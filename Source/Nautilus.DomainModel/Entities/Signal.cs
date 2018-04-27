@@ -1,0 +1,83 @@
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="Signal.cs" company="Nautech Systems Pty Ltd.">
+//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   http://www.nautechsystems.net
+// </copyright>
+// -------------------------------------------------------------------------------------------------
+
+namespace Nautilus.DomainModel.Entities
+{
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
+
+    /// <summary>
+    /// The immutable abstract <see cref="Signal"/> class. The base class for all signal types.
+    /// </summary>
+    [Immutable]
+    public abstract class Signal : Entity<Signal>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Signal"/> class.
+        /// </summary>
+        /// <param name="symbol">The signal symbol.</param>
+        /// <param name="signalId">The signal identifier.</param>
+        /// <param name="signalLabel">The signal label.</param>
+        /// <param name="tradeType">The signal trade type.</param>
+        /// <param name="signalTimestamp">The signal timestamp.</param>
+        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
+        /// struct argument is the default value.</exception>
+        protected Signal(
+            Symbol symbol,
+            EntityId signalId,
+            Label signalLabel,
+            TradeType tradeType,
+            ZonedDateTime signalTimestamp)
+            : base(
+                  signalId,
+                  signalTimestamp)
+        {
+            Validate.NotNull(symbol, nameof(symbol));
+            Validate.NotNull(signalId, nameof(signalId));
+            Validate.NotNull(signalLabel, nameof(signalLabel));
+            Validate.NotNull(tradeType, nameof(tradeType));
+            Validate.NotDefault(signalTimestamp, nameof(signalTimestamp));
+
+            this.Symbol = symbol;
+            this.SignalLabel = signalLabel;
+            this.TradeType = tradeType;
+        }
+
+        /// <summary>
+        /// Gets the signals symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
+
+        /// <summary>
+        /// The signals identifier.
+        /// </summary>
+        public EntityId SignalId => this.EntityId;
+
+        /// <summary>
+        /// Gets the signals label.
+        /// </summary>
+        public Label SignalLabel { get; }
+
+        /// <summary>
+        /// Gets the signals trade type.
+        /// </summary>
+        public TradeType TradeType { get; }
+
+        /// <summary>
+        /// Gets the signals timestamp.
+        /// </summary>
+        public ZonedDateTime SignalTimestamp => this.EntityTimestamp;
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Signal"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.SignalLabel.Value;
+    }
+}
