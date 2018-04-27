@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="QuickFix.Net.NetStandard" Version="1.7.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
+    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+  </ItemGroup>
+</Project>

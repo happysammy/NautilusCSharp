@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Enums" />
-    <Folder Include="Interfaces" />
+    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
   </ItemGroup>
 </Project>
