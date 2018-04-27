@@ -29,7 +29,7 @@ namespace Nautilus.BlackBox.Data.Market
     public sealed class TimeBarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
-        private readonly BarSpecification barProfile;
+        private readonly BarSpecification BarSpecification;
         private readonly TradeType tradeType;
         private readonly SpreadAnalyzer spreadAnalyzer;
 
@@ -61,7 +61,7 @@ namespace Nautilus.BlackBox.Data.Market
             Validate.NotNull(message, nameof(message));
 
             this.symbol = message.Symbol;
-            this.barProfile = message.BarProfile;
+            this.BarSpecification = message.BarSpecification;
             this.tradeType = message.TradeType;
             this.spreadAnalyzer = new SpreadAnalyzer(message.TickSize);
 
@@ -106,7 +106,7 @@ namespace Nautilus.BlackBox.Data.Market
 
             this.Log(
                 LogLevel.Debug,
-                  $"Registered for {this.barProfile} bars "
+                  $"Registered for {this.BarSpecification} bars "
                 + $"quoteBarStart={this.barBuilder.StartTime.ToStringFormattedIsoUtc()}, "
                 + $"quoteBarEnd={this.barEndTime.ToStringFormattedIsoUtc()}");
 
@@ -118,7 +118,7 @@ namespace Nautilus.BlackBox.Data.Market
             Debug.NotNull(quote, nameof(quote));
 
             var barStartTime = this.CalculateBarStartTime(quote.Timestamp);
-            this.barEndTime = barStartTime + this.barProfile.Duration;
+            this.barEndTime = barStartTime + this.BarSpecification.Duration;
 
             this.barBuilder = new BarBuilder(quote.Bid, quote.Timestamp);
         }
@@ -129,9 +129,9 @@ namespace Nautilus.BlackBox.Data.Market
 
             var dotNetDateTime = timeNow.ToDateTimeUtc();
 
-            if (this.barProfile.TimeFrame == BarTimeFrame.Second)
+            if (this.BarSpecification.TimeFrame == BarTimeFrame.Second)
             {
-                var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.barProfile.Period) * this.barProfile.Period;
+                var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -147,9 +147,9 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.barProfile.TimeFrame == BarTimeFrame.Minute)
+            if (this.BarSpecification.TimeFrame == BarTimeFrame.Minute)
             {
-                var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.barProfile.Period) * this.barProfile.Period;
+                var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -165,9 +165,9 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.barProfile.TimeFrame == BarTimeFrame.Hour)
+            if (this.BarSpecification.TimeFrame == BarTimeFrame.Hour)
             {
-                var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.barProfile.Period) * this.barProfile.Period;
+                var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -183,7 +183,7 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            throw new InvalidOperationException($"BarProfile {this.barProfile} currently not supported.");
+            throw new InvalidOperationException($"BarSpecification {this.BarSpecification} currently not supported.");
         }
 
         private void CreateNewMarketDataEvent(Tick quote)
@@ -195,7 +195,7 @@ namespace Nautilus.BlackBox.Data.Market
             var marketData = new MarketDataEvent(
                 this.symbol,
                 this.tradeType,
-                this.barProfile,
+                this.BarSpecification,
                 newBar,
                 quote,
                 this.spreadAnalyzer.AverageSpread,

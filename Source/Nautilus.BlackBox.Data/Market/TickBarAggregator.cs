@@ -26,7 +26,7 @@ namespace Nautilus.BlackBox.Data.Market
     public sealed class TickBarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
-        private readonly BarSpecification barProfile;
+        private readonly BarSpecification BarSpecification;
         private readonly TradeType tradeType;
         private readonly SpreadAnalyzer spreadAnalyzer;
 
@@ -58,7 +58,7 @@ namespace Nautilus.BlackBox.Data.Market
             Validate.NotNull(message, nameof(message));
 
             this.symbol = message.Symbol;
-            this.barProfile = message.BarProfile;
+            this.BarSpecification = message.BarSpecification;
             this.tradeType = message.TradeType;
             this.spreadAnalyzer = new SpreadAnalyzer(message.TickSize);
 
@@ -89,7 +89,7 @@ namespace Nautilus.BlackBox.Data.Market
             this.barBuilder.OnQuote(quote.Bid, quote.Timestamp);
             this.spreadAnalyzer.OnQuote(quote);
 
-            if (this.tickCounter >= this.barProfile.Period)
+            if (this.tickCounter >= this.BarSpecification.Period)
             {
                 this.CreateNewMarketDataEvent(quote);
                 this.CreateBarBuilder(quote);
@@ -103,7 +103,7 @@ namespace Nautilus.BlackBox.Data.Market
 
             this.CreateBarBuilder(quote);
 
-            this.Log(LogLevel.Debug, $"Registered for {this.barProfile} bars");
+            this.Log(LogLevel.Debug, $"Registered for {this.BarSpecification} bars");
             this.Log(LogLevel.Debug, $"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
         }
 
@@ -124,7 +124,7 @@ namespace Nautilus.BlackBox.Data.Market
             var marketData = new MarketDataEvent(
                 this.symbol,
                 this.tradeType,
-                this.barProfile,
+                this.BarSpecification,
                 newBar,
                 quote,
                 this.spreadAnalyzer.AverageSpread,

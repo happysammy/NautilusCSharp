@@ -88,7 +88,7 @@ namespace Nautilus.BlackBox.Data.Market
             Validate.EqualTo(message.Symbol, nameof(message.Symbol), this.symbol);
             Validate.DictionaryDoesNotContainKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
 
-            if (message.BarProfile.TimeFrame == BarTimeFrame.Tick)
+            if (message.BarSpecification.TimeFrame == BarTimeFrame.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
                     this.storedSetupContainer,
@@ -98,7 +98,7 @@ namespace Nautilus.BlackBox.Data.Market
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }
 
-            if (message.BarProfile.TimeFrame != BarTimeFrame.Tick)
+            if (message.BarSpecification.TimeFrame != BarTimeFrame.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
                     this.storedSetupContainer,
@@ -108,7 +108,7 @@ namespace Nautilus.BlackBox.Data.Market
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }
 
-            this.Log(LogLevel.Debug, $"Setup for {message.BarProfile} bars");
+            this.Log(LogLevel.Debug, $"Setup for {message.BarSpecification} bars");
 
             Debug.DictionaryContainsKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
         }

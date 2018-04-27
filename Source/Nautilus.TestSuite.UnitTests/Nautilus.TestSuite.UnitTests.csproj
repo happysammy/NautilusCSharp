@@ -11,6 +11,8 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.BlackBox.Execution\Nautilus.BlackBox.Execution.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />

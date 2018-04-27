@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Initializes a new instance of the <see cref="SubscribeSymbolDataType"/> class.
         /// </summary>
         /// <param name="symbol">The message symbol.</param>
-        /// <param name="barProfile">The message bar profile.</param>
+        /// <param name="BarSpecification">The message bar profile.</param>
         /// <param name="tradeType">The message trade type.</param>
         /// <param name="tickSize">The message tick size (cannot be zero or negative).</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
@@ -32,7 +32,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public SubscribeSymbolDataType(
             Symbol symbol,
-            BarSpecification barProfile,
+            BarSpecification BarSpecification,
             TradeType tradeType,
             decimal tickSize,
             Guid messageId,
@@ -40,14 +40,14 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
             : base(messageId, messageTimestamp)
         {
             Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(barProfile, nameof(barProfile));
+            Validate.NotNull(BarSpecification, nameof(BarSpecification));
             Validate.NotNull(tradeType, nameof(tradeType));
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
             this.Symbol = symbol;
-            this.BarProfile = barProfile;
+            this.BarSpecification = BarSpecification;
             this.TradeType = tradeType;
             this.TickSize = tickSize;
         }
@@ -60,7 +60,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// <summary>
         /// Gets the messages bar profile.
         /// </summary>
-        public BarSpecification BarProfile { get; }
+        public BarSpecification BarSpecification { get; }
 
         /// <summary>
         /// Gets the messages trade type.

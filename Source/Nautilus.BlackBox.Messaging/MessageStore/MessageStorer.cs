@@ -53,7 +53,7 @@ namespace Nautilus.BlackBox.Messaging.MessageStore
         {
             var commandReport = GetDiagnosticReport(this.warehouse.CommandEnvelopes);
             var eventReport = GetDiagnosticReport(this.warehouse.EventEnvelopes);
-            var serviceReport = GetDiagnosticReport(this.warehouse.ServiceEnvelopes);
+            var serviceReport = GetDiagnosticReport(this.warehouse.DocumentEnvelopes);
 
             Console.WriteLine();
             Console.WriteLine("-----------------------------------------------------------------------------");

@@ -18,7 +18,7 @@ namespace Nautilus.BlackBox.Messaging.MessageStore
     {
         private readonly IList<Envelope<CommandMessage>> commandEnvelopeList = new List<Envelope<CommandMessage>>();
         private readonly IList<Envelope<EventMessage>> eventEnvelopeList = new List<Envelope<EventMessage>>();
-        private readonly IList<Envelope<DocumentMessage>> serviceEnvelopeList = new List<Envelope<DocumentMessage>>();
+        private readonly IList<Envelope<DocumentMessage>> documentEnvelopeList = new List<Envelope<DocumentMessage>>();
 
         /// <summary>
         /// Gets a list of all stored command message envelopes.
@@ -35,8 +35,8 @@ namespace Nautilus.BlackBox.Messaging.MessageStore
         /// <summary>
         /// Gets a list of all stored document message envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<DocumentMessage>> ServiceEnvelopes =>
-              (IReadOnlyList<Envelope<DocumentMessage>>)this.serviceEnvelopeList;
+        public IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes =>
+              (IReadOnlyList<Envelope<DocumentMessage>>)this.documentEnvelopeList;
 
         /// <summary>
         /// Stores the given envelope in the warehouse.
@@ -71,7 +71,7 @@ namespace Nautilus.BlackBox.Messaging.MessageStore
         {
             Validate.NotNull(envelope, nameof(envelope));
 
-            this.serviceEnvelopeList.Add(envelope);
+            this.documentEnvelopeList.Add(envelope);
         }
     }
 }

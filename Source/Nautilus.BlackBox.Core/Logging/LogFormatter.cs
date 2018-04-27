@@ -403,7 +403,7 @@ namespace Nautilus.BlackBox.Core.Logging
 
             return $"Symbol={strategy.Instrument.Symbol}, "
                  + $"TradeProfile={strategy.TradeProfile}, "
-                 + $"BarProfile={strategy.TradeProfile.BarSpecification}, "
+                 + $"BarSpecification={strategy.TradeProfile.BarSpecification}, "
                  + $"TradePeriod={strategy.TradeProfile.TradePeriod}, "
                  + $"EntryAlgorithms={strategy.EntryAlgorithms.Count}, "
                  + $"TrailingStoplossAlgorithms={strategy.TrailingStopAlgorithms.Count}, "
