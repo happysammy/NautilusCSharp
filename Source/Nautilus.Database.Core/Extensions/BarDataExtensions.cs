@@ -14,6 +14,9 @@ using NautechSystems.CSharp.Validation;
 
 namespace Nautilus.Database.Core.Extensions
 {
+    using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.ValueObjects;
+
     /// <summary>
     /// Provides useful extension methods for converting bar data between types.
     /// </summary>

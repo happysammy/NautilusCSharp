@@ -9,4 +9,9 @@
   <ItemGroup>
     <Folder Include="Messages" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\servicestack.common\5.1.0\lib\netstandard2.0\ServiceStack.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

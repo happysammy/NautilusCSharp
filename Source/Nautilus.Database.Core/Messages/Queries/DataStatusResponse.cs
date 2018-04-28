@@ -12,12 +12,12 @@ using NautechSystems.CSharp.Validation;
 using NautilusDB.Messaging.Base;
 using NodaTime;
 
-namespace NautilusDB.Messaging.Queries
+namespace Nautilus.Database.Core.Messages.Queries
 {
     public sealed class DataStatusResponse : QueryResponseMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataStatusResponse"/> class. 
+        /// Initializes a new instance of the <see cref="DataStatusResponse"/> class.
         /// </summary>
         /// <param name="lastTimestampQueryResult">The last timestamp query result.</param>
         /// <param name="identifier">The identifier.</param>
@@ -28,9 +28,9 @@ namespace NautilusDB.Messaging.Queries
             Guid identifier,
             ZonedDateTime timestamp)
             : base(
-                lastTimestampQueryResult.IsSuccess, 
-                lastTimestampQueryResult.FullMessage, 
-                identifier, 
+                lastTimestampQueryResult.IsSuccess,
+                lastTimestampQueryResult.FullMessage,
+                identifier,
                 timestamp)
         {
             Validate.NotNull(lastTimestampQueryResult, nameof(lastTimestampQueryResult));

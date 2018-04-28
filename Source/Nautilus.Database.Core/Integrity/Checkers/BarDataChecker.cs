@@ -6,16 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.CQS;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Integrity.Checkers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+    using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.ValueObjects;
+    using ServiceStack;
+
     /// <summary>
     /// Checks various data forms for known anomalies. Performance optimized.
     /// </summary>

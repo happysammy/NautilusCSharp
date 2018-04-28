@@ -12,13 +12,16 @@ using NautilusDB.Core.Types;
 using NautilusDB.Messaging.Base;
 using NodaTime;
 
-namespace NautilusDB.Messaging.Queries
+namespace Nautilus.Database.Core.Messages.Queries
 {
+    using Nautilus.Common.Messaging;
+    using Nautilus.DomainModel.ValueObjects;
+
     public sealed class DataStatusRequest : Message
     {
         public DataStatusRequest(
             BarSpecification barSpec,
-            Guid identifier, 
+            Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

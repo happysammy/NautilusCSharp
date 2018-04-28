@@ -18,8 +18,9 @@ namespace Nautilus.Database.Core
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Messages;
+    using Nautilus.Database.Core.Messages.Events;
+    using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.DomainModel.Entities;
-    using NautilusDB.Messaging.Queries;
 
     /// <summary>
     /// The component which manages the queue of job messages being sent to the database.
@@ -90,8 +91,6 @@ namespace Nautilus.Database.Core
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
-
-            this.LogMsgReceipt(message);
 
             var marketDataQuery = this.marketDataRepository.Find(
                 message.BarSpecification,

@@ -13,14 +13,16 @@ using NautilusDB.Core.Types;
 using NautilusDB.Messaging.Base;
 using NodaTime;
 
-namespace NautilusDB.Messaging.Queries
+namespace Nautilus.Database.Core.Messages.Queries
 {
+    using Nautilus.DomainModel.ValueObjects;
+
     [Immutable]
     public sealed class MarketDataQueryRequest : QueryMessage
     {
         public MarketDataQueryRequest(
-            BarSpecification barSpecification, 
-            ZonedDateTime fromDateTime, 
+            BarSpecification barSpecification,
+            ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime,
             Guid identifier,
             ZonedDateTime timestamp)

@@ -11,19 +11,18 @@ using NautechSystems.CSharp;
 using NautechSystems.CSharp.Annotations;
 using NautechSystems.CSharp.Validation;
 using NautilusDB.Core.Types;
-using NautilusDB.Messaging.Base;
 using NodaTime;
 
-namespace NautilusDB.Messaging.Queries
+namespace Nautilus.Database.Core.Messages.Queries
 {
     [Immutable]
     public sealed class MarketDataQueryResponse : QueryResponseMessage
     {
         public MarketDataQueryResponse(
             Option<MarketDataFrame> marketData,
-            bool isSuccess, 
-            string message, 
-            Guid identifier, 
+            bool isSuccess,
+            string message,
+            Guid identifier,
             ZonedDateTime timestamp)
             : base(isSuccess, message, identifier, timestamp)
         {
@@ -44,6 +43,6 @@ namespace NautilusDB.Messaging.Queries
         /// Gets a string representation of the <see cref="MarketDataQueryResponse"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(MarketDataQueryResponse)}-{this.Identifier}";
+        public override string ToString() => $"{nameof(MarketDataQueryResponse)}-{this.Id}";
     }
 }

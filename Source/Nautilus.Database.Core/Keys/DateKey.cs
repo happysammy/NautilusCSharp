@@ -8,11 +8,12 @@
 
 using System;
 using NautechSystems.CSharp.Annotations;
-using NautilusDB.Core.Extensions;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Keys
 {
+    using Nautilus.Core.Extensions;
+
     /// <summary>
     /// Represents a strongly typed trading session date based on the given inputs.
     /// </summary>
