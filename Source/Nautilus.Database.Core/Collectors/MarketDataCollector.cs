@@ -32,7 +32,7 @@ namespace Nautilus.Database.Core.Collectors
             ComponentryContainer container,
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
-            : base(container, $"{nameof(MarketDataCollector)}-{dataReader.BarSpecification}")
+            : base(ServiceContext.Database, container, $"{nameof(MarketDataCollector)}-{dataReader.BarSpecification}")
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(dataReader, nameof(dataReader));

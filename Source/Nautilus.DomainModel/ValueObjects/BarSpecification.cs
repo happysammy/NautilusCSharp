@@ -24,23 +24,32 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
+        /// <param name="symbol"></param>
         /// <param name="quoteType"></param>
         /// <param name="resolution">The bar time frame.</param>
         /// <param name="period">The bar period.</param>
         /// <exception cref="ValidationException">Throws if the period is zero or negative.</exception>
         public BarSpecification(
+            Symbol symbol,
             BarQuoteType quoteType,
             BarResolution resolution,
             int period)
         {
+            Validate.NotNull(symbol, nameof(symbol));
             Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
+            this.Symbol = symbol;
             this.QuoteType = quoteType;
             this.Resolution = resolution;
             this.Period = period;
             this.TimePeriod = this.GetTimePeriod(period);
             this.Duration = this.TimePeriod.ToDuration();
         }
+
+        /// <summary>
+        /// Gets the bar specifications symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the bar specifications quote type.
@@ -100,7 +109,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(BarSpecification other)
         {
-            return this.QuoteType.Equals(other.QuoteType) &&
+            return this.Symbol.Equals(other.Symbol) &&
+                   this.QuoteType.Equals(other.QuoteType) &&
                    this.Resolution.Equals(other.Resolution) &&
                    this.Period.Equals(other.Period);
         }
@@ -112,7 +122,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.QuoteType.GetHashCode() +
+            return this.Symbol.GetHashCode() +
+                   this.QuoteType.GetHashCode() +
                    this.Resolution.GetHashCode() +
                    this.Period.GetHashCode();
         }
