@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Second, 30),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 30),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),

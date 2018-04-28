@@ -8,13 +8,13 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using Moq;
-    using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Logging;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Risk;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Logging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

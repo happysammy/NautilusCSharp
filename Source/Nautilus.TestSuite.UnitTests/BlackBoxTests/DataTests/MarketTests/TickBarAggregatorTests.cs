@@ -11,11 +11,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Util.Internal;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
-    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

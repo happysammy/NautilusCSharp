@@ -24,8 +24,8 @@ namespace Nautilus.Brokerage.FXCM
         {
             return new List<Symbol>
             {
-                new Symbol("AUDUSD", Exchange.Fxcm),
-                new Symbol("AUDJPY", Exchange.Fxcm)
+                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDJPY", Exchange.FXCM)
             };
         }
     }

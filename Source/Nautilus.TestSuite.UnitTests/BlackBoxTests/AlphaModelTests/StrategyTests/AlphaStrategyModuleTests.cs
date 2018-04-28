@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     using Akka.Actor;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.AlphaModel.Strategy;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             var alphaStrategy = StubAlphaStrategyFactory.Create();
 
             this.barStore = new BarStore(alphaStrategy.Instrument.Symbol, alphaStrategy.TradeProfile.BarSpecification);
-            this.barStoreDaily = new BarStore(alphaStrategy.Instrument.Symbol, new BarSpecification(BarTimeFrame.Day, 1));
+            this.barStoreDaily = new BarStore(alphaStrategy.Instrument.Symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1));
 
             var marketDataProvider = new MarketDataProvider(alphaStrategy.Instrument.Symbol);
             marketDataProvider.Update(StubTickFactory.Create(alphaStrategy.Instrument.Symbol), 0.00005m);
@@ -301,7 +301,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),
@@ -325,7 +325,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),
@@ -349,7 +349,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Day, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),
@@ -373,7 +373,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),
@@ -398,7 +398,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),

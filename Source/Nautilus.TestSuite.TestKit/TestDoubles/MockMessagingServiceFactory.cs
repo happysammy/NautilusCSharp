@@ -23,7 +23,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// </summary>
     public class MockMessagingServiceFactory
     {
-
         /// <summary>
         /// Gets the messaging adapter.
         /// </summary>
@@ -60,8 +59,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarhouse))); // TODO: make disposable so that test don't break
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
+                ServiceContext.CommandBus,
                 new Label(BlackBoxService.CommandBus.ToString()),
-                environment,
                 clock,
                 loggerFactory,
                 messageStoreRef)));

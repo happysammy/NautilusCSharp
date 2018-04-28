@@ -6,16 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using Akka.Actor;
-using NautechSystems.CSharp.Validation;
-using Newtonsoft.Json.Linq;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Build
 {
+    using System;
+    using System.Collections.Generic;
+    using Akka.Actor;
+    using NautechSystems.CSharp.Validation;
+    using Newtonsoft.Json.Linq;
+    using NodaTime;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
+    using Nautilus.Common.Messaging;
     using Nautilus.Database.Core.Configuration;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
@@ -49,13 +51,17 @@ namespace Nautilus.Database.Core.Build
             Validate.NotNull(economicNewsEventRepository, nameof(economicNewsEventRepository));
             Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
-            logger.Information($"Starting {nameof(NautilusDB)} builder...");
+            logger.Information(ServiceContext.Database, $"Starting {nameof(NautilusDB)} builder...");
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
             var container = new ComponentryContainer(clock, logger);
             var collectionSchedule = DataCollectionScheduleFactory.Create(clock.TimeNow(), collectionConfig);
             var actorSystem = ActorSystem.Create(nameof(NautilusDB));
+
+            this.messagingAdapter = MessagingServiceFactory.Create(
+                this.actorSystem,
+                setupContainer);
 
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
@@ -71,9 +77,16 @@ namespace Nautilus.Database.Core.Build
                     collectionSchedule,
                     barDataProvider)));
 
-            var actorReferences = new ActorReferences(
-                databaseTaskActorRef,
-                dataCollectionActorRef);
+            var addresses = new Dictionary<Enum, IActorRef>
+            {
+                { DatabaseComponent.DatabaseTaskManager, databaseTaskActorRef },
+                { DatabaseComponent.DatabaseCollectionManager, dataCollectionActorRef },
+            };
+
+            this.messagingAdapter.Send(new InitializeMessageSwitchboard(
+                new Switchboard(addresses),
+                this.NewGuid(),
+                this.TimeNow()));
 
             return new NautilusDatabase(
                 container,

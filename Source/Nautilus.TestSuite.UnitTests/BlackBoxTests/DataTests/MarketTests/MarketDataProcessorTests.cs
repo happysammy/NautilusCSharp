@@ -10,10 +10,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Data.Market;
-    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenSubscribeSymbolDataTypeMessage_WithMinuteBarSpecification_SetsUpBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarTimeFrame.Minute, 5);
+            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
             var tradeType = new TradeType("TestScalp");
             var message = new SubscribeSymbolDataType(
                 this.symbol,
@@ -98,7 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenSubscribeSymbolDataTypeMessage_WithTickBarSpecification_SetsUpBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarTimeFrame.Tick, 1000);
+            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
             var tradeType = new TradeType("TestScalp");
             var message = new SubscribeSymbolDataType(
                 this.symbol,
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenUnsubscribeSymbolDataTypeMessage_RemovesBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarTimeFrame.Tick, 1000);
+            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
             var tradeType = new TradeType("TestScalp");
             var message1 = new SubscribeSymbolDataType(
                 this.symbol,

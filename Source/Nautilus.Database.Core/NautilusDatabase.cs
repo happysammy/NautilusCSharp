@@ -6,16 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Akka.Actor;
-using NautechSystems.CSharp.Validation;
-
 namespace Nautilus.Database.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Akka.Actor;
+    using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Messages;
+    using Nautilus.Database.Core.Messages;
 
     /// <summary>
     /// The main macro object which contains the <see cref="NautilusDatabase"/> and presents its API.
@@ -23,7 +25,6 @@ namespace Nautilus.Database.Core
     public sealed class NautilusDatabase : ComponentBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
-        private readonly ActorReferences actorReferences;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
@@ -52,11 +53,11 @@ namespace Nautilus.Database.Core
 
             if (status == SystemStatus.Failure || status == SystemStatus.Suspended)
             {
-                this.Logger.Warning($"{this.ComponentName} cannot start due to a suspended or failed component.");
+                this.Logger.Warning($"{this.Component} cannot start due to a suspended or failed component.");
             }
             else
             {
-                this.Logger.Information($"{this.ComponentName} sending StartSystem message to all components...");
+                this.Logger.Information($"{this.Component} sending StartSystem message to all components...");
 
                 this.actorReferences.DataCollectionManager.Tell(
                     new StartSystem(

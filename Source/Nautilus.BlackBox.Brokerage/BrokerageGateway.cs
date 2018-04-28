@@ -835,7 +835,7 @@ namespace Nautilus.BlackBox.Brokerage
 
             return symbolString != "NONE"
                        ? new Symbol(symbolString, exchange)
-                       : new Symbol("AUDUSD", Exchange.Fxcm);
+                       : new Symbol("AUDUSD", Exchange.FXCM);
         }
 
         private Money GetMoneyType(decimal amount)

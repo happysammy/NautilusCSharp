@@ -8,7 +8,7 @@
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Core.Logging;
+    using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Risk;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;

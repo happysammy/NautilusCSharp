@@ -9,6 +9,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -19,7 +20,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new TradeProfile(
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(
+                    BarQuoteType.Bid,
+                    BarResolution.Minute,
+                    5),
                 tradePeriod,
                 2,
                 1000,

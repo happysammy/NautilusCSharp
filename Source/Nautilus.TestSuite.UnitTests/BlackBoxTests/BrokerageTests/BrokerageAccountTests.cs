@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.BlackBox.Brokerage;
-    using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

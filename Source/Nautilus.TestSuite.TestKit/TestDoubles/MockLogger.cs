@@ -11,7 +11,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
+    using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
 
     /// <summary>
@@ -46,6 +48,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this.GetLogStashTextAsStringList().Any(logEntry => logEntry.StartsWith(text));
         }
 
+        public string AssemblyVersion { get; }
+
         /// <summary>
         /// The verbose.
         /// </summary>
@@ -55,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="message">
         /// The log text.
         /// </param>
-        public void Verbose(BlackBoxService service, string message)
+        public void Verbose(Enum service, string message)
         {
             this.stash.Enqueue(message);
         }
@@ -69,7 +73,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="message">
         /// The log text.
         /// </param>
-        public void Debug(BlackBoxService service, string message)
+        public void Debug(Enum service, string message)
         {
             this.stash.Enqueue(message);
         }
@@ -83,7 +87,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="message">
         /// The log text.
         /// </param>
-        public void Information(BlackBoxService service, string message)
+        public void Information(Enum service, string message)
         {
             this.stash.Enqueue(message);
         }
@@ -97,7 +101,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="message">
         /// The log text.
         /// </param>
-        public void Warning(BlackBoxService service, string message)
+        public void Warning(Enum service, string message)
         {
             this.stash.Enqueue(message);
         }
@@ -114,7 +118,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="ex">
         /// The ex.
         /// </param>
-        public void Error(BlackBoxService service, string message, Exception ex)
+        public void Error(Enum service, string message, Exception ex)
         {
             this.stash.Enqueue(message);
         }
@@ -131,9 +135,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <param name="ex">
         /// The ex.
         /// </param>
-        public void Fatal(BlackBoxService service, string message, Exception ex)
+        public void Fatal(Enum service, string message, Exception ex)
         {
             this.stash.Enqueue(message);
+        }
+
+        public void LogResult(ResultBase result)
+        {
+            throw new NotImplementedException();
         }
 
         private IReadOnlyList<string> GetLogStashTextAsStringList()

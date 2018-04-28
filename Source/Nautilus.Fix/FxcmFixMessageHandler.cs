@@ -75,7 +75,7 @@ namespace Nautilus.Fix
             {
                 message.GetGroup(i, group);
 
-                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolMapper.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.Fxcm) : new Symbol("AUDUSD", Exchange.Fxcm);
+                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolMapper.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM) : new Symbol("AUDUSD", Exchange.FXCM);
                 var symbolId = new EntityId(symbol.ToString());
                 var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -213,7 +213,7 @@ namespace Nautilus.Fix
 
             this.brokerageGateway.OnQuote(
                 symbol,
-                Exchange.Fxcm,
+                Exchange.FXCM,
                 Convert.ToDecimal(bid),
                 Convert.ToDecimal(ask),
                 timestamp);
@@ -239,7 +239,7 @@ namespace Nautilus.Fix
 
             this.brokerageGateway.OnOrderCancelReject(
                 symbol,
-                Exchange.Fxcm,
+                Exchange.FXCM,
                 orderId,
                 brokerOrderId,
                 cancelRejectResponseTo,
@@ -281,7 +281,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderRejected(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     rejectReason,
                     timestamp);
@@ -291,7 +291,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderCancelled(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -302,7 +302,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderModified(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -318,7 +318,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderWorking(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -335,7 +335,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderExpired(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -351,7 +351,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderFilled(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     executionId,
@@ -373,7 +373,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderPartiallyFilled(
                     symbol,
-                    Exchange.Fxcm,
+                    Exchange.FXCM,
                     orderId,
                     brokerOrderId,
                     executionId,

@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.TestKit.Extensions
     using System.Threading.Tasks;
     using DomainModel.Events;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Messaging.Base;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;

@@ -6,13 +6,21 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace NautilusDB.Dukascopy
+namespace Nautilus.Database.Dukascopy
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Extensions;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.Database.Core.Configuration;
+    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
+
     /// <summary>
     /// Provides the <see cref="Dukascopy"/> meta-data.
     /// </summary>
@@ -136,8 +144,8 @@ namespace NautilusDB.Dukascopy
             {
                 foreach (var resolution in barResolutions)
                 {
-                    barSpecs.Add(new BarSpecification(symbol, Exchange.Dukascopy, BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1));
-                    barSpecs.Add(new BarSpecification(symbol, Exchange.Dukascopy, BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1));
+                    barSpecs.Add(new BarSpecification(new Symbol(symbol, Exchange.Dukascopy), BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1));
+                    barSpecs.Add(new BarSpecification(new Symbol(symbol, Exchange.Dukascopy), BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1));
                 }
             }
 

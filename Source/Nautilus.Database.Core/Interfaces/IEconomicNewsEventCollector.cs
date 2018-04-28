@@ -6,13 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using NautechSystems.CSharp.CQS;
-using NautilusDB.Core.Types;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Interfaces
 {
+    using System.Collections.Generic;
+    using NautechSystems.CSharp.CQS;
+    using NautilusDB.Core.Types;
+    using NodaTime;
+    using Nautilus.DomainModel.Entities;
+
     public interface IEconomicNewsEventCollector
     {
         /// <summary>

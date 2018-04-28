@@ -12,14 +12,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -392,7 +392,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),

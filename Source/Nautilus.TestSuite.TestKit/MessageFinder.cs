@@ -10,9 +10,9 @@ namespace Nautilus.TestSuite.TestKit
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
-    using Nautilus.Messaging.Base;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
     /// <summary>

@@ -9,6 +9,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
 

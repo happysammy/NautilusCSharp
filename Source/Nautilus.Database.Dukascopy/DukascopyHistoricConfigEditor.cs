@@ -6,17 +6,23 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace NautilusDB.Dukascopy
+namespace Nautilus.Database.Dukascopy
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Interfaces;
+    using NodaTime;
+    using ServiceStack;
+
     public sealed class DukascopyHistoricConfigEditor : ICsvDataConfigEditor
     {
         private readonly string dateTimeParsePattern;
-        private ZonedDateTime initialFromDate;
+        private readonly ZonedDateTime initialFromDate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DukascopyHistoricConfigEditor"/> class.

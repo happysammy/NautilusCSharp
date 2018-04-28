@@ -11,11 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.Extensions;

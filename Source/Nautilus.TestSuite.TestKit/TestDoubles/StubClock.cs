@@ -7,7 +7,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
     using NodaTime;
 
     /// <summary>

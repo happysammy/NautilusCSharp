@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     using Moq;
     using Nautilus.Algorithms.Entry;
     using Nautilus.BlackBox.AlphaModel.Strategy;
+    using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Logging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

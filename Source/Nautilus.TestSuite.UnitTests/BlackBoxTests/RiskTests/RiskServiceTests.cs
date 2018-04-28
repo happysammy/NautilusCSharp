@@ -10,10 +10,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Risk;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -244,7 +244,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             var message2 = new MarketDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("AUDUSD", Exchange.FXCM)),
                 decimal.One,

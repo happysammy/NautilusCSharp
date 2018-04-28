@@ -18,11 +18,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IBarStore
     {
         /// <summary>
-        /// Gets the bar stores symbol.
-        /// </summary>
-        Symbol Symbol { get; }
-
-        /// <summary>
         /// Gets the bar stores bar specification.
         /// </summary>
         BarSpecification BarSpecification { get; }

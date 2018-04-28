@@ -16,8 +16,12 @@ namespace Nautilus.DomainModel.Enums
 
         Simuilation = 0,
 
-        Fxcm = 1,
+        FXCM = 1,
 
-        Dukascopy = 2
+        Dukascopy = 2,
+
+        GLOBEX = 3,
+
+        LMAX =4
     }
 }
