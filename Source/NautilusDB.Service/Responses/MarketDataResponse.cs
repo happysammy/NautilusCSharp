@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
-using ServiceStack;
-
 namespace NautilusDB.Service.Responses
 {
+    using NautechSystems.CSharp.Validation;
+    using ServiceStack;
+    using Nautilus.Database.Core.Types;
+
     [Api("Market Data Response")]
     public class MarketDataResponse
     {

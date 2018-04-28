@@ -25,23 +25,23 @@ namespace Nautilus.Database.FxStreet
 
     public sealed class FxStreetRequester : IEconomicNewsEventCollector
     {
-        public QueryResult<IReadOnlyCollection<EconomicNewsEvent>> GetAllEvents()
+        public QueryResult<IReadOnlyCollection<EconomicEvent>> GetAllEvents()
         {
             var rawData = this.RequestRawDataAsync().Result;
 
             if (string.IsNullOrWhiteSpace(rawData))
             {
-                return QueryResult<IReadOnlyCollection<EconomicNewsEvent>>.Fail("Cannot get data");
+                return QueryResult<IReadOnlyCollection<EconomicEvent>>.Fail("Cannot get data");
             }
 
             var formedData = this.ParseEconomicEventsAsync(rawData).Result;
 
             return formedData.Count == 0
-                 ? QueryResult<IReadOnlyCollection<EconomicNewsEvent>>.Fail("No economic news events")
-                 : QueryResult<IReadOnlyCollection<EconomicNewsEvent>>.Ok(formedData);
+                 ? QueryResult<IReadOnlyCollection<EconomicEvent>>.Fail("No economic news events")
+                 : QueryResult<IReadOnlyCollection<EconomicEvent>>.Ok(formedData);
         }
 
-        public QueryResult<IReadOnlyCollection<EconomicNewsEvent>> GetEvents(ZonedDateTime fromDateTime)
+        public QueryResult<IReadOnlyCollection<EconomicEvent>> GetEvents(ZonedDateTime fromDateTime)
         {
             throw new System.NotImplementedException();
         }
@@ -66,10 +66,10 @@ namespace Nautilus.Database.FxStreet
             }
         }
 
-        private async Task<IReadOnlyCollection<EconomicNewsEvent>> ParseEconomicEventsAsync(string rawData)
+        private async Task<IReadOnlyCollection<EconomicEvent>> ParseEconomicEventsAsync(string rawData)
         {
             var reader = new StringReader(rawData);
-            var results = new List<EconomicNewsEvent>();
+            var results = new List<EconomicEvent>();
             var line = string.Empty;
 
             while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
@@ -84,7 +84,7 @@ namespace Nautilus.Database.FxStreet
                 try
                 {
                     results.Add(
-                        new EconomicNewsEvent(
+                        new EconomicEvent(
                             ParseDateTime(columns[0].Trim('"')),
                             columns[1].Trim('"'),
                             columns[2].Trim('"').ToEnum<Country>(),

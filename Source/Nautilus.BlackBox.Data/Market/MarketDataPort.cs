@@ -23,7 +23,7 @@ namespace Nautilus.BlackBox.Data.Market
     /// The immutable sealed <see cref="MarketDataPort"/> class.
     /// </summary>
     [Immutable]
-    public sealed class MarketDataPort : ActorComponentBase
+    public sealed class MarketDataPort : ActorComponentBusConnectedBase
     {
         private IDictionary<Symbol, IActorRef> marketDataProcessorsIndex = new Dictionary<Symbol, IActorRef>();
 

@@ -21,6 +21,16 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new and valid service <see cref="Label"/> from the given input.
         /// </summary>
+        /// <param name="componentName">The components name.</param>
+        /// <returns>A <see cref="Label"/>.</returns>
+        public static Label Component(string componentName)
+        {
+            return new Label(componentName + nameof(componentName));
+        }
+
+        /// <summary>
+        /// Creates and returns a new and valid service <see cref="Label"/> from the given input.
+        /// </summary>
         /// <param name="service">The black box service.</param>
         /// <returns>A <see cref="Label"/>.</returns>
         public static Label Service(Enum service)

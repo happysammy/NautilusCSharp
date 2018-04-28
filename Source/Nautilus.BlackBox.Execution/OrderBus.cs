@@ -26,7 +26,7 @@ namespace Nautilus.BlackBox.Execution
     /// The immutable sealed <see cref="OrderBus"/> class.
     /// </summary>
     [Immutable]
-    public sealed class OrderBus : ActorComponentBase
+    public sealed class OrderBus : ActorComponentBusConnectedBase
     {
         private IBrokerageGateway brokerageGateway;
 

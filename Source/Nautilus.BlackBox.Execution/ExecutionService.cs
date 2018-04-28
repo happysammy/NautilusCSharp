@@ -21,7 +21,7 @@ namespace Nautilus.BlackBox.Execution
     /// The sealed <see cref="ExecutionService"/> class. The <see cref="BlackBox"/> service context
     /// which handles all execution related operations.
     /// </summary>
-    public sealed class ExecutionService : ActorComponentBase
+    public sealed class ExecutionService : ActorComponentBusConnectedBase
     {
         private readonly IActorRef orderBusRef;
 

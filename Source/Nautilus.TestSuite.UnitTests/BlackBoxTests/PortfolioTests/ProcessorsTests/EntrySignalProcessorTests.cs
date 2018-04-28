@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -53,9 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;

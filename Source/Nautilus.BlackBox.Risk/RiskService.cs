@@ -23,7 +23,7 @@ namespace Nautilus.BlackBox.Risk
     /// <summary>
     /// The sealed <see cref="RiskService "/> class.
     /// </summary>
-    public sealed class RiskService : ActorComponentBase
+    public sealed class RiskService : ActorComponentBusConnectedBase
     {
         private IBrokerageAccount account;
         private IRiskModel riskModel;
@@ -101,7 +101,7 @@ namespace Nautilus.BlackBox.Risk
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send<DocumentMessage>(
+                this.MessagingAdapter.Send<CommandMessage>(
                     BlackBoxService.Portfolio,
                     tradeApproval,
                     this.Service);

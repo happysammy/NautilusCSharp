@@ -20,9 +20,9 @@ namespace Nautilus.DomainModel.Entities
     /// Represents an economic news event which affects financial markets.
     /// </summary>
     [Immutable]
-    public struct EconomicNewsEvent
+    public struct EconomicEvent
     {
-        public EconomicNewsEvent(
+        public EconomicEvent(
             ZonedDateTime time,
             string title,
             Country country,

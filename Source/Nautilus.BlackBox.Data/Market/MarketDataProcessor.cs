@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Data.Market
     /// <summary>
     /// The sealed <see cref="MarketDataProcessor"/> class.
     /// </summary>
-    public sealed class MarketDataProcessor : ActorComponentBase
+    public sealed class MarketDataProcessor : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxSetupContainer storedSetupContainer;
         private readonly Symbol symbol;

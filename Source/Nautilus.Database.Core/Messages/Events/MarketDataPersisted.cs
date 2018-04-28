@@ -13,28 +13,28 @@ namespace Nautilus.Database.Core.Messages.Events
     using NautechSystems.CSharp.Validation;
     using NodaTime;
     using Nautilus.Core;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Database.Core.Types;
 
     [Immutable]
     public sealed class MarketDataPersisted : Event
     {
         public MarketDataPersisted(
-            BarSpecification barSpec,
+            SymbolBarData symbolBarData,
             ZonedDateTime lastBarTime,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(symbolBarData, nameof(symbolBarData));
             Validate.NotDefault(lastBarTime, nameof(lastBarTime));
             Validate.NotDefault(identifier, nameof(identifier));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.BarSpecification = barSpec;
+            this.SymbolBarData = symbolBarData;
             this.LastBarTime = lastBarTime;
         }
 
-        public BarSpecification BarSpecification { get; }
+        public SymbolBarData SymbolBarData { get; }
 
         public ZonedDateTime LastBarTime { get; }
 

@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable sealed <see cref="MessageBus{T}"/> class.
+    /// Represents a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
     [Immutable]

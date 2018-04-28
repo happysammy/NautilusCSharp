@@ -8,9 +8,9 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using System.Collections.Generic;
     using Akka.Actor;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -29,12 +29,10 @@ namespace Nautilus.Common.Componentry
         /// <param name="service">The nautilus service name.</param>
         /// <param name="component">The component label.</param>
         /// <param name="setupContainer">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adatper.</param>
         protected ActorComponentBase(
             Enum service,
             Label component,
-            ComponentryContainer setupContainer,
-            IMessagingAdapter messagingAdapter)
+            ComponentryContainer setupContainer)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));
@@ -45,7 +43,6 @@ namespace Nautilus.Common.Componentry
             this.Logger = setupContainer.LoggerFactory.Create(this.Service, this.Component);
             this.GuidFactory = setupContainer.GuidFactory;
             this.CommandHandler = new CommandHandler(this.Logger);
-            this.MessagingAdapter = messagingAdapter;
 
             this.SetupMessageHandling();
         }
@@ -79,42 +76,6 @@ namespace Nautilus.Common.Componentry
         /// Gets the command handler.
         /// </summary>
         protected CommandHandler CommandHandler { get; }
-
-        /// <summary>
-        /// Gets the components messaging adapter.
-        /// </summary>
-        protected IMessagingAdapter MessagingAdapter { get; }
-
-        /// <summary>
-        /// Sends the given message to the given black box service via the messaging system.
-        /// </summary>
-        /// <param name="receiver">The message receiver.</param>
-        /// <param name="message">The message to send.</param>
-        /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        protected void SendMessage(
-            Enum receiver,
-            Message message)
-        {
-            Validate.NotNull(message, nameof(message));
-
-            this.MessagingAdapter.Send(receiver, message, this.Service);
-        }
-
-        /// <summary>
-        /// Sends the given messages to the given list of black box services via the messaging system.
-        /// </summary>
-        /// <param name="receivers">The message receivers.</param>
-        /// <param name="message">The message to send.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected void SendMessage(
-            IReadOnlyCollection<Enum> receivers,
-            Message message)
-        {
-            Debug.NotNull(receivers, nameof(receivers));
-            Debug.NotNull(message, nameof(message));
-
-            this.MessagingAdapter.Send(receivers, message, this.Service);
-        }
 
         /// <summary>
         /// Pre start method when actor base class is called.
@@ -156,6 +117,22 @@ namespace Nautilus.Common.Componentry
         protected void Log(LogLevel logLevel, [CanBeNull] string logText)
         {
             this.Logger.Log(logLevel, logText);
+        }
+
+        /// <summary>
+        /// Logs the result with the <see cref="ILogger"/>.
+        /// </summary>
+        /// <param name="result">The command result.</param>
+        public void LogResult(ResultBase result)
+        {
+            if (result.IsSuccess)
+            {
+                this.Log(LogLevel.Information, result.Message);
+            }
+            else
+            {
+                this.Log(LogLevel.Warning, result.Message);
+            }
         }
 
         /// <summary>

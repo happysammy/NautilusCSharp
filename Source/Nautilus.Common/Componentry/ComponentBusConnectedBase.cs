@@ -17,17 +17,17 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all components which are connected to the messaging service.
     /// </summary>
-    public abstract class BusConnectedComponentBase : ComponentBase
+    public abstract class ComponentBusConnectedBase : ComponentBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BusConnectedComponentBase"/> class.
+        /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
         /// </summary>
         /// <param name="service">The service context.</param>
         /// <param name="component">The component label.</param>
         /// <param name="container">The container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        protected BusConnectedComponentBase(
+        protected ComponentBusConnectedBase(
             Enum service,
             Label component,
             ComponentryContainer container,

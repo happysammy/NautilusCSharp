@@ -13,6 +13,7 @@ namespace Nautilus.Common.Enums
         CommandBus = 1,
         EventBus = 2,
         DocumentBus = 3,
-        Database = 4
+        Database = 4,
+        AspCoreHost = 5
     }
 }

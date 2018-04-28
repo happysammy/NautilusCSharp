@@ -6,19 +6,23 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.CQS;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NautilusDB.Core.Types;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Readers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using CsvHelper;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Types;
+    using Nautilus.DomainModel.ValueObjects;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.DomainModel.Enums;
+    using NodaTime;
+
     /// <summary>
     /// Collects market data from CSV files in the specified directory path.
     /// </summary>
@@ -28,25 +32,25 @@ namespace Nautilus.Database.Core.Readers
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvBarDataReader"/> class.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="symbolBarData">The symbol bar data.</param>
         /// <param name="dataProvider">The market data provider.</param>
         /// <exception cref="NautechSystems.CSharp.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
-            BarSpecification barSpec,
+            SymbolBarData symbolBarData,
             IBarDataProvider dataProvider)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(symbolBarData, nameof(symbolBarData));
             Validate.NotNull(dataProvider, nameof(dataProvider));
 
-            this.BarSpecification = barSpec;
+            this.SymbolBarData = symbolBarData;
             this.DataProvider = dataProvider;
             this.FilePathWildcard = this.BuildFilePathWildcard(dataProvider);
         }
 
         /// <summary>
-        /// Gets the market data collectors bar info.
+        /// Gets the CSV market data readers symbol bar data.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public SymbolBarData SymbolBarData { get; }
 
         /// <summary>
         /// Gets the CSV market data readers data provider.
@@ -113,7 +117,7 @@ namespace Nautilus.Database.Core.Readers
                 if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
                 {
                     QueryResult<MarketDataFrame>.Fail(
-                        $"No bars found to collect for {this.BarSpecification} " +
+                        $"No bars found to collect for {this.SymbolBarData} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
@@ -132,11 +136,13 @@ namespace Nautilus.Database.Core.Readers
                 if (barsAfterFromDate.Count == 0)
                 {
                     return QueryResult<MarketDataFrame>.Fail(
-                        $"No bars found to collect for {this.BarSpecification} " +
+                        $"No bars found to collect for {this.SymbolBarData} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
-                return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(this.BarSpecification, barsAfterFromDate.ToArray()));
+                return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
+                    this.SymbolBarData,
+                    barsAfterFromDate.ToArray()));
             }
 
             return QueryResult<MarketDataFrame>.Fail(readAllBarsQuery.Message);
@@ -160,7 +166,7 @@ namespace Nautilus.Database.Core.Readers
                     .Last();
 
                 return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
-                    this.BarSpecification,
+                    this.SymbolBarData,
                     new [] { lastBar }));
             }
 
@@ -209,13 +215,13 @@ namespace Nautilus.Database.Core.Readers
 
                         while (reader.Read())
                         {
-                            barsList.Add(new Bar(
-                                reader.GetField<string>(0).ToZonedDateTime(this.DataProvider.TimestampParsePattern),
-                                reader.GetField<decimal>(1),
-                                reader.GetField<decimal>(2),
-                                reader.GetField<decimal>(3),
-                                reader.GetField<decimal>(4),
-                                Convert.ToInt64(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple));
+                            barsList.Add(new Bar( // TODO: Do not do this.
+                                Price.Create(reader.GetField<decimal>(1), 0.00001m),
+                                Price.Create(reader.GetField<decimal>(2), 0.00001m),
+                                Price.Create(reader.GetField<decimal>(3), 0.00001m),
+                                Price.Create(reader.GetField<decimal>(4), 0.00001m),
+                                Quantity.Create(Convert.ToInt32(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple),
+                                reader.GetField<string>(0).ToZonedDateTime(this.DataProvider.TimestampParsePattern)));
                         }
                     }
 
@@ -223,9 +229,11 @@ namespace Nautilus.Database.Core.Readers
                     barsList.Sort();
 
                     return barsList.Count > 0
-                         ? QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(this.BarSpecification, barsList.ToArray()))
+                         ? QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
+                            this.SymbolBarData,
+                            barsList.ToArray()))
                          : QueryResult<MarketDataFrame>.Fail(
-                                   $"No bars to collect for {this.BarSpecification} in {csvFile.Name}");
+                                   $"No bars to collect for {this.SymbolBarData} in {csvFile.Name}");
                 }
                 catch (IOException)
                 {
@@ -239,25 +247,25 @@ namespace Nautilus.Database.Core.Readers
             Debug.NotNull(barDataProvider, nameof(barDataProvider));
 
             // TODO: Temporary if to handle Dukas 'Hourly'.
-            if (this.BarSpecification.Resolution == BarResolution.Hour)
+            if (this.SymbolBarData.BarSpecification.Resolution == BarResolution.Hour)
             {
-                return $"{this.BarSpecification.Symbol}_"
-                       + $"{barDataProvider.GetResolutionLabel(this.BarSpecification.Resolution)}_"
-                       + $"{this.BarSpecification.QuoteType}_"
+                return $"{this.SymbolBarData}_"
+                       + $"{barDataProvider.GetResolutionLabel(this.SymbolBarData.BarSpecification.Resolution)}_"
+                       + $"{this.SymbolBarData.BarSpecification.QuoteType}_"
                        + $"*.csv";
             }
 
-            return $"{this.BarSpecification.Symbol}_"
-                 + $"{this.BarSpecification.Period} "
-                 + $"{barDataProvider.GetResolutionLabel(this.BarSpecification.Resolution)}_"
-                 + $"{this.BarSpecification.QuoteType}_"
+            return $"{this.SymbolBarData}_" // TODO: This is now broken.
+                 + $"{this.SymbolBarData.BarSpecification.Period} "
+                 + $"{barDataProvider.GetResolutionLabel(this.SymbolBarData.BarSpecification.Resolution)}_"
+                 + $"{this.SymbolBarData.BarSpecification.QuoteType}_"
                  + $"*.csv";
         }
 
         private QueryResult<MarketDataFrame> NoDataFoundQueryResultFailure()
         {
             return QueryResult<MarketDataFrame>.Fail(
-                $"No data found for {this.BarSpecification.Symbol} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
+                $"No data found for {this.SymbolBarData.BarSpecification.ToString()} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
         }
     }
 }

@@ -1,28 +1,29 @@
-﻿//--------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="DukascopyHistoricConfigEditor.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using NautechSystems.CSharp.CQS;
+using NautechSystems.CSharp.Validation;
+using NodaTime;
+using ServiceStack;
 
 namespace Nautilus.Database.Dukascopy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
-    using NodaTime;
-    using ServiceStack;
 
     public sealed class DukascopyHistoricConfigEditor : ICsvDataConfigEditor
     {
         private readonly string dateTimeParsePattern;
-        private readonly ZonedDateTime initialFromDate;
+        private ZonedDateTime initialFromDate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DukascopyHistoricConfigEditor"/> class.
@@ -90,7 +91,7 @@ namespace Nautilus.Database.Dukascopy
 
             using (var fileStream = File.Create(this.ConfigCsvPath.FullName))
             {
-                fileStream.Write($"{firstLine}{Environment.NewLine}{secondLine}");
+                // TODO: fileStream.Write($"{firstLine}{Environment.NewLine}{secondLine}");
             }
 
             return CommandResult.Ok();
@@ -135,7 +136,7 @@ namespace Nautilus.Database.Dukascopy
 
             using (var fileStream = File.Create(this.ConfigCsvPath.FullName))
             {
-                fileStream.Write($"{firstLine}{Environment.NewLine}{secondLine}");
+                // TODO: fileStream.Write($"{firstLine}{Environment.NewLine}{secondLine}");
             }
 
             return CommandResult.Ok();

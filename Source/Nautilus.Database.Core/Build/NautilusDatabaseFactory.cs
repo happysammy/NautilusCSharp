@@ -17,6 +17,7 @@ namespace Nautilus.Database.Core.Build
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Core.Configuration;
     using Nautilus.Database.Core.Interfaces;
@@ -34,7 +35,7 @@ namespace Nautilus.Database.Core.Build
         /// <param name="logger">The database logger.</param>
         /// <param name="collectionConfig">The collection configuration.</param>
         /// <param name="marketDataRepository">The database market data repo.</param>
-        /// <param name="economicNewsEventRepository">The database economic news event repo.</param>
+        /// <param name="economicEventRepository">The database economic news event repo.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
@@ -42,36 +43,42 @@ namespace Nautilus.Database.Core.Build
             ILoggingAdapter logger,
             JObject collectionConfig,
             IMarketDataRepository marketDataRepository,
-            IEconomicNewsEventRepository<EconomicNewsEvent> economicNewsEventRepository,
+            IEconomicEventRepository<EconomicEvent> economicEventRepository,
             IBarDataProvider barDataProvider)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(collectionConfig, nameof(collectionConfig));
             Validate.NotNull(marketDataRepository, nameof(marketDataRepository));
-            Validate.NotNull(economicNewsEventRepository, nameof(economicNewsEventRepository));
+            Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
             Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
             logger.Information(ServiceContext.Database, $"Starting {nameof(NautilusDB)} builder...");
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
-            var container = new ComponentryContainer(clock, logger);
             var collectionSchedule = DataCollectionScheduleFactory.Create(clock.TimeNow(), collectionConfig);
+
+            var setupContainer = new DatabaseSetupContainer(
+                clock,
+                new GuidFactory(),
+                new LoggerFactory(logger));
+
             var actorSystem = ActorSystem.Create(nameof(NautilusDB));
 
-            this.messagingAdapter = MessagingServiceFactory.Create(
-                this.actorSystem,
+            var messagingAdapter = MessagingServiceFactory.Create(
+                actorSystem,
                 setupContainer);
 
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
-                    container,
+                    setupContainer,
                     marketDataRepository,
-                    economicNewsEventRepository)));
+                    economicEventRepository)));
 
             var dataCollectionActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DataCollectionManager(
-                    container,
+                    setupContainer,
+                    messagingAdapter,
                     actorSystem.Scheduler,
                     databaseTaskActorRef,
                     collectionSchedule,
@@ -79,19 +86,15 @@ namespace Nautilus.Database.Core.Build
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { DatabaseComponent.DatabaseTaskManager, databaseTaskActorRef },
-                { DatabaseComponent.DatabaseCollectionManager, dataCollectionActorRef },
+                { DatabaseService.DatabaseTaskManager, databaseTaskActorRef },
+                { DatabaseService.DatabaseCollectionManager, dataCollectionActorRef },
             };
 
-            this.messagingAdapter.Send(new InitializeMessageSwitchboard(
-                new Switchboard(addresses),
-                this.NewGuid(),
-                this.TimeNow()));
-
             return new NautilusDatabase(
-                container,
+                setupContainer,
                 actorSystem,
-                actorReferences);
+                messagingAdapter,
+                addresses);
         }
     }
 }

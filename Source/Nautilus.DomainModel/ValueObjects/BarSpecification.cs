@@ -24,32 +24,23 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
-        /// <param name="symbol"></param>
         /// <param name="quoteType"></param>
         /// <param name="resolution">The bar time frame.</param>
         /// <param name="period">The bar period.</param>
         /// <exception cref="ValidationException">Throws if the period is zero or negative.</exception>
         public BarSpecification(
-            Symbol symbol,
             BarQuoteType quoteType,
             BarResolution resolution,
             int period)
         {
-            Validate.NotNull(symbol, nameof(symbol));
             Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
-            this.Symbol = symbol;
             this.QuoteType = quoteType;
             this.Resolution = resolution;
             this.Period = period;
             this.TimePeriod = this.GetTimePeriod(period);
             this.Duration = this.TimePeriod.ToDuration();
         }
-
-        /// <summary>
-        /// Gets the bar specifications symbol.
-        /// </summary>
-        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the bar specifications quote type.
@@ -81,40 +72,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         public bool IsOneDayBar => this.Resolution == BarResolution.Day && this.Period == 1;
 
-        public static bool operator ==(BarSpecification left, BarSpecification right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(BarSpecification left, BarSpecification right)
-        {
-            return !(left == right);
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether this entity is equal to the given <see cref="object"/>.
-        /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            return other is BarSpecification barSpec && this.Equals(barSpec);
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether this <see cref="BarSpecification"/> is equal to the
-        /// given <see cref="BarSpecification"/>.
-        /// </summary>
-        /// <param name="other">The other bar specification.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(BarSpecification other)
-        {
-            return this.Symbol.Equals(other.Symbol) &&
-                   this.QuoteType.Equals(other.QuoteType) &&
-                   this.Resolution.Equals(other.Resolution) &&
-                   this.Period.Equals(other.Period);
-        }
-
         /// <summary>
         /// Returns the hash code of the <see cref="BarSpecification"/>.
         /// </summary>
@@ -122,8 +79,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.Symbol.GetHashCode() +
-                   this.QuoteType.GetHashCode() +
+            return this.QuoteType.GetHashCode() +
                    this.Resolution.GetHashCode() +
                    this.Period.GetHashCode();
         }
@@ -142,7 +98,9 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             return new object[]
                        {
-                           this.ToString()
+                           this.QuoteType,
+                           this.Resolution,
+                           this.Period
                        };
         }
 

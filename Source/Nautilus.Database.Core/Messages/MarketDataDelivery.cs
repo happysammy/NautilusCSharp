@@ -12,7 +12,7 @@ namespace Nautilus.Database.Core.Messages
     using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using NautilusDB.Core.Types;
+    using Nautilus.Database.Core.Types;
     using NodaTime;
 
     /// <summary>

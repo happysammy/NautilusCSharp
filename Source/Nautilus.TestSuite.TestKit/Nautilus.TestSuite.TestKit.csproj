@@ -19,10 +19,9 @@
     <ProjectReference Include="..\Nautilus.BlackBox.Brokerage\Nautilus.BlackBox.Brokerage.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj" />
-    <ProjectReference Include="..\Nautilus.BlackBox.Messaging\Nautilus.BlackBox.Messaging.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
+    <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
-    <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.8.2" />

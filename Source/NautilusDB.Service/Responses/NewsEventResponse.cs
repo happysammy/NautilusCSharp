@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using NautilusDB.Core.Types;
-
 namespace NautilusDB.Service.Responses
 {
+    using Nautilus.Database.Core.Types;
+
     public class NewsEventResponse
     {
         public NewsEventResponse(

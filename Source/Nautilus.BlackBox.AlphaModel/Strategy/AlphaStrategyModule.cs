@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     /// data events. Any generated signals are sent to the Portfolio service via the messaging
     /// service.
     /// </summary>
-    public sealed class AlphaStrategyModule : ActorComponentBase
+    public sealed class AlphaStrategyModule : ActorComponentBusConnectedBase
     {
         private readonly BarStore barStore;
         private readonly BarStore barStoreDaily;

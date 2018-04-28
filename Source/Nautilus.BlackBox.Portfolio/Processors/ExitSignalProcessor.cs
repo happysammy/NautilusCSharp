@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     /// <summary>
     /// The sealed <see cref="ExitSignalProcessor"/> class.
     /// </summary>
-    public class ExitSignalProcessor : BusConnectedComponentBase
+    public class ExitSignalProcessor : ComponentBusConnectedBase
     {
         private readonly ITradeBook tradeBook;
 

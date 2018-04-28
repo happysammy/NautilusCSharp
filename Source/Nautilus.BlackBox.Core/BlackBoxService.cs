@@ -65,6 +65,6 @@ namespace Nautilus.BlackBox.Core
         /// <summary>
         /// The black box service bus context.
         /// </summary>
-        ServiceBus
+        DocumentBus
     }
 }

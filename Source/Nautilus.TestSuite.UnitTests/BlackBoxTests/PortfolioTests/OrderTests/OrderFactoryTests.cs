@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using NautechSystems.CSharp;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

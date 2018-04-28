@@ -12,11 +12,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Messaging;
+    using Nautilus.BlackBox.Core;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -43,10 +42,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
             var testActorSystem = ActorSystem.Create(nameof(MessagingTests));
 
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
+                ServiceContext.Messaging,
                 new Label(BlackBoxService.CommandBus.ToString()),
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory,
+                setupContainer,
                 new StandardOutLogger())));
 
             var mockAlphaModelServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));

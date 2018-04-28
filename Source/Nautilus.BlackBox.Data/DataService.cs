@@ -25,7 +25,7 @@ namespace Nautilus.BlackBox.Data
     /// The sealed <see cref="DataService"/> class. The <see cref="BlackBox"/> service context
     /// which handles all data related operations.
     /// </summary>
-    public sealed class DataService : ActorComponentBase
+    public sealed class DataService : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxSetupContainer storedSetupContainer;
         private readonly IActorRef marketDataPortRef;

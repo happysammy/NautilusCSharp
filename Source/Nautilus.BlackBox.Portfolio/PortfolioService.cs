@@ -21,7 +21,7 @@ namespace Nautilus.BlackBox.Portfolio
     /// <summary>
     /// The sealed <see cref="PortfolioService"/> class.
     /// </summary>
-    public sealed class PortfolioService : ActorComponentBase
+    public sealed class PortfolioService : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxSetupContainer storedSetupContainer;
         private readonly SecurityPortfolioStore portfolioStore;

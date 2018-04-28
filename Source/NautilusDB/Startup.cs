@@ -17,12 +17,14 @@ namespace NautilusDB
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Database.Compression;
     using Newtonsoft.Json.Linq;
-    using NodaTime;
     using ServiceStack;
     using Nautilus.Database.Core;
     using Nautilus.Database.Core.Build;
     using Nautilus.Database.Core.Configuration;
+    using Nautilus.Database.Core.Temp;
+    using Nautilus.Database.Dukascopy;
     using Nautilus.Serilog;
 
     /// <summary>
@@ -119,18 +121,11 @@ namespace NautilusDB
                 (bool)config[ConfigSection.Database]["compression"],
                 (string)config[ConfigSection.Database]["compressionCodec"]);
 
-            var localHost = RedisConstants.LocalHost;
-            var redisClientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
-
             this.nautilusDB = NautilusDatabaseFactory.Create(
                 new SerilogLogger(),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
-                new RedisMarketDataRepository(
-                    redisClientManager,
-                    localHost,
-                    Duration.FromSeconds(10),
-                    compressor),
-                new RedisEconomicNewsEventRepository(),
+                new MockMarketDataRepository(),
+                new MockEconomicEventRepository(),
                 new DukascopyBarDataProvider(
                     this.dukasConfig,
                     configCsvPath,
@@ -162,7 +157,6 @@ namespace NautilusDB
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
 
             app.UseServiceStack(new AppHost

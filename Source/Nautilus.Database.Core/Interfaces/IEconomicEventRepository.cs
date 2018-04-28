@@ -13,7 +13,7 @@ using NautechSystems.CSharp.CQS;
 
 namespace Nautilus.Database.Core.Interfaces
 {
-    public interface IEconomicNewsEventRepository<T>
+    public interface IEconomicEventRepository<T>
     {
         CommandResult Add(T entity);
 

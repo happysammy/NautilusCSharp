@@ -6,21 +6,17 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.IO;
-using NautechSystems.CSharp.CQS;
-using NautilusDB.Core.Types;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Interfaces
 {
+    using System.IO;
+    using NautechSystems.CSharp.CQS;
+    using NodaTime;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
 
     public interface IBarDataReader
     {
-        /// <summary>
-        /// Gets the data collectors bar specification.
-        /// </summary>
-        BarSpecification BarSpecification { get; }
+        SymbolBarData SymbolBarData { get; }
 
         /// <summary>
         /// Returns a <see cref="MarketDataFrame"/> of all bars data.

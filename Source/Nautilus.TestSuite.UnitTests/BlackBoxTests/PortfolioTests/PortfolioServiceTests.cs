@@ -12,11 +12,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Portfolio;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -53,9 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
@@ -219,7 +216,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new MarketDataEvent(
                 new Symbol("SYMBOL", Exchange.LMAX),
                 new TradeType("TestTrade"),
-                new BarSpecification(BarTimeFrame.Minute, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),
                 0.00001m,

@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Data.Market
     /// <summary>
     /// The sealed <see cref="TickBarAggregator"/> class.
     /// </summary>
-    public sealed class TickBarAggregator : ActorComponentBase
+    public sealed class TickBarAggregator : ActorComponentBusConnectedBase
     {
         private readonly Symbol symbol;
         private readonly BarSpecification BarSpecification;

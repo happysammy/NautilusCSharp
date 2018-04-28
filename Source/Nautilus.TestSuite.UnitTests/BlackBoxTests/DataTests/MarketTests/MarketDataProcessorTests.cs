@@ -46,9 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;

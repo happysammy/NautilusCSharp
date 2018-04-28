@@ -12,12 +12,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Moq;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Execution;
-    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -49,9 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;

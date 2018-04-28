@@ -11,11 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Moq;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Data;
+    using Nautilus.Common.Enums;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -48,9 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.symbol = new Symbol("AUDUSD", Exchange.LMAX);
 
@@ -70,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
         internal void GivenSubscribeSymbolDataTypeMessage_SetsUpBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarTimeFrame.Minute, 5);
+            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
             var tradeType = new TradeType("TestScalp");
             var message = new SubscribeSymbolDataType(
                 this.symbol,
@@ -103,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
         internal void GivenUnsubscribeSymbolDataTypeMessage_RemovesBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarTimeFrame.Tick, 1000);
+            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
             var tradeType = new TradeType("TestScalp");
             var message1 = new SubscribeSymbolDataType(
                 this.symbol,

@@ -10,11 +10,12 @@ using System;
 using NautechSystems.CSharp;
 using NautechSystems.CSharp.Annotations;
 using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Messages.Queries
 {
+    using Nautilus.Database.Core.Types;
+
     [Immutable]
     public sealed class MarketDataQueryResponse : QueryResponseMessage
     {

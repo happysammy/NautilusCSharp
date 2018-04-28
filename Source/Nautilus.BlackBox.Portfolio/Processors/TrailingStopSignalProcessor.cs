@@ -25,7 +25,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     /// <summary>
     /// The sealed <see cref="TrailingStopSignalProcessor"/> class.
     /// </summary>
-    public sealed class TrailingStopSignalProcessor : BusConnectedComponentBase
+    public sealed class TrailingStopSignalProcessor : ComponentBusConnectedBase
     {
         private readonly ITradeBook tradeBook;
 

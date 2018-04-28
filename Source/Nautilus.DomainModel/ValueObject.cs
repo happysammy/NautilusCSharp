@@ -12,8 +12,7 @@ namespace Nautilus.DomainModel
     using NautechSystems.CSharp.Annotations;
 
     /// <summary>
-    /// The immutable abstract <see cref="ValueObject{T}"/> class. The base class for all domain
-    /// value objects.
+    /// The base class for all domain value objects.
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>
     [Immutable]

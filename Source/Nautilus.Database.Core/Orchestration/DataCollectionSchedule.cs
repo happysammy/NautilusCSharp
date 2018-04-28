@@ -6,14 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using NautechSystems.CSharp;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Orchestration
 {
+    using System;
+    using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Keys;
+
     /// <summary>
     /// A class to assist the scheduling of data collection.
     /// </summary>

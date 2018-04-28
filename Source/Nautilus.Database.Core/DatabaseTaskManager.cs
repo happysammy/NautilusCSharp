@@ -6,21 +6,22 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using Akka.Actor;
-using NautechSystems.CSharp;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
-using NodaTime;
-
 namespace Nautilus.Database.Core
 {
+    using System;
+    using Akka.Actor;
+    using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Messages;
     using Nautilus.Database.Core.Messages.Events;
     using Nautilus.Database.Core.Messages.Queries;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// The component which manages the queue of job messages being sent to the database.
@@ -28,27 +29,30 @@ namespace Nautilus.Database.Core
     public class DatabaseTaskManager : ActorComponentBase
     {
         private readonly IMarketDataRepository marketDataRepository;
-        private readonly IEconomicNewsEventRepository<EconomicNewsEvent> economicNewsEventRepository;
+        private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseTaskManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="marketDataRepository">The market data repository.</param>
-        /// <param name="economicNewsEventRepository">The news event repository.</param>
+        /// <param name="economicEventRepository">The news event repository.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public DatabaseTaskManager(
             ComponentryContainer container,
             IMarketDataRepository marketDataRepository,
-            IEconomicNewsEventRepository<EconomicNewsEvent> economicNewsEventRepository)
-            : base(container, nameof(DatabaseTaskManager))
+            IEconomicEventRepository<EconomicEvent> economicEventRepository)
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component(nameof(DatabaseTaskManager)),
+                container)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(marketDataRepository, nameof(marketDataRepository));
-            Validate.NotNull(economicNewsEventRepository, nameof(economicNewsEventRepository));
+            Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
 
             this.marketDataRepository = marketDataRepository;
-            this.economicNewsEventRepository = economicNewsEventRepository;
+            this.economicEventRepository = economicEventRepository;
 
             this.Receive<DataStatusRequest>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<MarketDataDelivery>(msg => this.OnMessage(msg, this.Sender));
@@ -59,7 +63,7 @@ namespace Nautilus.Database.Core
         {
             Debug.NotNull(message, nameof(message));
 
-            var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.BarSpecification);
+            var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.SymbolBarData);
 
             sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.Clock.TimeNow()));
         }
@@ -69,18 +73,16 @@ namespace Nautilus.Database.Core
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var barSpec = message.MarketData.BarSpecification;
+            var symbolBarData = message.MarketData.SymbolBarData;
             var result = this.marketDataRepository.Add(message.MarketData);
             this.LogResult(result);
 
-            var lastBarTimeQuery = this.marketDataRepository.LastBarTimestamp(barSpec);
+            var lastBarTimeQuery = this.marketDataRepository.LastBarTimestamp(symbolBarData);
 
-#pragma warning disable IDE0034 // Simplify 'default' expression
             if (result.IsSuccess && lastBarTimeQuery.IsSuccess && lastBarTimeQuery.Value != default(ZonedDateTime))
-#pragma warning restore IDE0034 // Simplify 'default' expression
             {
                 this.Sender.Tell(new MarketDataPersisted(
-                    barSpec,
+                    symbolBarData,
                     lastBarTimeQuery.Value,
                     Guid.NewGuid(),
                     this.Clock.TimeNow()));

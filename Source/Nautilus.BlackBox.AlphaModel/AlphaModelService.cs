@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.AlphaModel
     /// The sealed <see cref="AlphaModelService"/> class. Provides a message end point into the
     /// Alpha Model service.
     /// </summary>
-    public sealed class AlphaModelService : ActorComponentBase
+    public sealed class AlphaModelService : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxSetupContainer storedSetupContainer;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;

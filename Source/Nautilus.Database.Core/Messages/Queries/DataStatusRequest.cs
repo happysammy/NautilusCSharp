@@ -8,37 +8,36 @@
 
 using System;
 using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
-using NautilusDB.Messaging.Base;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Messages.Queries
 {
     using Nautilus.Common.Messaging;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
 
     public sealed class DataStatusRequest : Message
     {
         public DataStatusRequest(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Validate.NotNull(barSpec, nameof(barSpec));
 
-            this.BarSpecification = barSpec;
+            this.SymbolBarData = barSpec;
         }
 
         /// <summary>
         /// Gets the request messages <see cref="BarSpecification"/>.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public SymbolBarData SymbolBarData { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="StartSystem"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(DataStatusRequest)}-{this.Identifier}";
+        public override string ToString() => $"{nameof(DataStatusRequest)}-{this.Id}";
     }
 }

@@ -9,7 +9,6 @@
 using System;
 using NautechSystems.CSharp.CQS;
 using NautechSystems.CSharp.Validation;
-using NautilusDB.Messaging.Base;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Messages.Queries
@@ -47,6 +46,6 @@ namespace Nautilus.Database.Core.Messages.Queries
         /// Gets a string representation of the <see cref="StartSystem"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(DataStatusResponse)}-{this.Identifier}";
+        public override string ToString() => $"{nameof(DataStatusResponse)}-{this.Id}";
     }
 }

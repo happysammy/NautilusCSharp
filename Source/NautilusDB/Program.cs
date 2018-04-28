@@ -10,8 +10,10 @@ namespace NautilusDB
 {
     using Nautilus.Serilog;
     using Microsoft.AspNetCore.Hosting;
-    using global::Serilog;
     using Microsoft.AspNetCore;
+    using Nautilus.Common.Enums;
+
+    using global::Serilog;
 
     /// <summary>
     /// The main entry point for the program.
@@ -22,11 +24,11 @@ namespace NautilusDB
         {
             SerilogLogFactory.Create("NautilusDB");
             var logger = new SerilogLogger();
-            logger.Information("Building ASP.NET Core Web Host...");
+            logger.Information(ServiceContext.AspCoreHost, "Building ASP.NET Core Web Host...");
 
             BuildWebHost(args).Run();
 
-            logger.Information("Closing and flushing Serilog...");
+            logger.Information(ServiceContext.AspCoreHost, "Closing and flushing Serilog...");
             Log.CloseAndFlush();
         }
 

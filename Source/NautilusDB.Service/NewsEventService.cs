@@ -6,43 +6,42 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
-using NautilusDB.Service.Requests;
-using NautilusDB.Service.Responses;
-using ServiceStack;
-
 namespace NautilusDB.Service
 {
+    using System.Collections.Generic;
+    using NautechSystems.CSharp.Validation;
+    using NautilusDB.Service.Requests;
+    using NautilusDB.Service.Responses;
+    using ServiceStack;
     using System.Linq;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// The service which processes incoming <see cref="NewsEventRequest"/>(s).
     /// </summary>
-    public class NewsEventService : ServiceStack.Service
+    public class NewsEventService : Service
     {
         private readonly ILoggingAdapter logger;
-        private readonly IEconomicNewsEventRepository<EconomicNewsEvent> economicNewsEventRepository;
+        private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
 
         public NewsEventService(
             ILoggingAdapter logger,
-            IEconomicNewsEventRepository<EconomicNewsEvent> economicNewsEventRepository)
+            IEconomicEventRepository<EconomicEvent> economicEventRepository)
         {
             Validate.NotNull(logger, nameof(logger));
-            Validate.NotNull(economicNewsEventRepository, nameof(economicNewsEventRepository));
+            Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
 
             this.logger = logger;
-            this.economicNewsEventRepository = economicNewsEventRepository;
+            this.economicEventRepository = economicEventRepository;
         }
 
         public object Get(NewsEventRequest request)
         {
-            var newsEventsQuery = this.economicNewsEventRepository.GetAll(
+            var newsEventsQuery = this.economicEventRepository.GetAll(
                 newsEvent => request.Symbols.Contains(newsEvent.Currency)
                              && request.NewsImpacts.Contains(newsEvent.Impact)
                              && request.FromDateTime.Compare(newsEvent.Time) <= 0
@@ -50,7 +49,7 @@ namespace NautilusDB.Service
 
             this.logger.LogResult(newsEventsQuery);
 
-            var newsEvents = new List<EconomicNewsEvent>();
+            var newsEvents = new List<EconomicEvent>();
 
             if (newsEventsQuery.IsSuccess)
             {

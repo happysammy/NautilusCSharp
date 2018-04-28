@@ -19,7 +19,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// The immutable sealed <see cref="TradeApproved"/> class.
     /// </summary>
     [Immutable]
-    public sealed class TradeApproved : DocumentMessage
+    public sealed class TradeApproved : CommandMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeApproved"/> class.

@@ -9,7 +9,6 @@
 using Funq;
 using NautilusDB.Service;
 using ServiceStack;
-using ServiceStack.Redis;
 
 namespace NautilusDB
 {
@@ -29,8 +28,6 @@ namespace NautilusDB
         /// <param name="container">The Funq container.</param>
         public override void Configure(Container container)
         {
-            container.Register<IRedisClientsManager>(c =>
-                new RedisManagerPool((string)this.AppSettings.Get("REDIS_HOST", "localhost")));
         }
     }
 }

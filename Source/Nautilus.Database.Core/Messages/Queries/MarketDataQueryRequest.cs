@@ -9,8 +9,6 @@
 using System;
 using NautechSystems.CSharp.Annotations;
 using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Types;
-using NautilusDB.Messaging.Base;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Messages.Queries
@@ -21,6 +19,7 @@ namespace Nautilus.Database.Core.Messages.Queries
     public sealed class MarketDataQueryRequest : QueryMessage
     {
         public MarketDataQueryRequest(
+            Symbol symbol,
             BarSpecification barSpecification,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime,
@@ -28,16 +27,22 @@ namespace Nautilus.Database.Core.Messages.Queries
             ZonedDateTime timestamp)
         : base(identifier, timestamp)
         {
+            Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(barSpecification, nameof(barSpecification));
             Validate.NotDefault(fromDateTime, nameof(fromDateTime));
             Validate.NotDefault(toDateTime, nameof(toDateTime));
             Validate.NotDefault(identifier, nameof(identifier));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
+            this.Symbol = symbol;
             this.BarSpecification = barSpecification;
             this.FromDateTime = fromDateTime;
             this.ToDateTime = toDateTime;
         }
+        /// <summary>
+        /// Gets the query messages symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the query messages bar specification.
@@ -58,6 +63,6 @@ namespace Nautilus.Database.Core.Messages.Queries
         /// Gets a string representation of the <see cref="MarketDataQueryRequest"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(MarketDataQueryRequest)}-{this.Identifier}";
+        public override string ToString() => $"{nameof(MarketDataQueryRequest)}-{this.Id}";
     }
 }

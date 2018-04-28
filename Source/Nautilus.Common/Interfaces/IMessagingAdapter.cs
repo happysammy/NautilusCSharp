@@ -17,6 +17,8 @@ namespace Nautilus.Common.Interfaces
     /// </summary>
     public interface IMessagingAdapter
     {
+        void Send(InitializeMessageSwitchboard message);
+
         /// <summary>
         /// Sends the given message to the given receiver marked from the given sender.
         /// </summary>

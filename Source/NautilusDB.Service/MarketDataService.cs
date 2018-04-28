@@ -6,21 +6,19 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using Akka.Actor;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NautilusDB.Service.Requests;
-using NautilusDB.Service.Responses;
-using ServiceStack;
-
 namespace NautilusDB.Service
 {
+    using System;
+    using Akka.Actor;
+    using NautechSystems.CSharp.Validation;
+    using NautilusDB.Service.Requests;
+    using NautilusDB.Service.Responses;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusDB.Messaging.Queries;
+    using ServiceStack;
 
     /// <summary>
     /// The service which processes incoming <see cref="MarketDataRequest"/>(s).
@@ -48,13 +46,12 @@ namespace NautilusDB.Service
         public object Get(MarketDataRequest request)
         {
             var requestBarSpec = new BarSpecification(
-                request.Symbol,
-                request.Exchange.ToEnum<Exchange>(),
                 request.BarQuoteType.ToEnum<BarQuoteType>(),
                 request.BarResolution.ToEnum<BarResolution>(),
                 request.BerPeriod);
 
             var queryMessage = new MarketDataQueryRequest(
+                new Symbol(request.Symbol, request.Exchange.ToEnum<Exchange>()),
                 requestBarSpec,
                 request.FromDateTime.ToZonedDateTimeFromIso(),
                 request.ToDateTime.ToZonedDateTimeFromIso(),
@@ -68,9 +65,9 @@ namespace NautilusDB.Service
                 // Wait
             }
 
-            return marketData.Result.IsSuccess
-                       ? new MarketDataResponse(true, marketData.Result.Message, marketData.Result.MarketData.Value)
-                       : new MarketDataResponse(false, marketData.Result.Message, null);
+            return !marketData.Result.IsSuccess
+                ? new MarketDataResponse(true, marketData.Result.Message, marketData.Result.MarketData.Value)
+                : new MarketDataResponse(false, marketData.Result.Message, null);
         }
     }
 }

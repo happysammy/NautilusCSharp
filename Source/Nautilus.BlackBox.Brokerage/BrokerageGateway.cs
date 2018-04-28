@@ -31,7 +31,7 @@ namespace Nautilus.BlackBox.Brokerage
     /// The sealed <see cref="BrokerageGateway"/> class. The <see cref="Core.BlackBox"/> boundary for the
     /// brokerage implementation.
     /// </summary>
-    public sealed class BrokerageGateway : BusConnectedComponentBase, IBrokerageGateway
+    public sealed class BrokerageGateway : ComponentBusConnectedBase, IBrokerageGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IQuoteProvider quoteProvider;

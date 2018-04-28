@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     /// The sealed <see cref="OrderExpiryController"/> class. Contains and processes all
     /// <see cref="OrderExpiryCounter"/>(s) for a <see cref="SecurityPortfolio"/>.
     /// </summary>
-    public sealed class OrderExpiryController : BusConnectedComponentBase
+    public sealed class OrderExpiryController : ComponentBusConnectedBase
     {
         private readonly IList<OrderExpiryCounter> orderExpiryCounters = new List<OrderExpiryCounter>();
 

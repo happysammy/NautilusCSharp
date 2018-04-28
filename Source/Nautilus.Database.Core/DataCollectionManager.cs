@@ -18,6 +18,7 @@ namespace Nautilus.Database.Core
     using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Collectors;
     using Nautilus.Database.Core.Integrity.Checkers;
@@ -25,24 +26,27 @@ namespace Nautilus.Database.Core
     using Nautilus.Database.Core.Messages;
     using Nautilus.Database.Core.Messages.Commands;
     using Nautilus.Database.Core.Messages.Events;
+    using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.Database.Core.Orchestration;
-    using Nautilus.DomainModel.ValueObjects;
-    using NautilusDB.Messaging.Queries;
+    using Nautilus.Database.Core.Readers;
+    using Nautilus.Database.Core.Types;
+    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// The manager class which contains the separate data collector types and orchestrates their
     /// operations.
     /// </summary>
-    public class DataCollectionManager : ActorComponentBase
+    public class DataCollectionManager : ActorComponentBusConnectedBase
     {
         private readonly IScheduler scheduler;
         private readonly IActorRef databaseTaskActorRef;
         private readonly IBarDataProvider barDataProvider;
-        private readonly Dictionary<BarSpecification, IActorRef> marketDataCollectors;
+        private readonly Dictionary<SymbolBarData, IActorRef> marketDataCollectors;
         private readonly EconomicNewsEventCollector newsEventCollector;
         private readonly DataCollectionSchedule collectionSchedule;
+        private readonly DatabaseSetupContainer storedSetupContainer;
 
-        private Dictionary<BarSpecification, bool> collectionJobsRoster;
+        private Dictionary<SymbolBarData, bool> collectionJobsRoster;
 
         // TODO: Temporary variable to handle Dukascopy CSV initial collection from date.
         private bool isInitialCollection = true;
@@ -51,18 +55,24 @@ namespace Nautilus.Database.Core
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="databaseTaskActorRef">The database task actor ref.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
-            ComponentryContainer container,
+            DatabaseSetupContainer container,
+            IMessagingAdapter messagingAdapter,
             IScheduler scheduler,
             IActorRef databaseTaskActorRef,
             DataCollectionSchedule collectionSchedule,
             IBarDataProvider barDataProvider)
-            : base(container, nameof(DataCollectionManager))
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component(nameof(DataCollectionManager)),
+                container,
+                messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(scheduler, nameof(scheduler));
@@ -72,10 +82,11 @@ namespace Nautilus.Database.Core
             this.scheduler = scheduler;
             this.databaseTaskActorRef = databaseTaskActorRef;
             this.barDataProvider = barDataProvider;
-            this.marketDataCollectors = new Dictionary<BarSpecification, IActorRef>();
+            this.marketDataCollectors = new Dictionary<SymbolBarData, IActorRef>();
             this.newsEventCollector = new EconomicNewsEventCollector();
             this.collectionSchedule = collectionSchedule;
-            this.collectionJobsRoster = new Dictionary<BarSpecification, bool>();
+            this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
+            this.storedSetupContainer = container;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData>(msg => this.OnMessage(msg));
@@ -100,7 +111,7 @@ namespace Nautilus.Database.Core
 
             if (message.DataType == DataType.Bar)
             {
-                this.collectionJobsRoster = new Dictionary<BarSpecification, bool>();
+                this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
 
                 foreach (var collector in this.marketDataCollectors.Keys)
                 {
@@ -125,7 +136,7 @@ namespace Nautilus.Database.Core
             if (this.barDataProvider.IsBarDataCheckOn)
             {
                 var result = BarDataChecker.CheckBars(
-                    message.MarketData.BarSpecification,
+                    message.MarketData.SymbolBarData,
                     message.MarketData.Bars);
 
                 if (result.IsSuccess)
@@ -158,21 +169,21 @@ namespace Nautilus.Database.Core
         private void OnMessage(MarketDataPersisted message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.DictionaryContainsKey(message.BarSpecification, nameof(message.BarSpecification), this.marketDataCollectors);
+            Debug.DictionaryContainsKey(message.SymbolBarData, nameof(message.SymbolBarData.BarSpecification), this.marketDataCollectors);
 
-            this.marketDataCollectors[message.BarSpecification].Tell(message);
+            this.marketDataCollectors[message.SymbolBarData].Tell(message);
         }
 
         private void OnMessage(AllDataCollected message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.collectionJobsRoster[message.BarSpecification] = true;
+            this.collectionJobsRoster[message.SymbolBarData] = true;
 
             if (this.collectionJobsRoster.All(c => c.Value == true))
             {
-                this.Logger.Information(
-                    $"{this.ComponentName} data collection completed for {this.marketDataCollectors.Count} collectors...");
+                this.Log(LogLevel.Information,
+                    $"Data collection completed for {this.marketDataCollectors.Count} collectors...");
 
                 this.ScheduleNextCollection();
 
@@ -184,9 +195,9 @@ namespace Nautilus.Database.Core
 
         private void InitializeMarketDataCollectors()
         {
-            this.Logger.Information($"{this.ComponentName} initializing all market data collectors...");
+            this.Log(LogLevel.Information, $"Initializing all market data collectors...");
 
-            foreach (var barSpec in this.barDataProvider.BarSpecifications)
+            foreach (var barSpec in this.barDataProvider.SymbolBarDatas)
             {
                 var dataReader = new CsvBarDataReader(
                     barSpec,
@@ -194,7 +205,8 @@ namespace Nautilus.Database.Core
 
                 var collectorRef = Context.ActorOf(Props.Create(
                     () => new MarketDataCollector(
-                        this.Container,
+                        this.storedSetupContainer,
+                        this.MessagingAdapter,
                         dataReader,
                         this.collectionSchedule)));
 
@@ -204,12 +216,12 @@ namespace Nautilus.Database.Core
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
-                this.Logger.Debug($"{this.Component} waiting for DataStatusResponse for {barSpec}...");
+                this.Log(LogLevel.Debug, $"Waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
 
                 if (dataStatusTask.IsCompletedSuccessfully)
                 {
-                    this.Logger.Debug($"{this.Component} received a DataStatusResponse for {barSpec} and sending to collector");
+                    this.Log(LogLevel.Debug, $"Received a DataStatusResponse for {barSpec} and sending to collector");
 
                     collectorRef.Tell(dataStatusTask.Result, this.Self);
                 }
@@ -225,7 +237,7 @@ namespace Nautilus.Database.Core
                     this.collectionSchedule.NextCollectionTime);
             }
 
-            this.collectionJobsRoster = new Dictionary<BarSpecification, bool>();
+            this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
 
             this.Self.Tell(new CollectData(
                 DataType.Bar,
@@ -242,8 +254,9 @@ namespace Nautilus.Database.Core
                 Guid.NewGuid(),
                 this.Clock.TimeNow()));
 
-            this.Logger.Information(
-                $"{this.ComponentName} initiating market data collection for {nextCollectorOffTheRank.Key}...");
+            this.Log(
+                LogLevel.Information,
+                $"Initiating market data collection for {nextCollectorOffTheRank.Key}...");
         }
 
         private void ScheduleNextCollection()
@@ -270,15 +283,15 @@ namespace Nautilus.Database.Core
                     this.Clock.TimeNow()),
                 this.Self);
 
-            this.Logger.Information(
-                $"{this.ComponentName} scheduled next collection time for {this.collectionSchedule.NextCollectionTime.ToIsoString()}");
+            this.Log(LogLevel.Information,
+                $"Scheduled next collection time for {this.collectionSchedule.NextCollectionTime.ToIsoString()}");
         }
 
         private IReadOnlyList<string> GetCurrencyPairsStringList()
         {
             return this.marketDataCollectors.Keys
                 .ToList()
-                .Select(k => k.Symbol)
+                .Select(k => k.Symbol.Value)
                 .Distinct()
                 .ToList()
                 .AsReadOnly();

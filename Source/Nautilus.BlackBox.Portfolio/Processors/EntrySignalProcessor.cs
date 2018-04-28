@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     /// <summary>
     /// The sealed <see cref="EntrySignalProcessor"/> class.
     /// </summary>
-    public sealed class EntrySignalProcessor : BusConnectedComponentBase
+    public sealed class EntrySignalProcessor : ComponentBusConnectedBase
     {
         private readonly Instrument instrument;
         private readonly OrderPacketBuilder orderPacketBuilder;

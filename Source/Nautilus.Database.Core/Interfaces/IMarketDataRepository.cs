@@ -6,21 +6,22 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using NautechSystems.CSharp.CQS;
-using NautilusDB.Core.Types;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Interfaces
 {
+    using Nautilus.DomainModel.ValueObjects;
+    using NautechSystems.CSharp.CQS;
+    using Nautilus.Database.Core.Types;
+    using NodaTime;
+
     public interface IMarketDataRepository
     {
         /// <summary>
         /// Returns the count of bars persisted within the database with the given
         /// <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="symbolBarData">The symbol bar data.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        long BarsCount(BarSpecification barSpec);
+        long BarsCount(SymbolBarData symbolBarData);
 
         /// <summary>
         /// Returns the total count of bars persisted within the database.
@@ -52,6 +53,6 @@ namespace Nautilus.Database.Core.Interfaces
         /// </summary>
         /// <param name="barSpec">The bar specification.</param>
         /// <returns>A query result of <see cref="ZonedDateTime"/>.</returns>
-        QueryResult<ZonedDateTime> LastBarTimestamp(BarSpecification barSpec);
+        QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarData barSpec);
     }
 }

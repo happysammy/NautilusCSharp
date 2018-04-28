@@ -8,6 +8,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -79,6 +80,22 @@ namespace Nautilus.Common.Componentry
         protected void Log(LogLevel logLevel, string logText)
         {
             this.Logger.Log(logLevel, logText);
+        }
+
+        /// <summary>
+        /// Logs the result with the <see cref="ILogger"/>.
+        /// </summary>
+        /// <param name="result">The command result.</param>
+        public void LogResult(ResultBase result)
+        {
+            if (result.IsSuccess)
+            {
+                this.Log(LogLevel.Information, result.Message);
+            }
+            else
+            {
+                this.Log(LogLevel.Warning, result.Message);
+            }
         }
 
         /// <summary>

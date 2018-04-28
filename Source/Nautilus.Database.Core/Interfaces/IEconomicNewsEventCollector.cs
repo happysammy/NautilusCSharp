@@ -10,17 +10,17 @@ namespace Nautilus.Database.Core.Interfaces
 {
     using System.Collections.Generic;
     using NautechSystems.CSharp.CQS;
-    using NautilusDB.Core.Types;
+    using Nautilus.Database.Core.Types;
     using NodaTime;
     using Nautilus.DomainModel.Entities;
 
     public interface IEconomicNewsEventCollector
     {
         /// <summary>
-        /// Returns all <see cref="EconomicNewsEvent"/> of the applicable currency symbol.
+        /// Returns all <see cref="EconomicEvent"/> of the applicable currency symbol.
         /// </summary>
         /// <returns>A query result of <see cref="IReadOnlyCollection{EconomicNewsEvent}"/>.</returns>
-        QueryResult<IReadOnlyCollection<EconomicNewsEvent>> GetAllEvents();
+        QueryResult<IReadOnlyCollection<EconomicEvent>> GetAllEvents();
 
         /// <summary>
         /// Returns a <see cref="MarketDataFrame"/> of the bars data from and including the given
@@ -28,6 +28,6 @@ namespace Nautilus.Database.Core.Interfaces
         /// </summary>
         /// <param name="fromDateTime">The from date time.</param>
         /// <returns>A query result of <see cref="IReadOnlyCollection{EconomicNewsEvent}"/>.</returns>
-        QueryResult<IReadOnlyCollection<EconomicNewsEvent>> GetEvents(ZonedDateTime fromDateTime);
+        QueryResult<IReadOnlyCollection<EconomicEvent>> GetEvents(ZonedDateTime fromDateTime);
     }
 }

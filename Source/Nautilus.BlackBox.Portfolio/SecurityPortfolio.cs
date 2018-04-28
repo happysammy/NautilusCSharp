@@ -27,7 +27,7 @@ namespace Nautilus.BlackBox.Portfolio
     /// <summary>
     /// The sealed <see cref="SecurityPortfolio"/> class.
     /// </summary>
-    public sealed class SecurityPortfolio : ActorComponentBase
+    public sealed class SecurityPortfolio : ActorComponentBusConnectedBase
     {
         private readonly Instrument instrument;
         private readonly TradeBook tradeBook;

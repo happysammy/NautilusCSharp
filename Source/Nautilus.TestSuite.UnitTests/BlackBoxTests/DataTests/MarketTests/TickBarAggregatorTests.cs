@@ -53,9 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 this.testActorSystem,
-                NautilusEnvironment.Live,
-                this.setupContainer.Clock,
-                this.setupContainer.LoggerFactory);
+                this.setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             this.messagingAdapter = messagingServiceFactory.MessagingAdapter;
@@ -69,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Tick, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),
@@ -109,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Tick, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),

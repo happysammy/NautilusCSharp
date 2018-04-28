@@ -19,10 +19,9 @@ namespace Nautilus.Database.Core.Types
     using Nautilus.DomainModel.Enums;
 
     [Immutable]
-    [Serializable]
     public class EconomicNewsEventFrame
     {
-        public EconomicNewsEventFrame(IReadOnlyCollection<EconomicNewsEvent> events)
+        public EconomicNewsEventFrame(IReadOnlyCollection<EconomicEvent> events)
         {
             Validate.ReadOnlyCollectionNotNullOrEmpty(events, nameof(events));
 
@@ -38,7 +37,7 @@ namespace Nautilus.Database.Core.Types
         /// <summary>
         /// Gets the economic news event frames list of events.
         /// </summary>
-        public IReadOnlyCollection<EconomicNewsEvent> Events { get; }
+        public IReadOnlyCollection<EconomicEvent> Events { get; }
 
         /// <summary>
         /// Gets the economic news event frames first event time.

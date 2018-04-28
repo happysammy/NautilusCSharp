@@ -11,11 +11,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Util.Internal;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
-    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -52,9 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 this.testActorSystem,
-                NautilusEnvironment.Live,
-                this.setupContainer.Clock,
-                this.setupContainer.LoggerFactory);
+                this.setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             this.messagingAdapter = messagingServiceFactory.MessagingAdapter;
@@ -68,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),
@@ -164,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Minute, 5),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),
@@ -233,7 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Arrange
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                new BarSpecification(BarTimeFrame.Hour, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1),
                 new TradeType("TestScalp"),
                 0.00001m,
                 Guid.NewGuid(),

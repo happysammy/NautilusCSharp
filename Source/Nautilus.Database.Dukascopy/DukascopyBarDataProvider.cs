@@ -17,6 +17,7 @@ namespace Nautilus.Database.Dukascopy
     using NautechSystems.CSharp.Validation;
     using Nautilus.Database.Core.Configuration;
     using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -45,7 +46,7 @@ namespace Nautilus.Database.Dukascopy
             Validate.NotNull(initialFromDateString, nameof(initialFromDateString));
             Validate.Int32NotOutOfRange(collectionOffsetMinutes, nameof(collectionOffsetMinutes), 0, int.MaxValue);
 
-            this.BarSpecifications = BuildBarSpecifications(config.CurrencyPairs, config.BarResolutions);
+            this.SymbolBarDatas = BuildBarSpecifications(config.CurrencyPairs, config.BarResolutions);
             this.DataPath = new DirectoryInfo(config.CsvDataDirectory);
 
             this.HistoricConfigEditor = new DukascopyHistoricConfigEditor(
@@ -59,10 +60,7 @@ namespace Nautilus.Database.Dukascopy
             this.IsBarDataCheckOn = config.IsBarDataCheckOn;
         }
 
-        /// <summary>
-        /// Gets the <see cref="Dukascopy"/> bar specifications.
-        /// </summary>
-        public IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
+        public IReadOnlyCollection<SymbolBarData> SymbolBarDatas { get; }
 
         /// <summary>
         /// Gets the <see cref="Dukascopy"/> CSV data path.
@@ -134,18 +132,18 @@ namespace Nautilus.Database.Dukascopy
             return this.HistoricConfigEditor.UpdateConfigCsv(currencyPairs, fromDateTime, toDateTime);
         }
 
-        private static IReadOnlyCollection<BarSpecification> BuildBarSpecifications(
+        private static IReadOnlyCollection<SymbolBarData> BuildBarSpecifications(
             IReadOnlyCollection<string> currencyPairs,
             IReadOnlyCollection<string> barResolutions)
         {
-            var barSpecs = new List<BarSpecification>();
+            var barSpecs = new List<SymbolBarData>();
 
             foreach (var symbol in currencyPairs.Distinct())
             {
                 foreach (var resolution in barResolutions)
                 {
-                    barSpecs.Add(new BarSpecification(new Symbol(symbol, Exchange.Dukascopy), BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1));
-                    barSpecs.Add(new BarSpecification(new Symbol(symbol, Exchange.Dukascopy), BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1));
+                    barSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1)));
+                    barSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1)));
                 }
             }
 

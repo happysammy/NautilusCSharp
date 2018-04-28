@@ -6,41 +6,41 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Linq;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-using NodaTime;
-
-namespace NautilusDB.Core.Types
+namespace Nautilus.Database.Core.Types
 {
+    using Nautilus.DomainModel.ValueObjects;
+    using System;
+    using System.Linq;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+
     /// <summary>
     /// Contains financial market trade bar data.
     /// </summary>
     [Immutable]
-    [Serializable]
     public sealed class MarketDataFrame
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketDataFrame"/> class.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="symbolBarData">The symbol bar data.</param>
         /// <param name="bars">The bars dictionary.</param>
         /// <exception cref="ValidationException">Throws if the bar specification is the default
         /// value, or if the bars collection is null or empty.</exception>
-        public MarketDataFrame(BarSpecification barSpec, Bar[] bars)
+        public MarketDataFrame(SymbolBarData symbolBarData, Bar[] bars)
         {
-            Validate.NotDefault(barSpec, nameof(barSpec));
+            Validate.NotNull(symbolBarData, nameof(symbolBarData));
             Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
 
-            this.BarSpecification = barSpec;
+            this.SymbolBarData = symbolBarData;
             this.Bars = bars;
         }
 
         /// <summary>
-        /// Gets the market data frames bar specification.
+        /// Gets the market data frames symbol.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public SymbolBarData SymbolBarData { get; }
 
         /// <summary>
         /// Gets the market data frames bars.

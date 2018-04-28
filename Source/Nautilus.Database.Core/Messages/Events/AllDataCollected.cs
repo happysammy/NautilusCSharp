@@ -12,24 +12,24 @@ namespace Nautilus.Database.Core.Messages.Events
     using NautechSystems.CSharp.Validation;
     using NodaTime;
     using Nautilus.Core;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Database.Core.Types;
 
     public class AllDataCollected : Event
     {
         public AllDataCollected(
-            BarSpecification barSpec,
+            SymbolBarData symbolBarData,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(symbolBarData, nameof(symbolBarData));
             Validate.NotDefault(identifier, nameof(identifier));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.BarSpecification = barSpec;
+            this.SymbolBarData = symbolBarData;
         }
 
-        public BarSpecification BarSpecification { get; }
+        public SymbolBarData SymbolBarData { get; }
 
 
         /// <summary>

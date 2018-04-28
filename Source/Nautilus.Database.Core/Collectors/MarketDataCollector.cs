@@ -16,10 +16,12 @@ namespace Nautilus.Database.Core.Collectors
     using Nautilus.Database.Core.Messages.Commands;
     using Nautilus.Database.Core.Messages.Events;
     using Nautilus.Database.Core.Orchestration;
-    using NautilusDB.Messaging.Queries;
     using System;
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Database.Core.Messages.Queries;
+    using Nautilus.DomainModel.Factories;
     using NodaTime;
 
     public class MarketDataCollector : ActorComponentBase
@@ -29,10 +31,14 @@ namespace Nautilus.Database.Core.Collectors
         private Option<ZonedDateTime?> lastPersistedBarTime;
 
         public MarketDataCollector(
-            ComponentryContainer container,
+            DatabaseSetupContainer container,
+            IMessagingAdapter messagingAdapter,
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
-            : base(ServiceContext.Database, container, $"{nameof(MarketDataCollector)}-{dataReader.BarSpecification}")
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component($"{nameof(MarketDataCollector)}-{dataReader.SymbolBarData}"),
+                container)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(dataReader, nameof(dataReader));
@@ -58,9 +64,9 @@ namespace Nautilus.Database.Core.Collectors
 
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
-                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.BarSpecification}");
+                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.SymbolBarData}");
 
-                Context.Parent.Tell(new AllDataCollected(this.dataReader.BarSpecification, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarData, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
 
                 return;
             }
@@ -85,7 +91,7 @@ namespace Nautilus.Database.Core.Collectors
 
                     this.collectionSchedule.UpdateLastCollectedTime(this.Clock.TimeNow());
 
-                    this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
+                    //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
                     this.Log(LogLevel.Debug, $"{this.Component} updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
                 }
 
@@ -95,7 +101,7 @@ namespace Nautilus.Database.Core.Collectors
                 }
             }
 
-            Context.Parent.Tell(new AllDataCollected(this.dataReader.BarSpecification, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarData, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
         }
 
         private void OnMessage(DataStatusResponse message)

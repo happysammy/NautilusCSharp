@@ -15,6 +15,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
     using NautechSystems.CSharp.Validation;
     using NodaTime;
     using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
 
@@ -31,7 +32,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         /// <param name="barSpec">The bar specification to check.</param>
         /// <param name="bars">The bars to check.</param>
         /// <returns>A result and anomaly list of <see cref="string"/>(s).</returns>
-        public static QueryResult<List<string>> CheckBars(BarSpecification barSpec, Bar[] bars)
+        public static QueryResult<List<string>> CheckBars(SymbolBarData barSpec, Bar[] bars)
         {
             Validate.NotNull(barSpec, nameof(barSpec));
             Validate.NotNull(bars, nameof(bars));
@@ -54,7 +55,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckDuplicateBars(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             Bar[] bars,
             List<string> anomalyList)
         {
@@ -72,7 +73,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsInOrder(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             Bar[] bars,
             List<string> anomalyList)
         {
@@ -91,14 +92,14 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsComplete(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             Bar[] bars,
             List<string> anomalyList)
         {
             // Don't refactor Length - 1.
             for (var i = 0; i < bars.Length - 1; i++)
             {
-                if (bars[i + 1].Timestamp - bars[i].Timestamp != barSpec.GetBarDuration())
+                if (bars[i + 1].Timestamp - bars[i].Timestamp != barSpec.BarSpecification.Duration)
                 {
                     anomalyList.Add(
                         $"DataAnomaly: Missing bar "
@@ -109,7 +110,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         }
 
         private static QueryResult<List<string>> PassResult(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
@@ -122,7 +123,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         }
 
         private static QueryResult<List<string>> FailResult(
-            BarSpecification barSpec,
+            SymbolBarData barSpec,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)

@@ -10,14 +10,15 @@ namespace Nautilus.Database.Core
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Messages;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Database.Core.Messages;
+    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// The main macro object which contains the <see cref="NautilusDatabase"/> and presents its API.
@@ -25,70 +26,46 @@ namespace Nautilus.Database.Core
     public sealed class NautilusDatabase : ComponentBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
+        private readonly IMessagingAdapter messagingAdapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
         /// </summary>
-        /// <param name="container">The componentry container.</param>
+        /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="actorReferences">The actor references.</param>
+        /// <param name="messagingAdatper">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public NautilusDatabase(
-            ComponentryContainer container,
+            DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
-            ActorReferences actorReferences)
-            : base(container, nameof(NautilusDatabase))
+            IMessagingAdapter messagingAdatper,
+            IReadOnlyDictionary<Enum, IActorRef> addresses)
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component(nameof(NautilusDatabase)),
+                setupContainer)
         {
-            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(actorSystem, nameof(actorSystem));
-            Validate.NotNull(actorReferences, nameof(actorReferences));
+            Validate.NotNull(messagingAdatper, nameof(messagingAdatper));
 
             this.actorSystem = actorSystem;
-            this.actorReferences = actorReferences;
+            this.messagingAdapter = messagingAdatper;
+
+            messagingAdapter.Send(new InitializeMessageSwitchboard(
+                new Switchboard(addresses),
+                setupContainer.GuidFactory.NewGuid(),
+                this.TimeNow()));
         }
 
-        public async void Start()
+        public void Start()
         {
-            var status = await this.RequestSystemStatus();
-
-            if (status == SystemStatus.Failure || status == SystemStatus.Suspended)
-            {
-                this.Logger.Warning($"{this.Component} cannot start due to a suspended or failed component.");
-            }
-            else
-            {
-                this.Logger.Information($"{this.Component} sending StartSystem message to all components...");
-
-                this.actorReferences.DataCollectionManager.Tell(
-                    new StartSystem(
-                        Guid.NewGuid(),
-                        this.Clock.TimeNow()));
-            }
-        }
-
-        public async Task<SystemStatus> RequestSystemStatus()
-        {
-            var statusRequest = new SystemStatusRequest(Guid.NewGuid(), this.Clock.TimeNow());
-            var startupTasks = new List<Task<SystemStatusResponse>>
-                                   {
-                                       this.actorReferences
-                                           .DatabaseTaskManager
-                                           .Ask<SystemStatusResponse>(statusRequest),
-
-                                       this.actorReferences
-                                           .DataCollectionManager
-                                           .Ask<SystemStatusResponse>(statusRequest)
-                                   };
-
-            await Task.WhenAll(startupTasks);
-
-            startupTasks.ForEach(t => this.Logger.Information(
-                $"{t.Result.ComponentName}: "
-              + $"SystemStatus={t.Result.Status}"));
-
-            return startupTasks.Any(r => r.Result.Status == SystemStatus.Failure)
-                             ? SystemStatus.Failure
-                             : SystemStatus.OK;
+            this.messagingAdapter.Send(
+                DatabaseService.DatabaseCollectionManager,
+                new StartSystem(
+                    Guid.NewGuid(),
+                    this.Clock.TimeNow()),
+                DatabaseService.NautilusDatabase);
         }
 
         /// <summary>
@@ -99,19 +76,19 @@ namespace Nautilus.Database.Core
             // Placeholder for the log events (do not refactor away).
             var actorSystemName = this.actorSystem.Name;
 
-            this.Logger.Information($"{this.ComponentName} {actorSystemName} ActorSystem shutting down...");
+            this.Log(LogLevel.Information, $"{this.Component} {actorSystemName} ActorSystem shutting down...");
 
-            var shutdownTasks = new Task[]
-            {
-                this.actorReferences.DataCollectionManager.GracefulStop(TimeSpan.FromSeconds(10)),
-                this.actorReferences.DatabaseTaskManager.GracefulStop(TimeSpan.FromSeconds(10))
-            };
+//            var shutdownTasks = new Task[]
+//            {
+//                this.actorReferences.DataCollectionManager.GracefulStop(TimeSpan.FromSeconds(10)),
+//                this.actorReferences.DatabaseTaskManager.GracefulStop(TimeSpan.FromSeconds(10))
+//            };
 
-            this.Logger.Information($"{this.ComponentName} waiting for actors to shut down...");
-            Task.WhenAll(shutdownTasks);
+            this.Log(LogLevel.Information, $"{this.Component} waiting for actors to shut down...");
+            //Task.WhenAll(shutdownTasks);
 
             this.actorSystem.Terminate();
-            this.Logger.Information($"{this.ComponentName} {actorSystemName} terminated");
+            this.Log(LogLevel.Information, $"{this.Component} {actorSystemName} terminated");
 
             this.Dispose();
         }

@@ -10,9 +10,9 @@ namespace Nautilus.Database.Core.Interfaces
 {
     using System.Collections.Generic;
     using System.IO;
+    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides the meta-data for a market data provider.
@@ -23,7 +23,7 @@ namespace Nautilus.Database.Core.Interfaces
         /// Gets a list of all bar specifications provided by the data provider.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
+        IReadOnlyCollection<SymbolBarData> SymbolBarDatas { get; }
 
         /// <summary>
         /// Gets the directory info for the CSV data path.

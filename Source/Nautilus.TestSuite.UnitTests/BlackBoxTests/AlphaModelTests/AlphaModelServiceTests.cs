@@ -50,9 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                NautilusEnvironment.Live,
-                setupContainer.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
@@ -121,7 +119,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             var message = new MarketDataEvent(
                 new Symbol("some_symbol", Exchange.GLOBEX),
                 new TradeType("Scalp"),
-                new BarSpecification(BarTimeFrame.Minute, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("some_symbol", Exchange.GLOBEX)),
                 0.00001m,
