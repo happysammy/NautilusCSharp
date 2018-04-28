@@ -13,6 +13,8 @@ using NodaTime;
 
 namespace Nautilus.Database.Core.Interfaces
 {
+    using Nautilus.DomainModel.ValueObjects;
+
     public interface IBarDataReader
     {
         /// <summary>

@@ -4,23 +4,27 @@
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------
-
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using NautechSystems.CSharp.Validation;
-using Newtonsoft.Json.Linq;
-using NodaTime;
-using ServiceStack;
+//--------------------------------------------------------------------------------------------------
 
 namespace NautilusDB
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using NautechSystems.CSharp.Validation;
+    using Newtonsoft.Json.Linq;
+    using NodaTime;
+    using ServiceStack;
+    using Nautilus.Database.Core;
+    using Nautilus.Database.Core.Build;
+    using Nautilus.Database.Core.Configuration;
+    using Nautilus.Serilog;
+
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>

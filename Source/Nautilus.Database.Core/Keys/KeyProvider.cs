@@ -6,15 +6,16 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Keys
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using NodaTime;
+    using Nautilus.DomainModel.ValueObjects;
+
     [Immutable]
     public static class KeyProvider
     {
@@ -57,11 +58,11 @@ namespace Nautilus.Database.Core.Keys
 
         public static string GetWildcardString(BarSpecification barSpec)
         {
-            Debug.NotDefault(barSpec, nameof(barSpec));
+            Debug.NotNull(barSpec, nameof(barSpec));
 
             return MarketDataNamespace +
-                   $":{barSpec.Exchange.ToString().ToLower()}" +
-                   $":{barSpec.Symbol.ToLower()}" +
+                   $":{barSpec.Symbol.Exchange.ToString().ToLower()}" +
+                   $":{barSpec.Symbol.Code.ToLower()}" +
                    $":{barSpec.Resolution.ToString().ToLower()}" +
                    $":{barSpec.QuoteType.ToString().ToLower()}" + Wildcard;
         }

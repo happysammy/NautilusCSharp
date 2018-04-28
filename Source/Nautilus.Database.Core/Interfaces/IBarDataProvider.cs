@@ -6,12 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.IO;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Interfaces
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using Nautilus.DomainModel.Enums;
+    using NodaTime;
+    using Nautilus.DomainModel.ValueObjects;
+
     /// <summary>
     /// Provides the meta-data for a market data provider.
     /// </summary>

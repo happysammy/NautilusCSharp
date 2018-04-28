@@ -12,6 +12,8 @@ using NautechSystems.CSharp.Validation;
 
 namespace Nautilus.Database.Core.Keys
 {
+    using Nautilus.DomainModel.ValueObjects;
+
     /// <summary>
     /// Represents a strongly typed Redis Key based on the given market data specification.
     /// </summary>
@@ -83,8 +85,8 @@ namespace Nautilus.Database.Core.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             $"market_data" +
-            $":{this.BarSpecification.Exchange.ToString().ToLower()}" +
-            $":{this.BarSpecification.Symbol.ToLower()}" +
+            $":{this.BarSpecification.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.BarSpecification.Symbol.Code.ToLower()}" +
             $":{this.BarSpecification.Resolution.ToString().ToLower()}" +
             $":{this.BarSpecification.QuoteType.ToString().ToLower()}" +
             $":{this.DateKey}";

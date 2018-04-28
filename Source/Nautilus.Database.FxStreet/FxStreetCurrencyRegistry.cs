@@ -8,34 +8,36 @@
 
 using System.Collections.Generic;
 
-namespace NautilusDB.FxStreet
+namespace Nautilus.Database.FxStreet
 {
+    using Nautilus.DomainModel.Enums;
+
     /// <summary>
     /// Provides a registry of country strings mapped to currency codes.
     /// </summary>
     internal static class FxStreetCurrencyRegistry
     {
-        private static readonly Dictionary<string, Currency> CountryToCurrency =
-            new Dictionary<string, Currency>
+        private static readonly Dictionary<string, CurrencyCode> CountryToCurrency =
+            new Dictionary<string, CurrencyCode>
                 {
-                    { "New Zealand", Currency.NZD },
-                    { "Australia", Currency.AUD },
-                    { "China", Currency.CNY },
-                    { "Japan", Currency.JPY },
-                    { "Switzerland", Currency.CHF },
-                    { "France", Currency.EUR },
-                    { "Spain", Currency.EUR },
-                    { "Italy", Currency.EUR },
-                    { "Portugal", Currency.EUR },
-                    { "Germany", Currency.EUR },
-                    { "Greece", Currency.EUR },
-                    { "United Kingdom", Currency.GBP },
-                    { "European Monetary Union", Currency.EUR },
-                    { "Canada", Currency.CAD },
-                    { "United States", Currency.USD }
+                    { "New Zealand", CurrencyCode.NZD },
+                    { "Australia", CurrencyCode.AUD },
+                    { "China", CurrencyCode.CNY },
+                    { "Japan", CurrencyCode.JPY },
+                    { "Switzerland", CurrencyCode.CHF },
+                    { "France", CurrencyCode.EUR },
+                    { "Spain", CurrencyCode.EUR },
+                    { "Italy", CurrencyCode.EUR },
+                    { "Portugal", CurrencyCode.EUR },
+                    { "Germany", CurrencyCode.EUR },
+                    { "Greece", CurrencyCode.EUR },
+                    { "United Kingdom", CurrencyCode.GBP },
+                    { "European Monetary Union", CurrencyCode.EUR },
+                    { "Canada", CurrencyCode.CAD },
+                    { "United States", CurrencyCode.USD }
                 };
 
-        internal static Currency ForCountry(string country)
+        internal static CurrencyCode ForCountry(string country)
         {
             return CountryToCurrency[country];
         }

@@ -6,14 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Keys
 {
+    using System;
+    using System.Collections.Generic;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using NodaTime;
+
     public static class DateKeyGenerator
     {
         /// <summary>

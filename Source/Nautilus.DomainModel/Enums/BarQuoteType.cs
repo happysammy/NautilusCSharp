@@ -22,5 +22,10 @@ namespace Nautilus.DomainModel.Enums
         /// The ask quote type.
         /// </summary>
         Ask = 1,
+
+        /// <summary>
+        /// The mid quote type.
+        /// </summary>
+        Mid = 2
     }
 }

@@ -8,7 +8,6 @@
 
 using System.Collections.Generic;
 using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
 using NautilusDB.Core.Types;
 using NautilusDB.Service.Requests;
 using NautilusDB.Service.Responses;
@@ -16,7 +15,11 @@ using ServiceStack;
 
 namespace NautilusDB.Service
 {
+    using System.Linq;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// The service which processes incoming <see cref="NewsEventRequest"/>(s).

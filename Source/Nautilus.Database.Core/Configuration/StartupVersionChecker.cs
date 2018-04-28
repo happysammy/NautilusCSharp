@@ -12,6 +12,7 @@ namespace Nautilus.Database.Core.Configuration
     using System.Reflection;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     [Immutable]
@@ -25,18 +26,18 @@ namespace Nautilus.Database.Core.Configuration
         {
             Validate.NotNull(logger, nameof(logger));
 
-            logger.Information($"Running StartupVersionChecker...");
-            logger.Information("----------------------------------------------------------------");
-            logger.Information("NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            logger.Information("Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            logger.Information("----------------------------------------------------------------");
-            logger.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Information($"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Information($"OS {Environment.OSVersion}");
-            logger.Information($".NET Core v{GetNetCoreVersion()}");
-            logger.Information($"Akka.NET v1.3.5");
-            logger.Information($"ServiceStack v5.0.2");
-            logger.Information(logger.AssemblyVersion);
+            logger.Information(LogLevel.Information, $"Running StartupVersionChecker...");
+            logger.Information(LogLevel.Information, "----------------------------------------------------------------");
+            logger.Information(LogLevel.Information, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            logger.Information(LogLevel.Information, "Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            logger.Information(LogLevel.Information, "----------------------------------------------------------------");
+            logger.Information(LogLevel.Information, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            logger.Information(LogLevel.Information, $"Is64BitProcess={Environment.Is64BitProcess}");
+            logger.Information(LogLevel.Information, $"OS {Environment.OSVersion}");
+            logger.Information(LogLevel.Information, $".NET Core v{GetNetCoreVersion()}");
+            logger.Information(LogLevel.Information, $"Akka.NET v1.3.5");
+            logger.Information(LogLevel.Information, $"ServiceStack v5.0.2");
+            logger.Information(LogLevel.Information, logger.AssemblyVersion);
         }
 
         private static string GetNetCoreVersion()

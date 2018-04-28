@@ -6,17 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using NautilusDB.Core.Enums;
-using NautilusDB.Service.Responses;
-using NodaTime;
-using ServiceStack;
-
 namespace NautilusDB.Service.Requests
 {
+    using System.Collections.Generic;
+    using NautilusDB.Core.Enums;
+    using NautilusDB.Service.Responses;
+    using NodaTime;
+    using ServiceStack;
+    using Nautilus.DomainModel.Enums;
+
     public class NewsEventRequest : IReturn<NewsEventResponse>
     {
-        public IList<Currency> Symbols { get; private set; }
+        public IList<CurrencyCode> Symbols { get; private set; }
 
         public IList<NewsImpact> NewsImpacts { get; private set; }
 

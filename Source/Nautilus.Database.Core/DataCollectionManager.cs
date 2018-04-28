@@ -6,22 +6,34 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Akka.Actor;
-using NautechSystems.CSharp.Validation;
-using NodaTime;
-
 namespace Nautilus.Database.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Akka.Actor;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Core.Collectors;
+    using Nautilus.Database.Core.Integrity.Checkers;
+    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Messages;
+    using Nautilus.Database.Core.Messages.Commands;
+    using Nautilus.Database.Core.Messages.Events;
+    using Nautilus.Database.Core.Orchestration;
+    using Nautilus.DomainModel.ValueObjects;
+    using NautilusDB.Messaging.Queries;
+
     /// <summary>
     /// The manager class which contains the separate data collector types and orchestrates their
     /// operations.
     /// </summary>
-    public class DataCollectionManager : ActorComponent
+    public class DataCollectionManager : ActorComponentBase
     {
         private readonly IScheduler scheduler;
         private readonly IActorRef databaseTaskActorRef;
@@ -76,8 +88,6 @@ namespace Nautilus.Database.Core
         {
             Debug.NotNull(message, nameof(message));
 
-            this.LogMsgReceipt(message);
-
             // Provides system time to instantiate other components.
             Thread.Sleep(300);
 
@@ -87,8 +97,6 @@ namespace Nautilus.Database.Core
         private void OnMessage(CollectData message)
         {
             Debug.NotNull(message, nameof(message));
-
-            this.LogMsgReceipt(message);
 
             if (message.DataType == DataType.Bar)
             {
@@ -101,8 +109,9 @@ namespace Nautilus.Database.Core
 
                 var timeNow = this.Clock.TimeNow();
                 this.collectionSchedule.UpdateLastCollectedTime(this.Clock.TimeNow());
-                this.Logger.Information(
-                    $"{this.ComponentName} updated last collection time to {timeNow.ToIsoString()}.");
+                this.Log(
+                    LogLevel.Information,
+                    $"{this.Component} updated last collection time to {timeNow.ToIsoString()}.");
 
                 this.CollectMarketData();
             }
@@ -112,8 +121,6 @@ namespace Nautilus.Database.Core
         private void OnMessage(MarketDataDelivery message)
         {
             Debug.NotNull(message, nameof(message));
-
-            this.LogMsgReceipt(message);
 
             if (this.barDataProvider.IsBarDataCheckOn)
             {
@@ -125,23 +132,23 @@ namespace Nautilus.Database.Core
                 {
                     if (result.Value.Count == 0)
                     {
-                        this.Logger.Information(result.Message);
+                        this.Log(LogLevel.Information, result.Message);
                     }
 
                     if (result.Value.Count > 0)
                     {
-                        this.Logger.Warning(result.Message);
+                        this.Log(LogLevel.Warning, result.Message);
 
                         foreach (var anomaly in result.Value)
                         {
-                            this.Logger.Warning(anomaly);
+                            this.Log(LogLevel.Warning, anomaly);
                         }
                     }
                 }
 
                 if (result.IsFailure)
                 {
-                    this.Logger.Warning(result.FullMessage);
+                    this.Log(LogLevel.Warning, result.FullMessage);
                 }
             }
 
@@ -153,16 +160,12 @@ namespace Nautilus.Database.Core
             Debug.NotNull(message, nameof(message));
             Debug.DictionaryContainsKey(message.BarSpecification, nameof(message.BarSpecification), this.marketDataCollectors);
 
-            this.LogMsgReceipt(message);
-
             this.marketDataCollectors[message.BarSpecification].Tell(message);
         }
 
         private void OnMessage(AllDataCollected message)
         {
             Debug.NotNull(message, nameof(message));
-
-            this.LogMsgReceipt(message);
 
             this.collectionJobsRoster[message.BarSpecification] = true;
 
@@ -191,7 +194,7 @@ namespace Nautilus.Database.Core
 
                 var collectorRef = Context.ActorOf(Props.Create(
                     () => new MarketDataCollector(
-                        this.StoredContainer,
+                        this.Container,
                         dataReader,
                         this.collectionSchedule)));
 
@@ -201,12 +204,12 @@ namespace Nautilus.Database.Core
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
-                this.Logger.Debug($"{this.ComponentName} waiting for DataStatusResponse for {barSpec}...");
+                this.Logger.Debug($"{this.Component} waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
 
                 if (dataStatusTask.IsCompletedSuccessfully)
                 {
-                    this.Logger.Debug($"{this.ComponentName} received a DataStatusResponse for {barSpec} and sending to collector");
+                    this.Logger.Debug($"{this.Component} received a DataStatusResponse for {barSpec} and sending to collector");
 
                     collectorRef.Tell(dataStatusTask.Result, this.Self);
                 }

@@ -12,8 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// The immutable sealed <see cref="Symbol"/> class. Represents a financial market instruments
-    /// symbol.
+    /// Represents a financial market instruments symbol.
     /// </summary>
     [Immutable]
     public sealed class Symbol : ValidString

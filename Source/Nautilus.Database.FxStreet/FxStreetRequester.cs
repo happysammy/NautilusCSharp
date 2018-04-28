@@ -6,15 +6,23 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NautilusDB.FxStreet
+namespace Nautilus.Database.FxStreet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Text;
+    using System.Threading.Tasks;
+    using NautechSystems.CSharp;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
+    using NautilusDB.Core.Enums;
+    using NodaTime;
+
     public sealed class FxStreetRequester : IEconomicNewsEventCollector
     {
         public QueryResult<IReadOnlyCollection<EconomicNewsEvent>> GetAllEvents()

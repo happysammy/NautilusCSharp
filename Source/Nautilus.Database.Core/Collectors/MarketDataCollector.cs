@@ -6,17 +6,21 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System;
-using NautechSystems.CSharp;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Extensions;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Collectors
 {
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Messages;
+    using Nautilus.Database.Core.Messages.Commands;
+    using Nautilus.Database.Core.Messages.Events;
     using Nautilus.Database.Core.Orchestration;
+    using NautilusDB.Messaging.Queries;
+    using System;
+    using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
 
     public class MarketDataCollector : ActorComponentBase
     {
@@ -46,19 +50,15 @@ namespace Nautilus.Database.Core.Collectors
         private void OnMessage(StartSystem message)
         {
             Debug.NotNull(message, nameof(message));
-
-            this.LogMsgReceipt(message);
         }
 
         private void OnMessage(CollectData message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.LogMsgReceipt(message);
-
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
-                this.Logger.Warning($"{this.ComponentName} no csv files found for {this.dataReader.BarSpecification}");
+                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.BarSpecification}");
 
                 Context.Parent.Tell(new AllDataCollected(this.dataReader.BarSpecification, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
 
@@ -85,13 +85,13 @@ namespace Nautilus.Database.Core.Collectors
 
                     this.collectionSchedule.UpdateLastCollectedTime(this.Clock.TimeNow());
 
-                    this.Logger.Debug($"{this.ComponentName} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
-                    this.Logger.Debug($"{this.ComponentName} updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
+                    this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
+                    this.Log(LogLevel.Debug, $"{this.Component} updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
                 }
 
                 if (csvQuery.IsFailure)
                 {
-                    this.Logger.Warning(csvQuery.Message);
+                    this.Log(LogLevel.Warning, csvQuery.Message);
                 }
             }
 
@@ -102,29 +102,25 @@ namespace Nautilus.Database.Core.Collectors
         {
             Debug.NotNull(message, nameof(message));
 
-            this.LogMsgReceipt(message);
-
             if (message.LastTimestampQueryResult.IsSuccess)
             {
                 this.lastPersistedBarTime = message.LastTimestampQueryResult.Value;
 
-                this.Logger.Debug(
-                    $"{this.ComponentName} from {nameof(DataStatusResponse)} " +
+                this.Log(LogLevel.Debug,
+                    $"{this.Component} from {nameof(DataStatusResponse)} " +
                     $"updated last persisted bar timestamp to {this.lastPersistedBarTime.Value.ToIsoString()}");
 
                 return;
             }
 
-            this.Logger.Debug(
-                $"{this.ComponentName} from {nameof(DataStatusResponse)} " +
+            this.Log(LogLevel.Debug,
+                $"{this.Component} from {nameof(DataStatusResponse)} " +
                 $"no persisted bar timestamp");
         }
 
         private void OnMessage(MarketDataPersisted message)
         {
             Debug.NotNull(message, nameof(message));
-
-            this.LogMsgReceipt(message);
 
             this.lastPersistedBarTime = message.LastBarTime;
         }

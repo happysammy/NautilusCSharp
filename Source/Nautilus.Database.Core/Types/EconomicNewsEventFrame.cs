@@ -13,8 +13,11 @@ using NautechSystems.CSharp.Annotations;
 using NautechSystems.CSharp.Validation;
 using NodaTime;
 
-namespace NautilusDB.Core.Types
+namespace Nautilus.Database.Core.Types
 {
+    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
+
     [Immutable]
     [Serializable]
     public class EconomicNewsEventFrame
@@ -26,7 +29,7 @@ namespace NautilusDB.Core.Types
             this.Events = events;
         }
 
-        public IReadOnlyCollection<Currency> CurrencySymbols =>
+        public IReadOnlyCollection<CurrencyCode> CurrencySymbols =>
             this.Events.Select(e => e.Currency)
                 .Distinct()
                 .ToList()

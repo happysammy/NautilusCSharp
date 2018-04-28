@@ -6,12 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-
 namespace Nautilus.Database.Core.Wranglers
 {
+    using System.Collections.Generic;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using Nautilus.Database.Core.Extensions;
+    using Nautilus.Database.Core.Keys;
+    using Nautilus.DomainModel.ValueObjects;
+
     [Immutable]
     public static class BarWrangler
     {

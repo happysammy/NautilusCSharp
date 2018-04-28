@@ -17,7 +17,9 @@ namespace Nautilus.Database.Core
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Core.Messages;
     using Nautilus.DomainModel.Entities;
+    using NautilusDB.Messaging.Queries;
 
     /// <summary>
     /// The component which manages the queue of job messages being sent to the database.
@@ -56,8 +58,6 @@ namespace Nautilus.Database.Core
         {
             Debug.NotNull(message, nameof(message));
 
-            this.LogMsgReceipt(message);
-
             var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.BarSpecification);
 
             sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.Clock.TimeNow()));
@@ -68,11 +68,9 @@ namespace Nautilus.Database.Core
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            this.LogMsgReceipt(message);
-
             var barSpec = message.MarketData.BarSpecification;
             var result = this.marketDataRepository.Add(message.MarketData);
-            this.Logger.LogResult(result);
+            this.LogResult(result);
 
             var lastBarTimeQuery = this.marketDataRepository.LastBarTimestamp(barSpec);
 

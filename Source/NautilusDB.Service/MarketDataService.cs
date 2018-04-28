@@ -17,8 +17,10 @@ using ServiceStack;
 namespace NautilusDB.Service
 {
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusDB.Messaging.Queries;
 
     /// <summary>
     /// The service which processes incoming <see cref="MarketDataRequest"/>(s).
