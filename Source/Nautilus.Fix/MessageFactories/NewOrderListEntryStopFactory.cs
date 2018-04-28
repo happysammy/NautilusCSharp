@@ -1,15 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="NewOrderListEntryStopFactory.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Brokerage.FXCM;
     using Nautilus.DomainModel.Entities;
-
     using NodaTime;
 
     using QuickFix.Fields;

@@ -1,18 +1,18 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="Position.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core;
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

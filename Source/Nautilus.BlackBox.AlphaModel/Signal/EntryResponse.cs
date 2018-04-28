@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="EntryResponse.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Signal
 {
@@ -15,7 +15,7 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="EntryResponse"/> class. Represents the calculated signal 
+    /// The immutable sealed <see cref="EntryResponse"/> class. Represents the calculated signal
     /// response from an <see cref="IEntryAlgorithm"/>.
     /// </summary>
     [Immutable]

@@ -1,19 +1,20 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BlackBoxServicesFactory.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Setup
 {
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// The immutable sealed <see cref="BlackBoxServicesFactory"/> class. A container to store and
-    /// transport the factories which are used to instantiate the services of a 
+    /// transport the factories which are used to instantiate the services of a
     /// <see cref="BlackBox"/> instance.
     /// </summary>
     [Immutable]
@@ -23,8 +24,6 @@ namespace Nautilus.BlackBox.Core.Setup
         /// Initializes a new instance of the <see cref="BlackBoxServicesFactory"/> class.
         /// </summary>
         /// <param name="brokerageGatewayFactory">The brokerage service factory.</param>
-        /// <param name="messagingServiceFactory">The messaging service factory.</param>
-        /// <param name="switchboardFactory">The message switchboard factory.</param>
         /// <param name="alphaModelServiceFactory">The alpha model service factory.</param>
         /// <param name="dataServiceFactory">The data service factory.</param>
         /// <param name="executionServiceFactory">The execution service factory.</param>
@@ -32,8 +31,6 @@ namespace Nautilus.BlackBox.Core.Setup
         /// <param name="riskServiceFactory">The risk service factory.</param>
         public BlackBoxServicesFactory(
             IBrokerageGatewayFactory brokerageGatewayFactory,
-            IMessagingServiceFactory messagingServiceFactory,
-            ISwitchboardFactory switchboardFactory,
             IServiceFactory alphaModelServiceFactory,
             IServiceFactory dataServiceFactory,
             IServiceFactory executionServiceFactory,
@@ -41,8 +38,6 @@ namespace Nautilus.BlackBox.Core.Setup
             IServiceFactory riskServiceFactory)
         {
             Validate.NotNull(brokerageGatewayFactory, nameof(brokerageGatewayFactory));
-            Validate.NotNull(messagingServiceFactory, nameof(messagingServiceFactory));
-            Validate.NotNull(switchboardFactory, nameof(switchboardFactory));
             Validate.NotNull(alphaModelServiceFactory, nameof(alphaModelServiceFactory));
             Validate.NotNull(dataServiceFactory, nameof(dataServiceFactory));
             Validate.NotNull(executionServiceFactory, nameof(executionServiceFactory));
@@ -50,8 +45,6 @@ namespace Nautilus.BlackBox.Core.Setup
             Validate.NotNull(riskServiceFactory, nameof(riskServiceFactory));
 
             this.BrokerageGateway = brokerageGatewayFactory;
-            this.MessagingService = messagingServiceFactory;
-            this.Switchboard = switchboardFactory;
             this.AlphaModelService = alphaModelServiceFactory;
             this.DataService = dataServiceFactory;
             this.ExecutionService = executionServiceFactory;
@@ -63,16 +56,6 @@ namespace Nautilus.BlackBox.Core.Setup
         /// Gets the black box brokerage service factory.
         /// </summary>
         public IBrokerageGatewayFactory BrokerageGateway { get; }
-
-        /// <summary>
-        /// Gets the black box messaging service factory.
-        /// </summary>
-        public IMessagingServiceFactory MessagingService { get; }
-
-        /// <summary>
-        /// Gets the black box message switchboard factory.
-        /// </summary>
-        public ISwitchboardFactory Switchboard { get; }
 
         /// <summary>
         /// Gets the black box alpha model service factory.

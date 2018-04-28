@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -45,7 +46,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             Validate.NotNull(actorContext, nameof(actorContext));
 
             var barStore = new BarStore(strategy.Instrument.Symbol, strategy.TradeProfile.BarSpecification);
-            var barStoreDaily = new BarStore(strategy.Instrument.Symbol, new BarSpecification(BarTimeFrame.Day, 1));
+            var barStoreDaily = new BarStore(strategy.Instrument.Symbol, new BarSpecification(BarResolution.Day, 1));
             var marketDataProvider = new MarketDataProvider(strategy.Instrument.Symbol);
 
             var entrySignalGenerator = new EntrySignalGenerator(

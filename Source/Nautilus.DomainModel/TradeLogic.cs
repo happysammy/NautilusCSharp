@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TradeLogic.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel
 {
@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel
     using Nautilus.DomainModel.Orders;
 
     /// <summary>
-    /// The immutable static <see cref="TradeLogic"/> class. Represents generic trade logic as a 
+    /// The immutable static <see cref="TradeLogic"/> class. Represents generic trade logic as a
     /// finite state machine.
     /// </summary>
     [Immutable]

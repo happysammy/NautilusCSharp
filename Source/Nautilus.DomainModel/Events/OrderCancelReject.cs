@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="OrderCancelReject.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Events
 {
@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderCancelReject"/> class. Represents an event where a 
+    /// The immutable sealed <see cref="OrderCancelReject"/> class. Represents an event where a
     /// request to cancel an order had been rejected by the broker.
     /// </summary>
     [Immutable]

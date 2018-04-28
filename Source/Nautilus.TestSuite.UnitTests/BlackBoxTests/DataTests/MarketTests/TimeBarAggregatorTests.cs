@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TimeBarAggregatorTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 {
@@ -11,12 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Util.Internal;
-    using Nautilus.BlackBox.Data.Market;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Data.Market;
+    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -53,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 this.testActorSystem,
-                BlackBoxEnvironment.Live,
+                NautilusEnvironment.Live,
                 this.setupContainer.Clock,
                 this.setupContainer.LoggerFactory);
 

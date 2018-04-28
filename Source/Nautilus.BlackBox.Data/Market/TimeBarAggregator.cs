@@ -1,26 +1,27 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TimeBarAggregator.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Data.Market
 {
     using System;
     using System.Collections.Generic;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Extensions;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
+    using Nautilus.DomainModel.Extensions;
     using NodaTime;
 
     /// <summary>
@@ -129,7 +130,7 @@ namespace Nautilus.BlackBox.Data.Market
 
             var dotNetDateTime = timeNow.ToDateTimeUtc();
 
-            if (this.BarSpecification.TimeFrame == BarTimeFrame.Second)
+            if (this.BarSpecification.Resolution == BarResolution.Second)
             {
                 var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 
@@ -147,7 +148,7 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.BarSpecification.TimeFrame == BarTimeFrame.Minute)
+            if (this.BarSpecification.Resolution == BarResolution.Minute)
             {
                 var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 
@@ -165,7 +166,7 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.BarSpecification.TimeFrame == BarTimeFrame.Hour)
+            if (this.BarSpecification.Resolution == BarResolution.Hour)
             {
                 var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
 

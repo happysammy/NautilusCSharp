@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="ExitAlgorithmBase.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
@@ -51,38 +51,38 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         protected int ForUnit { get; }
 
         /// <summary>
-        /// Runs a calculation of the exit algorithm for long position exits, and returns an exit 
+        /// Runs a calculation of the exit algorithm for long position exits, and returns an exit
         /// response (optional value).
         /// </summary>
         /// <param name="isSignal">The boolean flag indicating whether there is an exit signal.</param>
-        /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>  
+        /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>
         protected Option<IExitResponse> SignalResponseLong(bool isSignal)
         {
             return isSignal
                 ? Option<IExitResponse>.Some(
                     new ExitResponse(
-                        this.AlgorithmLabel, 
-                        MarketPosition.Long, 
-                        this.ForUnit, 
+                        this.AlgorithmLabel,
+                        MarketPosition.Long,
+                        this.ForUnit,
                         this.BarStore.Timestamp))
 
                 : Option<IExitResponse>.None();
         }
 
         /// <summary>
-        /// Runs a calculation of the exit algorithm for short position exits, and returns an exit 
+        /// Runs a calculation of the exit algorithm for short position exits, and returns an exit
         /// response (optional value).
         /// </summary>
         /// <param name="isSignal">The boolean flag indicating whether there is an exit signal.</param>
-        /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>  
+        /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>
         protected Option<IExitResponse> SignalResponseShort(bool isSignal)
         {
             return isSignal
                 ? Option<IExitResponse>.Some(
                     new ExitResponse(
-                        this.AlgorithmLabel, 
-                        MarketPosition.Short, 
-                        this.ForUnit, 
+                        this.AlgorithmLabel,
+                        MarketPosition.Short,
+                        this.ForUnit,
                         this.BarStore.Timestamp))
 
                 : Option<IExitResponse>.None();

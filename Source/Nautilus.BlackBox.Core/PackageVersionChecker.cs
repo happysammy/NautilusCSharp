@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="PackageVersionChecker.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core
 {
@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Core
     using System.Reflection;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// The immutable static <see cref="PackageVersionChecker"/> class.

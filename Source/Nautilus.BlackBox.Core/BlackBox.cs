@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BlackBox.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core
 {
@@ -15,11 +15,12 @@ namespace Nautilus.BlackBox.Core
     using Akka.Actor;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Logging;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -33,7 +34,7 @@ namespace Nautilus.BlackBox.Core
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IBrokerageGateway brokerageGateway;
-        private readonly IMessagingAdapter messagingAdapter;
+        private readonly MessagingAdapter messagingAdapter;
 
         private readonly ActorSystem actorSystem;
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
@@ -75,11 +76,9 @@ namespace Nautilus.BlackBox.Core
             this.stopwatch.Start();
             this.actorSystem = ActorSystem.Create(actorSystemLabel.ToString());
 
-            this.messagingAdapter = servicesFactory.MessagingService.Create(
+            this.messagingAdapter = MessagingServiceFactory.Create(
                 this.actorSystem,
-                this.Environment,
-                this.Clock,
-                setupContainer.LoggerFactory);
+                setupContainer);
 
             this.instrumentRepository = setupContainer.InstrumentRepository;
 
@@ -108,20 +107,22 @@ namespace Nautilus.BlackBox.Core
                 setupContainer,
                 this.messagingAdapter);
 
-            var switchboard = servicesFactory.Switchboard.Create(
-                alphaModelServiceRef,
-                dataServiceRef,
-                executionServiceRef,
-                portfolioServiceRef,
-                riskServiceRef);
-
             this.brokerageGateway = servicesFactory.BrokerageGateway.Create(
                 setupContainer,
                 this.messagingAdapter,
                 brokerageClient);
 
+            var addresses = new Dictionary<Enum, IActorRef>
+            {
+                { BlackBoxService.AlphaModel, alphaModelServiceRef },
+                { BlackBoxService.Data, dataServiceRef },
+                { BlackBoxService.Execution, executionServiceRef },
+                { BlackBoxService.Portfolio , portfolioServiceRef },
+                { BlackBoxService.Risk, riskServiceRef }
+            };
+
             this.messagingAdapter.Send(new InitializeMessageSwitchboard(
-                switchboard,
+                new Switchboard(addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 

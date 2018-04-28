@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="IntegerNumber.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel
 {
@@ -12,12 +12,12 @@ namespace Nautilus.DomainModel
     using NautechSystems.CSharp.Validation;
 
     /// <summary>
-    /// The immutable abstract <see cref="IntegerNumber{T}"/> class. The base class for all value 
+    /// The immutable abstract <see cref="IntegerNumber{T}"/> class. The base class for all value
     /// objects based on an integer number.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ValueObject{T}"/>.</typeparam>
     [Immutable]
-    public abstract class IntegerNumber<T> : ValueObject<T> where T : IntegerNumber<T>, 
+    public abstract class IntegerNumber<T> : ValueObject<T> where T : IntegerNumber<T>,
         IComparable<IntegerNumber<T>>
     {
         /// <summary>

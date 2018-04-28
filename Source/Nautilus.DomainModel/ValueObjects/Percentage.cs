@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="Percentage.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -68,7 +68,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other percentage.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null, or if the other 
+        /// <exception cref="ValidationException">Throws if the argument is null, or if the other
         /// value is greater than this value.</exception>
         public Percentage Subtract(Percentage other)
         {
@@ -79,7 +79,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a new <see cref="Percentage"/> as the result of the value of this percent 
+        /// Returns a new <see cref="Percentage"/> as the result of the value of this percent
         /// multiplier by the given multiplier.
         /// </summary>
         /// <param name="multiplier">The other percentage.</param>
@@ -106,7 +106,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a new <see cref="Percentage"/> as the result of the value of this percent 
+        /// Returns a new <see cref="Percentage"/> as the result of the value of this percent
         /// divided by the given divisor (cannot be zero).
         /// </summary>
         /// <param name="divisor">The other price.</param>

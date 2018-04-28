@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="AlgorithmBase.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
@@ -132,7 +132,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         protected Price BestStopShort => this.CalculateBestEntryStopBuy();
 
         /// <summary>
-        /// Initializes the algorithm with the given <see cref="IBarStore"/> and 
+        /// Initializes the algorithm with the given <see cref="IBarStore"/> and
         /// <see cref="IMarketDataProvider"/>.
         /// </summary>
         /// <param name="barStore">The bar store.</param>

@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="Symbol.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -12,7 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// The immutable sealed <see cref="Symbol"/> class. Represents a financial market instruments 
+    /// The immutable sealed <see cref="Symbol"/> class. Represents a financial market instruments
     /// symbol.
     /// </summary>
     [Immutable]

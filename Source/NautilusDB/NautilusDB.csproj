@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ServiceStack" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
+    <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
+  </ItemGroup>
+</Project>

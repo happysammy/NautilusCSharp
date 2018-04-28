@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="MarketDataProcessor.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Data.Market
 {
@@ -11,15 +11,15 @@ namespace Nautilus.BlackBox.Data.Market
     using Akka.Actor;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
 
     /// <summary>
     /// The sealed <see cref="MarketDataProcessor"/> class.
@@ -88,7 +88,7 @@ namespace Nautilus.BlackBox.Data.Market
             Validate.EqualTo(message.Symbol, nameof(message.Symbol), this.symbol);
             Validate.DictionaryDoesNotContainKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
 
-            if (message.BarSpecification.TimeFrame == BarTimeFrame.Tick)
+            if (message.BarSpecification.Resolution == BarResolution.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
                     this.storedSetupContainer,
@@ -98,7 +98,7 @@ namespace Nautilus.BlackBox.Data.Market
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }
 
-            if (message.BarSpecification.TimeFrame != BarTimeFrame.Tick)
+            if (message.BarSpecification.Resolution != BarResolution.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
                     this.storedSetupContainer,

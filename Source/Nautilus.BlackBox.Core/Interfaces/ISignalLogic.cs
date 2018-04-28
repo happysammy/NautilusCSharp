@@ -1,9 +1,9 @@
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // <copyright file="ISignalLogic.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// The <see cref="ISignalLogic"/> interface. Contains logic to determine the validity of entry 
+    /// The <see cref="ISignalLogic"/> interface. Contains logic to determine the validity of entry
     /// signals.
     /// </summary>
     public interface ISignalLogic

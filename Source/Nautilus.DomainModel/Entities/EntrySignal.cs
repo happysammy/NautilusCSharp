@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="EntrySignal.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Entities
 {
@@ -103,7 +103,7 @@ namespace Nautilus.DomainModel.Entities
         private Option<ZonedDateTime?> CalculateExpireTime()
         {
             if (this.TradeProfile.BarsValid > 0
-             && this.TradeProfile.BarSpecification.TimeFrame != BarTimeFrame.Tick)
+             && this.TradeProfile.BarSpecification.Resolution != BarResolution.Tick)
             {
                 var expireTime = this.SignalTimestamp.Plus(this.TradeProfile.BarSpecification.Duration * this.TradeProfile.BarsValid);
 

@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="SecurityPortfolioTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 {
@@ -12,14 +12,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Messaging.MessageStore;
-    using Nautilus.BlackBox.Portfolio;
-    using Nautilus.BlackBox.Portfolio.Orders;
-    using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.BlackBox.Portfolio;
+    using Nautilus.BlackBox.Portfolio.Orders;
+    using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                BlackBoxEnvironment.Live,
+                NautilusEnvironment.Live,
                 setupContainer.Clock,
                 setupContainer.LoggerFactory);
 

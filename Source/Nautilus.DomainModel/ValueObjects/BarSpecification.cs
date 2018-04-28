@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BarSpecification.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -23,14 +23,14 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
-        /// <param name="timeFrame">The bar time frame.</param>
+        /// <param name="resolution">The bar time frame.</param>
         /// <param name="period">The bar period.</param>
         /// <exception cref="ValidationException">Throws if the period is zero or negative.</exception>
-        public BarSpecification(BarTimeFrame timeFrame, int period)
+        public BarSpecification(BarResolution resolution, int period)
         {
             Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
-            this.TimeFrame = timeFrame;
+            this.Resolution = resolution;
             this.Period = period;
             this.TimePeriod = this.GetTimePeriod(period);
             this.Duration = this.TimePeriod.ToDuration();
@@ -39,7 +39,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bars time frame.
         /// </summary>
-        public BarTimeFrame TimeFrame { get; }
+        public BarResolution Resolution { get; }
 
         /// <summary>
         /// Gets the bar period.
@@ -59,13 +59,13 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Returns a value indicating whether this bars time period is one day.
         /// </summary>
-        public bool IsOneDayBar => this.TimeFrame == BarTimeFrame.Day && this.Period == 1;
+        public bool IsOneDayBar => this.Resolution == BarResolution.Day && this.Period == 1;
 
         /// <summary>
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.TimeFrame}({this.Period})";
+        public override string ToString() => $"{this.Resolution}({this.Period})";
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.
@@ -83,27 +83,27 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.Int32NotOutOfRange(barPeriod, nameof(barPeriod), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
-            switch (this.TimeFrame)
+            switch (this.Resolution)
             {
-                case BarTimeFrame.Tick:
+                case BarResolution.Tick:
                     return NodaTime.Period.Zero;
 
-                case BarTimeFrame.Second:
+                case BarResolution.Second:
                     return NodaTime.Period.FromSeconds(barPeriod);
 
-                case BarTimeFrame.Minute:
+                case BarResolution.Minute:
                     return NodaTime.Period.FromMinutes(barPeriod);
 
-                case BarTimeFrame.Hour:
+                case BarResolution.Hour:
                     return NodaTime.Period.FromHours(barPeriod);
 
-                case BarTimeFrame.Day:
+                case BarResolution.Day:
                     return NodaTime.Period.FromDays(barPeriod);
 
-                case BarTimeFrame.Week:
+                case BarResolution.Week:
                     return NodaTime.Period.FromWeeks(barPeriod);
 
-                case BarTimeFrame.Month:
+                case BarResolution.Month:
                     return NodaTime.Period.FromMonths(barPeriod);
 
                 default: return NodaTime.Period.Zero;

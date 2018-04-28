@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="MockMessagingServiceFactory.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
@@ -11,13 +11,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Messaging;
+    using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
 
     /// <summary>
     /// The mock messaging service factory.
@@ -52,7 +51,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// </param>
         public void Create(
             ActorSystem actorSystem,
-            BlackBoxEnvironment environment,
+            NautilusEnvironment environment,
             IZonedClock clock,
             ILoggerFactory loggerFactory)
         {

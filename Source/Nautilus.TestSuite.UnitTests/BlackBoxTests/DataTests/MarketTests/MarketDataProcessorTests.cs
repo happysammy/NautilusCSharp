@@ -1,19 +1,19 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="MarketDataProcessorTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.BlackBox.Data.Market;
-    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.BlackBox.Data.Market;
+    using Nautilus.BlackBox.Messaging.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                BlackBoxEnvironment.Live,
+                NautilusEnvironment.Live,
                 setupContainer.Clock,
                 setupContainer.LoggerFactory);
 

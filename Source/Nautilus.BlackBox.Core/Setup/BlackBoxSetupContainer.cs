@@ -1,17 +1,19 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BlackBoxSetupContainer.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Setup
 {
     using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// The immutable sealed <see cref="BlackBoxSetupContainer"/> class. A container to store and
@@ -19,7 +21,7 @@ namespace Nautilus.BlackBox.Core.Setup
     /// instance and its required services and components.
     /// </summary>
     [Immutable]
-    public sealed class BlackBoxSetupContainer
+    public sealed class BlackBoxSetupContainer : ComponentryContainer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBoxSetupContainer"/> class.
@@ -33,7 +35,7 @@ namespace Nautilus.BlackBox.Core.Setup
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
         public BlackBoxSetupContainer(
-            BlackBoxEnvironment environment,
+            NautilusEnvironment environment,
             IZonedClock clock,
             ILoggerFactory loggerFactory,
             IGuidFactory guidFactory,
@@ -41,6 +43,7 @@ namespace Nautilus.BlackBox.Core.Setup
             IQuoteProvider quoteProvider,
             IReadOnlyRiskModel riskModel,
             IReadOnlyBrokerageAccount account)
+        : base(clock, guidFactory, loggerFactory)
         {
             Validate.NotNull(clock, nameof(clock));
             Validate.NotNull(loggerFactory, nameof(loggerFactory));
@@ -51,9 +54,6 @@ namespace Nautilus.BlackBox.Core.Setup
             Validate.NotNull(account, nameof(account));
 
             this.Environment = environment;
-            this.Clock = clock;
-            this.LoggerFactory = loggerFactory;
-            this.GuidFactory = guidFactory;
             this.InstrumentRepository = instrumentRepository;
             this.QuoteProvider = quoteProvider;
             this.RiskModel = riskModel;
@@ -63,22 +63,7 @@ namespace Nautilus.BlackBox.Core.Setup
         /// <summary>
         /// Gets the black box environment.
         /// </summary>
-        public BlackBoxEnvironment Environment { get; }
-
-        /// <summary>
-        /// Gets the black box clock.
-        /// </summary>
-        public IZonedClock Clock { get; }
-
-        /// <summary>
-        /// Gets the black box logger factory.
-        /// </summary>
-        public ILoggerFactory LoggerFactory { get; }
-
-        /// <summary>
-        /// Gets the black box <see cref="Guid"/> factory.
-        /// </summary>
-        public IGuidFactory GuidFactory { get; }
+        public NautilusEnvironment Environment { get; }
 
         /// <summary>
         /// Gets the black box risk model.

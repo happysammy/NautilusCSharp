@@ -1,15 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="FxcmTickValueProvider.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;

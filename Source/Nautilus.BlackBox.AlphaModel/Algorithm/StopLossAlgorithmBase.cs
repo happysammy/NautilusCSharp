@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="StopLossAlgorithmBase.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
@@ -41,8 +41,8 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         /// </summary>
         /// <param name="entryPrice">The entry price.</param>
         /// <param name="stopLossPrice">The stop-loss price.</param>
-        /// <returns>A <see cref="Price"/>.</returns>    
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>   
+        /// <returns>A <see cref="Price"/>.</returns>
+        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         protected Price CalculateFinalStopLossBuy(
             Price entryPrice,
             Price stopLossPrice)

@@ -1,0 +1,93 @@
+﻿{
+  "database": {
+    "compression":  true,
+    "compressionCodec": "gzip"
+  },
+
+  "serviceStack": {
+    "licenseKey": "5928-e1JlZjo1OTI4LE5hbWU6Q2hyaXN0b3BoZXIgU2VsbGVycyxUeXBlOkluZGllLEhhc2g6aWJrMTRjWFllU1UvVWY5dUo2OUJUWkVZOERCUkxKRkovUWxBbDRZRkpiV1hoTEN6WGIxbktUemY0Y3NLaGU4am9WL1dkbjlBVjd0V3hEN2lXM2x2UzdVYWNxVG9aeVoxdXVUcHFaaHZJMzN2UTZ1cG1WYkZoVEcwN1VVS2JGWDR1WnRqTUY5YmVYa1NlNzZ1N1RPakpnMDhZeVFkczBHdXMvN3hQUDR2R3ZvPSxFeHBpcnk6MjAxOS0wMy0xNX0=" 
+  },
+
+  "dukascopy": {
+    "run": true,
+    "collectionSchedule" : {
+      "collectionDay" : "Saturday",
+      "collectionHourUtc" : 12,
+      "collectionMinuteUtc" : 0,
+      "collectionOffsetMinutes" : 1440, 
+      "intervalicCollection" : false,
+      "intervalMinutes" : 360
+    },
+    "csvDataDirectory": "/var/lib/dukas/",
+    "configCsvPath": "/usr/local/bin/historicConfig.csv", 
+    "initialFromDateSpecified": true, 
+    "initialFromDate": "2018.01.01 00:00:00",
+    "barResolutions": [
+      "Hour"
+    ],
+    "timestampParsePattern": "yyyy.MM.dd HH:mm:ss",
+    "volumeMultiple": 1000000,
+    "checkBarDataIntegrity": true,
+    "replaceBars": false, 
+    "currencyPairs": [
+      "AUDCAD",
+      "AUDCHF",
+      "AUDJPY",
+      "AUDNZD",
+      "AUDSGD",
+      "AUDUSD",
+      "CADCHF",
+      "CADHKD",
+      "CADJPY",
+      "CHFJPY",
+      "CHFSGD",
+      "EURAUD",
+      "EURCAD",
+      "EURCHF",
+      "EURDKK",
+      "EURGBP",
+      "EURHKD",
+      "EURHUF",
+      "EURJPY",
+      "EURNOK",
+      "EURNZD",
+      "EURPLN",
+      "EURRUB",
+      "EURSEK",
+      "EURSGD",
+      "EURTRY",
+      "EURUSD",
+      "GBPAUD",
+      "GBPCAD",
+      "GBPCHF",
+      "GBPJPY",
+      "GBPNZD",
+      "GBPUSD",
+      "HKDJPY",
+      "NZDCAD",
+      "NZDCHF",
+      "NZDJPY",
+      "NZDUSD",
+      "SGDJPY",
+      "TRYJPY",
+      "USDCAD",
+      "USDCHF",
+      "USDCNH",
+      "USDCZK",
+      "USDDKK",
+      "USDHKD",
+      "USDHUF",
+      "USDJPY",
+      "USDMXN",
+      "USDNOK",
+      "USDPLN",
+      "USDRON",
+      "USDRUB",
+      "USDSEK",
+      "USDSGD",
+      "USDTRY",
+      "USDZAR",
+      "ZARJPY"
+    ]
+  }
+}

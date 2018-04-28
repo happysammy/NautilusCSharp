@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="FxcmFixMessageHandler.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.Fix
 {
@@ -21,6 +21,7 @@ namespace Nautilus.Fix
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
+    using Currency = QuickFix.Fields.Currency;
     using Symbol = DomainModel.ValueObjects.Symbol;
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace Nautilus.Fix
             {
                 message.GetGroup(i, group);
 
-                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolMapper.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM) : new Symbol("AUDUSD", Exchange.FXCM);
+                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolMapper.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.Fxcm) : new Symbol("AUDUSD", Exchange.Fxcm);
                 var symbolId = new EntityId(symbol.ToString());
                 var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -212,7 +213,7 @@ namespace Nautilus.Fix
 
             this.brokerageGateway.OnQuote(
                 symbol,
-                Exchange.FXCM,
+                Exchange.Fxcm,
                 Convert.ToDecimal(bid),
                 Convert.ToDecimal(ask),
                 timestamp);
@@ -238,7 +239,7 @@ namespace Nautilus.Fix
 
             this.brokerageGateway.OnOrderCancelReject(
                 symbol,
-                Exchange.FXCM,
+                Exchange.Fxcm,
                 orderId,
                 brokerOrderId,
                 cancelRejectResponseTo,
@@ -280,7 +281,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderRejected(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     rejectReason,
                     timestamp);
@@ -290,7 +291,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderCancelled(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -301,7 +302,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderModified(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -317,7 +318,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderWorking(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -334,7 +335,7 @@ namespace Nautilus.Fix
             {
                 this.brokerageGateway.OnOrderExpired(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     orderLabel,
@@ -350,7 +351,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderFilled(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     executionId,
@@ -372,7 +373,7 @@ namespace Nautilus.Fix
 
                 this.brokerageGateway.OnOrderPartiallyFilled(
                     symbol,
-                    Exchange.FXCM,
+                    Exchange.Fxcm,
                     orderId,
                     brokerOrderId,
                     executionId,

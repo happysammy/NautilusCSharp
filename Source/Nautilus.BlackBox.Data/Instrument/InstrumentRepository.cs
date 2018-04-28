@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="InstrumentRepository.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Data.Instrument
 {
@@ -12,17 +12,17 @@ namespace Nautilus.BlackBox.Data.Instrument
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The sealed <see cref="InstrumentRepository"/> class. A repository to hold a collection of
-    /// <see cref="Instrument"/>(s).
+    /// <see cref="DomainModel.Entities.Instrument"/>(s).
     /// </summary>
     internal sealed class InstrumentRepository : IInstrumentRepository
     {

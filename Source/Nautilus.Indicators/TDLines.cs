@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TDLines.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved. 
+//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.Indicators
 {
@@ -11,7 +11,6 @@ namespace Nautilus.Indicators
     using NautechSystems.CSharp.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Indicators.Base;
-
     using NodaTime;
 
     /// <summary>

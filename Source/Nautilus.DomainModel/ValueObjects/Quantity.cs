@@ -1,9 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="Quantity.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -44,7 +44,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         /// <exception cref="ValidationException">Throws if the amount is negative.</exception>
         public static Quantity Create(int amount)
-        {           
+        {
             return new Quantity(amount);
         }
 
@@ -64,7 +64,7 @@ namespace Nautilus.DomainModel.ValueObjects
 
         /// <summary>
         /// Returns a new <see cref="Quantity"/> as the result of the given <see cref="Quantity"/>
-        /// subtracted from this <see cref="Quantity"/> (cannot return a <see cref="Quantity"/> 
+        /// subtracted from this <see cref="Quantity"/> (cannot return a <see cref="Quantity"/>
         /// with a negative value).
         /// </summary>
         /// <param name="other">The other quantity.</param>

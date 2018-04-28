@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="MarketDataProvider.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="MarketDataProvider"/> class. Provides the latest quote and average 
+    /// The sealed <see cref="MarketDataProvider"/> class. Provides the latest quote and average
     /// spread to algorithms.
     /// </summary>
     public sealed class MarketDataProvider : IMarketDataProvider

@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="EntryAlgorithmBase.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
@@ -53,9 +53,9 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             return isSignal && entryPrice >= this.BestEntryStopBuy
                 ? Option<IEntryResponse>.Some(
                     new EntryResponse(
-                        this.AlgorithmLabel, 
-                        OrderSide.Buy, 
-                        entryPrice, 
+                        this.AlgorithmLabel,
+                        OrderSide.Buy,
+                        entryPrice,
                         this.BarStore.Timestamp))
 
                 : Option<IEntryResponse>.None();
@@ -76,9 +76,9 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             return isSignal && entryPrice <= this.BestEntryStopSell
                 ? Option<IEntryResponse>.Some(
                     new EntryResponse(
-                        this.AlgorithmLabel, 
-                        OrderSide.Sell, 
-                        entryPrice, 
+                        this.AlgorithmLabel,
+                        OrderSide.Sell,
+                        entryPrice,
                         this.BarStore.Timestamp))
 
                 : Option<IEntryResponse>.None();

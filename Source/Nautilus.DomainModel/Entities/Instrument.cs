@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="Instrument.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Entities
 {
@@ -260,7 +260,7 @@ namespace Nautilus.DomainModel.Entities
         }
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the 
+        /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the
         /// specified <see cref="object"/>.
         /// </summary>
         /// <param name="obj">The other object.</param>

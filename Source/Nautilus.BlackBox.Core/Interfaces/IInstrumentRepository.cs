@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="IInstrumentRepository.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -56,7 +56,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         QueryResult<Instrument> GetInstrument(Symbol symbol);
 
         /// <summary>
-        /// Returns the <see cref="decimal"/> tick size of the <see cref="Instrument"/> 
+        /// Returns the <see cref="decimal"/> tick size of the <see cref="Instrument"/>
         /// corresponding to the given <see cref="Symbol"/>.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

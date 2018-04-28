@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="ConfigReader.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Setup
 {
@@ -19,7 +19,7 @@ namespace Nautilus.BlackBox.Core.Setup
     public static class ConfigReader
     {
         /// <summary>
-        /// Returns the string value of the given argument name from the given 
+        /// Returns the string value of the given argument name from the given
         /// <see cref="NameValueCollection"/>.
         /// </summary>
         /// <param name="arguments">The arguments.</param>

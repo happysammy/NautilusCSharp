@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="IRiskModel.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -13,8 +13,8 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IRiskModel"/> interface implements <see cref="IReadOnlyRiskModel"/>. 
-    /// Represents a <see cref="BlackBox"/> systems model for quantifying financial market risk 
+    /// The <see cref="IRiskModel"/> interface implements <see cref="IReadOnlyRiskModel"/>.
+    /// Represents a <see cref="BlackBox"/> systems model for quantifying financial market risk
     /// exposure.
     /// </summary>
     public interface IRiskModel : IReadOnlyRiskModel

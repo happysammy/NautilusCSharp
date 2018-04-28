@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="FuzzyCandlesticks.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.Indicators
 {
@@ -15,8 +15,8 @@ namespace Nautilus.Indicators
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Indicators.Base;
     using Nautilus.Indicators.Enums;
-    using Nautilus.Indicators.Extensions;
     using Nautilus.Indicators.Objects;
+    using Nautilus.Indicators.Extensions;
 
     /// <summary>
     /// The fuzzy candlesticks.
@@ -350,8 +350,8 @@ namespace Nautilus.Indicators
                 return CandleDirection.Bull;
             }
 
-            return this.bars[0].Open > this.bars[0].Close 
-                ? CandleDirection.Bear 
+            return this.bars[0].Open > this.bars[0].Close
+                ? CandleDirection.Bear
                 : CandleDirection.None;
         }
 
@@ -388,8 +388,8 @@ namespace Nautilus.Indicators
                 return CandleSize.VeryLarge;
             }
 
-            return this.length >= this.meanLength + (this.sdLength * 3.0) 
-                ? CandleSize.ExtremelyLarge 
+            return this.length >= this.meanLength + (this.sdLength * 3.0)
+                ? CandleSize.ExtremelyLarge
                 : CandleSize.None;
         }
 
@@ -421,8 +421,8 @@ namespace Nautilus.Indicators
                 return CandleBody.Large;
             }
 
-            return this.bodyPercent >= this.meanBodyPercent + this.sdBodyPercent 
-                ? CandleBody.Trend 
+            return this.bodyPercent >= this.meanBodyPercent + this.sdBodyPercent
+                ? CandleBody.Trend
                 : CandleBody.None;
         }
 

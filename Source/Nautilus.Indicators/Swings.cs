@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="Swings.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.Indicators
 {
@@ -38,7 +38,7 @@ namespace Nautilus.Indicators
         /// Initializes a new instance of the <see cref="Swings"/> class.
         /// </summary>
         /// <param name="period">The period (> 0).</param>
-        public Swings(int period) 
+        public Swings(int period)
             : base(nameof(Swings))
         {
             Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);

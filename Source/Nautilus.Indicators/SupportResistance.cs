@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="SupportResistance.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.Indicators
 {
@@ -33,7 +33,7 @@ namespace Nautilus.Indicators
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportResistance"/> class.
         /// </summary>
-        public SupportResistance() : 
+        public SupportResistance() :
             base(nameof(SupportResistance))
         {
             this.DailyBarsCount = 0;

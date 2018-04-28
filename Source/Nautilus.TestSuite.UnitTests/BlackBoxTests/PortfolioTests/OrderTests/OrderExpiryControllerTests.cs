@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="OrderExpiryControllerTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 {
@@ -11,10 +11,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Messaging.MessageStore;
-    using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Messaging.MessageStore;
+    using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.DomainModel;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 testActorSystem,
-                BlackBoxEnvironment.Live,
+                NautilusEnvironment.Live,
                 setupContainer.Clock,
                 setupContainer.LoggerFactory);
 

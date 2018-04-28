@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TrailingStopAlgorithmBase.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
@@ -16,7 +16,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The <see cref="TrailingStopAlgorithmBase"/> class. The base class for all trailing stop 
+    /// The <see cref="TrailingStopAlgorithmBase"/> class. The base class for all trailing stop
     /// algorithms, inherits from <see cref="AlgorithmBase"/>.
     /// </summary>
     public abstract class TrailingStopAlgorithmBase : AlgorithmBase
@@ -51,7 +51,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         protected int ForUnit { get; }
 
         /// <summary>
-        /// Runs a calculation of the trailing stop algorithm for long positions, and returns a 
+        /// Runs a calculation of the trailing stop algorithm for long positions, and returns a
         /// response (optional value).
         /// </summary>
         /// <param name="isSignal">The boolean flag indicating whether there is an exit signal.</param>
@@ -70,17 +70,17 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             return isSignal
                 ? Option<ITrailingStopResponse>.Some(
                     new TrailingStopResponse(
-                        this.AlgorithmLabel, 
-                        MarketPosition.Long, 
-                        stopLossPrice, 
-                        this.ForUnit, 
+                        this.AlgorithmLabel,
+                        MarketPosition.Long,
+                        stopLossPrice,
+                        this.ForUnit,
                         this.BarStore.Timestamp))
 
                 : Option<ITrailingStopResponse>.None();
         }
 
         /// <summary>
-        /// Runs a calculation of the trailing stop algorithm for short positions, and returns a 
+        /// Runs a calculation of the trailing stop algorithm for short positions, and returns a
         /// response (optional value).
         /// </summary>
         /// <param name="isSignal">The boolean flag indicating whether there is an exit signal.</param>
@@ -99,9 +99,9 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             return isSignal
                 ? Option<ITrailingStopResponse>.Some(
                     new TrailingStopResponse(
-                        this.AlgorithmLabel, 
-                        MarketPosition.Short, 
-                        stopLossPrice, 
+                        this.AlgorithmLabel,
+                        MarketPosition.Short,
+                        stopLossPrice,
                         this.ForUnit,
                         this.BarStore.Timestamp))
 

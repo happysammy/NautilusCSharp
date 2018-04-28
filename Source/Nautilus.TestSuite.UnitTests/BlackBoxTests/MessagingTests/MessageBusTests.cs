@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="MessageBusTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
 {
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
 
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 new Label(BlackBoxService.CommandBus.ToString()),
-                BlackBoxEnvironment.Live,
+                NautilusEnvironment.Live,
                 setupContainer.Clock,
                 setupContainer.LoggerFactory,
                 new StandardOutLogger())));

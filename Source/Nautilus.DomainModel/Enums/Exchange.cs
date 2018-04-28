@@ -1,50 +1,23 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="Exchange.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The exchange label.
+    /// The exchange the financial market was traded on.
     /// </summary>
     public enum Exchange
     {
-        /// <summary>
-        /// The simulated exchange.
-        /// </summary>
-        Simulation,
 
-        /// <summary>
-        /// The FXCM venue.
-        /// </summary>
-        FXCM,
+        Simuilation = 0,
 
-        /// <summary>
-        /// The LMAX venue.
-        /// </summary>
-        LMAX,
+        Fxcm = 1,
 
-        /// <summary>
-        /// The New York Stock Exchange venue.
-        /// </summary>
-        NYSE,
-
-        /// <summary>
-        /// The Chicago Mercantile Exchange venue.
-        /// </summary>
-        CME,
-
-        /// <summary>
-        /// The ARCA venue.
-        /// </summary>
-        ARCA,
-
-        /// <summary>
-        /// The GLOBEX venue.
-        /// </summary>
-        GLOBEX
+        Dukascopy = 2
     }
 }

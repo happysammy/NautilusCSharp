@@ -1,36 +1,31 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="NewsImpact.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
-namespace Nautilus.DomainModel.Enums
+namespace NautilusDB.Core.Enums
 {
     /// <summary>
-    /// The <see cref="NewsImpact"/> enumeration. Represents the relative market impact of known
-    /// economic news events.
+    /// The relative historic impact on a financial market of a particular news event type.
     /// </summary>
     public enum NewsImpact
     {
         /// <summary>
-        /// No news impact.
+        /// The low news impact.
         /// </summary>
-        None = 0,
+        Low = 0,
 
         /// <summary>
-        /// Low news impact
+        /// The medium news impact.
         /// </summary>
-        Low = 1,
+        Medium = 1,
 
         /// <summary>
-        /// Medium news impact.
+        /// The high news impact.
         /// </summary>
-        Medium = 2,
-
-        /// <summary>
-        /// High news impact.
-        /// </summary>
-        High = 3
+        High = 2
     }
 }

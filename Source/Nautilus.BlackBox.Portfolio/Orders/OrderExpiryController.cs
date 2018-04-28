@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="OrderExpiryController.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
@@ -11,17 +11,18 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System.Collections.Immutable;
     using System.Linq;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Extensions;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
+    using Nautilus.DomainModel.Extensions;
 
     /// <summary>
     /// The sealed <see cref="OrderExpiryController"/> class. Contains and processes all

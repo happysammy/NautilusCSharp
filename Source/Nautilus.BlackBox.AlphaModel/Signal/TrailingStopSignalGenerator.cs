@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="TrailingStopSignalGenerator.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Signal
 {
@@ -13,8 +13,8 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using NautechSystems.CSharp.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.BlackBox.Core.Interfaces;
     using NautechSystems.CSharp.Extensions;
+    using Nautilus.BlackBox.Core.Interfaces;
 
     /// <summary>
     /// The trailing stop signal processor.

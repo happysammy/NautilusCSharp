@@ -1,17 +1,17 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="ClosePosition.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Messages.TradeCommands
 {
     using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Aggregates;
-    using Nautilus.Messaging.Base;
     using NodaTime;
 
     /// <summary>

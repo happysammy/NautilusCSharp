@@ -1,9 +1,9 @@
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // <copyright file="IProfitTargetAlgorithm.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -16,7 +16,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IProfitTargetAlgorithm
     {
         /// <summary>
-        /// Initializes the profit target algorithm with the given <see cref="IBarStore"/> 
+        /// Initializes the profit target algorithm with the given <see cref="IBarStore"/>
         /// and <see cref="IMarketDataProvider"/>.
         /// </summary>
         /// <param name="barStore">The bar store.</param>
@@ -30,7 +30,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         void Update(Bar bar);
 
         /// <summary>
-        /// Runs a calculation of the profit target algorithm for buy entries, and returns a 
+        /// Runs a calculation of the profit target algorithm for buy entries, and returns a
         /// dictionary of trade unit to price.
         /// </summary>
         /// <param name="entry">The entry price.</param>
@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         IReadOnlyDictionary<int, Price> CalculateBuy(Price entry, Price stoploss);
 
         /// <summary>
-        /// Runs a calculation of the profit target algorithm for sell entries, and returns a 
+        /// Runs a calculation of the profit target algorithm for sell entries, and returns a
         /// dictionary of trade unit to price.
         /// </summary>
         /// <param name="entry">The entry price.</param>

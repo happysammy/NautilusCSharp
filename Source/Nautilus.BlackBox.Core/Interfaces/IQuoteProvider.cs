@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="IQuoteProvider.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -13,7 +13,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The <see cref="IQuoteProvider"/> interface. Provides market quotes and exchange rate 
+    /// The <see cref="IQuoteProvider"/> interface. Provides market quotes and exchange rate
     /// calculations.
     /// </summary>
     public interface IQuoteProvider
@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         IReadOnlyCollection<Symbol> GetQuoteSymbolList();
 
         /// <summary>
-        /// Returns the exchange rate decimal if the quote provider contains the required 
+        /// Returns the exchange rate decimal if the quote provider contains the required
         /// information (optional value).
         /// </summary>
         /// <param name="accountCurrency">The account currency.</param>

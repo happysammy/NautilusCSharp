@@ -1,14 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------------
 // <copyright file="ConversionRateCurrencySymbols.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 namespace Nautilus.Brokerage.FXCM
 {
     using System.Collections.Generic;
-
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -25,8 +24,8 @@ namespace Nautilus.Brokerage.FXCM
         {
             return new List<Symbol>
             {
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new Symbol("AUDJPY", Exchange.FXCM)
+                new Symbol("AUDUSD", Exchange.Fxcm),
+                new Symbol("AUDJPY", Exchange.Fxcm)
             };
         }
     }

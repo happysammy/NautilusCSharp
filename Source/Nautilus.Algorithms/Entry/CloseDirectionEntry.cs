@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="CloseDirectionEntry.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.Algorithms.Entry
 {
@@ -47,7 +47,7 @@ namespace Nautilus.Algorithms.Entry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="bar"></param>
         public void Update(Bar bar)

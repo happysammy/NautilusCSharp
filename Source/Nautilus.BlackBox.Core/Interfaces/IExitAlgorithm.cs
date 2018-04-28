@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="IExitAlgorithm.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
@@ -16,7 +16,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IExitAlgorithm
     {
         /// <summary>
-        /// Initializes the exit algorithm with the given <see cref="IBarStore"/> 
+        /// Initializes the exit algorithm with the given <see cref="IBarStore"/>
         /// and <see cref="IMarketDataProvider"/>.
         /// </summary>
         /// <param name="barStore">The bar store.</param>
@@ -30,14 +30,14 @@ namespace Nautilus.BlackBox.Core.Interfaces
         void Update(Bar bar);
 
         /// <summary>
-        /// Runs a calculation of the exit algorithm for long position exits, and returns an exit 
+        /// Runs a calculation of the exit algorithm for long position exits, and returns an exit
         /// response (optional value).
         /// </summary>
         /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>
         Option<IExitResponse> CalculateLong();
 
         /// <summary>
-        /// Runs a calculation of the exit algorithm for short position exits, and returns an exit 
+        /// Runs a calculation of the exit algorithm for short position exits, and returns an exit
         /// response (optional value).
         /// </summary>
         /// <returns> A <see cref="Option{IExitResponse}"/>.</returns>

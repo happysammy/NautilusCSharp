@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="Entity.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.DomainModel
 {
@@ -12,7 +12,7 @@ namespace Nautilus.DomainModel
     using NodaTime;
 
     /// <summary>
-    /// The immutable abstract <see cref="Entity{T}"/> class. The base class for all uniquely 
+    /// The immutable abstract <see cref="Entity{T}"/> class. The base class for all uniquely
     /// identifiable domain objects.
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>

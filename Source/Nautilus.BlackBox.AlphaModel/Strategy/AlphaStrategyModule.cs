@@ -1,9 +1,9 @@
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // <copyright file="AlphaStrategyModule.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
@@ -13,13 +13,15 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Messaging.Base;
 
     /// <summary>
     /// The <see cref="AlphaStrategyModule"/> class. Contains the alpha signal processors for market

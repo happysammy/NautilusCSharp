@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="RiskModel.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Risk
 {
@@ -236,7 +236,7 @@ namespace Nautilus.BlackBox.Risk
         /// Returns the event log.
         /// </summary>
         /// <returns>A read only dictionary.</returns>
-        public IReadOnlyList<Tuple<ZonedDateTime, string>> GetEventLog() => 
+        public IReadOnlyList<Tuple<ZonedDateTime, string>> GetEventLog() =>
             this.eventLog.ToImmutableList();
     }
 }

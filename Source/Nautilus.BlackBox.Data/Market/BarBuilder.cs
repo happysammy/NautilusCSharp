@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BarBuilder.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Data.Market
 {
@@ -73,7 +73,7 @@ namespace Nautilus.BlackBox.Data.Market
         public ZonedDateTime Timestamp { get; private set; }
 
         /// <summary>
-        /// Updates the bar builder with the given quote price and timestamp. 
+        /// Updates the bar builder with the given quote price and timestamp.
         /// </summary>
         /// <param name="quote">The quote.</param>
         /// <param name="timestamp">The timestamp.</param>
@@ -102,7 +102,7 @@ namespace Nautilus.BlackBox.Data.Market
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="Bar"/> based on the values held by this 
+        /// Creates and returns a new <see cref="Bar"/> based on the values held by this
         /// <see cref="BarBuilder"/>.
         /// </summary>
         /// <param name="endTime">The end time of the bar.</param>

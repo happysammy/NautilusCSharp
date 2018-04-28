@@ -1,15 +1,16 @@
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // <copyright file="IBrokerageGateway.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
     using Akka.Actor;
     using NautechSystems.CSharp;
+    using Nautilus.Common.Componentry;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -67,7 +68,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
 
         /// <summary>
         /// Request an update on the instrument corresponding to the given symbol from the brokerage,
-        /// and subscribe to updates. 
+        /// and subscribe to updates.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         void UpdateInstrumentSubscribe(Symbol symbol);
@@ -142,7 +143,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         void OnPositionReport(string account);
 
         /// <summary>
-        /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the 
+        /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the
         /// Messaging system.
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>

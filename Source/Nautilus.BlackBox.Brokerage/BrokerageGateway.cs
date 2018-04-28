@@ -1,9 +1,9 @@
-﻿// -------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------
 // <copyright file="BrokerageGateway.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 
 namespace Nautilus.BlackBox.Brokerage
 {
@@ -12,21 +12,23 @@ namespace Nautilus.BlackBox.Brokerage
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Extensions;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Base;
+    using Nautilus.DomainModel.Extensions;
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="BrokerageGateway"/> class. The <see cref="BlackBox"/> boundary for the
+    /// The sealed <see cref="BrokerageGateway"/> class. The <see cref="Core.BlackBox"/> boundary for the
     /// brokerage implementation.
     /// </summary>
     public sealed class BrokerageGateway : BusConnectedComponentBase, IBrokerageGateway
@@ -833,7 +835,7 @@ namespace Nautilus.BlackBox.Brokerage
 
             return symbolString != "NONE"
                        ? new Symbol(symbolString, exchange)
-                       : new Symbol("AUDUSD", Exchange.FXCM);
+                       : new Symbol("AUDUSD", Exchange.Fxcm);
         }
 
         private Money GetMoneyType(decimal amount)
