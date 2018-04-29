@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -59,7 +60,7 @@ namespace Nautilus.BlackBox.Data.Market
         }
 
         /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
+        /// Sets up all <see cref="DocumentMessage"/> handling methods.
         /// </summary>
         private void SetupServiceMessageHandling()
         {

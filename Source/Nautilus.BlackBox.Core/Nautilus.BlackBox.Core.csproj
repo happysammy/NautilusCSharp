@@ -1,8 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.BlackBox.Core.xml</DocumentationFile>
+    <NoWarn>1591;1701;1702;1705</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
     <Reference Include="Akka, Version=1.3.6.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\..\.nuget\packages\akka\1.3.6\lib\netstandard1.6\Akka.dll</HintPath>
     </Reference>

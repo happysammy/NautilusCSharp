@@ -50,8 +50,17 @@ namespace Nautilus.BlackBox.Portfolio
             this.storedSetupContainer = setupContainer;
             this.portfolioStore = portfolioStore;
 
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
-            this.SetupServiceMessageHandling();
+        }
+
+        /// <summary>
+        /// Sets up all <see cref="CommandMessage"/> handling methods.
+        /// </summary>
+        private void SetupCommandMessageHandling()
+        {
+            this.Receive<CreatePortfolio>(msg => this.OnMessage(msg));
+            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -63,15 +72,6 @@ namespace Nautilus.BlackBox.Portfolio
             this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
             this.Receive<SignalEvent>(msg => this.OnMessage(msg));
             this.Receive<OrderEvent>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
-        /// </summary>
-        private void SetupServiceMessageHandling()
-        {
-            this.Receive<CreatePortfolio>(msg => this.OnMessage(msg));
-            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(CreatePortfolio message)

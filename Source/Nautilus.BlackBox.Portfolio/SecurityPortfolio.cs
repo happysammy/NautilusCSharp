@@ -79,12 +79,20 @@ namespace Nautilus.BlackBox.Portfolio
             this.exitSignalProcessor = exitSignalProcessor;
             this.trailingStopSignalProcessor = trailingStopSignalProcessor;
 
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
-            this.SetupServiceMessageHandling();
         }
 
         /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
+        /// Set up all <see cref="CommandMessage"/> handling methods.
+        /// </summary>
+        private void SetupCommandMessageHandling()
+        {
+            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
+        }
+
+        /// <summary>
+        /// Set up all <see cref="EventMessage"/> handling methods.
         /// </summary>
         private void SetupEventMessageHandling()
         {
@@ -99,14 +107,6 @@ namespace Nautilus.BlackBox.Portfolio
             this.Receive<OrderPartiallyFilled>(msg => this.OnMessage(msg));
             this.Receive<OrderExpired>(msg => this.OnMessage(msg));
             this.Receive<OrderModified>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
-        /// </summary>
-        private void SetupServiceMessageHandling()
-        {
-            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(TradeApproved @event)

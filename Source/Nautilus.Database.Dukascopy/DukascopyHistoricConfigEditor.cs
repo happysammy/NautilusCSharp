@@ -6,17 +6,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using NautechSystems.CSharp.CQS;
-using NautechSystems.CSharp.Validation;
-using NodaTime;
-using ServiceStack;
-
 namespace Nautilus.Database.Dukascopy
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+    using ServiceStack;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
 

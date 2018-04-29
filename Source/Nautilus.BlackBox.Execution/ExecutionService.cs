@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Execution
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -46,7 +47,6 @@ namespace Nautilus.BlackBox.Execution
             this.orderBusRef = Context.ActorOf(Props.Create(() => new OrderBus(setupContainer, messagingAdapter)));
 
             this.SetupCommandMessageHandling();
-            this.SetupServiceMessageHandling();
         }
 
         /// <summary>
@@ -54,19 +54,15 @@ namespace Nautilus.BlackBox.Execution
         /// </summary>
         private void SetupCommandMessageHandling()
         {
+            // Setup system commands.
+            this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
+            this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
+
+            // Setup trade commands.
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<ModifyStopLoss>(msg => this.OnMessage(msg));
             this.Receive<ClosePosition>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
-        /// </summary>
-        private void SetupServiceMessageHandling()
-        {
-            this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
-            this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(SubmitTrade message)

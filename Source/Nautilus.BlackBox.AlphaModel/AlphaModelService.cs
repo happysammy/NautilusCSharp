@@ -21,8 +21,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// The sealed <see cref="AlphaModelService"/> class. Provides a message end point into the
-    /// Alpha Model service.
+    /// Provides a message end point into the <see cref="BlackBoxService.AlphaModel"/> service.
     /// </summary>
     public sealed class AlphaModelService : ActorComponentBusConnectedBase
     {
@@ -53,26 +52,26 @@ namespace Nautilus.BlackBox.AlphaModel
             this.storedSetupContainer = setupContainer;
             this.alphaStrategyModuleStore = alphaStrategyModuleStore;
 
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
-            this.SetupServiceMessageHandling();
         }
 
         /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
+        /// Set up all <see cref="CommandMessage"/> handling methods.
+        /// </summary>
+        private void SetupCommandMessageHandling()
+        {
+            this.Receive<CreateAlphaStrategyModule>(msg => this.OnMessage(msg));
+            this.Receive<RemoveAlphaStrategyModule>(msg => this.OnMessage(msg));
+        }
+
+        /// <summary>
+        /// Set up all <see cref="EventMessage"/> handling methods.
         /// </summary>
         private void SetupEventMessageHandling()
         {
             this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
             this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
-        /// </summary>
-        private void SetupServiceMessageHandling()
-        {
-            this.Receive<CreateAlphaStrategyModule>(msg => this.OnMessage(msg));
-            this.Receive<RemoveAlphaStrategyModule>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(MarketDataEvent message)

@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -54,14 +55,14 @@ namespace Nautilus.BlackBox.Data.Market
             this.storedSetupContainer = setupContainer;
             this.symbol = symbol;
 
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
-            this.SetupServiceMessageHandling();
         }
 
         /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
+        /// Sets up all <see cref="CommandMessage"/> handling methods.
         /// </summary>
-        private void SetupServiceMessageHandling()
+        private void SetupCommandMessageHandling()
         {
             this.Receive<SubscribeSymbolDataType>(msg => this.OnMessage(msg));
             this.Receive<UnsubscribeSymbolDataType>(msg => this.OnMessage(msg));

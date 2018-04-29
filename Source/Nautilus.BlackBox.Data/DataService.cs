@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -55,13 +56,13 @@ namespace Nautilus.BlackBox.Data
             this.marketDataPortRef = Context.ActorOf(
                 Props.Create(() => new MarketDataPort(setupContainer, messagingAdapter)));
 
-            this.SetupServiceMessageHandling();
+            this.SetupCommandMessageHandling();
         }
 
         /// <summary>
-        /// Sets up all <see cref="Message"/> handling methods.
+        /// Sets up all <see cref="CommandMessage"/> handling methods.
         /// </summary>
-        private void SetupServiceMessageHandling()
+        private void SetupCommandMessageHandling()
         {
             this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
             this.Receive<SubscribeSymbolDataType>(msg => this.OnMessage(msg));

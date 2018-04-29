@@ -46,27 +46,27 @@ namespace Nautilus.BlackBox.Risk
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
-            this.SetupServiceMessageHandling();
         }
 
         /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
+        /// Set up all <see cref="CommandMessage"/> handling methods.
+        /// </summary>
+        private void SetupCommandMessageHandling()
+        {
+            this.Receive<InitializeRiskModel>(msg => this.OnMessage(msg));
+            this.Receive<RequestTradeApproval>(msg => this.OnMessage(msg));
+            this.Receive<AccountEvent>(msg => this.OnMessage(msg));
+        }
+
+        /// <summary>
+        /// Set up all <see cref="EventMessage"/> handling methods.
         /// </summary>
         private void SetupEventMessageHandling()
         {
             this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
             this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="ServiceMessage"/> handling methods.
-        /// </summary>
-        private void SetupServiceMessageHandling()
-        {
-            this.Receive<InitializeRiskModel>(msg => this.OnMessage(msg));
-            this.Receive<RequestTradeApproval>(msg => this.OnMessage(msg));
-            this.Receive<AccountEvent>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(InitializeRiskModel message)
