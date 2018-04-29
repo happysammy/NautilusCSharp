@@ -1,10 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.DomainModel", "Nautilus.DomainModel\Nautilus.DomainModel.csproj", "{2BB6E1DA-9469-44C6-A07E-2D980030E3CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{594EE890-8228-4812-AC7E-9E55610EDF59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Brokerages", "Brokerages", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B47CB9B7-F826-4E50-8D3F-81C80989740E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{BAF42D31-EB02-4957-A41C-A302F4897FD1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestSuite", "TestSuite", "{33E9E1BA-15F1-4786-9038-90EC96E2C6F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusDB", "NautilusDB", "{8AB6560F-56D5-4D01-AF21-15AABE70BF82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusBlackBox", "NautilusBlackBox", "{A3381D39-44E9-430D-BF98-410A2D893AE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlackBox", "BlackBox", "{15037648-9583-4277-B3B3-C51775801A29}"
 EndProject
@@ -23,12 +36,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Portfolio", "Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj", "{71A305AB-E009-4E9C-9F7F-7282FFE675D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Risk", "Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj", "{A3E6BAAE-641F-40D5-BAEE-7B9F5E35BC73}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Brokerages", "Brokerages", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B47CB9B7-F826-4E50-8D3F-81C80989740E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{BAF42D31-EB02-4957-A41C-A302F4897FD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Algorithms", "Nautilus.Algorithms\Nautilus.Algorithms.csproj", "{046E3165-C35B-4521-8A60-035BF2DAF81A}"
 EndProject
@@ -52,21 +59,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.Compressi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.Core", "Nautilus.Database.Core\Nautilus.Database.Core.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusDB", "NautilusDB", "{8AB6560F-56D5-4D01-AF21-15AABE70BF82}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusBlackBox", "NautilusBlackBox", "{A3381D39-44E9-430D-BF98-410A2D893AE8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB", "NautilusDB\NautilusDB.csproj", "{7A6A88B0-3179-4D92-A585-CE890A4F6FF4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.Dukascopy", "Nautilus.Database.Dukascopy\Nautilus.Database.Dukascopy.csproj", "{0FAD5E5E-408D-47A7-91DF-03F53E3B9012}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.FxStreet", "Nautilus.Database.FxStreet\Nautilus.Database.FxStreet.csproj", "{F934C292-E130-4B18-92A0-BBA56D75380E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB", "NautilusDB\NautilusDB.csproj", "{7A6A88B0-3179-4D92-A585-CE890A4F6FF4}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB.Service", "NautilusDB.Service\NautilusDB.Service.csproj", "{933D3504-F1B7-42AE-ADE7-AEBABF379DB7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{594EE890-8228-4812-AC7E-9E55610EDF59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
 EndProject
