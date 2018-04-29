@@ -32,7 +32,7 @@ namespace Nautilus.Common.Messaging
         {
             Validate.NotNull(addresses, nameof(addresses));
 
-            this.addresses = this.addresses.ToImmutableDictionary();
+            this.addresses = addresses.ToImmutableDictionary();
         }
 
         /// <summary>

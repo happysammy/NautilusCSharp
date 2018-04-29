@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             Task.Delay(100).Wait();
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
-                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol element).",
+                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -123,8 +123,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(DummyTrailingStopSignalEvent());
 
             // Assert
+            LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
-                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol element).",
+                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -141,8 +142,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
-                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol element).",
+                "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -176,8 +178,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(message);
 
             // Assert
+            LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
-                "PortfolioService: Validation Failed (The collection already contains the portfolioSymbol element).",
+                "PortfolioService: Validation Failed (The collection already contains the portfolioSymbol key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

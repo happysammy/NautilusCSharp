@@ -189,7 +189,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             CustomAssert.EventuallyContains(
                 typeof(RequestTradeApproval),
-                this.messageWarehouse.DocumentEnvelopes,
+                this.messageWarehouse.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }

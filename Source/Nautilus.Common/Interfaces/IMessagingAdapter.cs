@@ -26,7 +26,8 @@ namespace Nautilus.Common.Interfaces
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        void Send<T>(Enum receiver, T message, Enum sender) where T : Message;
+        void Send<T>(Enum receiver, T message, Enum sender)
+            where T : Message;
 
         /// <summary>
         /// Sends the given message to the given receivers marked from the given sender.
@@ -35,6 +36,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender) where T : Message;
+        void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender)
+            where T : Message;
     }
 }

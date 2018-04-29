@@ -204,22 +204,17 @@ namespace Nautilus.BlackBox.Data.Market
                 this.NewGuid(),
                 this.TimeNow());
 
-            var recipients =
-                new List<Enum>
-                    {
-                        BlackBoxService.AlphaModel,
-                        BlackBoxService.Portfolio,
-                        BlackBoxService.Risk
-                    };
-
-            var eventMessage = new EventMessage(
-                marketData,
-                this.NewGuid(),
-                this.TimeNow());
-
             this.MessagingAdapter.Send(
-                recipients,
-                eventMessage,
+                new List<Enum>
+                {
+                    BlackBoxService.AlphaModel,
+                    BlackBoxService.Portfolio,
+                    BlackBoxService.Risk
+                },
+                new EventMessage(
+                    marketData,
+                    this.NewGuid(),
+                    this.TimeNow()),
                 BlackBoxService.Data);
         }
     }

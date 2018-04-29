@@ -15,7 +15,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     using Nautilus.BlackBox.AlphaModel;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -134,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLogger, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel element).",
+                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -153,13 +152,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CreatePortfolio),
-                this.messageWarehouse.DocumentEnvelopes,
+                this.messageWarehouse.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
                 typeof(SubscribeSymbolDataType),
-                this.messageWarehouse.DocumentEnvelopes,
+                this.messageWarehouse.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -182,7 +181,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             // Assert
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection already contains the strategyLabel element).",
+                "AlphaModelService: Validation Failed (The collection already contains the strategyLabel key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -213,7 +212,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             // Assert
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel element).",
+                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -255,7 +254,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             // Assert
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel element).",
+                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

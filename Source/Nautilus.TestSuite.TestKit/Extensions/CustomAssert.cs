@@ -163,7 +163,8 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             {
                 Task.Delay(pollIntervalMilliseconds).Wait();
             }
-            while (!ListContains<T>(envelopeList.ToList(), eventToContain) && stopwatch.Elapsed < TimeSpan.FromMilliseconds(timeoutMilliseconds));
+            while (!ListContains<T>(envelopeList.ToList(), eventToContain)
+                && stopwatch.Elapsed < TimeSpan.FromMilliseconds(timeoutMilliseconds));
 
             Assert.True(ListContains<T>(envelopeList.ToList(), eventToContain));
         }
@@ -179,31 +180,31 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             {
                 case nameof(SignalEvent):
                     return envelopeList
-                       .Select(envelope => envelope.Open(StubDateTime.Now()))
-                       .Where(@event => @event is SignalEvent)
-                       .Cast<SignalEvent>()
-                       .Any(signal => signal.Signal.GetType() == eventToContain);
+                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Where(@event => @event is SignalEvent)
+                        .Cast<SignalEvent>()
+                        .Any(signal => signal.Signal.GetType() == eventToContain);
 
                 case nameof(OrderEvent):
                     return envelopeList
-                       .Select(envelope => envelope.Open(StubDateTime.Now()))
-                       .Where(@event => @event is OrderEvent)
-                       .Cast<OrderEvent>()
-                       .Any(e => e.GetType() == eventToContain);
+                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Where(@event => @event is OrderEvent)
+                        .Cast<OrderEvent>()
+                        .Any(e => e.GetType() == eventToContain);
 
                 case nameof(MarketDataEvent):
                     return envelopeList
-                       .Select(envelope => envelope.Open(StubDateTime.Now()))
-                       .Where(@event => @event is MarketDataEvent)
-                       .Cast<MarketDataEvent>()
-                       .Any(e => e.GetType() == eventToContain);
+                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Where(@event => @event is MarketDataEvent)
+                        .Cast<MarketDataEvent>()
+                        .Any(e => e.GetType() == eventToContain);
 
                 case nameof(AccountEvent):
                     return envelopeList
-                       .Select(envelope => envelope.Open(StubDateTime.Now()))
-                       .Where(@event => @event is AccountEvent)
-                       .Cast<AccountEvent>()
-                       .Any(e => e.GetType() == eventToContain);
+                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Where(@event => @event is AccountEvent)
+                        .Cast<AccountEvent>()
+                        .Any(e => e.GetType() == eventToContain);
 
                 default: return false;
             }
