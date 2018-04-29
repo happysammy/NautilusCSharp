@@ -83,7 +83,7 @@ namespace Nautilus.Common.Logging
                     break;
                 default:
                     throw new InvalidOperationException(
-                        $"Log Error ({nameof(logLevel)} log level not recognized by the logger).");
+                        $"The {nameof(logLevel)} log level not recognized by the logger.");
             }
         }
 
