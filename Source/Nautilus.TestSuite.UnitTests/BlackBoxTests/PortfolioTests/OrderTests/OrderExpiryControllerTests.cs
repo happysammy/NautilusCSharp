@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly OrderExpiryController orderExpiryController;
 
         public OrderExpiryControllerTests(ITestOutputHelper output)
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.orderExpiryController = new OrderExpiryController(
@@ -133,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Assert
             Task.Delay(100).Wait();
             LogDumper.Dump(this.mockLogger, this.output);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -152,11 +152,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CancelOrder),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            Assert.Equal(3, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(3, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]

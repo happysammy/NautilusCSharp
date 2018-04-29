@@ -7,7 +7,6 @@
 
 namespace Nautilus.BlackBox.Core.Setup
 {
-    using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;

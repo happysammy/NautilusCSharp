@@ -6,15 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using System.Globalization;
-using System.Text;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-using NodaTime;
-using NodaTime.Text;
-
 namespace Nautilus.Core.Extensions
 {
+    using System.Globalization;
+    using System.Text;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+    using NodaTime.Text;
+
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>

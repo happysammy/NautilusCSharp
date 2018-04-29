@@ -10,7 +10,6 @@ namespace Nautilus.BlackBox.Core.Setup
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// The immutable sealed <see cref="BlackBoxServicesFactory"/> class. A container to store and

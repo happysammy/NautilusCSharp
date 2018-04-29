@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -29,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     public class TrailingStopSignalProcessorTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly TrailingStopSignalProcessor trailingStopSignalProcessor;
         private readonly TradeBook tradeBook;
 
@@ -49,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.tradeBook = new TradeBook(setupContainer, instrument.Symbol);
@@ -74,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             // Assert
             Assert.Equal(TradeStatus.Initialized, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -96,7 +95,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             // Assert
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -118,7 +117,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             // Assert
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -140,7 +139,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             // Assert
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -164,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
             CustomAssert.EventuallyContains(
                 typeof(ModifyStopLoss),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.TimeoutMilliseconds);
         }
@@ -190,7 +189,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(MarketPosition.Short, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
             CustomAssert.EventuallyContains(
                 typeof(ModifyStopLoss),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.TimeoutMilliseconds);
         }
@@ -215,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(300).Wait();
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact] // TODO: erratic test? FAILED 1/08/2017 at 10:19PM
@@ -238,7 +237,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(300).Wait();
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
     }
 }

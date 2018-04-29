@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Gets the message warehouse.
         /// </summary>
-        public MessageWarehouse MessageWarehouse { get; private set; }
+        public InMemoryMessageStore InMemoryMessageStore { get; private set; }
 
         /// <summary>
         /// The create.
@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             ActorSystem actorSystem,
             ComponentryContainer container)
         {
-            var messageWarhouse = new MessageWarehouse();
+            var messageWarhouse = new InMemoryMessageStore();
 
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarhouse))); // TODO: make disposable so that test don't break
 
@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             messagingAdapter.Send(initializeSwitchboard);
 
             this.MessagingAdapter = messagingAdapter;
-            this.MessageWarehouse = messageWarhouse;
+            this.InMemoryMessageStore = messageWarhouse;
         }
     }
 }

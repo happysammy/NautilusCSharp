@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly EntrySignalProcessor entrySignalProcessor;
         private readonly TradeBook tradeBook;
 
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.tradeBook = new TradeBook(setupContainer, instrument.Symbol);
@@ -79,11 +79,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(RequestTradeApproval),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            var requestTradeApproval = this.messageWarehouse.CommandEnvelopes[0].Open(StubDateTime.Now()) as RequestTradeApproval;
+            var requestTradeApproval = this.inMemoryMessageStore.CommandEnvelopes[0].Open(StubDateTime.Now()) as RequestTradeApproval;
 
             Assert.Equal(2, requestTradeApproval?.OrderPacket.Orders.Count);
         }
@@ -112,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             // Assert
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(2, result.Count);
-            Assert.Equal(0, this.messageWarehouse.EventEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             // Assert
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(2, result.Count);
-            Assert.Equal(0, this.messageWarehouse.EventEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }
     }
 }

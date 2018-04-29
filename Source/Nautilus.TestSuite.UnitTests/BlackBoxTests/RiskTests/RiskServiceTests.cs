@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Risk;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
@@ -30,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef riskServiceRef;
 
         public RiskServiceTests(ITestOutputHelper output)
@@ -49,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.riskServiceRef = testActorSystem.ActorOf(Props.Create(() => new RiskService(
@@ -142,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
 
             CustomAssert.EventuallyContains(
                 typeof(TradeApproved),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -179,7 +178,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            Assert.True(this.messageWarehouse.DocumentEnvelopes.Count == 0);
+            Assert.True(this.inMemoryMessageStore.DocumentEnvelopes.Count == 0);
         }
 
         [Fact]

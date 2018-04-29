@@ -6,13 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------
 
-using NautechSystems.CSharp.Extensions;
-using NautechSystems.CSharp.Validation;
-using Newtonsoft.Json.Linq;
-using NodaTime;
-
 namespace Nautilus.Database.Core.Build
 {
+    using NautechSystems.CSharp.Extensions;
+    using NautechSystems.CSharp.Validation;
+    using Newtonsoft.Json.Linq;
+    using NodaTime;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Orchestration;
 
     /// <summary>

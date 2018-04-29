@@ -36,7 +36,7 @@ namespace Nautilus.Common.Messaging
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));
 
-            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(new MessageWarehouse())));
+            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(new InMemoryMessageStore())));
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 ServiceContext.Messaging,

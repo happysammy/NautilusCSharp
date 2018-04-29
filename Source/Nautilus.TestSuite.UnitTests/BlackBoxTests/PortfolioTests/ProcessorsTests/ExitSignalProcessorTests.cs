@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
@@ -33,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly ExitSignalProcessor exitSignalProcessor;
         private readonly TradeBook tradeBook;
 
@@ -54,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.tradeBook = new TradeBook(setupContainer, instrument.Symbol);
@@ -82,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(100).Wait();
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(TradeStatus.Initialized, result[0].TradeStatus);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -130,7 +129,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -155,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -183,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -216,7 +215,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, result[0].MarketPosition);
-            Assert.Equal(0, this.messageWarehouse.CommandEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
         [Fact]
@@ -250,7 +249,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }

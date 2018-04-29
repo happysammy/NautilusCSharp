@@ -10,7 +10,6 @@ namespace Nautilus.Database.Core
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
@@ -34,6 +33,7 @@ namespace Nautilus.Database.Core
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdatper">The messaging adapter.</param>
+        /// <param name="addresses">The system service addresses.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public NautilusDatabase(
             DatabaseSetupContainer setupContainer,

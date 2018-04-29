@@ -10,8 +10,7 @@ namespace Nautilus.Common.MessageStore
     using NautechSystems.CSharp.Annotations;
 
     /// <summary>
-    /// The immutable sealed <see cref="MessagingDiagnosticsReport"/> class. A report containing
-    /// summarized messaging diagnostics of a <see cref="BlackBox"/> run.
+    /// Represents a report containing summarized messaging diagnostics of a system run.
     /// </summary>
     [Immutable]
     public sealed class MessagingDiagnosticsReport

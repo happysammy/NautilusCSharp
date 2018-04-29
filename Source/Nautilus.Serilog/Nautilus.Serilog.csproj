@@ -1,8 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Serilog.xml</DocumentationFile>
+    <NoWarn>1591;1701;1702;1705</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
     <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />

@@ -12,9 +12,9 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Messaging;
 
     /// <summary>
-    /// The sealed <see cref="MessageWarehouse"/> class.
+    /// Represents an in-memory message store.
     /// </summary>
-    public sealed class MessageWarehouse
+    public sealed class InMemoryMessageStore
     {
         private readonly IList<Envelope<CommandMessage>> commandEnvelopeList = new List<Envelope<CommandMessage>>();
         private readonly IList<Envelope<EventMessage>> eventEnvelopeList = new List<Envelope<EventMessage>>();

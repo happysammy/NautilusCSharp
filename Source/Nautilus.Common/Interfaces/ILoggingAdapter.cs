@@ -26,30 +26,35 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Logs the given message with a verbose <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         void Verbose(Enum service, string message);
 
         /// <summary>
         /// Logs the given message with a debug <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         void Debug(Enum service, string message);
 
         /// <summary>
         /// Logs the given message with an information <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         void Information(Enum service, string message);
 
         /// <summary>
         /// Logs the given message with a warning <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         void Warning(Enum service, string message);
 
         /// <summary>
         /// Logs the given message and exception with an error <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         void Error(Enum service, string message, Exception ex);
@@ -57,6 +62,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Logs the given message and exception with a fatal <see cref="LogLevel"/>.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         void Fatal(Enum service, string message, Exception ex);

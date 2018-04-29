@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;
         private readonly IActorRef alphaModelServiceRef;
 
@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.alphaStrategyModuleStore = new AlphaStrategyModuleStore();
@@ -152,13 +152,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CreatePortfolio),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
                 typeof(SubscribeSymbolDataType),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 

@@ -9,7 +9,6 @@
 namespace Nautilus.Database.Core.Types
 {
     using Nautilus.DomainModel.ValueObjects;
-    using System;
     using System.Linq;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;

@@ -11,11 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Microsoft.Extensions.Primitives;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.Common.MessageStore;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -32,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly BarStore barStore;
         private readonly BarStore barStoreDaily;
         private readonly IActorRef alphaStrategyModuleRef;
@@ -53,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             var alphaStrategy = StubAlphaStrategyFactory.Create();
@@ -156,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            Assert.Equal(0, this.messageWarehouse.EventEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
             this.mockLogger.WriteStashToOutput(this.output);
         }
@@ -176,7 +174,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            Assert.Equal(0, this.messageWarehouse.EventEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
             this.mockLogger.WriteStashToOutput(this.output);
         }
@@ -192,7 +190,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             Task.Delay(100).Wait();
             LogDumper.Dump(this.mockLogger, this.output);
             Assert.Equal(0, this.barStore.Count);
-            Assert.Equal(0, this.messageWarehouse.EventEnvelopes.Count);
+            Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
             this.mockLogger.WriteStashToOutput(this.output);
         }

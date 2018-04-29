@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Execution;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
@@ -32,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef executionServiceRef;
 
         public ExecutionServiceTests(ITestOutputHelper output)
@@ -51,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.executionServiceRef = testActorSystem.ActorOf(Props.Create(() => new ExecutionService(

@@ -16,9 +16,4 @@
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="NodaTime, Version=2.2.5.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\nodatime\2.2.5\lib\netstandard1.3\NodaTime.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>

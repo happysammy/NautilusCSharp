@@ -1,8 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Core.xml</DocumentationFile>
+    <NoWarn>1591;1701;1702;1705</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
     <PackageReference Include="NautechSystems.CSharp" Version="1.7.5" />
     <PackageReference Include="NodaTime" Version="2.2.5" />
   </ItemGroup>

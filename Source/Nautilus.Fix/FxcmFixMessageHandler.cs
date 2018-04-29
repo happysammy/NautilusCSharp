@@ -21,7 +21,6 @@ namespace Nautilus.Fix
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
-    using Currency = QuickFix.Fields.Currency;
     using Symbol = DomainModel.ValueObjects.Symbol;
 
     /// <summary>

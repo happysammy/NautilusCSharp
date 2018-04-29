@@ -12,7 +12,7 @@ namespace Nautilus.Common.Componentry
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="Clock"/> class. The clock for the <see cref="BlackBox"/> system.
+    /// The <see cref="Clock"/> class. The clock for the system.
     /// </summary>
     public class Clock : IZonedClock
     {

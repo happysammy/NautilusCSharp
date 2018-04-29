@@ -13,26 +13,25 @@ namespace Nautilus.Common.MessageStore
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Messaging;
-    using NodaTime;
 
     /// <summary>
     /// The sealed <see cref="MessageStorer"/> class. Sends received messages to the
-    /// <see cref="MessageWarehouse"/>.
+    /// <see cref="InMemoryMessageStore"/>.
     /// </summary>
     public sealed class MessageStorer : ReceiveActor
     {
-        private readonly MessageWarehouse warehouse;
+        private readonly InMemoryMessageStore store;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageStorer"/> class.
         /// </summary>
-        /// <param name="warehouse">The warehouse.</param>
+        /// <param name="store">The warehouse.</param>
         /// <exception cref="ValidationException">Throws if the warehouse is null.</exception>
-        public MessageStorer(MessageWarehouse warehouse)
+        public MessageStorer(InMemoryMessageStore store)
         {
-            Validate.NotNull(warehouse, nameof(warehouse));
+            Validate.NotNull(store, nameof(store));
 
-            this.warehouse = warehouse;
+            this.store = store;
 
             this.SetupMessageHandling();
         }
@@ -42,9 +41,9 @@ namespace Nautilus.Common.MessageStore
         /// </summary>
         private void SetupMessageHandling()
         {
-            this.Receive<Envelope<CommandMessage>>(envelope => this.warehouse.Store(envelope));
-            this.Receive<Envelope<EventMessage>>(envelope => this.warehouse.Store(envelope));
-            this.Receive<Envelope<DocumentMessage>>(envelope => this.warehouse.Store(envelope));
+            this.Receive<Envelope<CommandMessage>>(envelope => this.store.Store(envelope));
+            this.Receive<Envelope<EventMessage>>(envelope => this.store.Store(envelope));
+            this.Receive<Envelope<DocumentMessage>>(envelope => this.store.Store(envelope));
         }
 
         /// <summary>
@@ -52,9 +51,9 @@ namespace Nautilus.Common.MessageStore
         /// </summary>
         protected override void PostStop()
         {
-            var commandReport = GetDiagnosticReport(this.warehouse.CommandEnvelopes);
-            var eventReport = GetDiagnosticReport(this.warehouse.EventEnvelopes);
-            var serviceReport = GetDiagnosticReport(this.warehouse.DocumentEnvelopes);
+            var commandReport = GetDiagnosticReport(this.store.CommandEnvelopes);
+            var eventReport = GetDiagnosticReport(this.store.EventEnvelopes);
+            var serviceReport = GetDiagnosticReport(this.store.DocumentEnvelopes);
 
             Console.WriteLine();
             Console.WriteLine("-----------------------------------------------------------------------------");

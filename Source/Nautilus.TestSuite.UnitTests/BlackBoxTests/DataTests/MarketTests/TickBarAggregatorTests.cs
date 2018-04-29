@@ -10,15 +10,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Akka.Util.Internal;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -35,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         private readonly ActorSystem testActorSystem;
         private readonly BlackBoxSetupContainer setupContainer;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IMessagingAdapter messagingAdapter;
         private readonly Symbol symbol;
 
@@ -55,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.testActorSystem,
                 this.setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             this.messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.symbol = new Symbol("AUDUSD", Exchange.FXCM);

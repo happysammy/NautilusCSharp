@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLogger mockLogger;
-        private readonly MessageWarehouse messageWarehouse;
+        private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IQuoteProvider quoteProvider;
         private readonly TradeBook tradeBook;
         private readonly IActorRef portfolioRef;
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 testActorSystem,
                 setupContainer);
 
-            this.messageWarehouse = messagingServiceFactory.MessageWarehouse;
+            this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             var messagingAdapter = messagingServiceFactory.MessagingAdapter;
 
             this.quoteProvider = setupFactory.QuoteProvider;
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(SubmitTrade),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -189,7 +189,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             CustomAssert.EventuallyContains(
                 typeof(RequestTradeApproval),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -216,7 +216,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -243,7 +243,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             LogDumper.Dump(this.mockLogger, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ModifyStopLoss),
-                this.messageWarehouse.CommandEnvelopes,
+                this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }

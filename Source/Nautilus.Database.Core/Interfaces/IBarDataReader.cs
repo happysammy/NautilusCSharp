@@ -12,7 +12,6 @@ namespace Nautilus.Database.Core.Interfaces
     using NautechSystems.CSharp.CQS;
     using NodaTime;
     using Nautilus.Database.Core.Types;
-    using Nautilus.DomainModel.ValueObjects;
 
     public interface IBarDataReader
     {
