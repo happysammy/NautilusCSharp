@@ -1,9 +1,9 @@
-﻿//--------------------------------------------------------------
-// <copyright file="KeltnerChannelRatchetTrail.cs" company="Nautech Systems Pty Ltd.">
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="KeltnerChannelRatchetTrail.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
 //   http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.Algorithms.TrailingStop
 {

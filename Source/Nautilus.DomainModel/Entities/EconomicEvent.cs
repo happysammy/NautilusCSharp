@@ -1,19 +1,17 @@
-﻿//--------------------------------------------------------------
-// <copyright file="EconomicNewsEvent.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//   The use of this source code is governed by the license as found in the LICENSE.txt file.
-//   http://www.nautechsystems.net
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="EconomicNewsEvent.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------
-
-using NautechSystems.CSharp;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-using NautilusDB.Core.Enums;
-using NodaTime;
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.Entities
 {
+    using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>

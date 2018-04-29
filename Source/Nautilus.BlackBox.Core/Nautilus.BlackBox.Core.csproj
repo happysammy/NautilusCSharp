@@ -4,7 +4,7 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.BlackBox.Core.xml</DocumentationFile>
     <NoWarn>1591;1701;1702;1705</NoWarn>

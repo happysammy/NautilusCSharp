@@ -1,4 +1,6 @@
-﻿namespace Nautilus.Database.Core.Temp
+﻿
+
+namespace Nautilus.Database.Core.Temp
 {
     using System;
     using System.Collections.Generic;

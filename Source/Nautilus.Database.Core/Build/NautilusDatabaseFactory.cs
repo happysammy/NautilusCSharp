@@ -1,10 +1,10 @@
-﻿//--------------------------------------------------------------
-// <copyright file="NautilusDatabaseFactory.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//   The use of this source code is governed by the license as found in the LICENSE.txt file.
-//   http://www.nautechsystems.net
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="NautilusDatabaseFactory.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.Database.Core.Build
 {
@@ -52,7 +52,7 @@ namespace Nautilus.Database.Core.Build
             Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
             Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
-            logger.Information(ServiceContext.Database, $"Starting {nameof(NautilusDB)} builder...");
+            logger.Information(ServiceContext.Database, $"Starting {nameof(NautilusDatabase)} builder...");
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
@@ -63,7 +63,7 @@ namespace Nautilus.Database.Core.Build
                 new GuidFactory(),
                 new LoggerFactory(logger));
 
-            var actorSystem = ActorSystem.Create(nameof(NautilusDB));
+            var actorSystem = ActorSystem.Create(nameof(NautilusDatabase));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
