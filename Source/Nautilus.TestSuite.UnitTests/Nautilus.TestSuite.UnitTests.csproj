@@ -5,15 +5,32 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
-    <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Algorithms\Nautilus.Algorithms.csproj" />
+    <ProjectReference Include="..\Nautilus.Backtest\Nautilus.Backtest.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Brokerage\Nautilus.BlackBox.Brokerage.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Execution\Nautilus.BlackBox.Execution.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj" />
-    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />t
+    <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
+    <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
+    <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Database.Compression\Nautilus.Database.Compression.csproj" />
+    <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Database.Dukascopy\Nautilus.Database.Dukascopy.csproj" />
+    <ProjectReference Include="..\Nautilus.Database.FxStreet\Nautilus.Database.FxStreet.csproj" />
+    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
+    <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
+    <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
+    <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
   </ItemGroup>
 </Project>
