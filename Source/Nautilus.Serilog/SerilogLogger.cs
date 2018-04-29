@@ -10,27 +10,28 @@ namespace Nautilus.Serilog
 {
     using System;
     using System.Reflection;
-    using global::Serilog;
     using NautechSystems.CSharp.CQS;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using global::Serilog;
 
     /// <summary>
     /// The <see cref="Serilog"/> adapter.
     /// </summary>
     public class SerilogLogger : ILoggingAdapter
     {
-//        /// <summary>
-//        /// Initializes a new instance of the <see cref="SerilogLogger"/> class.
-//        /// </summary>
-//        /// <param name="logDatabaseName">
-//        /// The log Database Name.
-//        /// </param>
-//        public SerilogLogger(string logDatabaseName)
-//        {
-//            SerilogLogFactory.Create(logDatabaseName);
-//
-//            this.Information($"Serilog (version {Assembly.LoadFrom("Serilog.dll").GetName().Version})");
-//        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerilogLogger"/> class.
+        /// </summary>
+        /// <param name="logDatabaseName">
+        /// The log Database Name.
+        /// </param>
+        public SerilogLogger(string logDatabaseName)
+        {
+            SerilogLogFactory.Create(logDatabaseName);
+
+            this.Information(ServiceContext.Serilog, $"(version 2.6)"); //{Assembly.LoadFrom("Serilog.dll").GetName().Version})");
+        }
 
         public string AssemblyVersion =>
             $"Serilog (version {Assembly.LoadFrom("Serilog.dll").GetName().Version})";

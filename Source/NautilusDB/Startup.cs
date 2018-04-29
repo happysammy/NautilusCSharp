@@ -122,7 +122,7 @@ namespace NautilusDB
                 (string)config[ConfigSection.Database]["compressionCodec"]);
 
             this.nautilusDB = NautilusDatabaseFactory.Create(
-                new SerilogLogger(),
+                new SerilogLogger("Logs"),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
                 new MockMarketDataRepository(),
                 new MockEconomicEventRepository(),

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.BlackBox.xml</DocumentationFile>
+    <NoWarn>1591;</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Algorithms\Nautilus.Algorithms.csproj" />
+    <ProjectReference Include="..\Nautilus.Backtest\Nautilus.Backtest.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Brokerage\Nautilus.BlackBox.Brokerage.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Execution\Nautilus.BlackBox.Execution.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj" />
+    <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
+    <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
+    <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
+    <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />
+    <ProjectReference Include="..\Nautilus.RavenDB\Nautilus.RavenDB.csproj" />
+    <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
+  </ItemGroup>
+</Project>

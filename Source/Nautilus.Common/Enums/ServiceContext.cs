@@ -15,6 +15,8 @@ namespace Nautilus.Common.Enums
         EventBus = 2,
         DocumentBus = 3,
         Database = 4,
-        AspCoreHost = 5
+        AspCoreHost = 5,
+        Serilog = 6,
+        RavenDB = 7
     }
 }

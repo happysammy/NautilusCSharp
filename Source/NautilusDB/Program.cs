@@ -23,7 +23,7 @@ namespace NautilusDB
         public static void Main(string[] args)
         {
             SerilogLogFactory.Create("NautilusDB");
-            var logger = new SerilogLogger();
+            var logger = new SerilogLogger("Logs");
             logger.Information(ServiceContext.AspCoreHost, "Building ASP.NET Core Web Host...");
 
             BuildWebHost(args).Run();

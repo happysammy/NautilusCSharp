@@ -126,7 +126,7 @@ namespace Nautilus.Fix
                 this.initiator.Start();
 
                 Console.WriteLine($"BrokerClient {this}");
-                Console.WriteLine($"QuickFix (version {Assembly.LoadFrom("QuickFix.dll").GetName().Version})");
+                //Console.WriteLine($"QuickFix (version {Assembly.LoadFrom("QuickFix.dll").GetName().Version})");
                 Console.WriteLine($"Starting initiator... ");
             });
         }

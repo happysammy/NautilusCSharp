@@ -69,17 +69,17 @@ namespace Nautilus.BlackBox.Data.Instrument
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         public CommandResult LoadAllInstrumentsFromDatabase()
         {
-            var instruments = this.database.Query<Instrument>().ToList();
+//            var instruments = this.database.Query<Instrument>().ToList();
+//
+//            foreach (var instrument in instruments)
+//            {
+//                if (!this.instrumentIndex.ContainsKey(instrument.Symbol))
+//                {
+//                    this.instrumentIndex.Add(instrument.Symbol, instrument);
+//                }
+//            }
 
-            foreach (var instrument in instruments)
-            {
-                if (!this.instrumentIndex.ContainsKey(instrument.Symbol))
-                {
-                    this.instrumentIndex.Add(instrument.Symbol, instrument);
-                }
-            }
-
-            return CommandResult.Ok($"All instruments loaded from database [{this.database}.Instruments] (count = {instruments.Count})");
+            return CommandResult.Ok($"All instruments loaded from database [{this.database}.Instruments] (count = {0})");
         }
 
         /// <summary>
