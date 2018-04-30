@@ -30,7 +30,7 @@ namespace Nautilus.Serilog
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
                    .WriteTo.Console(outputTemplate: logTemplateDefault)
-                   .WriteTo.RollingFile("Logs\\NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
+                   .WriteTo.RollingFile("Log/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }
         }

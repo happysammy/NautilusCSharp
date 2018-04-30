@@ -9,8 +9,8 @@ namespace Nautilus.RavenDB
 {
     using System.Linq;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Raven.Client;
-    using Raven.Client.Embedded;
+    using Raven.Client.Documents;
+    using Raven.Client.Documents.Session;
 
     /// <summary>
     /// The <see cref="RavenDbAdapter"/> class.
@@ -28,11 +28,11 @@ namespace Nautilus.RavenDB
         /// </param>
         public RavenDbAdapter(string storeName)
         {
-            this.documentStore = new EmbeddableDocumentStore()
-                                     {
-                                         Url = "http://localhost:8080",
-                                         DefaultDatabase = storeName,
-                                     }.Initialize();
+//            this.documentStore = new DocumentStore()
+//                                     {
+//                                         Url = "http://localhost:8080",
+//                                         DefaultDatabase = storeName,
+//                                     }.Initialize();
         }
 
         /// <summary>
