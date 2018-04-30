@@ -35,7 +35,6 @@ namespace Nautilus.BlackBox
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
-    using Nautilus.RavenDB;
     using Nautilus.Serilog;
     using NodaTime;
 
@@ -65,9 +64,9 @@ namespace Nautilus.BlackBox
 
             var broker = Broker.FXCM;
 
-            var username = "D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
-            var password = "1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
-            var accountNumber = "02402856"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
+            var username = "D102862129"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
+            var password = "demo"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
+            var accountNumber = "02851908"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
 
             var fxcmAccount = new BrokerageAccount(broker, accountNumber, username, password, CurrencyCode.AUD, clock.TimeNow());
 

@@ -1,314 +1,332 @@
-2018/04/30 09:36:54.443 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:40:45.861 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:42:00.984 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:42:01.070 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:42:01.253 [01][INF] [Core______] BlackBox: BlackBox instance created in 182ms
-2018/04/30 09:42:01.253 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:42:01.270 [08][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:42:01.270 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:42:01.270 [03][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:42:01.270 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:42:01.270 [09][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:42:01.270 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:42:01.270 [12][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:42:01.271 [13][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:42:01.271 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:42:01.270 [06][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:42:01.272 [08][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:42:01.272 [03][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:42:01.272 [04][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:42:01.278 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:42:01.278 [13][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:42:01.278 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:42:01.278 [12][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:42:01.278 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:42:01.278 [06][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:42:01.279 [13][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:42:01.280 [06][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:42:01.281 [12][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1124857991]
-2018/04/30 09:42:14.720 [01][FTL] [Brokerage_] BrokerageGateway: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+2018/04/30 10:09:42.846 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:09:42.934 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:09:42.934 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:09:42.934 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:09:42.934 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:09:42.934 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:09:42.935 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:09:42.935 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:09:43.120 [01][INF] [Core______] BlackBox: BlackBox instance created in 184ms
+2018/04/30 10:09:43.120 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:09:43.129 [07][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:09:43.129 [05][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:09:43.129 [13][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:09:43.129 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:09:43.129 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:09:43.129 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:09:43.129 [06][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:09:43.130 [12][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:09:43.129 [03][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:09:43.129 [11][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:09:43.131 [03][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:09:43.131 [05][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:09:43.131 [07][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:09:43.135 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:09:43.135 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:09:43.135 [03][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:09:43.135 [13][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:09:43.135 [14][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:09:43.135 [12][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:09:43.137 [12][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:09:43.137 [14][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:09:43.139 [13][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#409413716]
+2018/04/30 10:09:47.252 [01][FTL] [Brokerage_] BrokerageGateway: Configuration failed: File fix_fxcm.cfg not found (Could not find file '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/fix_fxcm.cfg'.) StackTrace:    at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 121
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+QuickFix.ConfigError: Configuration failed: File fix_fxcm.cfg not found (Could not find file '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/fix_fxcm.cfg'.)
+   at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 121
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:42:14.723 [01][FTL] [Core______] BlackBox: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+2018/04/30 10:09:47.254 [01][FTL] [Core______] BlackBox: Configuration failed: File fix_fxcm.cfg not found (Could not find file '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/fix_fxcm.cfg'.) StackTrace:    at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 121
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
    at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
    at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
    at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+QuickFix.ConfigError: Configuration failed: File fix_fxcm.cfg not found (Could not find file '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/fix_fxcm.cfg'.)
+   at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 121
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
    at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
    at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
    at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:43:22.694 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:43:22.781 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:43:22.955 [01][INF] [Core______] BlackBox: BlackBox instance created in 173ms
-2018/04/30 09:43:22.955 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:43:22.967 [03][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:43:22.967 [14][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:43:22.967 [06][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:43:22.967 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:43:22.967 [04][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:43:22.967 [05][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:43:22.968 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:43:22.967 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:43:22.967 [13][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:43:22.968 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:43:22.970 [04][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:43:22.970 [05][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:43:22.970 [03][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:43:22.974 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:43:22.974 [07][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:43:22.974 [16][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:43:22.974 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:43:22.974 [03][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:43:22.974 [11][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:43:22.975 [11][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:43:22.975 [16][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:43:22.976 [07][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#706413182]
-2018/04/30 09:43:24.812 [01][FTL] [Brokerage_] BrokerageGateway: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+2018/04/30 10:10:29.424 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:10:29.536 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:10:29.537 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:10:29.537 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:10:29.537 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:10:29.537 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:10:29.537 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:10:29.538 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:10:29.725 [01][INF] [Core______] BlackBox: BlackBox instance created in 186ms
+2018/04/30 10:10:29.725 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:10:29.743 [05][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:10:29.743 [09][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:10:29.743 [06][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:10:29.743 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:10:29.744 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:10:29.743 [03][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:10:29.744 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:10:29.743 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:10:29.743 [13][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:10:29.743 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:10:29.746 [05][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:10:29.746 [04][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:10:29.746 [06][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:10:29.749 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:10:29.749 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:10:29.749 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:10:29.749 [07][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:10:29.749 [11][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:10:29.749 [10][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:10:29.750 [07][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:10:29.750 [10][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:10:29.752 [11][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#2055072675]
+2018/04/30 10:11:50.015 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:11:50.122 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:11:50.122 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:11:50.122 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:11:50.122 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:11:50.122 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:11:50.123 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:11:50.123 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:11:50.298 [01][INF] [Core______] BlackBox: BlackBox instance created in 174ms
+2018/04/30 10:11:50.298 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:11:50.317 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:11:50.317 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:11:50.317 [05][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:11:50.317 [15][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:11:50.317 [14][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:11:50.317 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:11:50.317 [10][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:11:50.317 [07][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:11:50.317 [06][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:11:50.317 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:11:50.320 [05][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:11:50.320 [06][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:11:50.320 [04][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:11:50.324 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:11:50.324 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:11:50.325 [09][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:11:50.325 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:11:50.325 [12][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:11:50.325 [13][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:11:50.326 [12][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:11:50.327 [13][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:11:50.328 [09][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1834451963]
+2018/04/30 10:14:46.624 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:14:46.715 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:14:46.715 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:14:46.715 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:14:46.715 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:14:46.716 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:14:46.716 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:14:46.716 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:14:46.895 [01][INF] [Core______] BlackBox: BlackBox instance created in 178ms
+2018/04/30 10:14:46.895 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:14:46.922 [15][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:14:46.922 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:14:46.923 [03][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:14:46.922 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:14:46.923 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:14:46.922 [07][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:14:46.922 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:14:46.922 [13][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:14:46.922 [05][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:14:46.922 [10][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:14:46.926 [04][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:14:46.926 [07][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:14:46.926 [05][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:14:46.929 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:14:46.929 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:14:46.930 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:14:46.930 [09][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:14:46.930 [10][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:14:46.930 [14][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:14:46.931 [10][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:14:46.931 [09][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:14:46.933 [14][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1379315324]
+2018/04/30 10:15:35.355 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:15:35.440 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:15:35.440 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:15:35.441 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:15:35.441 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:15:35.441 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:15:35.441 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:15:35.441 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:15:35.614 [01][INF] [Core______] BlackBox: BlackBox instance created in 172ms
+2018/04/30 10:15:35.614 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:15:35.631 [15][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:15:35.631 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:15:35.632 [14][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:15:35.632 [06][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:15:35.631 [09][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:15:35.632 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:15:35.631 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:15:35.632 [05][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:15:35.632 [07][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:15:35.632 [03][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:15:35.634 [05][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:15:35.634 [06][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:15:35.634 [03][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:15:35.637 [05][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:15:35.637 [05][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:15:35.637 [05][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:15:35.637 [09][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:15:35.637 [14][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:15:35.638 [07][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:15:35.639 [09][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:15:35.639 [07][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:15:35.641 [14][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1270181759]
+2018/04/30 10:15:37.360 [01][FTL] [Brokerage_] BrokerageGateway: Configuration failed: File fix_fxcm.cfg not found (Configuration failed: BeginString (FIX.4.49) must be FIX.4.0 to FIX.4.4 or FIXT.1.1) StackTrace:    at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 120
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+QuickFix.ConfigError: Configuration failed: File fix_fxcm.cfg not found (Configuration failed: BeginString (FIX.4.49) must be FIX.4.0 to FIX.4.4 or FIXT.1.1)
+   at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 120
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:43:24.815 [01][FTL] [Core______] BlackBox: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+2018/04/30 10:15:37.363 [01][FTL] [Core______] BlackBox: Configuration failed: File fix_fxcm.cfg not found (Configuration failed: BeginString (FIX.4.49) must be FIX.4.0 to FIX.4.4 or FIXT.1.1) StackTrace:    at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 120
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
-   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
+   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 116
    at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
    at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
+QuickFix.ConfigError: Configuration failed: File fix_fxcm.cfg not found (Configuration failed: BeginString (FIX.4.49) must be FIX.4.0 to FIX.4.4 or FIXT.1.1)
+   at QuickFix.SessionSettings..ctor(String file)
+   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 120
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
-   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
+   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 116
    at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
    at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
    at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:47:14.101 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:47:14.188 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:47:14.188 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:47:14.188 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:47:14.189 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:47:14.189 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:47:14.189 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:47:14.189 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:47:14.386 [01][INF] [Core______] BlackBox: BlackBox instance created in 197ms
-2018/04/30 09:47:14.387 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:47:14.401 [06][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:47:14.402 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:47:14.402 [08][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:47:14.402 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:47:14.402 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:47:14.402 [03][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:47:14.402 [11][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:47:14.402 [10][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:47:14.402 [13][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:47:14.402 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:47:14.404 [06][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:47:14.404 [04][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:47:14.404 [03][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:47:14.408 [08][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:47:14.408 [12][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:47:14.408 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:47:14.408 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:47:14.409 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:47:14.409 [05][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:47:14.409 [12][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:47:14.410 [05][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:47:14.411 [08][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#822555708]
-2018/04/30 09:47:16.017 [01][FTL] [Brokerage_] BrokerageGateway: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:47:16.021 [01][FTL] [Core______] BlackBox: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
- StackTrace:    at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
-   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
-   at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
-   at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-System.IO.FileNotFoundException: Could not load file or assembly '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'. The system cannot find the file specified.
-
-File name: '/home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox/QuickFix.dll'
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromPath(IntPtr ptrNativeAssemblyLoadContext, String ilPath, String niPath, ObjectHandleOnStack retAssembly)
-   at System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(String assemblyPath)
-   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
-   at Nautilus.Fix.FxcmFixClient.<Connect>b__16_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 129
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 56
-   at Nautilus.Fix.FxcmFixClient.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Fix/FxcmFixClient.cs:line 117
-   at Nautilus.BlackBox.Brokerage.BrokerageGateway.Connect() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Brokerage/BrokerageGateway.cs:line 116
-   at Nautilus.BlackBox.Core.BlackBox.<ConnectToBrokerage>b__13_0() in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.BlackBox.Core/BlackBox.cs:line 172
-   at Nautilus.Common.Componentry.CommandHandler.Execute(Action action) in /home/cjdsellers/Documents/Projects/Nautech Systems/Nautilus/Source/Nautilus.Common/Componentry/CommandHandler.cs:line 46
-
-
-2018/04/30 09:47:56.118 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:47:56.205 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:47:56.205 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:47:56.205 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:47:56.205 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:47:56.205 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:47:56.206 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:47:56.206 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:47:56.388 [01][INF] [Core______] BlackBox: BlackBox instance created in 181ms
-2018/04/30 09:47:56.388 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:47:56.408 [03][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:47:56.408 [06][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:47:56.409 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:47:56.409 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:47:56.408 [05][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:47:56.409 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:47:56.409 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:47:56.408 [13][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:47:56.409 [07][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:47:56.409 [09][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:47:56.411 [06][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:47:56.411 [03][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:47:56.411 [05][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:47:56.414 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:47:56.415 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:47:56.415 [11][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:47:56.415 [12][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:47:56.415 [07][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:47:56.415 [03][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:47:56.417 [12][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:47:56.417 [11][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#177399343]
-2018/04/30 09:47:56.417 [07][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:49:15.647 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:49:15.733 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:49:15.734 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:49:15.914 [01][INF] [Core______] BlackBox: BlackBox instance created in 179ms
-2018/04/30 09:49:15.914 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:49:15.930 [08][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:49:15.930 [06][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:49:15.930 [05][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:49:15.931 [04][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:49:15.931 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:49:15.931 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:49:15.931 [14][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:49:15.931 [13][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:49:15.931 [11][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:49:15.931 [10][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:49:15.933 [05][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:49:15.933 [06][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:49:15.933 [08][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:49:15.938 [08][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:49:15.938 [08][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:49:15.938 [16][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:49:15.938 [12][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:49:15.938 [08][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:49:15.939 [11][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:49:15.940 [12][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:49:15.940 [11][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:49:15.941 [16][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1956074712]
-2018/04/30 09:50:12.323 [01][INF] [Serilog___] (version 2.6)
-2018/04/30 09:50:12.410 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: Is64BitProcess=True
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
-2018/04/30 09:50:12.411 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
-2018/04/30 09:50:12.591 [01][INF] [Core______] BlackBox: BlackBox instance created in 179ms
-2018/04/30 09:50:12.591 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
-2018/04/30 09:50:12.606 [03][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
-2018/04/30 09:50:12.606 [06][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
-2018/04/30 09:50:12.606 [08][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
-2018/04/30 09:50:12.606 [04][DBG] [Messaging_] EventBus: EventMessageBus initializing...
-2018/04/30 09:50:12.606 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
-2018/04/30 09:50:12.606 [10][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
-2018/04/30 09:50:12.606 [12][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
-2018/04/30 09:50:12.606 [13][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
-2018/04/30 09:50:12.608 [11][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
-2018/04/30 09:50:12.606 [09][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
-2018/04/30 09:50:12.609 [08][INF] [Messaging_] DocumentBus: Switchboard initialized
-2018/04/30 09:50:12.609 [06][INF] [Messaging_] CommandBus: Switchboard initialized
-2018/04/30 09:50:12.609 [04][INF] [Messaging_] EventBus: Switchboard initialized
-2018/04/30 09:50:12.613 [06][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
-2018/04/30 09:50:12.614 [15][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
-2018/04/30 09:50:12.614 [06][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
-2018/04/30 09:50:12.614 [06][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
-2018/04/30 09:50:12.614 [11][DBG] [Risk______] RiskService: Received InitializeRiskModel
-2018/04/30 09:50:12.615 [15][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
-2018/04/30 09:50:12.614 [14][DBG] [Data______] DataService: Received InitializeBrokerageGateway
-2018/04/30 09:50:12.615 [11][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
-2018/04/30 09:50:12.618 [14][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#2099544315]
+2018/04/30 10:16:12.820 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:16:12.907 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:16:12.908 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:16:13.096 [01][INF] [Core______] BlackBox: BlackBox instance created in 187ms
+2018/04/30 10:16:13.096 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:16:13.108 [04][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:16:13.108 [07][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:16:13.108 [06][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:16:13.109 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:16:13.109 [13][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:16:13.108 [09][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:16:13.108 [11][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:16:13.108 [03][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:16:13.108 [10][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:16:13.108 [12][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:16:13.111 [06][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:16:13.111 [07][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:16:13.111 [03][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:16:13.115 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:16:13.115 [03][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:16:13.115 [04][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:16:13.116 [03][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:16:13.116 [10][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:16:13.115 [15][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:16:13.117 [10][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:16:13.117 [15][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:16:13.118 [04][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1960325655]
+2018/04/30 10:22:15.978 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:22:16.065 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:22:16.065 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:22:16.065 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:22:16.065 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:22:16.065 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:22:16.066 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:22:16.066 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:22:16.245 [01][INF] [Core______] BlackBox: BlackBox instance created in 178ms
+2018/04/30 10:22:16.245 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:22:16.262 [15][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:22:16.262 [07][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:22:16.262 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:22:16.262 [09][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:22:16.262 [05][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:22:16.262 [03][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:22:16.262 [10][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:22:16.262 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:22:16.262 [11][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:22:16.262 [04][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:22:16.264 [07][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:22:16.264 [04][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:22:16.264 [05][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:22:16.268 [05][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:22:16.269 [05][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:22:16.269 [12][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:22:16.269 [13][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:22:16.269 [05][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:22:16.269 [10][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:22:16.270 [10][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:22:16.271 [13][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:22:16.271 [12][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#789250448]
+2018/04/30 10:23:43.004 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:23:43.119 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:23:43.119 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:23:43.119 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:23:43.120 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:23:43.120 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:23:43.120 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:23:43.120 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:23:43.317 [01][INF] [Core______] BlackBox: BlackBox instance created in 196ms
+2018/04/30 10:23:43.317 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:23:43.333 [14][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:23:43.334 [08][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:23:43.334 [09][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:23:43.334 [13][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:23:43.334 [12][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:23:43.334 [10][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:23:43.334 [11][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:23:43.334 [05][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:23:43.334 [06][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:23:43.334 [04][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:23:43.336 [04][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:23:43.336 [08][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:23:43.336 [06][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:23:43.340 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:23:43.340 [04][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:23:43.340 [14][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:23:43.340 [04][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:23:43.340 [13][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:23:43.340 [05][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:23:43.341 [13][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:23:43.342 [05][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:23:43.344 [14][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#1281203834]
+2018/04/30 10:26:40.775 [01][INF] [Serilog___] (version 2.6)
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: NautilusBlackBox - Automated Algorithmic Trading Platform (version 1.0.0.0)
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: ---------------------------------------------------------------------------
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: Is64BitOperatingSystem=True
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: Is64BitProcess=True
+2018/04/30 10:26:40.861 [01][INF] [Core______] BlackBox: Unix 4.13.0.39
+2018/04/30 10:26:40.862 [01][INF] [Core______] BlackBox: Microsoft.NET Framework (version 4.0.30319.42000)
+2018/04/30 10:26:41.039 [01][INF] [Core______] BlackBox: BlackBox instance created in 177ms
+2018/04/30 10:26:41.039 [01][INF] [Core______] BlackBox: Environment=Live, Broker=FXCM
+2018/04/30 10:26:41.060 [04][DBG] [AlphaModel] AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...
+2018/04/30 10:26:41.060 [03][DBG] [Data______] DataService: Nautilus.BlackBox.Data.DataService initializing...
+2018/04/30 10:26:41.060 [07][DBG] [Messaging_] CommandBus: CommandMessageBus initializing...
+2018/04/30 10:26:41.062 [05][DBG] [Messaging_] DocumentBus: DocumentMessageBus initializing...
+2018/04/30 10:26:41.062 [10][DBG] [Execution_] ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...
+2018/04/30 10:26:41.062 [11][DBG] [Risk______] RiskService: Nautilus.BlackBox.Risk.RiskService initializing...
+2018/04/30 10:26:41.062 [15][DBG] [Data______] MarketDataPort: Nautilus.BlackBox.Data.Market.MarketDataPort initializing...
+2018/04/30 10:26:41.062 [12][DBG] [Portfolio_] PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...
+2018/04/30 10:26:41.060 [08][DBG] [Messaging_] EventBus: EventMessageBus initializing...
+2018/04/30 10:26:41.062 [14][DBG] [Execution_] OrderBus: Nautilus.BlackBox.Execution.OrderBus initializing...
+2018/04/30 10:26:41.064 [08][INF] [Messaging_] EventBus: Switchboard initialized
+2018/04/30 10:26:41.064 [07][INF] [Messaging_] CommandBus: Switchboard initialized
+2018/04/30 10:26:41.064 [05][INF] [Messaging_] DocumentBus: Switchboard initialized
+2018/04/30 10:26:41.067 [07][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Data
+2018/04/30 10:26:41.067 [07][DBG] [Messaging_] CommandBus: [1] Core -> [InitializeBrokerageGateway] -> Execution
+2018/04/30 10:26:41.068 [07][DBG] [Messaging_] CommandBus: [2] Core -> [InitializeRiskModel] -> Risk
+2018/04/30 10:26:41.068 [11][DBG] [Data______] DataService: Received InitializeBrokerageGateway
+2018/04/30 10:26:41.068 [06][DBG] [Risk______] RiskService: Received InitializeRiskModel
+2018/04/30 10:26:41.068 [10][DBG] [Execution_] ExecutionService: Received InitializeBrokerageGateway
+2018/04/30 10:26:41.069 [06][INF] [Risk______] RiskService: BrokerageAccount and RiskModel initialized
+2018/04/30 10:26:41.070 [10][INF] [Execution_] OrderBus: Nautilus.BlackBox.Brokerage.BrokerageGateway initialized.
+2018/04/30 10:26:41.070 [11][INF] [Brokerage_] BrokerageGateway: MarketDataPort registered at [akka://NautilusActorSystem/user/$f/$a#979614989]

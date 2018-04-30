@@ -10,7 +10,6 @@ namespace Nautilus.Fix
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Threading.Tasks;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
@@ -253,7 +252,7 @@ namespace Nautilus.Fix
                     message.SetField(new Username(this.username));
                     message.SetField(new Password(this.password));
 
-                    Console.WriteLine("Session Authorized");
+                    Console.WriteLine("Authorizing session...");
                 }
 
                 message.SetField(new Account(this.accountNumber));

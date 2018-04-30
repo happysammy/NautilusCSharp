@@ -2,13 +2,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <LangVersion>7.2</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.BlackBox.xml</DocumentationFile>
-    <NoWarn>1591;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Algorithms\Nautilus.Algorithms.csproj" />
