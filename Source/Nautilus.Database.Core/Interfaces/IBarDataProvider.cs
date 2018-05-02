@@ -17,7 +17,7 @@ namespace Nautilus.Database.Core.Interfaces
     /// <summary>
     /// Provides the meta-data for a market data provider.
     /// </summary>
-    public interface IBarDataProvider : ICsvDataConfigEditor
+    public interface IBarDataProvider
     {
         /// <summary>
         /// Gets a list of all bar specifications provided by the data provider.

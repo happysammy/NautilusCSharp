@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 
-namespace Nautilus.Database.FxStreet
+namespace Nautilus.DataProviders.FxStreet
 {
     using Nautilus.DomainModel.Enums;
 

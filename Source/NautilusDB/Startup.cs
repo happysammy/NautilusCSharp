@@ -24,7 +24,7 @@ namespace NautilusDB
     using Nautilus.Database.Core.Build;
     using Nautilus.Database.Core.Configuration;
     using Nautilus.Database.Core.Temp;
-    using Nautilus.Database.Dukascopy;
+    using Nautilus.DataProviders.Dukascopy;
     using Nautilus.Serilog;
 
     /// <summary>
@@ -128,8 +128,6 @@ namespace NautilusDB
                 new MockEconomicEventRepository(),
                 new DukascopyBarDataProvider(
                     this.dukasConfig,
-                    configCsvPath,
-                    initialFromDateSpecified,
                     initialFromDateString,
                     collectionOffsetMinutes));
 

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Dukascopy
+namespace Nautilus.DataProviders.Dukascopy
 {
     using System;
     using System.Collections.Generic;
@@ -31,14 +31,10 @@ namespace Nautilus.Database.Dukascopy
         /// Initializes a new instance of the <see cref="DukascopyBarDataProvider"/> class.
         /// </summary>
         /// <param name="config">The market data provider configuration.</param>
-        /// <param name="configCsvPath">The historic config CSV path.</param>
-        /// <param name="initialFromDateSpecified">Is the initial from date specified flag.</param>
         /// <param name="initialFromDateString">The initial from date string.</param>
         /// <param name="collectionOffsetMinutes">The collection offset minutes.</param>
         public DukascopyBarDataProvider(
             MarketDataProviderConfig config,
-            string configCsvPath,
-            bool initialFromDateSpecified,
             string initialFromDateString,
             int collectionOffsetMinutes)
         {
@@ -48,13 +44,6 @@ namespace Nautilus.Database.Dukascopy
 
             this.SymbolBarDatas = BuildBarSpecifications(config.CurrencyPairs, config.BarResolutions);
             this.DataPath = new DirectoryInfo(config.CsvDataDirectory);
-
-            this.HistoricConfigEditor = new DukascopyHistoricConfigEditor(
-                configCsvPath,
-                config.TimestampParsePattern,
-                initialFromDateSpecified,
-                initialFromDateString);
-
             this.TimestampParsePattern = config.TimestampParsePattern;
             this.VolumeMultiple = config.VolumeMultiple;
             this.IsBarDataCheckOn = config.IsBarDataCheckOn;
@@ -66,11 +55,6 @@ namespace Nautilus.Database.Dukascopy
         /// Gets the <see cref="Dukascopy"/> CSV data path.
         /// </summary>
         public DirectoryInfo DataPath { get; }
-
-        /// <summary>
-        /// Gets the <see cref="Dukascopy"/> historic config CSV file editor;
-        /// </summary>
-        public DukascopyHistoricConfigEditor HistoricConfigEditor { get; }
 
         /// <summary>
         /// Gets the <see cref="Dukascopy"/> <see cref="ZonedDateTime"/> parse pattern.
@@ -86,9 +70,6 @@ namespace Nautilus.Database.Dukascopy
         /// Gets a value indicating whether the bar data integrity check is on.
         /// </summary>
         public bool IsBarDataCheckOn { get; }
-
-        // TODO: Temporary property to provide a hook into the historic config csv editor.
-        public bool InitialFromDateSpecified => this.HistoricConfigEditor.InitialFromDateSpecified;
 
         /// <summary>
         /// Returns the <see cref="Dukascopy"/> label for the given <see cref="BarResolution"/>.
@@ -114,22 +95,6 @@ namespace Nautilus.Database.Dukascopy
                 default:
                     throw new ArgumentOutOfRangeException(nameof(resolution), resolution, null);
             }
-        }
-
-        // TODO: Temporary method to provide a hook into the historic config csv editor.
-        public CommandResult InitialFromDateConfigCsv(
-            IReadOnlyList<string> currencyPairs,
-            ZonedDateTime toDateTime)
-        {
-            return this.HistoricConfigEditor.InitialFromDateConfigCsv(currencyPairs, toDateTime);
-        }
-
-        public CommandResult UpdateConfigCsv(
-            IReadOnlyList<string> currencyPairs,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
-        {
-            return this.HistoricConfigEditor.UpdateConfigCsv(currencyPairs, fromDateTime, toDateTime);
         }
 
         private static IReadOnlyCollection<SymbolBarSpec> BuildBarSpecifications(

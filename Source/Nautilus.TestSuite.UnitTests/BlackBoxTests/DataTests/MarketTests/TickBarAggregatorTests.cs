@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 
             // Assert
             CustomAssert.EventuallyContains(
-                "TickBarAggregator-AUDUSD.FXCM(TestScalp): Registered for Tick(5) bars",
+                "TickBarAggregator-AUDUSD.FXCM(TestScalp): Registered for 5-Tick[Bid] bars",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

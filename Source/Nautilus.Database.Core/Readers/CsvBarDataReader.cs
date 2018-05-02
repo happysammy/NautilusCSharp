@@ -249,13 +249,13 @@ namespace Nautilus.Database.Core.Readers
             // TODO: Temporary if to handle Dukas 'Hourly'.
             if (this.SymbolBarSpec.BarSpecification.Resolution == BarResolution.Hour)
             {
-                return $"{this.SymbolBarSpec.Symbol}_"
+                return $"{this.SymbolBarSpec.Symbol.Code}_"
                        + $"{barDataProvider.GetResolutionLabel(this.SymbolBarSpec.BarSpecification.Resolution)}_"
                        + $"{this.SymbolBarSpec.BarSpecification.QuoteType}_"
                        + $"*.csv";
             }
 
-            return $"{this.SymbolBarSpec.Symbol}_"
+            return $"{this.SymbolBarSpec.Symbol.Code}_"
                  + $"{this.SymbolBarSpec.BarSpecification.Period} "
                  + $"{barDataProvider.GetResolutionLabel(this.SymbolBarSpec.BarSpecification.Resolution)}_"
                  + $"{this.SymbolBarSpec.BarSpecification.QuoteType}_"

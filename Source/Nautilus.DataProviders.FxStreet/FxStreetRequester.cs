@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.FxStreet
+namespace Nautilus.DataProviders.FxStreet
 {
     using System;
     using System.Collections.Generic;

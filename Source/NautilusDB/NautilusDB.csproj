@@ -17,7 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Database.Compression\Nautilus.Database.Compression.csproj" />
-    <ProjectReference Include="..\Nautilus.Database.Dukascopy\Nautilus.Database.Dukascopy.csproj" />
+    <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
+    <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
   </ItemGroup>

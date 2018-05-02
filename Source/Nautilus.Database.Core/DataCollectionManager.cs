@@ -15,7 +15,6 @@ namespace Nautilus.Database.Core
     using System.Threading.Tasks;
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
-    using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -47,9 +46,6 @@ namespace Nautilus.Database.Core
         private readonly DatabaseSetupContainer storedSetupContainer;
 
         private Dictionary<SymbolBarSpec, bool> collectionJobsRoster;
-
-        // TODO: Temporary variable to handle Dukascopy CSV initial collection from date.
-        private bool isInitialCollection = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
@@ -230,13 +226,6 @@ namespace Nautilus.Database.Core
             // Allow above actors to initialize.
             Task.Delay(2000);
 
-            if (this.barDataProvider.InitialFromDateSpecified)
-            {
-                this.barDataProvider.InitialFromDateConfigCsv(
-                    this.GetCurrencyPairsStringList(),
-                    this.collectionSchedule.NextCollectionTime);
-            }
-
             this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
 
             this.Self.Tell(new CollectData(
@@ -261,16 +250,6 @@ namespace Nautilus.Database.Core
 
         private void ScheduleNextCollection()
         {
-            if (!this.isInitialCollection)
-            {
-                this.barDataProvider.UpdateConfigCsv(
-                    this.GetCurrencyPairsStringList(),
-                    this.collectionSchedule.NextCollectionTime - Duration.FromDays(6),
-                    this.collectionSchedule.NextCollectionTime - Duration.FromDays(1));
-            }
-
-            this.isInitialCollection = false;
-
             var timeFromCollection = (this.collectionSchedule.NextCollectionTime - this.Clock.TimeNow())
                 .ToTimeSpan();
 

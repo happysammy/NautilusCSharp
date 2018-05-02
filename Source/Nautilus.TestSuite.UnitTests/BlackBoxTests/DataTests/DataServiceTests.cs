@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
             LogDumper.Dump(this.mockLogger, this.output);
 
             CustomAssert.EventuallyContains(
-                "MarketDataProcessor-AUDUSD.LMAX: Setup for Minute(5) bars",
+                "MarketDataProcessor-AUDUSD.LMAX: Setup for 5-Minute[Bid] bars",
                 this.mockLogger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
