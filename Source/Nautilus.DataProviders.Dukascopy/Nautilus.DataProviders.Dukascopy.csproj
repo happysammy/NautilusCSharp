@@ -2,8 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
+    <AssemblyName>Nautilus.DataProviders.Dukascopy</AssemblyName>
+    <RootNamespace>Nautilus.DataProviders.Dukascopy</RootNamespace>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Database.Dukascopy.xml</DocumentationFile>
