@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="StopMarketOrder"/> class. Represents a stop market order type.
+    /// Represents a StopMarket order type.
     /// </summary>
     public class StopMarketOrder : StopOrder
     {

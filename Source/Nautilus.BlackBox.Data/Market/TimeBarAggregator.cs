@@ -18,11 +18,11 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.DomainModel.Extensions;
     using NodaTime;
 
     /// <summary>
@@ -109,8 +109,8 @@ namespace Nautilus.BlackBox.Data.Market
             this.Log(
                 LogLevel.Debug,
                   $"Registered for {this.BarSpecification} bars "
-                + $"quoteBarStart={this.barBuilder.StartTime.ToStringFormattedIsoUtc()}, "
-                + $"quoteBarEnd={this.barEndTime.ToStringFormattedIsoUtc()}");
+                + $"quoteBarStart={this.barBuilder.StartTime.ToIsoString()}, "
+                + $"quoteBarEnd={this.barEndTime.ToIsoString()}");
 
             this.Log(LogLevel.Debug, $"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
         }

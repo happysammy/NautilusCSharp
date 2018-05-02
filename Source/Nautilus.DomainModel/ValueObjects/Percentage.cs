@@ -1,9 +1,10 @@
-﻿//---------------------------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="Percentage.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-//---------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -29,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="Percentage"/> with a value of zero.
+        /// Returns a new <see cref="Percentage"/> with a value of zero.
         /// </summary>
         /// <returns>A <see cref="Percentage"/>.</returns>
         public static Percentage Zero()
@@ -38,7 +39,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="Percentage"/> with the given percent value.
+        /// Returns a new <see cref="Percentage"/> with the given percent value.
         /// </summary>
         /// <param name="percent">The percent value.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>

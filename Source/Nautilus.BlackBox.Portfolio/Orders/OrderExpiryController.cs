@@ -19,11 +19,11 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.DomainModel.Extensions;
 
     /// <summary>
     /// The sealed <see cref="OrderExpiryController"/> class. Contains and processes all
@@ -167,7 +167,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                         this.Log(
                             LogLevel.Warning,
                             $"ForceRemoveExpiredCounter() "
-                          + $"({counter} at {this.TimeNow().ToStringFormattedIsoUtc()}) "
+                          + $"({counter} at {this.TimeNow().ToIsoString()}) "
                           + $"TotalCounters={this.TotalCounters}");
                     }
                 }

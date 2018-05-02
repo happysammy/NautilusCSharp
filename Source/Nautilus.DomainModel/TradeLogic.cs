@@ -18,8 +18,7 @@ namespace Nautilus.DomainModel
     using Nautilus.DomainModel.Orders;
 
     /// <summary>
-    /// The immutable static <see cref="TradeLogic"/> class. Represents generic trade logic as a
-    /// finite state machine.
+    /// Provides generic trade logic.
     /// </summary>
     [Immutable]
     public static class TradeLogic

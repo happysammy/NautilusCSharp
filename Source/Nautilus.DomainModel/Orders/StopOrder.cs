@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The abstract <see cref="StopOrder"/> class. The base class for all stop order types.
+    /// The base class for all Stop order types.
     /// </summary>
     public abstract class StopOrder : Order
     {

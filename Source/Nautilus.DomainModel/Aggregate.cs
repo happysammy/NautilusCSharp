@@ -15,8 +15,8 @@ namespace Nautilus.DomainModel
     using NodaTime;
 
     /// <summary>
-    /// The abstract <see cref="Aggregate{T}"/> class. The base class for all uniquely identifiable
-    /// domain objects which are made up of an aggregation of entities.
+    /// The base class for all uniquely identifiable domain objects which are made up of an
+    /// aggregation of entities.
     /// </summary>
     /// <typeparam name="T">The aggregate type.</typeparam>
     public abstract class Aggregate<T> : Entity<T> where T : class

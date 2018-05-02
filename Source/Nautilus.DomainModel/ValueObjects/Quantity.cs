@@ -1,9 +1,10 @@
-﻿//---------------------------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="Quantity.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-//---------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -29,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Creates a new <see cref="Quantity"/> with zero value.
+        /// Returns a new <see cref="Quantity"/> with zero value.
         /// </summary>
         /// <returns>A <see cref="Quantity"/>.</returns>
         public static Quantity Zero()
@@ -38,7 +39,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Creates a new <see cref="Quantity"/> with the given value amount.
+        /// Returns a new <see cref="Quantity"/> with the given value amount.
         /// </summary>
         /// <param name="amount">The amount.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>

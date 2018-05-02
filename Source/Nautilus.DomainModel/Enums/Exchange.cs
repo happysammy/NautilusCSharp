@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The exchange the instrument is traded on.
+    /// The venue an instrument is traded on.
     /// </summary>
     public enum Exchange
     {

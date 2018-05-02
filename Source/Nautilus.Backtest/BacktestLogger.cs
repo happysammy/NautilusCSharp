@@ -13,8 +13,8 @@ namespace Nautilus.Backtest
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core;
-    using Nautilus.DomainModel.Extensions;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// The mock system logger.
@@ -50,7 +50,7 @@ namespace Nautilus.Backtest
         /// </param>
         public void Verbose(Enum service, string message)
         {
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][VRB] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][VRB] [{LogFormatter.ToOutput(service)}] {message}");
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nautilus.Backtest
         /// </param>
         public void Debug(Enum service, string message)
         {
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][DBG] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][DBG] [{LogFormatter.ToOutput(service)}] {message}");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Nautilus.Backtest
         /// </param>
         public void Information(Enum service, string message)
         {
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][INF] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][INF] [{LogFormatter.ToOutput(service)}] {message}");
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Nautilus.Backtest
         public void Warning(Enum service, string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][WRN] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][WRN] [{LogFormatter.ToOutput(service)}] {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -112,7 +112,7 @@ namespace Nautilus.Backtest
         public void Error(Enum service, string message, Exception ex)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][ERR] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][ERR] [{LogFormatter.ToOutput(service)}] {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -131,7 +131,7 @@ namespace Nautilus.Backtest
         public void Fatal(Enum service, string message, Exception ex)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{this.clock.TimeNow().ToStringFormattedIsoUtc()} [{Thread.CurrentThread.ManagedThreadId:000}][FTL] [{LogFormatter.ToOutput(service)}] {message}");
+            Console.WriteLine($"{this.clock.TimeNow().ToIsoString()} [{Thread.CurrentThread.ManagedThreadId:000}][FTL] [{LogFormatter.ToOutput(service)}] {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 

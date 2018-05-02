@@ -13,8 +13,7 @@ namespace Nautilus.DomainModel
     using NodaTime;
 
     /// <summary>
-    /// The immutable abstract <see cref="Entity{T}"/> class. The base class for all uniquely
-    /// identifiable domain objects.
+    /// The base class for all uniquely identifiable domain objects.
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]

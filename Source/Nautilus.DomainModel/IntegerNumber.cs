@@ -13,8 +13,7 @@ namespace Nautilus.DomainModel
     using NautechSystems.CSharp.Validation;
 
     /// <summary>
-    /// The immutable abstract <see cref="IntegerNumber{T}"/> class. The base class for all value
-    /// objects based on an integer number.
+    /// The base class for all <see cref="ValueObject{T}"/>(s) based on an integer number.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ValueObject{T}"/>.</typeparam>
     [Immutable]

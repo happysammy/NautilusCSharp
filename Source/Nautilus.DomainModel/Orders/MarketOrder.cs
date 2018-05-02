@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="MarketOrder"/> class. Represents a market order type.
+    /// Represents a Market order type.
     /// </summary>
     public class MarketOrder : Order
     {

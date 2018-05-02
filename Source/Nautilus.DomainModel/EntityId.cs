@@ -12,7 +12,7 @@ namespace Nautilus.DomainModel
     using NautechSystems.CSharp.Validation;
 
     /// <summary>
-    /// The immutable sealed <see cref="EntityId"/> class. Represents a unique validated entity identifier.
+    /// A <see cref="ValueObject{T}"/> which represents a unique validated entity identifier.
     /// </summary>
     [Immutable]
     public sealed class EntityId : ValidString

@@ -12,8 +12,8 @@ namespace Nautilus.DomainModel.Entities
     using System.Runtime.Serialization;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -110,7 +110,7 @@ namespace Nautilus.DomainModel.Entities
         private Instrument(SerializationInfo info, StreamingContext context)
             : base(
                 new EntityId(info.GetString("InstrumentId")),
-                ZonedDateTimeExtensions.GetFromString(info.GetString("Timestamp")))
+                (info.GetString("Timestamp").ToZonedDateTimeFromIso()))
         {
             Debug.NotNull(info, nameof(info));
 
@@ -257,7 +257,7 @@ namespace Nautilus.DomainModel.Entities
             info.AddValue(nameof(this.MarginRequirement), this.MarginRequirement);
             info.AddValue(nameof(this.RolloverInterestBuy), this.RolloverInterestBuy);
             info.AddValue(nameof(this.RolloverInterestSell), this.RolloverInterestSell);
-            info.AddValue(nameof(this.Timestamp), this.Timestamp.ToStringFormattedIsoUtc());
+            info.AddValue(nameof(this.Timestamp), this.Timestamp.ToIsoString());
         }
 
         /// <summary>

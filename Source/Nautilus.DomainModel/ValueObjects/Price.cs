@@ -1,9 +1,10 @@
-﻿//---------------------------------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="Price.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
-//---------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.DomainModel.ValueObjects
 {
@@ -15,7 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using NautechSystems.CSharp.Validation;
 
     /// <summary>
-    /// The immutable sealed <see cref="Price"/> class. Represents a none-negative financial market price.
+    /// Represents a none-negative financial market price.
     /// </summary>
     [Immutable]
     public sealed class Price : DecimalNumber<Price>, IComparable<DecimalNumber<Price>>

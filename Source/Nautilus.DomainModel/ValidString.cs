@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel
     using NautechSystems.CSharp.Validation;
 
     /// <summary>
-    /// The immutable abstract <see cref="ValidString"/> class. Encapsulates a validated string.
+    /// A <see cref="ValueObject{T}"/> which encapsulates a validated string.
     /// </summary>
     [Immutable]
     public abstract class ValidString : ValueObject<ValidString>

@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.DataProvidersTests.FxStreetTests
+namespace Nautilus.TestSuite.UnitTests.DataProvidersTests.FxStreetTests
 {
     using System.Diagnostics.CodeAnalysis;
 

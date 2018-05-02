@@ -16,12 +16,12 @@ namespace Nautilus.BlackBox.Core
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.DomainModel.Extensions;
     using NodaTime;
 
     /// <summary>
@@ -281,7 +281,7 @@ namespace Nautilus.BlackBox.Core
             return $"{tick}: "
                  + $"Bid={tick.Bid}, "
                  + $"Ask={tick.Ask}, "
-                 + $"SignalTimestamp={tick.Timestamp.ToStringFormattedIsoUtc()}";
+                 + $"SignalTimestamp={tick.Timestamp.ToIsoString()}";
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Nautilus.BlackBox.Core
                  + $"GlobalMaxRiskPerTrade={model.GlobalMaxRiskPerTrade}, "
                  + $"PositionSizeHardLimits={model.PositionSizeHardLimits}, "
                  + $"EventCount={model.EventCount}, "
-                 + $"LastEventTime={model.LastEventTime.ToStringFormattedIsoUtc()}";
+                 + $"LastEventTime={model.LastEventTime.ToIsoString()}";
         }
 
         /// <summary>

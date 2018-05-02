@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="StopLimitOrder"/> class. Represents a stop limit order type.
+    /// Represents a StopLimit order type.
     /// </summary>
     public class StopLimitOrder : StopOrder
     {

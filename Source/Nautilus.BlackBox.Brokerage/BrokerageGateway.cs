@@ -19,13 +19,13 @@ namespace Nautilus.BlackBox.Brokerage
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.DomainModel.Extensions;
     using NodaTime;
 
     /// <summary>
@@ -645,7 +645,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 if (expireTime.HasValue)
                 {
-                    expireTimeString = expireTime.Value.ToStringFormattedIsoUtc();
+                    expireTimeString = expireTime.Value.ToIsoString();
                 }
 
                 this.Log(LogLevel.Information, $"OrderWorking: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price}, ExpireTime={expireTimeString})");
