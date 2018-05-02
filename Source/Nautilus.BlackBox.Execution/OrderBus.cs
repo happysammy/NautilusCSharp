@@ -103,9 +103,7 @@ namespace Nautilus.BlackBox.Execution
             foreach (var stoplossModification in message.StopLossModificationsIndex)
             {
                 var orderModification = new KeyValuePair<Order, Price>(stoplossModification.Key, stoplossModification.Value);
-
                 this.brokerageGateway.ModifyStoplossOrder(orderModification);
-
                 var symbol = stoplossModification.Key.Symbol;
 
                 this.Log(LogLevel.Debug, $"Routing StoplossReplaceRequest {symbol} => {this.brokerageGateway.Broker}");
@@ -117,7 +115,6 @@ namespace Nautilus.BlackBox.Execution
             Validate.True(this.IsConnectedToBroker(), nameof(this.brokerageGateway));
 
             var tradeUnit = message.ForTradeUnit;
-
             this.brokerageGateway.ClosePosition(tradeUnit.Position);
 
             this.Log(LogLevel.Debug, $"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.brokerageGateway.Broker}");
