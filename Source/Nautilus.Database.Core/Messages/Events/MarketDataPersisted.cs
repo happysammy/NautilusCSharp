@@ -19,22 +19,22 @@ namespace Nautilus.Database.Core.Messages.Events
     public sealed class MarketDataPersisted : Event
     {
         public MarketDataPersisted(
-            SymbolBarData symbolBarData,
+            SymbolBarSpec symbolBarSpec,
             ZonedDateTime lastBarTime,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(symbolBarData, nameof(symbolBarData));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
             Validate.NotDefault(lastBarTime, nameof(lastBarTime));
             Validate.NotDefault(identifier, nameof(identifier));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.SymbolBarData = symbolBarData;
+            this.SymbolBarSpec = symbolBarSpec;
             this.LastBarTime = lastBarTime;
         }
 
-        public SymbolBarData SymbolBarData { get; }
+        public SymbolBarSpec SymbolBarSpec { get; }
 
         public ZonedDateTime LastBarTime { get; }
 

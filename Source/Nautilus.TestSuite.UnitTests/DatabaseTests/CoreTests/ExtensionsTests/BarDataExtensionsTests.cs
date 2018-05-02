@@ -5,12 +5,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ExtensionsTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Database.Core.Extensions;
     using Nautilus.Database.Core.Types;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
@@ -30,10 +29,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests
                 0.80005M,
                 500000,
                 StubZonedDateTime.UnixEpoch());
-            var barString = bar.ToUtf8Bytes();
+            var barBytes = bar.ToUtf8Bytes();
 
             // Act
-            var result = barString.ToBarData();
+            var result = barBytes.ToBarData();
 
             // Assert
             Assert.Equal(bar, result);

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core
+namespace Nautilus.Database.Core.Enums
 {
     public enum DatabaseService
     {

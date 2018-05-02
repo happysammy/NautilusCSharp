@@ -19,9 +19,9 @@ namespace Nautilus.Database.Core.Interfaces
         /// Returns the count of bars persisted within the database with the given
         /// <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="symbolBarData">The symbol bar data.</param>
+        /// <param name="symbolBarSpec">The symbol bar data.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        long BarsCount(SymbolBarData symbolBarData);
+        long BarsCount(SymbolBarSpec symbolBarSpec);
 
         /// <summary>
         /// Returns the total count of bars persisted within the database.
@@ -53,6 +53,6 @@ namespace Nautilus.Database.Core.Interfaces
         /// </summary>
         /// <param name="barSpec">The bar specification.</param>
         /// <returns>A query result of <see cref="ZonedDateTime"/>.</returns>
-        QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarData barSpec);
+        QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec);
     }
 }

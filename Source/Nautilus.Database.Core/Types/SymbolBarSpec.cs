@@ -4,9 +4,9 @@ namespace Nautilus.Database.Core.Types
 {
     using Nautilus.DomainModel.ValueObjects;
 
-    public class SymbolBarData
+    public class SymbolBarSpec
     {
-        public SymbolBarData(
+        public SymbolBarSpec(
             Symbol symbol,
             BarSpecification barSpecification)
         {

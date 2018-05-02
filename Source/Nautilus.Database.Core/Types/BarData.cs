@@ -160,12 +160,12 @@ namespace Nautilus.Database.Core.Types
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return this.Timestamp.ToIsoString() + "," +
-                   this.Open.ToString(CultureInfo.InvariantCulture) + "," +
+            return this.Open.ToString(CultureInfo.InvariantCulture) + "," +
                    this.High.ToString(CultureInfo.InvariantCulture) + "," +
                    this.Low.ToString(CultureInfo.InvariantCulture) + "," +
                    this.Close.ToString(CultureInfo.InvariantCulture) + "," +
-                   this.Volume.ToString(CultureInfo.InvariantCulture);
+                   this.Volume.ToString(CultureInfo.InvariantCulture) + "," +
+                   this.Timestamp.ToIsoString();
         }
 
         /// <summary>

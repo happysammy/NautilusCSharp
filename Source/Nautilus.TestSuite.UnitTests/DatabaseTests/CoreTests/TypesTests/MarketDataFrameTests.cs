@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
     public class MarketDataFrameTests
     {
         private readonly ITestOutputHelper output;
-        private readonly SymbolBarData stubBarSpec;
+        private readonly SymbolBarSpec stubBarSpec;
 
         public MarketDataFrameTests(ITestOutputHelper output)
         {

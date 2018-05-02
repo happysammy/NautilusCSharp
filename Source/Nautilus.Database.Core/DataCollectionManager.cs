@@ -41,12 +41,12 @@ namespace Nautilus.Database.Core
         private readonly IScheduler scheduler;
         private readonly IActorRef databaseTaskActorRef;
         private readonly IBarDataProvider barDataProvider;
-        private readonly Dictionary<SymbolBarData, IActorRef> marketDataCollectors;
+        private readonly Dictionary<SymbolBarSpec, IActorRef> marketDataCollectors;
         private readonly EconomicNewsEventCollector newsEventCollector;
         private readonly DataCollectionSchedule collectionSchedule;
         private readonly DatabaseSetupContainer storedSetupContainer;
 
-        private Dictionary<SymbolBarData, bool> collectionJobsRoster;
+        private Dictionary<SymbolBarSpec, bool> collectionJobsRoster;
 
         // TODO: Temporary variable to handle Dukascopy CSV initial collection from date.
         private bool isInitialCollection = true;
@@ -82,10 +82,10 @@ namespace Nautilus.Database.Core
             this.scheduler = scheduler;
             this.databaseTaskActorRef = databaseTaskActorRef;
             this.barDataProvider = barDataProvider;
-            this.marketDataCollectors = new Dictionary<SymbolBarData, IActorRef>();
+            this.marketDataCollectors = new Dictionary<SymbolBarSpec, IActorRef>();
             this.newsEventCollector = new EconomicNewsEventCollector();
             this.collectionSchedule = collectionSchedule;
-            this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
+            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
             this.storedSetupContainer = container;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
@@ -111,7 +111,7 @@ namespace Nautilus.Database.Core
 
             if (message.DataType == DataType.Bar)
             {
-                this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
+                this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
 
                 foreach (var collector in this.marketDataCollectors.Keys)
                 {
@@ -136,7 +136,7 @@ namespace Nautilus.Database.Core
             if (this.barDataProvider.IsBarDataCheckOn)
             {
                 var result = BarDataChecker.CheckBars(
-                    message.MarketData.SymbolBarData,
+                    message.MarketData.SymbolBarSpec,
                     message.MarketData.BarsData);
 
                 if (result.IsSuccess)
@@ -169,16 +169,16 @@ namespace Nautilus.Database.Core
         private void OnMessage(MarketDataPersisted message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.DictionaryContainsKey(message.SymbolBarData, nameof(message.SymbolBarData.BarSpecification), this.marketDataCollectors);
+            Debug.DictionaryContainsKey(message.SymbolBarSpec, nameof(message.SymbolBarSpec.BarSpecification), this.marketDataCollectors);
 
-            this.marketDataCollectors[message.SymbolBarData].Tell(message);
+            this.marketDataCollectors[message.SymbolBarSpec].Tell(message);
         }
 
         private void OnMessage(AllDataCollected message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.collectionJobsRoster[message.SymbolBarData] = true;
+            this.collectionJobsRoster[message.SymbolBarSpec] = true;
 
             if (this.collectionJobsRoster.All(c => c.Value == true))
             {
@@ -237,7 +237,7 @@ namespace Nautilus.Database.Core
                     this.collectionSchedule.NextCollectionTime);
             }
 
-            this.collectionJobsRoster = new Dictionary<SymbolBarData, bool>();
+            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
 
             this.Self.Tell(new CollectData(
                 DataType.Bar,

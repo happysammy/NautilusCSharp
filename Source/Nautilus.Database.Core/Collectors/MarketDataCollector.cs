@@ -37,7 +37,7 @@ namespace Nautilus.Database.Core.Collectors
             DataCollectionSchedule collectionSchedule)
             : base(
                 ServiceContext.Database,
-                LabelFactory.Component($"{nameof(MarketDataCollector)}-{dataReader.SymbolBarData}"),
+                LabelFactory.Component($"{nameof(MarketDataCollector)}-{dataReader.SymbolBarSpec}"),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -64,9 +64,9 @@ namespace Nautilus.Database.Core.Collectors
 
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
-                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.SymbolBarData}");
+                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.SymbolBarSpec}");
 
-                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarData, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
 
                 return;
             }
@@ -101,7 +101,7 @@ namespace Nautilus.Database.Core.Collectors
                 }
             }
 
-            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarData, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
         }
 
         private void OnMessage(DataStatusResponse message)

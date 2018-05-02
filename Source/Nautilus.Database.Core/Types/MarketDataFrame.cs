@@ -8,7 +8,6 @@
 
 namespace Nautilus.Database.Core.Types
 {
-    using Nautilus.DomainModel.ValueObjects;
     using System.Linq;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
@@ -23,23 +22,23 @@ namespace Nautilus.Database.Core.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketDataFrame"/> class.
         /// </summary>
-        /// <param name="symbolBarData">The symbol bar data.</param>
+        /// <param name="symbolBarSpec">The symbol bar data.</param>
         /// <param name="barsData">The bars dictionary.</param>
         /// <exception cref="ValidationException">Throws if the bar specification is the default
         /// value, or if the bars collection is null or empty.</exception>
-        public MarketDataFrame(SymbolBarData symbolBarData, BarData[] barsData)
+        public MarketDataFrame(SymbolBarSpec symbolBarSpec, BarData[] barsData)
         {
-            Validate.NotNull(symbolBarData, nameof(symbolBarData));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
             Validate.CollectionNotNullOrEmpty(barsData, nameof(barsData));
 
-            this.SymbolBarData = symbolBarData;
+            this.SymbolBarSpec = symbolBarSpec;
             this.BarsData = barsData;
         }
 
         /// <summary>
         /// Gets the market data frames symbol.
         /// </summary>
-        public SymbolBarData SymbolBarData { get; }
+        public SymbolBarSpec SymbolBarSpec { get; }
 
         /// <summary>
         /// Gets the market data frames bars.

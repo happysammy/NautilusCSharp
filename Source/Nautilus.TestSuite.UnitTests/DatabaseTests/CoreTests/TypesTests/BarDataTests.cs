@@ -13,10 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Extensions;
     using Nautilus.Database.Core.Types;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -145,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
             var result = bar.ToString();
 
             // Assert
-            Assert.Equal("1970-01-01T00:00:00.000,0.80000,0.80010,0.79990,0.80001,1000000", result);
+            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000,1970-01-01T00:00:00.000", result);
         }
 
         [Fact]
@@ -184,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
             var result = bar.ValuesToString();
 
             // Assert
-            Assert.Equal("0.80000,0.80010,0.79990,0.80005,500000", result);
+            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000", result);
         }
 
         [Fact]

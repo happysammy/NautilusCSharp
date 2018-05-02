@@ -8,7 +8,7 @@
 
     public class MockMarketDataRepository : IMarketDataRepository
     {
-        public long BarsCount(SymbolBarData symbolBarData)
+        public long BarsCount(SymbolBarSpec symbolBarSpec)
         {
             throw new System.NotImplementedException();
         }
@@ -23,7 +23,7 @@
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarData barSpec)
+        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec)
         {
             throw new System.NotImplementedException();
         }

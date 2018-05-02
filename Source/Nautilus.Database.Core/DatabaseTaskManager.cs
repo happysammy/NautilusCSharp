@@ -63,7 +63,7 @@ namespace Nautilus.Database.Core
         {
             Debug.NotNull(message, nameof(message));
 
-            var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.SymbolBarData);
+            var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.SymbolBarSpec);
 
             sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.Clock.TimeNow()));
         }
@@ -73,7 +73,7 @@ namespace Nautilus.Database.Core
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var symbolBarData = message.MarketData.SymbolBarData;
+            var symbolBarData = message.MarketData.SymbolBarSpec;
             var result = this.marketDataRepository.Add(message.MarketData);
             this.LogResult(result);
 

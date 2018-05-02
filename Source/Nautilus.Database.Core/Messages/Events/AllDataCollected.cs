@@ -17,19 +17,19 @@ namespace Nautilus.Database.Core.Messages.Events
     public class AllDataCollected : Event
     {
         public AllDataCollected(
-            SymbolBarData symbolBarData,
+            SymbolBarSpec symbolBarSpec,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(symbolBarData, nameof(symbolBarData));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
             Validate.NotDefault(identifier, nameof(identifier));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.SymbolBarData = symbolBarData;
+            this.SymbolBarSpec = symbolBarSpec;
         }
 
-        public SymbolBarData SymbolBarData { get; }
+        public SymbolBarSpec SymbolBarSpec { get; }
 
 
         /// <summary>

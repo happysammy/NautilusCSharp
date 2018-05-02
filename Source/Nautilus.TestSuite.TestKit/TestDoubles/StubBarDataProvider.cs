@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public string DateTimeParsePattern => "yyyy.MM.dd HH:mm:ss";
 
-        public IReadOnlyCollection<SymbolBarData> SymbolBarDatas => this.GetSymbolBarDatas();
+        public IReadOnlyCollection<SymbolBarSpec> SymbolBarDatas => this.GetSymbolBarDatas();
 
         public DirectoryInfo DataPath => new DirectoryInfo(TestKitConstants.TestDataDirectory);
 
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
         }
 
-        private IReadOnlyCollection<SymbolBarData> GetSymbolBarDatas()
+        private IReadOnlyCollection<SymbolBarSpec> GetSymbolBarDatas()
         {
             var symbols = new List<string>
                               {
@@ -126,16 +126,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                                   "ZARJPY"
                               }.Distinct();
 
-            var symbolBarSpecs = new List<SymbolBarData>();
+            var symbolBarSpecs = new List<SymbolBarSpec>();
 
             foreach (var symbol in symbols)
             {
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)));
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Minute, 1)));
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1)));
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Hour, 1)));
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)));
-                symbolBarSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Day, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Minute, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Hour, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)));
+                symbolBarSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Day, 1)));
             }
 
             return symbolBarSpecs.AsReadOnly();

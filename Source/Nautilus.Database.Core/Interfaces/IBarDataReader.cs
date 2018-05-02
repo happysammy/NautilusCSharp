@@ -15,7 +15,7 @@ namespace Nautilus.Database.Core.Interfaces
 
     public interface IBarDataReader
     {
-        SymbolBarData SymbolBarData { get; }
+        SymbolBarSpec SymbolBarSpec { get; }
 
         /// <summary>
         /// Returns a <see cref="MarketDataFrame"/> of all bars data.

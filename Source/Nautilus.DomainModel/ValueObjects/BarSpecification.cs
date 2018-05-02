@@ -88,7 +88,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.Resolution}({this.Period})";
+        public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.

@@ -14,9 +14,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
     public static class StubSymbolBarData
     {
-        public static SymbolBarData AUDUSD()
+        public static SymbolBarSpec AUDUSD()
         {
-            return new SymbolBarData(
+            return new SymbolBarSpec(
                 new Symbol("AUDUSD", Exchange.Dukascopy),
                 new BarSpecification(
                     BarQuoteType.Ask,
@@ -24,9 +24,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     1));
         }
 
-        public static SymbolBarData GBPUSD()
+        public static SymbolBarSpec GBPUSD()
         {
-            return new SymbolBarData(
+            return new SymbolBarSpec(
                 new Symbol("GBPUSD", Exchange.Dukascopy),
                 new BarSpecification(
                     BarQuoteType.Bid,
@@ -34,9 +34,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     1));
         }
 
-        public static SymbolBarData USDJPY()
+        public static SymbolBarSpec USDJPY()
         {
-            return new SymbolBarData(
+            return new SymbolBarSpec(
                 new Symbol("USDJPY", Exchange.Dukascopy),
                 new BarSpecification(
                     BarQuoteType.Bid,
@@ -44,9 +44,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     1));
         }
 
-        public static SymbolBarData CADHKD()
+        public static SymbolBarSpec CADHKD()
         {
-            return new SymbolBarData(
+            return new SymbolBarSpec(
                 new Symbol("CADHKD", Exchange.Dukascopy),
                 new BarSpecification(
                     BarQuoteType.Bid,

@@ -32,7 +32,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         /// <param name="barSpec">The bar specification to check.</param>
         /// <param name="bars">The bars to check.</param>
         /// <returns>A result and anomaly list of <see cref="string"/>(s).</returns>
-        public static QueryResult<List<string>> CheckBars(SymbolBarData barSpec, BarData[] bars)
+        public static QueryResult<List<string>> CheckBars(SymbolBarSpec barSpec, BarData[] bars)
         {
             Validate.NotNull(barSpec, nameof(barSpec));
             Validate.NotNull(bars, nameof(bars));
@@ -55,7 +55,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckDuplicateBars(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             BarData[] bars,
             List<string> anomalyList)
         {
@@ -73,7 +73,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsInOrder(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             BarData[] bars,
             List<string> anomalyList)
         {
@@ -92,7 +92,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsComplete(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             BarData[] bars,
             List<string> anomalyList)
         {
@@ -110,7 +110,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         }
 
         private static QueryResult<List<string>> PassResult(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
@@ -123,7 +123,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         }
 
         private static QueryResult<List<string>> FailResult(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)

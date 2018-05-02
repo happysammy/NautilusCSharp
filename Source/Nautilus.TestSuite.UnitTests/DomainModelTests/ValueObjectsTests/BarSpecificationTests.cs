@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = barSpec.ToString();
 
             // Assert
-            Assert.Equal("AUDUSD.Dukascopy 1-Minute[Bid]", result);
+            Assert.Equal("1-Minute[Bid]", result);
         }
     }
 }

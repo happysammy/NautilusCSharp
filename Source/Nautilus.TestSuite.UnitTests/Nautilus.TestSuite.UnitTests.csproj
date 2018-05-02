@@ -43,5 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DatabaseTests\CompressionTests" />
+    <Folder Include="DatabaseTests\CoreTests\CollectorsTests" />
   </ItemGroup>
 </Project>

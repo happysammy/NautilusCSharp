@@ -60,7 +60,7 @@ namespace Nautilus.Database.Dukascopy
             this.IsBarDataCheckOn = config.IsBarDataCheckOn;
         }
 
-        public IReadOnlyCollection<SymbolBarData> SymbolBarDatas { get; }
+        public IReadOnlyCollection<SymbolBarSpec> SymbolBarDatas { get; }
 
         /// <summary>
         /// Gets the <see cref="Dukascopy"/> CSV data path.
@@ -132,18 +132,18 @@ namespace Nautilus.Database.Dukascopy
             return this.HistoricConfigEditor.UpdateConfigCsv(currencyPairs, fromDateTime, toDateTime);
         }
 
-        private static IReadOnlyCollection<SymbolBarData> BuildBarSpecifications(
+        private static IReadOnlyCollection<SymbolBarSpec> BuildBarSpecifications(
             IReadOnlyCollection<string> currencyPairs,
             IReadOnlyCollection<string> barResolutions)
         {
-            var barSpecs = new List<SymbolBarData>();
+            var barSpecs = new List<SymbolBarSpec>();
 
             foreach (var symbol in currencyPairs.Distinct())
             {
                 foreach (var resolution in barResolutions)
                 {
-                    barSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1)));
-                    barSpecs.Add(new SymbolBarData(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1)));
+                    barSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1)));
+                    barSpecs.Add(new SymbolBarSpec(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1)));
                 }
             }
 

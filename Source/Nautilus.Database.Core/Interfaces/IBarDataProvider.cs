@@ -23,7 +23,7 @@ namespace Nautilus.Database.Core.Interfaces
         /// Gets a list of all bar specifications provided by the data provider.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyCollection<SymbolBarData> SymbolBarDatas { get; }
+        IReadOnlyCollection<SymbolBarSpec> SymbolBarDatas { get; }
 
         /// <summary>
         /// Gets the directory info for the CSV data path.

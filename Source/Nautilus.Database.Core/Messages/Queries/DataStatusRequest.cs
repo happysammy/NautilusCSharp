@@ -19,20 +19,20 @@ namespace Nautilus.Database.Core.Messages.Queries
     public sealed class DataStatusRequest : Message
     {
         public DataStatusRequest(
-            SymbolBarData barSpec,
+            SymbolBarSpec barSpec,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Validate.NotNull(barSpec, nameof(barSpec));
 
-            this.SymbolBarData = barSpec;
+            this.SymbolBarSpec = barSpec;
         }
 
         /// <summary>
         /// Gets the request messages <see cref="BarSpecification"/>.
         /// </summary>
-        public SymbolBarData SymbolBarData { get; }
+        public SymbolBarSpec SymbolBarSpec { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="StartSystem"/> message.
