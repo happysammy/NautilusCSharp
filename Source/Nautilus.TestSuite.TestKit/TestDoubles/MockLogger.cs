@@ -23,6 +23,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         private readonly ConcurrentQueue<string> stash = new ConcurrentQueue<string>();
 
+        public string AssemblyVersion => "1.0.0";
+
         /// <summary>
         /// The write stash to output.
         /// </summary>
@@ -47,8 +49,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return this.GetLogStashTextAsStringList().Any(logEntry => logEntry.StartsWith(text));
         }
-
-        public string AssemblyVersion { get; }
 
         /// <summary>
         /// The verbose.

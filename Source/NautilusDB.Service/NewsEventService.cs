@@ -59,7 +59,7 @@ namespace NautilusDB.Service
                     .ToList();
             }
 
-            var newsEventsFrame = new EconomicNewsEventFrame(newsEvents);
+            var newsEventsFrame = new EconomicEventFrame(newsEvents);
 
             return newsEvents.IsEmpty()
                        ? new NewsEventResponse(false, "Could not find any news events", newsEventsFrame)

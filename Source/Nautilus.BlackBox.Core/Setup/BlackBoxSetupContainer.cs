@@ -16,9 +16,8 @@ namespace Nautilus.BlackBox.Core.Setup
     using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// The immutable sealed <see cref="BlackBoxSetupContainer"/> class. A container to store and
-    /// transport the information and infrastructure needed to instantiate a <see cref="BlackBox"/>
-    /// instance and its required services and components.
+    /// A container to store and transport the information and infrastructure needed to instantiate
+    /// a <see cref="BlackBox"/> instance and its required services and components.
     /// </summary>
     [Immutable]
     public sealed class BlackBoxSetupContainer : ComponentryContainer

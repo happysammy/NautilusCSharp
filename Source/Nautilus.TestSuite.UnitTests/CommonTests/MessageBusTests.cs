@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
+namespace Nautilus.TestSuite.UnitTests.CommonTests
 {
     using System;
     using System.Collections.Generic;
@@ -40,11 +40,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.MessagingTests
             var setupContainer = setupFactory.Create();
             this.mockLogger = setupFactory.Logger;
 
-            var testActorSystem = ActorSystem.Create(nameof(MessagingTests));
+            var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
 
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 ServiceContext.Messaging,
-                new Label(BlackBoxService.CommandBus.ToString()),
+                new Label(ServiceContext.CommandBus.ToString()),
                 setupContainer,
                 new StandardOutLogger())));
 

@@ -15,17 +15,17 @@ namespace NautilusDB.Service.Responses
         public NewsEventResponse(
             bool isSuccess,
             string message,
-            EconomicNewsEventFrame economicNewsEvents)
+            EconomicEventFrame economicEvents)
         {
             this.IsSuccess = isSuccess;
             this.Message = message;
-            this.EconomicNewsEvents = economicNewsEvents;
+            this.EconomicEvents = economicEvents;
         }
 
         public bool IsSuccess { get; private set; }
 
         public string Message { get; private set; }
 
-        public EconomicNewsEventFrame EconomicNewsEvents { get; private set; }
+        public EconomicEventFrame EconomicEvents { get; private set; }
     }
 }

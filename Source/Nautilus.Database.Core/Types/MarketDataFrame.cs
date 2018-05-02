@@ -24,16 +24,16 @@ namespace Nautilus.Database.Core.Types
         /// Initializes a new instance of the <see cref="MarketDataFrame"/> class.
         /// </summary>
         /// <param name="symbolBarData">The symbol bar data.</param>
-        /// <param name="bars">The bars dictionary.</param>
+        /// <param name="barsData">The bars dictionary.</param>
         /// <exception cref="ValidationException">Throws if the bar specification is the default
         /// value, or if the bars collection is null or empty.</exception>
-        public MarketDataFrame(SymbolBarData symbolBarData, Bar[] bars)
+        public MarketDataFrame(SymbolBarData symbolBarData, BarData[] barsData)
         {
             Validate.NotNull(symbolBarData, nameof(symbolBarData));
-            Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
+            Validate.CollectionNotNullOrEmpty(barsData, nameof(barsData));
 
             this.SymbolBarData = symbolBarData;
-            this.Bars = bars;
+            this.BarsData = barsData;
         }
 
         /// <summary>
@@ -44,16 +44,16 @@ namespace Nautilus.Database.Core.Types
         /// <summary>
         /// Gets the market data frames bars.
         /// </summary>
-        public Bar[] Bars { get; }
+        public BarData[] BarsData { get; }
 
         /// <summary>
         /// Gets the market data frames start time.
         /// </summary>
-        public ZonedDateTime StartDateTime => this.Bars.First().Timestamp;
+        public ZonedDateTime StartDateTime => this.BarsData.First().Timestamp;
 
         /// <summary>
         /// Gets the market data frames end time.
         /// </summary>
-        public ZonedDateTime EndDateTime => this.Bars.Last().Timestamp;
+        public ZonedDateTime EndDateTime => this.BarsData.Last().Timestamp;
     }
 }

@@ -9,19 +9,33 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The exchange the financial market was traded on.
+    /// The exchange the instrument is traded on.
     /// </summary>
     public enum Exchange
     {
-
+        /// <summary>
+        /// The simulated exchange venue (backtesting).
+        /// </summary>
         Simuilation = 0,
 
+        /// <summary>
+        /// The FXCM brokerage venue (OTC products) .
+        /// </summary>
         FXCM = 1,
 
+        /// <summary>
+        /// The Dukascopy brokerage venue (OTC products).
+        /// </summary>
         Dukascopy = 2,
 
+        /// <summary>
+        /// The GLOBEX exchange venue.
+        /// </summary>
         GLOBEX = 3,
 
+        /// <summary>
+        /// The LMAX exchange venue.
+        /// </summary>
         LMAX =4
     }
 }

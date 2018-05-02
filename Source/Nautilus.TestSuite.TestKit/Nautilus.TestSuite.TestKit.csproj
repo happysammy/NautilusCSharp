@@ -4,7 +4,7 @@
     <LangVersion>7.2</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1591;1701;1702;1705</NoWarn>
@@ -12,6 +12,9 @@
   <ItemGroup>
     <Reference Include="NodaTime, Version=2.2.5.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1">
       <HintPath>..\..\..\..\..\..\.nuget\packages\nodatime\2.2.5\lib\netstandard1.3\NodaTime.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\servicestack.text\5.1.0\lib\netstandard2.0\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
       <HintPath>..\..\..\..\..\..\.nuget\packages\xunit.abstractions\2.0.1\lib\netstandard1.0\xunit.abstractions.dll</HintPath>

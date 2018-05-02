@@ -114,15 +114,15 @@ namespace Nautilus.Database.Core.Readers
 
             if (readAllBarsQuery.IsSuccess)
             {
-                if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
+                if (readAllBarsQuery.Value.BarsData.Last().Timestamp.IsLessThan(fromDateTime))
                 {
                     QueryResult<MarketDataFrame>.Fail(
                         $"No bars found to collect for {this.SymbolBarData} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
-                var bars = readAllBarsQuery.Value.Bars;
-                var barsAfterFromDate = new List<Bar>();
+                var bars = readAllBarsQuery.Value.BarsData;
+                var barsAfterFromDate = new List<BarData>();
 
                 for (var i = 0; i < bars.Length; i++)
                 {
@@ -162,7 +162,7 @@ namespace Nautilus.Database.Core.Readers
             {
                 var lastBar = readAllBarsQuery
                     .Value
-                    .Bars
+                    .BarsData
                     .Last();
 
                 return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
@@ -184,7 +184,7 @@ namespace Nautilus.Database.Core.Readers
             var lastBarQuery = this.GetLastBar(csvFile);
 
             return lastBarQuery.IsSuccess
-                 ? QueryResult<ZonedDateTime>.Ok(lastBarQuery.Value.Bars.First().Timestamp)
+                 ? QueryResult<ZonedDateTime>.Ok(lastBarQuery.Value.BarsData.First().Timestamp)
                  : QueryResult<ZonedDateTime>.Fail(lastBarQuery.Message);
         }
 
@@ -206,7 +206,7 @@ namespace Nautilus.Database.Core.Readers
                         return this.NoDataFoundQueryResultFailure();
                     }
 
-                    var barsList = new List<Bar>();
+                    var barsList = new List<BarData>();
 
                     using (var textReader = File.OpenText(csvFile.FullName))
                     {
@@ -215,12 +215,12 @@ namespace Nautilus.Database.Core.Readers
 
                         while (reader.Read())
                         {
-                            barsList.Add(new Bar( // TODO: Do not do this.
-                                Price.Create(reader.GetField<decimal>(1), 0.00001m),
-                                Price.Create(reader.GetField<decimal>(2), 0.00001m),
-                                Price.Create(reader.GetField<decimal>(3), 0.00001m),
-                                Price.Create(reader.GetField<decimal>(4), 0.00001m),
-                                Quantity.Create(Convert.ToInt32(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple),
+                            barsList.Add(new BarData( // TODO: Do not do this.
+                                reader.GetField<decimal>(1),
+                                reader.GetField<decimal>(2),
+                                reader.GetField<decimal>(3),
+                                reader.GetField<decimal>(4),
+                                Convert.ToInt64(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple,
                                 reader.GetField<string>(0).ToZonedDateTime(this.DataProvider.TimestampParsePattern)));
                         }
                     }

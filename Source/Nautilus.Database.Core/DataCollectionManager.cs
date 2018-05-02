@@ -137,7 +137,7 @@ namespace Nautilus.Database.Core
             {
                 var result = BarDataChecker.CheckBars(
                     message.MarketData.SymbolBarData,
-                    message.MarketData.Bars);
+                    message.MarketData.BarsData);
 
                 if (result.IsSuccess)
                 {

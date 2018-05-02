@@ -53,19 +53,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 ServiceContext.Messaging,
-                new Label(BlackBoxService.CommandBus.ToString()),
+                new Label(ServiceContext.CommandBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
                 ServiceContext.Messaging,
-                new Label(BlackBoxService.EventBus.ToString()),
+                new Label(ServiceContext.EventBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
                 ServiceContext.Messaging,
-                new Label(BlackBoxService.DocumentBus.ToString()),
+                new Label(ServiceContext.DocumentBus.ToString()),
                 container,
                 messageStoreRef)));
 

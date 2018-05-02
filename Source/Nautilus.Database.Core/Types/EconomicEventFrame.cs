@@ -18,9 +18,9 @@ namespace Nautilus.Database.Core.Types
     using Nautilus.DomainModel.Enums;
 
     [Immutable]
-    public class EconomicNewsEventFrame
+    public class EconomicEventFrame
     {
-        public EconomicNewsEventFrame(IReadOnlyCollection<EconomicEvent> events)
+        public EconomicEventFrame(IReadOnlyCollection<EconomicEvent> events)
         {
             Validate.ReadOnlyCollectionNotNullOrEmpty(events, nameof(events));
 

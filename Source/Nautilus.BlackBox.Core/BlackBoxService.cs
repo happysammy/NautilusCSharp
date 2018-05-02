@@ -39,11 +39,6 @@ namespace Nautilus.BlackBox.Core
         Portfolio,
 
         /// <summary>
-        /// The black box messaging service context.
-        /// </summary>
-        Messaging,
-
-        /// <summary>
         /// The black box execution service context.
         /// </summary>
         Execution,
@@ -52,20 +47,5 @@ namespace Nautilus.BlackBox.Core
         /// The black box brokerage service context.
         /// </summary>
         Brokerage,
-
-        /// <summary>
-        /// The black box command bus context.
-        /// </summary>
-        CommandBus,
-
-        /// <summary>
-        /// The black box event bus context.
-        /// </summary>
-        EventBus,
-
-        /// <summary>
-        /// The black box service bus context.
-        /// </summary>
-        DocumentBus
     }
 }
