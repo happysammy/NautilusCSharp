@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Extensions;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

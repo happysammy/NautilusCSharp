@@ -30,7 +30,7 @@ namespace Nautilus.Core.Extensions
 
             for (var i = 0; i < value; i++)
             {
-                divisor = divisor * 10;
+                divisor *= 10;
             }
 
             return 1 / divisor;
