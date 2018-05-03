@@ -32,7 +32,7 @@ namespace Nautilus.Common.Messaging
         /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public static MessagingAdapter Create(
             ActorSystem actorSystem,
-            ComponentryContainer container)
+            IComponentryContainer container)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));

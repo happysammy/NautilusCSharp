@@ -30,7 +30,7 @@ namespace Nautilus.Common.Componentry
         protected ComponentBase(
             Enum service,
             Label component,
-            ComponentryContainer container)
+            IComponentryContainer container)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));

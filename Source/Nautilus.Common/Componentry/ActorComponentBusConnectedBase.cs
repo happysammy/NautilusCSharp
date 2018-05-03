@@ -20,7 +20,7 @@ namespace Nautilus.Common.Componentry
         public ActorComponentBusConnectedBase(
             Enum service,
             Label component,
-            ComponentryContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
                 service,

@@ -33,7 +33,7 @@ namespace Nautilus.Common.Componentry
         protected ActorComponentBase(
             Enum service,
             Label component,
-            ComponentryContainer setupContainer)
+            IComponentryContainer setupContainer)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));

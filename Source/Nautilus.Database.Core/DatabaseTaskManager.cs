@@ -15,6 +15,7 @@ namespace Nautilus.Database.Core
     using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Messages;
     using Nautilus.Database.Core.Messages.Events;
@@ -39,7 +40,7 @@ namespace Nautilus.Database.Core
         /// <param name="economicEventRepository">The news event repository.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public DatabaseTaskManager(
-            ComponentryContainer container,
+            IComponentryContainer container,
             IMarketDataRepository marketDataRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository)
             : base(

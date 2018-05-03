@@ -36,7 +36,7 @@ namespace Nautilus.Common.Messaging
         public MessageBus(
             Enum serviceContext,
             Label component,
-            ComponentryContainer container,
+            IComponentryContainer container,
             IActorRef messageStoreRef)
         {
             Validate.NotNull(component, nameof(component));

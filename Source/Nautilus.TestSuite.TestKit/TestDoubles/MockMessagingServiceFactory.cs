@@ -45,10 +45,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// </param>
         public void Create(
             ActorSystem actorSystem,
-            ComponentryContainer container)
+            IComponentryContainer container)
         {
             var messageWarhouse = new InMemoryMessageStore();
-
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarhouse))); // TODO: make disposable so that test don't break
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
@@ -82,7 +81,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             };
 
             var switchboard = new Switchboard(addresses);
-
             var initializeSwitchboard = new InitializeMessageSwitchboard(
                 switchboard,
                 Guid.NewGuid(),

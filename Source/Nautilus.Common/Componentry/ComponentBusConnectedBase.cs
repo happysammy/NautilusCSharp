@@ -31,7 +31,7 @@ namespace Nautilus.Common.Componentry
         protected ComponentBusConnectedBase(
             Enum service,
             Label component,
-            ComponentryContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(service, component, container)
         {

@@ -73,8 +73,8 @@ namespace Nautilus.BlackBox
             var setupContainer = new BlackBoxSetupContainer(
                 environment,
                 clock,
-                loggerFactory,
                 guidFactory,
+                loggerFactory,
                 instrumentRepository,
                 quoteProvider,
                 riskModel,

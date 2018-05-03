@@ -20,7 +20,7 @@ namespace Nautilus.BlackBox.Core.Setup
     /// a <see cref="BlackBox"/> instance and its required services and components.
     /// </summary>
     [Immutable]
-    public sealed class BlackBoxSetupContainer : ComponentryContainer
+    public sealed class BlackBoxSetupContainer : IComponentryContainer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBoxSetupContainer"/> class.
@@ -36,13 +36,12 @@ namespace Nautilus.BlackBox.Core.Setup
         public BlackBoxSetupContainer(
             NautilusEnvironment environment,
             IZonedClock clock,
-            ILoggerFactory loggerFactory,
             IGuidFactory guidFactory,
+            ILoggerFactory loggerFactory,
             IInstrumentRepository instrumentRepository,
             IQuoteProvider quoteProvider,
             IReadOnlyRiskModel riskModel,
             IReadOnlyBrokerageAccount account)
-        : base(clock, guidFactory, loggerFactory)
         {
             Validate.NotNull(clock, nameof(clock));
             Validate.NotNull(loggerFactory, nameof(loggerFactory));
@@ -53,6 +52,9 @@ namespace Nautilus.BlackBox.Core.Setup
             Validate.NotNull(account, nameof(account));
 
             this.Environment = environment;
+            this.Clock = clock;
+            this.LoggerFactory = loggerFactory;
+            this.GuidFactory = guidFactory;
             this.InstrumentRepository = instrumentRepository;
             this.QuoteProvider = quoteProvider;
             this.RiskModel = riskModel;
@@ -63,6 +65,21 @@ namespace Nautilus.BlackBox.Core.Setup
         /// Gets the black box environment.
         /// </summary>
         public NautilusEnvironment Environment { get; }
+
+        /// <summary>
+        /// Gets the containers clock.
+        /// </summary>
+        public IZonedClock Clock { get; }
+
+        /// <summary>
+        /// Gets the containers guid factory.
+        /// </summary>
+        public IGuidFactory GuidFactory { get; }
+
+        /// <summary>
+        /// Gets the containers logger.
+        /// </summary>
+        public ILoggerFactory LoggerFactory { get; }
 
         /// <summary>
         /// Gets the black box risk model.
