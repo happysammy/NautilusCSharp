@@ -350,7 +350,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Risk, eventMessage, this.Service);
+                this.Send(BlackBoxService.Risk, eventMessage);
 
                 this.Log(LogLevel.Debug, $"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
             });
@@ -428,7 +428,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Warning, $"OrderRejected: (OrderId={orderId}, RejectReason={rejectReason}");
             });
@@ -476,7 +476,7 @@ namespace Nautilus.BlackBox.Brokerage
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                    this.Send(BlackBoxService.Portfolio, eventMessage);
 
                     this.Log(LogLevel.Warning, $"OrderCancelReject: (OrderId={orderId}, CxlRejResponseTo={cancelRejectResponseTo}, Reason={cancelRejectReason}");
                 });
@@ -520,7 +520,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Information, $"OrderCancelled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
@@ -571,7 +571,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Information, $"OrderModified: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price})");
             });
@@ -639,7 +639,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 var expireTimeString = string.Empty;
 
@@ -690,7 +690,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Information, $"OrderExpired: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
@@ -755,7 +755,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Information, $"OrderFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice})");
             });
@@ -824,7 +824,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send(BlackBoxService.Portfolio, eventMessage, this.Service);
+                this.Send(BlackBoxService.Portfolio, eventMessage);
 
                 this.Log(LogLevel.Information, $"OrderPartiallyFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice}, LeavesQty={leavesQuantity})");
             });

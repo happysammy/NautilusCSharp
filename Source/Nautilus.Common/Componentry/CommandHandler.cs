@@ -13,7 +13,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// The <see cref="CommandHandler"/> class. Executes all encapsulated <see cref="Action"/>(s)
+    /// A class which provides encapsulated execution of <see cref="Action"/>(s)
     /// and handles and logs all errors and exceptions. Validation exceptions are logged and swallowed,
     /// all other exceptions other than a specified exception type are logged and rethrown.
     /// </summary>

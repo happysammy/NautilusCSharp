@@ -18,7 +18,6 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
@@ -85,10 +84,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                             this.NewGuid(),
                             this.TimeNow());
 
-                        this.MessagingAdapter.Send<CommandMessage>(
-                            BlackBoxService.Execution,
-                            cancelOrder,
-                            this.Service);
+                        this.Send(BlackBoxService.Execution, cancelOrder);
                     }
                 }
             }

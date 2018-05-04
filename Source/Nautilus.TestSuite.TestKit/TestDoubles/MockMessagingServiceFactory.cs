@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Akka.Actor;
     using Akka.Event;
     using Nautilus.BlackBox.Core;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;

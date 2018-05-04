@@ -12,7 +12,6 @@ namespace Nautilus.DataProviders.Dukascopy
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Database.Core.Configuration;

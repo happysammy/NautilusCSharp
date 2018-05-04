@@ -87,7 +87,7 @@ namespace Nautilus.Common.Componentry
         /// Logs the result with the <see cref="ILogger"/>.
         /// </summary>
         /// <param name="result">The command result.</param>
-        public void LogResult(ResultBase result)
+        protected void LogResult(ResultBase result)
         {
             if (result.IsSuccess)
             {

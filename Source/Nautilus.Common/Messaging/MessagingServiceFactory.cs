@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using Akka.Actor;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;

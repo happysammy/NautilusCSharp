@@ -18,7 +18,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
 
@@ -108,10 +107,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send<CommandMessage>(
-                    BlackBoxService.Risk,
-                    tradeApproved,
-                    this.Service);
+                this.Send(BlackBoxService.Risk, tradeApproved);
             }
         }
 

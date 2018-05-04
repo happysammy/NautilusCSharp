@@ -16,7 +16,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -83,10 +82,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                                     this.NewGuid(),
                                     this.TimeNow());
 
-                                this.MessagingAdapter.Send<CommandMessage>(
-                                    BlackBoxService.Execution,
-                                    closePosition,
-                                    this.Service);
+                                this.Send(BlackBoxService.Execution, closePosition);
                             }
                         }
                     }

@@ -1,6 +1,5 @@
 ﻿namespace Nautilus.Database.Core
 {
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
 
     public class DatabaseSetupContainer : IComponentryContainer

@@ -100,10 +100,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                             this.NewGuid(),
                             this.TimeNow());
 
-                        this.MessagingAdapter.Send(
-                            BlackBoxService.Execution,
-                            modifyStoploss,
-                            this.Service);
+                        this.Send(BlackBoxService.Execution, modifyStoploss);
                     }
                 }
             }

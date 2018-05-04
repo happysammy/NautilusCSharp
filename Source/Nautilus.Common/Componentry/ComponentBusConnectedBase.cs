@@ -45,7 +45,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the components messaging adapter.
         /// </summary>
-        protected IMessagingAdapter MessagingAdapter { get; }
+        private IMessagingAdapter MessagingAdapter { get; }
 
         /// <summary>
         /// Sends the given message to the given black box service via the messaging system.
@@ -53,7 +53,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
         /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        protected void SendMessage(
+        protected void Send(
             Enum receiver,
             Message message)
         {
@@ -63,12 +63,12 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given messages to the given list of black box services via the messaging system.
+        /// Sends the given messages to the given list of system services via the messaging system.
         /// </summary>
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected void SendMessage(
+        protected void Send(
             IReadOnlyCollection<Enum> receivers,
             Message message)
         {
@@ -76,6 +76,15 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(message, nameof(message));
 
             this.MessagingAdapter.Send(receivers, message, this.Service);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="IMessagingAdapter"/> held by the base class.
+        /// </summary>
+        /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
+        protected IMessagingAdapter GetMessagingAdapter()
+        {
+            return this.MessagingAdapter;
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Nautilus.BlackBox.Core.Setup
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
