@@ -18,10 +18,7 @@ namespace Nautilus.Serilog
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="logDatabaseName">
-        /// The log Database Name.
-        /// </param>
-        public static void Create(string logDatabaseName)
+        public static void Create()
         {
             {
                 const string logTemplateDefault = "{Timestamp:yyyy/MM/dd HH:mm:ss.fff} [{ThreadId:00}][{Level:u3}] {Message}{NewLine}{Exception}";
@@ -30,7 +27,7 @@ namespace Nautilus.Serilog
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
                    .WriteTo.Console(outputTemplate: logTemplateDefault)
-                   .WriteTo.RollingFile("Log/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
+                   .WriteTo.RollingFile("Logs/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }
         }

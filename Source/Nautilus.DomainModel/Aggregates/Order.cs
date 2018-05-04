@@ -191,7 +191,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="event">The event.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         /// <exception cref="ValidationException">Throws if the event argument is null.</exception>
-        [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly", Justification = "Reviewed.")]
         public override CommandResult Apply(Event @event)
         {
             Validate.NotNull(@event, nameof(@event));

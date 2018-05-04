@@ -26,9 +26,9 @@ namespace Nautilus.Serilog
         /// <param name="logDatabaseName">
         /// The log Database Name.
         /// </param>
-        public SerilogLogger(string logDatabaseName)
+        public SerilogLogger()
         {
-            SerilogLogFactory.Create(logDatabaseName);
+            SerilogLogFactory.Create();
 
             this.Information(ServiceContext.Serilog, $"(version 2.6)"); //{Assembly.LoadFrom("Serilog.dll").GetName().Version})");
         }

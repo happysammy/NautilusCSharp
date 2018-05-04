@@ -27,9 +27,9 @@ namespace Nautilus.Fix
     using Symbol = DomainModel.ValueObjects.Symbol;
 
     /// <summary>
-    /// The FXCM QuickFix client.
+    /// Provides a generic QuickFix client.
     /// </summary>
-    public class FxcmFixClient : MessageCracker, IApplication, IBrokerageClient
+    public class FixClient : MessageCracker, IApplication, IBrokerageClient
     {
         private readonly string username;
         private readonly string password;
@@ -44,18 +44,14 @@ namespace Nautilus.Fix
         private Session sessionMd;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FxcmFixClient"/> class.
+        /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
-        /// <param name="username">
-        /// The username.
-        /// </param>
-        /// <param name="password">
-        /// The password.
-        /// </param>
-        /// <param name="accountNumber">
-        /// The account Number.
-        /// </param>
-        public FxcmFixClient(
+        /// <param name="broker">The account brokerage.</param>
+        /// <param name="username">The account username.</param>
+        /// <param name="password">The account password.</param>
+        /// <param name="accountNumber">The account number.</param>
+        public FixClient(
+            Broker broker,
             string username,
             string password,
             string accountNumber)
@@ -64,6 +60,7 @@ namespace Nautilus.Fix
             Validate.NotNull(password, nameof(password));
             Validate.NotNull(accountNumber, nameof(accountNumber));
 
+            this.Broker = broker;
             this.username = username;
             this.password = password;
             this.accountNumber = accountNumber;
@@ -83,7 +80,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// The broker.
         /// </summary>
-        public Broker Broker => Broker.FXCM;
+        public Broker Broker { get; }
 
         /// <summary>
         /// The is connected.
@@ -159,8 +156,10 @@ namespace Nautilus.Fix
 
                 if (this.session == null)
                 {
+                    Console.WriteLine($"Creating session...");
                     this.session = Session.LookupSession(sessionId);
                     this.messageRouter.ConnectSession(this.session);
+                    Console.WriteLine($"Session {this.session}");
                 }
 
                 this.sessionMd = Session.LookupSession(sessionId);

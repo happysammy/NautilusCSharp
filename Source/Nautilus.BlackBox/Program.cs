@@ -44,7 +44,7 @@ namespace Nautilus.BlackBox
         {
             var environment = NautilusEnvironment.Live;
             var clock = new Clock(DateTimeZone.Utc);
-            var loggingAdapter = new SerilogLogger("Logs");
+            var loggingAdapter = new SerilogLogger();
             var loggerFactory = new LoggerFactory(loggingAdapter);
             var guidFactory = new GuidFactory();
 
@@ -63,12 +63,11 @@ namespace Nautilus.BlackBox
                 clock.TimeNow());
 
             var broker = Broker.FXCM;
-
             var username = "D102862129"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
             var password = "demo"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
             var accountNumber = "02851908"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
 
-            var fxcmAccount = new BrokerageAccount(broker, accountNumber, username, password, CurrencyCode.AUD, clock.TimeNow());
+            var account = new BrokerageAccount(broker, accountNumber, username, password, CurrencyCode.AUD, clock.TimeNow());
 
             var setupContainer = new BlackBoxSetupContainer(
                 environment,
@@ -78,7 +77,7 @@ namespace Nautilus.BlackBox
                 instrumentRepository,
                 quoteProvider,
                 riskModel,
-                fxcmAccount);
+                account);
 
             var brokerageServiceFactory = new BrokerageGatewayFactory();
             var alphaModelServiceFactory = new AlphaModelServiceFactory();
@@ -95,7 +94,8 @@ namespace Nautilus.BlackBox
                 portfolioServiceFactory,
                 riskServiceFactory);
 
-            var fxcmClient = new FxcmFixClient(
+            var fixClient = new FixClient(
+                broker,
                 username,
                 password,
                 accountNumber);
@@ -104,8 +104,8 @@ namespace Nautilus.BlackBox
                 new Label("NautilusActorSystem"),
                 setupContainer,
                 serviceFactory,
-                fxcmClient,
-                fxcmAccount,
+                fixClient,
+                account,
                 riskModel);
 
             // var forexConnect = new FxcmForexConnect();
@@ -122,7 +122,6 @@ namespace Nautilus.BlackBox
 
             nautilusSystem.ConnectToBrokerage();
 
-            Console.ReadLine();
             Console.ReadLine();
 
             var tradingSymbols = new List<Symbol>
