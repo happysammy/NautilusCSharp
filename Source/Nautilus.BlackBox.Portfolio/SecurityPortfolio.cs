@@ -122,14 +122,13 @@ namespace Nautilus.BlackBox.Portfolio
 
                 this.orderExpiryController.AddCounters(@event.OrderPacket, @event.BarsValid);
 
-                this.MessagingAdapter.Send<CommandMessage>(
+                this.Send(
                     BlackBoxService.Execution,
                     new SubmitTrade(
                         @event.OrderPacket,
                         this.instrument.MinStopDistance,
                         this.NewGuid(),
-                        this.TimeNow()),
-                    this.Service);
+                        this.TimeNow()));
 
                 this.Log(LogLevel.Debug, $"Received {@event}");
             });

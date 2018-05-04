@@ -114,8 +114,8 @@ namespace Nautilus.Database.Core
                     this.collectionJobsRoster.Add(collector, false);
                 }
 
-                var timeNow = this.Clock.TimeNow();
-                this.collectionSchedule.UpdateLastCollectedTime(this.Clock.TimeNow());
+                var timeNow = this.TimeNow();
+                this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
                 this.Log(
                     LogLevel.Information,
                     $"{this.Component} updated last collection time to {timeNow.ToIsoString()}.");
@@ -202,13 +202,13 @@ namespace Nautilus.Database.Core
                 var collectorRef = Context.ActorOf(Props.Create(
                     () => new MarketDataCollector(
                         this.storedSetupContainer,
-                        this.MessagingAdapter,
+                        this.GetMessagingAdapter(),
                         dataReader,
                         this.collectionSchedule)));
 
                 this.marketDataCollectors.Add(barSpec, collectorRef);
 
-                var message = new DataStatusRequest(barSpec, Guid.NewGuid(), this.Clock.TimeNow());
+                var message = new DataStatusRequest(barSpec, this.NewGuid(), this.TimeNow());
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
@@ -230,8 +230,8 @@ namespace Nautilus.Database.Core
 
             this.Self.Tell(new CollectData(
                 DataType.Bar,
-                Guid.NewGuid(),
-                this.Clock.TimeNow()));
+                this.NewGuid(),
+                this.TimeNow()));
         }
 
         private void CollectMarketData()
@@ -240,8 +240,8 @@ namespace Nautilus.Database.Core
 
             this.marketDataCollectors[nextCollectorOffTheRank.Key].Tell(new CollectData(
                 DataType.Bar,
-                Guid.NewGuid(),
-                this.Clock.TimeNow()));
+                this.NewGuid(),
+                this.TimeNow()));
 
             this.Log(
                 LogLevel.Information,
@@ -250,7 +250,7 @@ namespace Nautilus.Database.Core
 
         private void ScheduleNextCollection()
         {
-            var timeFromCollection = (this.collectionSchedule.NextCollectionTime - this.Clock.TimeNow())
+            var timeFromCollection = (this.collectionSchedule.NextCollectionTime - this.TimeNow())
                 .ToTimeSpan();
 
             this.scheduler.ScheduleTellOnce(
@@ -258,8 +258,8 @@ namespace Nautilus.Database.Core
                 this.Self,
                 new CollectData(
                     DataType.Bar,
-                    Guid.NewGuid(),
-                    this.Clock.TimeNow()),
+                    this.NewGuid(),
+                    this.TimeNow()),
                 this.Self);
 
             this.Log(LogLevel.Information,

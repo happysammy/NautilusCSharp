@@ -324,10 +324,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         {
             Debug.NotNull(message, nameof(message));
 
-            this.MessagingAdapter.Send(
-                BlackBoxService.Portfolio,
-                message,
-                this.Service);
+            this.Send(BlackBoxService.Portfolio, message);
         }
     }
 }

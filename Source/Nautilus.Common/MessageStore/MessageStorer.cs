@@ -16,8 +16,7 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Messaging;
 
     /// <summary>
-    /// The sealed <see cref="MessageStorer"/> class. Sends received messages to the
-    /// <see cref="InMemoryMessageStore"/>.
+    /// Sends received messages to the <see cref="InMemoryMessageStore"/>.
     /// </summary>
     public sealed class MessageStorer : ReceiveActor
     {

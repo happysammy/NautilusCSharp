@@ -59,24 +59,24 @@ namespace Nautilus.Common.Componentry
         protected Label Component { get; }
 
         /// <summary>
+        /// Gets the command handler.
+        /// </summary>
+        protected CommandHandler CommandHandler { get; }
+
+        /// <summary>
         /// Gets the black box clock.
         /// </summary>
-        protected IZonedClock Clock { get; }
+        private IZonedClock Clock { get; }
 
         /// <summary>
         /// Gets the black box logger.
         /// </summary>
-        protected ILogger Logger { get; }
+        private ILogger Logger { get; }
 
         /// <summary>
         /// Gets the black box <see cref="Guid"/> factory.
         /// </summary>
-        protected IGuidFactory GuidFactory { get; }
-
-        /// <summary>
-        /// Gets the command handler.
-        /// </summary>
-        protected CommandHandler CommandHandler { get; }
+        private IGuidFactory GuidFactory { get; }
 
         /// <summary>
         /// Pre start method when actor base class is called.
@@ -124,7 +124,7 @@ namespace Nautilus.Common.Componentry
         /// Logs the result with the <see cref="ILogger"/>.
         /// </summary>
         /// <param name="result">The command result.</param>
-        public void LogResult(ResultBase result)
+        protected void LogResult(ResultBase result)
         {
             if (result.IsSuccess)
             {

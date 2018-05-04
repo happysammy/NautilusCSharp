@@ -66,7 +66,7 @@ namespace Nautilus.Database.Core
 
             var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.SymbolBarSpec);
 
-            sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.Clock.TimeNow()));
+            sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
         }
 
         private void OnMessage(MarketDataDelivery message, IActorRef sender)
@@ -85,8 +85,8 @@ namespace Nautilus.Database.Core
                 this.Sender.Tell(new MarketDataPersisted(
                     symbolBarData,
                     lastBarTimeQuery.Value,
-                    Guid.NewGuid(),
-                    this.Clock.TimeNow()));
+                    this.NewGuid(),
+                    this.TimeNow()));
             }
         }
 
@@ -108,8 +108,8 @@ namespace Nautilus.Database.Core
                     marketData,
                     marketDataQuery.IsSuccess,
                     marketDataQuery.Message,
-                    Guid.NewGuid(),
-                    this.Clock.TimeNow()));
+                    this.NewGuid(),
+                    this.TimeNow()));
         }
     }
 }

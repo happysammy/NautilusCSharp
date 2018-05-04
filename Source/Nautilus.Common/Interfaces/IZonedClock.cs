@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using NodaTime;
-
 namespace Nautilus.Common.Interfaces
 {
+    using NodaTime;
+
     /// <summary>
     /// The <see cref="IZonedClock"/> interface. The clock for the database system.
     /// </summary>

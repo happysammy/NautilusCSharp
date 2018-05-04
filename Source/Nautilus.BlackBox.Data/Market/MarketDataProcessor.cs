@@ -94,7 +94,7 @@ namespace Nautilus.BlackBox.Data.Market
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
                     this.storedSetupContainer,
-                    this.MessagingAdapter,
+                    this.GetMessagingAdapter(),
                     message)));
 
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
@@ -104,7 +104,7 @@ namespace Nautilus.BlackBox.Data.Market
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
                     this.storedSetupContainer,
-                    this.MessagingAdapter,
+                    this.GetMessagingAdapter(),
                     message)));
 
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);

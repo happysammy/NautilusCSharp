@@ -205,7 +205,7 @@ namespace Nautilus.BlackBox.Data.Market
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.MessagingAdapter.Send(
+            this.Send(
                 new List<Enum>
                 {
                     BlackBoxService.AlphaModel,
@@ -215,8 +215,7 @@ namespace Nautilus.BlackBox.Data.Market
                 new EventMessage(
                     marketData,
                     this.NewGuid(),
-                    this.TimeNow()),
-                BlackBoxService.Data);
+                    this.TimeNow()));
         }
     }
 }

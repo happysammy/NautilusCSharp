@@ -12,7 +12,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Common.Enums;
 
     /// <summary>
-    /// The <see cref="ILogger"/> interface. Sends log events to the <see cref="ILoggingAdapter"/>.
+    /// Sends log events to the <see cref="ILoggingAdapter"/>.
     /// </summary>
     public interface ILogger
     {

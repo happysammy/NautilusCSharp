@@ -88,7 +88,7 @@ namespace Nautilus.BlackBox.Data
 
                 var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new MarketDataProcessor(
                     this.storedSetupContainer,
-                    this.MessagingAdapter,
+                    this.GetMessagingAdapter(),
                     message.Symbol)));
 
                 this.marketDataProcessorIndex.Add(message.Symbol, marketDataProcessorRef);

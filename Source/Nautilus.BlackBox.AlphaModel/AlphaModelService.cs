@@ -97,7 +97,7 @@ namespace Nautilus.BlackBox.AlphaModel
 
                 var alphasStrategyModuleRef = AlphaStrategyModuleFactory.Create(
                     this.storedSetupContainer,
-                    this.MessagingAdapter,
+                    this.GetMessagingAdapter(),
                     message.Strategy,
                     Context);
 
@@ -116,8 +116,8 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendMessage(BlackBoxService.Portfolio, createPortfolio);
-                this.SendMessage(BlackBoxService.Data, registerSymbolDataType);
+                this.Send(BlackBoxService.Portfolio, createPortfolio);
+                this.Send(BlackBoxService.Data, registerSymbolDataType);
 
                 this.Log(LogLevel.Debug, $"{strategyLabel} created");
             });

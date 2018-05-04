@@ -83,7 +83,7 @@ namespace Nautilus.BlackBox.Portfolio
             {
                 var portfolioRef = SecurityPortfolioFactory.Create(
                     this.storedSetupContainer,
-                    this.MessagingAdapter,
+                    this.GetMessagingAdapter(),
                     message.Instrument,
                     Context);
 

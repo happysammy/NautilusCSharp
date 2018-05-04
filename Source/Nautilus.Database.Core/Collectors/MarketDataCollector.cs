@@ -66,7 +66,7 @@ namespace Nautilus.Database.Core.Collectors
             {
                 this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.SymbolBarSpec}");
 
-                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
 
                 return;
             }
@@ -86,10 +86,10 @@ namespace Nautilus.Database.Core.Collectors
                         new MarketDataDelivery(
                             csvQuery.Value,
                             Guid.NewGuid(),
-                            this.Clock.TimeNow()),
+                            this.TimeNow()),
                         this.Self);
 
-                    this.collectionSchedule.UpdateLastCollectedTime(this.Clock.TimeNow());
+                    this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
 
                     //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
                     this.Log(LogLevel.Debug, $"{this.Component} updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
@@ -101,7 +101,7 @@ namespace Nautilus.Database.Core.Collectors
                 }
             }
 
-            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.Clock.TimeNow()), this.Self);
+            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
         }
 
         private void OnMessage(DataStatusResponse message)

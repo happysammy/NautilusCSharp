@@ -102,10 +102,7 @@ namespace Nautilus.BlackBox.Risk
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.MessagingAdapter.Send<CommandMessage>(
-                    BlackBoxService.Portfolio,
-                    tradeApproval,
-                    this.Service);
+                this.Send(BlackBoxService.Portfolio, tradeApproval);
             });
         }
 
