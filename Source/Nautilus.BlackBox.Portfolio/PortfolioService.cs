@@ -79,7 +79,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var portfolioRef = SecurityPortfolioFactory.Create(
                     this.storedSetupContainer,
@@ -95,7 +95,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.portfolioStore.Tell(message.Symbol, message);
             });
@@ -105,7 +105,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.portfolioStore.Tell(message.Symbol, message);
             });
@@ -115,7 +115,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.portfolioStore.Tell(message.Symbol, message);
             });
@@ -125,7 +125,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.portfolioStore.Tell(message.Symbol, message);
             });

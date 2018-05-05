@@ -72,10 +72,10 @@ namespace Nautilus.BlackBox.Risk
 
         private void OnMessage(InitializeRiskModel message)
         {
-            Debug.NotNull(message, nameof(message));
-
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
+                Validate.NotNull(message, nameof(message));
+
                 this.account = message.Account;
                 this.riskModel = message.RiskModel;
 
@@ -85,10 +85,10 @@ namespace Nautilus.BlackBox.Risk
 
         private void OnMessage(RequestTradeApproval message)
         {
-            Validate.NotNull(message, nameof(message));
-
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
+                Debug.NotNull(message, nameof(message));
+
                 if (this.account.FreeEquity.Value == decimal.Zero)
                 {
                     this.Log(LogLevel.Warning, $"{message} ignored... (Free Equity <= zero)");
@@ -108,10 +108,10 @@ namespace Nautilus.BlackBox.Risk
 
         private void OnMessage(AccountEvent @event)
         {
-            Validate.NotNull(@event, nameof(@event));
-
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
+                Debug.NotNull(@event, nameof(@event));
+
                 this.account.Apply(@event);
 
                 this.Log(LogLevel.Information, $"BrokerageAccount updated");
@@ -120,10 +120,9 @@ namespace Nautilus.BlackBox.Risk
 
         private void OnMessage(MarketDataEvent message)
         {
-            Validate.NotNull(message, nameof(message));
-
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
+                Debug.NotNull(message, nameof(message));
                 // TODO
             });
         }

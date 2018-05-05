@@ -82,7 +82,7 @@ namespace Nautilus.BlackBox.Data
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(this.brokerageGateway, nameof(this.brokerageGateway));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex);
 
@@ -102,7 +102,7 @@ namespace Nautilus.BlackBox.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.DictionaryContainsKey(message.Symbol, nameof(this.marketDataProcessorIndex), this.marketDataProcessorIndex);
 
@@ -115,7 +115,7 @@ namespace Nautilus.BlackBox.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
                 {
                     this.brokerageGateway = message.BrokerageGateway;
                     this.brokerageGateway.RegisterMarketDataPort(this.marketDataPortRef);
@@ -126,7 +126,7 @@ namespace Nautilus.BlackBox.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 // TODO
             });

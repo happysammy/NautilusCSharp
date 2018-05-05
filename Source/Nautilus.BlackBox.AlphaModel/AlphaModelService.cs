@@ -79,7 +79,7 @@ namespace Nautilus.BlackBox.AlphaModel
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var forStrategy = LabelFactory.StrategyLabel(message.Symbol, message.TradeType);
 
@@ -91,7 +91,7 @@ namespace Nautilus.BlackBox.AlphaModel
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var strategyLabel = LabelFactory.StrategyLabel(message.Symbol, message.TradeType);
 
@@ -127,7 +127,7 @@ namespace Nautilus.BlackBox.AlphaModel
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var strategyLabel = LabelFactory.StrategyLabel(message.Symbol, message.TradeType);
 

@@ -38,9 +38,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
             // Act
             var account = new BrokerageAccount(
                 Broker.FXCM,
-                "123456789",
                 "some username",
                 "some password",
+                "123456789",
                 this.currency,
                 this.clock.TimeNow());
 

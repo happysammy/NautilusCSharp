@@ -114,7 +114,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var newTrade = TradeFactory.Create(@event.OrderPacket);
 
@@ -138,7 +138,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var activeOrderIds = this.tradeBook.GetAllActiveOrderIds();
 
@@ -152,7 +152,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 switch (@event.Signal)
                 {
@@ -177,7 +177,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderExpiryController.RemoveCounter(@event.OrderId);
 
@@ -198,7 +198,7 @@ namespace Nautilus.BlackBox.Portfolio
 
         private void OnMessage(OrderWorking @event)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Debug.NotNull(@event, nameof(@event));
 
@@ -220,7 +220,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderExpiryController.RemoveCounter(@event.OrderId);
 
@@ -242,7 +242,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderExpiryController.RemoveCounter(@event.OrderId);
 
@@ -264,7 +264,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderExpiryController.RemoveCounter(@event.OrderId);
 
@@ -286,7 +286,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderExpiryController.RemoveCounter(@event.OrderId);
 
@@ -308,7 +308,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 var result = this.tradeBook.GetTradeForOrder(@event.OrderId);
 

@@ -29,8 +29,7 @@ namespace Nautilus.BlackBox.Brokerage
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="BrokerageGateway"/> class. The <see cref="Core.BlackBox"/> boundary for the
-    /// brokerage implementation.
+    /// The <see cref="BlackBox"/> boundary for the brokerage implementation.
     /// </summary>
     public sealed class BrokerageGateway : ComponentBusConnectedBase, IBrokerageGateway
     {

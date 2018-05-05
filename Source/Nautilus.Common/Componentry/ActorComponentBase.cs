@@ -24,6 +24,11 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public abstract class ActorComponentBase : ReceiveActor
     {
+        private readonly IZonedClock clock;
+        private readonly IGuidFactory guidFactory;
+        private readonly ILogger logger;
+        private readonly CommandHandler commandHandler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorComponentBase"/> class.
         /// </summary>
@@ -40,65 +45,42 @@ namespace Nautilus.Common.Componentry
 
             this.Service = service;
             this.Component = component;
-            this.Clock = setupContainer.Clock;
-            this.Logger = setupContainer.LoggerFactory.Create(this.Service, this.Component);
-            this.GuidFactory = setupContainer.GuidFactory;
-            this.CommandHandler = new CommandHandler(this.Logger);
+            this.clock = setupContainer.Clock;
+            this.guidFactory = setupContainer.GuidFactory;
+            this.logger = setupContainer.LoggerFactory.Create(this.Service, this.Component);
+            this.commandHandler = new CommandHandler(this.logger);
 
             this.SetupMessageHandling();
         }
 
         /// <summary>
-        /// Gets the components black box service context.
+        /// Gets the components service context.
         /// </summary>
         protected Enum Service { get; }
 
         /// <summary>
-        /// Gets the components label.
+        /// Gets the components name.
         /// </summary>
         protected Label Component { get; }
 
         /// <summary>
-        /// Gets the command handler.
+        /// Returns the current time of the black box system clock.
         /// </summary>
-        protected CommandHandler CommandHandler { get; }
-
-        /// <summary>
-        /// Gets the black box clock.
-        /// </summary>
-        private IZonedClock Clock { get; }
-
-        /// <summary>
-        /// Gets the black box logger.
-        /// </summary>
-        private ILogger Logger { get; }
-
-        /// <summary>
-        /// Gets the black box <see cref="Guid"/> factory.
-        /// </summary>
-        private IGuidFactory GuidFactory { get; }
-
-        /// <summary>
-        /// Pre start method when actor base class is called.
-        /// </summary>
-        protected override void PreStart()
+        /// <returns>
+        /// A <see cref="ZonedDateTime"/>.
+        /// </returns>
+        protected ZonedDateTime TimeNow()
         {
-            this.Logger.Log(LogLevel.Debug, $"{this} initializing...");
+            return this.clock.TimeNow();
         }
 
         /// <summary>
-        /// Post restart method when the actor base class is restarted.
+        /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
         /// </summary>
-        /// <param name="reason">The restart reason.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected override void PostRestart(Exception reason)
+        /// <returns>A <see cref="Guid"/>.</returns>
+        protected Guid NewGuid()
         {
-            Validate.NotNull(reason, nameof(reason));
-
-            this.Logger.Log(LogLevel.Information, $"{this} restarting ({reason.Message})");
-            this.Logger.LogException(reason);
-
-            this.PreStart();
+            return this.guidFactory.NewGuid();
         }
 
         /// <summary>
@@ -107,7 +89,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message object.</param>
         protected override void Unhandled([CanBeNull] object message)
         {
-            this.Logger.Log(LogLevel.Error, $"Unhandled message {message}");
+            this.logger.Log(LogLevel.Error, $"Unhandled message {message}");
         }
 
         /// <summary>
@@ -117,7 +99,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="logText">The log text.</param>
         protected void Log(LogLevel logLevel, [CanBeNull] string logText)
         {
-            this.Logger.Log(logLevel, logText);
+            this.logger.Log(logLevel, logText);
         }
 
         /// <summary>
@@ -137,23 +119,35 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Returns the current time of the black box system clock.
+        /// Passes the given <see cref="Action"/> to the <see cref="CommandHandler"/> for execution.
         /// </summary>
-        /// <returns>
-        /// A <see cref="ZonedDateTime"/>.
-        /// </returns>
-        protected ZonedDateTime TimeNow()
+        /// <param name="action">The action to execute.</param>
+        protected void Execute(Action action)
         {
-            return this.Clock.TimeNow();
+            this.commandHandler.Execute(action);
         }
 
         /// <summary>
-        /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
+        /// Pre start method when actor base class is called.
         /// </summary>
-        /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid()
+        protected override void PreStart()
         {
-            return this.GuidFactory.NewGuid();
+            this.logger.Log(LogLevel.Debug, $"{this} initializing...");
+        }
+
+        /// <summary>
+        /// Post restart method when the actor base class is restarted.
+        /// </summary>
+        /// <param name="reason">The restart reason.</param>
+        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        protected override void PostRestart(Exception reason)
+        {
+            Validate.NotNull(reason, nameof(reason));
+
+            this.logger.Log(LogLevel.Information, $"{this} restarting ({reason.Message})");
+            this.logger.LogException(reason);
+
+            this.PreStart();
         }
 
         /// <summary>
@@ -175,7 +169,7 @@ namespace Nautilus.Common.Componentry
         {
             Debug.NotNull(envelope, nameof(envelope));
 
-            var message = envelope.Open(this.Clock.TimeNow());
+            var message = envelope.Open(this.clock.TimeNow());
             this.Self.Tell(message);
 
             this.Log(LogLevel.Debug, $"Received {message}");

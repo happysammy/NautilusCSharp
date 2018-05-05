@@ -10,7 +10,6 @@ namespace Nautilus.Serilog
 {
     using System;
     using System.Reflection;
-    using NautechSystems.CSharp.CQS;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using global::Serilog;
@@ -23,14 +22,11 @@ namespace Nautilus.Serilog
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogLogger"/> class.
         /// </summary>
-        /// <param name="logDatabaseName">
-        /// The log Database Name.
-        /// </param>
         public SerilogLogger()
         {
             SerilogLogFactory.Create();
 
-            this.Information(ServiceContext.Serilog, $"(version 2.6)"); //{Assembly.LoadFrom("Serilog.dll").GetName().Version})");
+            this.Information(ServiceContext.Serilog, $"(version 2.6)"); //TODO://{Assembly.LoadFrom("Serilog.dll").GetName().Version})");
         }
 
         public string AssemblyVersion =>
@@ -39,12 +35,8 @@ namespace Nautilus.Serilog
         /// <summary>
         /// The verbose.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
         public void Verbose(Enum service, string message)
         {
             Log.Verbose($"[{ToOutput(service)}] {message}");
@@ -53,12 +45,8 @@ namespace Nautilus.Serilog
         /// <summary>
         /// The debug.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
         public void Debug(Enum service, string message)
         {
             Log.Debug($"[{ToOutput(service)}] {message}");
@@ -67,12 +55,8 @@ namespace Nautilus.Serilog
         /// <summary>
         /// The information.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
         public void Information(Enum service, string message)
         {
             Log.Information($"[{ToOutput(service)}] {message}");
@@ -81,56 +65,36 @@ namespace Nautilus.Serilog
         /// <summary>
         /// The warning.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
         public void Warning(Enum service, string message)
         {
             Log.Warning($"[{ToOutput(service)}] {message}");
         }
 
         /// <summary>
-        /// The error.
+        /// Creates an error log event.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
-        /// <param name="ex">
-        /// The ex.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
+        /// <param name="ex">The exception.</param>
         public void Error(Enum service, string message, Exception ex)
         {
             Log.Error(ex, $"[{ToOutput(service)}] {message}");
         }
 
         /// <summary>
-        /// The fatal.
+        /// Creates a fatal log event.
         /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="message">
-        /// The log text.
-        /// </param>
-        /// <param name="ex">
-        /// The ex.
-        /// </param>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
+        /// <param name="ex">The fatal exception.</param>
         public void Fatal(Enum service, string message, Exception ex)
         {
             Log.Fatal(ex, $"[{ToOutput(service)}] {message}");
         }
 
-        public void LogResult(ResultBase result)
-        {
-            throw new NotImplementedException();
-        }
-
+        // TODO: Refactor.
         private static string ToOutput(Enum service)
         {
             const int LogStringLength = 10;

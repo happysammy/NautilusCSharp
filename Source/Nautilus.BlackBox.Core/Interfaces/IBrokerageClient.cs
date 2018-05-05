@@ -20,7 +20,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IBrokerageClient
     {
         /// <summary>
-        /// Gets the brokers name.
+        /// Gets the name of the brokerage.
         /// </summary>
         Broker Broker { get; }
 

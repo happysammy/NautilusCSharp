@@ -27,7 +27,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// The FXCM quick fix message handler.
     /// </summary>
-    public class FxcmFixMessageHandler
+    public class FixMessageHandler
     {
         private IBrokerageGateway brokerageGateway;
 

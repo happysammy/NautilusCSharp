@@ -70,7 +70,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderBusRef.Tell(message, this.Self);
             });
@@ -80,7 +80,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderBusRef.Tell(message, this.Self);
             });
@@ -90,7 +90,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderBusRef.Tell(message, this.Self);
             });
@@ -100,7 +100,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderBusRef.Tell(message, this.Self);
             });
@@ -110,7 +110,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.orderBusRef.Tell(message, this.Self);
             });
@@ -120,7 +120,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 // TODO
             });

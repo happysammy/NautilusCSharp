@@ -47,8 +47,6 @@ namespace NautilusDB.Service
                              && request.FromDateTime.Compare(newsEvent.Time) <= 0
                              && request.ToDateTime.Compare(newsEvent.Time) >= 0);
 
-            this.logger.LogResult(newsEventsQuery);
-
             var newsEvents = new List<EconomicEvent>();
 
             if (newsEventsQuery.IsSuccess)

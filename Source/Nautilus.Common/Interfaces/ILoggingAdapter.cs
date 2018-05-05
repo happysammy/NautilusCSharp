@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using NautechSystems.CSharp.CQS;
     using Nautilus.Common.Enums;
 
     /// <summary>
@@ -66,12 +65,5 @@ namespace Nautilus.Common.Interfaces
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         void Fatal(Enum service, string message, Exception ex);
-
-        /// <summary>
-        /// Logs the given result with a <see cref="LogLevel"/> of Information is success, or
-        /// Warning if failure.
-        /// </summary>
-        /// <param name="result">The command result.</param>
-        void LogResult(ResultBase result);
     }
 }

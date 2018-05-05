@@ -38,9 +38,9 @@ namespace Nautilus.BlackBox.Brokerage
         /// any struct argument is the default value.</exception>
         public BrokerageAccount(
             Broker broker,
-            string accountNumber,
             string username,
             string password,
+            string accountNumber,
             CurrencyCode currency,
             ZonedDateTime timestamp)
             : base(
@@ -54,9 +54,9 @@ namespace Nautilus.BlackBox.Brokerage
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
-            this.AccountNumber = accountNumber;
             this.Username = username;
             this.Password = password;
+            this.AccountNumber = accountNumber;
             this.Currency = currency;
             this.CashBalance = Money.Zero(this.Currency);
             this.CashStartDay = Money.Zero(this.Currency);

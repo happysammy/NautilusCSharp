@@ -16,8 +16,7 @@ namespace Nautilus.Common.Logging
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable sealed <see cref="Logger"/> class. Sends log events to the
-    /// <see cref="ILoggingAdapter"/>.
+    /// Sends log events to the <see cref="ILoggingAdapter"/>.
     /// </summary>
     [Immutable]
     public sealed class Logger : ILogger

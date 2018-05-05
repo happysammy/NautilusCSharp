@@ -67,9 +67,15 @@ namespace Nautilus.BlackBox
             var password = "demo"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
             var accountNumber = "02851908"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
 
-            var account = new BrokerageAccount(broker, accountNumber, username, password, CurrencyCode.AUD, clock.TimeNow());
+            var account = new BrokerageAccount(
+                broker,
+                username,
+                password,
+                accountNumber,
+                CurrencyCode.AUD,
+                clock.TimeNow());
 
-            var setupContainer = new BlackBoxSetupContainer(
+            var container = new BlackBoxSetupContainer(
                 environment,
                 clock,
                 guidFactory,
@@ -94,15 +100,12 @@ namespace Nautilus.BlackBox
                 portfolioServiceFactory,
                 riskServiceFactory);
 
-            var fixClient = new FixClient(
-                broker,
-                username,
-                password,
-                accountNumber);
+            var credentials = new FixCredentials(username, password, accountNumber);
+            var fixClient = new FixClient(container, credentials, broker);
 
             var nautilusSystem = new BlackBox(
                 new Label("NautilusActorSystem"),
-                setupContainer,
+                container,
                 serviceFactory,
                 fixClient,
                 account,

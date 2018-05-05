@@ -21,9 +21,9 @@ namespace Nautilus.Fix
     using QuickFix;
 
     /// <summary>
-    /// The <see cref="FxcmFixMessageRouter"/>.
+    /// The <see cref="FixMessageRouter"/>.
     /// </summary>
-    public class FxcmFixMessageRouter
+    public class FixMessageRouter
     {
         private IBrokerageGateway brokerageGateway;
         private Session session;
