@@ -36,7 +36,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public static IActorRef Create(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             IAlphaStrategy strategy,
             IUntypedActorContext actorContext)

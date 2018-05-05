@@ -18,7 +18,6 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.AlphaModel;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Brokerage;
-    using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Data;
@@ -29,7 +28,6 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Logging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -44,14 +42,9 @@ namespace Nautilus.BlackBox
         {
             var environment = NautilusEnvironment.Live;
             var clock = new Clock(DateTimeZone.Utc);
-            var loggingAdapter = new SerilogLogger();
-            var loggerFactory = new LoggerFactory(loggingAdapter);
-            var guidFactory = new GuidFactory();
-
-            //var ravenDbAdapter = new RavenDbAdapter("Instruments");
-            var database = new DummyDatabase();
-            var instrumentRepository = InstrumentRepositoryFactory.Create(clock, database);
-
+            var loggingAdatper = new SerilogLogger();
+            var databaseAdapter = new DummyDatabase();
+            var instrumentRepository = InstrumentRepositoryFactory.Create(clock, databaseAdapter);
             var quoteProvider = new QuoteProvider(Exchange.FXCM);
 
             var riskModel = new RiskModel(
@@ -75,41 +68,27 @@ namespace Nautilus.BlackBox
                 CurrencyCode.AUD,
                 clock.TimeNow());
 
-            var container = new ComponentryContainer(
+            var fixCredentials = new FixCredentials(username, password, accountNumber);
+
+            var serviceFactory = new BlackBoxServicesFactory(
+                new BrokerageGatewayFactory(),
+                new FixClientFactory(Broker.FXCM, fixCredentials),
+                new AlphaModelServiceFactory(),
+                new DataServiceFactory(),
+                new ExecutionServiceFactory(),
+                new PortfolioServiceFactory(),
+                new RiskServiceFactory());
+
+            var blackBox = BlackBoxFactory.Create(
                 environment,
                 clock,
-                guidFactory,
-                loggerFactory,
+                loggingAdatper,
+                databaseAdapter,
                 instrumentRepository,
                 quoteProvider,
                 riskModel,
-                account);
-
-            var brokerageServiceFactory = new BrokerageGatewayFactory();
-            var alphaModelServiceFactory = new AlphaModelServiceFactory();
-            var dataServiceFactory = new DataServiceFactory();
-            var executionServiceFactory = new ExecutionServiceFactory();
-            var portfolioServiceFactory = new PortfolioServiceFactory();
-            var riskServiceFactory = new RiskServiceFactory();
-
-            var serviceFactory = new BlackBoxServicesFactory(
-                brokerageServiceFactory,
-                alphaModelServiceFactory,
-                dataServiceFactory,
-                executionServiceFactory,
-                portfolioServiceFactory,
-                riskServiceFactory);
-
-            var credentials = new FixCredentials(username, password, accountNumber);
-            var fixClient = new FixClient(container, credentials, broker);
-
-            var nautilusSystem = new BlackBox(
-                new Label("NautilusActorSystem"),
-                container,
-                serviceFactory,
-                fixClient,
                 account,
-                riskModel);
+                serviceFactory);
 
             // var forexConnect = new FxcmForexConnect();
             // forexConnect.Connect();
@@ -123,7 +102,7 @@ namespace Nautilus.BlackBox
 
             Console.ReadLine();
 
-            nautilusSystem.ConnectToBrokerage();
+            blackBox.ConnectToBrokerage();
 
             Console.ReadLine();
 
@@ -145,7 +124,7 @@ namespace Nautilus.BlackBox
 
             foreach (var symbol in tradingSymbols)
             {
-                var instrument = nautilusSystem.GetInstrument(symbol).Value;
+                var instrument = blackBox.GetInstrument(symbol).Value;
                 var barProfile = new BarSpecification(
                     BarQuoteType.Bid,
                     BarResolution.Minute,
@@ -186,17 +165,17 @@ namespace Nautilus.BlackBox
                     trailingStopAlgorithms,
                     exitAlgorithms);
 
-                nautilusSystem.AddAlphaStrategyModule(strategy);
+                blackBox.AddAlphaStrategyModule(strategy);
             }
 
             Console.ReadLine();
 
-            nautilusSystem.StartAlphaStrategyModulesAll();
+            blackBox.StartAlphaStrategyModulesAll();
 
             Console.ReadLine();
 
-            nautilusSystem.Terminate();
-            nautilusSystem.Dispose();
+            blackBox.Terminate();
+            blackBox.Dispose();
 
             Console.ReadLine();
         }

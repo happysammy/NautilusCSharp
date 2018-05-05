@@ -31,13 +31,13 @@ namespace Nautilus.BlackBox.Core
     /// The <see cref="BlackBox"/> class. The object with contains all other <see cref="BlackBox"/>
     /// components.
     /// </summary>
-    public class BlackBox : ComponentBase, IDisposable
+    public class BlackBox : ComponentBusConnectedBase, IDisposable
     {
+        private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IBrokerageGateway brokerageGateway;
-        private readonly MessagingAdapter messagingAdapter;
+        private readonly IBrokerageClient brokerageClient;
 
-        private readonly ActorSystem actorSystem;
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
         private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
 
@@ -46,105 +46,67 @@ namespace Nautilus.BlackBox.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBox"/> class.
         /// </summary>
-        /// <param name="actorSystemLabel">The actor system label.</param>
+        /// <param name="actorSystem">The actor system label.</param>
         /// <param name="container">The setup container.</param>
-        /// <param name="servicesFactory">The service factory.</param>
+        /// <param name="messagingAdapter"></param>
+        /// <param name="switchboard">The service factory.</param>
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BlackBox(
-            Label actorSystemLabel,
-            ComponentryContainer container,
-            BlackBoxServicesFactory servicesFactory,
+            ActorSystem actorSystem,
+            BlackBoxContainer container,
+            MessagingAdapter messagingAdapter,
+            Switchboard switchboard,
+            IBrokerageGateway brokerageGateway,
             IBrokerageClient brokerageClient,
             IBrokerageAccount account,
             IRiskModel riskModel)
             : base(
-                  BlackBoxService.Core,
-                  new Label(nameof(BlackBox)),
-                  container)
+                BlackBoxService.Core,
+                new Label(nameof(BlackBox)),
+                container,
+                messagingAdapter)
         {
-            Validate.NotNull(actorSystemLabel, nameof(actorSystemLabel));
+            Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(servicesFactory, nameof(servicesFactory));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(switchboard, nameof(switchboard));
+            Validate.NotNull(brokerageGateway, nameof(brokerageGateway));
             Validate.NotNull(brokerageClient, nameof(brokerageClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
-            BuildVersionChecker.Run(this.Log);
+            this.actorSystem = actorSystem;
+            this.instrumentRepository = container.InstrumentRepository;
+            this.brokerageGateway = brokerageGateway;
+            this.brokerageClient = brokerageClient;
+
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
-            this.actorSystem = ActorSystem.Create(actorSystemLabel.ToString());
 
-            this.messagingAdapter = MessagingServiceFactory.Create(
-                this.actorSystem,
-                container);
-
-            this.instrumentRepository = container.InstrumentRepository;
-
-            var alphaModelServiceRef = servicesFactory.AlphaModelService.Create(
-                this.actorSystem,
-                container,
-                this.messagingAdapter);
-
-            var dataServiceRef = servicesFactory.DataService.Create(
-                this.actorSystem,
-                container,
-                this.messagingAdapter);
-
-            var executionServiceRef = servicesFactory.ExecutionService.Create(
-                this.actorSystem,
-                container,
-                this.messagingAdapter);
-
-            var portfolioServiceRef = servicesFactory.PortfolioService.Create(
-                this.actorSystem,
-                container,
-                this.messagingAdapter);
-
-            var riskServiceRef = servicesFactory.RiskService.Create(
-                this.actorSystem,
-                container,
-                this.messagingAdapter);
-
-            this.brokerageGateway = servicesFactory.BrokerageGateway.Create(
-                container,
-                this.messagingAdapter,
-                brokerageClient);
-
-            var addresses = new Dictionary<Enum, IActorRef>
-            {
-                { BlackBoxService.AlphaModel, alphaModelServiceRef },
-                { BlackBoxService.Data, dataServiceRef },
-                { BlackBoxService.Execution, executionServiceRef },
-                { BlackBoxService.Portfolio , portfolioServiceRef },
-                { BlackBoxService.Risk, riskServiceRef }
-            };
-
-            this.messagingAdapter.Send(new InitializeMessageSwitchboard(
-                new Switchboard(addresses),
+            messagingAdapter.Send(new InitializeMessageSwitchboard(
+                switchboard,
                 this.NewGuid(),
                 this.TimeNow()));
 
-            this.messagingAdapter.Send(
+            this.Send(
                 new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution },
                 new InitializeBrokerageGateway(
                     this.brokerageGateway,
                     this.NewGuid(),
-                    this.TimeNow()),
-                this.Service);
+                    this.TimeNow()));
 
-            this.messagingAdapter.Send(
+            this.Send(
                 BlackBoxService.Risk,
                 new InitializeRiskModel(
                     account,
                     riskModel,
                     this.NewGuid(),
-                    this.TimeNow()),
-                this.Service);
+                    this.TimeNow()));
 
-            brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
+            this.brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -209,13 +171,12 @@ namespace Nautilus.BlackBox.Core
 
                 this.startedStrategies.Add(strategy);
 
-                this.messagingAdapter.Send(
+                this.Send(
                     BlackBoxService.AlphaModel,
                     new CreateAlphaStrategyModule(
                         strategy,
                         this.NewGuid(),
-                        this.TimeNow()),
-                    this.Service);
+                        this.TimeNow()));
 
                 this.Log.Information($"AlphaStrategyModule starting... ({strategy.ToString()})");
             });
@@ -259,14 +220,13 @@ namespace Nautilus.BlackBox.Core
             {
                 Validate.NotNull(strategy, nameof(strategy));
 
-                this.messagingAdapter.Send(
+                this.Send(
                     BlackBoxService.AlphaModel,
                     new RemoveAlphaStrategyModule(
                         strategy.Instrument.Symbol,
                         strategy.TradeProfile.TradeType,
                         this.NewGuid(),
-                        this.TimeNow()),
-                    this.Service);
+                        this.TimeNow()));
 
                 this.startedStrategies.Remove(strategy);
 

@@ -30,7 +30,7 @@ namespace Nautilus.BlackBox.Data
     /// </summary>
     public sealed class DataService : ActorComponentBusConnectedBase
     {
-        private readonly ComponentryContainer storedContainer;
+        private readonly BlackBoxContainer storedContainer;
         private readonly IActorRef marketDataPortRef;
         private readonly IDictionary<Symbol, IActorRef> marketDataProcessorIndex = new Dictionary<Symbol, IActorRef>();
 
@@ -43,7 +43,7 @@ namespace Nautilus.BlackBox.Data
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataService(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Data,

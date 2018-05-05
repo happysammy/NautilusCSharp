@@ -37,7 +37,7 @@ namespace Nautilus.BlackBox.Execution
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public OrderBus(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Execution,

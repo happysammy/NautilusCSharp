@@ -29,7 +29,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// <param name="brokerageClient">The broker client.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
         public IBrokerageGateway Create(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             IBrokerageClient brokerageClient)
         {

@@ -14,35 +14,34 @@ namespace Nautilus.Database.Core
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Core.Enums;
     using Nautilus.Database.Core.Messages;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// The main macro object which contains the <see cref="NautilusDatabase"/> and presents its API.
+    /// The main macro object which contains the <see cref="Database"/> and presents its API.
     /// </summary>
-    public sealed class NautilusDatabase : ComponentBusConnectedBase, IDisposable
+    public sealed class Database : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
+        /// Initializes a new instance of the <see cref="Database"/> class.
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdatper">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public NautilusDatabase(
+        public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
-            IMessagingAdapter messagingAdatper,
+            MessagingAdapter messagingAdatper,
             IReadOnlyDictionary<Enum, IActorRef> addresses)
             : base(
                 ServiceContext.Database,
-                LabelFactory.Component(nameof(NautilusDatabase)),
+                LabelFactory.Component(nameof(Database)),
                 setupContainer,
                 messagingAdatper)
         {
@@ -52,7 +51,7 @@ namespace Nautilus.Database.Core
 
             this.actorSystem = actorSystem;
 
-            this.GetMessagingAdapter().Send(new InitializeMessageSwitchboard(
+            messagingAdatper.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));
@@ -68,7 +67,7 @@ namespace Nautilus.Database.Core
         }
 
         /// <summary>
-        /// Gracefully shuts down the <see cref="NautilusDatabase"/> system.
+        /// Gracefully shuts down the <see cref="Database"/> system.
         /// </summary>
         public void Shutdown()
         {
@@ -93,7 +92,7 @@ namespace Nautilus.Database.Core
         }
 
         /// <summary>
-        /// Disposes the <see cref="NautilusDatabase"/> object.
+        /// Disposes the <see cref="Database"/> object.
         /// </summary>
         public void Dispose()
         {

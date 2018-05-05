@@ -49,7 +49,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="trailingStopSignalProcessor">The trailing stop signal processor.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public SecurityPortfolio(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             TradeBook tradeBook,

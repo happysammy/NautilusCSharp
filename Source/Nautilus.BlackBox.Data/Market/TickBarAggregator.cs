@@ -42,7 +42,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// <param name="message">The message.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public TickBarAggregator(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             SubscribeSymbolDataType message)
             : base(

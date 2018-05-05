@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="BlackBoxComponentryContainer"/>.
         /// </returns>
-        public ComponentryContainer Create()
+        public BlackBoxContainer Create()
         {
             var environment = NautilusEnvironment.Live;
 
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var account = StubAccountFactory.Create();
 
-            return new ComponentryContainer(
+            return new BlackBoxContainer(
                 environment,
                 clock,
                 guidFactory,

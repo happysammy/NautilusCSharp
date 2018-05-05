@@ -27,7 +27,7 @@ namespace Nautilus.BlackBox.Data.Market
     /// </summary>
     public sealed class MarketDataProcessor : ActorComponentBusConnectedBase
     {
-        private readonly ComponentryContainer storedContainer;
+        private readonly BlackBoxContainer storedContainer;
         private readonly Symbol symbol;
         private readonly IDictionary<TradeType, IActorRef> barAggregators = new Dictionary<TradeType, IActorRef>();
 
@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MarketDataProcessor(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(

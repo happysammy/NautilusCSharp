@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// <returns>A <see cref="IActorRef"/>.</returns>
         IActorRef Create(
             ActorSystem actorSystem,
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter);
     }
 }

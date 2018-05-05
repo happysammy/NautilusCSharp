@@ -37,7 +37,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public TradeBook(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             Symbol symbol)
             : base(
             BlackBoxService.Portfolio,

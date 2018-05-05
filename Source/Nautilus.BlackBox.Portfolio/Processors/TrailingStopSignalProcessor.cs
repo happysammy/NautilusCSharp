@@ -37,7 +37,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// <param name="instrument">The instrument.</param>
         /// <param name="tradeBook">The trade book.</param>
         public TrailingStopSignalProcessor(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             ITradeBook tradeBook)

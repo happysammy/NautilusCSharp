@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public OrderExpiryController(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(

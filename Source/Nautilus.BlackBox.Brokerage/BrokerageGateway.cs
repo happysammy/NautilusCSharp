@@ -48,7 +48,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BrokerageGateway(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             IBrokerageClient brokerageClient)
             : base(

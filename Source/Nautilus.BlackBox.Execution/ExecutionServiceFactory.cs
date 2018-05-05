@@ -33,7 +33,7 @@ namespace Nautilus.BlackBox.Execution
         /// <exception cref="ValidationException">Throw if any argument is null.</exception>
         public IActorRef Create(
             ActorSystem actorSystem,
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));

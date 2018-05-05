@@ -19,10 +19,10 @@ namespace Nautilus.BlackBox.Core.Build
     /// a <see cref="BlackBox"/> instance and its required services and components.
     /// </summary>
     [Immutable]
-    public sealed class ComponentryContainer : IComponentryContainer
+    public sealed class BlackBoxContainer : IComponentryContainer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentryContainer"/> class.
+        /// Initializes a new instance of the <see cref="BlackBoxContainer"/> class.
         /// </summary>
         /// <param name="environment">The environment.</param>
         /// <param name="clock">The clock.</param>
@@ -32,7 +32,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="quoteProvider">The quote provider.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
-        public ComponentryContainer(
+        public BlackBoxContainer(
             NautilusEnvironment environment,
             IZonedClock clock,
             IGuidFactory guidFactory,

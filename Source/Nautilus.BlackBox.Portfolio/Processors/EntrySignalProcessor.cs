@@ -41,7 +41,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// <param name="tradeBook">The trade book.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public EntrySignalProcessor(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             ITradeBook tradeBook)

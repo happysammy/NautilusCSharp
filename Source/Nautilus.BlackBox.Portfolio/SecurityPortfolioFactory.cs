@@ -34,7 +34,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public static IActorRef Create(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             IUntypedActorContext actorContext)

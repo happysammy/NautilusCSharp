@@ -32,7 +32,7 @@ namespace NautilusDB
     /// </summary>
     public class Startup
     {
-        private NautilusDatabase nautilusDB;
+        private Database nautilusDB;
         private MarketDataProviderConfig dukasConfig;
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace NautilusDB
                 (bool)config[ConfigSection.Database]["compression"],
                 (string)config[ConfigSection.Database]["compressionCodec"]);
 
-            this.nautilusDB = NautilusDatabaseFactory.Create(
+            this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
                 new MockMarketDataRepository(),

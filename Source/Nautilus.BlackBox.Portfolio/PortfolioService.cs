@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Portfolio
     /// </summary>
     public sealed class PortfolioService : ActorComponentBusConnectedBase
     {
-        private readonly ComponentryContainer storedContainer;
+        private readonly BlackBoxContainer storedContainer;
         private readonly SecurityPortfolioStore portfolioStore;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="portfolioStore">The security portfolio store.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public PortfolioService(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             SecurityPortfolioStore portfolioStore)
             : base(

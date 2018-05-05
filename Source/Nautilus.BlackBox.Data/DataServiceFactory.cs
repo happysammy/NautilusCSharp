@@ -32,7 +32,7 @@ namespace Nautilus.BlackBox.Data
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public IActorRef Create(
             ActorSystem actorSystem,
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));

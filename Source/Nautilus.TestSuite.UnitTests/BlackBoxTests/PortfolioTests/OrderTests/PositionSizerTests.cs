@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class PositionSizerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly ComponentryContainer container;
+        private readonly BlackBoxContainer container;
         private readonly MockLoggingAdatper mockLoggingAdatper;
 
         public PositionSizerTests(ITestOutputHelper output)

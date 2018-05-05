@@ -12,21 +12,19 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// The <see cref="IBrokerageGatewayFactory"/> interface. Provides
-    /// <see cref="IBrokerageGateway"/>(s) for the <see cref="BlackBox"/> system from the given inputs.
+    /// Provides <see cref="IBrokerageClient"/>(s) for the <see cref="BlackBox"/> system from the
+    /// given inputs.
     /// </summary>
-    public interface IBrokerageGatewayFactory
+    public interface IBrokerageClientFactory
     {
         /// <summary>
         /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="brokerageClient">The brokerage client.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
-        IBrokerageGateway Create(
+        IBrokerageClient Create(
             BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter,
-            IBrokerageClient brokerageClient);
+            IMessagingAdapter messagingAdapter);
     }
 }

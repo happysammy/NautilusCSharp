@@ -25,7 +25,7 @@ namespace Nautilus.BlackBox.AlphaModel
     /// </summary>
     public sealed class AlphaModelService : ActorComponentBusConnectedBase
     {
-        private readonly ComponentryContainer storedContainer;
+        private readonly BlackBoxContainer storedContainer;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nautilus.BlackBox.AlphaModel
         /// <param name="alphaStrategyModuleStore">The alpha strategy module store.</param>
         /// <exception cref="ValidationException">Throws any argument is null.</exception>
         public AlphaModelService(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             AlphaStrategyModuleStore alphaStrategyModuleStore)
             : base(

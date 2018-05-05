@@ -37,7 +37,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="instrument">The instrument.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public OrderPacketBuilder(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             Instrument instrument)
             : base(
             BlackBoxService.Portfolio,

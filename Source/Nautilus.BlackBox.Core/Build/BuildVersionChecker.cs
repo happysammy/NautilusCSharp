@@ -12,6 +12,7 @@ namespace Nautilus.BlackBox.Core.Build
     using System.Reflection;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -24,17 +25,17 @@ namespace Nautilus.BlackBox.Core.Build
         /// Runs the version checker which produces log events.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public static void Run(ILogger logger)
+        public static void Run(ILoggingAdapter logger)
         {
             Validate.NotNull(logger, nameof(logger));
 
-            logger.Information("---------------------------------------------------------------------------");
-            logger.Information("NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            logger.Information("---------------------------------------------------------------------------");
-            logger.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Information($"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Information($"{Environment.OSVersion}");
-            logger.Information($"Microsoft.NET Framework (version {Environment.Version})");
+            logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
+            logger.Information(BlackBoxService.Core, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
+            logger.Information(BlackBoxService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            logger.Information(BlackBoxService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
+            logger.Information(BlackBoxService.Core, $"{Environment.OSVersion}");
+            logger.Information(BlackBoxService.Core, $"Microsoft.NET Framework (version {Environment.Version})");
         }
     }
 }

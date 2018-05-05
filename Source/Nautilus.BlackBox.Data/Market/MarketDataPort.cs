@@ -36,7 +36,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// </param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public MarketDataPort(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Data,

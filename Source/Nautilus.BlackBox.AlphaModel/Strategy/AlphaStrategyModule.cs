@@ -52,7 +52,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <param name="trailingStopSignalGenerator">The module trailing stop signal generator.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public AlphaStrategyModule(
-            ComponentryContainer container,
+            BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
             IAlphaStrategy alphaStrategy,
             BarStore barStore,

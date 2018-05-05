@@ -26,7 +26,7 @@ namespace Nautilus.Database.Core.Build
     /// <summary>
     /// The builder for the NautilusDB database infrastructure.
     /// </summary>
-    public static class NautilusDatabaseFactory
+    public static class DatabaseFactory
     {
         /// <summary>
         /// Builds the NautilusDB database infrastructure and returns an <see cref="IActorRef"/>
@@ -39,7 +39,7 @@ namespace Nautilus.Database.Core.Build
         /// <param name="barDataProvider">The market data provider.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public static NautilusDatabase Create(
+        public static Database Create(
             ILoggingAdapter logger,
             JObject collectionConfig,
             IMarketDataRepository marketDataRepository,
@@ -52,7 +52,7 @@ namespace Nautilus.Database.Core.Build
             Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
             Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
-            logger.Information(ServiceContext.Database, $"Starting {nameof(NautilusDatabase)} builder...");
+            logger.Information(ServiceContext.Database, $"Starting {nameof(Database)} builder...");
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
@@ -63,7 +63,7 @@ namespace Nautilus.Database.Core.Build
                 new GuidFactory(),
                 new LoggerFactory(logger));
 
-            var actorSystem = ActorSystem.Create(nameof(NautilusDatabase));
+            var actorSystem = ActorSystem.Create(nameof(Database));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
@@ -90,7 +90,7 @@ namespace Nautilus.Database.Core.Build
                 { DatabaseService.DatabaseCollectionManager, dataCollectionActorRef },
             };
 
-            return new NautilusDatabase(
+            return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,

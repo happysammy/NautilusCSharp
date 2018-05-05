@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     {
         private readonly ITestOutputHelper output;
         private readonly ActorSystem testActorSystem;
-        private readonly ComponentryContainer container;
+        private readonly BlackBoxContainer container;
         private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IMessagingAdapter messagingAdapter;
