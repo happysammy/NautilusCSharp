@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Setup
+namespace Nautilus.BlackBox.Core.Build
 {
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;

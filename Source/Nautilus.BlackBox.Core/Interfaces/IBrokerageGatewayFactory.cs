@@ -8,7 +8,7 @@
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
-    using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -20,12 +20,12 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// <summary>
         /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
         IBrokerageGateway Create(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IBrokerageClient brokerageClient);
     }

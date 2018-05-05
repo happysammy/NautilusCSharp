@@ -9,8 +9,8 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using Moq;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
@@ -39,9 +39,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// The create.
         /// </summary>
         /// <returns>
-        /// The <see cref="BlackBoxSetupContainer"/>.
+        /// The <see cref="BlackBoxComponentryContainer"/>.
         /// </returns>
-        public BlackBoxSetupContainer Create()
+        public ComponentryContainer Create()
         {
             var environment = NautilusEnvironment.Live;
 
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var account = StubAccountFactory.Create();
 
-            return new BlackBoxSetupContainer(
+            return new ComponentryContainer(
                 environment,
                 clock,
                 guidFactory,

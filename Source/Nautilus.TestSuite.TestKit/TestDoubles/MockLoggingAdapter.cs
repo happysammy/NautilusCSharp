@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
@@ -140,7 +139,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.stash.Enqueue(message);
         }
 
-        private IReadOnlyList<string> GetLogStashTextAsStringList()
+        private IEnumerable<string> GetLogStashTextAsStringList()
         {
             return this.stash.ToList().AsReadOnly();
         }

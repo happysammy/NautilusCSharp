@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Portfolio
     using Akka.Actor;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -27,22 +27,22 @@ namespace Nautilus.BlackBox.Portfolio
         /// address.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging Adapter.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public IActorRef Create(
             ActorSystem actorSystem,
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             var portfolioStore = new SecurityPortfolioStore();
             return actorSystem.ActorOf(Props.Create(() => new PortfolioService(
-                setupContainer,
+                container,
                 messagingAdapter,
                 portfolioStore)));
         }

@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using Nautilus.Common.Enums;
 
     /// <summary>
     /// The interface between the abstract application logger and the logging framework.

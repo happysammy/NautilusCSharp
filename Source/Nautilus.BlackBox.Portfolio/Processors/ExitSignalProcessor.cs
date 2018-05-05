@@ -11,10 +11,9 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -31,23 +30,23 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// <summary>
         /// Initializes a new instance of the <see cref="ExitSignalProcessor"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="instrument">The instrument.</param>
         /// <param name="tradeBook">The trade book.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public ExitSignalProcessor(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             ITradeBook tradeBook)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(ExitSignalProcessor), instrument.Symbol),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(instrument, nameof(instrument));
             Validate.NotNull(tradeBook, nameof(tradeBook));

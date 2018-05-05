@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Akka.Actor;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.Common.Interfaces;
@@ -27,50 +27,50 @@ namespace Nautilus.BlackBox.Portfolio
         /// Creates a new <see cref="SecurityPortfolio"/> and returns its <see cref="IActorRef"/>
         /// address.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="instrument">The instrument.</param>
         /// <param name="actorContext">The actor context.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public static IActorRef Create(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             IUntypedActorContext actorContext)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(instrument, nameof(instrument));
             Validate.NotNull(actorContext, nameof(actorContext));
 
-            var tradeBook = new TradeBook(setupContainer, instrument.Symbol);
+            var tradeBook = new TradeBook(container, instrument.Symbol);
 
             var orderExpiryController = new OrderExpiryController(
-                setupContainer,
+                container,
                 messagingAdapter,
                 instrument.Symbol);
 
             var entrySignalProcessor = new EntrySignalProcessor(
-                setupContainer,
+                container,
                 messagingAdapter,
                 instrument,
                 tradeBook);
 
             var exitSignalProcessor = new ExitSignalProcessor(
-                setupContainer,
+                container,
                 messagingAdapter,
                 instrument,
                 tradeBook);
 
             var trailingStopSignalProcessor = new TrailingStopSignalProcessor(
-                setupContainer,
+                container,
                 messagingAdapter,
                 instrument,
                 tradeBook);
 
             return actorContext.ActorOf(Props.Create(() => new SecurityPortfolio(
-                setupContainer,
+                container,
                 messagingAdapter,
                 instrument,
                 tradeBook,

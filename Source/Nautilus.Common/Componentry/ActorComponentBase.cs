@@ -22,6 +22,8 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public abstract class ActorComponentBase : ReceiveActor
     {
+        private readonly Enum serviceContext;
+        private readonly Label component;
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly CommandHandler commandHandler;
@@ -40,26 +42,15 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));
 
+            this.serviceContext = service;
+            this.component = component;
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;
-            this.Log = setupContainer.LoggerFactory.Create(this.Service, this.Component);
+            this.Log = setupContainer.LoggerFactory.Create(service, component);
             this.commandHandler = new CommandHandler(this.Log);
-            this.Service = service;
-            this.Component = component;
 
             this.SetupMessageHandling();
         }
-
-        /// <summary>
-        /// Gets the components service context.
-        /// </summary>
-        protected Enum Service { get; }
-
-        /// <summary>
-        /// Gets the components name.
-        /// </summary>
-        protected Label Component { get; }
-
         /// <summary>
         /// Gets the components logger.
         /// </summary>

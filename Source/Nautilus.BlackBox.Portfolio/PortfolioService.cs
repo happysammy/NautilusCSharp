@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Portfolio
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -24,31 +24,31 @@ namespace Nautilus.BlackBox.Portfolio
     /// </summary>
     public sealed class PortfolioService : ActorComponentBusConnectedBase
     {
-        private readonly BlackBoxSetupContainer storedSetupContainer;
+        private readonly ComponentryContainer storedContainer;
         private readonly SecurityPortfolioStore portfolioStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PortfolioService"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="portfolioStore">The security portfolio store.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public PortfolioService(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             SecurityPortfolioStore portfolioStore)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Service(BlackBoxService.Portfolio),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(portfolioStore, nameof(portfolioStore));
 
-            this.storedSetupContainer = setupContainer;
+            this.storedContainer = container;
             this.portfolioStore = portfolioStore;
 
             this.SetupCommandMessageHandling();
@@ -82,7 +82,7 @@ namespace Nautilus.BlackBox.Portfolio
             this.Execute(() =>
             {
                 var portfolioRef = SecurityPortfolioFactory.Create(
-                    this.storedSetupContainer,
+                    this.storedContainer,
                     this.GetMessagingAdapter(),
                     message.Instrument,
                     Context);

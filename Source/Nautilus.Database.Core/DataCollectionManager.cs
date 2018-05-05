@@ -117,7 +117,7 @@ namespace Nautilus.Database.Core
                 var timeNow = this.TimeNow();
                 this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
                 this.Log.Information(
-                    $"{this.Component} updated last collection time to {timeNow.ToIsoString()}.");
+                    $"Updated last collection time to {timeNow.ToIsoString()}.");
 
                 this.CollectMarketData();
             }

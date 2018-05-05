@@ -13,12 +13,11 @@ namespace Nautilus.BlackBox.Portfolio
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
@@ -40,7 +39,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <summary>
         /// Initializes a new instance of the <see cref="SecurityPortfolio"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="instrument">The instrument.</param>
         /// <param name="tradeBook">The trade book.</param>
@@ -50,7 +49,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="trailingStopSignalProcessor">The trailing stop signal processor.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public SecurityPortfolio(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             TradeBook tradeBook,
@@ -61,10 +60,10 @@ namespace Nautilus.BlackBox.Portfolio
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(SecurityPortfolio), instrument.Symbol),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(instrument, nameof(instrument));
             Validate.NotNull(tradeBook, nameof(tradeBook));

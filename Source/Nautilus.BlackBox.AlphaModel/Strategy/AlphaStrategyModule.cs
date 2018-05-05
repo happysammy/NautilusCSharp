@@ -13,9 +13,9 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -41,7 +41,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <summary>
         /// Initializes a new instance of the <see cref="AlphaStrategyModule"/> class.
         /// </summary>
-        /// <param name="setupContainer">The module setup container.</param>
+        /// <param name="container">The module setup container.</param>
         /// <param name="messagingAdapter">The module messaging adapter.</param>
         /// <param name="alphaStrategy">The module alpha strategy.</param>
         /// <param name="barStore">The module bar store.</param>
@@ -52,7 +52,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <param name="trailingStopSignalGenerator">The module trailing stop signal generator.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public AlphaStrategyModule(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IAlphaStrategy alphaStrategy,
             BarStore barStore,
@@ -67,10 +67,10 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                 nameof(AlphaStrategyModule),
                 alphaStrategy.Instrument.Symbol,
                 alphaStrategy.TradeProfile.TradeType),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(alphaStrategy, nameof(alphaStrategy));
             Validate.NotNull(barStore, nameof(barStore));

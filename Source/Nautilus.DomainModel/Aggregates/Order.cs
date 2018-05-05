@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;

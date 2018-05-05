@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Setup
+namespace Nautilus.BlackBox.Core.Build
 {
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
@@ -19,10 +19,10 @@ namespace Nautilus.BlackBox.Core.Setup
     /// a <see cref="BlackBox"/> instance and its required services and components.
     /// </summary>
     [Immutable]
-    public sealed class BlackBoxSetupContainer : IComponentryContainer
+    public sealed class ComponentryContainer : IComponentryContainer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BlackBoxSetupContainer"/> class.
+        /// Initializes a new instance of the <see cref="ComponentryContainer"/> class.
         /// </summary>
         /// <param name="environment">The environment.</param>
         /// <param name="clock">The clock.</param>
@@ -32,7 +32,7 @@ namespace Nautilus.BlackBox.Core.Setup
         /// <param name="quoteProvider">The quote provider.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
-        public BlackBoxSetupContainer(
+        public ComponentryContainer(
             NautilusEnvironment environment,
             IZonedClock clock,
             IGuidFactory guidFactory,

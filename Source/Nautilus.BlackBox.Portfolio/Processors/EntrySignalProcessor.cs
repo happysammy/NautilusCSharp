@@ -12,11 +12,10 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Portfolio.Orders;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -36,33 +35,33 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// <summary>
         /// Initializes a new instance of the <see cref="EntrySignalProcessor"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="instrument">The instrument.</param>
         /// <param name="tradeBook">The trade book.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public EntrySignalProcessor(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             ITradeBook tradeBook)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(EntrySignalProcessor), instrument.Symbol),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(instrument, nameof(instrument));
             Validate.NotNull(tradeBook, nameof(tradeBook));
 
             this.instrument = instrument;
             this.tradeBook = tradeBook;
-            this.orderPacketBuilder = new OrderPacketBuilder(setupContainer, instrument);
-            this.quoteProvider = setupContainer.QuoteProvider;
-            this.account = setupContainer.Account;
-            this.riskModel = setupContainer.RiskModel;
+            this.orderPacketBuilder = new OrderPacketBuilder(container, instrument);
+            this.quoteProvider = container.QuoteProvider;
+            this.account = container.Account;
+            this.riskModel = container.RiskModel;
         }
 
         /// <summary>

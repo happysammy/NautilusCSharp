@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;

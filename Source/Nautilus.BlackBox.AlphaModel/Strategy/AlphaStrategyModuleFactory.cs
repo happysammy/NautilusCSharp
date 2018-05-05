@@ -12,8 +12,8 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -29,19 +29,19 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// Creates a new <see cref="AlphaStrategyModule"/> and returns its <see cref="IActorRef"/>
         /// address.
         /// </summary>
-        /// <param name="setupContainer">The module setup container.</param>
+        /// <param name="container">The module setup container.</param>
         /// <param name="messagingAdapter">The module messaging adapter.</param>
         /// <param name="strategy">The module strategy.</param>
         /// <param name="actorContext">The module actor context.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public static IActorRef Create(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IAlphaStrategy strategy,
             IUntypedActorContext actorContext)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(strategy, nameof(strategy));
             Validate.NotNull(actorContext, nameof(actorContext));
@@ -69,7 +69,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             return actorContext.ActorOf(Props.Create(
                 () => new AlphaStrategyModule(
-                    setupContainer,
+                    container,
                     messagingAdapter,
                     strategy,
                     barStore,

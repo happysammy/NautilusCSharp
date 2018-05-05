@@ -13,10 +13,9 @@ namespace Nautilus.BlackBox.Data.Market
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Enums;
@@ -28,32 +27,32 @@ namespace Nautilus.BlackBox.Data.Market
     /// </summary>
     public sealed class MarketDataProcessor : ActorComponentBusConnectedBase
     {
-        private readonly BlackBoxSetupContainer storedSetupContainer;
+        private readonly ComponentryContainer storedContainer;
         private readonly Symbol symbol;
         private readonly IDictionary<TradeType, IActorRef> barAggregators = new Dictionary<TradeType, IActorRef>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketDataProcessor"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MarketDataProcessor(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(
             BlackBoxService.Data,
             LabelFactory.Component(nameof(MarketDataProcessor), symbol),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(symbol, nameof(symbol));
 
-            this.storedSetupContainer = setupContainer;
+            this.storedContainer = container;
             this.symbol = symbol;
 
             this.SetupCommandMessageHandling();
@@ -93,7 +92,7 @@ namespace Nautilus.BlackBox.Data.Market
             if (message.BarSpecification.Resolution == BarResolution.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
-                    this.storedSetupContainer,
+                    this.storedContainer,
                     this.GetMessagingAdapter(),
                     message)));
 
@@ -103,7 +102,7 @@ namespace Nautilus.BlackBox.Data.Market
             if (message.BarSpecification.Resolution != BarResolution.Tick)
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
-                    this.storedSetupContainer,
+                    this.storedContainer,
                     this.GetMessagingAdapter(),
                     message)));
 

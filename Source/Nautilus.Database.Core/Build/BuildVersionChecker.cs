@@ -6,13 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Configuration
+namespace Nautilus.Database.Core.Build
 {
     using System;
     using System.Reflection;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Enums;
 

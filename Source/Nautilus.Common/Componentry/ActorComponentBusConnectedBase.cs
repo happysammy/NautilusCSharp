@@ -17,9 +17,8 @@ namespace Nautilus.Common.Componentry
 
     public class ActorComponentBusConnectedBase : ActorComponentBase
     {
-        /// <summary>
-        /// Gets the components messaging adapter.
-        /// </summary>
+        private readonly Enum service;
+        private readonly Label component;
         private readonly IMessagingAdapter messagingAdapter;
 
         protected ActorComponentBusConnectedBase(
@@ -36,11 +35,13 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
+            this.service = service;
+            this.component = component;
             this.messagingAdapter = messagingAdapter;
         }
 
         /// <summary>
-        /// Sends the given message to the given black box service via the messaging system.
+        /// Sends the given message to the given service via the messaging system.
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
@@ -51,7 +52,7 @@ namespace Nautilus.Common.Componentry
         {
             Validate.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receiver, message, this.Service);
+            this.messagingAdapter.Send(receiver, message, this.service);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receivers, message, this.Service);
+            this.messagingAdapter.Send(receivers, message, this.service);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using NautechSystems.CSharp;
-    using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class PositionSizerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly BlackBoxSetupContainer setupContainer;
+        private readonly ComponentryContainer container;
         private readonly MockLoggingAdatper mockLoggingAdatper;
 
         public PositionSizerTests(ITestOutputHelper output)
@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.output = output;
 
             var setupFactory = new StubSetupContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            this.container = setupFactory.Create();
             this.mockLoggingAdatper = setupFactory.LoggingAdatper;
         }
 
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,
@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.USDJPY();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,
@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.USDJPY();
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
-            var positionSizer = new PositionSizer(this.setupContainer, instrument);
+            var positionSizer = new PositionSizer(this.container, instrument);
 
             var signal = new EntrySignal(
                 instrument.Symbol,

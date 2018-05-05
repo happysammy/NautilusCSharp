@@ -14,10 +14,9 @@ namespace Nautilus.BlackBox.Execution
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -34,19 +33,19 @@ namespace Nautilus.BlackBox.Execution
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderBus"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public OrderBus(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Execution,
             new Label(nameof(OrderBus)),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.SetupCommandMessageHandling();

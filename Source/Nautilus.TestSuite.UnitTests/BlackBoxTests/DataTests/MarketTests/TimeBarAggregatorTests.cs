@@ -11,8 +11,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     {
         private readonly ITestOutputHelper output;
         private readonly ActorSystem testActorSystem;
-        private readonly BlackBoxSetupContainer setupContainer;
+        private readonly ComponentryContainer container;
         private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IMessagingAdapter messagingAdapter;
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             this.output = output;
 
             var setupFactory = new StubSetupContainerFactory();
-            this.setupContainer = setupFactory.Create();
+            this.container = setupFactory.Create();
             this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             this.testActorSystem = ActorSystem.Create(nameof(TimeBarAggregatorTests));
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             var messagingServiceFactory = new MockMessagingServiceFactory();
             messagingServiceFactory.Create(
                 this.testActorSystem,
-                this.setupContainer);
+                this.container);
 
             this.inMemoryMessageStore = messagingServiceFactory.InMemoryMessageStore;
             this.messagingAdapter = messagingServiceFactory.MessagingAdapter;
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubDateTime.Now());
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
-                this.setupContainer,
+                this.container,
                 this.messagingAdapter,
                 message)));
 
@@ -113,7 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubDateTime.Now());
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
-                this.setupContainer,
+                this.container,
                 this.messagingAdapter,
                 message)));
 
@@ -167,7 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubDateTime.Now());
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
-                this.setupContainer,
+                this.container,
                 this.messagingAdapter,
                 message)));
 
@@ -236,7 +236,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubDateTime.Now());
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
-                this.setupContainer,
+                this.container,
                 this.messagingAdapter,
                 message)));
 

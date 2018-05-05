@@ -11,10 +11,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System.Collections.Generic;
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -34,22 +33,22 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderPacketBuilder"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="instrument">The instrument.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public OrderPacketBuilder(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             Instrument instrument)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(OrderPacketBuilder), instrument.Symbol),
-            setupContainer)
+            container)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(instrument, nameof(instrument));
 
             this.instrument = instrument;
-            this.positionSizer = new PositionSizer(setupContainer, instrument);
+            this.positionSizer = new PositionSizer(container, instrument);
             this.orderIdFactory = new OrderIdFactory(instrument.Symbol);
         }
 

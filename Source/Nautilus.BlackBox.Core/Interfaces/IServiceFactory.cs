@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Setup;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -23,12 +23,12 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// from the given inputs.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         IActorRef Create(
             ActorSystem actorSystem,
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter);
     }
 }

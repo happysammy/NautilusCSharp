@@ -11,10 +11,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System;
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -29,18 +28,18 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionSizer"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="instrument">The instrument.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public PositionSizer(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             Instrument instrument)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(PositionSizer), instrument.Symbol),
-            setupContainer)
+            container)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(instrument, nameof(instrument));
 
             this.instrument = instrument;

@@ -11,9 +11,9 @@ namespace Nautilus.BlackBox.AlphaModel
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -25,31 +25,31 @@ namespace Nautilus.BlackBox.AlphaModel
     /// </summary>
     public sealed class AlphaModelService : ActorComponentBusConnectedBase
     {
-        private readonly BlackBoxSetupContainer storedSetupContainer;
+        private readonly ComponentryContainer storedContainer;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlphaModelService"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="alphaStrategyModuleStore">The alpha strategy module store.</param>
         /// <exception cref="ValidationException">Throws any argument is null.</exception>
         public AlphaModelService(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             AlphaStrategyModuleStore alphaStrategyModuleStore)
             : base(
             BlackBoxService.AlphaModel,
             LabelFactory.Service(BlackBoxService.AlphaModel),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(alphaStrategyModuleStore, nameof(alphaStrategyModuleStore));
 
-            this.storedSetupContainer = setupContainer;
+            this.storedContainer = container;
             this.alphaStrategyModuleStore = alphaStrategyModuleStore;
 
             this.SetupCommandMessageHandling();
@@ -95,7 +95,7 @@ namespace Nautilus.BlackBox.AlphaModel
                 var strategyLabel = LabelFactory.StrategyLabel(message.Symbol, message.TradeType);
 
                 var alphasStrategyModuleRef = AlphaStrategyModuleFactory.Create(
-                    this.storedSetupContainer,
+                    this.storedContainer,
                     this.GetMessagingAdapter(),
                     message.Strategy,
                     Context);

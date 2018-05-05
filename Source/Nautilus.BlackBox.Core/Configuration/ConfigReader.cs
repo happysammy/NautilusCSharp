@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Setup
+namespace Nautilus.BlackBox.Core.Configuration
 {
     using System;
     using System.Collections.Specialized;

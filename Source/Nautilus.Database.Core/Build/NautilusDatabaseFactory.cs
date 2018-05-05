@@ -19,7 +19,6 @@ namespace Nautilus.Database.Core.Build
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
-    using Nautilus.Database.Core.Configuration;
     using Nautilus.Database.Core.Enums;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.DomainModel.Entities;

@@ -16,11 +16,11 @@ namespace Nautilus.BlackBox.Core
     using Akka.Actor;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -47,7 +47,7 @@ namespace Nautilus.BlackBox.Core
         /// Initializes a new instance of the <see cref="BlackBox"/> class.
         /// </summary>
         /// <param name="actorSystemLabel">The actor system label.</param>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="servicesFactory">The service factory.</param>
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
@@ -55,7 +55,7 @@ namespace Nautilus.BlackBox.Core
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BlackBox(
             Label actorSystemLabel,
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             BlackBoxServicesFactory servicesFactory,
             IBrokerageClient brokerageClient,
             IBrokerageAccount account,
@@ -63,53 +63,53 @@ namespace Nautilus.BlackBox.Core
             : base(
                   BlackBoxService.Core,
                   new Label(nameof(BlackBox)),
-                  setupContainer)
+                  container)
         {
             Validate.NotNull(actorSystemLabel, nameof(actorSystemLabel));
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(servicesFactory, nameof(servicesFactory));
             Validate.NotNull(brokerageClient, nameof(brokerageClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
-            PackageVersionChecker.Run(this.Log);
+            BuildVersionChecker.Run(this.Log);
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
             this.actorSystem = ActorSystem.Create(actorSystemLabel.ToString());
 
             this.messagingAdapter = MessagingServiceFactory.Create(
                 this.actorSystem,
-                setupContainer);
+                container);
 
-            this.instrumentRepository = setupContainer.InstrumentRepository;
+            this.instrumentRepository = container.InstrumentRepository;
 
             var alphaModelServiceRef = servicesFactory.AlphaModelService.Create(
                 this.actorSystem,
-                setupContainer,
+                container,
                 this.messagingAdapter);
 
             var dataServiceRef = servicesFactory.DataService.Create(
                 this.actorSystem,
-                setupContainer,
+                container,
                 this.messagingAdapter);
 
             var executionServiceRef = servicesFactory.ExecutionService.Create(
                 this.actorSystem,
-                setupContainer,
+                container,
                 this.messagingAdapter);
 
             var portfolioServiceRef = servicesFactory.PortfolioService.Create(
                 this.actorSystem,
-                setupContainer,
+                container,
                 this.messagingAdapter);
 
             var riskServiceRef = servicesFactory.RiskService.Create(
                 this.actorSystem,
-                setupContainer,
+                container,
                 this.messagingAdapter);
 
             this.brokerageGateway = servicesFactory.BrokerageGateway.Create(
-                setupContainer,
+                container,
                 this.messagingAdapter,
                 brokerageClient);
 
@@ -148,7 +148,7 @@ namespace Nautilus.BlackBox.Core
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
-            this.Log.Information($"Environment={setupContainer.Environment}, Broker={setupContainer.Account.Broker}");
+            this.Log.Information($"Environment={container.Environment}, Broker={container.Account.Broker}");
             this.stopwatch.Reset();
         }
 

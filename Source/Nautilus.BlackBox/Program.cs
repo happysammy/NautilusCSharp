@@ -19,8 +19,8 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Brokerage;
     using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Data;
     using Nautilus.BlackBox.Data.Instrument;
     using Nautilus.BlackBox.Data.Market;
@@ -75,7 +75,7 @@ namespace Nautilus.BlackBox
                 CurrencyCode.AUD,
                 clock.TimeNow());
 
-            var container = new BlackBoxSetupContainer(
+            var container = new ComponentryContainer(
                 environment,
                 clock,
                 guidFactory,

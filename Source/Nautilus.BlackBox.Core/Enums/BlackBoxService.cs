@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core
+namespace Nautilus.BlackBox.Core.Enums
 {
     /// <summary>
     /// The <see cref="BlackBoxService"/> context enumeration.

@@ -13,10 +13,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System.Linq;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
@@ -35,21 +34,21 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderExpiryController"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public OrderExpiryController(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(OrderExpiryController), symbol),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(symbol, nameof(symbol));
         }

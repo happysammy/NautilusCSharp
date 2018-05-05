@@ -13,10 +13,10 @@ namespace Nautilus.BlackBox.Brokerage
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
@@ -43,27 +43,27 @@ namespace Nautilus.BlackBox.Brokerage
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokerageGateway"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BrokerageGateway(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IBrokerageClient brokerageClient)
             : base(
                 BlackBoxService.Brokerage,
                 new Label(nameof(BrokerageGateway)),
-                setupContainer,
+                container,
                 messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(brokerageClient, nameof(brokerageClient));
 
-            this.instrumentRepository = setupContainer.InstrumentRepository;
-            this.quoteProvider = setupContainer.QuoteProvider;
-            this.brokerageAccount = setupContainer.Account;
+            this.instrumentRepository = container.InstrumentRepository;
+            this.quoteProvider = container.QuoteProvider;
+            this.brokerageAccount = container.Account;
             this.brokerageClient = brokerageClient;
         }
 

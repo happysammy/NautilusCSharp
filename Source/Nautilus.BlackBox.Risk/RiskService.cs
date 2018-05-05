@@ -10,10 +10,10 @@ namespace Nautilus.BlackBox.Risk
 {
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -31,19 +31,19 @@ namespace Nautilus.BlackBox.Risk
         /// <summary>
         /// Initializes a new instance of the <see cref="RiskService"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public RiskService(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Risk,
             LabelFactory.Service(BlackBoxService.Risk),
-            setupContainer,
+            container,
             messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.SetupCommandMessageHandling();

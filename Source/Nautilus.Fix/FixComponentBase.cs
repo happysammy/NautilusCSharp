@@ -10,10 +10,8 @@ namespace Nautilus.Fix
 {
     using System;
     using System.Threading.Tasks;
-    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

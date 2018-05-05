@@ -120,7 +120,7 @@ namespace Nautilus.Database.Core.Collectors
             }
 
             this.Log.Debug(
-                $"{this.Component} from {nameof(DataStatusResponse)} " +
+                $"From {nameof(DataStatusResponse)} " +
                 $"no persisted bar timestamp");
         }
 

@@ -14,8 +14,8 @@ namespace Nautilus.BlackBox.Portfolio
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Setup;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
@@ -33,18 +33,18 @@ namespace Nautilus.BlackBox.Portfolio
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeBook"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public TradeBook(
-            BlackBoxSetupContainer setupContainer,
+            ComponentryContainer container,
             Symbol symbol)
             : base(
             BlackBoxService.Portfolio,
             LabelFactory.Component(nameof(TradeBook), symbol),
-            setupContainer)
+            container)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(symbol, nameof(symbol));
         }
 

@@ -10,7 +10,7 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common.Enums;
