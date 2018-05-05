@@ -37,7 +37,6 @@ namespace Nautilus.BlackBox.Core
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IBrokerageGateway brokerageGateway;
         private readonly IBrokerageClient brokerageClient;
-
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
         private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
 
