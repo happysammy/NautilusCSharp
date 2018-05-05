@@ -76,7 +76,7 @@ namespace Nautilus.Database.Core
 
             var symbolBarData = message.MarketData.SymbolBarSpec;
             var result = this.marketDataRepository.Add(message.MarketData);
-            this.LogResult(result);
+            this.Log.Result(result);
 
             var lastBarTimeQuery = this.marketDataRepository.LastBarTimestamp(symbolBarData);
 

@@ -13,7 +13,6 @@ namespace Nautilus.Common.Messaging
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -25,6 +24,14 @@ namespace Nautilus.Common.Messaging
     public sealed class MessageBus<T> : ReceiveActor
         where T : Message
     {
+        private readonly IZonedClock clock;
+        private readonly ILogger log;
+        private readonly IActorRef MessageStore;
+        private readonly CommandHandler CommandHandler;
+
+        private ISwitchboard switchboard;
+        private int messageCount;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
         /// </summary>
@@ -43,62 +50,20 @@ namespace Nautilus.Common.Messaging
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messageStoreRef, nameof(messageStoreRef));
 
-            this.Service = serviceContext;
-            this.Component = component;
-            this.Clock = container.Clock;
-            this.Logger = container.LoggerFactory.Create(this.Service, component);
+            this.clock = container.Clock;
+            this.log = container.LoggerFactory.Create(serviceContext, component);
             this.MessageStore = messageStoreRef;
-            this.CommandHandler = new CommandHandler(this.Logger);
+            this.CommandHandler = new CommandHandler(this.log);
 
             this.SetupMessageHandling();
         }
-
-        /// <summary>
-        /// Gets the message bus bounded context.
-        /// </summary>
-        private Enum Service { get; }
-
-        /// <summary>
-        /// Gets the message bus component.
-        /// </summary>
-        private Label Component { get; }
-
-        /// <summary>
-        /// Gets the message bus clock.
-        /// </summary>
-        private IZonedClock Clock { get; }
-
-        /// <summary>
-        /// Gets the message bus logger.
-        /// </summary>
-        private ILogger Logger { get; }
-
-        /// <summary>
-        /// Gets or sets the message bus switchboard.
-        /// </summary>
-        private ISwitchboard Switchboard { get; set; }
-
-        /// <summary>
-        /// Gets the message bus message store.
-        /// </summary>
-        private IActorRef MessageStore { get; }
-
-        /// <summary>
-        /// Gets the message bus command handler.
-        /// </summary>
-        private CommandHandler CommandHandler { get; }
-
-        /// <summary>
-        /// Gets or sets the message count.
-        /// </summary>
-        private int MessageCount { get; set; }
 
         /// <summary>
         /// Runs pre-start of the receive actor.
         /// </summary>
         protected override void PreStart()
         {
-            this.Logger.Log(LogLevel.Debug, $"{typeof(T).Name}Bus initializing...");
+            this.log.Debug($"{typeof(T).Name}Bus initializing...");
         }
 
         /// <summary>
@@ -107,7 +72,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         protected override void Unhandled(object message)
         {
-            this.Logger.Log(LogLevel.Error, $"Unhandled message {message}");
+            this.log.Warning($"Unhandled message {message}");
         }
 
         /// <summary>
@@ -125,9 +90,9 @@ namespace Nautilus.Common.Messaging
 
             this.CommandHandler.Execute(() =>
             {
-                this.Switchboard = message.Switchboard;
+                this.switchboard = message.Switchboard;
 
-                this.Log(LogLevel.Information, $"{this.Switchboard.GetType().Name} initialized");
+                this.log.Information($"{this.switchboard.GetType().Name} initialized");
             });
         }
 
@@ -137,12 +102,12 @@ namespace Nautilus.Common.Messaging
 
             this.CommandHandler.Execute(() =>
             {
-                this.MessageCount++;
+                this.messageCount++;
                 this.MessageStore.Tell(envelope);
 
                 foreach (var receiver in envelope.Receivers)
                 {
-                    this.Log(LogLevel.Debug, $"[{this.MessageCount}] {envelope.Sender} -> {envelope} -> {receiver}");
+                    this.log.Debug($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {receiver}");
                 }
             });
         }
@@ -153,19 +118,9 @@ namespace Nautilus.Common.Messaging
 
             this.CommandHandler.Execute(() =>
             {
-                this.Switchboard.SendToReceivers(envelope);
+                this.switchboard.SendToReceivers(envelope);
 
                 this.LogEnvelope(envelope);
-            });
-        }
-
-        private void Log(LogLevel logLevel, string logText)
-        {
-            Debug.NotNull(logText, nameof(logText));
-
-            this.CommandHandler.Execute(() =>
-            {
-                this.Logger.Log(logLevel, logText);
             });
         }
     }

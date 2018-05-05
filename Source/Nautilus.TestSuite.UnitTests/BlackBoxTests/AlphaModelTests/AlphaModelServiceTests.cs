@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     public class AlphaModelServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;
         private readonly IActorRef alphaModelServiceRef;
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaModelServiceTests));
 
@@ -88,11 +88,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Unhandled message random_object",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -131,11 +131,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CreatePortfolio),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -183,7 +183,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection already contains the strategyLabel key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -214,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
             Assert.Equal(1, this.alphaStrategyModuleStore.Count);
@@ -236,10 +236,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaModelService: AUDUSD.FXCM(TestTrade) removed",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
             Assert.Equal(0, this.alphaStrategyModuleStore.Count);

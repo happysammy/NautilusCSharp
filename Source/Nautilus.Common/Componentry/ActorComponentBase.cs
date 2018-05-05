@@ -11,9 +11,7 @@ namespace Nautilus.Common.Componentry
     using System;
     using Akka.Actor;
     using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
@@ -26,7 +24,6 @@ namespace Nautilus.Common.Componentry
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
-        private readonly ILogger logger;
         private readonly CommandHandler commandHandler;
 
         /// <summary>
@@ -43,12 +40,12 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));
 
-            this.Service = service;
-            this.Component = component;
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;
-            this.logger = setupContainer.LoggerFactory.Create(this.Service, this.Component);
-            this.commandHandler = new CommandHandler(this.logger);
+            this.Log = setupContainer.LoggerFactory.Create(this.Service, this.Component);
+            this.commandHandler = new CommandHandler(this.Log);
+            this.Service = service;
+            this.Component = component;
 
             this.SetupMessageHandling();
         }
@@ -62,6 +59,11 @@ namespace Nautilus.Common.Componentry
         /// Gets the components name.
         /// </summary>
         protected Label Component { get; }
+
+        /// <summary>
+        /// Gets the components logger.
+        /// </summary>
+        protected ILogger Log { get; }
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -84,41 +86,6 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Logs unhandled messages sent to this actor.
-        /// </summary>
-        /// <param name="message">The message object.</param>
-        protected override void Unhandled([CanBeNull] object message)
-        {
-            this.logger.Log(LogLevel.Error, $"Unhandled message {message}");
-        }
-
-        /// <summary>
-        /// Creates a log event with the given level and text.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="logText">The log text.</param>
-        protected void Log(LogLevel logLevel, [CanBeNull] string logText)
-        {
-            this.logger.Log(logLevel, logText);
-        }
-
-        /// <summary>
-        /// Logs the result with the <see cref="ILogger"/>.
-        /// </summary>
-        /// <param name="result">The command result.</param>
-        protected void LogResult(ResultBase result)
-        {
-            if (result.IsSuccess)
-            {
-                this.Log(LogLevel.Information, result.Message);
-            }
-            else
-            {
-                this.Log(LogLevel.Warning, result.Message);
-            }
-        }
-
-        /// <summary>
         /// Passes the given <see cref="Action"/> to the <see cref="CommandHandler"/> for execution.
         /// </summary>
         /// <param name="action">The action to execute.</param>
@@ -128,24 +95,32 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Logs unhandled messages sent to this actor.
+        /// </summary>
+        /// <param name="message">The message object.</param>
+        protected override void Unhandled([CanBeNull] object message)
+        {
+            this.Log.Warning($"Unhandled message {message}");
+        }
+
+        /// <summary>
         /// Pre start method when actor base class is called.
         /// </summary>
         protected override void PreStart()
         {
-            this.logger.Log(LogLevel.Debug, $"{this} initializing...");
+            this.Log.Debug($"{this} initializing...");
         }
 
         /// <summary>
         /// Post restart method when the actor base class is restarted.
         /// </summary>
-        /// <param name="reason">The restart reason.</param>
+        /// <param name="ex">The restart reason exception.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected override void PostRestart(Exception reason)
+        protected override void PostRestart(Exception ex)
         {
-            Validate.NotNull(reason, nameof(reason));
+            Validate.NotNull(ex, nameof(ex));
 
-            this.logger.Log(LogLevel.Information, $"{this} restarting ({reason.Message})");
-            this.logger.LogException(reason);
+            this.Log.Error($"{this} restarting ({ex.Message})", ex);
 
             this.PreStart();
         }
@@ -172,7 +147,7 @@ namespace Nautilus.Common.Componentry
             var message = envelope.Open(this.clock.TimeNow());
             this.Self.Tell(message);
 
-            this.Log(LogLevel.Debug, $"Received {message}");
+            this.Log.Debug($"Received {message}");
         }
     }
 }

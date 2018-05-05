@@ -10,8 +10,8 @@ namespace Nautilus.Common.Logging
 {
     using System;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -29,8 +29,8 @@ namespace Nautilus.Common.Logging
         /// Initializes a new instance of the <see cref="Logger"/> class.
         /// </summary>
         /// <param name="loggingAdapter">The logging adapter.</param>
-        /// <param name="service">The black box service context.</param>
-        /// <param name="component">The component label.</param>
+        /// <param name="service">The service context.</param>
+        /// <param name="component">The component name.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public Logger(
             ILoggingAdapter loggingAdapter,
@@ -45,65 +45,66 @@ namespace Nautilus.Common.Logging
             this.component = component;
         }
 
-        /// <summary>
-        /// Sends the given log level and log text to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="logText">The log text.</param>
-        /// <exception cref="ValidationException">Throws if the log text is null or white space.</exception>
-        /// <exception cref="InvalidOperationException">Throws if the log level is not recognized.</exception>
-        public void Log(LogLevel logLevel, string logText)
+        public void Verbose(string message)
         {
-            Validate.NotNull(logText, nameof(logText));
+            Validate.NotNull(message, nameof(message));
 
-            switch (logLevel)
-            {
-                case LogLevel.Verbose:
-                    this.loggingAdapter.Verbose(this.service, $"{this.component}: {logText}");
-                    break;
+            this.loggingAdapter.Verbose(this.service, $"{this.component}: {message}");
+        }
 
-                case LogLevel.Information:
-                    this.loggingAdapter.Information(this.service, $"{this.component}: {logText}");
-                    break;
+        public void Information(string message)
+        {
+            Validate.NotNull(message, nameof(message));
 
-                case LogLevel.Debug:
-                    this.loggingAdapter.Debug(this.service, $"{this.component}: {logText}");
-                    break;
+            this.loggingAdapter.Information(this.service, $"{this.component}: {message}");
+        }
 
-                case LogLevel.Warning:
-                    this.loggingAdapter.Warning(this.service, $"{this.component}: {logText}");
-                    break;
+        public void Debug(string message)
+        {
+            Validate.NotNull(message, nameof(message));
 
-                case LogLevel.Error:
-                    this.loggingAdapter.Error(this.service, $"{this.component}: {logText}", null);
-                    break;
+            this.loggingAdapter.Debug(this.service, $"{this.component}: {message}");
+        }
 
-                case LogLevel.Fatal:
-                    this.loggingAdapter.Fatal(this.service, $"{this.component}: {logText}", null);
-                    break;
-                default:
-                    throw new InvalidOperationException(
-                        $"The {nameof(logLevel)} log level not recognized by the logger.");
-            }
+        public void Warning(string message)
+        {
+            Validate.NotNull(message, nameof(message));
+
+            this.loggingAdapter.Warning(this.service, $"{this.component}: {message}");
+        }
+
+        public void Error(string message, Exception ex)
+        {
+            Validate.NotNull(message, nameof(message));
+            Validate.NotNull(ex, nameof(ex));
+
+            this.loggingAdapter.Error(this.service, $"{this.component}: {message}", ex);
+        }
+
+        public void Fatal(string message, Exception ex)
+        {
+            Validate.NotNull(message, nameof(message));
+            Validate.NotNull(ex, nameof(ex));
+
+            this.loggingAdapter.Fatal(this.service, $"{this.component}: {message}", ex);
         }
 
         /// <summary>
-        /// Sends the given <see cref="Exception"/> to the <see cref="ILoggingAdapter"/> to log.
+        /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
-        /// <param name="ex">The exception.</param>
-        /// <exception cref="ValidationException">Throws if the exception is null.</exception>
-        public void LogException(Exception ex)
+        /// <param name="result">The result to handle.</param>
+        public void Result(ResultBase result)
         {
-            Validate.NotNull(ex, nameof(Exception));
+            Validate.NotNull(result, nameof(result));
 
-            if (ex is ValidationException)
+            if (result.IsSuccess)
             {
-                this.loggingAdapter.Error(this.service, $"{this.component}: {ex.Message} StackTrace: {ex.StackTrace}", ex);
-
-                return;
+                this.Information(result.Message);
             }
-
-            this.loggingAdapter.Fatal(this.service, $"{this.component}: {ex.Message} StackTrace: {ex.StackTrace}", ex);
+            else
+            {
+                this.Warning(result.Message);
+            }
         }
     }
 }

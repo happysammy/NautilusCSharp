@@ -19,7 +19,7 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public class CommandHandler
     {
-        private readonly ILogger logger;
+        private readonly ILogger log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandHandler"/> class.
@@ -29,7 +29,7 @@ namespace Nautilus.Common.Componentry
         {
             Validate.NotNull(logger, nameof(logger));
 
-            this.logger = logger;
+            this.log = logger;
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Nautilus.Common.Componentry
             }
             catch (ValidationException ex)
             {
-                this.logger.LogException(ex);
+                this.log.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
-                this.logger.LogException(ex);
+                this.log.Fatal(ex.Message, ex);
 
                 throw;
             }
@@ -73,15 +73,15 @@ namespace Nautilus.Common.Componentry
             }
             catch (T ex)
             {
-                this.logger.LogException(ex);
+                this.log.Error(ex.Message, ex);
             }
             catch (ValidationException ex)
             {
-                this.logger.LogException(ex);
+                this.log.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
-                this.logger.LogException(ex);
+                this.log.Fatal(ex.Message, ex);
 
                 throw;
             }

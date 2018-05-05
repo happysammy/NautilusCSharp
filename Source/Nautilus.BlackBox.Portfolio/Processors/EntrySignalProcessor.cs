@@ -124,8 +124,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             {
                 if (tradesCount >= maxTradesByType)
                 {
-                    this.Log(
-                        LogLevel.Debug,
+                    this.Log.Debug(
                         $"Entry signal {signal.OrderSide}-{tradeType} ignored... "
                       + $"MaxTrades[{tradeType}]={maxTradesByType}, "
                       + $"TradeCount[{tradeType}]={trades.Count}");
@@ -137,8 +136,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
 
                 if (currentOrderSide != signal.OrderSide)
                 {
-                    this.Log(
-                        LogLevel.Debug,
+                    this.Log.Debug(
                         $"Entry signal {signal.OrderSide}-{tradeType} ignored... "
                       + $"OrderSide for signal does not match currently traded OrderSide="
                       + $"{currentOrderSide}");

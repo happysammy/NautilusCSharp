@@ -25,9 +25,12 @@ namespace Nautilus.Fix
 
     public class FixComponentBase : MessageCracker, IApplication
     {
+        private readonly Enum service;
+        private readonly Label component;
         private readonly IZonedClock clock;
-        private readonly ILogger logger;
         private readonly IGuidFactory guidFactory;
+        private readonly ILogger logger;
+        private readonly CommandHandler commandHandler;
         private readonly FixCredentials credentials;
 
         private SocketInitiator initiator;
@@ -50,68 +53,31 @@ namespace Nautilus.Fix
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
 
-            this.Service = service;
-            this.Component = component;
+            this.service = service;
+            this.component = component;
             this.clock = container.Clock;
-            this.logger = container.LoggerFactory.Create(service, this.Component);
             this.guidFactory = container.GuidFactory;
+            this.logger = container.LoggerFactory.Create(service, this.component);
+            this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
-            this.CommandHandler = new CommandHandler(this.logger);
-
             this.FixMessageHandler = new FixMessageHandler();
             this.FixMessageRouter = new FixMessageRouter();
         }
 
         /// <summary>
-        /// Gets the black box service context.
+        /// Gets the components logger.
         /// </summary>
-        protected Enum Service { get; }
+        protected ILogger Log => this.logger;
 
         /// <summary>
-        /// Gets the components label.
-        /// </summary>
-        protected Label Component { get; }
-
-        /// <summary>
-        /// Gets the command handler.
-        /// </summary>
-        protected CommandHandler CommandHandler { get; }
-
-        /// <summary>
-        /// Gets the FIX message handler.
+        /// Gets the components FIX message handler.
         /// </summary>
         protected FixMessageHandler FixMessageHandler { get; }
 
         /// <summary>
-        /// Gets the FIX message router.
+        /// Gets the components FIX message router.
         /// </summary>
         protected FixMessageRouter FixMessageRouter { get; }
-
-        /// <summary>
-        /// Creates a log event with the given level and text.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="logText">The log text.</param>
-        protected void Log(LogLevel logLevel, string logText)
-        {
-            this.logger.Log(logLevel, logText);
-        }
-
-        /// <summary>
-        /// Logs the result with the <see cref="ILogger"/>.
-        /// </summary>
-        /// <param name="result">The command result.</param>
-        protected void LogResult(ResultBase result)
-        {
-            if (result.IsSuccess)
-            {
-                this.Log(LogLevel.Information, result.Message);
-            }
-            else
-            {
-                this.Log(LogLevel.Warning, result.Message);
-            }
-        }
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -134,6 +100,15 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
+        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        protected void Execute(Action action)
+        {
+            this.commandHandler.Execute(action);
+        }
+
+        /// <summary>
         /// The is connected.
         /// </summary>
         /// <returns>
@@ -146,14 +121,14 @@ namespace Nautilus.Fix
         /// </summary>
         public void ConnectFix()
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 var settings = new SessionSettings("fix_fxcm.cfg");
                 var storeFactory = new FileStoreFactory(settings);
                 var logFactory = new ScreenLogFactory(settings);
                 this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
 
-                this.Log(LogLevel.Information, "Starting initiator...");
+                this.Log.Information("Starting initiator...");
                 this.initiator.Start();
 
                 Task.Delay(1000);
@@ -165,13 +140,13 @@ namespace Nautilus.Fix
         /// </summary>
         public void DisconnectFix()
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(this.initiator, nameof(this.initiator));
 
                 this.initiator.Stop();
 
-                this.Log(LogLevel.Information, "Stopping initiator... ");
+                this.Log.Information("Stopping initiator... ");
             });
         }
 
@@ -183,16 +158,16 @@ namespace Nautilus.Fix
         /// </param>
         public void OnCreate(SessionID sessionId)
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
                 if (this.session == null)
                 {
-                    this.Log(LogLevel.Information, "Creating session...");
+                    this.Log.Information("Creating session...");
                     this.session = Session.LookupSession(sessionId);
                     this.FixMessageRouter.ConnectSession(this.session);
-                    this.Log(LogLevel.Information, $"Session {this.session}");
+                    this.Log.Information($"Session {this.session}");
                 }
 
                 this.sessionMd = Session.LookupSession(sessionId);
@@ -208,11 +183,11 @@ namespace Nautilus.Fix
         /// </param>
         public void OnLogon(SessionID sessionId)
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
-                this.Log(LogLevel.Information, $"Logon - {sessionId}");
+                this.Log.Information($"Logon - {sessionId}");
 
                 // allow logon to complete
                 Task.Delay(100).Wait();
@@ -232,11 +207,11 @@ namespace Nautilus.Fix
         /// </param>
         public void OnLogout(SessionID sessionId)
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
-                this.Log(LogLevel.Information, $"Logout - {sessionId}");
+                this.Log.Information($"Logout - {sessionId}");
             });
         }
 
@@ -264,7 +239,7 @@ namespace Nautilus.Fix
         /// </param>
         public void ToAdmin(Message message, SessionID sessionId)
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(message, nameof(message));
                 Validate.NotNull(sessionId, nameof(sessionId));
@@ -274,7 +249,7 @@ namespace Nautilus.Fix
                     message.SetField(new Username(this.credentials.Username));
                     message.SetField(new Password(this.credentials.Password));
 
-                    this.Log(LogLevel.Information, "Authorizing session...");
+                    this.Log.Information("Authorizing session...");
                 }
 
                 message.SetField(new Account(this.credentials.AccountNumber));
@@ -292,7 +267,7 @@ namespace Nautilus.Fix
         /// </param>
         public void FromApp(Message message, SessionID sessionId)
         {
-            this.CommandHandler.Execute(() =>
+            this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(message, nameof(message));
                 Validate.NotNull(sessionId, nameof(sessionId));
@@ -315,7 +290,7 @@ namespace Nautilus.Fix
         /// </exception>
         public void ToApp(Message message, SessionID sessionId)
         {
-            this.CommandHandler.Execute<FieldNotFoundException>(() =>
+            this.commandHandler.Execute<FieldNotFoundException>(() =>
             {
                 message.SetField(new Account(this.credentials.AccountNumber));
 

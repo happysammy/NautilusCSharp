@@ -116,8 +116,7 @@ namespace Nautilus.Database.Core
 
                 var timeNow = this.TimeNow();
                 this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
-                this.Log(
-                    LogLevel.Information,
+                this.Log.Information(
                     $"{this.Component} updated last collection time to {timeNow.ToIsoString()}.");
 
                 this.CollectMarketData();
@@ -139,23 +138,23 @@ namespace Nautilus.Database.Core
                 {
                     if (result.Value.Count == 0)
                     {
-                        this.Log(LogLevel.Information, result.Message);
+                        this.Log.Information(result.Message);
                     }
 
                     if (result.Value.Count > 0)
                     {
-                        this.Log(LogLevel.Warning, result.Message);
+                        this.Log.Warning(result.Message);
 
                         foreach (var anomaly in result.Value)
                         {
-                            this.Log(LogLevel.Warning, anomaly);
+                            this.Log.Warning(anomaly);
                         }
                     }
                 }
 
                 if (result.IsFailure)
                 {
-                    this.Log(LogLevel.Warning, result.FullMessage);
+                    this.Log.Warning(result.FullMessage);
                 }
             }
 
@@ -178,7 +177,7 @@ namespace Nautilus.Database.Core
 
             if (this.collectionJobsRoster.All(c => c.Value == true))
             {
-                this.Log(LogLevel.Information,
+                this.Log.Information(
                     $"Data collection completed for {this.marketDataCollectors.Count} collectors...");
 
                 this.ScheduleNextCollection();
@@ -191,7 +190,7 @@ namespace Nautilus.Database.Core
 
         private void InitializeMarketDataCollectors()
         {
-            this.Log(LogLevel.Information, $"Initializing all market data collectors...");
+            this.Log.Information($"Initializing all market data collectors...");
 
             foreach (var barSpec in this.barDataProvider.SymbolBarDatas)
             {
@@ -212,12 +211,12 @@ namespace Nautilus.Database.Core
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
-                this.Log(LogLevel.Debug, $"Waiting for DataStatusResponse for {barSpec}...");
+                this.Log.Debug($"Waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
 
                 if (dataStatusTask.IsCompletedSuccessfully)
                 {
-                    this.Log(LogLevel.Debug, $"Received a DataStatusResponse for {barSpec} and sending to collector");
+                    this.Log.Debug($"Received a DataStatusResponse for {barSpec} and sending to collector");
 
                     collectorRef.Tell(dataStatusTask.Result, this.Self);
                 }
@@ -243,8 +242,7 @@ namespace Nautilus.Database.Core
                 this.NewGuid(),
                 this.TimeNow()));
 
-            this.Log(
-                LogLevel.Information,
+            this.Log.Information(
                 $"Initiating market data collection for {nextCollectorOffTheRank.Key}...");
         }
 
@@ -262,7 +260,7 @@ namespace Nautilus.Database.Core
                     this.TimeNow()),
                 this.Self);
 
-            this.Log(LogLevel.Information,
+            this.Log.Information(
                 $"Scheduled next collection time for {this.collectionSchedule.NextCollectionTime.ToIsoString()}");
         }
 

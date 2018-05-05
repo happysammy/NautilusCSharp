@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
     public class DataServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly IActorRef dataServiceRef;
         private readonly Symbol symbol;
 
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaModelServiceTests));
 
@@ -82,17 +82,17 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
             this.dataServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "MarketDataProcessor-AUDUSD.LMAX: Setup for 5-Minute[Bid] bars",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
                 "TimeBarAggregator-AUDUSD.LMAX(TestScalp): Nautilus.BlackBox.Data.Market.TimeBarAggregator initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -121,11 +121,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
             this.dataServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "MarketDataProcessor-AUDUSD.LMAX: Data for AUDUSD.LMAX(TestScalp) bars deregistered",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
             this.dataServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
     }
 }

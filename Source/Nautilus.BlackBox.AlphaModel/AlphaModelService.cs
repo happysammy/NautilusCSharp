@@ -15,7 +15,6 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
@@ -119,7 +118,7 @@ namespace Nautilus.BlackBox.AlphaModel
                 this.Send(BlackBoxService.Portfolio, createPortfolio);
                 this.Send(BlackBoxService.Data, registerSymbolDataType);
 
-                this.Log(LogLevel.Debug, $"{strategyLabel} created");
+                this.Log.Debug($"{strategyLabel} created");
             });
         }
 
@@ -133,7 +132,7 @@ namespace Nautilus.BlackBox.AlphaModel
 
                 this.alphaStrategyModuleStore.RemoveStrategy(strategyLabel);
 
-                this.Log(LogLevel.Information, $"{strategyLabel} removed");
+                this.Log.Information($"{strategyLabel} removed");
             });
         }
     }

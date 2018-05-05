@@ -23,10 +23,9 @@ namespace Nautilus.Database.Core
     /// <summary>
     /// The main macro object which contains the <see cref="NautilusDatabase"/> and presents its API.
     /// </summary>
-    public sealed class NautilusDatabase : ComponentBase, IDisposable
+    public sealed class NautilusDatabase : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
-        private readonly IMessagingAdapter messagingAdapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
@@ -44,16 +43,16 @@ namespace Nautilus.Database.Core
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(NautilusDatabase)),
-                setupContainer)
+                setupContainer,
+                messagingAdatper)
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdatper, nameof(messagingAdatper));
 
             this.actorSystem = actorSystem;
-            this.messagingAdapter = messagingAdatper;
 
-            messagingAdapter.Send(new InitializeMessageSwitchboard(
+            this.GetMessagingAdapter().Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));
@@ -61,12 +60,11 @@ namespace Nautilus.Database.Core
 
         public void Start()
         {
-            this.messagingAdapter.Send(
+            this.Send(
                 DatabaseService.DatabaseCollectionManager,
                 new StartSystem(
                     Guid.NewGuid(),
-                    this.Clock.TimeNow()),
-                DatabaseService.NautilusDatabase);
+                    this.TimeNow()));
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace Nautilus.Database.Core
             // Placeholder for the log events (do not refactor away).
             var actorSystemName = this.actorSystem.Name;
 
-            this.Log(LogLevel.Information, $"{this.Component} {actorSystemName} ActorSystem shutting down...");
+            this.Log.Information($"{actorSystemName} ActorSystem shutting down...");
 
 //            var shutdownTasks = new Task[]
 //            {
@@ -85,11 +83,11 @@ namespace Nautilus.Database.Core
 //                this.actorReferences.DatabaseTaskManager.GracefulStop(TimeSpan.FromSeconds(10))
 //            };
 
-            this.Log(LogLevel.Information, $"{this.Component} waiting for actors to shut down...");
+            this.Log.Information($"waiting for actors to shut down...");
             //Task.WhenAll(shutdownTasks);
 
             this.actorSystem.Terminate();
-            this.Log(LogLevel.Information, $"{this.Component} {actorSystemName} terminated");
+            this.Log.Information($"{actorSystemName} terminated");
 
             this.Dispose();
         }

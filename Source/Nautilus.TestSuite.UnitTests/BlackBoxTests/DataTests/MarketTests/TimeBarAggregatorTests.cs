@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         private readonly ITestOutputHelper output;
         private readonly ActorSystem testActorSystem;
         private readonly BlackBoxSetupContainer setupContainer;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IMessagingAdapter messagingAdapter;
         private readonly Symbol symbol;
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 
             var setupFactory = new StubSetupContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             this.testActorSystem = ActorSystem.Create(nameof(TimeBarAggregatorTests));
 
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote1);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains(
 //                "TimeBarAggregator-AUDUSD.LMAX(TestScalp): Registered for Minute(5) bars quoteBarStart=1970-01-01T00:01:01.000Z, quoteBarEnd=1970-01-01T00:05:00.000Z",
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote3);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<MarketDataEvent>(
 //                typeof(MarketDataEvent),
@@ -209,7 +209,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote5);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<MarketDataEvent>(
 //                typeof(MarketDataEvent),
@@ -278,7 +278,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote5);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<MarketDataEvent>(
 //                typeof(MarketDataEvent),

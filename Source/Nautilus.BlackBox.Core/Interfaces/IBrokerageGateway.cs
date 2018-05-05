@@ -30,11 +30,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
         Broker Broker { get; }
 
         /// <summary>
-        /// Gets the brokerage gateways command handler.
-        /// </summary>
-        CommandHandler Command { get; }
-
-        /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
         bool IsConnected { get; }

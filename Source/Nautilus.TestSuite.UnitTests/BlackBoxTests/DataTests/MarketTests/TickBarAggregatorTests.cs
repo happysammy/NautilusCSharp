@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         private readonly ITestOutputHelper output;
         private readonly ActorSystem testActorSystem;
         private readonly BlackBoxSetupContainer setupContainer;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IMessagingAdapter messagingAdapter;
         private readonly Symbol symbol;
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 
             var setupFactory = new StubSetupContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             this.testActorSystem = ActorSystem.Create(nameof(TickBarAggregatorTests));
 
@@ -88,13 +88,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             // Assert
             CustomAssert.EventuallyContains(
                 "TickBarAggregator-AUDUSD.FXCM(TestScalp): Registered for 5-Tick[Bid] bars",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
                 "TickBarAggregator-AUDUSD.FXCM(TestScalp): Receiving quotes (AUDUSD) from FXCM...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote5);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 
 //            CustomAssert.EventuallyContains<MarketDataEvent>(

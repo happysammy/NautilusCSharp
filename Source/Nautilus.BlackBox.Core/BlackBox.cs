@@ -72,8 +72,8 @@ namespace Nautilus.BlackBox.Core
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
-            PackageVersionChecker.Run(this.Logger);
-            this.StartTime = this.Clock.TimeNow();
+            PackageVersionChecker.Run(this.Log);
+            this.StartTime = this.TimeNow();
             this.stopwatch.Start();
             this.actorSystem = ActorSystem.Create(actorSystemLabel.ToString());
 
@@ -147,15 +147,10 @@ namespace Nautilus.BlackBox.Core
             brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
 
             this.stopwatch.Stop();
-            this.Log(LogLevel.Information, $"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
-            this.Log(LogLevel.Information, $"Environment={setupContainer.Environment}, Broker={setupContainer.Account.Broker}");
+            this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
+            this.Log.Information($"Environment={setupContainer.Environment}, Broker={setupContainer.Account.Broker}");
             this.stopwatch.Reset();
         }
-
-        /// <summary>
-        /// Gets the black box clocks time zone.
-        /// </summary>
-        public DateTimeZone ClockTimeZone => this.Clock.GetTimeZone();
 
         /// <summary>
         /// Gets the black box start time.
@@ -167,7 +162,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void ConnectToBrokerage()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.brokerageGateway.Connect();
             });
@@ -192,13 +187,13 @@ namespace Nautilus.BlackBox.Core
         /// <param name="strategy">The strategy.</param>
         public void AddAlphaStrategyModule(IAlphaStrategy strategy)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(strategy, nameof(strategy));
 
                 this.alphaStrategyList.Add(strategy);
 
-                this.Log(LogLevel.Information, $"AlphaStrategyModule added ({LogFormatter.ToOutput(strategy)})");
+                this.Log.Information($"AlphaStrategyModule added ({LogFormatter.ToOutput(strategy)})");
             });
         }
 
@@ -208,7 +203,7 @@ namespace Nautilus.BlackBox.Core
         /// <param name="strategy">The strategy.</param>
         public void StartAlphaStrategyModule(IAlphaStrategy strategy)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(strategy, nameof(strategy));
 
@@ -222,7 +217,7 @@ namespace Nautilus.BlackBox.Core
                         this.TimeNow()),
                     this.Service);
 
-                this.Log(LogLevel.Information, $"AlphaStrategyModule starting... ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule starting... ({strategy.ToString()})");
             });
         }
 
@@ -231,7 +226,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void StartAlphaStrategyModulesAll()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 foreach (var strategy in this.alphaStrategyList.ToList())
                 {
@@ -245,7 +240,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void StopAlphaStrategyModulesAll()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 foreach (var strategy in this.startedStrategies.ToList())
                 {
@@ -260,7 +255,7 @@ namespace Nautilus.BlackBox.Core
         /// <param name="strategy">The strategy.</param>
         public void StopAlphaStrategyModule(IAlphaStrategy strategy)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(strategy, nameof(strategy));
 
@@ -275,7 +270,7 @@ namespace Nautilus.BlackBox.Core
 
                 this.startedStrategies.Remove(strategy);
 
-                this.Log(LogLevel.Information, $"AlphaStrategyModule stopped ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule stopped ({strategy.ToString()})");
             });
         }
 
@@ -287,13 +282,13 @@ namespace Nautilus.BlackBox.Core
         /// </param>
         public void RemoveAlphaStrategyModule(IAlphaStrategy strategy)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(strategy, nameof(strategy));
 
                 this.alphaStrategyList.Remove(strategy);
 
-                this.Log(LogLevel.Information, $"AlphaStrategyModule removed ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule removed ({strategy.ToString()})");
             });
         }
 
@@ -302,7 +297,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void RemoveAlphaStrategyModulesAll()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 foreach (var strategy in this.alphaStrategyList.ToList())
                 {
@@ -316,7 +311,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void Terminate()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
 
@@ -330,11 +325,11 @@ namespace Nautilus.BlackBox.Core
 
                 Task.Delay(100).Wait();
 
-                this.Log(LogLevel.Information, $"{actorSystemName} shutting down...");
+                this.Log.Information($"{actorSystemName} shutting down...");
 
                 this.actorSystem.Terminate();
 
-                this.Log(LogLevel.Information, $"{actorSystemName} terminated");
+                this.Log.Information($"{actorSystemName} terminated");
 
                 this.Dispose();
             });
@@ -345,7 +340,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void Dispose()
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                  this.actorSystem.Dispose();
                  GC.SuppressFinalize(this);

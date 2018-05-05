@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class OrderExpiryControllerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly OrderExpiryController orderExpiryController;
 
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(OrderExpiryControllerTests));
 
@@ -133,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.orderExpiryController.ProcessCounters(orderPacket.OrderIdList);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CancelOrder),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var result2 = this.orderExpiryController.TotalCounters;
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             Assert.Equal(3, result1);
             Assert.Equal(0, result2);
         }

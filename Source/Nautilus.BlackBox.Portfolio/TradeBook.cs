@@ -17,7 +17,6 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -71,8 +70,7 @@ namespace Nautilus.BlackBox.Portfolio
                 {
                     this.tradeList.Remove(trade);
 
-                    this.Log(
-                        LogLevel.Information,
+                    this.Log.Information(
                         $"Trade removed ({trade.TradeId}), "
                       + $"TradeStatus={trade.TradeStatus})");
 
@@ -92,8 +90,7 @@ namespace Nautilus.BlackBox.Portfolio
 
             this.tradeList.Add(trade);
 
-            this.Log(
-                LogLevel.Information,
+            this.Log.Information(
                 $"Trade added ({trade.TradeId}), "
               + $"TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition})");
         }

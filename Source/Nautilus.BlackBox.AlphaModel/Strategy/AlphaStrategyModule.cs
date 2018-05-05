@@ -17,7 +17,6 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
@@ -155,7 +154,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
         private void LogReceivedMarketData()
         {
-            this.Log(LogLevel.Debug, $"Received MarketDataEvent");
+            this.Log.Debug("Received MarketDataEvent");
         }
 
         private void UpdateDailyBarStore(MarketDataEvent message)
@@ -163,7 +162,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             Debug.NotNull(message, nameof(message));
 
             this.barStoreDaily.Update(message.Bar);
-            this.Log(LogLevel.Debug, $"BarStore updated (daily bar)");
+            this.Log.Debug("BarStore updated (daily bar)");
         }
 
         private void UpdateBarStore(MarketDataEvent message)
@@ -176,12 +175,12 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             this.exitSignalGenerator.Update(message.Bar);
             this.trailingStopSignalGenerator.Update(message.Bar);
 
-            this.Log(LogLevel.Debug, $"BarStore updated (intraday bar)");
+            this.Log.Debug($"BarStore updated (intraday bar)");
         }
 
         private void ProcessSignals()
         {
-            this.Log(LogLevel.Debug, $"Processing signals...");
+            this.Log.Debug($"Processing signals...");
 
             var entrySignalsBuy = this.entrySignalGenerator.ProcessBuy();
             var entrySignalsSell = this.entrySignalGenerator.ProcessSell();
@@ -230,7 +229,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             if (trailingStopSignalLong.HasNoValue)
             {
-                this.Log(LogLevel.Information, $"Trailing stop signals LONG count=0...");
+                this.Log.Information("Trailing stop signals LONG count=0...");
             }
 
             var trailingStopSignalShort = this.trailingStopSignalGenerator.ProcessShort();
@@ -251,7 +250,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             if (trailingStopSignalShort.HasNoValue)
             {
-                this.Log(LogLevel.Information, $"Trailing stop signals SHORT count=0...");
+                this.Log.Information("Trailing stop signals SHORT count=0...");
             }
         }
 
@@ -283,7 +282,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             if (exitSignalLong.HasNoValue)
             {
-                this.Log(LogLevel.Information, $"Exit signals LONG count=0...");
+                this.Log.Information($"Exit signals LONG count=0...");
             }
 
             if (exitSignalLong.HasValue)
@@ -302,7 +301,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             if (exitSignalShort.HasNoValue)
             {
-                this.Log(LogLevel.Information, $"Exit signals SHORT count=0...");
+                this.Log.Information("Exit signals SHORT count=0...");
             }
 
             if (exitSignalShort.HasValue)

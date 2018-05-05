@@ -21,6 +21,11 @@ namespace Nautilus.Common.Componentry
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
         /// <summary>
+        /// Gets the components messaging adapter.
+        /// </summary>
+        private readonly IMessagingAdapter messagingAdapter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
         /// </summary>
         /// <param name="service">The service context.</param>
@@ -39,13 +44,8 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            this.MessagingAdapter = messagingAdapter;
+            this.messagingAdapter = messagingAdapter;
         }
-
-        /// <summary>
-        /// Gets the components messaging adapter.
-        /// </summary>
-        private IMessagingAdapter MessagingAdapter { get; }
 
         /// <summary>
         /// Sends the given message to the given black box service via the messaging system.
@@ -57,9 +57,9 @@ namespace Nautilus.Common.Componentry
             Enum receiver,
             Message message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
-            this.MessagingAdapter.Send(receiver, message, this.Service);
+            this.messagingAdapter.Send(receiver, message, this.Service);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
-            this.MessagingAdapter.Send(receivers, message, this.Service);
+            this.messagingAdapter.Send(receivers, message, this.Service);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nautilus.Common.Componentry
         /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
         protected IMessagingAdapter GetMessagingAdapter()
         {
-            return this.MessagingAdapter;
+            return this.messagingAdapter;
         }
     }
 }

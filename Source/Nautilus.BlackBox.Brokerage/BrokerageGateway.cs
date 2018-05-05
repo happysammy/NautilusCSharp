@@ -73,11 +73,6 @@ namespace Nautilus.BlackBox.Brokerage
         public Broker Broker => this.brokerageClient.Broker;
 
         /// <summary>
-        /// Gets the brokerage gateways command handler.
-        /// </summary>
-        public CommandHandler Command => this.CommandHandler;
-
-        /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
         public bool IsConnected => this.brokerageClient.IsConnected;
@@ -97,13 +92,13 @@ namespace Nautilus.BlackBox.Brokerage
         /// <param name="actorRef">The actor address.</param>
         public void RegisterMarketDataPort(IActorRef actorRef)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(actorRef, nameof(actorRef));
 
                 this.marketDataPortRef = actorRef;
 
-                this.Log(LogLevel.Information, $"MarketDataPort registered at {this.marketDataPortRef}");
+                this.Log.Information($"MarketDataPort registered at {this.marketDataPortRef}");
             });
         }
 
@@ -225,7 +220,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(account, nameof(account));
 
-            this.Log(LogLevel.Debug, $"PositionReport: ({account})");
+            this.Log.Debug($"PositionReport: ({account})");
         }
 
         /// <summary>
@@ -239,7 +234,7 @@ namespace Nautilus.BlackBox.Brokerage
             Validate.NotNull(inquiryId, nameof(inquiryId));
             Validate.NotNull(accountNumber, nameof(accountNumber));
 
-            this.Log(LogLevel.Debug, $"CollateralInquiryAck: ({this.Broker}-{accountNumber}, InquiryId={inquiryId})");
+            this.Log.Debug($"CollateralInquiryAck: ({this.Broker}-{accountNumber}, InquiryId={inquiryId})");
         }
 
         /// <summary>
@@ -248,11 +243,11 @@ namespace Nautilus.BlackBox.Brokerage
         /// <param name="message">The message.</param>
         public void OnBusinessMessage(string message)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(message, nameof(message));
 
-                this.Log(LogLevel.Debug, $"BusinessMessageReject: {message}");
+                this.Log.Debug($"BusinessMessageReject: {message}");
             });
         }
 
@@ -267,7 +262,7 @@ namespace Nautilus.BlackBox.Brokerage
             string responseId,
             string result)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(instruments, nameof(instruments));
                 Validate.NotNull(responseId, nameof(responseId));
@@ -275,7 +270,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.instrumentRepository.UpdateInstruments(instruments);
 
-                this.Log(LogLevel.Debug, $"SecurityListReceived: (SecurityResponseId={responseId}) result={result}");
+                this.Log.Debug($"SecurityListReceived: (SecurityResponseId={responseId}) result={result}");
             });
         }
 
@@ -289,7 +284,7 @@ namespace Nautilus.BlackBox.Brokerage
             Validate.NotNull(accountNumber, nameof(accountNumber));
             Validate.NotNull(positionRequestId, nameof(positionRequestId));
 
-            this.Log(LogLevel.Debug, $"RequestForPositionsAck Received ({accountNumber}-{positionRequestId})");
+            this.Log.Debug($"RequestForPositionsAck Received ({accountNumber}-{positionRequestId})");
         }
 
         /// <summary>
@@ -318,7 +313,7 @@ namespace Nautilus.BlackBox.Brokerage
             string marginCallStatus,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(inquiryId, nameof(inquiryId));
                 Validate.NotNull(account, nameof(account));
@@ -351,7 +346,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Risk, eventMessage);
 
-                this.Log(LogLevel.Debug, $"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
+                this.Log.Debug($"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
             });
         }
 
@@ -371,7 +366,7 @@ namespace Nautilus.BlackBox.Brokerage
             decimal ask,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
@@ -407,7 +402,7 @@ namespace Nautilus.BlackBox.Brokerage
             string rejectReason,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -429,7 +424,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Warning, $"OrderRejected: (OrderId={orderId}, RejectReason={rejectReason}");
+                this.Log.Warning($"OrderRejected: (OrderId={orderId}, RejectReason={rejectReason}");
             });
         }
 
@@ -453,7 +448,7 @@ namespace Nautilus.BlackBox.Brokerage
             string cancelRejectReason,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
                 {
                     Validate.NotNull(symbol, nameof(symbol));
                     Validate.NotNull(orderId, nameof(orderId));
@@ -477,7 +472,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                     this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                    this.Log(LogLevel.Warning, $"OrderCancelReject: (OrderId={orderId}, CxlRejResponseTo={cancelRejectResponseTo}, Reason={cancelRejectReason}");
+                    this.Log.Warning($"OrderCancelReject: (OrderId={orderId}, CxlRejResponseTo={cancelRejectResponseTo}, Reason={cancelRejectReason}");
                 });
         }
 
@@ -499,7 +494,7 @@ namespace Nautilus.BlackBox.Brokerage
             string orderLabel,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -521,7 +516,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Information, $"OrderCancelled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
+                this.Log.Information($"OrderCancelled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
         }
 
@@ -545,7 +540,7 @@ namespace Nautilus.BlackBox.Brokerage
             decimal price,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -572,7 +567,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Information, $"OrderModified: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price})");
+                this.Log.Information($"OrderModified: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price})");
             });
         }
 
@@ -606,7 +601,7 @@ namespace Nautilus.BlackBox.Brokerage
             Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -647,7 +642,7 @@ namespace Nautilus.BlackBox.Brokerage
                     expireTimeString = expireTime.Value.ToIsoString();
                 }
 
-                this.Log(LogLevel.Information, $"OrderWorking: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price}, ExpireTime={expireTimeString})");
+                this.Log.Information($"OrderWorking: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price}, ExpireTime={expireTimeString})");
             });
         }
 
@@ -669,7 +664,7 @@ namespace Nautilus.BlackBox.Brokerage
             string orderLabel,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -691,7 +686,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Information, $"OrderExpired: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
+                this.Log.Information($"OrderExpired: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
         }
 
@@ -723,7 +718,7 @@ namespace Nautilus.BlackBox.Brokerage
             decimal averagePrice,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -756,7 +751,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Information, $"OrderFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice})");
+                this.Log.Information($"OrderFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice})");
             });
         }
 
@@ -790,7 +785,7 @@ namespace Nautilus.BlackBox.Brokerage
             decimal averagePrice,
             ZonedDateTime timestamp)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotNull(orderId, nameof(orderId));
@@ -825,7 +820,7 @@ namespace Nautilus.BlackBox.Brokerage
 
                 this.Send(BlackBoxService.Portfolio, eventMessage);
 
-                this.Log(LogLevel.Information, $"OrderPartiallyFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice}, LeavesQty={leavesQuantity})");
+                this.Log.Information($"OrderPartiallyFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice}, LeavesQty={leavesQuantity})");
             });
         }
 

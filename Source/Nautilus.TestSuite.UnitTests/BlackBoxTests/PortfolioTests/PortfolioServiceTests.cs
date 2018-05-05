@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     public class PortfolioServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly SecurityPortfolioStore portfolioStore;
         private readonly IActorRef portfolioServiceRef;
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(PortfolioServiceTests));
 
@@ -77,10 +77,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell("random_object", null);
 
             // Assert
-            CustomAssert.EventuallyContains("PortfolioService: Unhandled message random_object", this.mockLogger, 100, 20);
+            CustomAssert.EventuallyContains("PortfolioService: Unhandled message random_object", this.mockLoggingAdatper, 100, 20);
         }
 
         [Fact]
@@ -106,10 +106,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             Assert.Equal(0, this.portfolioStore.Count);
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -124,10 +124,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(DummyTrailingStopSignalEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -142,11 +142,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(DummyOrderFilledEventWrapper());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -179,10 +179,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection already contains the portfolioSymbol key).",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -207,7 +207,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(SubmitTrade),
                 this.inMemoryMessageStore.CommandEnvelopes,

@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     public class RiskServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef riskServiceRef;
 
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(RiskServiceTests));
 
@@ -63,10 +63,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "RiskService: Nautilus.BlackBox.Risk.RiskService initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -81,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Assert
             CustomAssert.EventuallyContains(
                 "RiskService: Unhandled message random_object",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -105,11 +105,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             this.riskServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: BrokerageAccount and RiskModel initialized",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 typeof(TradeApproved),
@@ -171,11 +171,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: RequestTradeApproval-TestTrade ignored... (Free Equity <= zero)",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -215,11 +215,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: BrokerageAccount updated",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -255,7 +255,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
     }
 }

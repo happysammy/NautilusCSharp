@@ -67,7 +67,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// <param name="stringToContain">
         /// The string to contain.
         /// </param>
-        /// <param name="logger">
+        /// <param name="loggingAdatper">
         /// The logger.
         /// </param>
         /// <param name="timeoutMilliseconds">
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// </param>
         public static void EventuallyContains(
             string stringToContain,
-            MockLogger logger,
+            MockLoggingAdatper loggingAdatper,
             int timeoutMilliseconds,
             int pollIntervalMilliseconds)
         {
@@ -90,9 +90,9 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             {
                 Task.Delay(pollIntervalMilliseconds).Wait();
             }
-            while (!logger.Contains(stringToContain) && stopwatch.Elapsed.Duration().Milliseconds < (int)Period.FromMilliseconds(timeoutMilliseconds).Milliseconds);
+            while (!loggingAdatper.Contains(stringToContain) && stopwatch.Elapsed.Duration().Milliseconds < (int)Period.FromMilliseconds(timeoutMilliseconds).Milliseconds);
 
-            Assert.True(logger.Contains(stringToContain));
+            Assert.True(loggingAdatper.Contains(stringToContain));
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     public class SecurityPortfolioTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IQuoteProvider quoteProvider;
         private readonly TradeBook tradeBook;
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(SecurityPortfolioTests));
 
@@ -114,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(SubmitTrade),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -185,7 +185,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Act
             this.portfolioRef.Tell(message);
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             // Assert
             CustomAssert.EventuallyContains(
@@ -214,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -241,7 +241,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ModifyStopLoss),
                 this.inMemoryMessageStore.CommandEnvelopes,

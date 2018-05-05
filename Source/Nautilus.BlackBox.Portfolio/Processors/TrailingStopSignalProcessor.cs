@@ -113,8 +113,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
 
             if (trade.TradeStatus != TradeStatus.Active)
             {
-                this.Log(
-                    LogLevel.Debug,
+                this.Log.Debug(
                     $"TrailingStop Signal {signal.ForMarketPosition}-{trade.TradeType} ignored... "
                   + $"(trade not active TradeStatus={trade.TradeStatus})");
 
@@ -123,8 +122,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
 
             if (trade.MarketPosition != signal.ForMarketPosition)
             {
-                this.Log(
-                    LogLevel.Debug,
+                this.Log.Debug(
                     $"TrailingStop Signal {signal.ForMarketPosition}-{trade.TradeType} ignored... "
                   + $"(signal MarketPosition does not equal trade MarketPosition={trade.MarketPosition})");
 
@@ -133,8 +131,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
 
             if (trade.TradeTimestamp == signal.SignalTimestamp)
             {
-                this.Log(
-                    LogLevel.Debug,
+                this.Log.Debug(
                     $"TrailingStop Signal {signal.ForMarketPosition}-{trade.TradeType} ignored... "
                   + $"(signal time {signal.SignalTimestamp} coincides with trade timestamp {trade.TradeTimestamp}");
 

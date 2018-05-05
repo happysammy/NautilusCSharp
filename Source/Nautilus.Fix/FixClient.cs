@@ -110,7 +110,7 @@ namespace Nautilus.Fix
         /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryLimitStopOrder(AtomicOrder elsOrder)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
             });
@@ -122,7 +122,7 @@ namespace Nautilus.Fix
         /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryStopOrder(AtomicOrder elsOrder)
         {
-            this.CommandHandler.Execute(() =>
+            this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitEntryStopOrder(elsOrder);
             });

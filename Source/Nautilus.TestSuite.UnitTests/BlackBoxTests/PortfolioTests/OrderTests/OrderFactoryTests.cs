@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class OrderFactoryTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly OrderPacketBuilder orderPacketBuilder;
         private readonly EntrySignal entrySignal;
 
@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             this.orderPacketBuilder = new OrderPacketBuilder(setupContainer, StubInstrumentFactory.EURUSD());
             this.entrySignal = StubSignalBuilder.BuyEntrySignal();

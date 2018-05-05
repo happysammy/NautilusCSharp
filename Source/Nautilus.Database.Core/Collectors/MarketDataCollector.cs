@@ -64,7 +64,7 @@ namespace Nautilus.Database.Core.Collectors
 
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
-                this.Log(LogLevel.Warning, $"{this.Component} no csv files found for {this.dataReader.SymbolBarSpec}");
+                this.Log.Warning($"No csv files found for {this.dataReader.SymbolBarSpec}");
 
                 Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
 
@@ -92,12 +92,12 @@ namespace Nautilus.Database.Core.Collectors
                     this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
 
                     //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
-                    this.Log(LogLevel.Debug, $"{this.Component} updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
+                    this.Log.Debug($"Updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
                 }
 
                 if (csvQuery.IsFailure)
                 {
-                    this.Log(LogLevel.Warning, csvQuery.Message);
+                    this.Log.Warning(csvQuery.Message);
                 }
             }
 
@@ -112,14 +112,14 @@ namespace Nautilus.Database.Core.Collectors
             {
                 this.lastPersistedBarTime = message.LastTimestampQueryResult.Value;
 
-                this.Log(LogLevel.Debug,
-                    $"{this.Component} from {nameof(DataStatusResponse)} " +
+                this.Log.Debug(
+                    $"From {nameof(DataStatusResponse)} " +
                     $"updated last persisted bar timestamp to {this.lastPersistedBarTime.Value.ToIsoString()}");
 
                 return;
             }
 
-            this.Log(LogLevel.Debug,
+            this.Log.Debug(
                 $"{this.Component} from {nameof(DataStatusResponse)} " +
                 $"no persisted bar timestamp");
         }

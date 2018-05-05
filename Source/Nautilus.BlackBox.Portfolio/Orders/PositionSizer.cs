@@ -135,7 +135,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             var logtext3 = $"RiskPerTrade={riskPerTrade} ((RiskDollars={riskDollars} / RiskPoints={riskPoints})";
             var logtext4 = $"/ tickValueSize={tickValueSize}): TotalPositionSize={positionSize}";
             var logtext5 = $"/ Units={units} (Batches={unitBatches}), FinalPositionSize={positionSizeFinal}";
-            this.Log(LogLevel.Debug, $"{logtext3} {logtext4} {logtext5}");
+            this.Log.Debug("{logtext3} {logtext4} {logtext5}");
         }
     }
 }

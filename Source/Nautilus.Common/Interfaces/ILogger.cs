@@ -9,24 +9,55 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using Nautilus.Common.Enums;
+    using NautechSystems.CSharp.CQS;
 
     /// <summary>
-    /// Sends log events to the <see cref="ILoggingAdapter"/>.
+    /// The adapter interface for logging with the <see cref="ILoggingAdapter"/>.
     /// </summary>
     public interface ILogger
     {
         /// <summary>
-        /// Sends the given log level and log text to the <see cref="Akka.Event.ILoggingAdapter"/> to log.
+        /// Sends the given verbose message to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="logText">The log text.</param>
-        void Log(LogLevel logLevel, string logText);
+        /// <param name="message">The message to log.</param>
+        void Verbose(string message);
 
         /// <summary>
-        /// Sends the given <see cref="Exception"/> to the <see cref="Akka.Event.ILoggingAdapter"/> to log.
+        /// Sends the given information message to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
-        /// <param name="ex">The exception.</param>
-        void LogException(Exception ex);
+        /// <param name="message">The message to log.</param>
+        void Information(string message);
+
+        /// <summary>
+        /// Sends the given debug message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        void Debug(string message);
+
+        /// <summary>
+        /// Sends the given warning message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        void Warning(string message);
+
+        /// <summary>
+        /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        /// <param name="ex">The exception to log</param>
+        void Error(string message, Exception ex);
+
+        /// <summary>
+        /// Sends the given fatal message and exception to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        /// <param name="ex">The exception to log</param>
+        void Fatal(string message, Exception ex);
+
+        /// <summary>
+        /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="result">The result to handle.</param>
+        void Result(ResultBase result);
     }
 }

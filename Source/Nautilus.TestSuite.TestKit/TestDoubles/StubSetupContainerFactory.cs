@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Gets the logger.
         /// </summary>
-        public MockLogger Logger { get; private set; }
+        public MockLoggingAdatper LoggingAdatper { get; private set; }
 
         /// <summary>
         /// Gets the quote provider.
@@ -48,8 +48,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var clock = new StubClock();
             clock.FreezeSetTime(StubDateTime.Now());
 
-            this.Logger = new MockLogger();
-            var loggerFactory = new LoggerFactory(this.Logger);
+            this.LoggingAdatper = new MockLoggingAdatper();
+            var loggerFactory = new LoggerFactory(this.LoggingAdatper);
 
             var guidFactory = new GuidFactory();
             var instrumentRepository = new Mock<IInstrumentRepository>().Object;

@@ -19,7 +19,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// The mock system logger.
     /// </summary>
-    public class MockLogger : ILoggingAdapter
+    public class MockLoggingAdatper : ILoggingAdapter
     {
         private readonly ConcurrentQueue<string> stash = new ConcurrentQueue<string>();
 
@@ -138,11 +138,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public void Fatal(Enum service, string message, Exception ex)
         {
             this.stash.Enqueue(message);
-        }
-
-        public void LogResult(ResultBase result)
-        {
-            throw new NotImplementedException();
         }
 
         private IReadOnlyList<string> GetLogStashTextAsStringList()

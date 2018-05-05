@@ -84,7 +84,7 @@ namespace Nautilus.BlackBox.Data.Market
 
             this.marketDataProcessorsIndex = message.MarketDataProcessorsIndex;
 
-            this.Log(LogLevel.Debug, $"MarketDataProcessorsIndex updated");
+            this.Log.Debug($"MarketDataProcessorsIndex updated");
         }
     }
 }

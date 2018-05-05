@@ -89,7 +89,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 
             if (positionSize.Value == 0)
             {
-                this.Log(LogLevel.Warning, $"Calculated unit size exceeds risk model limit (unit size = 0)");
+                this.Log.Warning("Calculated unit size exceeds risk model limit (unit size = 0)");
 
                 return Option<AtomicOrderPacket>.None();
             }

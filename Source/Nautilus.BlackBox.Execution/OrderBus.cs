@@ -71,7 +71,7 @@ namespace Nautilus.BlackBox.Execution
             Debug.NotNull(message, nameof(message));
 
             this.brokerageGateway = message.BrokerageGateway;
-            this.Log(LogLevel.Information, $"{this.brokerageGateway} initialized.");
+            this.Log.Information($"{this.brokerageGateway} initialized.");
 
             Debug.NotNull(this.brokerageGateway, nameof(this.brokerageGateway));
         }
@@ -85,7 +85,7 @@ namespace Nautilus.BlackBox.Execution
             {
                 this.RouteOrder(atomicOrder);
 
-                this.Log(LogLevel.Debug, $"Routing ELS Order {atomicOrder.Symbol} => {this.brokerageGateway.Broker}");
+                this.Log.Debug($"Routing ELS Order {atomicOrder.Symbol} => {this.brokerageGateway.Broker}");
             }
         }
 
@@ -106,7 +106,7 @@ namespace Nautilus.BlackBox.Execution
                 this.brokerageGateway.ModifyStoplossOrder(orderModification);
                 var symbol = stoplossModification.Key.Symbol;
 
-                this.Log(LogLevel.Debug, $"Routing StoplossReplaceRequest {symbol} => {this.brokerageGateway.Broker}");
+                this.Log.Debug($"Routing StoplossReplaceRequest {symbol} => {this.brokerageGateway.Broker}");
             }
         }
 
@@ -117,7 +117,7 @@ namespace Nautilus.BlackBox.Execution
             var tradeUnit = message.ForTradeUnit;
             this.brokerageGateway.ClosePosition(tradeUnit.Position);
 
-            this.Log(LogLevel.Debug, $"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.brokerageGateway.Broker}");
+            this.Log.Debug($"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.brokerageGateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)
@@ -141,7 +141,7 @@ namespace Nautilus.BlackBox.Execution
 
             if (!this.brokerageGateway.IsConnected)
             {
-                this.Log(LogLevel.Error, $"Cannot process orders (not connected to broker).");
+                this.Log.Warning("Cannot process orders (not connected to broker).");
 
                 return false;
             }

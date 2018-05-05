@@ -12,7 +12,6 @@ namespace Nautilus.BlackBox.Core
     using System.Reflection;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -25,17 +24,17 @@ namespace Nautilus.BlackBox.Core
         /// Runs the version checker which produces log events.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public static void Run(ILogger logger)
+        public static void Run(ILogger log)
         {
-            Validate.NotNull(logger, nameof(logger));
+            Validate.NotNull(log, nameof(log));
 
-            logger.Log(LogLevel.Information, "---------------------------------------------------------------------------");
-            logger.Log(LogLevel.Information, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            logger.Log(LogLevel.Information, "---------------------------------------------------------------------------");
-            logger.Log(LogLevel.Information, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Log(LogLevel.Information, $"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Log(LogLevel.Information, $"{Environment.OSVersion}");
-            logger.Log(LogLevel.Information, $"Microsoft.NET Framework (version {Environment.Version})");
+            log.Information("---------------------------------------------------------------------------");
+            log.Information("NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information("---------------------------------------------------------------------------");
+            log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information($"{Environment.OSVersion}");
+            log.Information($"Microsoft.NET Framework (version {Environment.Version})");
         }
     }
 }

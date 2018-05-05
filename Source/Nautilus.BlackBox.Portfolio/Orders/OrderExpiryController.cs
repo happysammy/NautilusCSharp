@@ -89,7 +89,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 }
             }
 
-            this.Log(LogLevel.Debug, $"Processed OrderExpiryCounters (TotalCounters={this.TotalCounters})");
+            this.Log.Debug($"Processed OrderExpiryCounters (TotalCounters={this.TotalCounters})");
         }
 
         /// <summary>
@@ -110,8 +110,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 {
                     this.orderExpiryCounters.Add(new OrderExpiryCounter(atomicOrder.EntryOrder, barsValid));
 
-                    this.Log(
-                        LogLevel.Debug,
+                    this.Log.Debug(
                         $"Added OrderExpiryCounter ({atomicOrder.EntryOrder.OrderId}) "
                       + $"BarsValid={barsValid}");
                 }
@@ -133,8 +132,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 {
                     this.orderExpiryCounters.Remove(counter);
 
-                    this.Log(
-                        LogLevel.Debug,
+                    this.Log.Debug(
                         $"Removed OrderExpiryCounter ({orderId}) "
                       + $"TotalCounters={this.TotalCounters}");
                 }
@@ -160,8 +158,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                     {
                         this.orderExpiryCounters.Remove(counter);
 
-                        this.Log(
-                            LogLevel.Warning,
+                        this.Log.Warning(
                             $"ForceRemoveExpiredCounter() "
                           + $"({counter} at {this.TimeNow().ToIsoString()}) "
                           + $"TotalCounters={this.TotalCounters}");

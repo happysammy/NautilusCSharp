@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     {
         private readonly ITestOutputHelper output;
         private readonly BlackBoxSetupContainer setupContainer;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
 
         public PositionSizerTests(ITestOutputHelper output)
         {
@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var setupFactory = new StubSetupContainerFactory();
             this.setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
         }
 
         [Fact]

@@ -130,7 +130,7 @@ namespace Nautilus.BlackBox.Portfolio
                         this.NewGuid(),
                         this.TimeNow()));
 
-                this.Log(LogLevel.Debug, $"Received {@event}");
+                this.Log.Debug($"Received {@event}");
             });
         }
 
@@ -144,7 +144,7 @@ namespace Nautilus.BlackBox.Portfolio
 
                 this.orderExpiryController.ProcessCounters(activeOrderIds);
 
-                this.Log(LogLevel.Debug, $"Received {@event}");
+                this.Log.Debug($"Received {@event}");
             });
         }
 
@@ -190,8 +190,8 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
-                    this.Log(LogLevel.Warning, $"{@event} ({@event.RejectedReason})");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Warning($"{@event} ({@event.RejectedReason})");
                 }
             });
         }
@@ -211,7 +211,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -233,7 +233,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -255,7 +255,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -277,7 +277,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -299,7 +299,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -319,7 +319,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log(LogLevel.Debug, $"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }

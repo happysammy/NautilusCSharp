@@ -110,7 +110,7 @@ namespace Nautilus.BlackBox.Data.Market
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }
 
-            this.Log(LogLevel.Debug, $"Setup for {message.BarSpecification} bars");
+            this.Log.Debug($"Setup for {message.BarSpecification} bars");
 
             Debug.DictionaryContainsKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
         }
@@ -124,7 +124,7 @@ namespace Nautilus.BlackBox.Data.Market
             this.barAggregators[message.TradeType].Tell(PoisonPill.Instance);
             this.barAggregators.Remove(message.TradeType);
 
-            this.Log(LogLevel.Information, $"Data for {this.symbol}({message.TradeType}) bars deregistered");
+            this.Log.Information($"Data for {this.symbol}({message.TradeType}) bars deregistered");
 
             Debug.DictionaryDoesNotContainKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
         }

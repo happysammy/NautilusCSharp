@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     public class EntrySignalProcessorTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly EntrySignalProcessor entrySignalProcessor;
         private readonly TradeBook tradeBook;
@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var instrument = StubInstrumentFactory.AUDUSD();
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             setupFactory.QuoteProvider.OnQuote(
                 new Tick(
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             this.entrySignalProcessor.Process(entrySignal);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 typeof(RequestTradeApproval),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -111,7 +111,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             Assert.Equal(2, result.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             Assert.Equal(2, result.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }

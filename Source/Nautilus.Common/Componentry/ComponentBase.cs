@@ -9,9 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -21,6 +19,11 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public abstract class ComponentBase
     {
+        private readonly IZonedClock Clock;
+        private readonly ILogger logger;
+        private readonly IGuidFactory guidFactory;
+        private readonly CommandHandler commandHandler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
@@ -38,9 +41,9 @@ namespace Nautilus.Common.Componentry
             this.Service = service;
             this.Component = component;
             this.Clock = container.Clock;
-            this.Logger = container.LoggerFactory.Create(service, this.Component);
-            this.GuidFactory = container.GuidFactory;
-            this.CommandHandler = new CommandHandler(this.Logger);
+            this.logger = container.LoggerFactory.Create(service, this.Component);
+            this.guidFactory = container.GuidFactory;
+            this.commandHandler = new CommandHandler(this.logger);
         }
 
         /// <summary>
@@ -54,50 +57,9 @@ namespace Nautilus.Common.Componentry
         protected Label Component { get; }
 
         /// <summary>
-        /// Gets the black box system clock.
+        /// Gets the components logger.
         /// </summary>
-        protected IZonedClock Clock { get; }
-
-        /// <summary>
-        /// Gets the black box system logger.
-        /// </summary>
-        protected ILogger Logger { get; }
-
-        /// <summary>
-        /// Gets the black box <see cref="Guid"/> factory.
-        /// </summary>
-        protected IGuidFactory GuidFactory { get; }
-
-        /// <summary>
-        /// Gets the command handler.
-        /// </summary>
-        protected CommandHandler CommandHandler { get; }
-
-        /// <summary>
-        /// Creates a log event with the given level and text.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="logText">The log text.</param>
-        protected void Log(LogLevel logLevel, string logText)
-        {
-            this.Logger.Log(logLevel, logText);
-        }
-
-        /// <summary>
-        /// Logs the result with the <see cref="ILogger"/>.
-        /// </summary>
-        /// <param name="result">The command result.</param>
-        protected void LogResult(ResultBase result)
-        {
-            if (result.IsSuccess)
-            {
-                this.Log(LogLevel.Information, result.Message);
-            }
-            else
-            {
-                this.Log(LogLevel.Warning, result.Message);
-            }
-        }
+        protected ILogger Log => this.logger;
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -116,7 +78,16 @@ namespace Nautilus.Common.Componentry
         /// <returns>A <see cref="Guid"/>.</returns>
         protected Guid NewGuid()
         {
-            return this.GuidFactory.NewGuid();
+            return this.guidFactory.NewGuid();
+        }
+
+        /// <summary>
+        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        protected void Execute(Action action)
+        {
+            this.commandHandler.Execute(action);
         }
     }
 }

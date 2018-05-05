@@ -14,6 +14,7 @@ namespace Nautilus.Database.Core.Configuration
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Database.Core.Enums;
 
     [Immutable]
     public static class StartupVersionChecker
@@ -21,23 +22,23 @@ namespace Nautilus.Database.Core.Configuration
         /// <summary>
         /// Runs the version checker which produces log events.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        public static void Run(ILoggingAdapter logger)
+        /// <param name="log">The logger.</param>
+        public static void Run(ILoggingAdapter log)
         {
-            Validate.NotNull(logger, nameof(logger));
+            Validate.NotNull(log, nameof(log));
 
-            logger.Information(LogLevel.Information, $"Running StartupVersionChecker...");
-            logger.Information(LogLevel.Information, "----------------------------------------------------------------");
-            logger.Information(LogLevel.Information, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            logger.Information(LogLevel.Information, "Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            logger.Information(LogLevel.Information, "----------------------------------------------------------------");
-            logger.Information(LogLevel.Information, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Information(LogLevel.Information, $"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Information(LogLevel.Information, $"OS {Environment.OSVersion}");
-            logger.Information(LogLevel.Information, $".NET Core v{GetNetCoreVersion()}");
-            logger.Information(LogLevel.Information, $"Akka.NET v1.3.5");
-            logger.Information(LogLevel.Information, $"ServiceStack v5.0.2");
-            logger.Information(LogLevel.Information, logger.AssemblyVersion);
+            log.Information(DatabaseService.NautilusDatabase, "Running StartupVersionChecker...");
+            log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
+            log.Information(DatabaseService.NautilusDatabase, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(DatabaseService.NautilusDatabase, "Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
+            log.Information(DatabaseService.NautilusDatabase, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information(DatabaseService.NautilusDatabase, $"OS {Environment.OSVersion}");
+            log.Information(DatabaseService.NautilusDatabase, $".NET Core v{GetNetCoreVersion()}");
+            log.Information(DatabaseService.NautilusDatabase, $"Akka.NET v1.3.5");
+            log.Information(DatabaseService.NautilusDatabase, $"ServiceStack v5.0.2");
+            log.Information(DatabaseService.NautilusDatabase, log.AssemblyVersion);
         }
 
         private static string GetNetCoreVersion()

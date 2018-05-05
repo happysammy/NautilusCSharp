@@ -105,8 +105,8 @@ namespace Nautilus.BlackBox.Data.Market
 
             this.CreateBarBuilder(quote);
 
-            this.Log(LogLevel.Debug, $"Registered for {this.BarSpecification} bars");
-            this.Log(LogLevel.Debug, $"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
+            this.Log.Debug($"Registered for {this.BarSpecification} bars");
+            this.Log.Debug($"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
         }
 
         private void CreateBarBuilder(Tick quote)

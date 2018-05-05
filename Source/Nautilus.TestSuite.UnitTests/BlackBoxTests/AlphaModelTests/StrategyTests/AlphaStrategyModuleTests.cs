@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     public class AlphaStrategyModuleTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly BarStore barStore;
         private readonly BarStore barStoreDaily;
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaStrategyModuleTests));
 
@@ -100,10 +100,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Nautilus.BlackBox.AlphaModel.Strategy.AlphaStrategyModule initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -116,10 +116,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell("random_object", null);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Unhandled message random_object",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -132,10 +132,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(InvalidMarketDataEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Received MarketDataEvent",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -148,7 +148,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(HistoricalMarketDataEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyHasCount(
                 1,
                 this.barStore,
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLogger.WriteStashToOutput(this.output);
+            this.mockLoggingAdatper.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventDailyBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyHasCount(
                 1,
                 this.barStoreDaily,
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLogger.WriteStashToOutput(this.output);
+            this.mockLoggingAdatper.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -189,11 +189,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             Assert.Equal(0, this.barStore.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLogger.WriteStashToOutput(this.output);
+            this.mockLoggingAdatper.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Act
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(EntrySignal),
@@ -222,7 +222,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBearBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(EntrySignal),
@@ -239,7 +239,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(ExitSignal),
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(ExitSignal),
@@ -273,7 +273,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(TrailingStopSignal),
@@ -290,7 +290,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(TrailingStopSignal),

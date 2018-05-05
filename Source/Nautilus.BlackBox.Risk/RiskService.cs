@@ -15,7 +15,6 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.BlackBox.Core.Setup;
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
@@ -79,7 +78,7 @@ namespace Nautilus.BlackBox.Risk
                 this.account = message.Account;
                 this.riskModel = message.RiskModel;
 
-                this.Log(LogLevel.Information, $"BrokerageAccount and RiskModel initialized");
+                this.Log.Information($"BrokerageAccount and RiskModel initialized");
             });
         }
 
@@ -91,7 +90,7 @@ namespace Nautilus.BlackBox.Risk
 
                 if (this.account.FreeEquity.Value == decimal.Zero)
                 {
-                    this.Log(LogLevel.Warning, $"{message} ignored... (Free Equity <= zero)");
+                    this.Log.Warning($"{message} ignored... (Free Equity <= zero)");
 
                     return;
                 }
@@ -114,7 +113,7 @@ namespace Nautilus.BlackBox.Risk
 
                 this.account.Apply(@event);
 
-                this.Log(LogLevel.Information, $"BrokerageAccount updated");
+                this.Log.Information("BrokerageAccount updated");
             });
         }
 

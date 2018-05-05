@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     public class ExecutionServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLogger mockLogger;
+        private readonly MockLoggingAdatper mockLoggingAdatper;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef executionServiceRef;
 
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLogger = setupFactory.Logger;
+            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
 
             var testActorSystem = ActorSystem.Create(nameof(ExecutionServiceTests));
 
@@ -72,10 +72,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
                 "ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Assert
             CustomAssert.EventuallyContains(
                 "ExecutionService: Unhandled message random_object",
-                this.mockLogger,
+                this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -122,7 +122,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLogger, this.output);
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
         }
     }
 }
