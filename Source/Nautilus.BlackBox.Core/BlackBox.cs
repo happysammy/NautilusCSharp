@@ -36,7 +36,6 @@ namespace Nautilus.BlackBox.Core
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IBrokerageGateway brokerageGateway;
-        private readonly IBrokerageClient brokerageClient;
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
         private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
 
@@ -49,6 +48,7 @@ namespace Nautilus.BlackBox.Core
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter"></param>
         /// <param name="switchboard">The service factory.</param>
+        /// <param name="brokerageGateway">The brokerage gateway.</param>
         /// <param name="brokerageClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
@@ -80,7 +80,6 @@ namespace Nautilus.BlackBox.Core
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
             this.brokerageGateway = brokerageGateway;
-            this.brokerageClient = brokerageClient;
 
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
@@ -105,7 +104,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            this.brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
+            brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
