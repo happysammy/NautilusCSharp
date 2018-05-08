@@ -32,8 +32,8 @@ namespace Nautilus.Common.Messaging
             ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Validate.NotNull(@event, nameof(@event));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(@event, nameof(@event));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Event = @event;
         }
