@@ -25,11 +25,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// </summary>
     public abstract class Order : Aggregate<Order>
     {
-        /// <summary>
-        /// Returns the orders protected finite state machine.
-        /// </summary>
-        protected readonly FiniteStateMachine OrderState = OrderStateMachine.Create();
-
+        private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
         private readonly IList<EntityId> orderIdList = new List<EntityId>();
         private readonly IList<EntityId> brokerOrderIdList = new List<EntityId>();
         private readonly IList<EntityId> executionIdList = new List<EntityId>();
@@ -135,7 +131,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the current order status.
         /// </summary>
-        public OrderStatus OrderStatus => (OrderStatus)this.OrderState.CurrentState.Value;
+        public OrderStatus OrderStatus => (OrderStatus)this.orderState.CurrentState.Value;
 
         /// <summary>
         /// Gets the orders last event time.
@@ -251,11 +247,21 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
+        /// <summary>
+        /// Processes the trigger with the orders finite state machine.
+        /// </summary>
+        /// <param name="trigger">The trigger.</param>
+        /// <returns>The result of the trigger process.</returns>
+        protected CommandResult Process(Trigger trigger)
+        {
+            return this.orderState.Process(trigger);
+        }
+
         private CommandResult When(OrderRejected orderEvent)
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState
+            return this.orderState
                 .Process(new Trigger(nameof(OrderRejected)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
         }
@@ -264,7 +270,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState
+            return this.orderState
                 .Process(new Trigger(nameof(OrderCancelled)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
         }
@@ -273,7 +279,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState
+            return this.orderState
                 .Process(new Trigger(nameof(OrderWorking)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => this.UpdateBrokerOrderId(orderEvent.BrokerOrderId));
@@ -283,7 +289,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState
+            return this.orderState
                 .Process(new Trigger(nameof(OrderPartiallyFilled)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => this.UpdateExecutionId(orderEvent.ExecutionId))
@@ -295,7 +301,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState
+            return this.orderState
                 .Process(new Trigger(nameof(OrderFilled)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => { this.FilledQuantity = orderEvent.FilledQuantity; })

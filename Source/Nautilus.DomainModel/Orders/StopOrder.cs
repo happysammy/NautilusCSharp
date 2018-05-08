@@ -135,7 +135,7 @@ namespace Nautilus.DomainModel.Orders
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState.Process(new Trigger(nameof(OrderExpired)))
+            return this.Process(new Trigger(nameof(OrderExpired)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
         }
 
@@ -143,7 +143,7 @@ namespace Nautilus.DomainModel.Orders
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            return this.OrderState.Process(new Trigger(nameof(OrderModified)))
+            return this.Process(new Trigger(nameof(OrderModified)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => this.UpdateBrokerOrderId(orderEvent.BrokerOrderId))
                 .OnSuccess(() => { this.Price = orderEvent.ModifiedPrice; });
