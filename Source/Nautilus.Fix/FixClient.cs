@@ -19,7 +19,8 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
+    using Price = Nautilus.DomainModel.ValueObjects.Price;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
     /// Provides a generic QuickFix client.
@@ -87,7 +88,15 @@ namespace Nautilus.Fix
         public void Connect()
         {
             this.ConnectFix();
+        }
 
+        public void Disconnect()
+        {
+            this.DisconnectFix();
+        }
+
+        public void InitializeSession()
+        {
             this.CollateralInquiry();
             this.TradingSessionStatus();
             this.RequestAllPositions();
@@ -97,11 +106,6 @@ namespace Nautilus.Fix
             {
                 this.RequestMarketDataSubscribe(symbol);
             }
-        }
-
-        public void Disconnect()
-        {
-            this.DisconnectFix();
         }
 
         /// <summary>

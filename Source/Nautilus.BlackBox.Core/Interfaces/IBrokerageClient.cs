@@ -46,6 +46,11 @@ namespace Nautilus.BlackBox.Core.Interfaces
         void Disconnect();
 
         /// <summary>
+        /// Initializes the brokerage session.
+        /// </summary>
+        void InitializeSession();
+
+        /// <summary>
         /// Request market data for the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

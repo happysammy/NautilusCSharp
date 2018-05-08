@@ -58,6 +58,13 @@ namespace Nautilus.Backtest
         /// <summary>
         ///
         /// </summary>
+        public void InitializeSession()
+        {
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
         /// <param name="symbol"></param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {

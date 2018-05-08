@@ -44,6 +44,11 @@ namespace Nautilus.BlackBox.Core.Interfaces
         void Disconnect();
 
         /// <summary>
+        /// Initializes the brokerage session.
+        /// </summary>
+        void InitializeSession();
+
+        /// <summary>
         /// Returns the current time of the <see cref="BlackBox"/> system clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>

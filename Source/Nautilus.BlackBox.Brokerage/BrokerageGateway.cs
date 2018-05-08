@@ -78,6 +78,14 @@ namespace Nautilus.BlackBox.Brokerage
         public bool IsConnected => this.brokerageClient.IsConnected;
 
         /// <summary>
+        /// Initializes the brokerage session.
+        /// </summary>
+        public void InitializeSession()
+        {
+            this.brokerageClient.InitializeSession();
+        }
+
+        /// <summary>
         /// Returns the current time of the <see cref="BlackBox"/> system clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>

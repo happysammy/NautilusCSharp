@@ -118,13 +118,24 @@ namespace Nautilus.BlackBox.Core
         public ZonedDateTime StartTime { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the black box is connected to the broker.
+        /// Connects to the brokerage.
         /// </summary>
         public void ConnectToBrokerage()
         {
             this.Execute(() =>
             {
                 this.brokerageGateway.Connect();
+            });
+        }
+
+        /// <summary>
+        /// Initializes the brokerage session.
+        /// </summary>
+        public void InitializeSession()
+        {
+            this.Execute(() =>
+            {
+                this.brokerageGateway.InitializeSession();
             });
         }
 
