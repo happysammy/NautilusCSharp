@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ActorComponentBase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ActorComponentBusConnectedBase.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,12 +15,22 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
 
+    /// <summary>
+    /// The base class for all Akka.NET components in the system.
+    /// </summary>
     public class ActorComponentBusConnectedBase : ActorComponentBase
     {
         private readonly Enum service;
         private readonly Label component;
         private readonly IMessagingAdapter messagingAdapter;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActorComponentBusConnectedBase"/> class.
+        /// </summary>
+        /// <param name="service">The components service context.</param>
+        /// <param name="component">The components name.</param>
+        /// <param name="container">The componentry container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         protected ActorComponentBusConnectedBase(
             Enum service,
             Label component,

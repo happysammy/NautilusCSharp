@@ -6,16 +6,24 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
-using NodaTime;
-
 namespace Nautilus.Common.Messaging
 {
+    using System;
+    using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Validation;
+    using NodaTime;
+
+    /// <summary>
+    /// The base class for all command messages.
+    /// </summary>
     [Immutable]
     public abstract class CommandMessage : Message
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandMessage"/> class.
+        /// </summary>
+        /// <param name="id">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         protected CommandMessage(Guid id, ZonedDateTime timestamp)
             : base(id, timestamp)
         {

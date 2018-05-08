@@ -63,7 +63,8 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <typeparam name="T">The exception type.</typeparam>
         /// <param name="action">The action.</param>
-        public void Execute<T>(Action action) where T : Exception
+        public void Execute<T>(Action action)
+            where T : Exception
         {
             Debug.NotNull(action, nameof(action));
 

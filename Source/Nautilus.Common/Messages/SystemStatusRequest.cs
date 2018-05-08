@@ -11,12 +11,20 @@ namespace Nautilus.Common.Messages
     using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using NodaTime;
     using Nautilus.Common.Messaging;
+    using NodaTime;
 
+    /// <summary>
+    /// The system status request message.
+    /// </summary>
     [Immutable]
     public sealed class SystemStatusRequest : Message
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.
+        /// </summary>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public SystemStatusRequest(
             Guid identifier,
             ZonedDateTime timestamp)

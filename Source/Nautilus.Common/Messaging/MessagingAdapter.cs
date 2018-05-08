@@ -69,7 +69,8 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
         /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        public void Send<T>(Enum receiver, T message, Enum sender) where T : Message
+        public void Send<T>(Enum receiver, T message, Enum sender)
+            where T : Message
         {
             Validate.NotNull(message, nameof(message));
 
@@ -87,7 +88,8 @@ namespace Nautilus.Common.Messaging
         /// <exception cref="ValidationException">Throws if the receivers are null, or if the message
         /// is null.</exception>
         /// <exception cref="InvalidOperationException">Throws if a receiver is unknown.</exception>
-        public void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender) where T : Message
+        public void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender)
+            where T : Message
         {
             Validate.NotNull(receivers, nameof(receivers));
             Validate.NotNull(message, nameof(message));

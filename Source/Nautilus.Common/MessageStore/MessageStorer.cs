@@ -33,14 +33,6 @@ namespace Nautilus.Common.MessageStore
 
             this.store = store;
 
-            this.SetupMessageHandling();
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="Message"/> handling methods.
-        /// </summary>
-        private void SetupMessageHandling()
-        {
             this.Receive<Envelope<CommandMessage>>(envelope => this.store.Store(envelope));
             this.Receive<Envelope<EventMessage>>(envelope => this.store.Store(envelope));
             this.Receive<Envelope<DocumentMessage>>(envelope => this.store.Store(envelope));
@@ -65,7 +57,8 @@ namespace Nautilus.Common.MessageStore
             PrintReportToConsole(serviceReport);
         }
 
-        private static MessagingDiagnosticsReport GetDiagnosticReport<T>(IReadOnlyCollection<Envelope<T>> envelopeList) where T : Message
+        private static MessagingDiagnosticsReport GetDiagnosticReport<T>(IReadOnlyCollection<Envelope<T>> envelopeList)
+            where T : Message
         {
             Debug.NotNull(envelopeList, nameof(envelopeList));
 
@@ -122,7 +115,8 @@ namespace Nautilus.Common.MessageStore
             return diagnosticsReport;
         }
 
-        private static int GetDeliveryTime<T>(Envelope<T> envelope) where T : Message
+        private static int GetDeliveryTime<T>(Envelope<T> envelope)
+            where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 

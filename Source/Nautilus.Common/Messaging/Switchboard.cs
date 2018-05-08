@@ -42,7 +42,8 @@ namespace Nautilus.Common.Messaging
         /// <param name="envelope">The envelope.</param>
         /// <typeparam name="T">The message type.</typeparam>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
-        public void SendToReceivers<T>(Envelope<T> envelope) where T : Message
+        public void SendToReceivers<T>(Envelope<T> envelope)
+            where T : Message
         {
             Validate.NotNull(envelope, nameof(envelope));
 
@@ -52,7 +53,8 @@ namespace Nautilus.Common.Messaging
             }
         }
 
-        private void RouteEnvelope<T>(Enum receiver, Envelope<T> envelope) where T : Message
+        private void RouteEnvelope<T>(Enum receiver, Envelope<T> envelope)
+            where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 

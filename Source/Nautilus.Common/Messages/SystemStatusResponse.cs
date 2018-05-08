@@ -11,10 +11,13 @@ namespace Nautilus.Common.Messages
     using System;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using NodaTime;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
+    using NodaTime;
 
+    /// <summary>
+    /// The system status request message.
+    /// </summary>
     [Immutable]
     public sealed class SystemStatusResponse : Message
     {

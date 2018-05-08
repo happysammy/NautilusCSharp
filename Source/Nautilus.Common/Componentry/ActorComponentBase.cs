@@ -51,6 +51,7 @@ namespace Nautilus.Common.Componentry
 
             this.SetupMessageHandling();
         }
+
         /// <summary>
         /// Gets the components logger.
         /// </summary>
@@ -131,7 +132,8 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
         /// <param name="envelope">The message envelope.</param>
-        private void Open<T>(Envelope<T> envelope) where T : Message
+        private void Open<T>(Envelope<T> envelope)
+            where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 

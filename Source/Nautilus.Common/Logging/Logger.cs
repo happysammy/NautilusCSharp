@@ -45,6 +45,10 @@ namespace Nautilus.Common.Logging
             this.component = component;
         }
 
+        /// <summary>
+        /// Sends the given verbose message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void Verbose(string message)
         {
             Validate.NotNull(message, nameof(message));
@@ -52,6 +56,10 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter.Verbose(this.service, $"{this.component}: {message}");
         }
 
+        /// <summary>
+        /// Sends the given information message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void Information(string message)
         {
             Validate.NotNull(message, nameof(message));
@@ -59,6 +67,10 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter.Information(this.service, $"{this.component}: {message}");
         }
 
+        /// <summary>
+        /// Sends the given debug message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void Debug(string message)
         {
             Validate.NotNull(message, nameof(message));
@@ -66,6 +78,10 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter.Debug(this.service, $"{this.component}: {message}");
         }
 
+        /// <summary>
+        /// Sends the given warning message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void Warning(string message)
         {
             Validate.NotNull(message, nameof(message));
@@ -73,6 +89,11 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter.Warning(this.service, $"{this.component}: {message}");
         }
 
+        /// <summary>
+        /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        /// <param name="ex">The exception to log</param>
         public void Error(string message, Exception ex)
         {
             Validate.NotNull(message, nameof(message));
@@ -81,6 +102,11 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter.Error(this.service, $"{this.component}: {message}", ex);
         }
 
+        /// <summary>
+        /// Sends the given fatal message and exception to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        /// <param name="ex">The exception to log</param>
         public void Fatal(string message, Exception ex)
         {
             Validate.NotNull(message, nameof(message));

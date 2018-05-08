@@ -19,7 +19,7 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public abstract class ComponentBase
     {
-        private readonly IZonedClock Clock;
+        private readonly IZonedClock clock;
         private readonly ILogger logger;
         private readonly IGuidFactory guidFactory;
         private readonly CommandHandler commandHandler;
@@ -40,7 +40,7 @@ namespace Nautilus.Common.Componentry
 
             this.Service = service;
             this.Component = component;
-            this.Clock = container.Clock;
+            this.clock = container.Clock;
             this.logger = container.LoggerFactory.Create(service, this.Component);
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.logger);
@@ -69,7 +69,7 @@ namespace Nautilus.Common.Componentry
         /// </returns>
         protected ZonedDateTime TimeNow()
         {
-            return this.Clock.TimeNow();
+            return this.clock.TimeNow();
         }
 
         /// <summary>
