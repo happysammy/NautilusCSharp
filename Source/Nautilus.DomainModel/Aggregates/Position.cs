@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Aggregates
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

@@ -11,6 +11,7 @@ namespace Nautilus.BlackBox.Core.Build
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// A container to store and transport the factories which are used to instantiate the services

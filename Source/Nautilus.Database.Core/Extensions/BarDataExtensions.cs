@@ -12,8 +12,8 @@ namespace Nautilus.Database.Core.Extensions
     using System.Text;
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
 

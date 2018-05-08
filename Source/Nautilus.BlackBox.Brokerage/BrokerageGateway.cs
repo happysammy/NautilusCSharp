@@ -11,6 +11,7 @@ namespace Nautilus.BlackBox.Brokerage
     using System.Collections.Generic;
     using Akka.Actor;
     using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Core.Build;
@@ -19,7 +20,6 @@ namespace Nautilus.BlackBox.Brokerage
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;

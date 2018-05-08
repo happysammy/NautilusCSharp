@@ -10,9 +10,9 @@ namespace Nautilus.Database.Core.Orchestration
 {
     using System;
     using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using NodaTime;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Keys;
 
     /// <summary>

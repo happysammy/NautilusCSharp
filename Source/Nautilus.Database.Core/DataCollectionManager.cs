@@ -14,11 +14,11 @@ namespace Nautilus.Database.Core
     using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Collectors;
     using Nautilus.Database.Core.Integrity.Checkers;
     using Nautilus.Database.Core.Interfaces;

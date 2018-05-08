@@ -11,8 +11,8 @@ namespace Nautilus.DomainModel.Entities
     using System;
     using System.Runtime.Serialization;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

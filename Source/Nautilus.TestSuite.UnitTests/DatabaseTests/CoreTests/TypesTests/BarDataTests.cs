@@ -143,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
             var result = bar.ToString();
 
             // Assert
-            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000,1970-01-01T00:00:00.000", result);
+            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000,1970-01-01T00:00:00.000Z", result);
         }
 
         [Fact]

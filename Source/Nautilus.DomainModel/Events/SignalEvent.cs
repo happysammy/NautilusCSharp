@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel.Events
 {
     using System;
+    using NautechSystems.CSharp;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

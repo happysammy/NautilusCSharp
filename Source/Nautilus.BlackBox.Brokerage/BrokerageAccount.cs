@@ -9,10 +9,10 @@
 namespace Nautilus.BlackBox.Brokerage
 {
     using System;
+    using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

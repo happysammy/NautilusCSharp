@@ -10,13 +10,13 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core;
-    using Nautilus.Core.FiniteStateMachine;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.FiniteStateMachine;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

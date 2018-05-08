@@ -12,7 +12,6 @@ namespace Nautilus.DomainModel.Events
     using NautechSystems.CSharp;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

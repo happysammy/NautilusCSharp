@@ -13,17 +13,16 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// The <see cref="IServiceFactory"/> interface. An abstract factory which provides
-    /// <see cref="BlackBox"/> services.
+    /// An abstract factory which provides creation of a system service.
     /// </summary>
     public interface IServiceFactory
     {
         /// <summary>
-        /// Creates a <see cref="BlackBox"/> service and returns the <see cref="IActorRef"/> address
-        /// from the given inputs.
+        /// Creates a system service and returns the <see cref="IActorRef"/> address from the given
+        /// inputs.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         IActorRef Create(

@@ -10,7 +10,6 @@ namespace Nautilus.BlackBox.Risk
 {
     using Akka.Actor;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Enums;
@@ -35,7 +34,7 @@ namespace Nautilus.BlackBox.Risk
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public RiskService(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             BlackBoxService.Risk,

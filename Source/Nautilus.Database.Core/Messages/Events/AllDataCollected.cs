@@ -9,10 +9,10 @@
 namespace Nautilus.Database.Core.Messages.Events
 {
     using System;
+    using NautechSystems.CSharp;
     using NautechSystems.CSharp.Validation;
-    using NodaTime;
-    using Nautilus.Core;
     using Nautilus.Database.Core.Types;
+    using NodaTime;
 
     public class AllDataCollected : Event
     {

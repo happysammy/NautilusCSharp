@@ -12,9 +12,9 @@ namespace Nautilus.Database.Core.Types
     using System.Globalization;
     using System.Text;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using NodaTime;
-    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// Represents a financial market trade bar.

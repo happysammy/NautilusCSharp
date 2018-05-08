@@ -288,7 +288,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Act
             var result = LogFormatter.ToOutput(riskModel);
             var expected =
-                $"RiskModel: GlobalMaxRiskExposure=10%, GlobalMaxRiskPerTrade=1%, PositionSizeHardLimits=True, EventCount=1, LastEventTime=1970-01-01T00:00:01.000";
+                $"RiskModel: GlobalMaxRiskExposure=10%, GlobalMaxRiskPerTrade=1%, PositionSizeHardLimits=True, EventCount=1, LastEventTime=1970-01-01T00:00:01.000Z";
 
             // Assert
             Assert.Equal(expected, result);

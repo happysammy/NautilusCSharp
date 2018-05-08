@@ -10,7 +10,6 @@ namespace Nautilus.Database.Core.Collectors
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Messages;
     using Nautilus.Database.Core.Messages.Commands;
@@ -18,6 +17,7 @@ namespace Nautilus.Database.Core.Collectors
     using Nautilus.Database.Core.Orchestration;
     using System;
     using NautechSystems.CSharp;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Messages.Queries;

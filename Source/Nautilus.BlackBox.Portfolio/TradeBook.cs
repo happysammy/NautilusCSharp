@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -37,7 +38,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public TradeBook(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             Symbol symbol)
             : base(
             BlackBoxService.Portfolio,

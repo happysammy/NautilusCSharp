@@ -9,10 +9,10 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using NautechSystems.CSharp.Extensions;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Orchestration;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 

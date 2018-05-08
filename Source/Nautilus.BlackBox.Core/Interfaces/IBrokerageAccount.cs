@@ -8,8 +8,8 @@
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
+    using NautechSystems.CSharp;
     using NautechSystems.CSharp.CQS;
-    using Nautilus.Core;
 
     /// <summary>
     /// The <see cref="IBrokerageAccount"/> interface. Represents a generic brokerage account.

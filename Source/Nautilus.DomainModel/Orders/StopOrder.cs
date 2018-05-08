@@ -12,11 +12,10 @@ namespace Nautilus.DomainModel.Orders
     using NautechSystems.CSharp.CQS;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
-    using Nautilus.Core;
-    using Nautilus.Core.FiniteStateMachine;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.FiniteStateMachine;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

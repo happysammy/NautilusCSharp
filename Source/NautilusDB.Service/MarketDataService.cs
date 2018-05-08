@@ -10,20 +10,21 @@ namespace NautilusDB.Service
 {
     using System;
     using Akka.Actor;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using NautilusDB.Service.Requests;
     using NautilusDB.Service.Responses;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
+    using StringExtensions = NautechSystems.CSharp.Extensions.StringExtensions;
 
     /// <summary>
     /// The service which processes incoming <see cref="MarketDataRequest"/>(s).
     /// </summary>
-    public class MarketDataService : ServiceStack.Service
+    public class MarketDataService : Service
     {
         private readonly IZonedClock clock;
         private readonly ILoggingAdapter logger;
@@ -46,12 +47,12 @@ namespace NautilusDB.Service
         public object Get(MarketDataRequest request)
         {
             var requestBarSpec = new BarSpecification(
-                request.BarQuoteType.ToEnum<BarQuoteType>(),
-                request.BarResolution.ToEnum<BarResolution>(),
+                StringExtensions.ToEnum<BarQuoteType>(request.BarQuoteType),
+                StringExtensions.ToEnum<BarResolution>(request.BarResolution),
                 request.BerPeriod);
 
             var queryMessage = new MarketDataQueryRequest(
-                new Symbol(request.Symbol, request.Exchange.ToEnum<Exchange>()),
+                new Symbol(request.Symbol, StringExtensions.ToEnum<Exchange>(request.Exchange)),
                 requestBarSpec,
                 request.FromDateTime.ToZonedDateTimeFromIso(),
                 request.ToDateTime.ToZonedDateTimeFromIso(),

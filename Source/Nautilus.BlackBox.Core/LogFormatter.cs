@@ -14,9 +14,9 @@ namespace Nautilus.BlackBox.Core
     using System.Globalization;
     using System.Linq;
     using NautechSystems.CSharp.Annotations;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;

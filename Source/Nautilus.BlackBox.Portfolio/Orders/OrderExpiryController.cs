@@ -11,13 +11,12 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -39,7 +38,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public OrderExpiryController(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(

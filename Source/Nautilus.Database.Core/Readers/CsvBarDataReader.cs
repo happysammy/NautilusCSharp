@@ -13,12 +13,12 @@ namespace Nautilus.Database.Core.Readers
     using System.IO;
     using System.Linq;
     using CsvHelper;
-    using Nautilus.Core.Extensions;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
     using NautechSystems.CSharp.Annotations;
     using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.DomainModel.Enums;
     using NodaTime;

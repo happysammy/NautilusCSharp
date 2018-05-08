@@ -11,10 +11,10 @@ namespace Nautilus.Backtest
     using System;
     using System.Threading;
     using NautechSystems.CSharp.CQS;
+    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// The mock system logger.

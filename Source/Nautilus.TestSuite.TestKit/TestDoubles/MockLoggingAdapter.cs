@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp.Extensions;
+    using Akka.Util.Internal;
     using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
 
