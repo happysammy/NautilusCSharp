@@ -7,7 +7,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <NoWarn>1591;1701;1702;1705</NoWarn>
+    <NoWarn>1591;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Akka.TestKit" Version="1.3.6" />
@@ -39,9 +39,5 @@
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
     <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DatabaseTests\CompressionTests" />
-    <Folder Include="DatabaseTests\CoreTests\CollectorsTests" />
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ namespace Nautilus.Common.Messaging
     {
         private readonly IZonedClock clock;
         private readonly ILogger log;
-        private readonly IActorRef MessageStore;
+        private readonly IActorRef messageStore;
         private readonly CommandHandler CommandHandler;
 
         private ISwitchboard switchboard;
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
 
             this.clock = container.Clock;
             this.log = container.LoggerFactory.Create(serviceContext, component);
-            this.MessageStore = messageStoreRef;
+            this.messageStore = messageStoreRef;
             this.CommandHandler = new CommandHandler(this.log);
 
             this.SetupMessageHandling();
@@ -103,7 +103,7 @@ namespace Nautilus.Common.Messaging
             this.CommandHandler.Execute(() =>
             {
                 this.messageCount++;
-                this.MessageStore.Tell(envelope);
+                this.messageStore.Tell(envelope);
 
                 foreach (var receiver in envelope.Receivers)
                 {

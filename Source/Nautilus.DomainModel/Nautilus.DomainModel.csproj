@@ -7,11 +7,8 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.DomainModel.xml</DocumentationFile>
-    <NoWarn>1591;1701;1702;1705</NoWarn>
+    <NoWarn>1591;</NoWarn>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
     <PackageReference Include="NautechSystems.CSharp" Version="1.8.0" />
