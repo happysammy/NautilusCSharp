@@ -10,7 +10,6 @@ namespace Nautilus.BlackBox.Data.Market
 {
     using System.Collections.Generic;
     using Akka.Actor;
-    using Akka.Util.Internal;
     using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
