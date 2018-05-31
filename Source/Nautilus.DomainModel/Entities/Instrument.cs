@@ -8,10 +8,7 @@
 
 namespace Nautilus.DomainModel.Entities
 {
-    using System;
-    using System.Runtime.Serialization;
     using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Extensions;
     using NautechSystems.CSharp.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -21,8 +18,7 @@ namespace Nautilus.DomainModel.Entities
     /// The immutable sealed <see cref="Instrument"/> class. Represents a financial market instrument.
     /// </summary>
     [Immutable]
-    [Serializable]
-    public sealed class Instrument : Entity<Instrument>, ISerializable
+    public sealed class Instrument : Entity<Instrument>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
@@ -100,37 +96,6 @@ namespace Nautilus.DomainModel.Entities
             this.MarginRequirement = marginRequirement;
             this.RolloverInterestBuy = rolloverInterestBuy;
             this.RolloverInterestSell = rolloverInterestSell;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Instrument"/> class.
-        /// </summary>
-        /// <param name="info">The serialization info.</param>
-        /// <param name="context">The streaming context.</param>
-        private Instrument(SerializationInfo info, StreamingContext context)
-            : base(
-                new EntityId(info.GetString("InstrumentId")),
-                (info.GetString("Timestamp").ToZonedDateTimeFromIso()))
-        {
-            Debug.NotNull(info, nameof(info));
-
-            this.Symbol = new Symbol(info.GetString("SymbolCode"), (Exchange)info.GetValue("SymbolExchange", typeof(Exchange)));
-            this.BrokerSymbol = new EntityId(info.GetString("BrokerSymbol"));
-            this.QuoteCurrency = (CurrencyCode)info.GetValue(nameof(this.QuoteCurrency), typeof(CurrencyCode));
-            this.SecurityType = (SecurityType)info.GetValue(nameof(this.SecurityType), typeof(SecurityType));
-            this.TickSize = info.GetDecimal(nameof(this.TickSize));
-            this.TickValue = info.GetDecimal(nameof(this.TickValue));
-            this.TargetDirectSpread = info.GetInt32(nameof(this.TargetDirectSpread));
-            this.ContractSize = info.GetInt32(nameof(this.ContractSize));
-            this.MinStopDistanceEntry = info.GetInt32(nameof(this.MinStopDistanceEntry));
-            this.MinLimitDistanceEntry = info.GetInt32(nameof(this.MinLimitDistanceEntry));
-            this.MinStopDistance = info.GetInt32(nameof(this.MinStopDistance));
-            this.MinLimitDistance = info.GetInt32(nameof(this.MinLimitDistance));
-            this.MinTradeSize = info.GetInt32(nameof(this.MinTradeSize));
-            this.MaxTradeSize = info.GetInt32(nameof(this.MaxTradeSize));
-            this.MarginRequirement = info.GetDecimal(nameof(this.MarginRequirement));
-            this.RolloverInterestBuy = info.GetDecimal(nameof(this.RolloverInterestBuy));
-            this.RolloverInterestSell = info.GetDecimal(nameof(this.RolloverInterestSell));
         }
 
         /// <summary>
@@ -227,38 +192,6 @@ namespace Nautilus.DomainModel.Entities
         /// The instruments creation timestamp.
         /// </summary>
         public ZonedDateTime Timestamp => this.EntityTimestamp;
-
-        /// <summary>
-        /// Gets the object data for serialization.
-        /// </summary>
-        /// <param name="info">The serialization information.</param>
-        /// <param name="context">The context.</param>
-        /// <exception cref="ValidationException">Throws if the info is null.</exception>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            Validate.NotNull(info, nameof(info));
-
-            info.AddValue("SymbolCode", this.Symbol.Code);
-            info.AddValue("SymbolExchange", this.Symbol.Exchange);
-            info.AddValue(nameof(this.InstrumentId), this.InstrumentId.Value);
-            info.AddValue(nameof(this.BrokerSymbol), this.BrokerSymbol.Value);
-            info.AddValue(nameof(this.QuoteCurrency), this.QuoteCurrency);
-            info.AddValue(nameof(this.SecurityType), this.SecurityType);
-            info.AddValue(nameof(this.TickSize), this.TickSize);
-            info.AddValue(nameof(this.TickValue), this.TickValue);
-            info.AddValue(nameof(this.TargetDirectSpread), this.TargetDirectSpread);
-            info.AddValue(nameof(this.ContractSize), this.ContractSize);
-            info.AddValue(nameof(this.MinStopDistanceEntry), this.MinStopDistanceEntry);
-            info.AddValue(nameof(this.MinLimitDistanceEntry), this.MinLimitDistanceEntry);
-            info.AddValue(nameof(this.MinStopDistance), this.MinStopDistance);
-            info.AddValue(nameof(this.MinLimitDistance), this.MinLimitDistance);
-            info.AddValue(nameof(this.MinTradeSize), this.MinTradeSize);
-            info.AddValue(nameof(this.MaxTradeSize), this.MaxTradeSize);
-            info.AddValue(nameof(this.MarginRequirement), this.MarginRequirement);
-            info.AddValue(nameof(this.RolloverInterestBuy), this.RolloverInterestBuy);
-            info.AddValue(nameof(this.RolloverInterestSell), this.RolloverInterestSell);
-            info.AddValue(nameof(this.Timestamp), this.Timestamp.ToIsoString());
-        }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the

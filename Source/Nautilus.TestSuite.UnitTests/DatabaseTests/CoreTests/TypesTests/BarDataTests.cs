@@ -202,7 +202,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
 
             // Assert
             Assert.Equal(typeof(byte[]), result.GetType());
-            Assert.Equal("0.80000,0.80010,0.79990,0.80005,500000", Encoding.Default.GetString(result));
+            Assert.Equal("0.80000,0.80010,0.79990,0.80005,500000", Encoding.UTF8.GetString(result));
         }
     }
 }
