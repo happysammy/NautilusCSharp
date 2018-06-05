@@ -37,7 +37,6 @@ namespace Nautilus.Core.Collections
 
             this.capacity = capacity;
 
-            // ReSharper disable once ExceptionNotDocumentedOptional (exception already documented).
             this.internalList = new List<T>(capacity);
         }
 

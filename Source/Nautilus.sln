@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Backtest", "Nautil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Indicators", "Nautilus.Indicators\Nautilus.Indicators.csproj", "{16F87023-5BAE-4EE0-BD37-89360E4C8993}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Core", "Nautilus.Core\Nautilus.Core.csproj", "{AEE3A061-B7B0-4492-BE1C-2C43631379E1}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Common", "Nautilus.Common\Nautilus.Common.csproj", "{FF13E1FD-FA68-4D83-B99F-97029E312B1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Fix", "Nautilus.Fix\Nautilus.Fix.csproj", "{C49CF207-29E8-4838-9634-A99EE3CC29B2}"
@@ -72,8 +74,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Core", "Nautilus.Core\Nautilus.Core.csproj", "{AEE3A061-B7B0-4492-BE1C-2C43631379E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
