@@ -11,7 +11,7 @@ namespace Nautilus.Database.Core
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;

@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Extensions;
     using Xunit;
     using Xunit.Abstractions;
     using Nautilus.Database.Core.Readers;

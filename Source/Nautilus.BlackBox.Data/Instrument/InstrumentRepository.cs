@@ -14,8 +14,8 @@ namespace Nautilus.BlackBox.Data.Instrument
     using System.Text;
     using System.Threading.Tasks;
     using Akka.Util.Internal;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;

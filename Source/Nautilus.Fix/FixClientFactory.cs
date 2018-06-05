@@ -1,6 +1,6 @@
 ﻿namespace Nautilus.Fix
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;

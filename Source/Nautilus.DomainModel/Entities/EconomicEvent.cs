@@ -8,9 +8,9 @@
 
 namespace Nautilus.DomainModel.Entities
 {
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.DomainModel.Enums;
 

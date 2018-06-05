@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The base class for all trading domain value objects.

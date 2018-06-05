@@ -11,7 +11,7 @@ namespace Nautilus.Database.Core.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Newtonsoft.Json.Linq;
     using NodaTime;
     using Nautilus.Common.Componentry;

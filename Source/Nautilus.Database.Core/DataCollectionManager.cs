@@ -14,8 +14,8 @@ namespace Nautilus.Database.Core
     using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -214,7 +214,7 @@ namespace Nautilus.Database.Core
                 this.Log.Debug($"Waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
 
-                if (dataStatusTask.IsCompletedSuccessfully)
+                if (dataStatusTask.IsCompleted)
                 {
                     this.Log.Debug($"Received a DataStatusResponse for {barSpec} and sending to collector");
 

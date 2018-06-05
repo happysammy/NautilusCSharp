@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

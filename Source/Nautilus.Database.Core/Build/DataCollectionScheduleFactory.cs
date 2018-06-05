@@ -8,8 +8,8 @@
 
 namespace Nautilus.Database.Core.Build
 {
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Newtonsoft.Json.Linq;
     using NodaTime;
     using Nautilus.Common.Interfaces;

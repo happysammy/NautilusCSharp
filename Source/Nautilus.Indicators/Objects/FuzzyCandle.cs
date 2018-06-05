@@ -7,7 +7,7 @@
 
 namespace Nautilus.Indicators.Objects
 {
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
     using Nautilus.Indicators.Enums;
 
     /// <summary>

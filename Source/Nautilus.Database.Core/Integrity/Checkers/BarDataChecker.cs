@@ -10,10 +10,10 @@ namespace Nautilus.Database.Core.Integrity.Checkers
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;

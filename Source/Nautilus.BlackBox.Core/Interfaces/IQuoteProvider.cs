@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 

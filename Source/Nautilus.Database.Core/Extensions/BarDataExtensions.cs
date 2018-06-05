@@ -10,10 +10,10 @@ namespace Nautilus.Database.Core.Extensions
 {
     using System;
     using System.Text;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -53,7 +53,7 @@ namespace Nautilus.Database.Core.Extensions
         {
             Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
 
-            var values = Encoding.Default
+            var values = Encoding.UTF8
                 .GetString(barBytes)
                 .Split(',');
 

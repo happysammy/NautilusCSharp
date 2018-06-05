@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NautechSystems.CSharp.CQS;
+using Nautilus.Core.CQS;
 
 namespace Nautilus.Database.Core.Interfaces
 {

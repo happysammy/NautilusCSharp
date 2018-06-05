@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Compression
 {
     using System;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Database.Core.Interfaces;
 
     /// <summary>

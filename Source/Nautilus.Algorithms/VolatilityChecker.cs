@@ -7,7 +7,7 @@
 
 namespace Nautilus.Algorithms
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The volatility checker.

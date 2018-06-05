@@ -16,10 +16,10 @@ namespace Nautilus.Database.Core.Readers
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 
@@ -34,7 +34,7 @@ namespace Nautilus.Database.Core.Readers
         /// </summary>
         /// <param name="symbolBarSpec">The symbol bar data.</param>
         /// <param name="dataProvider">The market data provider.</param>
-        /// <exception cref="NautechSystems.CSharp.Validation.ValidationException">Throws if the validation fails.</exception>
+        /// <exception cref="Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
             SymbolBarSpec symbolBarSpec,
             IBarDataProvider dataProvider)

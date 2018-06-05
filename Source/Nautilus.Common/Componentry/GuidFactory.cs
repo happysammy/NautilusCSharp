@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
     using Nautilus.Common.Interfaces;
 
     /// <summary>

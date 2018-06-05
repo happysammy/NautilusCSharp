@@ -8,7 +8,7 @@
 
 namespace Nautilus.BlackBox.Data.Market
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

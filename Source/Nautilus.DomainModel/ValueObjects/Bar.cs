@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

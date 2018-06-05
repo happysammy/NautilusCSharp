@@ -10,8 +10,8 @@ namespace Nautilus.BlackBox.Core.Build
 {
     using System;
     using System.Reflection;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Interfaces;
 
@@ -30,12 +30,12 @@ namespace Nautilus.BlackBox.Core.Build
             Validate.NotNull(logger, nameof(logger));
 
             logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
-            logger.Information(BlackBoxService.Core, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            logger.Information(BlackBoxService.Core, "NautilusBlackBox - Automated Algorithmic Trading Platform (version "); //Assembly.GetExecutingAssembly().GetName().Version + ")");
             logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
-            logger.Information(BlackBoxService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Information(BlackBoxService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Information(BlackBoxService.Core, $"{Environment.OSVersion}");
-            logger.Information(BlackBoxService.Core, $"Microsoft.NET Framework (version {Environment.Version})");
+//            logger.Information(BlackBoxService.Core, $"Is64BitOperatingSystem={Environment.}");
+//            logger.Information(BlackBoxService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
+//            logger.Information(BlackBoxService.Core, $"{Environment.OSVersion}");
+//            logger.Information(BlackBoxService.Core, $"Microsoft.NET Framework (version {Environment.Version})");
         }
     }
 }

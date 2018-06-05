@@ -9,7 +9,7 @@ namespace Nautilus.Indicators.Extensions
 {
     using System;
     using System.Linq;
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The immutable static <see cref="ArrayExtensions"/> class.

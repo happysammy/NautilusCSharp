@@ -9,15 +9,15 @@
 namespace Nautilus.Database.Core.Messages
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Messaging;
 
     [Immutable]
     public abstract class QueryMessage : Message
     {
-        /// <exception cref="T:NautechSystems.CSharp.Validation.ValidationException">Throws if the validation fails.</exception>
+        /// <exception cref="T:Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         protected QueryMessage(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

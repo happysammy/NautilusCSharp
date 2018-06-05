@@ -9,8 +9,8 @@ namespace Nautilus.Indicators
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Collections;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Collections;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Indicators.Base;
 

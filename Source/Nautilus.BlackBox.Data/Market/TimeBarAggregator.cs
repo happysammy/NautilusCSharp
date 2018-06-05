@@ -10,8 +10,8 @@ namespace Nautilus.BlackBox.Data.Market
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;

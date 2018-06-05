@@ -10,8 +10,8 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The immutable sealed <see cref="Quantity"/> class. Represents a none-negative quantity.

@@ -8,7 +8,7 @@
 
 namespace Nautilus.DomainModel.Orders
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

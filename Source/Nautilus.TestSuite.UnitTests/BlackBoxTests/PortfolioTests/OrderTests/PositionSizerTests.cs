@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.DomainModel;

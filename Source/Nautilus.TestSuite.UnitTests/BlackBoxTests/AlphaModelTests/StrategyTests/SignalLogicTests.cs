@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;

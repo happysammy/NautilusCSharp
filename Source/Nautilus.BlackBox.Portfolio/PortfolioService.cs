@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Enums;

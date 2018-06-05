@@ -10,8 +10,8 @@ namespace Nautilus.Database.Core.Keys
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     public static class DateKeyGenerator

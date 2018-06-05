@@ -8,7 +8,7 @@
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
 

@@ -1,6 +1,6 @@
 ﻿namespace Nautilus.Database.Core.Temp
 {
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;

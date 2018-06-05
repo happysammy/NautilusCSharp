@@ -7,7 +7,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
     using NodaTime;
 
     /// <summary>

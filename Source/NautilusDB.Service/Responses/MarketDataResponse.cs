@@ -8,7 +8,7 @@
 
 namespace NautilusDB.Service.Responses
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using ServiceStack;
     using Nautilus.Database.Core.Types;
 

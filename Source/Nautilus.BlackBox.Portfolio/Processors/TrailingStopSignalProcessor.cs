@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.Portfolio.Processors
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Core.Build;

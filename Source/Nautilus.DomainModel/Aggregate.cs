@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace Nautilus.BlackBox.Data
 {
     using System.Collections.Generic;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;

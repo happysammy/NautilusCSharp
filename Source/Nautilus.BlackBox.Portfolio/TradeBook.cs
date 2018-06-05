@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Portfolio
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;

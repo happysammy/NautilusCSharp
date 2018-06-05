@@ -8,7 +8,7 @@
 
 namespace Nautilus.Database.Core.Configuration
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
 
     public sealed class MarketDataProviderConfig
     {

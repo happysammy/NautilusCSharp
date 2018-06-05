@@ -10,8 +10,8 @@ namespace Nautilus.Indicators
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp.Collections;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Collections;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Indicators.Base;
     using Nautilus.Indicators.Objects;

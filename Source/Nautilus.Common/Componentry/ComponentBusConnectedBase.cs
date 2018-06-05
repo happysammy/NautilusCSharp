@@ -10,7 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;

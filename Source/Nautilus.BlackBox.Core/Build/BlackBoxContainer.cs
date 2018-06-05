@@ -8,8 +8,8 @@
 
 namespace Nautilus.BlackBox.Core.Build
 {
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;

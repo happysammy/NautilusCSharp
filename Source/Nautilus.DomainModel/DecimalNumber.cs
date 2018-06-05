@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The base class for all <see cref="ValueObject{T}"/>(s) based on a decimal number.

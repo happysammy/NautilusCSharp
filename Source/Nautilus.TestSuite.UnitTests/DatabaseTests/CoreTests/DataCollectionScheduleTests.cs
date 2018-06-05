@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Extensions;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;

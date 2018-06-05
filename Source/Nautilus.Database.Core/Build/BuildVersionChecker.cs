@@ -10,8 +10,8 @@ namespace Nautilus.Database.Core.Build
 {
     using System;
     using System.Reflection;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Enums;
 
@@ -28,12 +28,12 @@ namespace Nautilus.Database.Core.Build
 
             log.Information(DatabaseService.NautilusDatabase, "Running StartupVersionChecker...");
             log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
-            log.Information(DatabaseService.NautilusDatabase, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(DatabaseService.NautilusDatabase, "NautilusDB - Financial Market Database Service (version "); //+ Assembly.GetExecutingAssembly().GetName().Version + ")");
             log.Information(DatabaseService.NautilusDatabase, "Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
-            log.Information(DatabaseService.NautilusDatabase, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information(DatabaseService.NautilusDatabase, $"OS {Environment.OSVersion}");
+//            log.Information(DatabaseService.NautilusDatabase, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+//            log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");
+//            log.Information(DatabaseService.NautilusDatabase, $"OS {Environment.OSVersion}");
             log.Information(DatabaseService.NautilusDatabase, $".NET Core v{GetNetCoreVersion()}");
             log.Information(DatabaseService.NautilusDatabase, $"Akka.NET v1.3.5");
             log.Information(DatabaseService.NautilusDatabase, $"ServiceStack v5.0.2");

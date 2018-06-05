@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Moq;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;

@@ -16,9 +16,9 @@ namespace Nautilus.Database.Core.Collectors
     using Nautilus.Database.Core.Messages.Events;
     using Nautilus.Database.Core.Orchestration;
     using System;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.DomainModel.Factories;

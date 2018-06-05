@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents the concept of a starting <see cref="State"/>, which is then affected by an event

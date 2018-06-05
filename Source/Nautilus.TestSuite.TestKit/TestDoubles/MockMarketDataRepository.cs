@@ -1,6 +1,6 @@
 ﻿namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;

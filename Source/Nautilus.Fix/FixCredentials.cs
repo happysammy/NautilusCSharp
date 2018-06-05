@@ -8,7 +8,7 @@
 
 namespace Nautilus.Fix
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
 
     public class FixCredentials
     {

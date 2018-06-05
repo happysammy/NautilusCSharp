@@ -10,9 +10,9 @@ namespace Nautilus.Backtest
 {
     using System;
     using System.Threading;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core;
     using Nautilus.Common.Interfaces;
 

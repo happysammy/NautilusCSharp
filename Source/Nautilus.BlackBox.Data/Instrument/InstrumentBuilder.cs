@@ -10,7 +10,7 @@ namespace Nautilus.BlackBox.Data.Instrument
 {
     using System.Collections.Generic;
     using System.Globalization;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

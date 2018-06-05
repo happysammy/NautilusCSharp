@@ -9,9 +9,9 @@
 namespace Nautilus.Brokerage.FXCM
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The immutable static <see cref="FxcmTargetDirectSpreadProvider"/> class.

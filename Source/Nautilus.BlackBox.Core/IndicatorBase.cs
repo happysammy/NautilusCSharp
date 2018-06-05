@@ -9,9 +9,9 @@
 namespace Nautilus.BlackBox.Core
 {
     using System;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

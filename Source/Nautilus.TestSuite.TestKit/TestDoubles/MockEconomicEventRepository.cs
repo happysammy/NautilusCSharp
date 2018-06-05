@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
     public class MockEconomicEventRepository : IEconomicEventRepository<EconomicEvent>

@@ -10,7 +10,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
     using Akka.Actor;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

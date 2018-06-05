@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;

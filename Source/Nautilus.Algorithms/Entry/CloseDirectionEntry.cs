@@ -7,8 +7,8 @@
 
 namespace Nautilus.Algorithms.Entry
 {
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Algorithm;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;

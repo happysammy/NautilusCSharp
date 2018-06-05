@@ -10,7 +10,7 @@ namespace Nautilus.BlackBox.Portfolio
 {
     using System;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Portfolio.Orders;

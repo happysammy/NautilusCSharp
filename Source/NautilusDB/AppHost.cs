@@ -18,7 +18,7 @@ namespace NautilusDB
         /// Initializes a new instance of the <see cref="AppHost"/> class.
         /// </summary>
         public AppHost()
-            : base("NautilusDB", typeof(MarketDataService).Assembly)
+            : base("NautilusDB", typeof(MarketDataService).GetAssembly())
         {
         }
 

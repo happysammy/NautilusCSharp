@@ -9,12 +9,12 @@
 namespace NautilusDB.Service
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using NautilusDB.Service.Requests;
     using NautilusDB.Service.Responses;
     using ServiceStack;
     using System.Linq;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Extensions;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Core.Interfaces;
     using Nautilus.Database.Core.Types;

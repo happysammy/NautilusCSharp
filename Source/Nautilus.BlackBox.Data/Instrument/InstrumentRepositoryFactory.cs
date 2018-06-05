@@ -8,8 +8,8 @@
 
 namespace Nautilus.BlackBox.Data.Instrument
 {
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
 

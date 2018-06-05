@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
     using System;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 

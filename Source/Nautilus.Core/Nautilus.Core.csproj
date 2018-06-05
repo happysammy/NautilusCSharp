@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <AssemblyName>Nautilus.Core</AssemblyName>
+    <RootNamespace>Nautilus.Core</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Nautech Systems</Authors>
+    <Company>Nautech Systems Pty Ltd</Company>
+    <Description>A library to support C# development for Nautech Systems.</Description>
+    <Title>Common C# Library</Title>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/nautechsystems/Nautilus.Core</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/nautechsystems/Nautilus.Core/master/nautechsystems.ico</PackageIconUrl>
+    <RepositoryUrl>https://github.com/nautechsystems/Nautilus.Core</RepositoryUrl>
+    <PackageTags>validation functional cqs extensions</PackageTags>
+    <Copyright>Copyright © 2018 Nautech Systems Pty Ltd.</Copyright>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>Migrated to .NET Core.</PackageReleaseNotes>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Core.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU' ">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Nautilus.Core.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
+    <PackageReference Include="NodaTime" Version="2.3.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@ namespace Nautilus.Algorithms.ProfitTarget
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Algorithm;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;

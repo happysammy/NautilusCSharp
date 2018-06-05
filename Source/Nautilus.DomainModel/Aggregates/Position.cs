@@ -10,9 +10,9 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

@@ -10,7 +10,7 @@ namespace Nautilus.Database.Compression
 {
     using System.Text;
     using LZ4;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Database.Core.Interfaces;
 
     /// <summary>

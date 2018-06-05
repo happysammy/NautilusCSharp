@@ -8,8 +8,8 @@
 
 namespace Nautilus.DomainModel.Orders
 {
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

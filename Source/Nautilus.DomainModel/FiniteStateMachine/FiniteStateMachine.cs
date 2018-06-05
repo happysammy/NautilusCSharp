@@ -11,9 +11,9 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents a simple generic finite state machine comprising of a state transition look-up

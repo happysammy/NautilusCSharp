@@ -9,8 +9,8 @@
 namespace Nautilus.Database.Core.Types
 {
     using System.Linq;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

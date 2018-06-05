@@ -8,7 +8,7 @@
 
 namespace Nautilus.Common.MessageStore
 {
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Represents a report containing summarized messaging diagnostics of a system run.

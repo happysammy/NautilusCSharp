@@ -10,8 +10,8 @@ namespace NautilusDB.Service
 {
     using System;
     using Akka.Actor;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using NautilusDB.Service.Requests;
     using NautilusDB.Service.Responses;
     using Nautilus.Common.Interfaces;
@@ -19,7 +19,7 @@ namespace NautilusDB.Service
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
-    using StringExtensions = NautechSystems.CSharp.Extensions.StringExtensions;
+    using StringExtensions = Nautilus.Core.Extensions.StringExtensions;
 
     /// <summary>
     /// The service which processes incoming <see cref="MarketDataRequest"/>(s).

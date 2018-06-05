@@ -9,7 +9,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;

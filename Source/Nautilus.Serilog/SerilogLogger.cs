@@ -30,7 +30,7 @@ namespace Nautilus.Serilog
         }
 
         public string AssemblyVersion =>
-            $"Serilog (version {Assembly.LoadFrom("Serilog.dll").GetName().Version})";
+            $"Serilog (version )";//{Assembly.LoadFrom("Serilog.dll").GetName().Version})";
 
         /// <summary>
         /// The verbose.

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 using System.Collections.Generic;
-using NautechSystems.CSharp.CQS;
+using Nautilus.Core.CQS;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Interfaces

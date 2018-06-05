@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
     using NodaTime;
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public IReadOnlyCollection<SymbolBarSpec> SymbolBarDatas => this.GetSymbolBarDatas();
 
-        public DirectoryInfo DataPath => new DirectoryInfo(TestKitConstants.TestDataDirectory);
+        public DirectoryInfo DataPath => new DirectoryInfo("");//TestKitConstants.TestDataDirectory);
 
         public string TimestampParsePattern => "yyyy.MM.dd HH:mm:ss";
 

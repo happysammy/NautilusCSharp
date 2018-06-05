@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
 
     /// <summary>
     /// The adapter interface for logging with the <see cref="ILoggingAdapter"/>.

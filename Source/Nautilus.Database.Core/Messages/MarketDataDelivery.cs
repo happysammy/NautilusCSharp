@@ -10,8 +10,8 @@ namespace Nautilus.Database.Core.Messages
 {
     using Nautilus.Common.Messaging;
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.Database.Core.Types;
     using NodaTime;
 

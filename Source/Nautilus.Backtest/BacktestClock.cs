@@ -8,7 +8,7 @@
 
 namespace Nautilus.Backtest
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using NodaTime;
 

@@ -9,8 +9,8 @@
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using Akka.Actor;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;

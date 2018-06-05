@@ -9,8 +9,8 @@
 namespace Nautilus.BlackBox.Brokerage
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The immutable static <see cref="OrderIdPostfixRemover"/> class. Removes the '_R#' from any

@@ -8,7 +8,7 @@
 
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>

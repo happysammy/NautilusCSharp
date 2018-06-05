@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.

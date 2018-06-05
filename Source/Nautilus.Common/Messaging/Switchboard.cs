@@ -12,8 +12,8 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Akka.Actor;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
 
     /// <summary>

@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
 

@@ -10,9 +10,9 @@ namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Orders;

@@ -11,9 +11,9 @@ namespace Nautilus.Database.Core.Types
     using System;
     using System.Globalization;
     using System.Text;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

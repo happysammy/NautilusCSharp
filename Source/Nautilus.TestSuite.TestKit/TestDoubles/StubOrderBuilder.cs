@@ -8,7 +8,7 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Orders;

@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Extensions;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// A <see cref="ValueObject{T}"/> which encapsulates a validated string.

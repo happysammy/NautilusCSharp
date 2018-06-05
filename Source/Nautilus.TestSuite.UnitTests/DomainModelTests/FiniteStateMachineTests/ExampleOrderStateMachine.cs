@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;

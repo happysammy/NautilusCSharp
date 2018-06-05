@@ -9,8 +9,8 @@
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
 

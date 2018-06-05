@@ -12,7 +12,7 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using System.Linq;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
 
     /// <summary>

@@ -10,8 +10,8 @@ namespace Nautilus.Database.Core
 {
     using System;
     using Akka.Actor;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;

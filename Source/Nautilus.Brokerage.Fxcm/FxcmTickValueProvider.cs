@@ -10,9 +10,9 @@ namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.CQS;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>

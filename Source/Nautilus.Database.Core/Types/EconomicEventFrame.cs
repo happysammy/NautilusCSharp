@@ -8,8 +8,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using NautechSystems.CSharp.Annotations;
-using NautechSystems.CSharp.Validation;
+using Nautilus.Core.Annotations;
+using Nautilus.Core.Validation;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Types

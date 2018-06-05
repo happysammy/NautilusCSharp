@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Core.Interfaces
 {
     using System.IO;
-    using NautechSystems.CSharp.CQS;
+    using Nautilus.Core.CQS;
     using NodaTime;
     using Nautilus.Database.Core.Types;
 

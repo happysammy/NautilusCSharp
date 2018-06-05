@@ -8,8 +8,8 @@
 
 namespace Nautilus.DomainModel
 {
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// A <see cref="ValueObject{T}"/> which represents a unique validated entity identifier.

@@ -7,8 +7,8 @@
 
 namespace Nautilus.Indicators.Base
 {
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

@@ -8,7 +8,7 @@
 namespace Nautilus.Indicators
 {
     using System;
-    using NautechSystems.CSharp.Extensions;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Indicators.Base;
     using NodaTime;

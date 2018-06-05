@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Risk
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.ValueObjects;

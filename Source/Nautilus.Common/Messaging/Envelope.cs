@@ -10,8 +10,8 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

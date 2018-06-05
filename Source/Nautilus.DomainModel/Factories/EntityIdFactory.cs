@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System.Globalization;
-    using NautechSystems.CSharp.Annotations;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.DomainModel;

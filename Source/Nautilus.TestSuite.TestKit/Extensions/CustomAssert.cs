@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
     using System.Linq;
     using System.Threading.Tasks;
     using DomainModel.Events;
-    using NautechSystems.CSharp;
+    using Nautilus.Core;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.TestSuite.TestKit.TestDoubles;

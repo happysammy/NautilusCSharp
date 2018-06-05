@@ -10,8 +10,8 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using System.Collections.Generic;
     using Akka.Util.Internal;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;

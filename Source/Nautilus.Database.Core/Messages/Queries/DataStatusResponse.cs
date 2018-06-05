@@ -7,8 +7,8 @@
 // -------------------------------------------------------------------------------------------------
 
 using System;
-using NautechSystems.CSharp.CQS;
-using NautechSystems.CSharp.Validation;
+using Nautilus.Core.CQS;
+using Nautilus.Core.Validation;
 using NodaTime;
 
 namespace Nautilus.Database.Core.Messages.Queries

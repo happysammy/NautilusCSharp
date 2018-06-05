@@ -12,8 +12,8 @@ namespace Nautilus.BlackBox.Data.Market
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using NautechSystems.CSharp;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

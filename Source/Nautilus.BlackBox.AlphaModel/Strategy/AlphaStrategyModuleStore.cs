@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>

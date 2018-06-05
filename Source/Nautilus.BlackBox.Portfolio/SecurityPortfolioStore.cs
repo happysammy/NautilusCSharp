@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Portfolio
     using System.Collections.Generic;
     using System.Linq;
     using Akka.Actor;
-    using NautechSystems.CSharp.Validation;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
