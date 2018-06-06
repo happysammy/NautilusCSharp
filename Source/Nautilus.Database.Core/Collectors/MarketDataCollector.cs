@@ -24,12 +24,22 @@ namespace Nautilus.Database.Core.Collectors
     using Nautilus.DomainModel.Factories;
     using NodaTime;
 
+    /// <summary>
+    /// Represents a market data collector.
+    /// </summary>
     public class MarketDataCollector : ActorComponentBase
     {
         private readonly IBarDataReader dataReader;
         private readonly DataCollectionSchedule collectionSchedule;
         private Option<ZonedDateTime?> lastPersistedBarTime;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarketDataCollector"/> class.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="dataReader">The bar data reader.</param>
+        /// <param name="collectionSchedule">The collection schedule.</param>
         public MarketDataCollector(
             DatabaseSetupContainer container,
             IMessagingAdapter messagingAdapter,
