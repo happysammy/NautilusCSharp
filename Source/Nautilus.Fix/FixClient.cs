@@ -43,7 +43,7 @@ namespace Nautilus.Fix
             Broker broker)
         : base(
             ServiceContext.FIX,
-            LabelFactory.Service(BlackBoxService.AlphaModel),
+            LabelFactory.Service(BlackBoxService.Brokerage),
             container,
             credentials)
         {
@@ -85,16 +85,25 @@ namespace Nautilus.Fix
             this.FixMessageRouter.InitializeBrokerageGateway(gateway);
         }
 
+        /// <summary>
+        /// Connects to the FIX session.
+        /// </summary>
         public void Connect()
         {
             this.ConnectFix();
         }
 
+        /// <summary>
+        /// Disconnects from the FIX session.
+        /// </summary>
         public void Disconnect()
         {
             this.DisconnectFix();
         }
 
+        /// <summary>
+        /// Initializes the FIX session. Performs actions on logon.
+        /// </summary>
         public void InitializeSession()
         {
             this.CollateralInquiry();

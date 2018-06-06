@@ -73,7 +73,7 @@ namespace Nautilus.Fix
         {
             var message = CollateralInquiryFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"CollateralInquiry + SubscribeCollateralReports...");
         }
@@ -85,7 +85,7 @@ namespace Nautilus.Fix
         {
             var message = TradingSessionStatusRequestFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"TradingSessionStatusRequest...");
         }
@@ -97,7 +97,7 @@ namespace Nautilus.Fix
         {
             var message = RequestForOpenPositionsFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"RequestForOpenPositions + SubscribePositionReports...");
         }
@@ -112,7 +112,7 @@ namespace Nautilus.Fix
         {
             var fxcmSymbol = FxcmSymbolMapper.GetFxcmSymbol(symbol.Code);
 
-            this.SendMessage(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
+            this.session.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
         }
@@ -122,7 +122,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.SendMessage(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
+            this.session.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
         }
@@ -137,7 +137,7 @@ namespace Nautilus.Fix
         {
             var fxcmSymbol = FxcmSymbolMapper.GetFxcmSymbol(symbol.Code).Value;
 
-            this.SendMessageMd(MarketDataRequestSubscriptionFactory.Create(fxcmSymbol, this.brokerageGateway.GetTimeNow()));
+            this.sessionMd.Send(MarketDataRequestSubscriptionFactory.Create(fxcmSymbol, this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"MarketDataRequest + SubscribeUpdates ({symbol})...");
         }
@@ -154,7 +154,7 @@ namespace Nautilus.Fix
                 elsOrder,
                 this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"Submitting ELS Order => {Broker.FXCM}");
         }
@@ -171,7 +171,7 @@ namespace Nautilus.Fix
                 elsOrder,
                 this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"Submitting ELS Order => {Broker.FXCM}");
         }
@@ -189,7 +189,7 @@ namespace Nautilus.Fix
                 orderModification.Value,
                 this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"{orderModification.Key.Symbol} Submitting OrderReplaceRequest: (ClOrdId={orderModification.Key.OrderId}, OrderId={orderModification.Key.BrokerOrderId}) => {Broker.FXCM}");
         }
@@ -204,7 +204,7 @@ namespace Nautilus.Fix
         {
             var message = OrderCancelRequestFactory.Create(order, this.brokerageGateway.GetTimeNow());
 
-            this.SendMessage(message);
+            this.session.Send(message);
 
             Console.WriteLine($"{order.Symbol} Submitting OrderCancelRequestFactory: (ClOrdId={order.OrderId}, OrderId={order.BrokerOrderId}) => {Broker.FXCM}");
         }
@@ -218,44 +218,6 @@ namespace Nautilus.Fix
         public void ClosePosition(Position position)
         {
 
-        }
-
-        /// <summary>
-        /// The send message.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        private void SendMessage(Message message)
-        {
-            if (this.session != null)
-            {
-                this.session.Send(message);
-            }
-            else
-            {
-                // This probably won't ever happen.
-                Console.WriteLine($"Error: Cannot send message (session not created)");
-            }
-        }
-
-        /// <summary>
-        /// The send message md.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        private void SendMessageMd(Message message)
-        {
-            if (this.sessionMd != null)
-            {
-                this.sessionMd.Send(message);
-            }
-            else
-            {
-                // This probably won't ever happen.
-                Console.WriteLine($"Cannot send message (session not created)");
-            }
         }
     }
 }
