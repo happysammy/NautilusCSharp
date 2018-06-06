@@ -90,16 +90,6 @@ namespace Nautilus.BlackBox
                 account,
                 serviceFactory);
 
-            // var forexConnect = new FxcmForexConnect();
-            // forexConnect.Connect();
-            // forexConnect.RequestHistoricalBars("AUD/USD", "Min", NautilusTrader.TimeNow() - TimePeriod.FromDays(1), NautilusTrader.TimeNow());
-
-            // Console.ReadLine();
-
-            // forexConnect.Disconnect();
-
-            // Console.ReadLine();
-
             Console.ReadLine();
 
             blackBox.ConnectToBrokerage();

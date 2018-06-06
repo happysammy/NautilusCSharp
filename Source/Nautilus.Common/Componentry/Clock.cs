@@ -24,7 +24,7 @@ namespace Nautilus.Common.Componentry
         /// Initializes a new instance of the <see cref="Clock"/> class.
         /// </summary>
         /// <param name="dateTimeZone">The date time zone.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        /// <exception cref="ValidationException">If the argument is null.</exception>
         public Clock(DateTimeZone dateTimeZone)
         {
             Validate.NotNull(dateTimeZone, nameof(dateTimeZone));

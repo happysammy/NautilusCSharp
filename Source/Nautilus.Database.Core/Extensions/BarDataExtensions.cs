@@ -35,11 +35,11 @@ namespace Nautilus.Database.Core.Extensions
             var values = barString.Split(',');
 
             return new BarData(
-                SafeConvert.ToDecimal(values[0]),
-                SafeConvert.ToDecimal(values[1]),
-                SafeConvert.ToDecimal(values[2]),
-                SafeConvert.ToDecimal(values[3]),
-                Convert.ToInt64(SafeConvert.ToDecimal(values[4])),
+                SafeConvert.ToDecimalOr(values[0], 0m),
+                SafeConvert.ToDecimalOr(values[1], 0m),
+                SafeConvert.ToDecimalOr(values[2], 0m),
+                SafeConvert.ToDecimalOr(values[3], 0m),
+                Convert.ToInt64(SafeConvert.ToDecimalOr(values[4], 0m)),
                 values[5].ToZonedDateTimeFromIso());
         }
 
@@ -58,11 +58,11 @@ namespace Nautilus.Database.Core.Extensions
                 .Split(',');
 
             return new BarData(
-                SafeConvert.ToDecimal(values[0]),
-                SafeConvert.ToDecimal(values[1]),
-                SafeConvert.ToDecimal(values[2]),
-                SafeConvert.ToDecimal(values[3]),
-                Convert.ToInt64(SafeConvert.ToDecimal(values[4])),
+                SafeConvert.ToDecimalOr(values[0], 0m),
+                SafeConvert.ToDecimalOr(values[1], 0m),
+                SafeConvert.ToDecimalOr(values[2], 0m),
+                SafeConvert.ToDecimalOr(values[3], 0m),
+                Convert.ToInt64(SafeConvert.ToDecimalOr(values[4], 0m)),
                 values[5].ToZonedDateTimeFromIso());
         }
     }

@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Core.Annotations;
+    using Core.Annotations;
 
     /// <summary>
     /// The base class for all trading domain value objects.
@@ -79,7 +79,9 @@ namespace Nautilus.DomainModel
         public override int GetHashCode()
         {
             return this.GetMembersForEqualityCheck()
-               .Aggregate(17, (current, obj) => (current * 31) + (obj == null ? 0 : obj.GetHashCode()));
+               .Aggregate(17, (current, obj) => (current * 31) + (obj == null
+                                                    ? 0
+                                                    : obj.GetHashCode()));
         }
 
         /// <summary>

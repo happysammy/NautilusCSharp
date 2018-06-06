@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            var result = SafeConvert.ToDecimal(toBeParsed);
+            var result = SafeConvert.ToDecimalOr(toBeParsed, 0m);
 
             // Assert
             Assert.Equal(expectedResult, result);
