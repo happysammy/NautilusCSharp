@@ -9,7 +9,6 @@
 namespace Nautilus.Serilog
 {
     using System;
-    using System.Reflection;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using global::Serilog;

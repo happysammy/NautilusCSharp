@@ -8,11 +8,6 @@
 
 namespace Nautilus.BlackBox.Core.Configuration
 {
-    using System;
-    using System.Collections.Specialized;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
-
 //    /// <summary>
 //    /// The static <see cref="ConfigReader"/> class. Returns the configuration value of a given
 //    /// <see cref="NameValueCollection"/>.

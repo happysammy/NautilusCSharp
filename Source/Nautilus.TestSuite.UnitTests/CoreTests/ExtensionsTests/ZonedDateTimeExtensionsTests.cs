@@ -7,8 +7,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using Nautilus.TestSuite.TestKit.TestDoubles;
-
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Text;

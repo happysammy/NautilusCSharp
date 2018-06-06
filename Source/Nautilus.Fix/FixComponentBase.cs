@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System;
-    using System.Net;
     using System.Threading.Tasks;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;

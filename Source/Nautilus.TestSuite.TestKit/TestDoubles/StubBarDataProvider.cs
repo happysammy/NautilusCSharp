@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public IReadOnlyCollection<SymbolBarSpec> SymbolBarDatas => this.GetSymbolBarDatas();
 
-        public DirectoryInfo DataPath => new DirectoryInfo("");//TestKitConstants.TestDataDirectory);
+        public DirectoryInfo DataPath => new DirectoryInfo(TestKitConstants.TestDataDirectory);
 
         public string TimestampParsePattern => "yyyy.MM.dd HH:mm:ss";
 

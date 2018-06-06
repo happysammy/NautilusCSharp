@@ -11,12 +11,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\servicestack.text\5.1.0\lib\netstandard2.0\ServiceStack.Text.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
-  </ItemGroup>
 </Project>

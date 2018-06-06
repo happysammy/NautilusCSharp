@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.TestKit
         /// <summary>
         /// Gets the full path for the test data (/Source/TestData)
         /// </summary>
-//        public static string TestDataDirectory => Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "TestData//";
+        public static string TestDataDirectory => Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "TestData//";
 
         /// <summary>
         /// Gets the test <see cref="Guid"/> for this run of tests.
@@ -35,10 +35,10 @@ namespace Nautilus.TestSuite.TestKit
         /// </summary>
         public static void RegisterServiceStackLicense()
         {
-//            var nautilusDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "NautilusDB//";
-//            var config = JObject.Parse(File.ReadAllText(nautilusDirectory + "config.json"));
+            var nautilusDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "NautilusDB//";
+            var config = JObject.Parse(File.ReadAllText(nautilusDirectory + "config.json"));
 
- //           Licensing.RegisterLicense((string)config["serviceStack"]["licenseKey"]);
+            Licensing.RegisterLicense((string)config["serviceStack"]["licenseKey"]);
         }
     }
 }

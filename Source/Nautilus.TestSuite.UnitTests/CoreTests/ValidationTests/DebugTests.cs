@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         internal void NotDefault_WithNotDefaultStruct_DoesNothing()
         {
             // Arrange
-            var obj = new TimeSpan();
+            var obj = new TimeSpan(0, 0, 1);
 
             // Act
             // Assert

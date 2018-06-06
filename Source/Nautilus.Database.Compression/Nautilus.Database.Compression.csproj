@@ -12,7 +12,6 @@
     <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
     <PackageReference Include="lz4net" Version="1.0.15.93" />
   </ItemGroup>
 </Project>

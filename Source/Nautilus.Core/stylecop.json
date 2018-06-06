@@ -3,7 +3,7 @@
   "settings": {
     "documentationRules": {
       "companyName": "Nautech Systems Pty Ltd",
-      "copyrightText": "  Copyright (C) 2015-2018 {companyName}. All rights reserved.\n  The use of this source code is governed by the Apache 2.0 license\n  as found in the LICENSE.txt file.\n  https://github.com/nautechsystems/Nautilus.Core",
+      "copyrightText": "  Copyright (C) 2015-2018 {companyName}. All rights reserved.\n  The use of this source code is governed by the license as found in the LICENSE.txt file.\n  http://www.nautechsystems.net",
       "xmlHeader": true,
       "fileNamingConvention": "stylecop"
     },
