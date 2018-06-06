@@ -39,12 +39,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get security request result.
         /// </summary>
-        /// <param name="result">
-        /// The result.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        /// <param name="result">The result.</param>
+        /// <returns>A <see cref="string"/>.</returns>
         public static string GetSecurityRequestResult(SecurityRequestResult result)
         {
             return SecurityRequestResults.ContainsKey(result.ToString()) ? SecurityRequestResults[result.ToString()] : "security request result unknown";
@@ -65,12 +61,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get cancel reject reason string.
         /// </summary>
-        /// <param name="rejectCode">
-        /// The reject code.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        /// <param name="rejectCode">The reject code.</param>
+        /// <returns>A <see cref="string"/>.</returns>
         public static string GetCancelRejectReasonString(string rejectCode)
         {
             return CxlRejReasonStrings.ContainsKey(rejectCode) ? CxlRejReasonStrings[rejectCode] : CxlRejReasonStrings["99"];
@@ -85,12 +77,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// Returns the cancel reject response to.
         /// </summary>
-        /// <param name="response">
-        /// The response.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        /// <param name="response">The response.</param>
+        /// <returns>A <see cref="string"/>.</returns>
         public static string GetCxlRejResponseTo(CxlRejResponseTo response)
         {
             return CxlRejResponse.ContainsKey(response.ToString()) ? CxlRejResponse[response.ToString()] : string.Empty;
@@ -122,12 +110,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get fix time in force.
         /// </summary>
-        /// <param name="timeInForce">
-        /// The time in force.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TimeInForce"/>.
-        /// </returns>
+        /// <param name="timeInForce">The time in force.</param>
+        /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static QuickFix.Fields.TimeInForce GetFixTimeInForce(TimeInForce timeInForce)
         {
             return TimeInForceIndex.ContainsKey(timeInForce) ? TimeInForceIndex[timeInForce] : null;
@@ -136,12 +120,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get nautilus time in force.
         /// </summary>
-        /// <param name="timeInForce">
-        /// The time in force.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TimeInForce"/>.
-        /// </returns>
+        /// <param name="timeInForce">The time in force.</param>
+        /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static TimeInForce GetNautilusTimeInForce(string timeInForce)
         {
             return TimeInForceStringIndex.ContainsKey(timeInForce) ? TimeInForceStringIndex[timeInForce] : TimeInForce.Unknown;
@@ -150,12 +130,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get security type.
         /// </summary>
-        /// <param name="type">
-        /// The type.
-        /// </param>
-        /// <returns>
-        /// The <see cref="SecurityType"/>.
-        /// </returns>
+        /// <param name="type">The type.</param>
+        /// <returns>A <see cref="SecurityType"/>.</returns>
         public static SecurityType GetSecurityType(string type)
         {
             // TODO
@@ -170,12 +146,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get nautilus order side.
         /// </summary>
-        /// <param name="side">
-        /// The side.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderSide"/>.
-        /// </returns>
+        /// <param name="side">The side.</param>
+        /// <returns>The <see cref="OrderSide"/>.</returns>
         public static OrderSide GetNautilusOrderSide(string side)
         {
             if (side == Side.BUY.ToString())
@@ -194,12 +166,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get fix order side.
         /// </summary>
-        /// <param name="orderSide">
-        /// The order side.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Side"/>.
-        /// </returns>
+        /// <param name="orderSide">The order side.</param>
+        /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetFixOrderSide(OrderSide orderSide)
         {
             if (orderSide == OrderSide.Buy)
@@ -213,12 +181,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get opposite fix order side.
         /// </summary>
-        /// <param name="orderSide">
-        /// The order side.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Side"/>.
-        /// </returns>
+        /// <param name="orderSide">The order side.</param>
+        /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetOppositeFixOrderSide(OrderSide orderSide)
         {
             if (orderSide == OrderSide.Buy)
@@ -232,12 +196,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get nautilus order type.
         /// </summary>
-        /// <param name="fixType">
-        /// The fix type.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderType"/>.
-        /// </returns>
+        /// <param name="fixType">The fix type.</param>
+        /// <returns>The <see cref="OrderType"/>.</returns>
         public static OrderType GetNautilusOrderType(string fixType)
         {
             if (fixType == OrdType.MARKET.ToString())
@@ -271,12 +231,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get fix order type.
         /// </summary>
-        /// <param name="orderType">
-        /// The order type.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrdType"/>.
-        /// </returns>
+        /// <param name="orderType">The order type.</param>
+        /// <returns>The <see cref="OrdType"/>.</returns>
         public static OrdType GetFixOrderType(OrderType orderType)
         {
             if (orderType == OrderType.Market)
@@ -310,12 +266,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get fix order status.
         /// </summary>
-        /// <param name="orderStatus">
-        /// The order status.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        /// <param name="orderStatus">The order status.</param>
+        /// <returns>A <see cref="string"/>.</returns>
         public static string GetFixOrderStatus(string orderStatus)
         {
             if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
@@ -394,12 +346,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get fxcm order status.
         /// </summary>
-        /// <param name="orderStatus">
-        /// The order status.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        /// <param name="orderStatus">The order status.</param>
+        /// <returns>A <see cref="string"/>.</returns>
         public static string GetFxcmOrderStatus(string orderStatus)
         {
             if (orderStatus == "W")
@@ -463,18 +411,10 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get order price.
         /// </summary>
-        /// <param name="orderType">
-        /// The order type.
-        /// </param>
-        /// <param name="stopPrice">
-        /// The stop price.
-        /// </param>
-        /// <param name="limitPrice">
-        /// The limit price.
-        /// </param>
-        /// <returns>
-        /// The <see cref="decimal"/>.
-        /// </returns>
+        /// <param name="orderType">The order type.</param>
+        /// <param name="stopPrice">The stop price.</param>
+        /// <param name="limitPrice">The limit price.</param>
+        /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal GetOrderPrice(OrderType orderType, decimal stopPrice, decimal limitPrice)
         {
             if (orderType == OrderType.StopMarket)
@@ -499,24 +439,16 @@ namespace Nautilus.Fix
         /// <summary>
         /// The get date time from market data string.
         /// </summary>
-        /// <param name="dateTime">
-        /// The date time.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ZonedDateTime"/>.
-        /// </returns>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>The <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime GetZonedDateTimeUtcFromMarketDataString(string dateTime) =>
             MarketDataParsePattern.Parse(dateTime).Value;
 
         /// <summary>
         /// The get date time from execution string.
         /// </summary>
-        /// <param name="dateTime">
-        /// The date time.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ZonedDateTime"/>.
-        /// </returns>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public static ZonedDateTime GetZonedDateTimeUtcFromExecutionReportString(string dateTime) =>
             ExecutionReportParsePattern.Parse(dateTime).Value;
     }

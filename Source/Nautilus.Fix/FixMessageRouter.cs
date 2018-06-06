@@ -26,15 +26,13 @@ namespace Nautilus.Fix
     public class FixMessageRouter
     {
         private IBrokerageGateway brokerageGateway;
-        private Session session;
-        private Session sessionMd;
+        private Session fixSession;
+        private Session fixSessionMd;
 
         /// <summary>
         /// The initialize brokerage gateway.
         /// </summary>
-        /// <param name="gateway">
-        /// The gateway.
-        /// </param>
+        /// <param name="gateway">The brokerage gateway.</param>
         public void InitializeBrokerageGateway(IBrokerageGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
@@ -43,49 +41,44 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The connect session.
+        /// Connects the FIX session.
         /// </summary>
-        /// <param name="session">
-        /// The session.
-        /// </param>
+        /// <param name="session">The FIX session.</param>
         public void ConnectSession(Session session)
         {
-            // TODO?
-            this.session = session;
+            this.fixSession = session;
         }
 
         /// <summary>
-        /// The connect session md.
+        /// Connects the FIX session md.
         /// </summary>
-        /// <param name="sessionMd">
-        /// The session md.
+        /// <param name="sessionMd">The FIX session md.
         /// </param>
         public void ConnectSessionMd(Session sessionMd)
         {
-            // TODO?
-            this.sessionMd = sessionMd;
+            this.fixSessionMd = sessionMd;
         }
 
         /// <summary>
-        /// The collateral inquiry.
+        /// Sends a new collateral inquiry FIX message.
         /// </summary>
         public void CollateralInquiry()
         {
             var message = CollateralInquiryFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"CollateralInquiry + SubscribeCollateralReports...");
         }
 
         /// <summary>
-        /// The trading session status.
+        /// Send a new trading session status FIX message.
         /// </summary>
         public void TradingSessionStatus()
         {
             var message = TradingSessionStatusRequestFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"TradingSessionStatusRequest...");
         }
@@ -97,13 +90,13 @@ namespace Nautilus.Fix
         {
             var message = RequestForOpenPositionsFactory.Create(this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"RequestForOpenPositions + SubscribePositionReports...");
         }
 
         /// <summary>
-        /// The update instrument subscribe.
+        /// Updates the instrument from the given symbol via a security status request FIX message.
         /// </summary>
         /// <param name="symbol">
         /// The symbol.
@@ -112,76 +105,68 @@ namespace Nautilus.Fix
         {
             var fxcmSymbol = FxcmSymbolMapper.GetFxcmSymbol(symbol.Code);
 
-            this.session.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
+            this.fixSession.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
         }
 
         /// <summary>
-        /// The update instruments subscribe all.
+        /// Updates all instruments via a security status request FIX message.
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.session.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
+            this.fixSession.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
         }
 
         /// <summary>
-        /// The market data request subscribe.
+        /// Subscribes to market data for the given symbol.
         /// </summary>
-        /// <param name="symbol">
-        /// The symbol.
-        /// </param>
+        /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
             var fxcmSymbol = FxcmSymbolMapper.GetFxcmSymbol(symbol.Code).Value;
 
-            this.sessionMd.Send(MarketDataRequestSubscriptionFactory.Create(fxcmSymbol, this.brokerageGateway.GetTimeNow()));
+            this.fixSessionMd.Send(MarketDataRequestSubscriptionFactory.Create(fxcmSymbol, this.brokerageGateway.GetTimeNow()));
 
             Console.WriteLine($"MarketDataRequest + SubscribeUpdates ({symbol})...");
         }
 
         /// <summary>
-        /// The submit entry limit stop order.
+        /// Submits an entry limit stop order.
         /// </summary>
-        /// <param name="elsOrder">
-        /// The ELS order.
-        /// </param>
+        /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryLimitStopOrder(AtomicOrder elsOrder)
         {
             var message = NewOrderListEntryLimitStopFactory.Create(
                 elsOrder,
                 this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"Submitting ELS Order => {Broker.FXCM}");
         }
 
         /// <summary>
-        /// The submit entry stop order.
+        /// Submits an entry stop order.
         /// </summary>
-        /// <param name="elsOrder">
-        /// The ELS order.
-        /// </param>
+        /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryStopOrder(AtomicOrder elsOrder)
         {
             var message = NewOrderListEntryStopFactory.Create(
                 elsOrder,
                 this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"Submitting ELS Order => {Broker.FXCM}");
         }
 
         /// <summary>
-        /// The modify stop-loss order.
+        /// Submits a modify stop-loss order.
         /// </summary>
-        /// <param name="orderModification">
-        /// The order modification.
-        /// </param>
+        /// <param name="orderModification">The order modification.</param>
         public void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification)
         {
             var message = OrderCancelReplaceRequestFactory.Create(
@@ -189,31 +174,28 @@ namespace Nautilus.Fix
                 orderModification.Value,
                 this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"{orderModification.Key.Symbol} Submitting OrderReplaceRequest: (ClOrdId={orderModification.Key.OrderId}, OrderId={orderModification.Key.BrokerOrderId}) => {Broker.FXCM}");
         }
 
         /// <summary>
-        /// The cancel order.
+        /// Submits a cancel order.
         /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
+        /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
             var message = OrderCancelRequestFactory.Create(order, this.brokerageGateway.GetTimeNow());
 
-            this.session.Send(message);
+            this.fixSession.Send(message);
 
             Console.WriteLine($"{order.Symbol} Submitting OrderCancelRequestFactory: (ClOrdId={order.OrderId}, OrderId={order.BrokerOrderId}) => {Broker.FXCM}");
         }
 
         /// <summary>
-        /// The close position.
+        /// Submits a request to close a position.
         /// </summary>
-        /// <param name="position">
-        /// The position.
+        /// <param name="position">The position to close.
         /// </param>
         public void ClosePosition(Position position)
         {
