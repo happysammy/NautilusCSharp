@@ -10,7 +10,7 @@
     <NoWarn>1591;1701;1702;1705</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
