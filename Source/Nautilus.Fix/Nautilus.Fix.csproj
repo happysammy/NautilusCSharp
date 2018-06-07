@@ -12,8 +12,6 @@
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
     <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="QuickFix.Net.NetStandard" Version="1.7.9" />
+    <ProjectReference Include="..\QuickFix\QuickFix.csproj" />
   </ItemGroup>
 </Project>
