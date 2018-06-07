@@ -13,6 +13,9 @@ namespace Nautilus.Database.Core.Interfaces
     using Nautilus.Database.Core.Types;
     using NodaTime;
 
+    /// <summary>
+    /// The market data repository interface.
+    /// </summary>
     public interface IMarketDataRepository
     {
         /// <summary>
@@ -39,20 +42,20 @@ namespace Nautilus.Database.Core.Interfaces
         /// <summary>
         /// Returns the result of the find bars query.
         /// </summary>
-        /// <param name="barSpec">The bar specification to find.</param>
+        /// <param name="symbolBarSpec">The bar specification to find.</param>
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>A query result of <see cref="MarketDataFrame"/>.</returns>
         QueryResult<MarketDataFrame> Find(
-            BarSpecification barSpec,
+            SymbolBarSpec symbolBarSpec,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime);
 
         /// <summary>
         /// Returns the result of the last bars timestamp of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="symbolBarSpec">The bar specification.</param>
         /// <returns>A query result of <see cref="ZonedDateTime"/>.</returns>
-        QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec);
+        QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec symbolBarSpec);
     }
 }

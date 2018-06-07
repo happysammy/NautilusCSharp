@@ -132,7 +132,7 @@ namespace Nautilus.Database.Core
             {
                 var result = BarDataChecker.CheckBars(
                     message.MarketData.SymbolBarSpec,
-                    message.MarketData.BarsData);
+                    message.MarketData.Bars);
 
                 if (result.IsSuccess)
                 {

@@ -58,6 +58,36 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Bar"/> class.
+        /// </summary>
+        /// <param name="open">The open price.</param>
+        /// <param name="high">The high price.</param>
+        /// <param name="low">The low price.</param>
+        /// <param name="close">The close price.</param>
+        /// <param name="volume">The volume.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
+        /// struct argument is the default value.</exception>
+        public Bar(
+            decimal open,
+            decimal high,
+            decimal low,
+            decimal close,
+            int volume,
+            ZonedDateTime timestamp)
+        {
+            Validate.NotNull(volume, nameof(volume));
+            Validate.NotDefault(timestamp, nameof(timestamp));
+
+            this.Open = Price.Create(open, open.GetDecimalPlaces());
+            this.High = Price.Create(high, open.GetDecimalPlaces());;
+            this.Low = Price.Create(low, open.GetDecimalPlaces());;
+            this.Close = Price.Create(close, open.GetDecimalPlaces());;
+            this.Volume = Quantity.Create(volume);
+            this.Timestamp = timestamp;
+        }
+
+        /// <summary>
         /// Gets the bars open <see cref="Price"/>.
         /// </summary>
         public Price Open { get; }

@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
 
 
             // Assert
-            Assert.Equal(7200, result.Value.BarsData.Length);
+            Assert.Equal(7200, result.Value.Bars.Length);
         }
 
         [Fact]

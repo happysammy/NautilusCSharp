@@ -96,7 +96,7 @@ namespace Nautilus.Database.Core
             Debug.NotNull(sender, nameof(sender));
 
             var marketDataQuery = this.marketDataRepository.Find(
-                message.BarSpecification,
+                new SymbolBarSpec(message.Symbol, message.BarSpecification),
                 message.FromDateTime,
                 message.ToDateTime);
 

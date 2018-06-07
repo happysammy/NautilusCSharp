@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -23,9 +22,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// </summary>
         /// <param name="offsetMinutes">The timestamp offset minutes.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
-        public static BarData Create(int offsetMinutes = 0)
+        public static Bar Create(int offsetMinutes = 0)
         {
-            return new BarData(
+            return new Bar(
                 1.00000m,
                 1.00000m,
                 1.00000m,
@@ -40,9 +39,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// </summary>
         /// <param name="offset">The timestamp offset.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
-        public static BarData Create(Duration offset)
+        public static Bar Create(Duration offset)
         {
-            return new BarData(
+            return new Bar(
                 1.00000m,
                 1.00000m,
                 1.00000m,

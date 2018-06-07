@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.WranglersTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using Xunit;
     using Nautilus.Database.Core.Wranglers;
@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.WranglersTests
             // Arrange
             var bar = StubBarData.Create();
 
-            var expectedBarList = new List<BarData> { bar, bar, bar };
+            var expectedBarList = new List<Bar> { bar, bar, bar };
             var barStringBuilder = new StringBuilder(3);
 
             barStringBuilder.Append(bar);

@@ -32,7 +32,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         /// <param name="barSpec">The bar specification to check.</param>
         /// <param name="bars">The bars to check.</param>
         /// <returns>A result and anomaly list of <see cref="string"/>(s).</returns>
-        public static QueryResult<List<string>> CheckBars(SymbolBarSpec barSpec, BarData[] bars)
+        public static QueryResult<List<string>> CheckBars(SymbolBarSpec barSpec, Bar[] bars)
         {
             Validate.NotNull(barSpec, nameof(barSpec));
             Validate.NotNull(bars, nameof(bars));
@@ -56,7 +56,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         [PerformanceOptimized]
         private static void CheckDuplicateBars(
             SymbolBarSpec barSpec,
-            BarData[] bars,
+            Bar[] bars,
             List<string> anomalyList)
         {
             // Don't refactor Length - 1.
@@ -74,7 +74,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         [PerformanceOptimized]
         private static void CheckBarsInOrder(
             SymbolBarSpec barSpec,
-            BarData[] bars,
+            Bar[] bars,
             List<string> anomalyList)
         {
             // Don't refactor Length - 1.
@@ -93,7 +93,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
         [PerformanceOptimized]
         private static void CheckBarsComplete(
             SymbolBarSpec barSpec,
-            BarData[] bars,
+            Bar[] bars,
             List<string> anomalyList)
         {
             // Don't refactor Length - 1.

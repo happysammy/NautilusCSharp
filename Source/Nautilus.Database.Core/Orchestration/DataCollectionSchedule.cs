@@ -16,7 +16,7 @@ namespace Nautilus.Database.Core.Orchestration
     using Nautilus.Database.Core.Keys;
 
     /// <summary>
-    /// A class to assist the scheduling of data collection.
+    /// Represents a schedule for data collection.
     /// </summary>
     public sealed class DataCollectionSchedule
     {
@@ -25,6 +25,15 @@ namespace Nautilus.Database.Core.Orchestration
         private readonly int collectionMinute;
         private readonly ZonedDateTime previousScheduledTime;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataCollectionSchedule"/> class.
+        /// </summary>
+        /// <param name="timeNow">The time now.</param>
+        /// <param name="collectionDay">The collection day.</param>
+        /// <param name="collectionHour">The collection hour.</param>
+        /// <param name="collectionMinute">The collection minute.</param>
+        /// <param name="intervalicCollection">The intervalic collection flag.</param>
+        /// <param name="intervalMinutes">The interval minutes.</param>
         public DataCollectionSchedule(
             ZonedDateTime timeNow,
             IsoDayOfWeek collectionDay,

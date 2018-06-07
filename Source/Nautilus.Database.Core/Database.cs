@@ -57,6 +57,9 @@ namespace Nautilus.Database.Core
                 this.TimeNow()));
         }
 
+        /// <summary>
+        /// Start the database.
+        /// </summary>
         public void Start()
         {
             this.Send(

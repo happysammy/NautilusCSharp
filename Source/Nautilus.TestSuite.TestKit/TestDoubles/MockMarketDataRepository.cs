@@ -23,7 +23,7 @@
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<MarketDataFrame> Find(BarSpecification barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public QueryResult<MarketDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
             throw new System.NotImplementedException();
         }

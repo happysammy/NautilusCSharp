@@ -11,6 +11,7 @@ namespace Nautilus.Database.Core.Types
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -23,16 +24,16 @@ namespace Nautilus.Database.Core.Types
         /// Initializes a new instance of the <see cref="MarketDataFrame"/> class.
         /// </summary>
         /// <param name="symbolBarSpec">The symbol bar data.</param>
-        /// <param name="barsData">The bars dictionary.</param>
+        /// <param name="bars">The bars dictionary.</param>
         /// <exception cref="ValidationException">Throws if the bar specification is the default
         /// value, or if the bars collection is null or empty.</exception>
-        public MarketDataFrame(SymbolBarSpec symbolBarSpec, BarData[] barsData)
+        public MarketDataFrame(SymbolBarSpec symbolBarSpec, Bar[] bars)
         {
             Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
-            Validate.CollectionNotNullOrEmpty(barsData, nameof(barsData));
+            Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
 
             this.SymbolBarSpec = symbolBarSpec;
-            this.BarsData = barsData;
+            this.Bars = bars;
         }
 
         /// <summary>
@@ -43,16 +44,16 @@ namespace Nautilus.Database.Core.Types
         /// <summary>
         /// Gets the market data frames bars.
         /// </summary>
-        public BarData[] BarsData { get; }
+        public Bar[] Bars { get; }
 
         /// <summary>
         /// Gets the market data frames start time.
         /// </summary>
-        public ZonedDateTime StartDateTime => this.BarsData.First().Timestamp;
+        public ZonedDateTime StartDateTime => this.Bars.First().Timestamp;
 
         /// <summary>
         /// Gets the market data frames end time.
         /// </summary>
-        public ZonedDateTime EndDateTime => this.BarsData.Last().Timestamp;
+        public ZonedDateTime EndDateTime => this.Bars.Last().Timestamp;
     }
 }

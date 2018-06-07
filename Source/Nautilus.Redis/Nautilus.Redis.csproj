@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ServiceStack" Version="5.1.0" />
+    <PackageReference Include="ServiceStack.Redis" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+  </ItemGroup>
+</Project>
