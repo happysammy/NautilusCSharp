@@ -22,6 +22,9 @@ namespace Nautilus.Fix
     using QuickFix.Transport;
     using Message = QuickFix.Message;
 
+    /// <summary>
+    /// The base class for all FIX protocol components.
+    /// </summary>
     public class FixComponentBase : MessageCracker, IApplication
     {
         private readonly Enum service;
