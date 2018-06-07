@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
         {
             // Fixture Setup
             this.output = output;
-            this.stubBarSpec = StubSymbolBarData.AUDUSD();
+            this.stubBarSpec = StubSymbolBarSpec.AUDUSD();
         }
 
         [Fact]

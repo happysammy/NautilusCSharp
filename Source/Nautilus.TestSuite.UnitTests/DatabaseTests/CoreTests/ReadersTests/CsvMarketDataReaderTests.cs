@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
         {
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
-                StubSymbolBarData.AUDUSD(),
+                StubSymbolBarSpec.AUDUSD(),
                 new StubBarDataProvider(),
                 5);
 
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
         {
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
-                StubSymbolBarData.AUDUSD(),
+                StubSymbolBarSpec.AUDUSD(),
                 new StubBarDataProvider(),
                 5);
 
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
         {
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
-                StubSymbolBarData.AUDUSD(),
+                StubSymbolBarSpec.AUDUSD(),
                 new StubBarDataProvider(),
                 5);
 
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
         {
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
-                StubSymbolBarData.AUDUSD(),
+                StubSymbolBarSpec.AUDUSD(),
                 new StubBarDataProvider(),
                 5);
 
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
         {
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
-                StubSymbolBarData.AUDUSD(),
+                StubSymbolBarSpec.AUDUSD(),
                 new StubBarDataProvider(),
                 5);
 

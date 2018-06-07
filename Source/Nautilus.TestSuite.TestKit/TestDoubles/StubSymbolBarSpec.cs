@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
-    public static class StubSymbolBarData
+    public static class StubSymbolBarSpec
     {
         public static SymbolBarSpec AUDUSD()
         {
