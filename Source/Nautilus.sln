@@ -63,9 +63,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Serilog", "Nautilu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.RavenDB", "Nautilus.RavenDB\Nautilus.RavenDB.csproj", "{B00847F5-A99D-45BF-B908-C70B41685286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.Compression", "Nautilus.Database.Compression\Nautilus.Database.Compression.csproj", "{A42DE733-1C1B-4D1C-B98F-2AC163C980FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Compression", "Nautilus.Compression\Nautilus.Compression.csproj", "{A42DE733-1C1B-4D1C-B98F-2AC163C980FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database.Core", "Nautilus.Database.Core\Nautilus.Database.Core.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database", "Nautilus.Database\Nautilus.Database.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.DataProviders.Dukascopy", "Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj", "{0FAD5E5E-408D-47A7-91DF-03F53E3B9012}"
 EndProject

@@ -9,7 +9,7 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Database.FxStreet.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
   </ItemGroup>
 </Project>

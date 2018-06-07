@@ -15,7 +15,7 @@
     <PackageReference Include="ServiceStack" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Database.Compression\Nautilus.Database.Compression.csproj" />
+    <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />

@@ -26,8 +26,8 @@
     <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
     <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-    <ProjectReference Include="..\Nautilus.Database.Compression\Nautilus.Database.Compression.csproj" />
-    <ProjectReference Include="..\Nautilus.Database.Core\Nautilus.Database.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
+    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.FxStreet\Nautilus.DataProviders.FxStreet.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />

@@ -11,8 +11,13 @@
     <Folder Include="RedisTests" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Database.Compression\Nautilus.Database.Compression.csproj" />
+    <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
     <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\xunit.abstractions\2.0.1\lib\netstandard1.0\xunit.abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
