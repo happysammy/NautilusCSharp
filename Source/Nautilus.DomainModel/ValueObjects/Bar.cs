@@ -167,7 +167,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="barString">The bar string.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
-        public static Bar ToBarData(string barString)
+        public static Bar GetFromString(string barString)
         {
             Debug.NotNull(barString, nameof(barString));
 
@@ -189,7 +189,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="barBytes">The bar bytes array.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public static Bar ToBarData(byte[] barBytes)
+        public static Bar GetFromBytes(byte[] barBytes)
         {
             Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
 
