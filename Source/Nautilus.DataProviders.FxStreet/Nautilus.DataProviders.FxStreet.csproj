@@ -6,7 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Database.FxStreet.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Database.FxStreet.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />

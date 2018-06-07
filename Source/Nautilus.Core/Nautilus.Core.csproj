@@ -4,12 +4,12 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Core.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU' ">
-    <DocumentationFile>bin\Release\netcoreapp2.0\Nautilus.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.1\Nautilus.Core.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>

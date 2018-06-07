@@ -6,7 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Serilog.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Serilog.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.7.1" />

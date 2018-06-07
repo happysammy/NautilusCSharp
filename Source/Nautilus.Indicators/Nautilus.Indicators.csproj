@@ -6,7 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.Indicators.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Indicators.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />

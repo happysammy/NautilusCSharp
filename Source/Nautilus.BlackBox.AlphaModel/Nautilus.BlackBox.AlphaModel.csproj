@@ -6,7 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Nautilus.BlackBox.AlphaModel.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.BlackBox.AlphaModel.xml</DocumentationFile>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
   <ItemGroup>

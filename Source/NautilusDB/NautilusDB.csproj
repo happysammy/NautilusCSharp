@@ -6,8 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.0\NautilusDB.xml</DocumentationFile>
-    <NoWarn>1591;</NoWarn>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusDB.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.0" />

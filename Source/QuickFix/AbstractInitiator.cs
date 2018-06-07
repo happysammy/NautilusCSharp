@@ -243,8 +243,6 @@ namespace QuickFix
             }
         }
 
-        #region Virtual Methods
-
         /// <summary>
         /// Override this to configure additional implemenation-specific settings
         /// </summary>
@@ -263,10 +261,6 @@ namespace QuickFix
         [System.Obsolete("This method's intended purpose is unclear.  Don't use it.")]
         protected virtual void OnInitialize(SessionSettings settings)
         { }
-
-        #endregion
-
-        #region Abstract Methods
 
         /// <summary>
         /// Implemented to start connecting to targets.
@@ -288,10 +282,6 @@ namespace QuickFix
         /// <param name="sessionID"></param>
         /// <param name="settings"></param>
         protected abstract void DoConnect(SessionID sessionID, QuickFix.Dictionary settings);
-
-        #endregion
-
-        #region Protected Methods
 
         protected void Connect()
         {
@@ -368,9 +358,6 @@ namespace QuickFix
                 return disconnected_.Contains(sessionID);
             }
         }
-
-        #endregion
-
 
         /// <summary>
         /// Get the SessionIDs for the sessions managed by this initiator.
