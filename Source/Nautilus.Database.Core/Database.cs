@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core
+namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace Nautilus.Database.Core
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
-    using Nautilus.Database.Core.Enums;
-    using Nautilus.Database.Core.Messages;
+    using Nautilus.Database.Enums;
+    using Nautilus.Database.Messages;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>

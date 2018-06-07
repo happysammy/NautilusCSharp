@@ -6,15 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Readers
+namespace Nautilus.Database.Readers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using CsvHelper;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;

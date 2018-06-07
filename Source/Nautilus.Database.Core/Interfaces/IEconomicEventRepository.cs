@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Nautilus.Core.CQS;
 
-namespace Nautilus.Database.Core.Interfaces
+namespace Nautilus.Database.Interfaces
 {
     public interface IEconomicEventRepository<T>
     {

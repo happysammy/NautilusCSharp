@@ -11,7 +11,7 @@ using Nautilus.Core.Annotations;
 using Nautilus.Core.Validation;
 using NodaTime;
 
-namespace Nautilus.Database.Core.Messages.Queries
+namespace Nautilus.Database.Messages.Queries
 {
     using Nautilus.DomainModel.ValueObjects;
 

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Configuration
+namespace Nautilus.Database.Configuration
 {
     using Nautilus.Core.Validation;
 

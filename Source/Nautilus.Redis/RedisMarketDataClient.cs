@@ -16,10 +16,10 @@ namespace Nautilus.Redis
     using Nautilus.Core.Validation;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Types;
-    using Nautilus.Database.Core.Keys;
-    using Nautilus.Database.Core.Wranglers;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Keys;
+    using Nautilus.Database.Types;
+    using Nautilus.Database.Wranglers;
     using NodaTime;
     using ServiceStack.Redis;
 

@@ -6,14 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Build
+namespace Nautilus.Database.Build
 {
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Newtonsoft.Json.Linq;
     using NodaTime;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Orchestration;
+    using Nautilus.Database.Orchestration;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="DataCollectionSchedule"/> from the given time and

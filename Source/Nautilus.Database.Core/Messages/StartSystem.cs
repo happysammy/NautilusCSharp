@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Messages
+namespace Nautilus.Database.Messages
 {
     using System;
     using NodaTime;

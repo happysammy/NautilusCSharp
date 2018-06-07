@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Nautilus.Core.CQS;
 using NodaTime;
 
-namespace Nautilus.Database.Core.Interfaces
+namespace Nautilus.Database.Interfaces
 {
     /// <summary>
     /// Temporary interface to provide a hook into the Dukascopy editor.

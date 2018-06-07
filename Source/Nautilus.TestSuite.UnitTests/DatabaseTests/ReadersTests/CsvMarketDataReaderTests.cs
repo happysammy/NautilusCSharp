@@ -6,13 +6,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.ReadersTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Database.Core.Readers;
+    using Nautilus.Database.Readers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

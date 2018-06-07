@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Compression
+namespace Nautilus.Compression
 {
     using System.Text;
     using LZ4;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Interfaces;
 
     /// <summary>
     /// Implements the LZ4 algorithm for compression and decompression of UTF8 encoded

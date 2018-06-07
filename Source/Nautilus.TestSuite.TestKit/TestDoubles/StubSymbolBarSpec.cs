@@ -8,7 +8,7 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 

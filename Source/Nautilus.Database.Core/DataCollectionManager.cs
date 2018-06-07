@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core
+namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
@@ -19,16 +19,16 @@ namespace Nautilus.Database.Core
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Collectors;
-    using Nautilus.Database.Core.Integrity.Checkers;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Messages;
-    using Nautilus.Database.Core.Messages.Commands;
-    using Nautilus.Database.Core.Messages.Events;
-    using Nautilus.Database.Core.Messages.Queries;
-    using Nautilus.Database.Core.Orchestration;
-    using Nautilus.Database.Core.Readers;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Collectors;
+    using Nautilus.Database.Integrity.Checkers;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Messages;
+    using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Events;
+    using Nautilus.Database.Messages.Queries;
+    using Nautilus.Database.Orchestration;
+    using Nautilus.Database.Readers;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>

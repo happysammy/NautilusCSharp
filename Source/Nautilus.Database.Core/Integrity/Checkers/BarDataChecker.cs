@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Integrity.Checkers
+namespace Nautilus.Database.Integrity.Checkers
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,7 +15,7 @@ namespace Nautilus.Database.Core.Integrity.Checkers
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
 

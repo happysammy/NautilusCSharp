@@ -6,14 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Build
+namespace Nautilus.Database.Build
 {
     using System;
     using System.Reflection;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Enums;
+    using Nautilus.Database.Enums;
 
     /// <summary>
     /// Provides a startup version checker with logging.

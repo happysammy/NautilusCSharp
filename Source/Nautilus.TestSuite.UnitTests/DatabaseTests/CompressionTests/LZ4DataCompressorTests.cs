@@ -9,10 +9,10 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CompressionTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Compression;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Database.Compression;
-    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Interfaces;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

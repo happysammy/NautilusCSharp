@@ -6,14 +6,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Keys
+namespace Nautilus.Database.Keys
 {
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Core.Extensions;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

@@ -6,11 +6,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Compression
+namespace Nautilus.Compression
 {
     using System;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Interfaces;
 
     /// <summary>
     /// Provides a factory for the creation of <see cref="IDataCompressor"/>(s).

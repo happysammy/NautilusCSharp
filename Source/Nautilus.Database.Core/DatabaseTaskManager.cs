@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core
+namespace Nautilus.Database
 {
     using System;
     using Akka.Actor;
@@ -16,11 +16,11 @@ namespace Nautilus.Database.Core
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Messages;
-    using Nautilus.Database.Core.Messages.Events;
-    using Nautilus.Database.Core.Messages.Queries;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Messages;
+    using Nautilus.Database.Messages.Events;
+    using Nautilus.Database.Messages.Queries;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
 

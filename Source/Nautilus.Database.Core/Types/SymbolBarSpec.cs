@@ -1,6 +1,6 @@
 ﻿
 
-namespace Nautilus.Database.Core.Types
+namespace Nautilus.Database.Types
 {
     using Nautilus.DomainModel.ValueObjects;
 

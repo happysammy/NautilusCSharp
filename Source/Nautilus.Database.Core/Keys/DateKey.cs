@@ -10,7 +10,7 @@ using System;
 using Nautilus.Core.Annotations;
 using NodaTime;
 
-namespace Nautilus.Database.Core.Keys
+namespace Nautilus.Database.Keys
 {
     using Nautilus.Core.Extensions;
 

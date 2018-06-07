@@ -10,10 +10,10 @@ using System;
 using Nautilus.Core.Validation;
 using NodaTime;
 
-namespace Nautilus.Database.Core.Messages.Queries
+namespace Nautilus.Database.Messages.Queries
 {
     using Nautilus.Common.Messaging;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
 
     public sealed class DataStatusRequest : Message

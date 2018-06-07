@@ -6,11 +6,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.TypesTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
 {
-    using Nautilus.Database.Core.Types;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Database.Types;
     using Newtonsoft.Json;
     using NodaTime;
     using Xunit;

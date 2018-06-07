@@ -11,7 +11,7 @@ using Nautilus.Core.CQS;
 using Nautilus.Core.Validation;
 using NodaTime;
 
-namespace Nautilus.Database.Core.Messages.Queries
+namespace Nautilus.Database.Messages.Queries
 {
     public sealed class DataStatusResponse : QueryResponseMessage
     {

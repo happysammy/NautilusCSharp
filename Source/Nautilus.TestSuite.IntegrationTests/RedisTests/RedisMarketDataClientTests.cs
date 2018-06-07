@@ -11,9 +11,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Nautilus.Database.Compression;
+    using Nautilus.Compression;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Database.Core.Keys;
+    using Nautilus.Database.Keys;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;

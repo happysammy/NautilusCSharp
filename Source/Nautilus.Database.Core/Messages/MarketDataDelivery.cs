@@ -6,13 +6,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Messages
+namespace Nautilus.Database.Messages
 {
     using Nautilus.Common.Messaging;
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

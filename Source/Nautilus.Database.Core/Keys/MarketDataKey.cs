@@ -6,12 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Keys
+namespace Nautilus.Database.Keys
 {
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
 
     /// <summary>
     /// Represents a strongly typed Redis Key based on the given market data specification.

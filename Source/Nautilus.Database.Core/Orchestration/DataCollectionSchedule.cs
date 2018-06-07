@@ -6,14 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Orchestration
+namespace Nautilus.Database.Orchestration
 {
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Database.Core.Keys;
+    using Nautilus.Database.Keys;
 
     /// <summary>
     /// Represents a schedule for data collection.

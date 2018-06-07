@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Keys
+namespace Nautilus.Database.Keys
 {
     using System;
     using System.Collections.Generic;

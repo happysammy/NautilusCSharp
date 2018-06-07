@@ -6,14 +6,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Database.Core.Orchestration;
+    using Nautilus.Database.Orchestration;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

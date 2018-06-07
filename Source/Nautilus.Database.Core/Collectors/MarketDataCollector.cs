@@ -6,21 +6,21 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Collectors
+namespace Nautilus.Database.Collectors
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Messages;
-    using Nautilus.Database.Core.Messages.Commands;
-    using Nautilus.Database.Core.Messages.Events;
-    using Nautilus.Database.Core.Orchestration;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Messages;
+    using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Events;
+    using Nautilus.Database.Orchestration;
     using System;
+    using Messages.Queries;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Messages.Queries;
     using Nautilus.DomainModel.Factories;
     using NodaTime;
 

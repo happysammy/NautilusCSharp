@@ -6,12 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Wranglers
+namespace Nautilus.Database.Wranglers
 {
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Keys;
+    using Nautilus.Database.Keys;
     using Nautilus.DomainModel.ValueObjects;
 
     [Immutable]

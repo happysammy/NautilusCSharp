@@ -6,14 +6,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Messages.Events
+namespace Nautilus.Database.Messages.Events
 {
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
 
     [Immutable]
     public sealed class MarketDataPersisted : Event

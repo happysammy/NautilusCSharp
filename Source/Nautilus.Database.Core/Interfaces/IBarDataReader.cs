@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Interfaces
+namespace Nautilus.Database.Interfaces
 {
     using System.IO;
     using Nautilus.Core.CQS;
     using NodaTime;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
 
     public interface IBarDataReader
     {

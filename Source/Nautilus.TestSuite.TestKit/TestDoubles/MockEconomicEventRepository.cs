@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using Nautilus.Core.CQS;
-    using Nautilus.Database.Core.Interfaces;
+    using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Entities;
+
     public class MockEconomicEventRepository : IEconomicEventRepository<EconomicEvent>
     {
         public CommandResult Add(EconomicEvent entity)

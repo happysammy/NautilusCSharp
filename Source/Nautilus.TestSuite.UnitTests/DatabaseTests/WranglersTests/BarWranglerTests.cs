@@ -6,15 +6,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.WranglersTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.WranglersTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Nautilus.Database.Wranglers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using Xunit;
-    using Nautilus.Database.Core.Wranglers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

@@ -14,14 +14,14 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Compression;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Compression;
+    using Nautilus.Database;
+    using Nautilus.Database.Build;
+    using Nautilus.Database.Configuration;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
-    using Nautilus.Database.Core;
-    using Nautilus.Database.Core.Build;
-    using Nautilus.Database.Core.Configuration;
-    using Nautilus.Database.Core.Temp;
+    using Nautilus.Database.Temp;
     using Nautilus.DataProviders.Dukascopy;
     using Nautilus.Serilog;
 

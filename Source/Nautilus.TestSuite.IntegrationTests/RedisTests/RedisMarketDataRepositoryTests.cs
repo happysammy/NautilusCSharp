@@ -14,9 +14,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
-    using Database.Compression;
-    using Nautilus.Database.Core.Integrity.Checkers;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Compression;
+    using Nautilus.Database.Integrity.Checkers;
+    using Nautilus.Database.Types;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 

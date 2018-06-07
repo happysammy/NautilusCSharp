@@ -1,4 +1,4 @@
-﻿namespace Nautilus.Database.Core
+﻿namespace Nautilus.Database
 {
     using Nautilus.Common.Interfaces;
 

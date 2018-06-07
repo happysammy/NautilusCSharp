@@ -6,12 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Core.Messages.Events
+namespace Nautilus.Database.Messages.Events
 {
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     public class AllDataCollected : Event

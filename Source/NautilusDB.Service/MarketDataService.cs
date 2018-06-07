@@ -15,7 +15,7 @@ namespace NautilusDB.Service
     using NautilusDB.Service.Requests;
     using NautilusDB.Service.Responses;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Core.Messages.Queries;
+    using Nautilus.Database.Messages.Queries;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;

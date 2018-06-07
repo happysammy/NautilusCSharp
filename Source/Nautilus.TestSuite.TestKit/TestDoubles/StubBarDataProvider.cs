@@ -8,8 +8,6 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using System;
@@ -17,6 +15,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.IO;
     using System.Linq;
     using Nautilus.Core.CQS;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

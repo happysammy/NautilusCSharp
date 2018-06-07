@@ -1,11 +1,10 @@
 ﻿
 
-namespace Nautilus.Database.Core.Temp
+namespace Nautilus.Database.Temp
 {
     using Nautilus.Core.CQS;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Types;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     public class MockMarketDataRepository : IMarketDataRepository

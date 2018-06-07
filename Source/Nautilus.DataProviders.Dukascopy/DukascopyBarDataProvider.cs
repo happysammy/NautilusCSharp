@@ -14,9 +14,9 @@ namespace Nautilus.DataProviders.Dukascopy
     using System.Linq;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Core.Configuration;
-    using Nautilus.Database.Core.Interfaces;
-    using Nautilus.Database.Core.Types;
+    using Nautilus.Database.Configuration;
+    using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

@@ -6,15 +6,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
-using Nautilus.Core;
-using Nautilus.Core.Annotations;
-using Nautilus.Core.Validation;
-using NodaTime;
-
-namespace Nautilus.Database.Core.Messages.Queries
+namespace Nautilus.Database.Messages.Queries
 {
-    using Nautilus.Database.Core.Types;
+    using System;
+    using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
+    using NodaTime;
+    using Nautilus.Database.Types;
 
     [Immutable]
     public sealed class MarketDataQueryResponse : QueryResponseMessage
