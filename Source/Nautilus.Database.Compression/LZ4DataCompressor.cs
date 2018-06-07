@@ -21,6 +21,10 @@ namespace Nautilus.Database.Compression
     {
         private readonly bool isCompressionOn;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LZ4DataCompressor"/> class.
+        /// </summary>
+        /// <param name="isCompressionOn"></param>
         public LZ4DataCompressor(bool isCompressionOn)
         {
             this.isCompressionOn = isCompressionOn;

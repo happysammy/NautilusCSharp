@@ -6,21 +6,20 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Nautilus.Database.Compression;
-using Nautilus.Core.Extensions;
-using Nautilus.DomainModel.ValueObjects;
-using Nautilus.Database.Core.Keys;
-using Nautilus.Redis;
-using Nautilus.TestSuite.TestKit.TestDoubles;
-using NodaTime;
-using Xunit;
-using Xunit.Abstractions;
-
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using Nautilus.Database.Compression;
+    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Database.Core.Keys;
+    using Nautilus.Redis;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
+    using Xunit;
+    using Xunit.Abstractions;
+
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RedisMarketDataClientTests : IDisposable
@@ -36,7 +35,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.output = output;
 
             // Data compression off so that redis-cli is readable.
-            this.client = new RedisMarketDataClient(RedisConstants.LocalHost, new LZ4DataCompressor(true));
+            this.client = new RedisMarketDataClient(RedisConstants.LocalHost, new LZ4DataCompressor(false));
             this.client.FlushAll("YES");
         }
 
@@ -282,7 +281,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Value.ToString());
             Assert.True(result.IsSuccess);
-            Assert.Equal("1970-01-01T00:00:00.000,1.00000,1.00000,1.00000,1.00000,1000000", result.Value.ToString());
+            Assert.Equal("1.00000,1.00000,1.00000,1.00000,1000000,1970-01-01T00:00:00.000Z", result.Value.ToString());
         }
 
         [Fact]
@@ -366,7 +365,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("QueryResult Failure (No market data found for AUDUSD.Dukascopy 1-Minute[Ask] in time range from 1970-01-01T00:00:00.000 to 1970-01-01T00:02:00.000).", result.FullMessage);
+            Assert.Equal("QueryResult Failure (No market data found for AUDUSD.Dukascopy 1-Minute[Ask] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z).", result.FullMessage);
         }
 
         [Fact]
