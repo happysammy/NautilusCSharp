@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a none-negative financial market price.
     /// </summary>
     [Immutable]
-    public sealed class Price : DecimalNumber<Price>, IComparable<DecimalNumber<Price>>
+    public sealed class Price : DecimalNumber<Price>, IEquatable<Price>, IComparable<DecimalNumber<Price>>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Price"/> class.
@@ -67,6 +67,19 @@ namespace Nautilus.DomainModel.ValueObjects
         public static Price Create(decimal value, decimal tickSize)
         {
             return new Price(value, tickSize);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Price"/> with the given value and decimal places.
+        /// </summary>
+        /// <param name="value">The price value.</param>
+        /// <param name="decimals">The price decimal places.</param>
+        /// <returns>A <see cref="Price"/>.</returns>
+        /// <exception cref="ValidationException">Throws if either argument is negative, or if the
+        /// decimal places of the value is greater than the decimal places of the tick size.</exception>
+        public static Price Create(decimal value, int decimals)
+        {
+            return new Price(value, decimals.ToTickSize());
         }
 
         /// <summary>

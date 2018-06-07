@@ -14,10 +14,11 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The immutable sealed <see cref="Quantity"/> class. Represents a none-negative quantity.
+    /// Represents a none-negative quantity.
     /// </summary>
     [Immutable]
-    public sealed class Quantity : IntegerNumber<Quantity>, IComparable<IntegerNumber<Quantity>>
+    public sealed class Quantity
+        : IntegerNumber<Quantity>, IEquatable<Quantity>, IComparable<IntegerNumber<Quantity>>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.

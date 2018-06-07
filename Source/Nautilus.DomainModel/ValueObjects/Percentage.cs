@@ -17,7 +17,8 @@ namespace Nautilus.DomainModel.ValueObjects
     /// The immutable sealed <see cref="Percentage"/> class. Represents a percentage value.
     /// </summary>
     [Immutable]
-    public sealed class Percentage : DecimalNumber<Percentage>, IComparable<DecimalNumber<Percentage>>
+    public sealed class Percentage
+        : DecimalNumber<Percentage>, IEquatable<Percentage>, IComparable<DecimalNumber<Percentage>>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Percentage"/> class.

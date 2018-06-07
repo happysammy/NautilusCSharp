@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// period.
     /// </summary>
     [Immutable]
-    public sealed class BarSpecification : ValueObject<BarSpecification>
+    public sealed class BarSpecification : ValueObject<BarSpecification>, IEquatable<BarSpecification>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.

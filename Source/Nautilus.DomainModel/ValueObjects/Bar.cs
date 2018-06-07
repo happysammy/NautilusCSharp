@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="Bar.cs" company="Nautech Systems Pty Ltd">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
@@ -8,16 +8,20 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
     using System.Collections.Generic;
+    using System.Text;
+    using Core;
+    using Core.Extensions;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="Bar"/> class. Represents a financial market trade bar.
+    /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public sealed class Bar : ValueObject<Bar>
+    public sealed class Bar : ValueObject<Bar>, IEquatable<Bar>, IComparable<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bar"/> class.
@@ -26,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="high">The high price.</param>
         /// <param name="low">The low price.</param>
         /// <param name="close">The close price.</param>
-        /// <param name="volume">The trading volume.</param>
+        /// <param name="volume">The volume.</param>
         /// <param name="timestamp">The timestamp.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value.</exception>
@@ -98,6 +102,109 @@ namespace Nautilus.DomainModel.ValueObjects
                            this.Volume,
                            this.Timestamp
                        };
+        }
+
+        /// <summary>
+        /// Returns a result indicating whether the left <see cref="Bar"/> is less than, equal
+        /// to or greater than the right <see cref="Bar"/>.
+        /// </summary>
+        /// <param name="other">The other bar to compare.</param>
+        /// <returns>An <see cref="int"/>.</returns>
+        public int CompareTo(Bar other)
+        {
+            Debug.NotNull(other, nameof(other));
+
+            return this.Timestamp.Compare(other.Timestamp);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString()
+        {
+            return this.Open + "," +
+                   this.High + "," +
+                   this.Low + "," +
+                   this.Close + "," +
+                   this.Volume + "," +
+                   this.Timestamp.ToIsoString();
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="string"/> of values from this <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ValuesToString()
+        {
+            return this.Open + "," +
+                   this.High + "," +
+                   this.Low + "," +
+                   this.Close + "," +
+                   this.Volume;
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="byte"/> array.</returns>
+        public byte[] ToUtf8Bytes()
+        {
+            return Encoding.UTF8.GetBytes(this.ToString());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="byte"/> array of values from this <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="byte"/> array.</returns>
+        public byte[] ValuesToUtf8Bytes()
+        {
+            return Encoding.UTF8.GetBytes(this.ValuesToString());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
+        /// </summary>
+        /// <param name="barString">The bar string.</param>
+        /// <returns>A <see cref="Bar"/>.</returns>
+        public static Bar ToBarData(string barString)
+        {
+            Debug.NotNull(barString, nameof(barString));
+
+            var values = barString.Split(',');
+            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
+
+            return new Bar(
+                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
+                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
+                values[5].ToZonedDateTimeFromIso());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Bar"/> from this <see cref="byte"/> array.
+        /// </summary>
+        /// <param name="barBytes">The bar bytes array.</param>
+        /// <returns>A <see cref="Bar"/>.</returns>
+        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        public static Bar ToBarData(byte[] barBytes)
+        {
+            Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
+
+            var values = Encoding.UTF8
+                .GetString(barBytes)
+                .Split(',');
+            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
+
+            return new Bar(
+                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
+                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
+                values[5].ToZonedDateTimeFromIso());
         }
     }
 }

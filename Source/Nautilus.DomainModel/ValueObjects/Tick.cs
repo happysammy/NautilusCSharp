@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -17,7 +18,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick/quote.
     /// </summary>
     [Immutable]
-    public sealed class Tick : ValueObject<Tick>
+    public sealed class Tick : ValueObject<Tick>, IEquatable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.

@@ -36,7 +36,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(100, 0.1, 100)]
         [InlineData(500.5, 0.1, 500.5)]
         [InlineData(424242, 0.1, 424242)]
-        internal void Create_VariousValues_ReturnsExpectedValue(decimal value, decimal tickSize, decimal expected)
+        internal void Create_VariousValues_ReturnsExpectedValue(
+            decimal value,
+            decimal tickSize,
+            decimal expected)
         {
             // Arrange
             // Act
@@ -45,6 +48,28 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             // Assert
             Assert.Equal(expected, result.Value);
         }
+
+        [Theory]
+        [InlineData(0.1, 1, 0.1)]
+        [InlineData(0.001, 3, 0.001)]
+        [InlineData(1, 1, 1)]
+        [InlineData(100, 1, 100)]
+        [InlineData(500.5, 1, 500.5)]
+        [InlineData(424242, 0, 424242)]
+        internal void Create_VariousValuesWithDecimals_ReturnsExpectedValue(
+            decimal value,
+            int decimals,
+            decimal expected)
+        {
+            // Arrange
+            // Act
+            var result = Price.Create(value, decimals);
+
+            // Assert
+            Assert.Equal(expected, result.Value);
+            Assert.Equal(decimals, result.Decimals);
+        }
+
 
         [Theory]
         [InlineData(1, 1, 1)]

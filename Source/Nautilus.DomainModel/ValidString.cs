@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
@@ -17,7 +18,7 @@ namespace Nautilus.DomainModel
     /// A <see cref="ValueObject{T}"/> which encapsulates a validated string.
     /// </summary>
     [Immutable]
-    public abstract class ValidString : ValueObject<ValidString>
+    public abstract class ValidString : ValueObject<ValidString>, IEquatable<ValidString>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidString"/> class.

@@ -15,10 +15,10 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// The immutable sealed <see cref="Money"/> class.
+    /// Represents the concept of money.
     /// </summary>
     [Immutable]
-    public sealed class Money : DecimalNumber<Money>, IComparable<DecimalNumber<Money>>
+    public sealed class Money : DecimalNumber<Money>, IEquatable<Money>, IComparable<DecimalNumber<Money>>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Money"/> class.
