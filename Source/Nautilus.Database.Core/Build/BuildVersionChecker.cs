@@ -38,8 +38,8 @@ namespace Nautilus.Database.Core.Build
             log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");
             log.Information(DatabaseService.NautilusDatabase, $"OS {Environment.OSVersion}");
             log.Information(DatabaseService.NautilusDatabase, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(DatabaseService.NautilusDatabase, $"Akka.NET v1.3.5");
-            log.Information(DatabaseService.NautilusDatabase, $"ServiceStack v5.0.2");
+            log.Information(DatabaseService.NautilusDatabase, $"Akka.NET v1.3.8");
+            log.Information(DatabaseService.NautilusDatabase, $"ServiceStack v5.1.0");
             log.Information(DatabaseService.NautilusDatabase, log.AssemblyVersion);
         }
 
