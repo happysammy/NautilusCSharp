@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.TestKit
         /// </summary>
         public static void RegisterServiceStackLicense()
         {
-            var nautilusDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "NautilusDB//";
+            var nautilusDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "Nautilus//";
             var config = JObject.Parse(File.ReadAllText(nautilusDirectory + "config.json"));
 
             Licensing.RegisterLicense((string)config["serviceStack"]["licenseKey"]);

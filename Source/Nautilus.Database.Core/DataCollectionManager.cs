@@ -196,7 +196,8 @@ namespace Nautilus.Database.Core
             {
                 var dataReader = new CsvBarDataReader(
                     barSpec,
-                    this.barDataProvider);
+                    this.barDataProvider,
+                    5);
 
                 var collectorRef = Context.ActorOf(Props.Create(
                     () => new MarketDataCollector(

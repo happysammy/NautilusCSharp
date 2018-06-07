@@ -33,7 +33,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
                 StubSymbolBarData.AUDUSD(),
-                new StubBarDataProvider());
+                new StubBarDataProvider(),
+                5);
 
             // Act
             var filePath = csvMarketDataReader.FilePathWildcard;
@@ -48,7 +49,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
                 StubSymbolBarData.AUDUSD(),
-                new StubBarDataProvider());
+                new StubBarDataProvider(),
+                5);
 
             // Act
             var fileCount = csvMarketDataReader.FileCount;
@@ -63,7 +65,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
                 StubSymbolBarData.AUDUSD(),
-                new StubBarDataProvider());
+                new StubBarDataProvider(),
+                5);
 
             var csvFiles = csvMarketDataReader.GetAllCsvFilesOrdered();
 
@@ -81,7 +84,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
                 StubSymbolBarData.AUDUSD(),
-                new StubBarDataProvider());
+                new StubBarDataProvider(),
+                5);
 
             // Act
             var query = csvMarketDataReader.GetLastBar(csvMarketDataReader.GetAllCsvFilesOrdered().Value[0]);
@@ -96,7 +100,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CoreTests.ReadersTests
             // Arrange
             var csvMarketDataReader = new CsvBarDataReader(
                 StubSymbolBarData.AUDUSD(),
-                new StubBarDataProvider());
+                new StubBarDataProvider(),
+                5);
 
             // Act
             var query = csvMarketDataReader.GetLastBarTimestamp(csvMarketDataReader.GetAllCsvFilesOrdered().Value[0]);

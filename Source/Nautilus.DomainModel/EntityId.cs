@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel
         /// the string values length is greater than 100 characters.</exception>
         public EntityId(string value) : base(value)
         {
-            // Validated by base class.
+            Debug.NotNull(value, nameof(value));
         }
     }
 }

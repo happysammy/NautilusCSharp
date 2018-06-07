@@ -29,6 +29,7 @@ namespace Nautilus.Database.Core.Readers
     [Immutable]
     public sealed class CsvBarDataReader : IBarDataReader
     {
+        private readonly int decimals;
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvBarDataReader"/> class.
         /// </summary>
@@ -37,7 +38,8 @@ namespace Nautilus.Database.Core.Readers
         /// <exception cref="Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
             SymbolBarSpec symbolBarSpec,
-            IBarDataProvider dataProvider)
+            IBarDataProvider dataProvider,
+            int decimals)
         {
             Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
             Validate.NotNull(dataProvider, nameof(dataProvider));
@@ -45,6 +47,7 @@ namespace Nautilus.Database.Core.Readers
             this.SymbolBarSpec = symbolBarSpec;
             this.DataProvider = dataProvider;
             this.FilePathWildcard = this.BuildFilePathWildcard(dataProvider);
+            this.decimals = decimals;
         }
 
         /// <summary>
@@ -215,13 +218,13 @@ namespace Nautilus.Database.Core.Readers
 
                         while (reader.Read())
                         {
-//                            barsList.Add(new Bar( // TODO: Do not do this.
-//                                reader.GetField<decimal>(1),
-//                                reader.GetField<decimal>(2),
-//                                reader.GetField<decimal>(3),
-//                                reader.GetField<decimal>(4),
-//                                Convert.ToInt64(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple,
-//                                reader.GetField<string>(0).ToZonedDateTime(this.DataProvider.TimestampParsePattern)));
+                            barsList.Add(new Bar( // TODO: Do not do this. ??
+                                Price.Create(reader.GetField<decimal>(1), this.decimals),
+                                Price.Create(reader.GetField<decimal>(2), this.decimals),
+                                Price.Create(reader.GetField<decimal>(3), this.decimals),
+                                Price.Create(reader.GetField<decimal>(4), this.decimals),
+                                Quantity.Create(Convert.ToInt32(reader.GetField<double>(5)) * this.DataProvider.VolumeMultiple),
+                                reader.GetField<string>(0).ToZonedDateTime(this.DataProvider.TimestampParsePattern)));
                         }
                     }
 
