@@ -13,12 +13,12 @@ namespace Nautilus.Compression
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Database.Interfaces;
-    using ServiceStack.Validation;
 
     /// <summary>
     /// Implements the LZ4 algorithm for compression and decompression of UTF8 encoded
     /// <see cref="byte"/> arrays.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class LZ4DataCompressor : IDataCompressor
     {
         private readonly bool isCompressionOn;
