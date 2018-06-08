@@ -10,9 +10,13 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using NodaTime;
 
     /// <summary>
@@ -111,6 +115,48 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Symbol},{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
+
+        /// <summary>
+        /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>A <see cref="byte"/> array.</returns>
+        public byte[] ToUtf8Bytes()
+        {
+            return Encoding.UTF8.GetBytes(this.ToString());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Tick"/> from this <see cref="string"/>.
+        /// </summary>
+        /// <param name="tickString">The tick string.</param>
+        /// <returns>A <see cref="Tick"/>.</returns>
+        public static Tick GetFromString(string tickString)
+        {
+            Debug.NotNull(tickString, nameof(tickString));
+
+            var values = tickString.Split(',');
+            var header = values[0].Split('.');
+            var code = header[0];
+            var exchange = header[1];
+
+            return new Tick(
+                new Symbol(code, exchange.ToEnum<Exchange>()),
+                SafeConvert.ToDecimalOr(values[1], 0m),
+                SafeConvert.ToDecimalOr(values[2], 0m),
+                values[3].ToZonedDateTimeFromIso());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Tick"/> from this <see cref="byte"/> array.
+        /// </summary>
+        /// <param name="tickBytes">The tick bytes array.</param>
+        /// <returns>A <see cref="Tick"/>.</returns>
+        public static Tick GetFromBytes(byte[] tickBytes)
+        {
+            Debug.CollectionNotNullOrEmpty(tickBytes, nameof(tickBytes));
+
+            return GetFromString(Encoding.UTF8.GetString(tickBytes));
+        }
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.

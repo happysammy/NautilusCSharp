@@ -38,7 +38,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(decimal.One, tick.Bid.Value);
             Assert.Equal(decimal.One, tick.Ask.Value);
             Assert.Equal(1970, tick.Timestamp.Year);
-
         }
 
         [Theory]
@@ -66,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var tick = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("AUDUSD.FXCM: Bid=1.00000, Ask=1.00000, 1970-01-01T00:00:00.000Z", tick.ToString());
+            Assert.Equal("AUDUSD.FXCM,1.00000,1.00000,1970-01-01T00:00:00.000Z", tick.ToString());
         }
 
         [Theory]
@@ -86,6 +85,48 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             // Assert
             Assert.Equal(expected, result1);
             Assert.Equal(expected, result2);
+        }
+
+        [Fact]
+        internal void ToUtf8Bytes_WithValidBar_ReturnsExpectedBar()
+        {
+            // Arrange
+            var tick = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var result = tick.ToUtf8Bytes();
+
+            // Assert
+            Assert.Equal(typeof(byte[]), result.GetType());
+            Assert.Equal(tick, Tick.GetFromBytes(result));
+        }
+
+        [Fact]
+        internal void GetFromString_WithValidString_ReturnsExpectedBar()
+        {
+            // Arrange
+            var tick = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var tickString = tick.ToString();
+            var result = Tick.GetFromString(tickString);
+
+            // Assert
+            Assert.Equal(tick, result);
+        }
+
+        [Fact]
+        internal void GetFromBytes_WithValidBytesArray_ReturnsExpectedBar()
+        {
+            // Arrange
+            var tick = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var tickBytes = tick.ToUtf8Bytes();
+            var result = Tick.GetFromBytes(tickBytes);
+
+            // Assert
+            Assert.Equal(tick, result);
         }
     }
 }

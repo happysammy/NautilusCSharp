@@ -223,18 +223,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
 
-            var values = Encoding.UTF8
-                .GetString(barBytes)
-                .Split(',');
-            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
-
-            return new Bar(
-                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
-                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
-                values[5].ToZonedDateTimeFromIso());
+            return GetFromString(Encoding.UTF8.GetString(barBytes));
         }
     }
 }
