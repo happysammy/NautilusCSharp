@@ -34,19 +34,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
         }
 
-//        [Fact]
-//        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_RetusnExpectedLabel()
-//        {
-//            // Arrange
-//
-//            // Act
-//            var result = LabelFactory.Component(
-//                "Portfolio",
-//                new Symbol("AUDUSD", Exchange.LMAX));
-//
-//            // Assert
-//            Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
-//        }
+        [Fact]
+        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_RetusnExpectedLabel()
+        {
+            // Arrange
+
+            // Act
+            var result = LabelFactory.Component(
+                "Portfolio",
+                new Symbol("AUDUSD", Exchange.LMAX),
+                new TradeType("TestScalps"));
+
+            // Assert
+            Assert.Equal("Portfolio-AUDUSD.LMAX-TestScalps", result.ToString());
+        }
 
         [Fact]
         internal void ComponentLabel_WithModuleComponentSymbolExchange_RetusnExpectedLabel()
