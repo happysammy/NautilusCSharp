@@ -122,7 +122,7 @@ namespace NautilusDB
             this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
-                new MockMarketDataRepository(),
+                new MockBarRepository(),
                 new MockEconomicEventRepository(),
                 new DukascopyBarDataProvider(
                     this.dukasConfig,

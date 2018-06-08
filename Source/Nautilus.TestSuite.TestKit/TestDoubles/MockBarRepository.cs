@@ -1,13 +1,11 @@
-﻿
-
-namespace Nautilus.Database.Temp
+﻿namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using Nautilus.Core.CQS;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Types;
     using NodaTime;
 
-    public class MockMarketDataRepository : IMarketDataRepository
+    public class MockBarRepository : IBarRepository
     {
         public long BarsCount(SymbolBarSpec symbolBarSpec)
         {
@@ -24,12 +22,12 @@ namespace Nautilus.Database.Temp
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec)
+        public QueryResult<MarketDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<MarketDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec)
         {
             throw new System.NotImplementedException();
         }

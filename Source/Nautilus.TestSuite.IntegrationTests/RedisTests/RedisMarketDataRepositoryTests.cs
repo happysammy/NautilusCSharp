@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisMarketDataRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly RedisMarketDataRepository repository;
+        private readonly RedisBarRepository repository;
 
         public RedisMarketDataRepositoryTests(ITestOutputHelper output)
         {
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var redisClientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
 
             // Data compression off so that redis-cli is readable.
-            this.repository = new RedisMarketDataRepository(
+            this.repository = new RedisBarRepository(
                 redisClientManager,
                 localHost,
                 Duration.FromSeconds(10),

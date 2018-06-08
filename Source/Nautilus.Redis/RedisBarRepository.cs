@@ -18,20 +18,23 @@ namespace Nautilus.Redis
     using NodaTime;
     using ServiceStack.Redis;
 
-    public sealed class RedisMarketDataRepository : IMarketDataRepository
+    /// <summary>
+    /// Provides a repository for persisting <see cref="Bar"/> objects into Redis.
+    /// </summary>
+    public sealed class RedisBarRepository : IBarRepository
     {
         private readonly IRedisClientsManager clientsManager;
-        private readonly RedisMarketDataClient marketDataClient;
+        private readonly RedisBarClient barClient;
         private readonly TimeSpan operationsExpiry;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedisMarketDataRepository"/> class.
+        /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
         /// <param name="clientsManager">The clients manager.</param>
         /// <param name="endpoint">The <see cref="Redis"/> endpoint.</param>
         /// <param name="operationsExpiry">The operations expiry.</param>
         /// <param name="compressor">The data compressor.</param>
-        public RedisMarketDataRepository(
+        public RedisBarRepository(
             IRedisClientsManager clientsManager,
             RedisEndpoint endpoint,
             Duration operationsExpiry,
@@ -43,7 +46,7 @@ namespace Nautilus.Redis
 
             this.clientsManager = clientsManager;
             this.operationsExpiry = operationsExpiry.ToTimeSpan();
-            this.marketDataClient = new RedisMarketDataClient(endpoint, compressor);
+            this.barClient = new RedisBarClient(endpoint, compressor);
         }
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace Nautilus.Redis
 
             if (areYouSure == "YES")
             {
-                this.marketDataClient.FlushAll("YES");
+                this.barClient.FlushAll("YES");
 
                 return CommandResult.Ok();
             }
@@ -72,7 +75,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="int"/>.</returns>
         public long AllBarsCount()
         {
-            return this.marketDataClient.AllBarsCount();
+            return this.barClient.AllBarsCount();
         }
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace Nautilus.Redis
         {
             Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
 
-            return this.marketDataClient.BarsCount(symbolBarSpec);
+            return this.barClient.BarsCount(symbolBarSpec);
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace Nautilus.Redis
         {
             Validate.NotNull(marketData, nameof(marketData));
 
-            return this.marketDataClient.AddBars(marketData.SymbolBarSpec, marketData.Bars);
+            return this.barClient.AddBars(marketData.SymbolBarSpec, marketData.Bars);
         }
 
         /// <summary>
@@ -112,7 +115,7 @@ namespace Nautilus.Redis
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            var barsQuery = this.marketDataClient.GetBars(symbolBarSpec, fromDateTime, toDateTime);
+            var barsQuery = this.barClient.GetBars(symbolBarSpec, fromDateTime, toDateTime);
 
             return barsQuery.IsSuccess
                  ? QueryResult<MarketDataFrame>.Ok(barsQuery.Value)
@@ -121,7 +124,7 @@ namespace Nautilus.Redis
 
         public QueryResult<MarketDataFrame> FindAll(SymbolBarSpec barSpec)
         {
-            var barsQuery = this.marketDataClient.GetAllBars(barSpec);
+            var barsQuery = this.barClient.GetAllBars(barSpec);
 
             return barsQuery.IsSuccess
                 ? QueryResult<MarketDataFrame>.Ok(barsQuery.Value)
@@ -138,7 +141,7 @@ namespace Nautilus.Redis
         {
             Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
 
-            var barKeysQuery = this.marketDataClient.GetAllSortedKeys(symbolBarSpec);
+            var barKeysQuery = this.barClient.GetAllSortedKeys(symbolBarSpec);
 
             if (barKeysQuery.IsFailure)
             {
@@ -147,7 +150,7 @@ namespace Nautilus.Redis
 
             var lastKey = barKeysQuery.Value.Last();
 
-            var barsQuery = this.marketDataClient.GetBarsByDay(lastKey);
+            var barsQuery = this.barClient.GetBarsByDay(lastKey);
 
             if (barsQuery.IsFailure)
             {

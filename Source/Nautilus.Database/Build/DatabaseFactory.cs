@@ -34,7 +34,7 @@ namespace Nautilus.Database.Build
         /// </summary>
         /// <param name="logger">The database logger.</param>
         /// <param name="collectionConfig">The collection configuration.</param>
-        /// <param name="marketDataRepository">The database market data repo.</param>
+        /// <param name="barRepository">The database market data repo.</param>
         /// <param name="economicEventRepository">The database economic news event repo.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <returns>A built Nautilus database.</returns>
@@ -42,13 +42,13 @@ namespace Nautilus.Database.Build
         public static Database Create(
             ILoggingAdapter logger,
             JObject collectionConfig,
-            IMarketDataRepository marketDataRepository,
+            IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository,
             IBarDataProvider barDataProvider)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(collectionConfig, nameof(collectionConfig));
-            Validate.NotNull(marketDataRepository, nameof(marketDataRepository));
+            Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
             Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
@@ -72,7 +72,7 @@ namespace Nautilus.Database.Build
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
                     setupContainer,
-                    marketDataRepository,
+                    barRepository,
                     economicEventRepository)));
 
             var dataCollectionActorRef = actorSystem.ActorOf(Props.Create(

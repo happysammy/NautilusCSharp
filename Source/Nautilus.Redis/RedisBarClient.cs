@@ -24,23 +24,22 @@ namespace Nautilus.Redis
     using ServiceStack.Redis;
 
     /// <summary>
-    /// A client for accessing market data time series from <see cref="Redis"/> with a
-    /// <see cref="RedisNativeClient"/>. This client is not thread-safe and therefor should be
+    /// A client for accessing bar data from <see cref="Redis"/> with a <see cref="RedisNativeClient"/>. This client is not thread-safe and therefor should be
     /// encapsulated in a thread-safe environment for sequential operations on the
     /// <see cref="Redis"/> database.
     /// </summary>
     [Immutable]
-    public class RedisMarketDataClient
+    public class RedisBarClient
     {
         private readonly RedisNativeClient redisClient;
         private readonly IDataCompressor compressor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RedisMarketDataClient"/> class.
+        /// Initializes a new instance of the <see cref="RedisBarClient"/> class.
         /// </summary>
         /// <param name="redisEndpoint">The <see cref="Redis"/> end point.</param>
         /// <param name="compressor">The data compressor.</param>
-        public RedisMarketDataClient(RedisEndpoint redisEndpoint, IDataCompressor compressor)
+        public RedisBarClient(RedisEndpoint redisEndpoint, IDataCompressor compressor)
         {
             Validate.NotNull(redisEndpoint, nameof(redisEndpoint));
             Validate.NotNull(compressor, nameof(compressor));

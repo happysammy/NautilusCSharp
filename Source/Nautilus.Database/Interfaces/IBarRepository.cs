@@ -16,7 +16,7 @@ namespace Nautilus.Database.Interfaces
     /// <summary>
     /// The market data repository interface.
     /// </summary>
-    public interface IMarketDataRepository
+    public interface IBarRepository
     {
         /// <summary>
         /// Returns the count of bars persisted within the database with the given

@@ -29,19 +29,19 @@ namespace Nautilus.Database
     /// </summary>
     public class DatabaseTaskManager : ActorComponentBase
     {
-        private readonly IMarketDataRepository marketDataRepository;
+        private readonly IBarRepository barRepository;
         private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseTaskManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="marketDataRepository">The market data repository.</param>
+        /// <param name="barRepository">The market data repository.</param>
         /// <param name="economicEventRepository">The news event repository.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public DatabaseTaskManager(
             IComponentryContainer container,
-            IMarketDataRepository marketDataRepository,
+            IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository)
             : base(
                 ServiceContext.Database,
@@ -49,10 +49,10 @@ namespace Nautilus.Database
                 container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(marketDataRepository, nameof(marketDataRepository));
+            Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
 
-            this.marketDataRepository = marketDataRepository;
+            this.barRepository = barRepository;
             this.economicEventRepository = economicEventRepository;
 
             this.Receive<DataStatusRequest>(msg => this.OnMessage(msg, this.Sender));
@@ -64,7 +64,7 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            var lastBarTimestampQuery = this.marketDataRepository.LastBarTimestamp(message.SymbolBarSpec);
+            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.SymbolBarSpec);
 
             sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
         }
@@ -75,10 +75,10 @@ namespace Nautilus.Database
             Debug.NotNull(sender, nameof(sender));
 
             var symbolBarData = message.MarketData.SymbolBarSpec;
-            var result = this.marketDataRepository.Add(message.MarketData);
+            var result = this.barRepository.Add(message.MarketData);
             this.Log.Result(result);
 
-            var lastBarTimeQuery = this.marketDataRepository.LastBarTimestamp(symbolBarData);
+            var lastBarTimeQuery = this.barRepository.LastBarTimestamp(symbolBarData);
 
             if (result.IsSuccess && lastBarTimeQuery.IsSuccess && lastBarTimeQuery.Value != default(ZonedDateTime))
             {
@@ -95,7 +95,7 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var marketDataQuery = this.marketDataRepository.Find(
+            var marketDataQuery = this.barRepository.Find(
                 new SymbolBarSpec(message.Symbol, message.BarSpecification),
                 message.FromDateTime,
                 message.ToDateTime);
