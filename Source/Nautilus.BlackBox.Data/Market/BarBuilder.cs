@@ -44,22 +44,22 @@ namespace Nautilus.BlackBox.Data.Market
         public ZonedDateTime StartTime { get; }
 
         /// <summary>
-        /// Gets the bar builders open.
+        /// Gets the bar builders open price.
         /// </summary>
         public Price Open { get; }
 
         /// <summary>
-        /// Gets the bar builders high.
+        /// Gets the bar builders high price.
         /// </summary>
         public Price High { get; private set; }
 
         /// <summary>
-        /// Gets the bar builders low.
+        /// Gets the bar builders low price.
         /// </summary>
         public Price Low { get; private set; }
 
         /// <summary>
-        /// Gets the bar builders close.
+        /// Gets the bar builders close price.
         /// </summary>
         public Price Close { get; private set; }
 
@@ -76,7 +76,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// <summary>
         /// Updates the bar builder with the given quote price and timestamp.
         /// </summary>
-        /// <param name="quote">The quote.</param>
+        /// <param name="quote">The tick quote.</param>
         /// <param name="timestamp">The timestamp.</param>
         /// <exception cref="ValidationException">Throws if the price is null, or if the timestamp
         /// is the default value.</exception>

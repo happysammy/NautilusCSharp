@@ -14,6 +14,9 @@ namespace Nautilus.Database.Keys
     using Nautilus.Core.Validation;
     using NodaTime;
 
+    /// <summary>
+    /// Provides <see cref="DateKey"/>(s) based on the given parameters.
+    /// </summary>
     public static class DateKeyGenerator
     {
         /// <summary>

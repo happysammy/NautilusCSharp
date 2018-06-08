@@ -25,7 +25,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Initializes a new instance of the <see cref="SubscribeSymbolDataType"/> class.
         /// </summary>
         /// <param name="symbol">The message symbol.</param>
-        /// <param name="BarSpecification">The message bar profile.</param>
+        /// <param name="barSpec">The message bar profile.</param>
         /// <param name="tradeType">The message trade type.</param>
         /// <param name="tickSize">The message tick size (cannot be zero or negative).</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
@@ -33,7 +33,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public SubscribeSymbolDataType(
             Symbol symbol,
-            BarSpecification BarSpecification,
+            BarSpecification barSpec,
             TradeType tradeType,
             decimal tickSize,
             Guid messageId,
@@ -41,14 +41,14 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
             : base(messageId, messageTimestamp)
         {
             Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(BarSpecification, nameof(BarSpecification));
+            Validate.NotNull(barSpec, nameof(barSpec));
             Validate.NotNull(tradeType, nameof(tradeType));
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
             this.Symbol = symbol;
-            this.BarSpecification = BarSpecification;
+            this.BarSpecification = barSpec;
             this.TradeType = tradeType;
             this.TickSize = tickSize;
         }
