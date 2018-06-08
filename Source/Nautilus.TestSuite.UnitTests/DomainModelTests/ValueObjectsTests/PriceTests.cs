@@ -117,10 +117,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var price2 = Price.Create(value2, 0.00001m);
 
             // Act
-            var result = price1.Add(price2);
+            var result1 = price1.Add(price2);
+            var result2 = price1 + price2;
 
             // Assert
-            Assert.Equal(expected, result.Value);
+            Assert.Equal(expected, result1.Value);
+            Assert.Equal(expected, result2);
         }
 
         [Theory]
@@ -136,10 +138,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var price2 = Price.Create(value2, 0.00001m);
 
             // Act
-            var result = price1.Subtract(price2);
+            var result1 = price1.Subtract(price2);
+            var result2 = price1 - price2;
 
             // Assert
-            Assert.Equal(expected, result.Value);
+            Assert.Equal(expected, result1.Value);
+            Assert.Equal(expected, result2);
         }
 
         [Theory]

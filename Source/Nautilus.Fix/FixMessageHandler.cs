@@ -253,7 +253,8 @@ namespace Nautilus.Fix
         /// <param name="report">
         /// The report.
         /// </param>
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here because the actual variable name used for FIX is 'clOrderId'.")]
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation",
+            Justification = "Reviewed. Suppression is OK here because the actual variable name used for FIX is 'clOrderId'.")]
         public void OnExecutionReport(ExecutionReport report)
         {
             Validate.NotNull(report, nameof(report));

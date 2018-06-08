@@ -7,7 +7,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests
+namespace Nautilus.TestSuite.UnitTests.CoreTests
 {
     using NodaTime;
 

@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -18,7 +19,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick/quote.
     /// </summary>
     [Immutable]
-    public sealed class Tick : ValueObject<Tick>, IEquatable<Tick>
+    public sealed class Tick : ValueObject<Tick>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.
@@ -47,6 +48,32 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Tick"/> class.
+        /// </summary>
+        /// <param name="symbol">The quoted symbol.</param>
+        /// <param name="bid">The quoted bid price.</param>
+        /// <param name="ask">The quoted ask price.</param>
+        /// <param name="timestamp">The quote timestamp.</param>
+        /// <exception cref="ValidationException">Throws if any class argument is null, or if the
+        /// timestamp is the default struct value.</exception>
+        public Tick(
+            Symbol symbol,
+            decimal bid,
+            decimal ask,
+            ZonedDateTime timestamp)
+        {
+            Validate.NotNull(symbol, nameof(symbol));
+            Validate.NotNull(bid, nameof(bid));
+            Validate.NotNull(ask, nameof(ask));
+            Validate.NotDefault(timestamp, nameof(timestamp));
+
+            this.Symbol = symbol;
+            this.Bid = Price.Create(bid, bid.GetDecimalPlaces());
+            this.Ask = Price.Create(bid, bid.GetDecimalPlaces());
+            this.Timestamp = timestamp;
+        }
+
+        /// <summary>
         /// Gets the ticks symbol.
         /// </summary>
         public Symbol Symbol { get; }
@@ -67,10 +94,23 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
+        /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
+        /// to or greater than the right <see cref="Tick"/>.
+        /// </summary>
+        /// <param name="other">The other tick to compare.</param>
+        /// <returns>An <see cref="int"/>.</returns>
+        public int CompareTo(Tick other)
+        {
+            Debug.NotNull(other, nameof(other));
+
+            return this.Timestamp.Compare(other.Timestamp);
+        }
+
+        /// <summary>
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Tick)}({this.Symbol})";
+        public override string ToString() => $"{this.Symbol},{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.
