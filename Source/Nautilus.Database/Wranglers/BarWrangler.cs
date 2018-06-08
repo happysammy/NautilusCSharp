@@ -26,7 +26,6 @@ namespace Nautilus.Database.Wranglers
         /// </summary>
         /// <param name="barsBytes">The bar strings.</param>
         /// <returns>The list of parsed bars.</returns>
-        [PerformanceOptimized]
         public static List<Bar> ParseBars(byte[][] barsBytes)
         {
             Validate.NotNull(barsBytes, nameof(barsBytes));
@@ -37,11 +36,7 @@ namespace Nautilus.Database.Wranglers
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < barsBytes.Length; i++)
             {
-                var barString = Encoding.UTF8.GetString(barsBytes[i]);
-                if (!string.IsNullOrWhiteSpace(barString))
-                {
-                    barData.Add(Bar.GetFromString(barString));
-                }
+                barData.Add(Bar.GetFromString(Encoding.UTF8.GetString(barsBytes[i])));
             }
 
             return barData;
