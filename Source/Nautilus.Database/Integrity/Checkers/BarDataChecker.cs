@@ -15,7 +15,6 @@ namespace Nautilus.Database.Integrity.Checkers
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
 

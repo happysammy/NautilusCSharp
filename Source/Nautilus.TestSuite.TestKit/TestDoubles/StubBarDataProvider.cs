@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Linq;
     using Nautilus.Core.CQS;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

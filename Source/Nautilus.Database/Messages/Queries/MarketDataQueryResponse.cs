@@ -12,8 +12,8 @@ namespace Nautilus.Database.Messages.Queries
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.Data.Types;
     using NodaTime;
-    using Nautilus.Database.Types;
 
     [Immutable]
     public sealed class MarketDataQueryResponse : QueryResponseMessage

@@ -13,7 +13,6 @@ namespace Nautilus.Database.Keys
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Core.Extensions;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

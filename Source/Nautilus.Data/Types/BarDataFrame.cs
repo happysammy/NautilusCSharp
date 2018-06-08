@@ -6,10 +6,9 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Types
+namespace Nautilus.Data.Types
 {
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;

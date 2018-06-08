@@ -12,7 +12,7 @@ using Nautilus.Core.Annotations;
 using Nautilus.Core.Validation;
 using NodaTime;
 
-namespace Nautilus.Database.Types
+namespace Nautilus.Data.Types
 {
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

@@ -13,11 +13,21 @@ namespace Nautilus.Database.Messages.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
 
+    /// <summary>
+    /// A message representing that all bar data has been persisted.
+    /// </summary>
     [Immutable]
     public sealed class MarketDataPersisted : Event
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarketDataPersisted"/> class.
+        /// </summary>
+        /// <param name="symbolBarSpec">The message symbol bar specification.</param>
+        /// <param name="lastBarTime">The message last bar time.</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">THe message timestamp</param>
         public MarketDataPersisted(
             SymbolBarSpec symbolBarSpec,
             ZonedDateTime lastBarTime,
@@ -34,8 +44,14 @@ namespace Nautilus.Database.Messages.Events
             this.LastBarTime = lastBarTime;
         }
 
+        /// <summary>
+        /// Gets the messages symbol bar specification.
+        /// </summary>
         public SymbolBarSpec SymbolBarSpec { get; }
 
+        /// <summary>
+        /// Gets the messages last bar time.
+        /// </summary>
         public ZonedDateTime LastBarTime { get; }
 
         /// <summary>

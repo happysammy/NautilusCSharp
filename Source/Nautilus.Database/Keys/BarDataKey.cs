@@ -11,7 +11,7 @@ namespace Nautilus.Database.Keys
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Represents a Redis Key based on the given symbol and bar specification.

@@ -12,8 +12,8 @@ namespace Nautilus.Redis
     using System.Linq;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
+    using Nautilus.Data.Types;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using ServiceStack.Redis;

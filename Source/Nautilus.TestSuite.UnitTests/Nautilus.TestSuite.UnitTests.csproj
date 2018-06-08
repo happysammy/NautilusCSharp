@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.FxStreet\Nautilus.DataProviders.FxStreet.csproj" />
+    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />

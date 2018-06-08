@@ -28,8 +28,8 @@ namespace Nautilus.Database
     using Nautilus.Database.Messages.Queries;
     using Nautilus.Database.Orchestration;
     using Nautilus.Database.Readers;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The manager class which contains the separate data collector types and orchestrates their

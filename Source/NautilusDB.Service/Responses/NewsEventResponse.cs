@@ -8,7 +8,7 @@
 
 namespace NautilusDB.Service.Responses
 {
-    using Nautilus.Database.Types;
+    using Nautilus.Data.Types;
 
     public class NewsEventResponse
     {

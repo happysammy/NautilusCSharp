@@ -14,12 +14,12 @@ namespace Nautilus.Database.Readers
     using System.Linq;
     using CsvHelper;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

@@ -16,13 +16,14 @@ namespace Nautilus.Database
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Data.Types;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Messages.Queries;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The component which manages the queue of job messages being sent to the database.

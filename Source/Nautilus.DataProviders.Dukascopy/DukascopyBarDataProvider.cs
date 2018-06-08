@@ -16,7 +16,6 @@ namespace Nautilus.DataProviders.Dukascopy
     using Nautilus.Core.Validation;
     using Nautilus.Database.Configuration;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

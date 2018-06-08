@@ -6,27 +6,34 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System;
-using Nautilus.Core.Validation;
-using NodaTime;
-
 namespace Nautilus.Database.Messages.Queries
 {
+    using System;
     using Nautilus.Common.Messaging;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Core.Validation;
+    using NodaTime;
 
+    /// <summary>
+    /// The data status request message.
+    /// </summary>
     public sealed class DataStatusRequest : Message
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStatusRequest"/> message.
+        /// </summary>
+        /// <param name="symbolBarSpec">The message symbol bar specification.</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public DataStatusRequest(
-            SymbolBarSpec barSpec,
+            SymbolBarSpec symbolBarSpec,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
 
-            this.SymbolBarSpec = barSpec;
+            this.SymbolBarSpec = symbolBarSpec;
         }
 
         /// <summary>

@@ -10,12 +10,23 @@ namespace Nautilus.Database.Messages.Events
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
-    public class AllDataCollected : Event
+    /// <summary>
+    /// A message representing that all data has been collected.
+    /// </summary>
+    [Immutable]
+    public sealed class AllDataCollected : Event
     {
+        /// <summary>
+        /// Initializes a new intance of the <see cref="AllDataCollected"/> class.
+        /// </summary>
+        /// <param name="symbolBarSpec"></param>
+        /// <param name="identifier"></param>
+        /// <param name="timestamp"></param>
         public AllDataCollected(
             SymbolBarSpec symbolBarSpec,
             Guid identifier,
@@ -29,8 +40,10 @@ namespace Nautilus.Database.Messages.Events
             this.SymbolBarSpec = symbolBarSpec;
         }
 
+        /// <summary>
+        /// Gets the messages symbol bar specification.
+        /// </summary>
         public SymbolBarSpec SymbolBarSpec { get; }
-
 
         /// <summary>
         /// Gets a string representation of the <see cref="AllDataCollected"/> message.

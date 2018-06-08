@@ -10,11 +10,18 @@ namespace Nautilus.Database.Interfaces
 {
     using System.IO;
     using Nautilus.Core.CQS;
+    using Nautilus.Data.Types;
     using NodaTime;
-    using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
 
+    /// <summary>
+    /// The bar data reader interface.
+    /// </summary>
     public interface IBarDataReader
     {
+        /// <summary>
+        /// Gets the readers symbol bar specification.
+        /// </summary>
         SymbolBarSpec SymbolBarSpec { get; }
 
         /// <summary>

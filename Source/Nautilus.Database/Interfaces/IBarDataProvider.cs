@@ -10,8 +10,8 @@ namespace Nautilus.Database.Interfaces
 {
     using System.Collections.Generic;
     using System.IO;
-    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
