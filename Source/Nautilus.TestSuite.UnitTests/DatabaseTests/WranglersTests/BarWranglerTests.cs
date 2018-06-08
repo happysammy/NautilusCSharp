@@ -28,14 +28,15 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.WranglersTests
             var bar = StubBarData.Create();
 
             var expectedBarList = new List<Bar> { bar, bar, bar };
-            var barStringBuilder = new StringBuilder(3);
-
-            barStringBuilder.Append(bar);
-            barStringBuilder.Append("|" + bar);
-            barStringBuilder.Append("|" + bar);
+            var barStringArray = new List<byte[]>
+            {
+                bar.ToUtf8Bytes(),
+                bar.ToUtf8Bytes(),
+                bar.ToUtf8Bytes()
+            }.ToArray();
 
             // Act
-            var result = BarWrangler.ParseBars(barStringBuilder.ToString());
+            var result = BarWrangler.ParseBars(barStringArray);
 
             // Assert
             Assert.Equal(expectedBarList, result);

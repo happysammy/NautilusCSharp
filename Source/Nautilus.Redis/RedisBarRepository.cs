@@ -94,13 +94,13 @@ namespace Nautilus.Redis
         /// <summary>
         /// Adds the given bar(s) to the repository.
         /// </summary>
-        /// <param name="marketData">The market data.</param>
+        /// <param name="barData">The market data.</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>
-        public CommandResult Add(MarketDataFrame marketData)
+        public CommandResult Add(BarDataFrame barData)
         {
-            Validate.NotNull(marketData, nameof(marketData));
+            Validate.NotNull(barData, nameof(barData));
 
-            return this.barClient.AddBars(marketData.SymbolBarSpec, marketData.Bars);
+            return this.barClient.AddBars(barData.SymbolBarSpec, barData.Bars);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nautilus.Redis
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>A <see cref="QueryResult{MarketDataFrame}"/>.</returns>
-        public QueryResult<MarketDataFrame> Find(
+        public QueryResult<BarDataFrame> Find(
             SymbolBarSpec symbolBarSpec,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
@@ -118,17 +118,17 @@ namespace Nautilus.Redis
             var barsQuery = this.barClient.GetBars(symbolBarSpec, fromDateTime, toDateTime);
 
             return barsQuery.IsSuccess
-                 ? QueryResult<MarketDataFrame>.Ok(barsQuery.Value)
-                 : QueryResult<MarketDataFrame>.Fail(barsQuery.Message);
+                 ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
+                 : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
         }
 
-        public QueryResult<MarketDataFrame> FindAll(SymbolBarSpec barSpec)
+        public QueryResult<BarDataFrame> FindAll(SymbolBarSpec barSpec)
         {
             var barsQuery = this.barClient.GetAllBars(barSpec);
 
             return barsQuery.IsSuccess
-                ? QueryResult<MarketDataFrame>.Ok(barsQuery.Value)
-                : QueryResult<MarketDataFrame>.Fail(barsQuery.Message);
+                ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
+                : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
         }
 
         /// <summary>

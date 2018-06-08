@@ -14,6 +14,7 @@ namespace Nautilus.Database.Keys
     using Nautilus.Core.Validation;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -22,18 +23,67 @@ namespace Nautilus.Database.Keys
     [Immutable]
     public static class KeyProvider
     {
-        private const string MarketDataNamespace = "market_data";
-        private const string Wildcard = "*";
+        private const string TicksNamespaceConst = "ticks";
+        private const string BarsNamespaceConst = "bars";
+        private const string WildcardConst = "*";
 
         /// <summary>
-        /// Gets the Market Data namespace <see cref="string"/>.
+        /// Gets the ticks namespace <see cref="string"/>.
         /// </summary>
-        public static string Namespace => MarketDataNamespace;
+        public static string TicksNamespace => TicksNamespaceConst;
 
         /// <summary>
-        /// Gets the Market Data namespace wildcard <see cref="string"/>.
+        /// Gets the bars namespace <see cref="string"/>.
         /// </summary>
-        public static string NamespaceWildcard => MarketDataNamespace + Wildcard;
+        public static string BarsNamespace => BarsNamespaceConst;
+
+        /// <summary>
+        /// Gets the bars namespace wildcard <see cref="string"/>.
+        /// </summary>
+        public static string TicksNamespaceWildcard => TicksNamespaceConst + WildcardConst;
+
+        /// <summary>
+        /// Gets the bars namespace wildcard <see cref="string"/>.
+        /// </summary>
+        public static string BarsNamespaceWildcard => BarsNamespaceConst + WildcardConst;
+
+        /// <summary>
+        /// Returns an array of <see cref="DateKey"/>s based on the given from and to
+        /// <see cref="ZonedDateTime"/> range.
+        /// </summary>
+        /// <param name="symbol">The ticks symbol.</param>
+        /// <param name="fromDateTime">The ticks from date time.</param>
+        /// <param name="toDateTime">The ticks two date time</param>
+        /// <returns>An array of <see cref="DateKey"/>.</returns>
+        /// <remarks>The given time range should have been previously validated.</remarks>
+        public static IEnumerable<string> GetTicksKeyStrings(
+            Symbol symbol,
+            ZonedDateTime fromDateTime,
+            ZonedDateTime toDateTime)
+        {
+            Validate.NotNull(symbol, nameof(symbol));
+            Validate.NotDefault(fromDateTime, nameof(fromDateTime));
+            Validate.NotDefault(toDateTime, nameof(toDateTime));
+            Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+
+            return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
+                .Select(key => new TickDataKey(symbol, key).ToString())
+                .ToList();
+        }
+
+        /// <summary>
+        /// Returns a wildcard string from the given symbol bar spec.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetTicksWildcardString(Symbol symbol)
+        {
+            Debug.NotNull(symbol, nameof(symbol));
+
+            return TicksNamespaceConst +
+                   $":{symbol.Exchange.ToString().ToLower()}" +
+                   $":{symbol.Code.ToLower()}" + WildcardConst;
+        }
 
         /// <summary>
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to
@@ -44,7 +94,7 @@ namespace Nautilus.Database.Keys
         /// <param name="toDateTime">The two date time</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static IEnumerable<string> GetKeyStrings(
+        public static IEnumerable<string> GetBarsKeyStrings(
             SymbolBarSpec barSpec,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
@@ -55,7 +105,7 @@ namespace Nautilus.Database.Keys
             Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
-                .Select(key => new MarketDataKey(barSpec, key).ToString())
+                .Select(key => new BarDataKey(barSpec, key).ToString())
                 .ToList();
         }
 
@@ -64,15 +114,15 @@ namespace Nautilus.Database.Keys
         /// </summary>
         /// <param name="barSpec">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetWildcardString(SymbolBarSpec barSpec)
+        public static string GetBarsWildcardString(SymbolBarSpec barSpec)
         {
             Debug.NotNull(barSpec, nameof(barSpec));
 
-            return MarketDataNamespace +
+            return BarsNamespaceConst +
                    $":{barSpec.Symbol.Exchange.ToString().ToLower()}" +
                    $":{barSpec.Symbol.Code.ToLower()}" +
                    $":{barSpec.BarSpecification.Resolution.ToString().ToLower()}" +
-                   $":{barSpec.BarSpecification.QuoteType.ToString().ToLower()}" + Wildcard;
+                   $":{barSpec.BarSpecification.QuoteType.ToString().ToLower()}" + WildcardConst;
         }
     }
 }

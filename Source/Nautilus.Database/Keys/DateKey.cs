@@ -36,6 +36,10 @@ namespace Nautilus.Database.Keys
             this.StartOfDay = new ZonedDateTime(localDateTime, DateTimeZone.Utc, Offset.Zero);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DateKey"/> struct.
+        /// </summary>
+        /// <param name="timestamp"></param>
         public DateKey(ZonedDateTime timestamp)
             : this(timestamp.Year, timestamp.Month, timestamp.Day)
         {

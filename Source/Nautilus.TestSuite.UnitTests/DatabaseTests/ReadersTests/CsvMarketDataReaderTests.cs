@@ -73,9 +73,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.ReadersTests
             // Act
             var result = csvMarketDataReader.GetAllBars(csvFiles.Value[0]);
 
-
             // Assert
-            Assert.Equal(7200, result.Value.Bars.Length);
+            Assert.Equal(7200, result.Value.Count);
         }
 
         [Fact]

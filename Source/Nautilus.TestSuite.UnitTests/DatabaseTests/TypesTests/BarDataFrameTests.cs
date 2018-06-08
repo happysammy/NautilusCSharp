@@ -18,16 +18,35 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MarketDataFrameTests
+    public class BarDataFrameTests
     {
         private readonly ITestOutputHelper output;
         private readonly SymbolBarSpec stubBarSpec;
 
-        public MarketDataFrameTests(ITestOutputHelper output)
+        public BarDataFrameTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
             this.stubBarSpec = StubSymbolBarSpec.AUDUSD();
+        }
+
+        [Fact]
+        internal void Count_WithStubBars_ReturnsExpectedResult()
+        {
+            // Arrange
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(1);
+            var bars = new[] { bar1, bar2 };
+
+            var barDataFrame = new BarDataFrame(
+                this.stubBarSpec,
+                bars);
+
+            // Act
+            var result = barDataFrame.Count;
+
+            // Assert
+            Assert.Equal(2, result);
         }
 
         [Fact]
@@ -38,12 +57,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bar2 = StubBarData.Create(1);
             var bars = new[] { bar1, bar2 };
 
-            var marketDataFrame = new MarketDataFrame(
+            var barDataFrame = new BarDataFrame(
                 this.stubBarSpec,
                 bars);
 
             // Act
-            var result = marketDataFrame.StartDateTime;
+            var result = barDataFrame.StartDateTime;
 
             // Assert
             Assert.Equal(StubZonedDateTime.UnixEpoch(), result);
@@ -57,12 +76,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bar2 = StubBarData.Create(1);
             var bars = new[] { bar1, bar2 };
 
-            var marketDataFrame = new MarketDataFrame(
+            var barDataFrame = new BarDataFrame(
                 this.stubBarSpec,
                 bars);
 
             // Act
-            var result = marketDataFrame.EndDateTime;
+            var result = barDataFrame.EndDateTime;
 
             // Assert
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1), result);
@@ -75,12 +94,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bar = StubBarData.Create();
             var bars = new[] { bar };
 
-            var marketDataFrame = new MarketDataFrame(
+            var barDataFrame = new BarDataFrame(
                 this.stubBarSpec,
                 bars);
 
             // Act
-            var result = JsonConvert.SerializeObject(marketDataFrame);
+            var result = JsonConvert.SerializeObject(barDataFrame);
 
             // Assert
             this.output.WriteLine(result);
@@ -97,12 +116,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
 
             var bars = new[] { bar1, bar2, bar3, bar4 };
 
-            var marketDataFrame = new MarketDataFrame(
+            var barDataFrame = new BarDataFrame(
                 this.stubBarSpec,
                 bars);
 
             // Act
-            var result = JsonConvert.SerializeObject(marketDataFrame);
+            var result = JsonConvert.SerializeObject(barDataFrame);
 
             // Assert
             this.output.WriteLine(result);

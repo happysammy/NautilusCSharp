@@ -26,5 +26,13 @@ namespace Nautilus.Database.Interfaces
         /// <param name="bytesToDecompress">The bytes to decompress.</param>
         /// <returns>A decompressed <see cref="string"/>.</returns>
         string Read(byte[] bytesToDecompress);
+
+        /// <summary>
+        /// Returns an array of decompressed <see cref="string"/> from the given UTF8
+        /// <see cref="byte"/> arrays.
+        /// </summary>
+        /// <param name="byteArraysToDecompress">The bytes to decompress.</param>
+        /// <returns>A decompressed <see cref="string"/>.</returns>
+        string[] Read(byte[][] byteArraysToDecompress);
     }
 }

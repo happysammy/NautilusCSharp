@@ -19,7 +19,7 @@ namespace Nautilus.Database.Temp
             throw new System.NotImplementedException();
         }
 
-        public CommandResult Add(MarketDataFrame marketData)
+        public CommandResult Add(BarDataFrame barData)
         {
             throw new System.NotImplementedException();
         }
@@ -29,7 +29,7 @@ namespace Nautilus.Database.Temp
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<MarketDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public QueryResult<BarDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
             throw new System.NotImplementedException();
         }

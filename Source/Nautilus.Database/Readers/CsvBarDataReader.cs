@@ -89,16 +89,16 @@ namespace Nautilus.Database.Readers
         /// <summary>
         /// Returns the bars based on all data contained within the CSV directory.
         /// </summary>
-        /// <returns>A query result potentially containing a <see cref="MarketDataFrame"/>.</returns>
-        public QueryResult<MarketDataFrame> GetAllBars(FileInfo csvFile)
+        /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
+        public QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile)
         {
             Validate.NotNull(csvFile, nameof(csvFile));
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
             return readAllBarsQuery.IsSuccess
-                ? QueryResult<MarketDataFrame>.Ok(readAllBarsQuery.Value)
-                : QueryResult<MarketDataFrame>.Fail(readAllBarsQuery.Message);
+                ? QueryResult<BarDataFrame>.Ok(readAllBarsQuery.Value)
+                : QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
         }
 
         /// <summary>
@@ -107,9 +107,9 @@ namespace Nautilus.Database.Readers
         /// </summary>
         /// <param name="csvFile"></param>
         /// <param name="fromDateTime">The from date time.</param>
-        /// <returns>A query result containing a <see cref="MarketDataFrame"/> if successful.</returns>
+        /// <returns>A query result containing a <see cref="BarDataFrame"/> if successful.</returns>
         [PerformanceOptimized]
-        public QueryResult<MarketDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime)
+        public QueryResult<BarDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime)
         {
             Validate.NotNull(csvFile, nameof(csvFile));
 
@@ -119,7 +119,7 @@ namespace Nautilus.Database.Readers
             {
                 if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
                 {
-                    QueryResult<MarketDataFrame>.Fail(
+                    QueryResult<BarDataFrame>.Fail(
                         $"No bars found to collect for {this.SymbolBarSpec} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
@@ -138,24 +138,24 @@ namespace Nautilus.Database.Readers
                 // TODO: Redundant check due to bars 0 bug.
                 if (barsAfterFromDate.Count == 0)
                 {
-                    return QueryResult<MarketDataFrame>.Fail(
+                    return QueryResult<BarDataFrame>.Fail(
                         $"No bars found to collect for {this.SymbolBarSpec} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
-                return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
+                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
                     this.SymbolBarSpec,
                     barsAfterFromDate.ToArray()));
             }
 
-            return QueryResult<MarketDataFrame>.Fail(readAllBarsQuery.Message);
+            return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
         }
 
         /// <summary>
         /// Returns the latest bar based on all data contained within the CSV directory.
         /// </summary>
-        /// <returns>A query result potentially containing a <see cref="MarketDataFrame"/>.</returns>
-        public QueryResult<MarketDataFrame> GetLastBar(FileInfo csvFile)
+        /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
+        public QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile)
         {
             Validate.NotNull(csvFile, nameof(csvFile));
 
@@ -168,12 +168,12 @@ namespace Nautilus.Database.Readers
                     .Bars
                     .Last();
 
-                return QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
+                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
                     this.SymbolBarSpec,
                     new [] { lastBar }));
             }
 
-            return QueryResult<MarketDataFrame>.Fail(readAllBarsQuery.Message);
+            return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Nautilus.Database.Readers
                  : QueryResult<ZonedDateTime>.Fail(lastBarQuery.Message);
         }
 
-        private QueryResult<MarketDataFrame> ReadAllBarsFromCsv(FileInfo csvFile)
+        private QueryResult<BarDataFrame> ReadAllBarsFromCsv(FileInfo csvFile)
         {
             Validate.NotNull(csvFile, nameof(csvFile));
 
@@ -201,7 +201,7 @@ namespace Nautilus.Database.Readers
                 {
                     if (!this.DataProvider.DataPath.Exists)
                     {
-                        return QueryResult<MarketDataFrame>.Fail($"{this.DataProvider.DataPath} does not exist");
+                        return QueryResult<BarDataFrame>.Fail($"{this.DataProvider.DataPath} does not exist");
                     }
 
                     if (this.FileCount == 0)
@@ -232,10 +232,10 @@ namespace Nautilus.Database.Readers
                     barsList.Sort();
 
                     return barsList.Count > 0
-                         ? QueryResult<MarketDataFrame>.Ok(new MarketDataFrame(
+                         ? QueryResult<BarDataFrame>.Ok(new BarDataFrame(
                             this.SymbolBarSpec,
                             barsList.ToArray()))
-                         : QueryResult<MarketDataFrame>.Fail(
+                         : QueryResult<BarDataFrame>.Fail(
                                    $"No bars to collect for {this.SymbolBarSpec} in {csvFile.Name}");
                 }
                 catch (IOException)
@@ -265,9 +265,9 @@ namespace Nautilus.Database.Readers
                  + $"*.csv";
         }
 
-        private QueryResult<MarketDataFrame> NoDataFoundQueryResultFailure()
+        private QueryResult<BarDataFrame> NoDataFoundQueryResultFailure()
         {
-            return QueryResult<MarketDataFrame>.Fail(
+            return QueryResult<BarDataFrame>.Fail(
                 $"No data found for {this.SymbolBarSpec.BarSpecification.ToString()} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
         }
     }

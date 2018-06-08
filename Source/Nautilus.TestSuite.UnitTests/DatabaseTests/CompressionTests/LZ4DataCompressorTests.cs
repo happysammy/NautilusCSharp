@@ -8,7 +8,9 @@
 
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CompressionTests
 {
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using Nautilus.Compression;
     using Xunit;
     using Xunit.Abstractions;
@@ -16,6 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CompressionTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    // ReSharper disable once InconsistentNaming
     public class LZ4DataCompressorTests
     {
         private readonly ITestOutputHelper output;

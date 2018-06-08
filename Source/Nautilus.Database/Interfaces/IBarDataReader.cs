@@ -18,27 +18,27 @@ namespace Nautilus.Database.Interfaces
         SymbolBarSpec SymbolBarSpec { get; }
 
         /// <summary>
-        /// Returns a <see cref="MarketDataFrame"/> of all bars data.
+        /// Returns a <see cref="BarDataFrame"/> of all bars data.
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
-        /// <returns>A query result of <see cref="MarketDataFrame"/>.</returns>
-        QueryResult<MarketDataFrame> GetAllBars(FileInfo csvFile);
+        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile);
 
         /// <summary>
-        /// Returns a <see cref="MarketDataFrame"/> of the bars data from and including the given
+        /// Returns a <see cref="BarDataFrame"/> of the bars data from and including the given
         /// <see cref="ZonedDateTime"/>.
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
         /// <param name="fromDateTime">The from date time.</param>
-        /// <returns>A query result of <see cref="MarketDataFrame"/>.</returns>
-        QueryResult<MarketDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime);
+        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        QueryResult<BarDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime);
 
         /// <summary>
-        /// Returns a <see cref="MarketDataFrame"/> of data.
+        /// Returns a <see cref="BarDataFrame"/> of data.
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
-        /// <returns>A query result of <see cref="MarketDataFrame"/>.</returns>
-        QueryResult<MarketDataFrame> GetLastBar(FileInfo csvFile);
+        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile);
 
         // TODO: Temporary Property
         QueryResult<FileInfo[]> GetAllCsvFilesOrdered();

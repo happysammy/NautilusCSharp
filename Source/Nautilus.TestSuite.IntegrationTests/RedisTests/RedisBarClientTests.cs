@@ -22,12 +22,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class RedisMarketDataClientTests : IDisposable
+    public class RedisBarClientTests : IDisposable
     {
         private readonly ITestOutputHelper output;
         private readonly RedisBarClient client;
 
-        public RedisMarketDataClientTests(ITestOutputHelper output)
+        public RedisBarClientTests(ITestOutputHelper output)
         {
             // Fixture Setup
             RedisServiceStack.ConfigureServiceStack();
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         public void Dispose()
         {
-            this.client.FlushAll("YES");
+            //this.client.FlushAll("YES");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barSpec = StubSymbolBarSpec.AUDUSD();
-            var marketDataKey = new MarketDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var marketDataKey = new BarDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
 
             // Act
             var result1 = this.client.KeyExists(marketDataKey);
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barSpec = StubSymbolBarSpec.AUDUSD();
-            var marketDataKey = new MarketDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var marketDataKey = new BarDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(0.80000M, 0.80010M, 0.79990M, 0.80001M, 1000000, StubZonedDateTime.UnixEpoch());
 
             this.client.AddBars(barSpec, new[] { bar });

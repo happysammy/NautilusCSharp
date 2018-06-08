@@ -22,12 +22,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class RedisMarketDataRepositoryTests : IDisposable
+    public class RedisBarRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
         private readonly RedisBarRepository repository;
 
-        public RedisMarketDataRepositoryTests(ITestOutputHelper output)
+        public RedisBarRepositoryTests(ITestOutputHelper output)
         {
             RedisServiceStack.ConfigureServiceStack();
 
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Arrange
             var barSpec = StubSymbolBarSpec.AUDUSD();
             var bar = StubBarData.Create();
-            var marketData = new MarketDataFrame(barSpec, new[] { bar });
+            var marketData = new BarDataFrame(barSpec, new[] { bar });
 
             // Act
             var result = this.repository.Add(marketData);
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar3 = StubBarData.Create(2);
             var bar4 = StubBarData.Create(3);
             var bar5 = StubBarData.Create(4);
-            var marketData = new MarketDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             // Act
             var result = this.repository.Add(marketData);
@@ -108,8 +108,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar6 = StubBarData.Create(5);
             var bar7 = StubBarData.Create(6);
             var bar8 = StubBarData.Create(7);
-            var marketData1 = new MarketDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
-            var marketData2 = new MarketDataFrame(barSpec, new[] { bar6, bar7, bar8 });
+            var marketData1 = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData2 = new BarDataFrame(barSpec, new[] { bar6, bar7, bar8 });
 
             this.repository.Add(marketData1);
 
@@ -139,8 +139,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar6 = StubBarData.Create(5);
             var bar7 = StubBarData.Create(6);
             var bar8 = StubBarData.Create(7);
-            var marketData1 = new MarketDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
-            var marketData2 = new MarketDataFrame(barSpec, new[] { bar6, bar7, bar8 });
+            var marketData1 = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData2 = new BarDataFrame(barSpec, new[] { bar6, bar7, bar8 });
 
             this.repository.Add(marketData1);
 
@@ -181,7 +181,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var barSpec1 = StubSymbolBarSpec.AUDUSD();
             var barSpec2 = StubSymbolBarSpec.GBPUSD();
             var bar = StubBarData.Create();
-            var marketData = new MarketDataFrame(barSpec1, new[] { bar });
+            var marketData = new BarDataFrame(barSpec1, new[] { bar });
 
             this.repository.Add(marketData);
 
@@ -202,7 +202,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Arrange
             var barSpec = StubSymbolBarSpec.AUDUSD();
             var bar = StubBarData.Create();
-            var marketData = new MarketDataFrame(barSpec, new[] { bar });
+            var marketData = new BarDataFrame(barSpec, new[] { bar });
 
             this.repository.Add(marketData);
 
@@ -227,7 +227,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar3 = StubBarData.Create(2);
             var bar4 = StubBarData.Create(3);
             var bar5 = StubBarData.Create(4);
-            var marketData = new MarketDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             this.repository.Add(marketData);
 

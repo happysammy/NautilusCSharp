@@ -23,7 +23,7 @@ namespace Nautilus.Database.Interfaces
         QueryResult<IReadOnlyCollection<EconomicEvent>> GetAllEvents();
 
         /// <summary>
-        /// Returns a <see cref="MarketDataFrame"/> of the bars data from and including the given
+        /// Returns a <see cref="BarDataFrame"/> of the bars data from and including the given
         /// <see cref="ZonedDateTime"/>.
         /// </summary>
         /// <param name="fromDateTime">The from date time.</param>

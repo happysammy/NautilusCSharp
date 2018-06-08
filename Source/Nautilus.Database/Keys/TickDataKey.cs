@@ -11,38 +11,37 @@ namespace Nautilus.Database.Keys
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Types;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Represents a strongly typed Redis Key based on the given market data specification.
+    /// Represents a Redis Key based on the given tick specification.
     /// </summary>
     [Immutable]
-    public struct MarketDataKey : IEquatable<MarketDataKey>
+    public struct TickDataKey : IEquatable<TickDataKey>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketDataKey"/> struct. The bar period
+        /// Initializes a new instance of the <see cref="BarDataKey"/> struct. The bar period
         /// must be 1 for a valid key.
         /// </summary>
-        /// <param name="barSpec">The bar specification the key is based on.</param>
+        /// <param name="symbol">The tick symbol.</param>
         /// <param name="dateKey">The date key the key is based on.</param>
         /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
-        public MarketDataKey(SymbolBarSpec barSpec, DateKey dateKey)
+        public TickDataKey(Symbol symbol, DateKey dateKey)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(symbol, nameof(symbol));
             Validate.NotDefault(dateKey, nameof(dateKey));
-            Validate.EqualTo(1, nameof(barSpec.BarSpecification.Period), barSpec.BarSpecification.Period);
 
-            this.BarSpecification = barSpec;
+            this.Symbol = symbol;
             this.DateKey = dateKey;
         }
 
         /// <summary>
-        /// Gets the <see cref="MarketDataKey"/>(s) bar specification.
+        /// Gets the <see cref="TickDataKey"/> symbol.
         /// </summary>
-        public SymbolBarSpec BarSpecification { get; }
+        public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the <see cref="MarketDataKey"/>(s) date key.
+        /// Gets the <see cref="TickDataKey"/> date key.
         /// </summary>
         public DateKey DateKey { get; }
 
@@ -53,41 +52,39 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public override bool Equals([CanBeNull] object other)
         {
-            return other is MarketDataKey key && this.Equals(key);
+            return other is TickDataKey key && this.Equals(key);
         }
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="MarketDataKey"/> is equal to the given
-        /// <see cref="MarketDataKey"/>.
+        /// Returns a value indicating whether this <see cref="TickDataKey"/> is equal to the given
+        /// <see cref="TickDataKey"/>.
         /// </summary>
-        /// <param name="other">The other <see cref="MarketDataKey"/>.</param>
+        /// <param name="other">The other <see cref="TickDataKey"/>.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(MarketDataKey other)
+        public bool Equals(TickDataKey other)
         {
-            return this.BarSpecification.Equals(other.BarSpecification) &&
+            return this.Symbol.Equals(other.Symbol) &&
                    this.DateKey.Equals(other.DateKey);
         }
 
         /// <summary>
-        /// Returns the hash code of the <see cref="MarketDataKey"/>.
+        /// Returns the hash code of the <see cref="TickDataKey"/>.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.BarSpecification.GetHashCode() +
+            return this.Symbol.GetHashCode() +
                    this.DateKey.GetHashCode();
         }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="MarketDataKey"/>.
+        /// Returns a string representation of the <see cref="TickDataKey"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
-            $"market_data" +
-            $":{this.BarSpecification.Symbol.Exchange.ToString().ToLower()}" +
-            $":{this.BarSpecification.Symbol.Code.ToLower()}" +
-            $":{this.BarSpecification.BarSpecification.Resolution.ToString().ToLower()}" +
-            $":{this.BarSpecification.BarSpecification.QuoteType.ToString().ToLower()}" +
+            KeyProvider.TicksNamespace +
+            $":{this.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.Symbol.Code.ToLower()}" +
             $":{this.DateKey}";
     }
 }

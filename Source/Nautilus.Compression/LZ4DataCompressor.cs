@@ -10,8 +10,10 @@ namespace Nautilus.Compression
 {
     using System.Text;
     using LZ4;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Database.Interfaces;
+    using ServiceStack.Validation;
 
     /// <summary>
     /// Implements the LZ4 algorithm for compression and decompression of UTF8 encoded
@@ -58,6 +60,37 @@ namespace Nautilus.Compression
             return this.isCompressionOn
                  ? Encoding.UTF8.GetString(LZ4Codec.Unwrap(bytesToDecompress))
                  : Encoding.UTF8.GetString(bytesToDecompress);
+        }
+
+        /// <summary>
+        /// Returns a decompressed <see cref="string"/> from the given UTF8 <see cref="byte"/> array.
+        /// </summary>
+        /// <param name="byteArraysToDecompress">The bytes to decompress.</param>
+        /// <returns>A decompressed <see cref="string"/>.</returns>
+        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        [PerformanceOptimized]
+        public string[] Read(byte[][] byteArraysToDecompress)
+        {
+            Validate.NotNull(byteArraysToDecompress, nameof(byteArraysToDecompress));
+
+            var stringArray = new string[byteArraysToDecompress.Length];
+
+            if (this.isCompressionOn)
+            {
+                for (var i = 0; i < stringArray.Length; i++)
+                {
+                    stringArray[i] = Encoding.UTF8.GetString(byteArraysToDecompress[i]);
+                }
+            }
+            else
+            {
+                for (var i = 0; i < stringArray.Length; i++)
+                {
+                    stringArray[i] = Encoding.UTF8.GetString(LZ4Codec.Unwrap(byteArraysToDecompress[i]));
+                }
+            }
+
+            return stringArray;
         }
     }
 }

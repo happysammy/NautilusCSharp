@@ -74,8 +74,8 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var symbolBarData = message.MarketData.SymbolBarSpec;
-            var result = this.barRepository.Add(message.MarketData);
+            var symbolBarData = message.BarData.SymbolBarSpec;
+            var result = this.barRepository.Add(message.BarData);
             this.Log.Result(result);
 
             var lastBarTimeQuery = this.barRepository.LastBarTimestamp(symbolBarData);
@@ -102,7 +102,7 @@ namespace Nautilus.Database
 
             var marketData = marketDataQuery.IsSuccess
                            ? marketDataQuery.Value
-                           : Option<MarketDataFrame>.None();
+                           : Option<BarDataFrame>.None();
 
                 sender.Tell(new MarketDataQueryResponse(
                     marketData,

@@ -19,7 +19,7 @@ namespace Nautilus.Database.Messages.Queries
     public sealed class MarketDataQueryResponse : QueryResponseMessage
     {
         public MarketDataQueryResponse(
-            Option<MarketDataFrame> marketData,
+            Option<BarDataFrame> marketData,
             bool isSuccess,
             string message,
             Guid identifier,
@@ -37,7 +37,7 @@ namespace Nautilus.Database.Messages.Queries
         /// <summary>
         /// Gets the response messages market data.
         /// </summary>
-        public Option<MarketDataFrame> MarketData { get; }
+        public Option<BarDataFrame> MarketData { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="MarketDataQueryResponse"/> message.

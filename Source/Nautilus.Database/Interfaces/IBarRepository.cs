@@ -35,9 +35,9 @@ namespace Nautilus.Database.Interfaces
         /// <summary>
         /// Returns the result of the add bars command.
         /// </summary>
-        /// <param name="marketData">The market data to add.</param>
+        /// <param name="barData">The market data to add.</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>
-        CommandResult Add(MarketDataFrame marketData);
+        CommandResult Add(BarDataFrame barData);
 
         /// <summary>
         /// Returns the result of the find bars query.
@@ -45,8 +45,8 @@ namespace Nautilus.Database.Interfaces
         /// <param name="symbolBarSpec">The bar specification to find.</param>
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
-        /// <returns>A query result of <see cref="MarketDataFrame"/>.</returns>
-        QueryResult<MarketDataFrame> Find(
+        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        QueryResult<BarDataFrame> Find(
             SymbolBarSpec symbolBarSpec,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime);

@@ -131,8 +131,8 @@ namespace Nautilus.Database
             if (this.barDataProvider.IsBarDataCheckOn)
             {
                 var result = BarDataChecker.CheckBars(
-                    message.MarketData.SymbolBarSpec,
-                    message.MarketData.Bars);
+                    message.BarData.SymbolBarSpec,
+                    message.BarData.Bars);
 
                 if (result.IsSuccess)
                 {

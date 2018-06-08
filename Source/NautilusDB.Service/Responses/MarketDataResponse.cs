@@ -18,14 +18,14 @@ namespace NautilusDB.Service.Responses
         public MarketDataResponse(
             bool isSuccess,
             string message,
-            MarketDataFrame marketData)
+            BarDataFrame barData)
         {
             Validate.NotNull(message, nameof(message));
-            Validate.NotNull(marketData, nameof(marketData));
+            Validate.NotNull(barData, nameof(barData));
 
             this.IsSuccess = isSuccess;
             this.Message = message;
-            this.MarketData = marketData;
+            this.BarData = barData;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace NautilusDB.Service.Responses
         /// Gets the responses market data (if success).
         /// </summary>
         [ApiMember(Name = "Market Data", Description = "The response market data (if successful)", IsRequired = false)]
-        public MarketDataFrame MarketData { get; private set; }
+        public BarDataFrame BarData { get; private set; }
 
         /// <summary>
         /// Gets the responses status.

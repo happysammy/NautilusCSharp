@@ -24,26 +24,26 @@ namespace Nautilus.Database.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketDataDelivery"/> class.
         /// </summary>
-        /// <param name="marketData">The message market data.</param>
+        /// <param name="barData">The message market data.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public MarketDataDelivery(
-            MarketDataFrame marketData,
+            BarDataFrame barData,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(marketData, nameof(marketData));
-            Validate.NotDefault(identifier, nameof(marketData));
+            Validate.NotNull(barData, nameof(barData));
+            Validate.NotDefault(identifier, nameof(barData));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.MarketData = marketData;
+            this.BarData = barData;
         }
 
         /// <summary>
         /// Gets the messages market data.
         /// </summary>
-        public MarketDataFrame MarketData { get; }
+        public BarDataFrame BarData { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="MarketDataDelivery"/> message.
