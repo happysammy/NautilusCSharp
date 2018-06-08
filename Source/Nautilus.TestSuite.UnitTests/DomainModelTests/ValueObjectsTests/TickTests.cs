@@ -75,8 +75,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_VariousValues_ReturnsExpectedResult(decimal bid, decimal ask, int millisecondsOffset, bool expected)
         {
             // Arrange
-            var tick1 = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
-            var tick2 = new Tick(symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
+            var tick1 = new Tick(symbol, bid, ask, StubZonedDateTime.UnixEpoch());
+            var tick2 = new Tick(symbol, bid, ask, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
 
             // Act
             var result1 = tick1.Equals(tick2);
