@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -33,20 +34,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
         }
 
-        [Fact]
-        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_RetusnExpectedLabel()
-        {
-            // Arrange
-
-            // Act
-            var result = LabelFactory.ComponentByTradeType(
-                "Portfolio",
-                new Symbol("AUDUSD", Exchange.LMAX),
-                new TradeType("Scalp"));
-
-            // Assert
-            Assert.Equal("Portfolio-AUDUSD.LMAX(Scalp)", result.ToString());
-        }
+//        [Fact]
+//        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_RetusnExpectedLabel()
+//        {
+//            // Arrange
+//
+//            // Act
+//            var result = LabelFactory.Component(
+//                "Portfolio",
+//                new Symbol("AUDUSD", Exchange.LMAX));
+//
+//            // Assert
+//            Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
+//        }
 
         [Fact]
         internal void ComponentLabel_WithModuleComponentSymbolExchange_RetusnExpectedLabel()
@@ -63,18 +63,17 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentSymbolExchangeTradeType_RetusnExpectedLabel()
+        internal void ComponentLabel_WithModuleComponentSymbolBarSpec_RetusnExpectedLabel()
         {
             // Arrange
 
             // Act
-            var result = LabelFactory.ComponentByTradeType(
+            var result = LabelFactory.Component(
                 "TickBarAggregator",
-                new Symbol("AUDUSD", Exchange.LMAX),
-                new TradeType("Scalp"));
+                StubSymbolBarSpec.AUDUSD());
 
             // Assert
-            Assert.Equal("TickBarAggregator-AUDUSD.LMAX(Scalp)", result.ToString());
+            Assert.Equal("TickBarAggregator-AUDUSD.Dukascopy-1-Minute[Ask]", result.ToString());
         }
     }
 }

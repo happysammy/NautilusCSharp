@@ -19,6 +19,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a message end point into the <see cref="BlackBoxService.AlphaModel"/> service.
@@ -71,18 +72,18 @@ namespace Nautilus.BlackBox.AlphaModel
         private void SetupEventMessageHandling()
         {
             this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(MarketDataEvent message)
+        private void OnMessage(BarDataEvent message)
         {
             Debug.NotNull(message, nameof(message));
 
             this.Execute(() =>
             {
-                var forStrategy = LabelFactory.StrategyLabel(message.Symbol, message.TradeType);
+                var symbolBarSpec = new SymbolBarSpec(message.Symbol, message.BarSpecification);
 
-                this.alphaStrategyModuleStore.Tell(forStrategy, message);
+                this.alphaStrategyModuleStore.Tell(symbolBarSpec, message);
             });
         }
 
@@ -100,7 +101,9 @@ namespace Nautilus.BlackBox.AlphaModel
                     message.Strategy,
                     Context);
 
-                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, alphasStrategyModuleRef);
+                // TODO: Refactor below.
+                var symbolBarSpec = new SymbolBarSpec(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
+                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, symbolBarSpec, alphasStrategyModuleRef);
 
                 var createPortfolio = new CreatePortfolio(
                     message.Strategy.Instrument,

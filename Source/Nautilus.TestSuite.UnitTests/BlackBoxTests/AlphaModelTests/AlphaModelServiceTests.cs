@@ -116,9 +116,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
         internal void GivenMarketDataEventMessage_NoAlphaStrategyModules_LogsErrorAndRespondsFalse()
         {
             // Arrange
-            var message = new MarketDataEvent(
+            var message = new BarDataEvent(
                 new Symbol("some_symbol", Exchange.GLOBEX),
-                new TradeType("Scalp"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("some_symbol", Exchange.GLOBEX)),
@@ -134,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
+                "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -196,12 +195,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Arrange
             var message1 = CreateAlphaStrategyModuleMessage();
 
-            var message2 = new MarketDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("Scalp"),
+            var message2 = new BarDataEvent(
+                new Symbol("AUDUSD", Exchange.LMAX),
                 message1.Strategy.TradeProfile.BarSpecification,
                 StubBarBuilder.Build(),
-                StubTickFactory.Create(new Symbol("AUDUSD", Exchange.FXCM)),
+                StubTickFactory.Create(new Symbol("AUDUSD", Exchange.LMAX)),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
@@ -212,8 +210,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message2);
 
             // Assert
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
+                "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

@@ -6,16 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
+namespace Nautilus.TestSuite.UnitTests.DataTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Data.Market;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
+    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -63,18 +62,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void OnFirstTick_LogsExpected()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
-                this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+            var symbolBarSpec = new SymbolBarSpec(
+                new Symbol("AUDUSD", Exchange.FXCM),
+                new BarSpecification(BarQuoteType.Ask, BarResolution.Tick, 5));
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TickBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,
@@ -86,14 +82,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             barAggregatorRef.Tell(quote1);
 
             // Assert
+            LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "TickBarAggregator-AUDUSD.FXCM(TestScalp): Registered for 5-Tick[Bid] bars",
+                "TickBarAggregator-AUDUSD.FXCM-5-Tick[Ask]: Registered for 5-Tick[Ask] bars",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                "TickBarAggregator-AUDUSD.FXCM(TestScalp): Receiving quotes (AUDUSD) from FXCM...",
+                "TickBarAggregator-AUDUSD.FXCM-5-Tick[Ask]: Receiving quotes (AUDUSD) from FXCM...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -103,18 +100,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenTickMessages_WhenSecondBar_ReturnsValidBar()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
-                this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+            var symbolBarSpec = StubSymbolBarSpec.AUDUSD();
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TickBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,

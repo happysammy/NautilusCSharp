@@ -385,11 +385,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             Assert.Equal(Price.Create(0.80050m, 0.00001m), order.Price);
         }
 
-        private static MarketDataEvent ValidMarketDataEventBullBar()
+        private static BarDataEvent ValidMarketDataEventBullBar()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),

@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
+namespace Nautilus.TestSuite.UnitTests.DataTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Data.Market;
+    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

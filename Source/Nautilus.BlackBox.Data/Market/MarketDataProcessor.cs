@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -93,8 +94,9 @@ namespace Nautilus.BlackBox.Data.Market
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
                     this.storedContainer,
-                    this.GetMessagingAdapter(),
-                    message)));
+                    BlackBoxService.Data,
+                    new SymbolBarSpec(message.Symbol, message.BarSpecification),
+                    message.TickSize)));
 
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }
@@ -103,8 +105,9 @@ namespace Nautilus.BlackBox.Data.Market
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
                     this.storedContainer,
-                    this.GetMessagingAdapter(),
-                    message)));
+                    BlackBoxService.Data,
+                    new SymbolBarSpec(message.Symbol, message.BarSpecification),
+                    message.TickSize)));
 
                 this.barAggregators.Add(message.TradeType, barAggregatorRef);
             }

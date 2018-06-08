@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Market
+namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;

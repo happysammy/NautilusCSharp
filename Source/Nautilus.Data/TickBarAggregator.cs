@@ -6,17 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Market
+namespace Nautilus.Data
 {
     using System;
-    using System.Collections.Generic;
+    using Akka.Actor;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Data.Builders;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -24,11 +22,10 @@ namespace Nautilus.BlackBox.Data.Market
     /// <summary>
     /// The sealed <see cref="TickBarAggregator"/> class.
     /// </summary>
-    public sealed class TickBarAggregator : ActorComponentBusConnectedBase
+    public sealed class TickBarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
-        private readonly BarSpecification BarSpecification;
-        private readonly TradeType tradeType;
+        private readonly BarSpecification barSpecification;
         private readonly SpreadAnalyzer spreadAnalyzer;
 
         private BarBuilder barBuilder;
@@ -38,30 +35,29 @@ namespace Nautilus.BlackBox.Data.Market
         /// Initializes a new instance of the <see cref="TickBarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="serviceContext">The service context.</param>
+        /// <param name="symbolBarSpec">The symbol bar specification.</param>
+        /// <param name="tickSize">The tick size.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public TickBarAggregator(
-            BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter,
-            SubscribeSymbolDataType message)
+            IComponentryContainer container,
+            Enum serviceContext,
+            SymbolBarSpec symbolBarSpec,
+            decimal tickSize)
             : base(
-            BlackBoxService.Data,
-            LabelFactory.ComponentByTradeType(
+            serviceContext,
+            LabelFactory.Component(
                 nameof(TickBarAggregator),
-                message.Symbol,
-                message.TradeType),
-            container,
-            messagingAdapter)
+                symbolBarSpec),
+            container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(message, nameof(message));
+            Validate.NotNull(serviceContext, nameof(serviceContext));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
 
-            this.symbol = message.Symbol;
-            this.BarSpecification = message.BarSpecification;
-            this.tradeType = message.TradeType;
-            this.spreadAnalyzer = new SpreadAnalyzer(message.TickSize);
+            this.symbol = symbolBarSpec.Symbol;
+            this.barSpecification = symbolBarSpec.BarSpecification;
+            this.spreadAnalyzer = new SpreadAnalyzer(tickSize);
 
             this.SetupEventMessageHandling();
         }
@@ -90,7 +86,7 @@ namespace Nautilus.BlackBox.Data.Market
             this.barBuilder.OnQuote(quote.Bid, quote.Timestamp);
             this.spreadAnalyzer.OnQuote(quote);
 
-            if (this.tickCounter >= this.BarSpecification.Period)
+            if (this.tickCounter >= this.barSpecification.Period)
             {
                 this.CreateNewMarketDataEvent(quote);
                 this.CreateBarBuilder(quote);
@@ -104,7 +100,7 @@ namespace Nautilus.BlackBox.Data.Market
 
             this.CreateBarBuilder(quote);
 
-            this.Log.Debug($"Registered for {this.BarSpecification} bars");
+            this.Log.Debug($"Registered for {this.barSpecification} bars");
             this.Log.Debug($"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
         }
 
@@ -122,28 +118,16 @@ namespace Nautilus.BlackBox.Data.Market
 
             var newBar = this.barBuilder.Build(this.barBuilder.Timestamp);
 
-            var marketData = new MarketDataEvent(
+            Context.Parent.Tell(new BarDataEvent(
                 this.symbol,
-                this.tradeType,
-                this.BarSpecification,
+                this.barSpecification,
                 newBar,
                 quote,
                 this.spreadAnalyzer.AverageSpread,
                 false,
                 this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(
-                new List<Enum>
-                {
-                    BlackBoxService.AlphaModel,
-                    BlackBoxService.Portfolio,
-                    BlackBoxService.Risk
-                },
-                new EventMessage(
-                    marketData,
-                    this.NewGuid(),
-                    this.TimeNow()));
+                this.TimeNow()),
+                this.Self);
         }
     }
 }

@@ -68,11 +68,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
         internal void GivenSubscribeSymbolDataTypeMessage_SetsUpBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
+            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
             var tradeType = new TradeType("TestScalp");
             var message = new SubscribeSymbolDataType(
                 this.symbol,
-                BarSpecification,
+                barSpecification,
                 tradeType,
                 0.00001m,
                 Guid.NewGuid(),
@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                "TimeBarAggregator-AUDUSD.LMAX(TestScalp): Nautilus.BlackBox.Data.Market.TimeBarAggregator initializing...",
+                "TimeBarAggregator-AUDUSD.LMAX-5-Minute[Bid]: Nautilus.Data.TimeBarAggregator initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -101,11 +101,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
         internal void GivenUnsubscribeSymbolDataTypeMessage_RemovesBarAggregator()
         {
             // Arrange
-            var BarSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
+            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
             var tradeType = new TradeType("TestScalp");
             var message1 = new SubscribeSymbolDataType(
                 this.symbol,
-                BarSpecification,
+                barSpecification,
                 tradeType,
                 0.00001m,
                 Guid.NewGuid(),

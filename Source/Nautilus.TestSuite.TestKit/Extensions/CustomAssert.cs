@@ -191,10 +191,10 @@ namespace Nautilus.TestSuite.TestKit.Extensions
                         .Cast<OrderEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
-                case nameof(MarketDataEvent):
+                case nameof(BarDataEvent):
                     return envelopeList
                         .Select(envelope => envelope.Open(StubDateTime.Now()))
-                        .Cast<MarketDataEvent>()
+                        .Cast<BarDataEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
                 case nameof(AccountEvent):

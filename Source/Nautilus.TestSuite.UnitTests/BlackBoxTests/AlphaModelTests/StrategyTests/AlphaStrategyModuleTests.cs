@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Nautilus.BlackBox.AlphaModel.Strategy.AlphaStrategyModule initializing...",
+                "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Nautilus.BlackBox.AlphaModel.Strategy.AlphaStrategyModule initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Unhandled message random_object",
+                "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Unhandled message random_object",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaStrategyModule-AUDUSD.FXCM(TestTrade): Received MarketDataEvent",
+                "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Received MarketDataEvent",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -299,11 +299,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 //                EventuallyContains.PollIntervalMilliseconds);
         }
 
-        private static MarketDataEvent ValidMarketDataEventBullBar()
+        private static BarDataEvent ValidMarketDataEventBullBar()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
@@ -323,11 +322,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
         }
 
-        private static MarketDataEvent ValidMarketDataEventBearBar()
+        private static BarDataEvent ValidMarketDataEventBearBar()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
@@ -347,11 +345,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
         }
 
-        private static MarketDataEvent ValidMarketDataEventDailyBar()
+        private static BarDataEvent ValidMarketDataEventDailyBar()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
@@ -371,11 +368,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                 StubDateTime.Now() + Period.FromDays(1).ToDuration());
         }
 
-        private static MarketDataEvent HistoricalMarketDataEvent()
+        private static BarDataEvent HistoricalMarketDataEvent()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
@@ -396,11 +392,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         }
 
         // Invalid because the bar time frame is one minute.
-        private static MarketDataEvent InvalidMarketDataEvent()
+        private static BarDataEvent InvalidMarketDataEvent()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),

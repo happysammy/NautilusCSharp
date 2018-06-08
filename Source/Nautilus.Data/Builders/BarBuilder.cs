@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Market
+namespace Nautilus.Data.Builders
 {
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -21,9 +21,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// Initializes a new instance of the <see cref="BarBuilder"/> class.
         /// </summary>
         /// <param name="quote">The bar builder opening quote.</param>
-        /// <param name="startTime">
-        /// The bar builder start time.
-        /// </param>
+        /// <param name="startTime">The bar builder start time.</param>
         public BarBuilder(Price quote, ZonedDateTime startTime)
         {
             Validate.NotNull(quote, nameof(quote));

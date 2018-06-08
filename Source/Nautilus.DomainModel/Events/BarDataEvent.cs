@@ -16,17 +16,15 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="MarketDataEvent"/> class. Represents an event where a trade
-    /// bar was closed.
+    /// Represents an event where a trade bar was closed.
     /// </summary>
     [Immutable]
-    public sealed class MarketDataEvent : Event
+    public sealed class BarDataEvent : Event
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketDataEvent"/> class.
+        /// Initializes a new instance of the <see cref="BarDataEvent"/> class.
         /// </summary>
         /// <param name="symbol">The event symbol.</param>
-        /// <param name="tradeType">The event trade type.</param>
         /// <param name="barSpecification">The event bar profile.</param>
         /// <param name="bar">The event trade bar.</param>
         /// <param name="lastQuote">The event last quote.</param>
@@ -36,9 +34,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value, or if the average spread is zero or negative.</exception>
-        public MarketDataEvent(
+        public BarDataEvent(
             Symbol symbol,
-            TradeType tradeType,
             BarSpecification barSpecification,
             Bar bar,
             Tick lastQuote,
@@ -49,14 +46,12 @@ namespace Nautilus.DomainModel.Events
             : base(eventId, eventTimestamp)
         {
             Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(tradeType, nameof(tradeType));
             Validate.NotNull(barSpecification, nameof(barSpecification));
             Validate.NotNull(bar, nameof(bar));
             Validate.NotNull(lastQuote, nameof(lastQuote));
             Validate.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             this.Symbol = symbol;
-            this.TradeType = tradeType;
             this.BarSpecification = barSpecification;
             this.Bar = bar;
             this.LastQuote = lastQuote;
@@ -68,11 +63,6 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events symbol.
         /// </summary>
         public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the events trade type.
-        /// </summary>
-        public TradeType TradeType { get; }
 
         /// <summary>
         /// Gets the events bar specification.
@@ -100,9 +90,9 @@ namespace Nautilus.DomainModel.Events
         public bool IsHistorical { get; }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="MarketDataEvent"/>.
+        /// Returns a string representation of the <see cref="BarDataEvent"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(MarketDataEvent);
+        public override string ToString() => nameof(BarDataEvent);
     }
 }

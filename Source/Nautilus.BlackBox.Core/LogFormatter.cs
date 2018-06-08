@@ -437,7 +437,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         /// <param name="event">The market data event.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string ToOutput(MarketDataEvent @event)
+        public static string ToOutput(BarDataEvent @event)
         {
             Debug.NotNull(@event, nameof(@event));
 

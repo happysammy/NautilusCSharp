@@ -6,16 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
+namespace Nautilus.TestSuite.UnitTests.DataTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Data.Market;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
+    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -62,18 +61,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void OnFirstTick_LogsExpected()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
+            var symbolBarSpec = new SymbolBarSpec(
                 this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5));
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,
@@ -104,18 +100,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenTickMessages_WhenSecondBar_ReturnsValidBar()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
+            var symbolBarSpec = new SymbolBarSpec(
                 this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 30),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 30));
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,
@@ -158,18 +151,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenTickMessages_WhenMinuteBar_ReturnsValidBar()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
+            var symbolBarSpec = new SymbolBarSpec(
                 this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5));
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,
@@ -227,18 +217,15 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         internal void GivenTickMessages_WhenHourBar_ReturnsValidBar()
         {
             // Arrange
-            var message = new SubscribeSymbolDataType(
+            var symbolBarSpec = new SymbolBarSpec(
                 this.symbol,
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1),
-                new TradeType("TestScalp"),
-                0.00001m,
-                Guid.NewGuid(),
-                StubDateTime.Now());
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1));
 
             var barAggregatorRef = this.testActorSystem.ActorOf(Props.Create(() => new TimeBarAggregator(
                 this.container,
-                this.messagingAdapter,
-                message)));
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m)));
 
             var quote1 = new Tick(
                 this.symbol,

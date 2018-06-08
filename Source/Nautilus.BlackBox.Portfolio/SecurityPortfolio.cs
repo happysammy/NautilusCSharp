@@ -97,7 +97,7 @@ namespace Nautilus.BlackBox.Portfolio
         private void SetupEventMessageHandling()
         {
             this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
             this.Receive<SignalEvent>(msg => this.OnMessage(msg));
 
             this.Receive<OrderRejected>(msg => this.OnMessage(msg));
@@ -133,7 +133,7 @@ namespace Nautilus.BlackBox.Portfolio
             });
         }
 
-        private void OnMessage(MarketDataEvent @event)
+        private void OnMessage(BarDataEvent @event)
         {
             Debug.NotNull(@event, nameof(@event));
 

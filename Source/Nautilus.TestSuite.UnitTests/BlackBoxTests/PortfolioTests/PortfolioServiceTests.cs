@@ -215,11 +215,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 EventuallyContains.PollIntervalMilliseconds);
         }
 
-        private static MarketDataEvent ValidMarketDataEvent()
+        private static BarDataEvent ValidMarketDataEvent()
         {
-            return new MarketDataEvent(
+            return new BarDataEvent(
                 new Symbol("SYMBOL", Exchange.LMAX),
-                new TradeType("TestTrade"),
                 new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),

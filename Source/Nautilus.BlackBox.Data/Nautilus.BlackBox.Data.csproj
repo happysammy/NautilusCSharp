@@ -10,5 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
   </ItemGroup>
 </Project>

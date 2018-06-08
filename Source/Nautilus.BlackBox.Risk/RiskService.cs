@@ -65,7 +65,7 @@ namespace Nautilus.BlackBox.Risk
         private void SetupEventMessageHandling()
         {
             this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(InitializeRiskModel message)
@@ -116,7 +116,7 @@ namespace Nautilus.BlackBox.Risk
             });
         }
 
-        private void OnMessage(MarketDataEvent message)
+        private void OnMessage(BarDataEvent message)
         {
             this.Execute(() =>
             {

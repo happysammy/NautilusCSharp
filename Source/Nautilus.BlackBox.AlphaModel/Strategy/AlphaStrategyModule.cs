@@ -63,7 +63,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             TrailingStopSignalGenerator trailingStopSignalGenerator)
             : base(
             BlackBoxService.AlphaModel,
-            LabelFactory.ComponentByTradeType(
+            LabelFactory.Component(
                 nameof(AlphaStrategyModule),
                 alphaStrategy.Instrument.Symbol,
                 alphaStrategy.TradeProfile.TradeType),
@@ -94,7 +94,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
         private void SetupEventMessageHandling()
         {
-            this.Receive<MarketDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 
         private void InitializeAlgorithms(IAlphaStrategy alphaStrategy)
@@ -126,7 +126,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                 this.marketDataProvider));
         }
 
-        private void OnMessage(MarketDataEvent message)
+        private void OnMessage(BarDataEvent message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -157,7 +157,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             this.Log.Debug("Received MarketDataEvent");
         }
 
-        private void UpdateDailyBarStore(MarketDataEvent message)
+        private void UpdateDailyBarStore(BarDataEvent message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -165,7 +165,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             this.Log.Debug("BarStore updated (daily bar)");
         }
 
-        private void UpdateBarStore(MarketDataEvent message)
+        private void UpdateBarStore(BarDataEvent message)
         {
             Debug.NotNull(message, nameof(message));
             Debug.EqualTo(message.BarSpecification, nameof(message.BarSpecification), this.barStore.BarSpecification);

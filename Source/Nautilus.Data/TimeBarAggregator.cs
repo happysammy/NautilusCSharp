@@ -6,18 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Market
+namespace Nautilus.Data
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Data.Builders;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -27,11 +24,10 @@ namespace Nautilus.BlackBox.Data.Market
     /// <summary>
     /// The sealed <see cref="TimeBarAggregator"/> class.
     /// </summary>
-    public sealed class TimeBarAggregator : ActorComponentBusConnectedBase
+    public sealed class TimeBarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
-        private readonly BarSpecification BarSpecification;
-        private readonly TradeType tradeType;
+        private readonly BarSpecification barSpecification;
         private readonly SpreadAnalyzer spreadAnalyzer;
 
         private BarBuilder barBuilder;
@@ -41,30 +37,29 @@ namespace Nautilus.BlackBox.Data.Market
         /// Initializes a new instance of the <see cref="TimeBarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="message">The subsciption message.</param>
+        /// <param name="serviceContext">The service context.</param>
+        /// <param name="symbolBarSpec">The symbol bar specification.</param>
+        /// <param name="tickSize">The tick size.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public TimeBarAggregator(
-            BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter,
-            SubscribeSymbolDataType message)
+            IComponentryContainer container,
+            Enum serviceContext,
+            SymbolBarSpec symbolBarSpec,
+            decimal tickSize)
             : base(
-            BlackBoxService.Data,
-            LabelFactory.ComponentByTradeType(
-                nameof(TimeBarAggregator),
-                message.Symbol,
-                message.TradeType),
-            container,
-            messagingAdapter)
+                serviceContext,
+                LabelFactory.Component(
+                    nameof(TimeBarAggregator),
+                    symbolBarSpec),
+                container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(message, nameof(message));
+            Validate.NotNull(serviceContext, nameof(serviceContext));
+            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
 
-            this.symbol = message.Symbol;
-            this.BarSpecification = message.BarSpecification;
-            this.tradeType = message.TradeType;
-            this.spreadAnalyzer = new SpreadAnalyzer(message.TickSize);
+            this.symbol = symbolBarSpec.Symbol;
+            this.barSpecification = symbolBarSpec.BarSpecification;
+            this.spreadAnalyzer = new SpreadAnalyzer(tickSize);
 
             this.SetupEventMessageHandling();
         }
@@ -91,7 +86,7 @@ namespace Nautilus.BlackBox.Data.Market
             this.barBuilder.OnQuote(quote.Bid, quote.Timestamp);
             this.spreadAnalyzer.OnQuote(quote);
 
-            if (ZonedDateTime.Comparer.Instant.Compare(quote.Timestamp, this.barEndTime) >= 0)
+            if (quote.Timestamp.Compare(this.barEndTime) >= 0)
             {
                 this.CreateNewMarketDataEvent(quote);
                 this.CreateBarBuilder(quote);
@@ -106,7 +101,7 @@ namespace Nautilus.BlackBox.Data.Market
             this.CreateBarBuilder(quote);
 
             this.Log.Debug(
-                  $"Registered for {this.BarSpecification} bars "
+                  $"Registered for {this.barSpecification} bars "
                 + $"quoteBarStart={this.barBuilder.StartTime.ToIsoString()}, "
                 + $"quoteBarEnd={this.barEndTime.ToIsoString()}");
 
@@ -118,7 +113,7 @@ namespace Nautilus.BlackBox.Data.Market
             Debug.NotNull(quote, nameof(quote));
 
             var barStartTime = this.CalculateBarStartTime(quote.Timestamp);
-            this.barEndTime = barStartTime + this.BarSpecification.Duration;
+            this.barEndTime = barStartTime + this.barSpecification.Duration;
 
             this.barBuilder = new BarBuilder(quote.Bid, quote.Timestamp);
         }
@@ -129,9 +124,9 @@ namespace Nautilus.BlackBox.Data.Market
 
             var dotNetDateTime = timeNow.ToDateTimeUtc();
 
-            if (this.BarSpecification.Resolution == BarResolution.Second)
+            if (this.barSpecification.Resolution == BarResolution.Second)
             {
-                var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
+                var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.barSpecification.Period) * this.barSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -147,9 +142,9 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.BarSpecification.Resolution == BarResolution.Minute)
+            if (this.barSpecification.Resolution == BarResolution.Minute)
             {
-                var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
+                var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.barSpecification.Period) * this.barSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -165,9 +160,9 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            if (this.BarSpecification.Resolution == BarResolution.Hour)
+            if (this.barSpecification.Resolution == BarResolution.Hour)
             {
-                var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.BarSpecification.Period) * this.BarSpecification.Period;
+                var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.barSpecification.Period) * this.barSpecification.Period;
 
                 var dateTimeStart = new DateTime(
                     timeNow.Year,
@@ -183,37 +178,25 @@ namespace Nautilus.BlackBox.Data.Market
                 return new ZonedDateTime(instantStart, DateTimeZone.Utc);
             }
 
-            throw new InvalidOperationException($"BarSpecification {this.BarSpecification} currently not supported.");
+            throw new InvalidOperationException($"BarSpecification {this.barSpecification} currently not supported.");
         }
 
         private void CreateNewMarketDataEvent(Tick quote)
         {
             Debug.NotNull(quote, nameof(quote));
 
-            var newBar = this.barBuilder.Build(this.barEndTime);
+            var newBar = this.barBuilder.Build(this.barBuilder.Timestamp);
 
-            var marketData = new MarketDataEvent(
+            Context.Parent.Tell(new BarDataEvent(
                 this.symbol,
-                this.tradeType,
-                this.BarSpecification,
+                this.barSpecification,
                 newBar,
                 quote,
                 this.spreadAnalyzer.AverageSpread,
                 false,
                 this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(
-                new List<Enum>
-                {
-                    BlackBoxService.AlphaModel,
-                    BlackBoxService.Portfolio,
-                    BlackBoxService.Risk
-                },
-                new EventMessage(
-                    marketData,
-                    this.NewGuid(),
-                    this.TimeNow()));
+                this.TimeNow()),
+                this.Self);
         }
     }
 }
