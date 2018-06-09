@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                "TimeBarAggregator-AUDUSD.LMAX-5-Minute[Bid]: Nautilus.Data.TimeBarAggregator initializing...",
+                "BarAggregator-AUDUSD.LMAX-5-Minute[Bid]: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

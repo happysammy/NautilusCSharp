@@ -8,6 +8,7 @@
 
 namespace Nautilus.BlackBox.Data.Market
 {
+    using System;
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Extensions;
@@ -20,6 +21,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Common.Messaging;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -67,6 +69,7 @@ namespace Nautilus.BlackBox.Data.Market
         {
             this.Receive<SubscribeSymbolDataType>(msg => this.OnMessage(msg));
             this.Receive<UnsubscribeSymbolDataType>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -90,27 +93,13 @@ namespace Nautilus.BlackBox.Data.Market
             Validate.EqualTo(message.Symbol, nameof(message.Symbol), this.symbol);
             Validate.DictionaryDoesNotContainKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
 
-            if (message.BarSpecification.Resolution == BarResolution.Tick)
-            {
-                var barAggregatorRef = Context.ActorOf(Props.Create(() => new TickBarAggregator(
-                    this.storedContainer,
-                    BlackBoxService.Data,
-                    new SymbolBarSpec(message.Symbol, message.BarSpecification),
-                    message.TickSize)));
+            var barAggregatorRef = Context.ActorOf(Props.Create(() => new BarAggregator(
+                this.storedContainer,
+                BlackBoxService.Data,
+                new SymbolBarSpec(message.Symbol, message.BarSpecification),
+                message.TickSize)));
 
-                this.barAggregators.Add(message.TradeType, barAggregatorRef);
-            }
-
-            if (message.BarSpecification.Resolution != BarResolution.Tick)
-            {
-                var barAggregatorRef = Context.ActorOf(Props.Create(() => new TimeBarAggregator(
-                    this.storedContainer,
-                    BlackBoxService.Data,
-                    new SymbolBarSpec(message.Symbol, message.BarSpecification),
-                    message.TickSize)));
-
-                this.barAggregators.Add(message.TradeType, barAggregatorRef);
-            }
+            this.barAggregators.Add(message.TradeType, barAggregatorRef);
 
             this.Log.Debug($"Setup for {message.BarSpecification} bars");
 
@@ -129,6 +118,21 @@ namespace Nautilus.BlackBox.Data.Market
             this.Log.Information($"Data for {this.symbol}({message.TradeType}) bars deregistered");
 
             Debug.DictionaryDoesNotContainKey(message.TradeType, nameof(message.TradeType), this.barAggregators);
+        }
+
+        private void OnMessage(BarDataEvent message)
+        {
+            this.Send(
+                new List<Enum>
+                {
+                    BlackBoxService.AlphaModel,
+                    BlackBoxService.Portfolio,
+                    BlackBoxService.Risk
+                },
+                new EventMessage(
+                    message,
+                    this.NewGuid(),
+                    this.TimeNow()));
         }
     }
 }

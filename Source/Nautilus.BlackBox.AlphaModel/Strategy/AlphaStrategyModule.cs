@@ -148,7 +148,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                 return;
             }
 
-            this.marketDataProvider.Update(message.LastQuote, message.AverageSpread);
+            this.marketDataProvider.Update(message.LastTick, message.AverageSpread);
             this.ProcessSignals();
         }
 

@@ -21,68 +21,34 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.BuildersTests
     public class BarBuilderTests
     {
         [Fact]
-        internal void GivenNewInstantion_InitializesCorrectly()
-        {
-            // Arrange
-            var quote = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                Price.Create(1.00000m, 0.00001m),
-                Price.Create(1.00010m, 0.00001m),
-                StubDateTime.Now() + Period.FromSeconds(60).ToDuration());
-
-            // Act
-            var barBuilder = new BarBuilder(
-                quote.Bid,
-                quote.Timestamp - Period.FromSeconds(1).ToDuration());
-
-            // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromSeconds(59).ToDuration(), barBuilder.StartTime);
-            Assert.Equal(quote.Timestamp - Period.FromSeconds(1).ToDuration(), barBuilder.Timestamp);
-        }
-
-        [Fact]
         internal void OnQuote_CorrectlyUpdatesBar()
         {
             // Arrange
-            var quote1 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                Price.Create(1.00000m, 0.00001m),
-                Price.Create(1.00010m, 0.00001m),
-                StubDateTime.Now() + Period.FromSeconds(60).ToDuration());
+            var timestamp = StubDateTime.Now();
 
-            var quote2 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                Price.Create(1.00010m, 0.00001m),
-                Price.Create(0.99980m, 0.00001m),
-                StubDateTime.Now() + Period.FromSeconds(62).ToDuration());
+            var quote1 = Price.Create(1.00010m, 5);
 
-            var quote3 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                Price.Create(1.00020m, 0.00001m),
-                Price.Create(0.99950m, 0.00001m),
-                StubDateTime.Now() + Period.FromSeconds(64).ToDuration());
+            var quote2 = Price.Create(0.99980m, 5);
 
-            var quote4 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                Price.Create(0.99980m, 0.00001m),
-                Price.Create(0.99950m, 0.00001m),
-                StubDateTime.Now() + Period.FromSeconds(66).ToDuration());
+            var quote3 = Price.Create(0.99950m, 5);
 
-            var barBuilder = new BarBuilder(
-                quote1.Bid,
-                quote1.Timestamp - Period.FromSeconds(1).ToDuration());
+            var quote4 = Price.Create(0.99950m, 5);
+
+            var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote2.Bid, quote2.Timestamp);
-            barBuilder.OnQuote(quote3.Bid, quote3.Timestamp);
-            barBuilder.OnQuote(quote4.Bid, quote4.Timestamp);
+            barBuilder.OnQuote(quote1, timestamp + Period.FromSeconds(60).ToDuration());
+            barBuilder.OnQuote(quote2, timestamp + Period.FromSeconds(62).ToDuration());
+            barBuilder.OnQuote(quote3, timestamp + Period.FromSeconds(64).ToDuration());
+            barBuilder.OnQuote(quote4, timestamp + Period.FromSeconds(66).ToDuration());
+
             var bar = barBuilder.Build(StubDateTime.Now() + Period.FromSeconds(68).ToDuration());
 
             // Assert
-            Assert.Equal(quote1.Bid, bar.Open);
-            Assert.Equal(quote3.Bid, bar.High);
-            Assert.Equal(quote4.Bid, bar.Low);
-            Assert.Equal(quote4.Bid, bar.Close);
+            Assert.Equal(quote1, bar.Open);
+            Assert.Equal(quote1, bar.High);
+            Assert.Equal(quote4, bar.Low);
+            Assert.Equal(quote4, bar.Close);
             Assert.Equal(Quantity.Create(4), bar.Volume);
             Assert.Equal(StubDateTime.Now() + Period.FromSeconds(68).ToDuration(), bar.Timestamp);
         }

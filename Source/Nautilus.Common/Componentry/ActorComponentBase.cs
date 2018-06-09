@@ -96,7 +96,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         protected override void PreStart()
         {
-            this.Log.Debug($"{this} initializing...");
+            this.Log.Debug($"Initializing...");
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Nautilus.Common.Componentry
         {
             Validate.NotNull(ex, nameof(ex));
 
-            this.Log.Error($"{this} restarting ({ex.Message})", ex);
+            this.Log.Error($"Restarting ({ex.Message})", ex);
 
             this.PreStart();
         }

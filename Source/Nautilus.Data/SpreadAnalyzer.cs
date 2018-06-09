@@ -41,8 +41,8 @@ namespace Nautilus.Data
             this.decimalPlaces = tickSize.GetDecimalPlaces();
 
             this.AverageSpread = tickSize;
-            this.MaxSpread = Tuple.Create(default(ZonedDateTime), decimal.MinValue);
-            this.MinSpread = Tuple.Create(default(ZonedDateTime), decimal.MaxValue);
+            this.MaxSpread = (default(ZonedDateTime), decimal.MinValue);
+            this.MinSpread = (default(ZonedDateTime), decimal.MaxValue);
         }
 
         /// <summary>
@@ -68,12 +68,12 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the spread analyzers maximum spread.
         /// </summary>
-        public Tuple<ZonedDateTime, decimal> MaxSpread { get; private set; }
+        public (ZonedDateTime Timestamp, decimal Spread) MaxSpread { get; private set; }
 
         /// <summary>
         /// Gets the spread analyzers minimum spread.
         /// </summary>
-        public Tuple<ZonedDateTime, decimal> MinSpread { get; private set; }
+        public (ZonedDateTime Timestamp, decimal Spread) MinSpread { get; private set; }
 
         /// <summary>
         /// Gets the spread analyzers negative spreads.
@@ -99,14 +99,14 @@ namespace Nautilus.Data
 
             this.thisBarsSpreads.Add(this.CurrentSpread);
 
-            if (this.CurrentSpread > this.MaxSpread.Item2)
+            if (this.CurrentSpread > this.MaxSpread.Spread)
             {
-                this.MaxSpread = Tuple.Create(quote.Timestamp, this.CurrentSpread);
+                this.MaxSpread = (quote.Timestamp, this.CurrentSpread);
             }
 
-            if (this.CurrentSpread < this.MinSpread.Item2)
+            if (this.CurrentSpread < this.MinSpread.Spread)
             {
-                this.MinSpread = Tuple.Create(quote.Timestamp, this.CurrentSpread);
+                this.MinSpread = (quote.Timestamp, this.CurrentSpread);
             }
 
             if (this.totalAverageSpreads.Count == 0)

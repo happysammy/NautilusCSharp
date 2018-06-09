@@ -80,13 +80,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
-                "MarketDataProcessor-AUDUSD.LMAX: Nautilus.BlackBox.Data.Market.MarketDataProcessor initializing...",
+                "MarketDataProcessor-AUDUSD.LMAX: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                "TimeBarAggregator-AUDUSD.LMAX-5-Minute[Bid]: Nautilus.Data.TimeBarAggregator initializing...",
+                "BarAggregator-AUDUSD.LMAX-5-Minute[Bid]: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                "TickBarAggregator-AUDUSD.LMAX-1000-Tick[Bid]: Nautilus.Data.TickBarAggregator initializing...",
+                "BarAggregator-AUDUSD.LMAX-1000-Tick[Bid]: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

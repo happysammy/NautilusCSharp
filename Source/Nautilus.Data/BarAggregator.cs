@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="TimeBarAggregator.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarAggregator.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,11 +9,12 @@
 namespace Nautilus.Data
 {
     using System;
-    using Nautilus.Core.Extensions;
+    using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Builders;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -22,36 +23,38 @@ namespace Nautilus.Data
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="TimeBarAggregator"/> class.
+    /// The sealed <see cref="BarAggregator"/> class.
     /// </summary>
-    public sealed class TimeBarAggregator : ActorComponentBase
+    public sealed class BarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
         private readonly BarSpecification barSpecification;
         private readonly SpreadAnalyzer spreadAnalyzer;
+        private readonly int decimals;
 
         private BarBuilder barBuilder;
         private ZonedDateTime barEndTime;
+        private int tickCounter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeBarAggregator"/> class.
+        /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="serviceContext">The service context.</param>
         /// <param name="symbolBarSpec">The symbol bar specification.</param>
         /// <param name="tickSize">The tick size.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        public TimeBarAggregator(
+        public BarAggregator(
             IComponentryContainer container,
             Enum serviceContext,
             SymbolBarSpec symbolBarSpec,
             decimal tickSize)
             : base(
-                serviceContext,
-                LabelFactory.Component(
-                    nameof(TimeBarAggregator),
-                    symbolBarSpec),
-                container)
+            serviceContext,
+            LabelFactory.Component(
+                nameof(BarAggregator),
+                symbolBarSpec),
+            container)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(serviceContext, nameof(serviceContext));
@@ -60,9 +63,31 @@ namespace Nautilus.Data
             this.symbol = symbolBarSpec.Symbol;
             this.barSpecification = symbolBarSpec.BarSpecification;
             this.spreadAnalyzer = new SpreadAnalyzer(tickSize);
+            this.decimals = tickSize.GetDecimalPlaces();
+
+            this.IsTimeBar = true;
+            if (this.barSpecification.Resolution == BarResolution.Tick)
+            {
+                this.IsTimeBar = false;
+            }
 
             this.SetupEventMessageHandling();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this is a time based bar aggregator.
+        /// </summary>
+        private bool IsTimeBar { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this is a tick based bar aggregator.
+        /// </summary>
+        private bool IsTickBar => !this.IsTimeBar;
+
+        /// <summary>
+        /// Gets a value indicating whether the bar aggregator has been initialized.
+        /// </summary>
+        private bool IsInitialized { get; set; }
 
         /// <summary>
         /// Sets up all <see cref="EventMessage"/> handling methods.
@@ -72,25 +97,47 @@ namespace Nautilus.Data
             this.Receive<Tick>(msg => this.OnReceive(msg));
         }
 
-        private void OnReceive(Tick quote)
+        private void OnReceive(Tick tick)
         {
-            Debug.NotNull(quote, nameof(quote));
+            Debug.NotNull(tick, nameof(tick));
 
-            if (this.barBuilder == null)
+            if (!this.IsInitialized)
             {
-                this.OnFirstTick(quote);
+                this.OnFirstTick(tick);
 
                 return;
             }
 
-            this.barBuilder.OnQuote(quote.Bid, quote.Timestamp);
-            this.spreadAnalyzer.OnQuote(quote);
+            this.tickCounter++;
+            this.spreadAnalyzer.OnQuote(tick);
 
-            if (quote.Timestamp.Compare(this.barEndTime) >= 0)
+            switch (this.barSpecification.QuoteType)
             {
-                this.CreateNewMarketDataEvent(quote);
-                this.CreateBarBuilder(quote);
-                this.spreadAnalyzer.OnBarUpdate(this.barEndTime);
+                case BarQuoteType.Bid:
+                    this.barBuilder.OnQuote(tick.Bid, tick.Timestamp);
+                    break;
+
+                case BarQuoteType.Ask:
+                    this.barBuilder.OnQuote(tick.Ask, tick.Timestamp);
+                    break;
+
+                case BarQuoteType.Mid:
+                    this.barBuilder.OnQuote(
+                        Price.Create(Math.Round(tick.Bid + tick.Ask / 2, decimals), decimals), tick.Timestamp);
+                    break;
+                default:
+                    throw new InvalidOperationException("The quote type is not recognized.");
+            }
+
+            if (this.IsTimeBar && tick.Timestamp.Compare(this.barEndTime) >= 0)
+            {
+                this.CloseBar(tick);
+                this.tickCounter = 1;
+            }
+            if (this.IsTickBar && this.tickCounter < this.barSpecification.Period)
+            {
+                this.CloseBar(tick);
+                this.tickCounter = 1;
             }
         }
 
@@ -99,23 +146,23 @@ namespace Nautilus.Data
             Debug.NotNull(quote, nameof(quote));
 
             this.CreateBarBuilder(quote);
+            this.IsInitialized = true;
 
-            this.Log.Debug(
-                  $"Registered for {this.barSpecification} bars "
-                + $"quoteBarStart={this.barBuilder.StartTime.ToIsoString()}, "
-                + $"quoteBarEnd={this.barEndTime.ToIsoString()}");
-
+            this.Log.Debug($"Registered for {this.barSpecification} bars");
             this.Log.Debug($"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
         }
 
-        private void CreateBarBuilder(Tick quote)
+        private void CreateBarBuilder(Tick tick)
         {
-            Debug.NotNull(quote, nameof(quote));
+            Debug.NotNull(tick, nameof(tick));
 
-            var barStartTime = this.CalculateBarStartTime(quote.Timestamp);
-            this.barEndTime = barStartTime + this.barSpecification.Duration;
+            if (this.IsTimeBar)
+            {
+                var barStartTime = this.CalculateBarStartTime(tick.Timestamp);
+                this.barEndTime = barStartTime + this.barSpecification.Duration;
+            }
 
-            this.barBuilder = new BarBuilder(quote.Bid, quote.Timestamp);
+            this.barBuilder = new BarBuilder();
         }
 
         private ZonedDateTime CalculateBarStartTime(ZonedDateTime timeNow)
@@ -181,22 +228,30 @@ namespace Nautilus.Data
             throw new InvalidOperationException($"BarSpecification {this.barSpecification} currently not supported.");
         }
 
-        private void CreateNewMarketDataEvent(Tick quote)
+        private BarDataEvent CreateBarDataEvent(Tick tick)
         {
-            Debug.NotNull(quote, nameof(quote));
+            Debug.NotNull(tick, nameof(tick));
 
             var newBar = this.barBuilder.Build(this.barBuilder.Timestamp);
 
-            Context.Parent.Tell(new BarDataEvent(
+            return new BarDataEvent(
                 this.symbol,
                 this.barSpecification,
                 newBar,
-                quote,
+                tick,
                 this.spreadAnalyzer.AverageSpread,
                 false,
                 this.NewGuid(),
-                this.TimeNow()),
-                this.Self);
+                this.TimeNow());
+        }
+
+        private void CloseBar(Tick quote)
+        {
+            var @event = this.CreateBarDataEvent(quote);
+            this.CreateBarBuilder(quote);
+            this.spreadAnalyzer.OnBarUpdate(quote.Timestamp);
+
+            Context.Parent.Tell(@event);
         }
     }
 }
