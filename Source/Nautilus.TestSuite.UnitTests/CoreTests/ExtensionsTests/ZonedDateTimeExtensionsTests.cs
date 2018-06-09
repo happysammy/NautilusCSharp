@@ -111,21 +111,18 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        internal void IsGreaterThan_WithVariousCombinations_ReturnsExpectedInt32()
+        internal void Compare_WithVariousCombinations_ReturnsExpectedInt32()
         {
             // Arrange
             var time1 = StubZonedDateTime.UnixEpoch();
             var time2 = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1);
 
             // Act
-            var result1 = time1.IsGreaterThan(time1);
-            var result2 = time1.IsGreaterThan(time2);
-            var result3 = time2.IsGreaterThan(time1);
-
             // Assert
-            Assert.False(result1);
-            Assert.False(result2);
-            Assert.True(result3);
+            Assert.True(time1.Compare(time1) >= 0);
+            Assert.True(time1.Compare(time1) <= 0);
+            Assert.True(time1.Compare(time2) <= 0);
+            Assert.True(time2.Compare(time1) >= 0);
         }
 
         [Fact]
@@ -147,6 +144,42 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
+        internal void IsGreaterThan_WithVariousCombinations_ReturnsExpectedInt32()
+        {
+            // Arrange
+            var time1 = StubZonedDateTime.UnixEpoch();
+            var time2 = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1);
+
+            // Act
+            var result1 = time1.IsGreaterThan(time1);
+            var result2 = time1.IsGreaterThan(time2);
+            var result3 = time2.IsGreaterThan(time1);
+
+            // Assert
+            Assert.False(result1);
+            Assert.False(result2);
+            Assert.True(result3);
+        }
+
+        [Fact]
+        internal void IsGreaterThanOrEqualTo_WithVariousCombinations_ReturnsExpectedInt32()
+        {
+            // Arrange
+            var time1 = StubZonedDateTime.UnixEpoch();
+            var time2 = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1);
+
+            // Act
+            var result1 = time1.IsGreaterThanOrEqualTo(time1);
+            var result2 = time1.IsGreaterThanOrEqualTo(time2);
+            var result3 = time2.IsGreaterThanOrEqualTo(time1);
+
+            // Assert
+            Assert.True(result1);
+            Assert.False(result2);
+            Assert.True(result3);
+        }
+
+        [Fact]
         internal void IsLessThan_WithVariousCombinations_ReturnsExpectedInt32()
         {
             // Arrange
@@ -165,18 +198,21 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         }
 
         [Fact]
-        internal void Compare_WithVariousCombinations_ReturnsExpectedInt32()
+        internal void IsLessThanOrEqualTo_WithVariousCombinations_ReturnsExpectedInt32()
         {
             // Arrange
             var time1 = StubZonedDateTime.UnixEpoch();
             var time2 = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1);
 
             // Act
+            var result1 = time1.IsLessThanOrEqualTo(time1);
+            var result2 = time1.IsLessThanOrEqualTo(time2);
+            var result3 = time2.IsLessThanOrEqualTo(time1);
+
             // Assert
-            Assert.True(time1.Compare(time1) >= 0);
-            Assert.True(time1.Compare(time1) <= 0);
-            Assert.True(time1.Compare(time2) <= 0);
-            Assert.True(time2.Compare(time1) >= 0);
+            Assert.True(result1);
+            Assert.True(result2);
+            Assert.False(result3);
         }
     }
 }

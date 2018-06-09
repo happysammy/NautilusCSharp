@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         }
 
         [Fact]
-        internal void GivenTick_WhenTickBarAndReachedTicks_ReturnsValidBar()
+        internal void GivenTicks_WhenTickBarAndReachedTicks_ReturnsValidBar()
         {
             // Arrange
             var symbolBarSpec = new SymbolBarSpec(
@@ -283,6 +283,161 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             // Assert
             // Assert
             var result = ExpectMsg<BarDataEvent>();
+        }
+
+        [Fact]
+        internal void GivenTicks_WhenSecondBarAndSecondBarsMissed1_ReturnsValidBars()
+        {
+            // Arrange
+            var symbolBarSpec = new SymbolBarSpec(
+                this.symbol,
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+
+            var props = Props.Create(() => new BarAggregator(
+                this.container,
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m));
+
+            var barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
+
+            var quote1 = new Tick(
+                this.symbol,
+                Price.Create(1, 1),
+                Price.Create(1, 1),
+                StubDateTime.Now() + Duration.FromMilliseconds(1));
+
+            var quote2 = new Tick(
+                this.symbol,
+                Price.Create(2, 1),
+                Price.Create(2, 1),
+                StubDateTime.Now() + Duration.FromSeconds(1));
+
+            var quote3 = new Tick(
+                this.symbol,
+                Price.Create(3, 1),
+                Price.Create(3, 1),
+                StubDateTime.Now() + Duration.FromSeconds(3));
+
+            var quote4 = new Tick(
+                this.symbol,
+                Price.Create(0.5m, 1),
+                Price.Create(1m, 1),
+                StubDateTime.Now() + Duration.FromSeconds(4));
+
+            // Act
+            barAggregatorRef.Tell(quote1);
+            barAggregatorRef.Tell(quote2);
+            barAggregatorRef.Tell(quote3);
+            barAggregatorRef.Tell(quote4);
+
+            var result1 = ExpectMsg<BarDataEvent>();
+            var result2 = ExpectMsg<BarDataEvent>();
+            var result3 = ExpectMsg<BarDataEvent>();
+            var result4 = ExpectMsg<BarDataEvent>();
+
+            // Assert
+            Assert.Equal(1, result1.Bar.Open.Value);
+            Assert.Equal(2, result1.Bar.High.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(1), result1.Bar.Timestamp);
+
+            Assert.Equal(3, result2.Bar.Open.Value);
+            Assert.Equal(3, result2.Bar.High.Value);
+            Assert.Equal(3, result2.Bar.Low.Value);
+            Assert.Equal(3, result2.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(2), result2.Bar.Timestamp);
+
+            Assert.Equal(3, result3.Bar.Open.Value);
+            Assert.Equal(3, result3.Bar.High.Value);
+            Assert.Equal(3, result3.Bar.Low.Value);
+            Assert.Equal(3, result3.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(3), result3.Bar.Timestamp);
+
+            Assert.Equal(0.5m, result4.Bar.High.Value);
+            Assert.Equal(0.5m, result4.Bar.Low.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(4), result4.Bar.Timestamp);
+        }
+
+        [Fact]
+        internal void GivenTicks_WhenSecondBarAndSecondBarsMissed2_ReturnsValidBars()
+        {
+            // Arrange
+            var symbolBarSpec = new SymbolBarSpec(
+                this.symbol,
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+
+            var props = Props.Create(() => new BarAggregator(
+                this.container,
+                BlackBoxService.Data,
+                symbolBarSpec,
+                0.00001m));
+
+            var barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
+
+            var quote1 = new Tick(
+                this.symbol,
+                Price.Create(1, 1),
+                Price.Create(1, 1),
+                StubDateTime.Now() + Duration.FromMilliseconds(1));
+
+            var quote2 = new Tick(
+                this.symbol,
+                Price.Create(2, 1),
+                Price.Create(2, 1),
+                StubDateTime.Now() + Duration.FromSeconds(1));
+
+            var quote3 = new Tick(
+                this.symbol,
+                Price.Create(3, 1),
+                Price.Create(3, 1),
+                StubDateTime.Now() + Duration.FromSeconds(3));
+
+            var quote4 = new Tick(
+                this.symbol,
+                Price.Create(0.5m, 1),
+                Price.Create(1m, 1),
+                StubDateTime.Now() + Duration.FromSeconds(5));
+
+            // Act
+            barAggregatorRef.Tell(quote1);
+            barAggregatorRef.Tell(quote2);
+            barAggregatorRef.Tell(quote3);
+            barAggregatorRef.Tell(quote4);
+
+            var result1 = ExpectMsg<BarDataEvent>();
+            var result2 = ExpectMsg<BarDataEvent>();
+            var result3 = ExpectMsg<BarDataEvent>();
+            var result4 = ExpectMsg<BarDataEvent>();
+            var result5 = ExpectMsg<BarDataEvent>();
+
+            // Assert
+            Assert.Equal(1, result1.Bar.Open.Value);
+            Assert.Equal(2, result1.Bar.High.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(1), result1.Bar.Timestamp);
+
+            Assert.Equal(3, result2.Bar.Open.Value);
+            Assert.Equal(3, result2.Bar.High.Value);
+            Assert.Equal(3, result2.Bar.Low.Value);
+            Assert.Equal(3, result2.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(2), result2.Bar.Timestamp);
+
+            Assert.Equal(3, result3.Bar.Open.Value);
+            Assert.Equal(3, result3.Bar.High.Value);
+            Assert.Equal(3, result3.Bar.Low.Value);
+            Assert.Equal(3, result3.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(3), result3.Bar.Timestamp);
+
+            Assert.Equal(0.5m, result4.Bar.Open.Value);
+            Assert.Equal(0.5m, result4.Bar.High.Value);
+            Assert.Equal(0.5m, result4.Bar.Low.Value);
+            Assert.Equal(0.5m, result4.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(4), result4.Bar.Timestamp);
+
+            Assert.Equal(0.5m, result5.Bar.Open.Value);
+            Assert.Equal(0.5m, result5.Bar.High.Value);
+            Assert.Equal(0.5m, result5.Bar.Low.Value);
+            Assert.Equal(0.5m, result5.Bar.Close.Value);
+            Assert.Equal(StubDateTime.Now() + Duration.FromSeconds(5), result5.Bar.Timestamp);
         }
     }
 }

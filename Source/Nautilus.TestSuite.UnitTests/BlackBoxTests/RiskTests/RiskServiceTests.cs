@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "RiskService: Nautilus.BlackBox.Risk.RiskService initializing...",
+                "RiskService: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

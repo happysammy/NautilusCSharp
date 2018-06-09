@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Builders
+namespace Nautilus.Data
 {
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -17,30 +17,6 @@ namespace Nautilus.Data.Builders
     /// </summary>
     public sealed class BarBuilder
     {
-//        /// <summary>
-//        /// Initializes a new instance of the <see cref="BarBuilder"/> class.
-//        /// </summary>
-//        /// <param name="quote">The bar builder opening quote.</param>
-//        /// <param name="startTime">The bar builder start time.</param>
-//        public BarBuilder(Price quote, ZonedDateTime startTime)
-//        {
-//            Validate.NotNull(quote, nameof(quote));
-//            Validate.NotDefault(startTime, nameof(startTime));
-//
-//            this.StartTime = startTime;
-//            this.Open = quote;
-//            this.High = quote;
-//            this.Low = quote;
-//            this.Close = quote;
-//            this.Volume = 1;
-//            this.Timestamp = startTime;
-//        }
-
-//        /// <summary>
-//        /// Gets the bar builders start time.
-//        /// </summary>
-//        public ZonedDateTime StartTime { get; }
-
         /// <summary>
         /// Gets the bar builders open price.
         /// </summary>

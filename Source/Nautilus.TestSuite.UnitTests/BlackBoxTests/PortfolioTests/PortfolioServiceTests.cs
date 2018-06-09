@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "PortfolioService: Nautilus.BlackBox.Portfolio.PortfolioService initializing...",
+                "PortfolioService: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

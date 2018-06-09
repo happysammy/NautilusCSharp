@@ -108,18 +108,18 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a value indicating whether the given <see cref="ZonedDateTime"/> is greater than
-        /// this <see cref="ZonedDateTime"/>.
+        /// Returns a value indicating whether the left <see cref="ZonedDateTime"/> is less than
+        /// equal to or greater than the right <see cref="ZonedDateTime"/>.
         /// </summary>
         /// <param name="left">The left <see cref="ZonedDateTime"/>.</param>
         /// <param name="right">The right <see cref="ZonedDateTime"/>.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        public static bool IsGreaterThan(this ZonedDateTime left, ZonedDateTime right)
+        public static int Compare(this ZonedDateTime left, ZonedDateTime right)
         {
             Debug.NotDefault(left, nameof(left));
             Debug.NotDefault(right, nameof(right));
 
-            return Compare(left, right) == 1;
+            return ZonedDateTime.Comparer.Instant.Compare(left, right);
         }
 
         /// <summary>
@@ -138,6 +138,36 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
+        /// Returns a value indicating whether the given <see cref="ZonedDateTime"/> is greater than
+        /// this <see cref="ZonedDateTime"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="ZonedDateTime"/>.</param>
+        /// <param name="right">The right <see cref="ZonedDateTime"/>.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        public static bool IsGreaterThan(this ZonedDateTime left, ZonedDateTime right)
+        {
+            Debug.NotDefault(left, nameof(left));
+            Debug.NotDefault(right, nameof(right));
+
+            return Compare(left, right) == 1;
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the given <see cref="ZonedDateTime"/> is greater than
+        /// or equal to this <see cref="ZonedDateTime"/>.
+        /// </summary>
+        /// <param name="left">The left <see cref="ZonedDateTime"/>.</param>
+        /// <param name="right">The right <see cref="ZonedDateTime"/>.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        public static bool IsGreaterThanOrEqualTo(this ZonedDateTime left, ZonedDateTime right)
+        {
+            Debug.NotDefault(left, nameof(left));
+            Debug.NotDefault(right, nameof(right));
+
+            return Compare(left, right) >= 0;
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the given <see cref="ZonedDateTime"/> is less than
         /// this <see cref="ZonedDateTime"/>.
         /// </summary>
@@ -153,18 +183,18 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a value indicating whether the left <see cref="ZonedDateTime"/> is less than
-        /// equal to or greater than the right <see cref="ZonedDateTime"/>.
+        /// Returns a value indicating whether the given <see cref="ZonedDateTime"/> is less than
+        /// or equal to this <see cref="ZonedDateTime"/>.
         /// </summary>
         /// <param name="left">The left <see cref="ZonedDateTime"/>.</param>
         /// <param name="right">The right <see cref="ZonedDateTime"/>.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        public static int Compare(this ZonedDateTime left, ZonedDateTime right)
+        public static bool IsLessThanOrEqualTo(this ZonedDateTime left, ZonedDateTime right)
         {
             Debug.NotDefault(left, nameof(left));
             Debug.NotDefault(right, nameof(right));
 
-            return ZonedDateTime.Comparer.Instant.Compare(left, right);
+            return Compare(left, right) <= 0;
         }
     }
 }

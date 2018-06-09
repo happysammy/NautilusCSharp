@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Nautilus.BlackBox.AlphaModel.Strategy.AlphaStrategyModule initializing...",
+                "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

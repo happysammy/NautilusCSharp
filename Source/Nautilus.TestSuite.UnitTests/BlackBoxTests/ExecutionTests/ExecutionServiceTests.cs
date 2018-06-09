@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
             CustomAssert.EventuallyContains(
-                "ExecutionService: Nautilus.BlackBox.Execution.ExecutionService initializing...",
+                "ExecutionService: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

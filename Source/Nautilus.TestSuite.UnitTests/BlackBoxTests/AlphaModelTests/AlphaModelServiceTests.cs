@@ -91,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLoggingAdatper, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Nautilus.BlackBox.AlphaModel.AlphaModelService initializing...",
+                "AlphaModelService: Initializing...",
                 this.mockLoggingAdatper,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

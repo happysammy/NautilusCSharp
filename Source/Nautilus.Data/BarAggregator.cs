@@ -15,7 +15,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data.Builders;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -34,7 +33,6 @@ namespace Nautilus.Data
 
         private BarBuilder barBuilder;
         private ZonedDateTime barEndTime;
-        private int tickCounter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
@@ -104,61 +102,45 @@ namespace Nautilus.Data
             if (!this.IsInitialized)
             {
                 this.OnFirstTick(tick);
-
-                return;
             }
 
-            this.tickCounter++;
             this.spreadAnalyzer.OnQuote(tick);
+            this.UpdateBarBuilder(tick);
 
-            switch (this.barSpecification.QuoteType)
+            if (this.IsTimeBar && tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime))
             {
-                case BarQuoteType.Bid:
-                    this.barBuilder.OnQuote(tick.Bid, tick.Timestamp);
-                    break;
+                while (tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime + this.barSpecification.Duration))
+                {
+                    this.CloseBar(tick, this.barEndTime);
+                    this.UpdateBarBuilder(tick);
+                }
 
-                case BarQuoteType.Ask:
-                    this.barBuilder.OnQuote(tick.Ask, tick.Timestamp);
-                    break;
-
-                case BarQuoteType.Mid:
-                    this.barBuilder.OnQuote(
-                        Price.Create(Math.Round(tick.Bid + tick.Ask / 2, decimals), decimals), tick.Timestamp);
-                    break;
-                default:
-                    throw new InvalidOperationException("The quote type is not recognized.");
+                this.CloseBar(tick, tick.Timestamp);
             }
-
-            if (this.IsTimeBar && tick.Timestamp.Compare(this.barEndTime) >= 0)
+            if (this.IsTickBar && this.barBuilder.Volume >= this.barSpecification.Period)
             {
-                this.CloseBar(tick);
-                this.tickCounter = 1;
-            }
-            if (this.IsTickBar && this.tickCounter < this.barSpecification.Period)
-            {
-                this.CloseBar(tick);
-                this.tickCounter = 1;
+                this.CloseBar(tick, tick.Timestamp);
             }
         }
 
-        private void OnFirstTick(Tick quote)
-        {
-            Debug.NotNull(quote, nameof(quote));
-
-            this.CreateBarBuilder(quote);
-            this.IsInitialized = true;
-
-            this.Log.Debug($"Registered for {this.barSpecification} bars");
-            this.Log.Debug($"Receiving quotes ({quote.Symbol.Code}) from {quote.Symbol.Exchange}...");
-        }
-
-        private void CreateBarBuilder(Tick tick)
+        private void OnFirstTick(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
 
+            this.CreateBarBuilder(tick.Timestamp);
+            this.IsInitialized = true;
+
+            this.Log.Debug($"Registered for {this.barSpecification} bars");
+            this.Log.Debug($"Receiving quotes ({tick.Symbol.Code}) from {tick.Symbol.Exchange}...");
+        }
+
+        private void CreateBarBuilder(ZonedDateTime timeNow)
+        {
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             if (this.IsTimeBar)
             {
-                var barStartTime = this.CalculateBarStartTime(tick.Timestamp);
+                var barStartTime = this.CalculateBarStartTime(timeNow);
                 this.barEndTime = barStartTime + this.barSpecification.Duration;
             }
 
@@ -228,11 +210,34 @@ namespace Nautilus.Data
             throw new InvalidOperationException($"BarSpecification {this.barSpecification} currently not supported.");
         }
 
+        private void UpdateBarBuilder(Tick tick)
+        {
+            switch (this.barSpecification.QuoteType)
+            {
+                case BarQuoteType.Bid:
+                    this.barBuilder.OnQuote(tick.Bid, tick.Timestamp);
+                    break;
+
+                case BarQuoteType.Ask:
+                    this.barBuilder.OnQuote(tick.Ask, tick.Timestamp);
+                    break;
+
+                case BarQuoteType.Mid:
+                    this.barBuilder.OnQuote(
+                        Price.Create(Math.Round(tick.Bid + tick.Ask / 2, decimals), decimals), tick.Timestamp);
+                    break;
+                default:
+                    throw new InvalidOperationException("The quote type is not recognized.");
+            }
+        }
+
         private BarDataEvent CreateBarDataEvent(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
 
-            var newBar = this.barBuilder.Build(this.barBuilder.Timestamp);
+            var newBar = this.IsTimeBar
+                ? this.barBuilder.Build(this.barEndTime)
+                : this.barBuilder.Build(tick.Timestamp);
 
             return new BarDataEvent(
                 this.symbol,
@@ -245,11 +250,11 @@ namespace Nautilus.Data
                 this.TimeNow());
         }
 
-        private void CloseBar(Tick quote)
+        private void CloseBar(Tick tick, ZonedDateTime timestamp)
         {
-            var @event = this.CreateBarDataEvent(quote);
-            this.CreateBarBuilder(quote);
-            this.spreadAnalyzer.OnBarUpdate(quote.Timestamp);
+            var @event = this.CreateBarDataEvent(tick);
+            this.CreateBarBuilder(timestamp);
+            this.spreadAnalyzer.OnBarUpdate(timestamp);
 
             Context.Parent.Tell(@event);
         }
