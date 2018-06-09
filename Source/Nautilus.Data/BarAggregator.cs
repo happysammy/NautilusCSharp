@@ -109,6 +109,7 @@ namespace Nautilus.Data
 
             if (this.IsTimeBar && tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime))
             {
+                // The ticks timestamp is beyond when the bar expected to close.
                 while (tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime + this.barSpecification.Duration))
                 {
                     this.CloseBar(tick, this.barEndTime);

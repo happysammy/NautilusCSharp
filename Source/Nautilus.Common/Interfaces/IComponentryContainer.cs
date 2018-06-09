@@ -19,7 +19,7 @@ namespace Nautilus.Common.Interfaces
         IZonedClock Clock { get; }
 
         /// <summary>
-        /// Gets the containers guid factory.
+        /// Gets the containers GUID factory.
         /// </summary>
         IGuidFactory GuidFactory { get; }
 
