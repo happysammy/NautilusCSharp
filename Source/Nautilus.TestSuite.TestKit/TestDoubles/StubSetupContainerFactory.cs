@@ -26,21 +26,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     public class StubSetupContainerFactory
     {
         /// <summary>
-        /// Gets the logger.
+        /// Gets the containers logger.
         /// </summary>
         public MockLoggingAdatper LoggingAdatper { get; private set; }
 
         /// <summary>
-        /// Gets the quote provider.
+        /// Gets the containers quote provider.
         /// </summary>
         public IQuoteProvider QuoteProvider { get; private set; }
 
         /// <summary>
-        /// The create.
+        /// Creates a new <see cref="BlackBoxContainer"/>.
         /// </summary>
-        /// <returns>
-        /// The <see cref="BlackBoxContainer"/>.
-        /// </returns>
+        /// <returns>The <see cref="BlackBoxContainer"/>.</returns>
         public BlackBoxContainer Create()
         {
             var environment = NautilusEnvironment.Live;

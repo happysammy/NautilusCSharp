@@ -10,7 +10,6 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -112,7 +111,7 @@ namespace Nautilus.Data
                 var builder = this.barBuilders[message.BarSpecification];
 
                 // No ticks have been received by the builder.
-                if (!builder.IsInitialized)
+                if (builder.IsNotInitialized)
                 {
                     return;
                 }

@@ -8,9 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using System;
-    using System.Runtime.CompilerServices;
-    using System.Transactions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -46,14 +43,14 @@ namespace Nautilus.Data
         public int Volume { get; private set; }
 
         /// <summary>
-        /// Gets the bar builders timestamp.
-        /// </summary>
-        public ZonedDateTime Timestamp { get; private set; }
-
-        /// <summary>
         /// Gets a value indicating whether the bar builder is initialized.
         /// </summary>
-        public bool IsInitialized => this.Open != null;
+        public bool IsInitialized => !this.IsNotInitialized;
+
+        /// <summary>
+        /// Gets a value indicating whether the bar builder is NOT initialized.
+        /// </summary>
+        public bool IsNotInitialized => this.Open is null;
 
         /// <summary>
         /// Updates the bar builder with the given quote price and timestamp.
@@ -63,7 +60,7 @@ namespace Nautilus.Data
         {
             Debug.NotNull(quote, nameof(quote));
 
-            if (!this.IsInitialized)
+            if (this.IsNotInitialized)
             {
                 this.Open = quote;
                 this.High = quote;
