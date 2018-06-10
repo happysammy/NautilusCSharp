@@ -9,83 +9,64 @@
 namespace Nautilus.Data
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Extensions;
+    using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="BarAggregator"/> class.
+    /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
     /// </summary>
     public sealed class BarAggregator : ActorComponentBase
     {
         private readonly Symbol symbol;
-        private readonly BarSpecification barSpecification;
-        private readonly SpreadAnalyzer spreadAnalyzer;
-        private readonly int decimals;
-
-        private BarBuilder barBuilder;
-        private ZonedDateTime barEndTime;
+        private readonly IDictionary<BarSpecification, BarBuilder> barBuilders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="serviceContext">The service context.</param>
-        /// <param name="symbolBarSpec">The symbol bar specification.</param>
-        /// <param name="tickSize">The tick size.</param>
+        /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregator(
             IComponentryContainer container,
             Enum serviceContext,
-            SymbolBarSpec symbolBarSpec,
-            decimal tickSize)
+            Symbol symbol)
             : base(
             serviceContext,
             LabelFactory.Component(
                 nameof(BarAggregator),
-                symbolBarSpec),
+                symbol),
             container)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(serviceContext, nameof(serviceContext));
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(symbol, nameof(symbol));
 
-            this.symbol = symbolBarSpec.Symbol;
-            this.barSpecification = symbolBarSpec.BarSpecification;
-            this.spreadAnalyzer = new SpreadAnalyzer(tickSize);
-            this.decimals = tickSize.GetDecimalPlaces();
+            this.symbol = symbol;
+            this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
-            this.IsTimeBar = true;
-            if (this.barSpecification.Resolution == BarResolution.Tick)
-            {
-                this.IsTimeBar = false;
-            }
-
+            this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
         }
 
         /// <summary>
-        /// Gets a value indicating whether this is a time based bar aggregator.
+        /// Sets up all <see cref="CommandMessage"/> handling methods.
         /// </summary>
-        private bool IsTimeBar { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this is a tick based bar aggregator.
-        /// </summary>
-        private bool IsTickBar => !this.IsTimeBar;
-
-        /// <summary>
-        /// Gets a value indicating whether the bar aggregator has been initialized.
-        /// </summary>
-        private bool IsInitialized { get; set; }
+        private void SetupCommandMessageHandling()
+        {
+            this.Receive<CloseBar>(msg => this.OnReceive(msg));
+            this.Receive<SubscribeBarData>(msg => this.OnReceive(msg));
+            this.Receive<UnsubscribeBarData>(msg => this.OnReceive(msg));
+        }
 
         /// <summary>
         /// Sets up all <see cref="EventMessage"/> handling methods.
@@ -98,166 +79,88 @@ namespace Nautilus.Data
         private void OnReceive(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
+            Debug.EqualTo(tick.Symbol, nameof(tick.Symbol), this.symbol);
 
-            if (!this.IsInitialized)
+            foreach (var builder in this.barBuilders)
             {
-                this.OnFirstTick(tick);
-            }
-
-            this.spreadAnalyzer.OnQuote(tick);
-            this.UpdateBarBuilder(tick);
-
-            if (this.IsTimeBar && tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime))
-            {
-                // The ticks timestamp is beyond when the bar expected to close.
-                while (tick.Timestamp.IsGreaterThanOrEqualTo(this.barEndTime + this.barSpecification.Duration))
+                switch (builder.Key.QuoteType)
                 {
-                    this.CloseBar(tick, this.barEndTime);
-                    this.UpdateBarBuilder(tick);
+                    case BarQuoteType.Bid:
+                        builder.Value.OnQuote(tick.Bid, tick.Timestamp);
+                        break;
+
+                    case BarQuoteType.Ask:
+                        builder.Value.OnQuote(tick.Ask, tick.Timestamp);
+                        break;
+
+                    case BarQuoteType.Mid:
+                        builder.Value.OnQuote(
+                            Price.Create(Math.Round(tick.Bid + tick.Ask / 2, 10), 10), tick.Timestamp);
+                        break;
+                    default:
+                        throw new InvalidOperationException("The quote type is not recognized.");
+                }
+            }
+        }
+
+        private void OnReceive(CloseBar message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            if (this.barBuilders.ContainsKey(message.BarSpecification))
+            {
+                var builder = this.barBuilders[message.BarSpecification];
+
+                // No ticks have been received by the builder.
+                if (!builder.IsInitialized)
+                {
+                    return;
                 }
 
-                this.CloseBar(tick, tick.Timestamp);
+                // Close the bar and send to parent.
+                var bar = builder.Build(message.CloseTime);
+                Context.Parent.Tell(bar);
+
+                // Create and initialize new builder.
+                builder = new BarBuilder();
+                builder.OnQuote(bar.Close, bar.Timestamp);
+
+                return;
             }
-            if (this.IsTickBar && this.barBuilder.Volume >= this.barSpecification.Period)
+
+            Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
+        }
+
+        private void OnReceive(SubscribeBarData message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            foreach (var barSpec in message.BarSpecifications)
             {
-                this.CloseBar(tick, tick.Timestamp);
+                if (barSpec.Resolution == BarResolution.Tick)
+                {
+                    // TODO
+                    throw new InvalidOperationException("Tick bars not yet supported.");
+                }
+
+                if (!this.barBuilders.ContainsKey(barSpec))
+                {
+                    this.barBuilders.Add(barSpec, new BarBuilder());
+                }
             }
         }
 
-        private void OnFirstTick(Tick tick)
+        private void OnReceive(UnsubscribeBarData message)
         {
-            Debug.NotNull(tick, nameof(tick));
+            Debug.NotNull(message, nameof(message));
 
-            this.CreateBarBuilder(tick.Timestamp);
-            this.IsInitialized = true;
-
-            this.Log.Debug($"Registered for {this.barSpecification} bars");
-            this.Log.Debug($"Receiving quotes ({tick.Symbol.Code}) from {tick.Symbol.Exchange}...");
-        }
-
-        private void CreateBarBuilder(ZonedDateTime timeNow)
-        {
-            Debug.NotDefault(timeNow, nameof(timeNow));
-
-            if (this.IsTimeBar)
+            foreach (var barSpec in message.BarSpecifications)
             {
-                var barStartTime = this.CalculateBarStartTime(timeNow);
-                this.barEndTime = barStartTime + this.barSpecification.Duration;
+                if (this.barBuilders.ContainsKey(barSpec))
+                {
+                    this.barBuilders.Remove(barSpec);
+                }
             }
-
-            this.barBuilder = new BarBuilder();
-        }
-
-        private ZonedDateTime CalculateBarStartTime(ZonedDateTime timeNow)
-        {
-            Debug.NotDefault(timeNow, nameof(timeNow));
-
-            var dotNetDateTime = timeNow.ToDateTimeUtc();
-
-            if (this.barSpecification.Resolution == BarResolution.Second)
-            {
-                var secondsStart = Math.Floor(dotNetDateTime.Second / (double)this.barSpecification.Period) * this.barSpecification.Period;
-
-                var dateTimeStart = new DateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    timeNow.Minute,
-                    (int)secondsStart,
-                    DateTimeKind.Utc);
-
-                var instantStart = Instant.FromDateTimeUtc(dateTimeStart);
-
-                return new ZonedDateTime(instantStart, DateTimeZone.Utc);
-            }
-
-            if (this.barSpecification.Resolution == BarResolution.Minute)
-            {
-                var minutesStart = Math.Floor(dotNetDateTime.Minute / (double)this.barSpecification.Period) * this.barSpecification.Period;
-
-                var dateTimeStart = new DateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    (int)minutesStart,
-                    0,
-                    DateTimeKind.Utc);
-
-                var instantStart = Instant.FromDateTimeUtc(dateTimeStart);
-
-                return new ZonedDateTime(instantStart, DateTimeZone.Utc);
-            }
-
-            if (this.barSpecification.Resolution == BarResolution.Hour)
-            {
-                var hoursStart = Math.Floor(dotNetDateTime.Hour / (double)this.barSpecification.Period) * this.barSpecification.Period;
-
-                var dateTimeStart = new DateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    (int)hoursStart,
-                    0,
-                    0,
-                    DateTimeKind.Utc);
-
-                var instantStart = Instant.FromDateTimeUtc(dateTimeStart);
-
-                return new ZonedDateTime(instantStart, DateTimeZone.Utc);
-            }
-
-            throw new InvalidOperationException($"BarSpecification {this.barSpecification} currently not supported.");
-        }
-
-        private void UpdateBarBuilder(Tick tick)
-        {
-            switch (this.barSpecification.QuoteType)
-            {
-                case BarQuoteType.Bid:
-                    this.barBuilder.OnQuote(tick.Bid, tick.Timestamp);
-                    break;
-
-                case BarQuoteType.Ask:
-                    this.barBuilder.OnQuote(tick.Ask, tick.Timestamp);
-                    break;
-
-                case BarQuoteType.Mid:
-                    this.barBuilder.OnQuote(
-                        Price.Create(Math.Round(tick.Bid + tick.Ask / 2, decimals), decimals), tick.Timestamp);
-                    break;
-                default:
-                    throw new InvalidOperationException("The quote type is not recognized.");
-            }
-        }
-
-        private BarDataEvent CreateBarDataEvent(Tick tick)
-        {
-            Debug.NotNull(tick, nameof(tick));
-
-            var newBar = this.IsTimeBar
-                ? this.barBuilder.Build(this.barEndTime)
-                : this.barBuilder.Build(tick.Timestamp);
-
-            return new BarDataEvent(
-                this.symbol,
-                this.barSpecification,
-                newBar,
-                tick,
-                this.spreadAnalyzer.AverageSpread,
-                false,
-                this.NewGuid(),
-                this.TimeNow());
-        }
-
-        private void CloseBar(Tick tick, ZonedDateTime timestamp)
-        {
-            var @event = this.CreateBarDataEvent(tick);
-            this.CreateBarBuilder(timestamp);
-            this.spreadAnalyzer.OnBarUpdate(timestamp);
-
-            Context.Parent.Tell(@event);
         }
     }
 }

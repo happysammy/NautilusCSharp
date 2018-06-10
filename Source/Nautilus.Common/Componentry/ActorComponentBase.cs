@@ -40,6 +40,7 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));
 
+            this.Service = service;
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;
             this.Log = setupContainer.LoggerFactory.Create(service, component);
@@ -47,6 +48,11 @@ namespace Nautilus.Common.Componentry
 
             this.SetupMessageHandling();
         }
+
+        /// <summary>
+        /// Gets the components service context.
+        /// </summary>
+        protected Enum Service { get; }
 
         /// <summary>
         /// Gets the components logger.

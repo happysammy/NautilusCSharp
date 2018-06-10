@@ -8,6 +8,9 @@
 
 namespace Nautilus.Data
 {
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Transactions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -48,6 +51,11 @@ namespace Nautilus.Data
         public ZonedDateTime Timestamp { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating whether the bar builder is initialized.
+        /// </summary>
+        public bool IsInitialized => this.Open != null;
+
+        /// <summary>
         /// Updates the bar builder with the given quote price and timestamp.
         /// </summary>
         /// <param name="quote">The tick quote.</param>
@@ -56,8 +64,8 @@ namespace Nautilus.Data
         /// is the default value.</exception>
         public void OnQuote(Price quote, ZonedDateTime timestamp)
         {
-            Validate.NotNull(quote, nameof(quote));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(quote, nameof(quote));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Timestamp = timestamp;
 

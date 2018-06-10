@@ -8,7 +8,10 @@
 
 namespace Nautilus.BlackBox.Data
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
@@ -21,6 +24,8 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Data;
+    using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -67,18 +72,18 @@ namespace Nautilus.BlackBox.Data
         private void SetupCommandMessageHandling()
         {
             this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
-            this.Receive<SubscribeSymbolDataType>(msg => this.OnMessage(msg));
-            this.Receive<UnsubscribeSymbolDataType>(msg => this.OnMessage(msg));
+            this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
-        /// Creates a new <see cref="MarketDataProcessor"/> for the symbol and exchange. Registers
+        /// Creates a new <see cref="BarAggregationController"/> for the symbol and exchange. Registers
         /// the data type with the processor, updates the index of processors with the
         /// <see cref="MarketDataPort"/>. Then subscribes to the market data for the symbol and exchange.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void OnMessage(SubscribeSymbolDataType message)
+        private void OnMessage(SubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(this.brokerageGateway, nameof(this.brokerageGateway));
@@ -87,10 +92,12 @@ namespace Nautilus.BlackBox.Data
             {
                 Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex);
 
-                var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new MarketDataProcessor(
+                var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
+                var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
                     this.storedContainer,
                     this.GetMessagingAdapter(),
-                    message.Symbol)));
+                    BlackBoxService.Data,
+                    barReceivers)));
 
                 this.marketDataProcessorIndex.Add(message.Symbol, marketDataProcessorRef);
                 this.marketDataProcessorIndex[message.Symbol].Tell(message, this.Self);
@@ -99,7 +106,7 @@ namespace Nautilus.BlackBox.Data
             });
         }
 
-        private void OnMessage(UnsubscribeSymbolDataType message)
+        private void OnMessage(UnsubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
 

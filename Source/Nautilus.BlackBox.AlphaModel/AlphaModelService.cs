@@ -8,6 +8,7 @@
 
 namespace Nautilus.BlackBox.AlphaModel
 {
+    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
@@ -17,6 +18,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -110,11 +112,9 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.NewGuid(),
                     this.TimeNow());
 
-                var registerSymbolDataType = new SubscribeSymbolDataType(
+                var registerSymbolDataType = new SubscribeBarData(
                     message.Strategy.Instrument.Symbol,
-                    message.Strategy.TradeProfile.BarSpecification,
-                    message.Strategy.TradeProfile.TradeType,
-                    message.Strategy.Instrument.TickSize,
+                    new List<BarSpecification>{message.Strategy.TradeProfile.BarSpecification},
                     this.NewGuid(),
                     this.TimeNow());
 

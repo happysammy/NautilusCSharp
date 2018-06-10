@@ -21,6 +21,7 @@ namespace Nautilus.Database.Collectors
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Database.Enums;
     using Nautilus.DomainModel.Factories;
     using NodaTime;
 
@@ -46,7 +47,7 @@ namespace Nautilus.Database.Collectors
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
             : base(
-                ServiceContext.Database,
+                DatabaseService.DataCollection,
                 LabelFactory.Component($"{nameof(MarketDataCollector)}-{dataReader.SymbolBarSpec}"),
                 container)
         {

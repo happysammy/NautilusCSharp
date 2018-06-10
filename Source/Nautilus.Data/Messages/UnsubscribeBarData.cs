@@ -6,9 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.SystemCommands
+namespace Nautilus.Data.Messages
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
@@ -16,50 +17,49 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="UnsubscribeSymbolDataType"/> class.
+    /// The command message to unsubscribe from bar data.
     /// </summary>
     [Immutable]
-    public sealed class UnsubscribeSymbolDataType : CommandMessage
+    public sealed class UnsubscribeBarData : CommandMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnsubscribeSymbolDataType"/> class.
+        /// Initializes a new instance of the <see cref="UnsubscribeBarData"/> class.
         /// </summary>
         /// <param name="symbol">The message symbol.</param>
-        /// <param name="tradeType">The message trade type.</param>
+        /// <param name="barSpecs">The message bar specifications.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public UnsubscribeSymbolDataType(
+        public UnsubscribeBarData(
             Symbol symbol,
-            TradeType tradeType,
+            IReadOnlyList<BarSpecification> barSpecs,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
             Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(tradeType, nameof(tradeType));
+            Validate.ReadOnlyCollectionNotNullOrEmpty(barSpecs, nameof(barSpecs));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
             this.Symbol = symbol;
-            this.TradeType = tradeType;
+            this.BarSpecifications = barSpecs;
         }
 
         /// <summary>
-        /// Gets the messages instrument.
+        /// Gets the messages symbol.
         /// </summary>
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the messages trade type.
+        /// Gets the messages bar specifications.
         /// </summary>
-        public TradeType TradeType { get; }
+        public IReadOnlyList<BarSpecification> BarSpecifications { get; }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="UnsubscribeSymbolDataType"/> service
-        /// message.
+        /// Returns a string representation of the <see cref="UnsubscribeBarData"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(UnsubscribeSymbolDataType);
+        public override string ToString() => nameof(UnsubscribeBarData);
     }
 }

@@ -12,6 +12,7 @@ namespace Nautilus.Database.Enums
     {
         NautilusDatabase = 0,
         DatabaseTaskManager = 1,
-        DatabaseCollectionManager = 2
+        DatabaseCollectionManager = 2,
+        DataCollection = 3
     }
 }
