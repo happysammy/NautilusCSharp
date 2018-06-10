@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     public class RiskServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef riskServiceRef;
 
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(RiskServiceTests));
 
@@ -63,10 +63,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "RiskService: Initializing...",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -81,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Assert
             CustomAssert.EventuallyContains(
                 "RiskService: Unhandled message random_object",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -97,19 +97,19 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
-            var message = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubDateTime.Now());
+            var message = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.riskServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: BrokerageAccount and RiskModel initialized",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -125,20 +125,20 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
-            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubDateTime.Now());
+            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var orderPacket = StubOrderPacketBuilder.Build();
             var entrySignal = StubSignalBuilder.BuyEntrySignal();
-            var message2 = new RequestTradeApproval(orderPacket, entrySignal, Guid.NewGuid(), StubDateTime.Now());
+            var message2 = new RequestTradeApproval(orderPacket, entrySignal, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.riskServiceRef.Tell(message1);
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 typeof(TradeApproved),
@@ -158,24 +158,24 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
-            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubDateTime.Now());
+            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var orderPacket = StubOrderPacketBuilder.Build();
             var entrySignal = StubSignalBuilder.BuyEntrySignal();
-            var message2 = new RequestTradeApproval(orderPacket, entrySignal, Guid.NewGuid(), StubDateTime.Now());
+            var message2 = new RequestTradeApproval(orderPacket, entrySignal, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.riskServiceRef.Tell(message1);
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: RequestTradeApproval-TestTrade ignored... (Free Equity <= zero)",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -193,9 +193,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
-            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubDateTime.Now());
+            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new AccountEvent(
                 Broker.InteractiveBrokers,
@@ -208,18 +208,18 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 decimal.Zero,
                 string.Empty,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.riskServiceRef.Tell(message1);
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "RiskService: BrokerageAccount updated",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -235,9 +235,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
-            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubDateTime.Now());
+            var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new BarDataEvent(
                 new Symbol("AUDUSD", Exchange.FXCM),
@@ -247,14 +247,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 decimal.One,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.riskServiceRef.Tell(message1);
             this.riskServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 symbol,
                 Price.Create(LastBid, 0.00001m),
                 Price.Create(LastAsk, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 symbol,
                 bid,
                 ask,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         public static Tick Create(
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 symbol,
                 Price.Create(bid, 0.00001m),
                 Price.Create(ask, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

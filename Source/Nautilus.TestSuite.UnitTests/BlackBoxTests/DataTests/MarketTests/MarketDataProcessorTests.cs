@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
     {
         private readonly ITestOutputHelper output;
         private readonly IActorRef marketDataProcessorRef;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly Symbol symbol;
 
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch()()());
 //
 //            // Act
 //            this.marketDataProcessorRef.Tell(message);
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch()()());
 //
 //            // Act
 //            this.marketDataProcessorRef.Tell(message);
@@ -137,12 +137,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch()()());
 //            var message2 = new UnsubscribeSymbolBarSpec(
 //                this.symbol,
 //                tradeType,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch()()());
 //
 //            // Act
 //            this.marketDataProcessorRef.Tell(message1);

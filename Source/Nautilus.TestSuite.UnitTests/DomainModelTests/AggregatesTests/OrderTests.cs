@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Label("some_label"),
                 OrderSide.Buy,
                 Quantity.Create(10),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Exchange.LMAX), order.Symbol);
@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.OrderStatus);
         }
 
@@ -72,8 +72,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Quantity.Create(10),
                 Price.Create(2000, 0.1m),
                 TimeInForce.GTD,
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Exchange.LMAX), order.Symbol);
@@ -86,9 +86,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
             Assert.Equal(decimal.Zero, order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
-            Assert.Equal(StubDateTime.Now() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.OrderStatus);
         }
 
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(1, order.EventCount);
             Assert.Equal(OrderStatus.Rejected, order.OrderStatus);
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(2, order.EventCount);
             Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(2, order.EventCount);
             Assert.Equal(OrderStatus.Expired, order.OrderStatus);
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("some_broker_orderId", order.BrokerOrderId.ToString());
             Assert.Equal(1, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.OrderStatus);
-            Assert.Equal(StubDateTime.Now(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
         [Fact]
@@ -247,9 +247,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.Price,
                 order.TimeInForce,
                 order.ExpireTime,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             order.Apply(message);
@@ -277,9 +277,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
                 order.Price,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             order.Apply(message1);
             order.Apply(message2);
@@ -306,9 +306,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderSide,
                 order.Quantity,
                 order.Price,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             order.Apply(message1);
@@ -368,9 +368,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderSide,
                 order.Quantity,
                 Price.Create(averagePrice, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             order.Apply(message1);
             order.Apply(message2);
@@ -404,9 +404,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderSide,
                 order.Quantity,
                 Price.Create(averagePrice, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             order.Apply(message1);
             order.Apply(message2);

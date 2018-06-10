@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     {
         private readonly ITestOutputHelper output;
         private readonly BlackBoxContainer container;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
 
         public PositionSizerTests(ITestOutputHelper output)
         {
@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var setupFactory = new StubSetupContainerFactory();
             this.container = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.70000m, 0.00001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.79900m, 0.00001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80100m, 0.00001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80001m, 0.00001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(
@@ -188,7 +188,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(113.800m, 0.001m),
                 Price.Create(113.600m, 0.001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(
@@ -222,7 +222,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 Price.Create(113.800m, 0.001m),
                 Price.Create(114.000m, 0.001m),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = positionSizer.Calculate(

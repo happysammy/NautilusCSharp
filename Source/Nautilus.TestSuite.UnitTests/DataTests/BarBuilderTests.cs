@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             // Act
             barBuilder.Update(quote);
 
-            var bar = barBuilder.Build(StubDateTime.Now());
+            var bar = barBuilder.Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(quote, bar.Open);
@@ -38,14 +38,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(quote, bar.Low);
             Assert.Equal(quote, bar.Close);
             Assert.Equal(Quantity.Create(1), bar.Volume);
-            Assert.Equal(StubDateTime.Now(), bar.Timestamp);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), bar.Timestamp);
         }
 
         [Fact]
         internal void Build_WithVariousQuotes1_ReturnsExpectedBar()
         {
             // Arrange
-            var timestamp = StubDateTime.Now();
+            var timestamp = StubZonedDateTime.UnixEpoch();
             var quote1 = Price.Create(1.00010m, 5);
             var quote2 = Price.Create(0.99980m, 5);
             var quote3 = Price.Create(0.99950m, 5);
@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void Build_WithVariousQuotes2_ReturnsExpectedBar()
         {
             // Arrange
-            var timestamp = StubDateTime.Now();
+            var timestamp = StubZonedDateTime.UnixEpoch();
             var quote1 = Price.Create(1.00010m, 5);
             var quote2 = Price.Create(0.99980m, 5);
             var quote3 = Price.Create(1.00090m, 5);
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void Build_WithVariousQuotes3_ReturnsExpectedBar()
         {
             // Arrange
-            var timestamp = StubDateTime.Now();
+            var timestamp = StubZonedDateTime.UnixEpoch();
             var quote1 = Price.Create(0.99999m, 5);
             var quote2 = Price.Create(1.00001m, 5);
             var quote3 = Price.Create(1.00000m, 5);
@@ -117,7 +117,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             barBuilder.Update(quote3);
             barBuilder.Update(quote4);
 
-            var bar = barBuilder.Build(StubDateTime.Now());
+            var bar = barBuilder.Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(quote1, bar.Open);
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(quote1, bar.Low);
             Assert.Equal(quote4, bar.Close);
             Assert.Equal(Quantity.Create(4), bar.Volume);
-            Assert.Equal(StubDateTime.Now(), bar.Timestamp);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), bar.Timestamp);
         }
     }
 }

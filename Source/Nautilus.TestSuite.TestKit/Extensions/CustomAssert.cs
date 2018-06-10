@@ -67,7 +67,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// <param name="stringToContain">
         /// The string to contain.
         /// </param>
-        /// <param name="loggingAdatper">
+        /// <param name="loggingAdapter">
         /// The logger.
         /// </param>
         /// <param name="timeoutMilliseconds">
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// </param>
         public static void EventuallyContains(
             string stringToContain,
-            MockLoggingAdatper loggingAdatper,
+            MockLoggingAdapter loggingAdapter,
             int timeoutMilliseconds,
             int pollIntervalMilliseconds)
         {
@@ -90,9 +90,9 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             {
                 Task.Delay(pollIntervalMilliseconds).Wait();
             }
-            while (!loggingAdatper.Contains(stringToContain) && stopwatch.Elapsed.Duration().Milliseconds < (int)Period.FromMilliseconds(timeoutMilliseconds).Milliseconds);
+            while (!loggingAdapter.Contains(stringToContain) && stopwatch.Elapsed.Duration().Milliseconds < (int)Period.FromMilliseconds(timeoutMilliseconds).Milliseconds);
 
-            Assert.True(loggingAdatper.Contains(stringToContain));
+            Assert.True(loggingAdapter.Contains(stringToContain));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
 
         private static bool ListContains<T>(IEnumerable<Envelope<T>> envelopeList, Type typeToContain) where T : Message
         {
-            return envelopeList.Any(e => e.Open(StubDateTime.Now()).GetType().Name == typeToContain.Name);
+            return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).GetType().Name == typeToContain.Name);
         }
 
         private static bool ListContains<T>(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToContain) where T : Event
@@ -181,25 +181,25 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             {
                 case nameof(SignalEvent):
                     return envelopeList
-                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                         .Cast<SignalEvent>()
                         .Any(signal => signal.Signal.GetType() == eventToContain);
 
                 case nameof(OrderEvent):
                     return envelopeList
-                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                         .Cast<OrderEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
                 case nameof(BarDataEvent):
                     return envelopeList
-                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                         .Cast<BarDataEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
                 case nameof(AccountEvent):
                     return envelopeList
-                        .Select(envelope => envelope.Open(StubDateTime.Now()))
+                        .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                         .Cast<AccountEvent>()
                         .Any(e => e.GetType() == eventToContain);
 

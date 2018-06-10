@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new TradeType("TestTrade"),
                 atomicOrders,
                 new EntityId("StubOrderPacket"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         public static AtomicOrderPacket ThreeUnitsAndExpireTime(ZonedDateTime expireTime)
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new TradeType("TestTrade"),
                 atomicOrders,
                 new EntityId("StubOrderPacket"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

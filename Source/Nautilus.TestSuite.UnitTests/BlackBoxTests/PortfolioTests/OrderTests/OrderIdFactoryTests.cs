@@ -34,9 +34,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var orderIdFactory = new OrderIdFactory(new Symbol("AUDUSD", Exchange.LMAX));
 
             // Act
-            var result = orderIdFactory.Create(StubDateTime.Now()).ToString();
+            var result = orderIdFactory.Create(StubZonedDateTime.UnixEpoch()).ToString();
 
-            var expected = $"19700101000001000_AUDUSD_";
+            var expected = $"19700101000000000_AUDUSD_";
 
             // Assert
             this.output.WriteLine(result);

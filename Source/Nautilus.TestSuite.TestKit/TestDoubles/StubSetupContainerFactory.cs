@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Gets the containers logger.
         /// </summary>
-        public MockLoggingAdatper LoggingAdatper { get; private set; }
+        public MockLoggingAdapter LoggingAdapter { get; private set; }
 
         /// <summary>
         /// Gets the containers quote provider.
@@ -44,10 +44,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var environment = NautilusEnvironment.Live;
 
             var clock = new StubClock();
-            clock.FreezeSetTime(StubDateTime.Now());
+            clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
-            this.LoggingAdatper = new MockLoggingAdatper();
-            var loggerFactory = new LoggerFactory(this.LoggingAdatper);
+            this.LoggingAdapter = new MockLoggingAdapter();
+            var loggerFactory = new LoggerFactory(this.LoggingAdapter);
 
             var guidFactory = new GuidFactory();
             var instrumentRepository = new Mock<IInstrumentRepository>().Object;

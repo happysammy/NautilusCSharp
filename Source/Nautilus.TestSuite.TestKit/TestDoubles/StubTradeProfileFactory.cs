@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 2,
                 0,
                 1,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.quoteProvider.OnQuote(quote);
@@ -63,13 +63,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote2 = new Tick(
                 this.audusd,
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.quoteProvider.OnQuote(quote1);
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.quoteProvider.OnQuote(quote);
 
@@ -106,13 +106,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote2 = new Tick(
                 this.eurusd,
                 Price.Create(1.20000m, 0.00001m),
                 Price.Create(1.20005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.quoteProvider.OnQuote(quote1);
             this.quoteProvider.OnQuote(quote2);
@@ -158,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.quoteProvider.OnQuote(quote);
 
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.eurgbp,
                 Price.Create(0.88000m, 0.00001m),
                 Price.Create(0.88005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.quoteProvider.OnQuote(quote);
 
@@ -196,13 +196,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 this.audusd,
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote2 = new Tick(
                 this.eurusd,
                 Price.Create(1.20000m, 0.00001m),
                 Price.Create(1.20005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.quoteProvider.OnQuote(quote1);
             this.quoteProvider.OnQuote(quote2);

@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 0,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Exchange.GLOBEX),
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 barsValid,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Exchange.GLOBEX),
@@ -89,13 +89,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromSeconds(timeMultiple).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromSeconds(timeMultiple).ToDuration(), result);
         }
 
         [Theory]
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 barsValid,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Exchange.GLOBEX),
@@ -130,13 +130,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromMinutes(timeMultiple).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(timeMultiple).ToDuration(), result);
         }
 
         [Theory]
@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 barsValid,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Exchange.GLOBEX),
@@ -172,13 +172,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromHours(timeMultiple).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromHours(timeMultiple).ToDuration(), result);
         }
 
         [Theory]
@@ -201,7 +201,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 barsValid,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Arrange
             var signal = new EntrySignal(
@@ -213,13 +213,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromDays(timeMultiple).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromDays(timeMultiple).ToDuration(), result);
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 0,
                 0,
                 1,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Exchange.GLOBEX),
@@ -248,13 +248,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Price.Create(2, 1),
                 Price.Create(1, 1),
                 new SortedDictionary<int, Price>(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubDateTime.Now() + Period.FromDays(7).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromDays(7).ToDuration(), result);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     9,
                     1,
                     1,
-                    StubDateTime.Now());
+                    StubZonedDateTime.UnixEpoch());
 
             return instrument;
         }
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     9,
                     1,
                     1,
-                    StubDateTime.Now());
+                    StubZonedDateTime.UnixEpoch());
 
             return instrument;
         }
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                    10,
                    1,
                    1,
-                   StubDateTime.Now());
+                   StubZonedDateTime.UnixEpoch());
 
             return instrument;
         }

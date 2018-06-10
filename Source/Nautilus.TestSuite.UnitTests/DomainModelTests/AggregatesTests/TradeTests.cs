@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var trade = TradeFactory.Create(orderPacket);
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -162,7 +162,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -200,7 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -238,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -276,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -314,7 +314,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -361,7 +361,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -407,7 +407,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -453,7 +453,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -494,7 +494,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -533,7 +533,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -581,7 +581,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
@@ -645,7 +645,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 

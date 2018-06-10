@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
     public class AlphaStrategyModuleTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly BarStore barStore;
         private readonly BarStore barStoreDaily;
@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaStrategyModuleTests));
 
@@ -100,10 +100,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Initializing...",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -116,10 +116,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell("random_object", null);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Unhandled message random_object",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -132,10 +132,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(InvalidMarketDataEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaStrategyModule-AUDUSD.FXCM-TestTrade: Received MarketDataEvent",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -148,7 +148,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(HistoricalMarketDataEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyHasCount(
                 1,
                 this.barStore,
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLoggingAdatper.WriteStashToOutput(this.output);
+            this.mockLoggingAdapter.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventDailyBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyHasCount(
                 1,
                 this.barStoreDaily,
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLoggingAdatper.WriteStashToOutput(this.output);
+            this.mockLoggingAdapter.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -189,11 +189,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(0, this.barStore.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
 
-            this.mockLoggingAdatper.WriteStashToOutput(this.output);
+            this.mockLoggingAdapter.WriteStashToOutput(this.output);
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             // Act
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(EntrySignal),
@@ -222,7 +222,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBearBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(EntrySignal),
@@ -239,7 +239,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(ExitSignal),
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(ExitSignal),
@@ -273,7 +273,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(TrailingStopSignal),
@@ -290,7 +290,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             this.alphaStrategyModuleRef.Tell(ValidMarketDataEventBullBar());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             // TODO: Change actor testing methods.
 //            CustomAssert.EventuallyContains<SignalEvent>(
 //                typeof(TrailingStopSignal),
@@ -310,16 +310,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80150m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80150m, 0.00001m),
                     Price.Create(0.80155m, 0.00001m),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
         }
 
         private static BarDataEvent ValidMarketDataEventBearBar()
@@ -333,16 +333,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                     Price.Create(0.79980m, 0.00001m),
                     Price.Create(0.79990m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.79990m, 0.00001m),
                     Price.Create(0.80000m, 0.00001m),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
         }
 
         private static BarDataEvent ValidMarketDataEventDailyBar()
@@ -356,16 +356,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                     Price.Create(0.79900m, 0.00001m),
                     Price.Create(0.80010m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80115m, 0.00001m),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromDays(1).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromDays(1).ToDuration());
         }
 
         private static BarDataEvent HistoricalMarketDataEvent()
@@ -379,16 +379,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                     Price.Create(0.79980m, 0.00001m),
                     Price.Create(0.80010m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80010m, 0.00001m),
                     Price.Create(0.80015m, 0.00001m),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 0.00001m,
                 true,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
         }
 
         // Invalid because the bar time frame is one minute.
@@ -403,16 +403,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
                     Price.Create(0.79980m, 0.00001m),
                     Price.Create(0.80010m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80010m, 0.00001m),
                     Price.Create(0.80015m, 0.00001m),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
         }
     }
 }

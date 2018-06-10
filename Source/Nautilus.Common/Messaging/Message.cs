@@ -102,12 +102,18 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Returns the hash code for this object.
+        /// Returns the hash code for this message.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.Id.GetHashCode();
+            unchecked
+            {
+                var hash = 17;
+                hash = (hash * 29) + this.Id.GetHashCode();
+
+                return hash;
+            }
         }
 
         /// <summary>

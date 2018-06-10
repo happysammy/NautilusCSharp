@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Price.Create(0.81000m, 0.00001m),
                 Price.Create(0.80900m, 0.00001m),
                 new SortedDictionary<int, Price> { { 1, Price.Create(0.81100m, 0.00001m) } },
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         public static EntrySignal SellEntrySignal()
@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Price.Create(1.20500m, 0.00001m),
                 Price.Create(1.20550m, 0.00001m),
                 new SortedDictionary<int, Price> { { 1, Price.Create(1.20450m, 0.00001m) } },
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         public static ExitSignal LongExitSignalForAllUnits(
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Long,
                 new List<int> { 0 },
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static ExitSignal ShortExitSignalForAllUnits(
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Short,
                 new List<int> { 0 },
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static ExitSignal LongExitSignal(
@@ -95,7 +95,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Long,
                 forUnits,
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static ExitSignal ShortExitSignal(
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Short,
                 forUnits,
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static TrailingStopSignal LongTrailingStopSignal(
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Long,
                 forUnitStoplossPrices,
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static TrailingStopSignal ShortTrailingStopSignal(
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 tradeType,
                 MarketPosition.Short,
                 forUnitStoplossPrices,
-                StubDateTime.Now() + signalTimeOffset.ToDuration());
+                StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
     }
 }

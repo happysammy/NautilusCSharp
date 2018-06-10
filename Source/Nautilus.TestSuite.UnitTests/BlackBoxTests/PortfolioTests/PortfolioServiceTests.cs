@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     public class PortfolioServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly SecurityPortfolioStore portfolioStore;
         private readonly IActorRef portfolioServiceRef;
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(PortfolioServiceTests));
 
@@ -77,10 +77,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Initializing...",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell("random_object", null);
 
             // Assert
-            CustomAssert.EventuallyContains("PortfolioService: Unhandled message random_object", this.mockLoggingAdatper, 100, 20);
+            CustomAssert.EventuallyContains("PortfolioService: Unhandled message random_object", this.mockLoggingAdapter, 100, 20);
         }
 
         [Fact]
@@ -106,10 +106,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             Assert.Equal(0, this.portfolioStore.Count);
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -124,10 +124,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(DummyTrailingStopSignalEvent());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -142,11 +142,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.portfolioServiceRef.Tell(DummyOrderFilledEventWrapper());
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection does not contain the portfolioSymbol key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         internal void GivenCreatePortfolioMessage_WithNoPortfolios_ThenCreatesCorrectPortfolio()
         {
             // Arrange
-            var message = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubDateTime.Now());
+            var message = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioServiceRef.Tell(message);
@@ -172,17 +172,17 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         internal void GivenCreatePortfolioMessage_WithPortfolioAlreadyExisting_ThenLogsError()
         {
             // Arrange
-            var message = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubDateTime.Now());
+            var message = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioServiceRef.Tell(message);
             this.portfolioServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "PortfolioService: Validation Failed (The collection already contains the portfolioSymbol key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -194,20 +194,20 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         internal void GivenTradeApprovedMessage_WithPortfolio_ThenSendsMessageToCorrectPortfolio()
         {
             // Arrange
-            var message1 = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubDateTime.Now());
+            var message1 = new CreatePortfolio(StubInstrumentFactory.AUDUSD(), Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new TradeApproved(
                 StubOrderPacketBuilder.Build(),
                 1,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioServiceRef.Tell(message1);
             this.portfolioServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(SubmitTrade),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -225,7 +225,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         private static SignalEvent DummyEntrySignalEvent()
@@ -240,9 +240,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                     Price.Create(2, 1),
                     Price.Create(1, 1),
                     new SortedDictionary<int, Price>(),
-                    StubDateTime.Now()),
+                    StubZonedDateTime.UnixEpoch()),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         private static SignalEvent DummyExitSignalEvent()
@@ -250,7 +250,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new SignalEvent(
                 StubSignalBuilder.LongExitSignalForAllUnits(new TradeType("TestTrade"), Period.Zero),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         private static SignalEvent DummyTrailingStopSignalEvent()
@@ -258,7 +258,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new SignalEvent(
                 StubSignalBuilder.LongExitSignalForAllUnits(new TradeType("TestTrade"), Period.Zero), // TODO?
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         private static OrderFilled DummyOrderFilledEventWrapper()
@@ -271,9 +271,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 OrderSide.Buy,
                 Quantity.Create(100),
                 Price.Create(100m, 0.01m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

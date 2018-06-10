@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Exchange.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
                 position.Symbol,
@@ -40,9 +40,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(1000),
                 Price.Create(2000, 0.01m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             position.Apply(message);
@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("NONE", position.FromEntryOrderId.ToString());
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
-            Assert.Equal(StubDateTime.Now(), position.EntryTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);
             Assert.Equal(1, position.EventCount);
             Assert.Equal(Price.Create(2000, 0.01m), position.AverageEntryPrice);
         }
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Exchange.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
@@ -75,9 +75,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Sell,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
                 position.Symbol,
@@ -87,9 +87,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
                 position.Symbol,
@@ -99,9 +99,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Sell,
                 Quantity.Create(7000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             position.Apply(message1);
@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Exchange.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
@@ -131,9 +131,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
                 position.Symbol,
@@ -143,9 +143,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(200000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
                 position.Symbol,
@@ -155,9 +155,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Sell,
                 Quantity.Create(50000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message4 = new OrderFilled(
                 position.Symbol,
@@ -167,9 +167,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Sell,
                 Quantity.Create(250000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             position.Apply(message1);
@@ -190,7 +190,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Exchange.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
@@ -200,9 +200,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Sell,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
                 position.Symbol,
@@ -212,9 +212,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(500000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
                 position.Symbol,
@@ -224,9 +224,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 OrderSide.Buy,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 0.00001m),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             position.Apply(message1);

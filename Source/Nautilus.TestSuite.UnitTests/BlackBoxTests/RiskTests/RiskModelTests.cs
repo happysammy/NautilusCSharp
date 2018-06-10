@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal("12345", riskModel.RiskModelId.ToString());
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             Assert.Equal(1, riskModel.GlobalMaxRiskPerTrade.Value);
             Assert.True(riskModel.PositionSizeHardLimits);
             Assert.Equal(1, riskModel.EventCount);
-            Assert.Equal(StubDateTime.Now(), riskModel.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), riskModel.LastEventTime);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = riskModel.GetHardLimitQuantity(new Symbol("SYMBOL", Exchange.GLOBEX));
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = riskModel.GetMaxTrades(new TradeType("some_trade_type"));
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = riskModel.GetRiskPerTrade(new TradeType("some_trade_type"));
@@ -111,10 +111,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdateGlobalMaxRiskPerTrade(Percentage.Create(0.5m), StubDateTime.Now());
+            riskModel.UpdateGlobalMaxRiskPerTrade(Percentage.Create(0.5m), StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(0.5m, riskModel.GlobalMaxRiskPerTrade.Value);
@@ -131,10 +131,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(0.5m), StubDateTime.Now());
+            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(0.5m), StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(0.5m, riskModel.GetRiskPerTrade(new TradeType("TestType")).Value);
@@ -152,11 +152,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(0.5m), StubDateTime.Now());
-            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(1.5m), StubDateTime.Now());
+            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(0.5m), StubZonedDateTime.UnixEpoch());
+            riskModel.UpdateMaxRiskPerTradeType(new TradeType("TestType"), Percentage.Create(1.5m), StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(1.5m, riskModel.GetRiskPerTrade(new TradeType("TestType")).Value);
@@ -174,10 +174,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(3), StubDateTime.Now());
+            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(3), StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(Quantity.Create(2), riskModel.GetMaxTrades(new TradeType("AnotherType")));
@@ -195,11 +195,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(3), StubDateTime.Now());
-            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(1), StubDateTime.Now());
+            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(3), StubZonedDateTime.UnixEpoch());
+            riskModel.UpdateMaxTradesPerSymbolType(new TradeType("TestType"), Quantity.Create(1), StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(Quantity.Create(2), riskModel.GetMaxTrades(new TradeType("AnotherType")));
@@ -218,10 +218,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(1000000), StubDateTime.Now());
+            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(1000000), StubZonedDateTime.UnixEpoch());
             var result = riskModel.GetHardLimitQuantity(symbol);
 
             // Assert
@@ -241,11 +241,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
-            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(1000000), StubDateTime.Now());
-            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(2000000), StubDateTime.Now());
+            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(1000000), StubZonedDateTime.UnixEpoch());
+            riskModel.UpdatePositionSizeHardLimit(symbol, Quantity.Create(2000000), StubZonedDateTime.UnixEpoch());
             var result = riskModel.GetHardLimitQuantity(symbol);
 
             // Assert
@@ -264,7 +264,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var eventLog = riskModel.GetEventLog();
@@ -283,12 +283,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = LogFormatter.ToOutput(riskModel);
             var expected =
-                $"RiskModel: GlobalMaxRiskExposure=10%, GlobalMaxRiskPerTrade=1%, PositionSizeHardLimits=True, EventCount=1, LastEventTime=1970-01-01T00:00:01.000Z";
+                $"RiskModel: GlobalMaxRiskExposure=10%, GlobalMaxRiskPerTrade=1%, PositionSizeHardLimits=True, EventCount=1, LastEventTime=1970-01-01T00:00:00.000Z";
 
             // Assert
             Assert.Equal(expected, result);

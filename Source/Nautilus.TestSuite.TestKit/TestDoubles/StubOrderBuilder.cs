@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private Option<ZonedDateTime?> ExpireTime { get; set; } = Option<ZonedDateTime?>.None();
 
-        private ZonedDateTime Timestamp { get; set; } = StubDateTime.Now();
+        private ZonedDateTime Timestamp { get; set; } = StubZonedDateTime.UnixEpoch();
 
         public StubOrderBuilder WithSymbol(Symbol symbol)
         {
@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 0.00001m);
             this.TimeInForce = TimeInForce.GTD;
-            this.ExpireTime = StubDateTime.Now() + Period.FromMinutes(5).ToDuration();
+            this.ExpireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
 
             return this;
         }

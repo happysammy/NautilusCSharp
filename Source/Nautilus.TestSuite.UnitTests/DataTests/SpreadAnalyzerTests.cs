@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.spreadAnalyzer.OnQuote(quote);
@@ -56,19 +56,19 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote2 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote3 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.spreadAnalyzer.OnQuote(quote1);
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.spreadAnalyzer.OnQuote(quote1);
             this.spreadAnalyzer.OnBarUpdate(quote1.Timestamp);
@@ -96,13 +96,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var quote3 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.spreadAnalyzer.OnQuote(quote2);
             this.spreadAnalyzer.OnQuote(quote3);

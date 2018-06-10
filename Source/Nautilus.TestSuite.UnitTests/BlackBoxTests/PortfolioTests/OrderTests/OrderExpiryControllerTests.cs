@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class OrderExpiryControllerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly OrderExpiryController orderExpiryController;
 
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var instrument = StubInstrumentFactory.AUDUSD();
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(OrderExpiryControllerTests));
 
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void AddCounters_StubOrderPacket_ReturnsCorrectTimerCount()
         {
             // Arrange
-            var expireTime = StubDateTime.Now() + Period.FromMinutes(5).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 1;
 
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void RemoveCounters_WhenStubOrderPacketHasBeenAdded_ReturnsTotalCountersToZero()
         {
             // Arrange
-            var expireTime = StubDateTime.Now() + Period.FromMinutes(5).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 2;
 
@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessCounters_WithNoCounters_DoesNothing()
         {
             // Arrange
-            var expireTime = StubDateTime.Now();
+            var expireTime = StubZonedDateTime.UnixEpoch();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
 
             // Act
@@ -123,7 +123,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessCounters_OrderPacketWithThreeUnitsWhichHaventExpired_DoesNothing()
         {
             // Arrange
-            var expireTime = StubDateTime.Now() + Period.FromSeconds(60).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromSeconds(60).ToDuration();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 2;
             this.orderExpiryController.AddCounters(orderPacket, barsValid);
@@ -133,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
 
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessTimers_OrderPacketWithThreeUnitsExpired_SendsCorrectMessageToCommandBusRemovesTimers()
         {
             // Arrange
-            var expireTime = StubDateTime.Now();
+            var expireTime = StubZonedDateTime.UnixEpoch();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 1;
             this.orderExpiryController.AddCounters(orderPacket, barsValid);
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.orderExpiryController.ProcessCounters(orderPacket.OrderIdList);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CancelOrder),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -164,7 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessTimers_OrderPacketWithThreeUnitsNotExpiredThenProcessListOfUnrecognizedOrders_ResultsInForceRemoveAndReturnsTimerCountZero()
         {
             // Arrange
-            var expireTime = StubDateTime.Now() + Period.FromMinutes(5).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var unrecognizedActiveOrders = new List<EntityId>
                                                {
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var result2 = this.orderExpiryController.TotalCounters;
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(3, result1);
             Assert.Equal(0, result2);
         }

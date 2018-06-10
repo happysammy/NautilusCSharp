@@ -58,8 +58,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             var result = this.barStore.Timestamp;
 
             // Assert
-            Assert.Equal(StubDateTime.Now(), result);
-            Assert.Equal(StubDateTime.Now(), this.barStore.GetTimestamp(0));
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), this.barStore.GetTimestamp(0));
         }
 
         [Fact]
@@ -82,8 +82,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         {
             // Arrange
             // Act
-            var bar1 = this.barStore.GetBar(StubDateTime.Now());
-            var bar2 = this.barStore.GetBar(StubDateTime.Now() - Period.FromMinutes(10).ToDuration());
+            var bar1 = this.barStore.GetBar(StubZonedDateTime.UnixEpoch());
+            var bar2 = this.barStore.GetBar(StubZonedDateTime.UnixEpoch() - Period.FromMinutes(10).ToDuration());
 
             // Assert
             Assert.Equal(StubBarBuilder.BuildList()[9], bar1);

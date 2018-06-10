@@ -73,14 +73,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var result = this.entrySignalGenerator.ProcessBuy();
 
             // Assert
-            Assert.Equal("19700101000001000|AUDUSD.FXCM|TestTrade-Buy-CloseDirectionEntry-1", result.ToList()[0].SignalId.Value);
+            Assert.Equal("19700101000000000|AUDUSD.FXCM|TestTrade-Buy-CloseDirectionEntry-1", result.ToList()[0].SignalId.Value);
             Assert.Equal(1, result.Count);
             Assert.Equal(0.80021m, result.ToList()[0].EntryPrice.Value);
             Assert.Equal(0.79985m, result.ToList()[0].StopLossPrice.Value);
             Assert.Single(result.ToList()[0].ProfitTargets);
             Assert.Equal(OrderSide.Buy, result.ToList()[0].OrderSide);
             Assert.Equal(1, result.ToList()[0].TradeProfile.BarsValid);
-            Assert.Equal(StubDateTime.Now() + Period.FromMinutes(5).ToDuration(), result.ToList()[0].ExpireTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), result.ToList()[0].ExpireTime);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                 Price.Create(0.79980m, 0.00001m),
                 Price.Create(0.79990m, 0.00001m),
                 Quantity.Create(1000),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
 
             this.barStore.Update(lastBar);
 
@@ -101,14 +101,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var result = this.entrySignalGenerator.ProcessSell();
 
             // Assert
-            Assert.Equal("19700101000501000|AUDUSD.FXCM|TestTrade-Sell-CloseDirectionEntry-1", result.ToList()[0].SignalId.Value);
+            Assert.Equal("19700101000500000|AUDUSD.FXCM|TestTrade-Sell-CloseDirectionEntry-1", result.ToList()[0].SignalId.Value);
             Assert.Equal(1, result.Count);
             Assert.Equal(0.79979m, result.ToList()[0].EntryPrice.Value);
             Assert.Equal(0.80023m, result.ToList()[0].StopLossPrice.Value);
             Assert.Single(result.ToList()[0].ProfitTargets);
             Assert.Equal(OrderSide.Sell, result.ToList()[0].OrderSide);
             Assert.Equal(1, result.ToList()[0].TradeProfile.BarsValid);
-            Assert.Equal(StubDateTime.Now() + Period.FromMinutes(10).ToDuration(), result.ToList()[0].ExpireTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(10).ToDuration(), result.ToList()[0].ExpireTime);
         }
     }
 }

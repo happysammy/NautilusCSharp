@@ -25,10 +25,10 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var stubClock = new StubClock();
 
             // Act
-            stubClock.FreezeSetTime(StubDateTime.Now());
+            stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(StubDateTime.Now(), stubClock.TimeNow());
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), stubClock.TimeNow());
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var stubClock = new StubClock();
 
             // Act
-            stubClock.FreezeSetTime(StubDateTime.Now());
+            stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
             var result1 = stubClock.TimeNow();
             Task.Delay(300).Wait();
             stubClock.UnfreezeTime();

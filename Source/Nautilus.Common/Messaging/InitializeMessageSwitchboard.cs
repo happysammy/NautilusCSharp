@@ -43,12 +43,5 @@ namespace Nautilus.Common.Messaging
         /// Gets the messages account.
         /// </summary>
         public Switchboard Switchboard { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="InitializeMessageSwitchboard"/>
-        /// service message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(InitializeMessageSwitchboard);
     }
 }

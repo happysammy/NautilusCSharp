@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     public class TradeBookTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly TradeBook tradeBook;
 
         public TradeBookTests(ITestOutputHelper output)
@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var instrument = StubInstrumentFactory.AUDUSD();
             this.tradeBook = new TradeBook(setupContainer, instrument.Symbol);
@@ -355,11 +355,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             this.tradeBook.Process(trade.TradeType);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "TradeBook-AUDUSD.FXCM: Trade removed (TestTrade), TradeStatus=Completed)",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }

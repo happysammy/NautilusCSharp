@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// The mock system logger.
     /// </summary>
-    public class MockLoggingAdatper : ILoggingAdapter
+    public class MockLoggingAdapter : ILoggingAdapter
     {
         private readonly ConcurrentQueue<string> stash = new ConcurrentQueue<string>();
 

@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     public class EntrySignalProcessorTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly EntrySignalProcessor entrySignalProcessor;
         private readonly TradeBook tradeBook;
@@ -39,14 +39,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var instrument = StubInstrumentFactory.AUDUSD();
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             setupFactory.QuoteProvider.OnQuote(
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80001m, 0.00001m),
                     Price.Create(0.80005m, 0.00001m),
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var testActorSystem = ActorSystem.Create(nameof(EntrySignalProcessorTests));
 
@@ -77,14 +77,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             this.entrySignalProcessor.Process(entrySignal);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(RequestTradeApproval),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            var requestTradeApproval = this.inMemoryMessageStore.CommandEnvelopes[0].Open(StubDateTime.Now()) as RequestTradeApproval;
+            var requestTradeApproval = this.inMemoryMessageStore.CommandEnvelopes[0].Open(StubZonedDateTime.UnixEpoch()) as RequestTradeApproval;
 
             Assert.Equal(2, requestTradeApproval?.OrderPacket.Orders.Count);
         }
@@ -111,7 +111,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(2, result.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(2, result.Count);
             Assert.Equal(0, this.inMemoryMessageStore.EventEnvelopes.Count);
         }

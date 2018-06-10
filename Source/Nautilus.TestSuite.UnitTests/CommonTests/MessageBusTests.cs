@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     public class MessageBusTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly IActorRef messageBusRef;
 
         public MessageBusTests(ITestOutputHelper output)
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
 
@@ -78,11 +78,11 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBusRef.Tell(string.Empty);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "CommandBus: Unhandled message",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }

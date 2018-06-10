@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Price.Create(0.79980m, 0.00001m),
                 Price.Create(0.80008m, 0.00001m),
                 Quantity.Create(1000),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -43,16 +43,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new List<Bar>
             {
-                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(45).ToDuration()),
-                new Bar(Price.Create(0.80008m, 0.00001m), Price.Create(0.80020m, 0.00001m), Price.Create(0.80005m, 0.00001m), Price.Create(0.80015m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(40).ToDuration()),
-                new Bar(Price.Create(0.80015m, 0.00001m), Price.Create(0.80030m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80020m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(35).ToDuration()),
-                new Bar(Price.Create(0.80020m, 0.00001m), Price.Create(0.80030m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(30).ToDuration()),
-                new Bar(Price.Create(0.80010m, 0.00001m), Price.Create(0.80015m, 0.00001m), Price.Create(0.79990m, 0.00001m), Price.Create(0.79995m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(25).ToDuration()),
-                new Bar(Price.Create(0.79995m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.79980m, 0.00001m), Price.Create(0.79985m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(20).ToDuration()),
-                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(15).ToDuration()),
-                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(10).ToDuration()),
-                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubDateTime.Now() - Period.FromMinutes(05).ToDuration()),
-                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80015m, 0.00001m), Price.Create(0.79990m, 0.00001m), Price.Create(0.80005m, 0.00001m), Quantity.Create(1000), StubDateTime.Now())
+                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(45).ToDuration()),
+                new Bar(Price.Create(0.80008m, 0.00001m), Price.Create(0.80020m, 0.00001m), Price.Create(0.80005m, 0.00001m), Price.Create(0.80015m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(40).ToDuration()),
+                new Bar(Price.Create(0.80015m, 0.00001m), Price.Create(0.80030m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80020m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(35).ToDuration()),
+                new Bar(Price.Create(0.80020m, 0.00001m), Price.Create(0.80030m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(30).ToDuration()),
+                new Bar(Price.Create(0.80010m, 0.00001m), Price.Create(0.80015m, 0.00001m), Price.Create(0.79990m, 0.00001m), Price.Create(0.79995m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(25).ToDuration()),
+                new Bar(Price.Create(0.79995m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.79980m, 0.00001m), Price.Create(0.79985m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(20).ToDuration()),
+                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(15).ToDuration()),
+                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(10).ToDuration()),
+                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80010m, 0.00001m), Price.Create(0.80000m, 0.00001m), Price.Create(0.80008m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch() - Period.FromMinutes(05).ToDuration()),
+                new Bar(Price.Create(0.80000m, 0.00001m), Price.Create(0.80015m, 0.00001m), Price.Create(0.79990m, 0.00001m), Price.Create(0.80005m, 0.00001m), Quantity.Create(1000), StubZonedDateTime.UnixEpoch())
             };
         }
     }

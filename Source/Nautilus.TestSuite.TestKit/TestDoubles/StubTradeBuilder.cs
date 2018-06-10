@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
         }
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
         }
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
         }
@@ -117,7 +117,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("TestTrade"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
         }

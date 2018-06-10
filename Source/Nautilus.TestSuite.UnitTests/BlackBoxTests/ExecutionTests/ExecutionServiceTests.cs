@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     public class ExecutionServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IActorRef executionServiceRef;
 
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(ExecutionServiceTests));
 
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             var message = new InitializeBrokerageGateway(
                 new Mock<IBrokerageGateway>().Object,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             this.executionServiceRef.Tell(message);
         }
@@ -72,10 +72,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "ExecutionService: Initializing...",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Assert
             CustomAssert.EventuallyContains(
                 "ExecutionService: Unhandled message random_object",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
         {
             // Arrange
             var orderPacket = StubOrderPacketBuilder.Build();
-            var message = new SubmitTrade(orderPacket, decimal.Zero, Guid.NewGuid(), StubDateTime.Now());
+            var message = new SubmitTrade(orderPacket, decimal.Zero, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
@@ -116,13 +116,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             var stopLossModificationsIndex = new Dictionary<Order, Price> { { trade.TradeUnits[0].StopLoss, Price.Create(0.79000m, 0.00001m) } };
             var order = new StubOrderBuilder().StoplossOrder("1234");
 
-            var message = new ModifyStopLoss(trade, stopLossModificationsIndex, Guid.NewGuid(), StubDateTime.Now());
+            var message = new ModifyStopLoss(trade, stopLossModificationsIndex, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
 
         [Fact]
@@ -131,13 +131,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
 
-            var message = new ClosePosition(trade.TradeUnits[0], Guid.NewGuid(), StubDateTime.Now());
+            var message = new ClosePosition(trade.TradeUnits[0], Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
 
         [Fact]
@@ -146,26 +146,26 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
 
-            var message = new CancelOrder(trade.TradeUnits[0].Entry, "Order Expired", Guid.NewGuid(), StubDateTime.Now());
+            var message = new CancelOrder(trade.TradeUnits[0].Entry, "Order Expired", Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
 
         [Fact]
         internal void GivenShutdownSystemMessage_()
         {
             // Arrange
-            var message = new ShutdownSystem(Guid.NewGuid(), StubDateTime.Now());
+            var message = new ShutdownSystem(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }

@@ -39,9 +39,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.OrderSide,
                 order.Quantity,
                 order.Price,
-                StubDateTime.Now() + Period.FromMinutes(1).ToDuration(),
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
                 order.Price,
-                StubDateTime.Now() + Period.FromMinutes(1).ToDuration(),
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderRejected(
                 order.Symbol,
                 order.OrderId,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -116,10 +116,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Quantity,
                 order.Price,
                 order.TimeInForce,
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration(),
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -141,9 +141,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.OrderId,
                 new EntityId("NONE"),
                 newPrice,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -160,9 +160,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderCancelled(
                 order.Symbol,
                 order.OrderId,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         /// <summary>
@@ -179,9 +179,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderExpired(
                 order.Symbol,
                 order.OrderId,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

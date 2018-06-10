@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(100m, 0.01m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo = mockTrailingStopAlgoSetup.Object;
 
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(110m, 0.01m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo = mockTrailingStopAlgoSetup.Object;
 
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(95m, 0.1m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -172,7 +172,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(90m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -205,7 +205,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80500m, 0.00001m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -217,7 +217,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80600m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -250,7 +250,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(100m, 0.1m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -262,7 +262,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(110m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -297,7 +297,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80700m, 0.00001m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -308,7 +308,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80600m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -344,7 +344,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(110m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -356,7 +356,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(100m, 0.1m),
                     2,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -392,7 +392,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80700m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -404,7 +404,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80600m, 0.00001m),
                     2,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -439,7 +439,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(110m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -451,7 +451,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(100m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -483,7 +483,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80700m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -495,7 +495,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(0.80600m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -527,7 +527,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(100m, 0.1m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -539,7 +539,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(120m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -551,7 +551,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Long,
                     Price.Create(130m, 0.1m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo3 = mockTrailingStopAlgoSetup3.Object;
 
@@ -587,7 +587,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(1.30000m, 0.00001m),
                     0,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo1 = mockTrailingStopAlgoSetup1.Object;
 
@@ -599,7 +599,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(1.29000m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo2 = mockTrailingStopAlgoSetup2.Object;
 
@@ -611,7 +611,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(1.28000m, 0.00001m),
                     1,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo3 = mockTrailingStopAlgoSetup3.Object;
 
@@ -623,7 +623,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                     MarketPosition.Short,
                     Price.Create(1.29500m, 0.00001m),
                     2,
-                    StubDateTime.Now()));
+                    StubZonedDateTime.UnixEpoch()));
 
             var mockTrailingStopAlgo4 = mockTrailingStopAlgoSetup4.Object;
 

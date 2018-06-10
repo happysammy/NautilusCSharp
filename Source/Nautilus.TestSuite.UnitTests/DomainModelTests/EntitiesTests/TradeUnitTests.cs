@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 order,
                 order,
                 order,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal("U1", tradeUnit.TradeUnitLabel.ToString());
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder,
                 stoplossOrder,
                 profitTargetOrder,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var message = new OrderWorking(
                 entryOrder.Symbol,
@@ -70,9 +70,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder.Price,
                 entryOrder.TimeInForce,
                 entryOrder.ExpireTime,
-                StubDateTime.Now(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             entryOrder.Apply(message);
@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder,
                 stoplossOrder,
                 profitTargetOrder,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder,
                 stoplossOrder,
                 profitTargetOrder,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder,
                 stoplossOrder,
                 profitTargetOrder,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = tradeUnit.GetOrderById(new EntityId("EntryOrderId"));
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 entryOrder,
                 stoplossOrder,
                 profitTargetOrder,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = tradeUnit.GetOrderById(new EntityId("bad_order_id"));

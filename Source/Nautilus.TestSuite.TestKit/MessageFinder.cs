@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit
         public static T FindSignalEvent<T>(
             IEnumerable<Envelope<EventMessage>> envelopeList) where T : Signal
         {
-            return envelopeList.Select(envelope => envelope.Open(StubDateTime.Now()).Event)
+            return envelopeList.Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
                .Where(e => e is SignalEvent)
                .Cast<T>()
                .FirstOrDefault();
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.TestKit
         public static OrderEvent FindOrderEvent(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToFind)
         {
             return envelopeList
-               .Select(envelope => envelope.Open(StubDateTime.Now()).Event)
+               .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
                .Where(@event => @event is OrderEvent)
                .Cast<OrderEvent>()
                .FirstOrDefault(orderEvent => orderEvent.GetType() == eventToFind);

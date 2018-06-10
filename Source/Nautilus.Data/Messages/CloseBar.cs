@@ -16,19 +16,22 @@ namespace Nautilus.Data.Messages
     using NodaTime;
 
     /// <summary>
-    /// The command message to close the bar of the contained specification at the contained close time.
+    /// The command message to close the bar of the given bar specification at the given close time.
     /// </summary>
     [Immutable]
     public class CloseBar : CommandMessage
     {
         public CloseBar(
             BarSpecification barSpec,
+            ZonedDateTime closeTime,
             Guid id,
             ZonedDateTime timestamp) : base(id, timestamp)
         {
             Debug.NotNull(barSpec, nameof(barSpec));
-            this.BarSpecification = barSpec;
+            Debug.NotDefault(closeTime, nameof(closeTime));
 
+            this.BarSpecification = barSpec;
+            this.CloseTime = closeTime;
         }
 
         /// <summary>
@@ -40,11 +43,5 @@ namespace Nautilus.Data.Messages
         /// Gets the messages bar closing time.
         /// </summary>
         public ZonedDateTime CloseTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="SubscribeBarData"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(CloseBar);
     }
 }

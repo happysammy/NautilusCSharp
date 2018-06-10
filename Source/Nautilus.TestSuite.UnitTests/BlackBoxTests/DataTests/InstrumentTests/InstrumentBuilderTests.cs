@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.InstrumentTests
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             // Act
-            var result = instrumentBuilder.Build(StubDateTime.Now());
+            var result = instrumentBuilder.Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(audusd, result);
@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.InstrumentTests
             // Act
             var result = instrumentBuilder
                .Update(audusd)
-               .Build(StubDateTime.Now());
+               .Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(audusd, result);
@@ -86,12 +86,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.InstrumentTests
                 90,
                 45,
                 45,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = instrumentBuilder
                .Update(instrument)
-               .Build(StubDateTime.Now());
+               .Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(12, instrumentBuilder.Changes.Count);

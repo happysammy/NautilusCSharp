@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 new TradeType("TestTrade"),
                 new List<AtomicOrder>(),
                 new EntityId("StubOrderPacket"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result1 = orderPacket.Orders.Count;
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 atomicOrders[0].TradeType,
                 atomicOrders,
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal(1, orderPacket.Orders.Count);
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void OrderIdList_ThreeUnits_ReturnsCorrectOrderList()
         {
             // Arrange
-            var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+            var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
 
             // Act
             var expectedList = new List<EntityId>
@@ -114,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 new TradeType("TestTrade"),
                 new List<AtomicOrder>(),
                 new EntityId("NONE"),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = orderPacket.OrderIdList.Count;

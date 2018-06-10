@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 "my_username",
                 "my_password",
                 CurrencyCode.USD,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
                 Broker.InteractiveBrokers,
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 decimal.Zero,
                 string.Empty,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             account.Apply(accountEventMessage);
 
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 "my_username",
                 "my_password",
                 CurrencyCode.USD,
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
                 Broker.InteractiveBrokers,
@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 decimal.Zero,
                 string.Empty,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             account.Apply(accountEventMessage);
 

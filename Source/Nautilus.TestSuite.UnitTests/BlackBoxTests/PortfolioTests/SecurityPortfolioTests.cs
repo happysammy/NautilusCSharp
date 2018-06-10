@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     public class SecurityPortfolioTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly IQuoteProvider quoteProvider;
         private readonly TradeBook tradeBook;
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(SecurityPortfolioTests));
 
@@ -114,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 orderPacket,
                 2,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioRef.Tell(message);
@@ -152,13 +152,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 orderPacket,
                 2,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(SubmitTrade),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -174,18 +174,18 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
             this.quoteProvider.OnQuote(quote);
 
             var signal = StubSignalBuilder.BuyEntrySignal();
             var message = new SignalEvent(
                 signal,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioRef.Tell(message);
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // Assert
             CustomAssert.EventuallyContains(
@@ -208,13 +208,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 new List<int> { 0 },
                 Period.FromMinutes(5));
 
-            var message = new SignalEvent(signal, Guid.NewGuid(), StubDateTime.Now());
+            var message = new SignalEvent(signal, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -235,13 +235,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 new Dictionary<int, Price> { { 0, Price.Create(0.79990m, 0.00001m) } },
                 Period.FromMinutes(5));
 
-            var message = new SignalEvent(signal, Guid.NewGuid(), StubDateTime.Now());
+            var message = new SignalEvent(signal, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.portfolioRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ModifyStopLoss),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -396,12 +396,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                     Price.Create(0.80110m, 0.00001m),
                     Price.Create(0.80150m, 0.00001m),
                     Quantity.Create(1000),
-                    StubDateTime.Now() + Period.FromMinutes(5).ToDuration()),
+                    StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now() + Period.FromMinutes(5).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
         }
     }
 }

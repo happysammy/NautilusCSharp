@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     public class ExitSignalProcessorTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly ExitSignalProcessor exitSignalProcessor;
         private readonly TradeBook tradeBook;
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var instrument = StubInstrumentFactory.AUDUSD();
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(ExitSignalProcessorTests));
 
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Initialized, result[0].TradeStatus);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
         }
@@ -103,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var result = this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"));
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var result = this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"));
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(
@@ -177,10 +177,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var result = this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"));
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, result[0].MarketPosition);
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -202,7 +202,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 new TradeType("TestTrade"),
                 MarketPosition.Short,
                 new List<int> { 3 },
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             trade.Apply(StubEventMessages.OrderFilledEvent(trade.TradeUnits[0].Entry));
@@ -213,7 +213,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             // Assert
             Task.Delay(100).Wait();
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, result[0].MarketPosition);
             Assert.Equal(0, this.inMemoryMessageStore.CommandEnvelopes.Count);
@@ -233,7 +233,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 new TradeType("TestTrade"),
                 MarketPosition.Long,
                 new List<int> { 0 },
-                StubDateTime.Now() + Period.FromMinutes(1).ToDuration());
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration());
 
             // Act
             trade.Apply(StubEventMessages.OrderFilledEvent(trade.TradeUnits[0].Entry));
@@ -245,7 +245,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var result = this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"));
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(

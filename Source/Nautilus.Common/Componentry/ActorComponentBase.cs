@@ -114,7 +114,7 @@ namespace Nautilus.Common.Componentry
         {
             Validate.NotNull(ex, nameof(ex));
 
-            this.Log.Error($"Restarting ({ex.Message})", ex);
+            this.Log.Error($"Restarting {ex.Message}", ex);
 
             this.PreStart();
         }

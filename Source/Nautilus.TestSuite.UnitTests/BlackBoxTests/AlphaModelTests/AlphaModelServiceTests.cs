@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     public class AlphaModelServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly InMemoryMessageStore inMemoryMessageStore;
         private readonly AlphaStrategyModuleStore alphaStrategyModuleStore;
         private readonly IActorRef alphaModelServiceRef;
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaModelServiceTests));
 
@@ -89,11 +89,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Arrange
             // Act
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Initializing...",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Unhandled message random_object",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -125,17 +125,17 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.alphaModelServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CreatePortfolio),
                 this.inMemoryMessageStore.CommandEnvelopes,
@@ -174,7 +174,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             var message = new CreateAlphaStrategyModule(
                 StubAlphaStrategyFactory.Create(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.alphaModelServiceRef.Tell(message);
@@ -183,7 +183,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection already contains the strategyLabel key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
@@ -204,17 +204,17 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 0.00001m,
                 false,
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.alphaModelServiceRef.Tell(message1);
             this.alphaModelServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
             Assert.Equal(1, this.alphaStrategyModuleStore.Count);
@@ -236,10 +236,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message2);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 "AlphaModelService: AUDUSD.FXCM(TestTrade) removed",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
         }
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             CustomAssert.EventuallyContains(
                 "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
-                this.mockLoggingAdatper,
+                this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
             Assert.Equal(0, this.alphaStrategyModuleStore.Count);
@@ -267,7 +267,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             return new CreateAlphaStrategyModule(
                 StubAlphaStrategyFactory.Create(),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
 
         private static RemoveAlphaStrategyModule RemoveAlphaStrategyModuleMessage()
@@ -276,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
                 Guid.NewGuid(),
-                StubDateTime.Now());
+                StubZonedDateTime.UnixEpoch());
         }
     }
 }

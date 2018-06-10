@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
     public class DataServiceTests
     {
         private readonly ITestOutputHelper output;
-        private readonly MockLoggingAdatper mockLoggingAdatper;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly IActorRef dataServiceRef;
         private readonly Symbol symbol;
 
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 
             var setupFactory = new StubSetupContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.mockLoggingAdatper = setupFactory.LoggingAdatper;
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             var testActorSystem = ActorSystem.Create(nameof(AlphaModelServiceTests));
 
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
                 messagingAdapter)));
 
             var mockBrokerageGateway = new Mock<IBrokerageGateway>().Object;
-            var message = new InitializeBrokerageGateway(mockBrokerageGateway, Guid.NewGuid(), StubDateTime.Now());
+            var message = new InitializeBrokerageGateway(mockBrokerageGateway, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             this.dataServiceRef.Tell(message);
         }
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch());
 //
 //            // Act
 //            this.dataServiceRef.Tell(message);
@@ -110,12 +110,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch());
 //            var message2 = new SubscribeBarData(
 //                this.symbol,
 //                tradeType,
 //                Guid.NewGuid(),
-//                StubDateTime.Now());
+//                StubZonedDateTime.UnixEpoch());
 //
 //            // Act
 //            this.dataServiceRef.Tell(message1);
@@ -135,13 +135,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
         internal void GivenShutdownSystemMessage_()
         {
             // Arrange
-            var message = new ShutdownSystem(Guid.NewGuid(), StubDateTime.Now());
+            var message = new ShutdownSystem(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.dataServiceRef.Tell(message);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdatper, this.output);
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }
