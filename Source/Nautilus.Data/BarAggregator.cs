@@ -28,6 +28,8 @@ namespace Nautilus.Data
         private readonly Symbol symbol;
         private readonly IDictionary<BarSpecification, BarBuilder> barBuilders;
 
+        private Tick lastTick;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
@@ -100,6 +102,8 @@ namespace Nautilus.Data
                         throw new InvalidOperationException("The quote type is not recognized.");
                 }
             }
+
+            this.lastTick = tick;
         }
 
         private void OnMessage(CloseBar message)
@@ -108,7 +112,8 @@ namespace Nautilus.Data
 
             if (this.barBuilders.ContainsKey(message.BarSpecification))
             {
-                var builder = this.barBuilders[message.BarSpecification];
+                var barSpec = message.BarSpecification;
+                var builder = this.barBuilders[barSpec];
 
                 // No ticks have been received by the builder.
                 if (builder.IsNotInitialized)
@@ -118,7 +123,13 @@ namespace Nautilus.Data
 
                 // Close the bar and send to parent.
                 var bar = builder.Build(message.CloseTime);
-                Context.Parent.Tell(bar);
+                var barClosed = new BarClosed(
+                    this.symbol,
+                    barSpec,
+                    bar,
+                    this.lastTick,
+                    this.NewGuid());
+                Context.Parent.Tell(barClosed);
 
                 // Create and initialize new builder.
                 builder = new BarBuilder();

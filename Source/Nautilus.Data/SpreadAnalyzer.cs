@@ -12,7 +12,6 @@ namespace Nautilus.Data
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -22,8 +21,6 @@ namespace Nautilus.Data
     /// </summary>
     public sealed class SpreadAnalyzer
     {
-        private readonly decimal tickSize;
-        private readonly int decimalPlaces;
         private readonly IList<decimal> thisBarsSpreads = new List<decimal>();
         private readonly IDictionary<ZonedDateTime, decimal> negativeSpreads = new Dictionary<ZonedDateTime, decimal>();
         private readonly IDictionary<ZonedDateTime, decimal> totalAverageSpreads = new Dictionary<ZonedDateTime, decimal>();
@@ -36,9 +33,6 @@ namespace Nautilus.Data
         public SpreadAnalyzer(decimal tickSize)
         {
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-
-            this.tickSize = tickSize;
-            this.decimalPlaces = tickSize.GetDecimalPlaces();
 
             this.AverageSpread = tickSize;
             this.MaxSpread = (default(ZonedDateTime), decimal.MinValue);
@@ -58,7 +52,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the spread analyzers current spread.
         /// </summary>
-        public decimal CurrentSpread => Math.Round(this.CurrentAsk - this.CurrentBid, this.decimalPlaces);
+        public decimal CurrentSpread => this.CurrentAsk - this.CurrentBid;
 
         /// <summary>
         /// Gets the spread analyzers average spread.
@@ -86,27 +80,26 @@ namespace Nautilus.Data
         public IReadOnlyDictionary<ZonedDateTime, decimal> TotalAverageSpreads => this.totalAverageSpreads.ToImmutableDictionary();
 
         /// <summary>
-        /// Updates the spread analyzer with the given quote.
+        /// Updates the spread analyzer with the given tick.
         /// </summary>
-        /// <param name="quote">The quote.</param>
-        /// <exception cref="ValidationException">Throws if the quote is null.</exception>
-        public void OnQuote(Tick quote)
+        /// <param name="tick">The quote.</param>
+        public void Update(Tick tick)
         {
-            Validate.NotNull(quote, nameof(quote));
+            Debug.NotNull(tick, nameof(tick));
 
-            this.CurrentBid = quote.Bid;
-            this.CurrentAsk = quote.Ask;
+            this.CurrentBid = tick.Bid;
+            this.CurrentAsk = tick.Ask;
 
             this.thisBarsSpreads.Add(this.CurrentSpread);
 
             if (this.CurrentSpread > this.MaxSpread.Spread)
             {
-                this.MaxSpread = (quote.Timestamp, this.CurrentSpread);
+                this.MaxSpread = (tick.Timestamp, this.CurrentSpread);
             }
 
             if (this.CurrentSpread < this.MinSpread.Spread)
             {
-                this.MinSpread = (quote.Timestamp, this.CurrentSpread);
+                this.MinSpread = (tick.Timestamp, this.CurrentSpread);
             }
 
             if (this.totalAverageSpreads.Count == 0)
@@ -119,7 +112,6 @@ namespace Nautilus.Data
         /// Analyzes the spread data on the close of the bar with the given timestamp.
         /// </summary>
         /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the timestamp is the default value.</exception>
         public void OnBarUpdate(ZonedDateTime timestamp)
         {
             Validate.NotDefault(timestamp, nameof(timestamp));
@@ -131,7 +123,13 @@ namespace Nautilus.Data
 
         private decimal CalculateAverageSpread()
         {
-            return Math.Max(Math.Round(this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1), this.decimalPlaces), this.tickSize);
+            if (this.CurrentBid is null)
+            {
+                return 0;
+            }
+
+            return Math.Round(this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1),
+                this.CurrentBid.Decimals);
         }
     }
 }

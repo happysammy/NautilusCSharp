@@ -17,7 +17,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Data.Messages;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -27,7 +26,7 @@ namespace Nautilus.Data
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IImmutableList<Enum> barReceivers;
+        private readonly IImmutableList<Enum> barDataReceivers;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace Nautilus.Data
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="serviceContext">The service context.</param>
-        /// <param name="barReceivers">The closed bar receivers.</param>
+        /// <param name="barReceivers">The bar data receivers.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregationController(
             IComponentryContainer container,
@@ -55,7 +54,7 @@ namespace Nautilus.Data
             Validate.NotNull(barReceivers, nameof(barReceivers));
 
             this.storedContainer = container;
-            this.barReceivers = barReceivers.ToImmutableList();
+            this.barDataReceivers = barReceivers.ToImmutableList();
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
 
             this.SetupCommandMessageHandling();
@@ -77,7 +76,7 @@ namespace Nautilus.Data
         private void SetupEventMessageHandling()
         {
             this.Receive<Tick>(msg => this.OnMessage(msg));
-            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<BarClosed>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(Tick tick)
@@ -115,14 +114,14 @@ namespace Nautilus.Data
             this.barAggregators[message.Symbol].Tell(message);
         }
 
-        private void OnMessage(BarDataEvent message)
+        private void OnMessage(BarClosed message)
         {
-            this.Send(
-                this.barReceivers,
-                new EventMessage(
-                    message,
-                    this.NewGuid(),
-                    this.TimeNow()));
+            var @event = new EventMessage(
+                message,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(this.barDataReceivers, @event);
         }
     }
 }

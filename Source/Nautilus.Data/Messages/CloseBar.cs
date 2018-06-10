@@ -19,7 +19,7 @@ namespace Nautilus.Data.Messages
     /// The command message to close the bar of the given bar specification at the given close time.
     /// </summary>
     [Immutable]
-    public class CloseBar : CommandMessage
+    public sealed class CloseBar : CommandMessage
     {
         public CloseBar(
             BarSpecification barSpec,

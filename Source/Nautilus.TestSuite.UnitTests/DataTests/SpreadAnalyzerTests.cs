@@ -27,17 +27,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         }
 
         [Fact]
-        internal void OnQuote_WhenNoPreviousQuote_UpdatesValuesAccordingly()
+        internal void Ontick_WhenNoPrevioustick_UpdatesValuesAccordingly()
         {
             // Arrange
-            var quote = new Tick(
+            var tick = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.spreadAnalyzer.OnQuote(quote);
+            this.spreadAnalyzer.Update(tick);
 
             // Assert
             Assert.Equal(0.80000m, this.spreadAnalyzer.CurrentBid.Value);
@@ -49,31 +49,31 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         }
 
         [Fact]
-        internal void AverageSpread_WhenNoPreviousBarUpdates_CalculatesWithEachQuote()
+        internal void AverageSpread_WhenNoPreviousBarUpdates_CalculatesWithEachtick()
         {
             // Arrange
-            var quote1 = new Tick(
+            var tick1 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            var quote2 = new Tick(
+            var tick2 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            var quote3 = new Tick(
+            var tick3 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.spreadAnalyzer.OnQuote(quote1);
-            this.spreadAnalyzer.OnQuote(quote2);
-            this.spreadAnalyzer.OnQuote(quote3);
+            this.spreadAnalyzer.Update(tick1);
+            this.spreadAnalyzer.Update(tick2);
+            this.spreadAnalyzer.Update(tick3);
 
             // Assert
             Assert.Equal(0.00004m, this.spreadAnalyzer.AverageSpread);
@@ -83,29 +83,29 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void AverageSpread_WhenPreviousBarUpdates_ReturnsCalculatedValue()
         {
             // Arrange
-            var quote1 = new Tick(
+            var tick1 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.spreadAnalyzer.OnQuote(quote1);
-            this.spreadAnalyzer.OnBarUpdate(quote1.Timestamp);
+            this.spreadAnalyzer.Update(tick1);
+            this.spreadAnalyzer.OnBarUpdate(tick1.Timestamp);
 
-            var quote2 = new Tick(
+            var tick2 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            var quote3 = new Tick(
+            var tick3 = new Tick(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.spreadAnalyzer.OnQuote(quote2);
-            this.spreadAnalyzer.OnQuote(quote3);
+            this.spreadAnalyzer.Update(tick2);
+            this.spreadAnalyzer.Update(tick3);
 
             // Act
             var result = this.spreadAnalyzer.AverageSpread;

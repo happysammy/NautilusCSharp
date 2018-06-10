@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg();
+            ExpectNoMsg(100);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg();
+            ExpectNoMsg(100);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg();
+            ExpectNoMsg(100);
         }
 
         [Fact]
@@ -162,9 +162,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            var result = ExpectMsg<Bar>();
-            Assert.Equal(0.80000m, result.Open.Value);
-            Assert.Equal(0.80000m, result.Close.Value);
+            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            Assert.Equal(0.80000m, result.Bar.Open.Value);
+            Assert.Equal(0.80000m, result.Bar.Close.Value);
+            Assert.Equal(tick, result.LastTick);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), result.Timestamp);
         }
 
@@ -208,16 +209,16 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(subscribeMessage);
             this.barAggregatorRef.Tell(tick1);
             this.barAggregatorRef.Tell(closeBarMessage1);
-            ExpectMsg<Bar>();
+            ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             this.barAggregatorRef.Tell(tick2);
 
             // Act
             this.barAggregatorRef.Tell(closeBarMessage2);
 
             // Assert
-            var result = ExpectMsg<Bar>();
-            Assert.Equal(0.80000m, result.Open.Value);
-            Assert.Equal(0.80100m, result.Close.Value);
+            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            Assert.Equal(0.80000m, result.Bar.Open.Value);
+            Assert.Equal(0.80100m, result.Bar.Close.Value);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
         }
 
@@ -278,17 +279,18 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(tick1);
             this.barAggregatorRef.Tell(tick2);
             this.barAggregatorRef.Tell(closeBarMessage1);
-            ExpectMsg<Bar>();
+            ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             this.barAggregatorRef.Tell(tick3);
 
             // Act
             this.barAggregatorRef.Tell(closeBarMessage2);
 
             // Assert
-            var result = ExpectMsg<Bar>();
-            Assert.Equal(0.80000m, result.Open.Value);
-            Assert.Equal(0.80200m, result.High.Value);
-            Assert.Equal(0.80200m, result.Close.Value);
+            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            Assert.Equal(0.80000m, result.Bar.Open.Value);
+            Assert.Equal(0.80200m, result.Bar.High.Value);
+            Assert.Equal(0.80200m, result.Bar.Close.Value);
+            Assert.Equal(tick3, result.LastTick);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(10), result.Timestamp);
         }
 
@@ -331,9 +333,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            var result = ExpectMsg<Bar>();
-            Assert.Equal(0.80005m, result.Open.Value);
-            Assert.Equal(0.80035m, result.High.Value);
+            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            Assert.Equal(0.80005m, result.Bar.Open.Value);
+            Assert.Equal(0.80035m, result.Bar.High.Value);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
         }
     }
