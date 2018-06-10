@@ -50,6 +50,6 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
         /// Returns a string representation of the <see cref="ClosePosition"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(ClosePosition)}-{this.ForTradeUnit.Symbol}-{this.ForTradeUnit}";
+        public override string ToString() => $"{base.ToString()}-{this.ForTradeUnit.Symbol}-{this.ForTradeUnit}";
     }
 }

@@ -57,6 +57,6 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Returns a string representation of the <see cref="CreatePortfolio"/> service message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(CreatePortfolio)}-{this.Symbol}";
+        public override string ToString() => $"{base.ToString()}-{this.Symbol}";
     }
 }

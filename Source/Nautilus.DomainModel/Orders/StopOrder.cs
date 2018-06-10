@@ -164,7 +164,7 @@ namespace Nautilus.DomainModel.Orders
 
         private bool IsExpireTimeGreaterThanTimestamp(Option<ZonedDateTime?> expireTime)
         {
-            return ZonedDateTime.Comparer.Instant.Compare((ZonedDateTime)expireTime.Value, this.EntityTimestamp) >= 0;
+            return ZonedDateTime.Comparer.Instant.Compare((ZonedDateTime)expireTime.Value, this.Timestamp) >= 0;
         }
 
         private decimal CalculateSlippage()

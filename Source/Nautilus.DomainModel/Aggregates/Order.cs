@@ -76,7 +76,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders identifier.
         /// </summary>
-        public EntityId OrderId => this.EntityId;
+        public EntityId OrderId => this.Id;
 
         /// <summary>
         /// Gets the orders identifiers count.
@@ -143,7 +143,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders timestamp.
         /// </summary>
-        public ZonedDateTime OrderTimestamp => this.EntityTimestamp;
+        public ZonedDateTime OrderTimestamp => this.Timestamp;
 
         /// <summary>
         /// Gets a result indicating whether the order status is complete.

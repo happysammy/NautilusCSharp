@@ -74,7 +74,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// <summary>
         /// Gets the accounts identifier.
         /// </summary>
-        public EntityId AccountId => this.EntityId;
+        public EntityId AccountId => this.Id;
 
         /// <summary>
         /// Gets the accounts number.

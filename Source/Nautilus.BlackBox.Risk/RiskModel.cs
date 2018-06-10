@@ -63,7 +63,7 @@ namespace Nautilus.BlackBox.Risk
         /// <summary>
         /// Gets the risk models identifier.
         /// </summary>
-        public EntityId RiskModelId => this.EntityId;
+        public EntityId RiskModelId => this.Id;
 
         /// <summary>
         /// Gets the risk models maximum risk exposure.

@@ -58,7 +58,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// The signals identifier.
         /// </summary>
-        public EntityId SignalId => this.EntityId;
+        public EntityId SignalId => this.Id;
 
         /// <summary>
         /// Gets the signals label.
@@ -73,7 +73,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the signals timestamp.
         /// </summary>
-        public ZonedDateTime SignalTimestamp => this.EntityTimestamp;
+        public ZonedDateTime SignalTimestamp => this.Timestamp;
 
         /// <summary>
         /// Returns a string representation of the <see cref="Signal"/>.

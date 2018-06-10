@@ -63,6 +63,6 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(CreateAlphaStrategyModule)}-{this.Symbol}-{this.TradeType}";
+        public override string ToString() => $"{base.ToString()}-{this.Symbol}-{this.TradeType}";
     }
 }

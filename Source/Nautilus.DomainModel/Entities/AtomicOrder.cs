@@ -57,7 +57,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders identifier.
         /// </summary>
-        public EntityId AtomicOrderId => this.EntityId;
+        public EntityId AtomicOrderId => this.Id;
 
         /// <summary>
         /// Gets the atomic orders trade type.

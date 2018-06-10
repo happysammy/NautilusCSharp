@@ -30,14 +30,8 @@ namespace Nautilus.Common.Messages
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotDefault(identifier, nameof(identifier));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
         }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="SystemStatusRequest"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(SystemStatusRequest)}-{this.Id}";
     }
 }

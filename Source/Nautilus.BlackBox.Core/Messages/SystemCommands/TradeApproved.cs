@@ -60,11 +60,5 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Gets the messages bars valid for entry.
         /// </summary>
         public int BarsValid { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="TradeApproved"/> service message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(TradeApproved);
     }
 }

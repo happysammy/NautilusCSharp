@@ -80,7 +80,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trade units identifier.
         /// </summary>
-        public EntityId TradeUnitId => this.EntityId;
+        public EntityId TradeUnitId => this.Id;
 
         /// <summary>
         /// Gets the trade units symbol.

@@ -22,28 +22,28 @@ namespace Nautilus.DomainModel
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity{T}"/> class.
         /// </summary>
-        /// <param name="entityId">The entity identifier.</param>
-        /// <param name="entityTimestamp">The entity timestamp.</param>
+        /// <param name="identifier">The entity identifier.</param>
+        /// <param name="timestamp">The entity timestamp.</param>
         protected Entity(
-            EntityId entityId,
-            ZonedDateTime entityTimestamp)
+            EntityId identifier,
+            ZonedDateTime timestamp)
         {
-            Debug.NotNull(entityId, nameof(entityId));
-            Debug.NotDefault(entityTimestamp, nameof(entityTimestamp));
+            Debug.NotNull(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.EntityId = entityId;
-            this.EntityTimestamp = entityTimestamp;
+            this.Id = identifier;
+            this.Timestamp = timestamp;
         }
 
         /// <summary>
         /// Gets the entity identifier.
         /// </summary>
-        protected EntityId EntityId { get; }
+        public EntityId Id { get; }
 
         /// <summary>
         /// Gets the entity timestamp.
         /// </summary>
-        protected ZonedDateTime EntityTimestamp { get; }
+        public ZonedDateTime Timestamp { get; }
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given <see cref="object"/>.
@@ -60,13 +60,13 @@ namespace Nautilus.DomainModel
         public bool Equals([CanBeNull] T other)
         {
             var otherEntity = other as Entity<T>;
-            return otherEntity != null & this.EntityId.Equals(otherEntity?.EntityId);
+            return otherEntity != null & this.Id.Equals(otherEntity?.Id);
         }
 
         /// <summary>
         /// Returns the hash code for this entity.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => this.EntityId.ToString().GetHashCode();
+        public override int GetHashCode() => this.Id.ToString().GetHashCode();
     }
 }

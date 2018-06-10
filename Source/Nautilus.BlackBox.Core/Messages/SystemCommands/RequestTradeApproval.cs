@@ -61,6 +61,6 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// service message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(RequestTradeApproval)}-{this.Signal}";
+        public override string ToString() => $"{base.ToString()}-{this.Signal}";
     }
 }

@@ -55,11 +55,5 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Gets the messages risk model.
         /// </summary>
         public IRiskModel RiskModel { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="InitializeRiskModel"/> service message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(InitializeRiskModel);
     }
 }

@@ -45,11 +45,5 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// Gets the messages brokerage gateway.
         /// </summary>
         public IBrokerageGateway BrokerageGateway { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="InitializeBrokerageGateway"/> service message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(InitializeBrokerageGateway);
     }
 }

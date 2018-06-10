@@ -48,11 +48,5 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// </summary>
         public IDictionary<Symbol, IActorRef> MarketDataProcessorsIndex { get; }
 
-        /// <summary>
-        /// Returns a string representation of the <see cref="MarketDataProcessorIndexUpdate"/>
-        /// service message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(MarketDataProcessorIndexUpdate);
     }
 }

@@ -15,6 +15,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;

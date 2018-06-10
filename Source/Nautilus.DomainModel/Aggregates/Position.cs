@@ -87,7 +87,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Returns the positions timestamp.
         /// </summary>
-        public ZonedDateTime PositionTimestamp => this.EntityTimestamp;
+        public ZonedDateTime PositionTimestamp => this.Timestamp;
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to this position.

@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Act
             var result1 = orderPacket.Orders.Count;
             var result2 = orderPacket.OrderIdList.Count;
-            var result3 = orderPacket.OrderPacketId;
+            var result3 = orderPacket.Id;
 
             // Assert
             Assert.Equal(0, result1);
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var orderPacket = StubOrderPacketBuilder.Build();
 
             // Act
-            var result = orderPacket.OrderPacketId;
+            var result = orderPacket.Id;
 
             // Assert
             Assert.Equal("StubOrderPacket", result.ToString());

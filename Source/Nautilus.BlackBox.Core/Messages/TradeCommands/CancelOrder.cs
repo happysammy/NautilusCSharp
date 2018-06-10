@@ -60,6 +60,6 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
         /// Returns a string representation of the <see cref="CancelOrder"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(CancelOrder)}-{this.Order}";
+        public override string ToString() => $"{base.ToString()}-{this.Order}";
     }
 }

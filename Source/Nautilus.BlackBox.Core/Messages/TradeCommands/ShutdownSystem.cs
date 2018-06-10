@@ -34,11 +34,5 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="ShutdownSystem"/> command message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(ShutdownSystem);
     }
 }

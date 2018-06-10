@@ -72,11 +72,6 @@ namespace Nautilus.DomainModel.Entities
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the atomic order packets identifier.
-        /// </summary>
-        public EntityId OrderPacketId => this.EntityId;
-
-        /// <summary>
         /// Gets the atomic order packets trade type.
         /// </summary>
         public TradeType TradeType { get; }
@@ -90,10 +85,5 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the atomic order packets list of order identifiers.
         /// </summary>
         public IReadOnlyList<EntityId> OrderIdList { get; }
-
-        /// <summary>
-        /// Gets the atomic order packets timestamp.
-        /// </summary>
-        public ZonedDateTime Timestamp => this.EntityTimestamp;
     }
 }

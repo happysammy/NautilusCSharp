@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Factories
 
             return new Trade(
                 orderPacket.Symbol,
-                orderPacket.OrderPacketId,
+                orderPacket.Id,
                 orderPacket.TradeType,
                 tradeUnits,
                 orderPacket.OrderIdList,
@@ -39,7 +39,7 @@ namespace Nautilus.DomainModel.Factories
 
         private static List<TradeUnit> CreateTradeUnits(AtomicOrderPacket orderPacket)
         {
-            var tradeId = orderPacket.OrderPacketId;
+            var tradeId = orderPacket.Id;
             var tradeUnits = new List<TradeUnit>();
 
             foreach (var atomicOrder in orderPacket.Orders)

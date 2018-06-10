@@ -36,21 +36,21 @@ namespace Nautilus.Common.Messages
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(componentName, nameof(componentName));
-            Validate.NotDefault(identifier, nameof(identifier));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(componentName, nameof(componentName));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.ComponentName = componentName;
             this.Status = status;
         }
 
         /// <summary>
-        /// Gets the response messages component name.
+        /// Gets the messages component name.
         /// </summary>
         public string ComponentName { get; }
 
         /// <summary>
-        /// Gets the response messages system status.
+        /// Gets the messages system status.
         /// </summary>
         public SystemStatus Status { get; }
 
@@ -58,6 +58,6 @@ namespace Nautilus.Common.Messages
         /// Gets a string representation of the <see cref="SystemStatusResponse"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(SystemStatusResponse)}-{this.Id}={this.Status}";
+        public override string ToString() => $"{base.ToString()}-{this.ComponentName}={this.Status}";
     }
 }

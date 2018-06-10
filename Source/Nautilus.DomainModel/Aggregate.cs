@@ -25,14 +25,14 @@ namespace Nautilus.DomainModel
         /// <summary>
         /// Initializes a new instance of the <see cref="Aggregate{T}"/> class.
         /// </summary>
-        /// <param name="entityId">The aggregate identifier.</param>
-        /// <param name="entityTimestamp">The aggregate timestamp.</param>
+        /// <param name="identifier">The aggregate identifier.</param>
+        /// <param name="timestamp">The aggregate timestamp.</param>
         protected Aggregate(
-            EntityId entityId,
-            ZonedDateTime entityTimestamp)
-            : base(entityId, entityTimestamp)
+            EntityId identifier,
+            ZonedDateTime timestamp)
+            : base(identifier, timestamp)
         {
-            Debug.NotNull(entityId, nameof(entityId));
+            Debug.NotNull(identifier, nameof(identifier));
         }
 
         /// <summary>

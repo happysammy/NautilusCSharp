@@ -106,7 +106,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments identifier.
         /// </summary>
-        public EntityId InstrumentId => this.EntityId;
+        public EntityId InstrumentId => this.Id;
 
         /// <summary>
         /// Gets the instruments broker symbol.
@@ -191,7 +191,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// The instruments creation timestamp.
         /// </summary>
-        public ZonedDateTime Timestamp => this.EntityTimestamp;
+        public ZonedDateTime Timestamp => base.Timestamp;
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the

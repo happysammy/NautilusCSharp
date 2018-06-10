@@ -62,6 +62,6 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
         /// Returns a string representation of the <see cref="ModifyStopLoss"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(ModifyStopLoss)}-{this.ForTrade.Symbol}-{this.ForTrade}";
+        public override string ToString() => $"{base.ToString()}-{this.ForTrade.Symbol}-{this.ForTrade}";
     }
 }

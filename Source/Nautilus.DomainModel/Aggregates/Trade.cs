@@ -68,7 +68,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trades identifier.
         /// </summary>
-        public EntityId TradeId => this.EntityId;
+        public EntityId TradeId => this.Id;
 
         /// <summary>
         /// Gets the trades type.
@@ -103,7 +103,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trades timestamp.
         /// </summary>
-        public ZonedDateTime TradeTimestamp => this.EntityTimestamp;
+        public ZonedDateTime TradeTimestamp => this.Timestamp;
 
         /// <summary>
         /// Returns an <see cref="Option{Order}"/> containing the <see cref="Order"/> (or no value

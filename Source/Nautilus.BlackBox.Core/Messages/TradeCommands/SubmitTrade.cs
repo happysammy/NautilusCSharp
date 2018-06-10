@@ -59,6 +59,6 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
         /// Returns a string representation of the <see cref="SubmitTrade"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(SubmitTrade)}-{this.OrderPacket.OrderPacketId}";
+        public override string ToString() => $"{base.ToString()}-{this.OrderPacket.Id}";
     }
 }
