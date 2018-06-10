@@ -53,10 +53,10 @@ namespace Nautilus.Data
         public bool IsNotInitialized => this.Open is null;
 
         /// <summary>
-        /// Updates the bar builder with the given quote price and timestamp.
+        /// Updates the bar builder with the given quote price.
         /// </summary>
-        /// <param name="quote">The tick quote.</param>
-        public void OnQuote(Price quote)
+        /// <param name="quote">The quote price.</param>
+        public void Update(Price quote)
         {
             Debug.NotNull(quote, nameof(quote));
 
@@ -84,12 +84,10 @@ namespace Nautilus.Data
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="Bar"/> based on the values held by this
-        /// <see cref="BarBuilder"/>.
+        /// Creates and returns a new <see cref="Bar"/> based on the values held by the builder.
         /// </summary>
-        /// <param name="closeTime">The end time of the bar.</param>
+        /// <param name="closeTime">The close time of the bar.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the end time is the default value.</exception>
         public Bar Build(ZonedDateTime closeTime)
         {
             Debug.NotDefault(closeTime, nameof(closeTime));

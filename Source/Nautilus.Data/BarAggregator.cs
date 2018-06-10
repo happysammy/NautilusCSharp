@@ -85,15 +85,15 @@ namespace Nautilus.Data
                 switch (builder.Key.QuoteType)
                 {
                     case BarQuoteType.Bid:
-                        builder.Value.OnQuote(tick.Bid);
+                        builder.Value.Update(tick.Bid);
                         break;
 
                     case BarQuoteType.Ask:
-                        builder.Value.OnQuote(tick.Ask);
+                        builder.Value.Update(tick.Ask);
                         break;
 
                     case BarQuoteType.Mid:
-                        builder.Value.OnQuote(
+                        builder.Value.Update(
                             Price.Create(Math.Round(tick.Bid + tick.Ask / 2, 10), 10));
                         break;
                     default:
@@ -122,7 +122,7 @@ namespace Nautilus.Data
 
                 // Create and initialize new builder.
                 builder = new BarBuilder();
-                builder.OnQuote(bar.Close);
+                builder.Update(bar.Close);
 
                 return;
             }

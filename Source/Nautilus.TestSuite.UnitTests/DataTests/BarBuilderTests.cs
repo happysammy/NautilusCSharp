@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote);
+            barBuilder.Update(quote);
 
             var bar = barBuilder.Build(StubDateTime.Now());
 
@@ -54,10 +54,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1);
-            barBuilder.OnQuote(quote2);
-            barBuilder.OnQuote(quote3);
-            barBuilder.OnQuote(quote4);
+            barBuilder.Update(quote1);
+            barBuilder.Update(quote2);
+            barBuilder.Update(quote3);
+            barBuilder.Update(quote4);
 
             var bar = barBuilder.Build(timestamp + Period.FromSeconds(1).ToDuration());
 
@@ -83,10 +83,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1);
-            barBuilder.OnQuote(quote2);
-            barBuilder.OnQuote(quote3);
-            barBuilder.OnQuote(quote4);
+            barBuilder.Update(quote1);
+            barBuilder.Update(quote2);
+            barBuilder.Update(quote3);
+            barBuilder.Update(quote4);
 
             var bar = barBuilder.Build(timestamp + Period.FromMinutes(5).ToDuration());
 
@@ -112,10 +112,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1);
-            barBuilder.OnQuote(quote2);
-            barBuilder.OnQuote(quote3);
-            barBuilder.OnQuote(quote4);
+            barBuilder.Update(quote1);
+            barBuilder.Update(quote2);
+            barBuilder.Update(quote3);
+            barBuilder.Update(quote4);
 
             var bar = barBuilder.Build(StubDateTime.Now());
 
