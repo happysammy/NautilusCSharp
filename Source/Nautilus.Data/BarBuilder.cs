@@ -59,33 +59,15 @@ namespace Nautilus.Data
         /// Updates the bar builder with the given quote price and timestamp.
         /// </summary>
         /// <param name="quote">The tick quote.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the price is null, or if the timestamp
-        /// is the default value.</exception>
-        public void OnQuote(Price quote, ZonedDateTime timestamp)
+        public void OnQuote(Price quote)
         {
             Debug.NotNull(quote, nameof(quote));
-            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Timestamp = timestamp;
-
-            if (this.Open is null)
+            if (!this.IsInitialized)
             {
                 this.Open = quote;
-            }
-
-            if (this.High is null)
-            {
                 this.High = quote;
-            }
-
-            if (this.Low is null)
-            {
                 this.Low = quote;
-            }
-
-            if (this.Close is null)
-            {
                 this.Close = quote;
             }
 

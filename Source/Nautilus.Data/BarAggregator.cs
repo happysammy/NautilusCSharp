@@ -63,9 +63,9 @@ namespace Nautilus.Data
         /// </summary>
         private void SetupCommandMessageHandling()
         {
-            this.Receive<CloseBar>(msg => this.OnReceive(msg));
-            this.Receive<SubscribeBarData>(msg => this.OnReceive(msg));
-            this.Receive<UnsubscribeBarData>(msg => this.OnReceive(msg));
+            this.Receive<CloseBar>(msg => this.OnMessage(msg));
+            this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -73,10 +73,10 @@ namespace Nautilus.Data
         /// </summary>
         private void SetupEventMessageHandling()
         {
-            this.Receive<Tick>(msg => this.OnReceive(msg));
+            this.Receive<Tick>(msg => this.OnMessage(msg));
         }
 
-        private void OnReceive(Tick tick)
+        private void OnMessage(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
             Debug.EqualTo(tick.Symbol, nameof(tick.Symbol), this.symbol);
@@ -86,16 +86,16 @@ namespace Nautilus.Data
                 switch (builder.Key.QuoteType)
                 {
                     case BarQuoteType.Bid:
-                        builder.Value.OnQuote(tick.Bid, tick.Timestamp);
+                        builder.Value.OnQuote(tick.Bid);
                         break;
 
                     case BarQuoteType.Ask:
-                        builder.Value.OnQuote(tick.Ask, tick.Timestamp);
+                        builder.Value.OnQuote(tick.Ask);
                         break;
 
                     case BarQuoteType.Mid:
                         builder.Value.OnQuote(
-                            Price.Create(Math.Round(tick.Bid + tick.Ask / 2, 10), 10), tick.Timestamp);
+                            Price.Create(Math.Round(tick.Bid + tick.Ask / 2, 10), 10));
                         break;
                     default:
                         throw new InvalidOperationException("The quote type is not recognized.");
@@ -103,7 +103,7 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnReceive(CloseBar message)
+        private void OnMessage(CloseBar message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -123,7 +123,7 @@ namespace Nautilus.Data
 
                 // Create and initialize new builder.
                 builder = new BarBuilder();
-                builder.OnQuote(bar.Close, bar.Timestamp);
+                builder.OnQuote(bar.Close);
 
                 return;
             }
@@ -131,7 +131,7 @@ namespace Nautilus.Data
             Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
         }
 
-        private void OnReceive(SubscribeBarData message)
+        private void OnMessage(SubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -150,7 +150,7 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnReceive(UnsubscribeBarData message)
+        private void OnMessage(UnsubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
 

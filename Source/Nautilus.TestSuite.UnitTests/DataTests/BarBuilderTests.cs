@@ -23,15 +23,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void Build_WithOneQuotes_ReturnsExpectedBar()
         {
             // Arrange
-            var timestamp = StubDateTime.Now();
             var quote = Price.Create(1.00000m, 5);
 
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote, timestamp);
+            barBuilder.OnQuote(quote);
 
-            var bar = barBuilder.Build(timestamp);
+            var bar = barBuilder.Build(StubDateTime.Now());
 
             // Assert
             Assert.Equal(quote, bar.Open);
@@ -55,12 +54,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1, timestamp + Period.FromSeconds(1).ToDuration());
-            barBuilder.OnQuote(quote2, timestamp + Period.FromSeconds(2).ToDuration());
-            barBuilder.OnQuote(quote3, timestamp + Period.FromSeconds(3).ToDuration());
-            barBuilder.OnQuote(quote4, timestamp + Period.FromSeconds(4).ToDuration());
+            barBuilder.OnQuote(quote1);
+            barBuilder.OnQuote(quote2);
+            barBuilder.OnQuote(quote3);
+            barBuilder.OnQuote(quote4);
 
-            var bar = barBuilder.Build(timestamp + Period.FromSeconds(5).ToDuration());
+            var bar = barBuilder.Build(timestamp + Period.FromSeconds(1).ToDuration());
 
             // Assert
             Assert.Equal(quote1, bar.Open);
@@ -68,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(quote4, bar.Low);
             Assert.Equal(quote4, bar.Close);
             Assert.Equal(Quantity.Create(4), bar.Volume);
-            Assert.Equal(timestamp + Period.FromSeconds(5).ToDuration(), bar.Timestamp);
+            Assert.Equal(timestamp + Period.FromSeconds(1).ToDuration(), bar.Timestamp);
         }
 
         [Fact]
@@ -84,10 +83,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1, timestamp + Period.FromMinutes(1).ToDuration());
-            barBuilder.OnQuote(quote2, timestamp + Period.FromMinutes(2).ToDuration());
-            barBuilder.OnQuote(quote3, timestamp + Period.FromMinutes(3).ToDuration());
-            barBuilder.OnQuote(quote4, timestamp + Period.FromMinutes(4).ToDuration());
+            barBuilder.OnQuote(quote1);
+            barBuilder.OnQuote(quote2);
+            barBuilder.OnQuote(quote3);
+            barBuilder.OnQuote(quote4);
 
             var bar = barBuilder.Build(timestamp + Period.FromMinutes(5).ToDuration());
 
@@ -113,12 +112,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var barBuilder = new BarBuilder();
 
             // Act
-            barBuilder.OnQuote(quote1, timestamp);
-            barBuilder.OnQuote(quote2, timestamp);
-            barBuilder.OnQuote(quote3, timestamp + Period.FromMilliseconds(1).ToDuration());
-            barBuilder.OnQuote(quote4, timestamp + Period.FromMilliseconds(2).ToDuration());
+            barBuilder.OnQuote(quote1);
+            barBuilder.OnQuote(quote2);
+            barBuilder.OnQuote(quote3);
+            barBuilder.OnQuote(quote4);
 
-            var bar = barBuilder.Build(timestamp + Period.FromMilliseconds(2).ToDuration());
+            var bar = barBuilder.Build(StubDateTime.Now());
 
             // Assert
             Assert.Equal(quote1, bar.Open);
@@ -126,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(quote1, bar.Low);
             Assert.Equal(quote4, bar.Close);
             Assert.Equal(Quantity.Create(4), bar.Volume);
-            Assert.Equal(timestamp + Period.FromMilliseconds(2).ToDuration(), bar.Timestamp);
+            Assert.Equal(StubDateTime.Now(), bar.Timestamp);
         }
     }
 }

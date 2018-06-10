@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// The create.
         /// </summary>
         /// <returns>
-        /// The <see cref="BlackBoxComponentryContainer"/>.
+        /// The <see cref="BlackBoxContainer"/>.
         /// </returns>
         public BlackBoxContainer Create()
         {

@@ -8,13 +8,14 @@
 
 namespace Nautilus.TestSuite.UnitTests.DataTests
 {
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Enums;
     using Nautilus.Data;
+    using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -28,47 +29,125 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
     public class BarAggregatorTests : TestKit
     {
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer container;
         private readonly Symbol symbol;
+        private readonly IActorRef barAggregatorRef;
 
         public BarAggregatorTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
 
+            this.symbol = new Symbol("AUDUSD", Exchange.FXCM);
             var setupFactory = new StubSetupContainerFactory();
-            this.container = setupFactory.Create();
+            var container = setupFactory.Create();
 
-            this.symbol = new Symbol("AUDUSD", Exchange.LMAX);
+            var props = Props.Create(() => new BarAggregator(
+                container,
+                ServiceContext.Database,
+                this.symbol));
+
+            this.barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
         }
 
         [Fact]
-        internal void OnFirstTick_DoesNothing()
+        internal void GivenTick_WhenNoSubscriptions_ThenDoesNothing()
         {
-//            // Arrange
-//            var symbolBarSpec = new SymbolBarSpec(
-//                this.symbol,
-//                new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 5));
-//
-//            var props = Props.Create(() => new BarAggregator(
-//                this.container,
-//                BlackBoxService.Data,
-//                symbolBarSpec,
-//                0.00001m));
-//
-//            var barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
-//
-//            var quote1 = new Tick(
-//                this.symbol,
-//                Price.Create(0.80000m, 0.00001m),
-//                Price.Create(0.80005m, 0.00001m),
-//                StubDateTime.Now() + Duration.FromMinutes(1));
-//
-//            // Act
-//            barAggregatorRef.Tell(quote1);
-//
-//            // Assert
-//            ExpectNoMsg();
+            // Arrange
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80005m, 0.00001m),
+                StubDateTime.Now() + Duration.FromMinutes(1));
+
+            // Act
+            this.barAggregatorRef.Tell(tick);
+
+            // Assert
+            ExpectNoMsg();
+        }
+
+        [Fact]
+        internal void GivenCloseBarMessage_WhenNoSubscriptions_ThenDoesNothing()
+        {
+            // Arrange
+            var closeBarMessage = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            barAggregatorRef.Tell(closeBarMessage);
+
+            // Assert
+            ExpectNoMsg();
+        }
+
+        [Fact]
+        internal void GivenCloseBarMessage_WhenDifferentSubscription_ThenDoesNothing()
+        {
+            // Arrange
+            var subscribeMessage = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80005m, 0.00001m),
+                StubDateTime.Now() + Duration.FromMinutes(1));
+
+            var closeBarMessage = new CloseBar(
+                new BarSpecification(BarQuoteType.Ask, BarResolution.Second, 10),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            this.barAggregatorRef.Tell(subscribeMessage);
+            this.barAggregatorRef.Tell(tick);
+
+            // Act
+            this.barAggregatorRef.Tell(closeBarMessage);
+
+            // Assert
+            ExpectNoMsg();
+        }
+
+        [Fact]
+        internal void GivenCloseBarMessage_WhenMatchingSubscription_ThenReturnsExpectedBar()
+        {
+            // Arrange
+            var subscribeMessage = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80005m, 0.00001m),
+                StubDateTime.Now() + Duration.FromMinutes(1));
+
+            var closeBarMessage = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            this.barAggregatorRef.Tell(subscribeMessage);
+            this.barAggregatorRef.Tell(tick);
+
+            // Act
+            this.barAggregatorRef.Tell(closeBarMessage);
+
+            // Assert
+            var result = ExpectMsg<BarDataEvent>();
         }
 
         [Fact]
@@ -290,13 +369,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void GivenTicks_WhenSecondBarAndSecondBarsMissed1_ReturnsValidBars()
         {
             // Arrange
-            var props = Props.Create(() => new BarAggregator(
-                this.container,
-                BlackBoxService.Data,
-                this.symbol));
-
-            var barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
-
             var quote1 = new Tick(
                 this.symbol,
                 Price.Create(1, 1),
@@ -357,14 +429,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         [Fact]
         internal void GivenTicks_WhenSecondBarAndSecondBarsMissed2_ReturnsValidBars()
         {
-            // Arrange
-            var props = Props.Create(() => new BarAggregator(
-                this.container,
-                BlackBoxService.Data,
-                this.symbol));
-
-            var barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
-
             var quote1 = new Tick(
                 this.symbol,
                 Price.Create(1, 1),
