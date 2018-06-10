@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         }
 
         [Fact]
-        internal void GivenCloseBarMessage_WhenMatchingSubscription_ThenReturnsExpectedBar()
+        internal void GivenCloseBarMessage_WhenMatchingSubscription1_ThenReturnsExpectedBar()
         {
             // Arrange
             var subscribeMessage = new SubscribeBarData(
@@ -166,6 +166,175 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(0.80000m, result.Open.Value);
             Assert.Equal(0.80000m, result.Close.Value);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), result.Timestamp);
+        }
+
+        [Fact]
+        internal void GivenCloseBarMessage_WhenMatchingSubscription2_ThenReturnsNextBar()
+        {
+            // Arrange
+            var subscribeMessage = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick1 = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80005m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
+
+            var closeBarMessage1 = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick2 = new Tick(
+                this.symbol,
+                Price.Create(0.80100m, 0.00001m),
+                Price.Create(0.80110m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
+
+            var closeBarMessage2 = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            this.barAggregatorRef.Tell(subscribeMessage);
+            this.barAggregatorRef.Tell(tick1);
+            this.barAggregatorRef.Tell(closeBarMessage1);
+            ExpectMsg<Bar>();
+            this.barAggregatorRef.Tell(tick2);
+
+            // Act
+            this.barAggregatorRef.Tell(closeBarMessage2);
+
+            // Assert
+            var result = ExpectMsg<Bar>();
+            Assert.Equal(0.80000m, result.Open.Value);
+            Assert.Equal(0.80100m, result.Close.Value);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
+        }
+
+                [Fact]
+        internal void GivenCloseBarMessage_WhenMultipleSubscriptions1_ThenReturnsExpectedBar()
+        {
+            // Arrange
+            var subscribeMessage1 = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribeMessage2 = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick1 = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80005m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(10));
+
+            var tick2 = new Tick(
+                this.symbol,
+                Price.Create(0.80100m, 0.00001m),
+                Price.Create(0.80105m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
+
+            var closeBarMessage1 = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick3 = new Tick(
+                this.symbol,
+                Price.Create(0.80200m, 0.00001m),
+                Price.Create(0.80210m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
+
+            var closeBarMessage2 = new CloseBar(
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
+                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(10),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            this.barAggregatorRef.Tell(subscribeMessage1);
+            this.barAggregatorRef.Tell(subscribeMessage2);
+            this.barAggregatorRef.Tell(tick1);
+            this.barAggregatorRef.Tell(tick2);
+            this.barAggregatorRef.Tell(closeBarMessage1);
+            ExpectMsg<Bar>();
+            this.barAggregatorRef.Tell(tick3);
+
+            // Act
+            this.barAggregatorRef.Tell(closeBarMessage2);
+
+            // Assert
+            var result = ExpectMsg<Bar>();
+            Assert.Equal(0.80000m, result.Open.Value);
+            Assert.Equal(0.80200m, result.High.Value);
+            Assert.Equal(0.80200m, result.Close.Value);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(10), result.Timestamp);
+        }
+
+        [Fact]
+        internal void GivenCloseBarMessage_WhenMidBarSubscribed_ThenReturnsNextBar()
+        {
+            // Arrange
+            var subscribeMessage = new SubscribeBarData(
+                this.symbol,
+                new List<BarSpecification>
+                {
+                    new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1)
+                },
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var tick1 = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80010m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1));
+
+            var tick2 = new Tick(
+                this.symbol,
+                Price.Create(0.80000m, 0.00001m),
+                Price.Create(0.80070m, 0.00001m),
+                StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1001));
+
+            var closeBarMessage = new CloseBar(
+                new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1),
+                StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            this.barAggregatorRef.Tell(subscribeMessage);
+            this.barAggregatorRef.Tell(tick1);
+            this.barAggregatorRef.Tell(tick2);
+
+            // Act
+            this.barAggregatorRef.Tell(closeBarMessage);
+
+            // Assert
+            var result = ExpectMsg<Bar>();
+            Assert.Equal(0.80005m, result.Open.Value);
+            Assert.Equal(0.80035m, result.High.Value);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
         }
     }
 }

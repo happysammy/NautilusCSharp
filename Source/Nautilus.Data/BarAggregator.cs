@@ -94,7 +94,7 @@ namespace Nautilus.Data
 
                     case BarQuoteType.Mid:
                         builder.Value.Update(
-                            Price.Create(Math.Round(tick.Bid + tick.Ask / 2, 10), 10));
+                            Price.Create(Math.Round((tick.Bid + tick.Ask) / 2, 10), 10));
                         break;
                     default:
                         throw new InvalidOperationException("The quote type is not recognized.");
@@ -145,6 +145,8 @@ namespace Nautilus.Data
                 if (!this.barBuilders.ContainsKey(barSpec))
                 {
                     this.barBuilders.Add(barSpec, new BarBuilder());
+
+                    Log.Debug($"Added {barSpec} bars.");
                 }
             }
         }
@@ -158,6 +160,8 @@ namespace Nautilus.Data
                 if (this.barBuilders.ContainsKey(barSpec))
                 {
                     this.barBuilders.Remove(barSpec);
+
+                    Log.Debug($"Removed {barSpec} bars.");
                 }
             }
         }
