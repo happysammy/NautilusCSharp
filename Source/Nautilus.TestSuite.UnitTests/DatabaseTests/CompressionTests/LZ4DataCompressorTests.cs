@@ -8,9 +8,7 @@
 
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CompressionTests
 {
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using Nautilus.Compression;
     using Xunit;
     using Xunit.Abstractions;

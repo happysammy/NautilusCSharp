@@ -8,18 +8,11 @@
 
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Data.Market;
     using Nautilus.Common.MessageStore;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using Xunit;
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

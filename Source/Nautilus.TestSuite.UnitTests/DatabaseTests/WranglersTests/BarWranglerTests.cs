@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.WranglersTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using Nautilus.Database.Wranglers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

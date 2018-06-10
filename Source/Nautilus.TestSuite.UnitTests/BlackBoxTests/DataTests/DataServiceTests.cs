@@ -16,11 +16,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Data;
-    using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests;
     using Xunit;
