@@ -32,7 +32,7 @@ namespace Nautilus.Data
         private readonly IScheduler scheduler;
         private readonly IImmutableList<Enum> barDataReceivers;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
-        private readonly IDictionary<(Symbol, BarSpecification), ICancelable> barJobs;
+        private readonly IDictionary<BarJob, ICancelable> barJobs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
@@ -65,7 +65,7 @@ namespace Nautilus.Data
             this.scheduler = scheduler;
             this.barDataReceivers = barReceivers.ToImmutableList();
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
-            this.barJobs = new Dictionary<(Symbol, BarSpecification), ICancelable>();
+            this.barJobs = new Dictionary<BarJob, ICancelable>();
 
             this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
@@ -78,7 +78,7 @@ namespace Nautilus.Data
         {
             this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
             this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
-            this.Receive<(Symbol, BarSpecification)>(msg => this.OnMessage(msg));
+            this.Receive<BarJob>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Nautilus.Data
 
             foreach (var barSpec in message.BarSpecifications)
             {
-                var job = (message.Symbol, barSpec);
+                var job = new BarJob(message.Symbol, barSpec);
                 this.AddJob(job);
             }
         }
@@ -131,7 +131,7 @@ namespace Nautilus.Data
 
             foreach (var barSpec in message.BarSpecifications)
             {
-                this.RemoveJob((message.Symbol, barSpec));
+                this.RemoveJob(new BarJob(message.Symbol, barSpec));
             }
 
             this.barAggregators[message.Symbol].Tell(message);
@@ -141,25 +141,26 @@ namespace Nautilus.Data
         /// Adds the given bar job to the <see cref="IScheduler"/>.
         /// </summary>
         /// <param name="job">The bar job.</param>
-        private void AddJob((Symbol Symbol, BarSpecification BarSpec) job)
+        private void AddJob(BarJob job)
         {
             if (!this.barJobs.ContainsKey(job))
             {
                 var timeNow = this.TimeNow();
-                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpec.Duration);
+                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpecification.Duration);
                 var startTime = timeNow + Duration.FromMilliseconds(delay);
-                var interval = job.BarSpec.Duration.Milliseconds;
+                var interval = (int)job.BarSpecification.Duration.TotalMilliseconds;
 
                 var cancellationToken = this.scheduler.ScheduleTellRepeatedlyCancelable(
                     delay,
                     interval,
-                    this.barAggregators[job.Symbol],
+                    this.Self,
                     job,
                     this.Self);
 
                 this.barJobs.Add(job, cancellationToken);
 
-                Log.Debug($"Bar job added {job} starting at {startTime} then every {interval / 1000}s");
+                Log.Debug($"Bar job added {job} starting at {startTime.ToIsoString()} " +
+                          $"then every {interval / 1000}s");
             }
         }
 
@@ -167,7 +168,7 @@ namespace Nautilus.Data
         /// Cancels the associated job token, then removes the given bar job.
         /// </summary>
         /// <param name="job">The bar job.</param>
-        private void RemoveJob((Symbol Symbol, BarSpecification BarSpec) job)
+        private void RemoveJob(BarJob job)
         {
             if (this.barJobs.ContainsKey(job))
             {
@@ -201,21 +202,23 @@ namespace Nautilus.Data
         /// Handles the message by creating a <see cref="CloseBar"/> command message which is then
         /// forwarded to the relevant <see cref="BarAggregator"/>.
         /// </summary>
-        /// <param name="message">The received message.</param>
-        private void OnMessage((Symbol Symbol, BarSpecification BarSpec) message)
+        /// <param name="job">The received job.</param>
+        private void OnMessage(BarJob job)
         {
-            if (this.barAggregators.ContainsKey(message.Symbol))
+            if (this.barAggregators.ContainsKey(job.Symbol))
             {
                 var closeBar = new CloseBar(
-                    message.BarSpec,
-                    this.TimeNow().Floor(message.BarSpec.Duration),
+                    job.BarSpecification,
+                    this.TimeNow().Floor(job.BarSpecification.Duration),
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.barAggregators[message.Symbol].Tell(closeBar);
+                this.barAggregators[job.Symbol].Tell(closeBar);
+
+                return;
             }
 
-            Log.Warning($"Does not contain aggregator to close bar for {message.Symbol}{message.BarSpec}.");
+            Log.Warning($"Does not contain aggregator to close bar for {job}.");
         }
 
         /// <summary>

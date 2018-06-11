@@ -36,6 +36,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public IQuoteProvider QuoteProvider { get; private set; }
 
         /// <summary>
+        /// Gets the containers quote provider.
+        /// </summary>
+        public StubClock Clock { get; private set; }
+
+        /// <summary>
         /// Creates a new <see cref="BlackBoxContainer"/>.
         /// </summary>
         /// <returns>The <see cref="BlackBoxContainer"/>.</returns>
@@ -43,8 +48,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var environment = NautilusEnvironment.Live;
 
-            var clock = new StubClock();
-            clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
+            this.Clock = new StubClock();;
+            this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
             this.LoggingAdapter = new MockLoggingAdapter();
             var loggerFactory = new LoggerFactory(this.LoggingAdapter);
@@ -59,13 +64,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 Percentage.Create(1),
                 Quantity.Create(2),
                 true,
-                clock.TimeNow());
+                this.Clock.TimeNow());
 
             var account = StubAccountFactory.Create();
 
             return new BlackBoxContainer(
                 environment,
-                clock,
+                this.Clock,
                 guidFactory,
                 loggerFactory,
                 instrumentRepository,
