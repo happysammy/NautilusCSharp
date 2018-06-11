@@ -77,6 +77,11 @@ namespace Nautilus.Data
             this.Receive<Tick>(msg => this.OnMessage(msg));
         }
 
+        /// <summary>
+        /// On receiving the tick; updates all bar builders and records as last tick.
+        /// </summary>
+        /// <param name="tick">The received tick.</param>
+        /// <exception cref="InvalidOperationException">The quote type is not recognized.</exception>
         private void OnMessage(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
@@ -99,13 +104,18 @@ namespace Nautilus.Data
                             Price.Create(Math.Round((tick.Bid + tick.Ask) / 2, 10), 10));
                         break;
                     default:
-                        throw new InvalidOperationException("The quote type is not recognized.");
+                        throw new InvalidOperationException();
                 }
             }
 
             this.lastTick = tick;
         }
 
+        /// <summary>
+        /// Handles the message by checking if the relevant bar builder is contained, it will close
+        /// the bar sending a closed bar event to the parent. A new bar builder is then created.
+        /// </summary>
+        /// <param name="message">The received message.</param>
         private void OnMessage(CloseBar message)
         {
             Debug.NotNull(message, nameof(message));
@@ -141,6 +151,11 @@ namespace Nautilus.Data
             Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
         }
 
+        /// <summary>
+        /// Handles the message by adding a new bar builder for each contained bar specifications.
+        /// </summary>
+        /// <param name="message">The received message.</param>
+        /// <exception cref="InvalidOperationException">If the resolution is for tick bars.</exception>
         private void OnMessage(SubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
@@ -162,6 +177,10 @@ namespace Nautilus.Data
             }
         }
 
+        /// <summary>
+        /// Handles the message by removing all bar builders for the relevant bar specifications.
+        /// </summary>
+        /// <param name="message">The received message.</param>
         private void OnMessage(UnsubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
