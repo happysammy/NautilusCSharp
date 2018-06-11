@@ -216,19 +216,88 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Assert.False(result3);
         }
 
-        [Fact]
-        internal void PeriodFloor_WithStubDateTime_ReturnsExpectedFlooredTime()
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(999, 999)]
+        [InlineData(1000, 0)]
+        [InlineData(1500, 500)]
+        [InlineData(32010, 10)]
+        internal void FloorOffset_SecondWithVariousDurations_ReturnsExpectedFlooredTime(
+            int offset,
+            int expectedFloor)
         {
             // Arrange
-            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2500);
-            var period = Period.FromSeconds(1);
+            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(offset);
+            var duration = Duration.FromSeconds(1);
 
             // Act
-            var result = time.Floor(2500);
+            var result = time.FloorOffsetMilliseconds(duration);
 
             // Assert
-            Assert.Equal("", result.ToString());
+            Assert.Equal(expectedFloor, result);
+        }
 
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(999, 1)]
+        [InlineData(1000, 0)]
+        [InlineData(1500, 500)]
+        [InlineData(32010, 990)]
+        internal void CeilingOffset_SecondWithVariousDurations_ReturnsExpectedFlooredTime(
+            int offset,
+            int expectedCeiling)
+        {
+            // Arrange
+            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(offset);
+            var duration = Duration.FromSeconds(1);
+
+            // Act
+            var result = time.CeilingOffsetMilliseconds(duration);
+
+            // Assert
+            Assert.Equal(expectedCeiling, result);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(999, 0)]
+        [InlineData(1000, 1000)]
+        [InlineData(1500, 1000)]
+        [InlineData(32010, 32000)]
+        internal void Floor_SecondWithVariousDurations_ReturnsExpectedFlooredTime(
+            int offset,
+            int expectedFloor)
+        {
+            // Arrange
+            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(offset);
+            var duration = Duration.FromSeconds(1);
+
+            // Act
+            var result = time.Floor(duration);
+
+            // Assert
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(expectedFloor), result);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(999, 1000)]
+        [InlineData(1000, 1000)]
+        [InlineData(1500, 2000)]
+        [InlineData(32010, 33000)]
+        internal void Ceiling_SecondWithVariousDurations_ReturnsExpectedFlooredTime(
+            int offset,
+            int expectedCeiling)
+        {
+            // Arrange
+            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(offset);
+            var duration = Duration.FromSeconds(1);
+
+            // Act
+            var result = time.Ceiling(duration);
+
+            // Assert
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(expectedCeiling), result);
         }
     }
 }

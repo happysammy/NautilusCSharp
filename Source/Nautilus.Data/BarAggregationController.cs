@@ -16,6 +16,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -116,10 +117,13 @@ namespace Nautilus.Data
         {
             if (!this.barJobs.ContainsKey(job))
             {
+                var timeNow = this.TimeNow();
+                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpec.Duration);
+
                 var cancellationToken = this.scheduler.ScheduleTellRepeatedlyCancelable(
-                    this.CalculateStartTimeDelay(job.BarSpec),
+                    delay,
                     job.BarSpec.Duration.Milliseconds,
-                    this.barAggregators[job.Item1],
+                    this.barAggregators[job.Symbol],
                     job,
                     this.Self);
 
@@ -177,167 +181,11 @@ namespace Nautilus.Data
         {
             var closeBar = new CloseBar(
                 message.BarSpec,
-                this.CalculateCloseTime(message.BarSpec),
+                this.TimeNow().Floor(message.BarSpec.Duration),
                 this.NewGuid(),
                 this.TimeNow());
 
             this.barAggregators[message.Symbol].Tell(closeBar);
-        }
-
-        private int CalculateStartTimeDelay(BarSpecification barSpec)
-        {
-            Debug.NotNull(barSpec, nameof(barSpec));
-
-            var timeNow = this.TimeNow();
-
-            if (barSpec.Resolution == BarResolution.Second)
-            {
-                var secondsStart = Math.Ceiling(timeNow.Second / (double) barSpec.Period) *
-                                   barSpec.Period;
-
-                var dateTimeStart = new ZonedDateTime(new LocalDateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    timeNow.Minute,
-                    (int)secondsStart),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-
-                return dateTimeStart.Millisecond - this.TimeNow().Millisecond;
-            }
-
-            if (barSpec.Resolution == BarResolution.Minute)
-            {
-                var minutesStart =
-                    Math.Ceiling(timeNow.Minute / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                var dateTimeStart = new ZonedDateTime(new LocalDateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    (int)minutesStart),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-
-                return dateTimeStart.Millisecond - this.TimeNow().Millisecond;
-            }
-
-            if (barSpec.Resolution == BarResolution.Hour)
-            {
-                var hoursStart =
-                    Math.Ceiling(timeNow.Hour / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                var dateTimeStart = new ZonedDateTime(new LocalDateTime(
-                        timeNow.Year,
-                        timeNow.Month,
-                        timeNow.Day,
-                        (int)hoursStart,
-                        0),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-
-                return dateTimeStart.Millisecond - this.TimeNow().Millisecond;
-            }
-
-            if (barSpec.Resolution == BarResolution.Day)
-            {
-                var daysStart =
-                    Math.Ceiling(timeNow.Day / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                var dateTimeStart = new ZonedDateTime(new LocalDateTime(
-                        timeNow.Year,
-                        timeNow.Month,
-                        (int)daysStart,
-                        0,
-                        0),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-
-                return dateTimeStart.Millisecond - this.TimeNow().Millisecond;
-            }
-
-            throw new InvalidOperationException(
-                $"BarSpecification {barSpec} currently not supported.");
-        }
-
-        private ZonedDateTime CalculateCloseTime(BarSpecification barSpec)
-        {
-            Debug.NotNull(barSpec, nameof(barSpec));
-
-            var timeNow = this.TimeNow();
-
-            if (barSpec.Resolution == BarResolution.Second)
-            {
-                var secondsStart = Math.Floor(timeNow.Second / (double) barSpec.Period) *
-                                   barSpec.Period;
-
-                return new ZonedDateTime(new LocalDateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    timeNow.Minute,
-                    (int)secondsStart),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-            }
-
-            if (barSpec.Resolution == BarResolution.Minute)
-            {
-                var minutesStart =
-                    Math.Floor(timeNow.Minute / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                return new ZonedDateTime(new LocalDateTime(
-                    timeNow.Year,
-                    timeNow.Month,
-                    timeNow.Day,
-                    timeNow.Hour,
-                    (int)minutesStart),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-            }
-
-            if (barSpec.Resolution == BarResolution.Hour)
-            {
-                var hoursStart =
-                    Math.Floor(timeNow.Hour / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                return new ZonedDateTime(new LocalDateTime(
-                        timeNow.Year,
-                        timeNow.Month,
-                        timeNow.Day,
-                        (int)hoursStart,
-                        0),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-            }
-
-            if (barSpec.Resolution == BarResolution.Day)
-            {
-                var daysStart =
-                    Math.Ceiling(timeNow.Day / (double) barSpec.Period) *
-                    barSpec.Period;
-
-                return new ZonedDateTime(new LocalDateTime(
-                        timeNow.Year,
-                        timeNow.Month,
-                        (int)daysStart,
-                        0,
-                        0),
-                    DateTimeZone.Utc,
-                    Offset.Zero);
-            }
-
-            throw new InvalidOperationException(
-                $"BarSpecification {barSpec} currently not supported.");
         }
     }
 }

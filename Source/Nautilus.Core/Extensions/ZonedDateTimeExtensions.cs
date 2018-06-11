@@ -51,7 +51,8 @@ namespace Nautilus.Core.Extensions
             Debug.NotNull(dateTime, nameof(dateTime));
             Debug.NotNull(parsePattern, nameof(parsePattern));
 
-            return ZonedDateTimePattern.CreateWithInvariantCulture(parsePattern, DateTimeZoneProviders.Tzdb)
+            return ZonedDateTimePattern
+                .CreateWithInvariantCulture(parsePattern, DateTimeZoneProviders.Tzdb)
                 .Parse(dateTime)
                 .Value;
         }
@@ -78,8 +79,8 @@ namespace Nautilus.Core.Extensions
         public static string ToIsoString([CanBeNull] this ZonedDateTime? time)
         {
             return time == null
-                   ? string.Empty
-                   : ToIsoString((ZonedDateTime)time);
+                ? string.Empty
+                : ToIsoString((ZonedDateTime)time);
         }
 
         /// <summary>
@@ -199,43 +200,73 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns the last floored time based on the given period.
+        /// Returns the last floored time based on the given duration.
         /// </summary>
         /// <param name="time">The time.</param>
-        /// <param name="milliseconds">The milliseconds floor.</param>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime Floor(this ZonedDateTime time, int milliseconds)
+        /// <param name="duration">The duration floor.</param>
+        /// <returns>The <see cref="ZonedDateTime"/> less the rounded duration floor.</returns>
+        public static ZonedDateTime Floor(this ZonedDateTime time, Duration duration)
         {
             Debug.NotDefault(time, nameof(time));
+            Debug.NotDefault(duration, nameof(duration));
 
-            // ReSharper disable once PossibleLossOfFraction
-            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+            var offset = FloorOffsetMilliseconds(time, duration);
 
-            var flooredMilliseconds = Math.Floor(unixMilliseconds / (double)milliseconds) * milliseconds;
-            var difference = unixMilliseconds - flooredMilliseconds;
-
-            return time - Duration.FromMilliseconds(difference);
+            return time - Duration.FromMilliseconds(offset);
         }
 
         /// <summary>
-        /// Returns the given time with a period ceiling applied.
+        /// Returns the next time interval with a ceiling based on the given duration.
         /// </summary>
         /// <param name="time">The time.</param>
-        /// <param name="period">The interval period.</param>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime Ceiling(this ZonedDateTime time, Period period)
+        /// <param name="duration">The duration ceiling.</param>
+        /// <returns>The <see cref="ZonedDateTime"/> plus the rounded duration ceiling.</returns>
+        public static ZonedDateTime Ceiling(this ZonedDateTime time, Duration duration)
         {
             Debug.NotDefault(time, nameof(time));
-            Debug.NotNull(period, nameof(period));
+            Debug.NotDefault(duration, nameof(duration));
 
-            // ReSharper disable once PossibleLossOfFraction
-            var milliseconds = period.Milliseconds;
+            var offset = CeilingOffsetMilliseconds(time, duration);
+
+            return time + Duration.FromMilliseconds(offset);
+        }
+
+        /// <summary>
+        /// Returns the offset milliseconds of the given time floored from the given duration.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The milliseconds offset.</returns>
+        public static int FloorOffsetMilliseconds(this ZonedDateTime time, Duration duration)
+        {
+            Debug.NotDefault(time, nameof(time));
+            Debug.NotDefault(duration, nameof(duration));
+
+            var durationMs = duration.TotalMilliseconds;
             var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
 
-            var ceilingedMilliseconds = Math.Ceiling(unixMilliseconds / (double)milliseconds) * milliseconds;
-            var difference = ceilingedMilliseconds - unixMilliseconds;
+            var flooredMilliseconds = Math.Floor(unixMilliseconds / durationMs) * durationMs;
 
-            return time + Duration.FromMilliseconds(difference);
+            return (int)(unixMilliseconds - flooredMilliseconds);
+        }
+
+        /// <summary>
+        /// Returns the offset milliseconds of the given time ceiling from the given duration.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The milliseconds offset.</returns>
+        public static int CeilingOffsetMilliseconds(this ZonedDateTime time, Duration duration)
+        {
+            Debug.NotDefault(time, nameof(time));
+            Debug.NotDefault(duration, nameof(duration));
+
+            var durationMs = duration.TotalMilliseconds;
+            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+
+            var ceilingedMilliseconds = Math.Ceiling(unixMilliseconds / durationMs) * durationMs;
+
+            return (int)(ceilingedMilliseconds - unixMilliseconds);
         }
     }
 }
