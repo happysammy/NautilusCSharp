@@ -341,7 +341,7 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void LongNotOutOfRange(
+        public static void Int64NotOutOfRange(
             long value,
             string paramName,
             long lowerBound,

@@ -215,5 +215,20 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Assert.True(result2);
             Assert.False(result3);
         }
+
+        [Fact]
+        internal void PeriodFloor_WithStubDateTime_ReturnsExpectedFlooredTime()
+        {
+            // Arrange
+            var time = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2500);
+            var period = Period.FromSeconds(1);
+
+            // Act
+            var result = time.Floor(2500);
+
+            // Assert
+            Assert.Equal("", result.ToString());
+
+        }
     }
 }

@@ -8,6 +8,7 @@
 
 namespace Nautilus.Core.Extensions
 {
+    using System;
     using System.Globalization;
     using System.Text;
     using Nautilus.Core.Annotations;
@@ -195,6 +196,46 @@ namespace Nautilus.Core.Extensions
             Debug.NotDefault(right, nameof(right));
 
             return Compare(left, right) <= 0;
+        }
+
+        /// <summary>
+        /// Returns the last floored time based on the given period.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="milliseconds">The milliseconds floor.</param>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public static ZonedDateTime Floor(this ZonedDateTime time, int milliseconds)
+        {
+            Debug.NotDefault(time, nameof(time));
+
+            // ReSharper disable once PossibleLossOfFraction
+            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+
+            var flooredMilliseconds = Math.Floor(unixMilliseconds / (double)milliseconds) * milliseconds;
+            var difference = unixMilliseconds - flooredMilliseconds;
+
+            return time - Duration.FromMilliseconds(difference);
+        }
+
+        /// <summary>
+        /// Returns the given time with a period ceiling applied.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="period">The interval period.</param>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public static ZonedDateTime Ceiling(this ZonedDateTime time, Period period)
+        {
+            Debug.NotDefault(time, nameof(time));
+            Debug.NotNull(period, nameof(period));
+
+            // ReSharper disable once PossibleLossOfFraction
+            var milliseconds = period.Milliseconds;
+            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+
+            var ceilingedMilliseconds = Math.Ceiling(unixMilliseconds / (double)milliseconds) * milliseconds;
+            var difference = ceilingedMilliseconds - unixMilliseconds;
+
+            return time + Duration.FromMilliseconds(difference);
         }
     }
 }

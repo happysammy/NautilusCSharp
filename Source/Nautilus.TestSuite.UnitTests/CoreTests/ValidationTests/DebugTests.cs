@@ -718,7 +718,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.LongNotOutOfRange(value, nameof(value), 0, 1));
+            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1));
         }
 
         [Theory]
@@ -730,7 +730,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.LongNotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
+            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -743,7 +743,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.LongNotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
@@ -755,7 +755,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.LongNotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
+            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
@@ -768,7 +768,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.LongNotOutOfRange(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
+            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
         }
 
         [Theory]
@@ -779,7 +779,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.LongNotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
+            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
         }
 
         [Theory]
@@ -794,7 +794,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.LongNotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
         }
 
         [Theory]
