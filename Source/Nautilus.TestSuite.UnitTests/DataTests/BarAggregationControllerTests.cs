@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Enums;
@@ -43,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var container = setupFactory.Create();
 
             this.logger = setupFactory.LoggingAdapter;
-            this.stubClock = setupFactory.Clock;
+            //this.stubClock = setupFactory.Clock;
 
             var testActorSystem = ActorSystem.Create(nameof(BarAggregationControllerTests));
             var messagingAdapter = new MockMessagingAdapter(TestActor);
@@ -86,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
         internal void GivenUnsubscribeBarDataMessage_RemovesJobs()
         {
             // Arrange
-            this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
+            //this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
             var symbol = new Symbol("AUDUSD", Exchange.FXCM);
             var barSpecList1 = new List<BarSpecification>
             {
@@ -112,6 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
 
             // Act
             this.controllerRef.Tell(subscribe);
+            Thread.Sleep(60000);
             this.controllerRef.Tell(unsubscribe);
 
             LogDumper.Dump(this.logger, this.output);

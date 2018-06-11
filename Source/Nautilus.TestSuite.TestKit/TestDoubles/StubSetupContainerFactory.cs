@@ -15,10 +15,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// The stub nautilus setup container.
@@ -38,7 +40,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Gets the containers quote provider.
         /// </summary>
-        public StubClock Clock { get; private set; }
+        public IZonedClock Clock { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="BlackBoxContainer"/>.
@@ -48,8 +50,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var environment = NautilusEnvironment.Live;
 
-            this.Clock = new StubClock();;
-            this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
+            this.Clock = new Clock(DateTimeZone.Utc);;
+            //this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
             this.LoggingAdapter = new MockLoggingAdapter();
             var loggerFactory = new LoggerFactory(this.LoggingAdapter);

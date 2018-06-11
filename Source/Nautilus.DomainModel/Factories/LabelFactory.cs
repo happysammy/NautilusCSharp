@@ -26,7 +26,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>A <see cref="Label"/>.</returns>
         public static Label Component(string componentName)
         {
-            return new Label(componentName + nameof(componentName));
+            return new Label(componentName);
         }
 
         /// <summary>

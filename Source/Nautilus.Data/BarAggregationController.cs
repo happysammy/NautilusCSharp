@@ -160,7 +160,7 @@ namespace Nautilus.Data
                 this.barJobs.Add(job, cancellationToken);
 
                 Log.Debug($"Bar job added {job} starting at {startTime.ToIsoString()} " +
-                          $"then every {interval / 1000}s");
+                          $"initial delay {delay} then every {interval / 1000}s");
             }
         }
 
@@ -172,6 +172,8 @@ namespace Nautilus.Data
         {
             if (this.barJobs.ContainsKey(job))
             {
+                Log.Debug($"Bar job token {this.barJobs[job]} cancelling...");
+
                 this.barJobs[job].Cancel();
                 this.barJobs.Remove(job);
 
@@ -215,6 +217,8 @@ namespace Nautilus.Data
 
                 this.barAggregators[job.Symbol].Tell(closeBar);
 
+                // Log for unit testing only.
+                Log.Debug($"Received {job} at {DateTime.UtcNow.Millisecond}.");
                 return;
             }
 
