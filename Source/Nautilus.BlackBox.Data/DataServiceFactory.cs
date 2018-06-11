@@ -42,7 +42,8 @@ namespace Nautilus.BlackBox.Data
             return actorSystem.ActorOf(Props.Create(
                 () => new DataService(
                     container,
-                    messagingAdapter)));
+                    messagingAdapter,
+                    actorSystem.Scheduler)));
         }
     }
 }

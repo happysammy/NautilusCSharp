@@ -36,6 +36,7 @@ namespace Nautilus.BlackBox.Data
     public sealed class DataService : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxContainer storedContainer;
+        private readonly IScheduler scheduler;
         private readonly IActorRef marketDataPortRef;
         private readonly IDictionary<Symbol, IActorRef> marketDataProcessorIndex = new Dictionary<Symbol, IActorRef>();
 
@@ -46,10 +47,12 @@ namespace Nautilus.BlackBox.Data
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="scheduler">The scheduler.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataService(
             BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            IScheduler scheduler)
             : base(
             BlackBoxService.Data,
             LabelFactory.Service(BlackBoxService.Data),
@@ -58,8 +61,10 @@ namespace Nautilus.BlackBox.Data
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(scheduler, nameof(scheduler));
 
             this.storedContainer = container;
+            this.scheduler = scheduler;
             this.marketDataPortRef = Context.ActorOf(
                 Props.Create(() => new MarketDataPort(container, messagingAdapter)));
 
@@ -96,8 +101,9 @@ namespace Nautilus.BlackBox.Data
                 var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
                     this.storedContainer,
                     this.GetMessagingAdapter(),
-                    BlackBoxService.Data,
-                    barReceivers)));
+                    this.scheduler,
+                    barReceivers,
+                    BlackBoxService.Data)));
 
                 this.marketDataProcessorIndex.Add(message.Symbol, marketDataProcessorRef);
                 this.marketDataProcessorIndex[message.Symbol].Tell(message, this.Self);

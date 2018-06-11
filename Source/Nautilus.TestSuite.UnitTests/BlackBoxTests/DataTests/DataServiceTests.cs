@@ -55,7 +55,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 
             this.dataServiceRef = testActorSystem.ActorOf(Props.Create(() => new DataService(
                 setupContainer,
-                messagingAdapter)));
+                messagingAdapter,
+                testActorSystem.Scheduler)));
 
             var mockBrokerageGateway = new Mock<IBrokerageGateway>().Object;
             var message = new InitializeBrokerageGateway(mockBrokerageGateway, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
