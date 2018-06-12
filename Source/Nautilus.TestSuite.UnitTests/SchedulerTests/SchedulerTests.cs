@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 //        }
 
         [Fact]
-        public void Shceduler_Should_Remove_Job()
+        public void Scheduler_Should_Remove_Job()
         {
             var probe = CreateTestProbe(Sys);
             var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
@@ -53,28 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         }
 
         [Fact]
-        public void Shceduler_Should_Fail_With_Null_Trigger()
-        {
-            var probe = CreateTestProbe(Sys);
-            var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-            quartzActor.Tell(new CreateJob(probe, "Hello", null));
-            var failedJob = ExpectMsg<CreateJobFail>();
-            Assert.NotNull(failedJob.Reason);
-            Sys.Stop(quartzActor);
-        }
-
-        [Fact]
-        public void Shceduler_Should_Fail_With_Null_Actor()
-        {
-            var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-            quartzActor.Tell(new CreateJob(null, "Hello", TriggerBuilder.Create().WithCronSchedule(" * * * * * ?").Build()));
-            var failedJob = ExpectMsg<CreateJobFail>();
-            Assert.NotNull(failedJob.Reason);
-            Sys.Stop(quartzActor);
-        }
-
-        [Fact]
-        public void Shceduler_Should_Not_Remove_UnExisting_Job()
+        public void Scheduler_Should_Not_Remove_UnExisting_Job()
         {
             var probe = CreateTestProbe(Sys);
             var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");

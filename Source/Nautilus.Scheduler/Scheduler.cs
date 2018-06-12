@@ -1,4 +1,10 @@
-﻿
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="Scheduler.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
+// </copyright>
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.Scheduler
 {
@@ -13,13 +19,12 @@ namespace Nautilus.Scheduler
     using IScheduler = Quartz.IScheduler;
 
     /// <summary>
-    /// The base quartz scheduling actor. Handles a single quartz scheduler
-    /// and processes Add and Remove messages.
+    /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
+    /// and Remove messages.
     /// </summary>
     public class Scheduler : ActorBase
     {
         private readonly IScheduler quartzScheduler;
-
         private readonly bool externallySupplied;
 
         public Scheduler()
@@ -63,9 +68,9 @@ namespace Nautilus.Scheduler
 
         protected virtual void CreateJobCommand(CreateJob createJob)
         {
-            if (createJob.To == null)
+            if (createJob.Destination == null)
             {
-                Context.Sender.Tell(new CreateJobFail(null, null, new ArgumentNullException(nameof(createJob.To))));
+                Context.Sender.Tell(new CreateJobFail(null, null, new ArgumentNullException(nameof(createJob.Destination))));
             }
             if (createJob.Trigger == null)
             {
@@ -77,7 +82,7 @@ namespace Nautilus.Scheduler
                 try
                 {
                     var job =
-                   Job.CreateBuilderWithData(createJob.To, createJob.Message)
+                   Job.CreateBuilderWithData(createJob.Destination, createJob.Message)
                        .WithIdentity(createJob.Trigger.JobKey)
                        .Build();
                     quartzScheduler.ScheduleJob(job, createJob.Trigger);

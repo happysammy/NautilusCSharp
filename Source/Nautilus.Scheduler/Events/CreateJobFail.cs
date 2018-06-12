@@ -1,14 +1,32 @@
-using System;
-using Quartz;
+//--------------------------------------------------------------------------------------------------
+// <copyright file="CreateJobFail.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
+// </copyright>
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.Scheduler.Events
 {
+    using System;
+    using Quartz;
+
     /// <summary>
-    ///     Create job fail event
+    /// The create job fail job event message.
     /// </summary>
     public class CreateJobFail : JobEvent
     {
-        public CreateJobFail(JobKey jobKey, TriggerKey triggerKey, Exception reason) : base(jobKey, triggerKey)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateJobFail"/> class.
+        /// </summary>
+        /// <param name="jobKey"></param>
+        /// <param name="triggerKey"></param>
+        /// <param name="reason"></param>
+        public CreateJobFail(
+            JobKey jobKey,
+            TriggerKey triggerKey,
+            Exception reason)
+            : base(jobKey, triggerKey)
         {
             Reason = reason;
         }

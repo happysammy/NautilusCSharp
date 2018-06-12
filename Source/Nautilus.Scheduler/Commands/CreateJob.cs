@@ -1,34 +1,53 @@
-﻿
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="CreateJob.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
+// </copyright>
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.Scheduler.Commands
 {
     using Akka.Actor;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Quartz;
 
     /// <summary>
-    ///     Message to add a trigger.
+    /// The job command to create a new job..
     /// </summary>
-    public class CreateJob : IJobCommand
+    [Immutable]
+    public sealed class CreateJob : IJobCommand
     {
-        public CreateJob(IActorRef to, object message, ITrigger trigger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateJob"/> class.
+        /// </summary>
+        /// <param name="destination">The actor to send the message to.</param>
+        /// <param name="message">The job to message to send./</param>
+        /// <param name="trigger">The job trigger.</param>
+        public CreateJob(IActorRef destination, object message, ITrigger trigger)
         {
-            To = to;
+            Debug.NotNull(destination, nameof(destination));
+            Debug.NotNull(message, nameof(message));
+            Debug.NotNull(trigger, nameof(trigger));
+
+            Destination = destination;
             Message = message;
             Trigger = trigger;
         }
 
         /// <summary>
-        ///     The desination actor
+        /// Gets the jobs destination actor.
         /// </summary>
-        public IActorRef To { get; }
+        public IActorRef Destination { get; }
 
         /// <summary>
-        ///     Message
+        /// Gets the jobs message.
         /// </summary>
         public object Message { get; }
 
         /// <summary>
-        ///     Trigger
+        /// Gets the jobs trigger.
         /// </summary>
         public ITrigger Trigger { get; }
     }
