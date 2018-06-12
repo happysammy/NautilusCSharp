@@ -34,11 +34,13 @@
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />
+    <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
     <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DatabaseTests\CoreTests" />
+    <Folder Include="SchedulerTests" />
   </ItemGroup>
 </Project>

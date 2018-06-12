@@ -119,5 +119,31 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             LogDumper.Dump(this.logger, this.output);
             // Assert
         }
+
+        [Fact]
+        internal void GivenUnsubscribeBarDataMessage1_RemovesJobs()
+        {
+            // Arrange
+            //this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
+            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
+            var barSpecList1 = new List<BarSpecification>
+            {
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
+            };
+            var subscribe = new SubscribeBarData(
+                symbol,
+                barSpecList1,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.controllerRef.Tell(subscribe);
+
+            Thread.Sleep(200000);
+            LogDumper.Dump(this.logger, this.output);
+            // Assert
+        }
     }
 }
