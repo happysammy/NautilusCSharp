@@ -20,9 +20,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
     using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -44,16 +44,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             var container = setupFactory.Create();
 
             this.logger = setupFactory.LoggingAdapter;
-            //this.stubClock = setupFactory.Clock;
 
-            var testActorSystem = ActorSystem.Create(nameof(BarAggregationControllerTests));
             var messagingAdapter = new MockMessagingAdapter(TestActor);
+            var schedulerRef = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
 
             var props = Props.Create(() => new BarAggregationController(
                 container,
                 messagingAdapter,
-                testActorSystem.Scheduler,
                 new List<Enum>{ServiceContext.Database}.ToImmutableList(),
+                schedulerRef,
                 ServiceContext.Database));
 
             this.controllerRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);

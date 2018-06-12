@@ -11,7 +11,6 @@ namespace Nautilus.BlackBox.Data
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Linq;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
@@ -28,6 +27,7 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Scheduler;
 
     /// <summary>
     /// The sealed <see cref="DataService"/> class. The <see cref="BlackBox"/> service context
@@ -98,11 +98,12 @@ namespace Nautilus.BlackBox.Data
                 Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex);
 
                 var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
+                var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
                 var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
                     this.storedContainer,
                     this.GetMessagingAdapter(),
-                    this.scheduler,
                     barReceivers,
+                    schedulerRef,
                     BlackBoxService.Data)));
 
                 this.marketDataProcessorIndex.Add(message.Symbol, marketDataProcessorRef);

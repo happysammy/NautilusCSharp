@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Gets the containers quote provider.
         /// </summary>
-        public IZonedClock Clock { get; set; }
+        public StubClock Clock { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="BlackBoxContainer"/>.
@@ -50,8 +50,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var environment = NautilusEnvironment.Live;
 
-            this.Clock = new Clock(DateTimeZone.Utc);;
-            //this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
+            this.Clock = new StubClock();;
+            this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
             this.LoggingAdapter = new MockLoggingAdapter();
             var loggerFactory = new LoggerFactory(this.LoggingAdapter);

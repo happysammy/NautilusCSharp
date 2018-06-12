@@ -20,7 +20,9 @@ namespace Nautilus.Data
     using Nautilus.Data.Messages;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
+    using Nautilus.Scheduler.Commands;
+    using Nautilus.Scheduler.Events;
+    using Quartz;
 
     /// <summary>
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
@@ -29,25 +31,24 @@ namespace Nautilus.Data
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IScheduler scheduler;
         private readonly IImmutableList<Enum> barDataReceivers;
+        private readonly IActorRef schedulerRef;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
-        private readonly IDictionary<BarJob, ICancelable> barJobs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The actor system.</param>
         /// <param name="barReceivers">The bar data receivers.</param>
+        /// <param name="schedulerRef">The scheduler actor address.</param>
         /// <param name="serviceContext">The service context.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregationController(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IScheduler scheduler,
             IImmutableList<Enum> barReceivers,
+            IActorRef schedulerRef,
             Enum serviceContext)
             : base(
             serviceContext,
@@ -57,15 +58,14 @@ namespace Nautilus.Data
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(scheduler, nameof(scheduler));
             Validate.NotNull(barReceivers, nameof(barReceivers));
+            Validate.NotNull(schedulerRef, nameof(schedulerRef));
             Validate.NotNull(serviceContext, nameof(serviceContext));
 
             this.storedContainer = container;
-            this.scheduler = scheduler;
             this.barDataReceivers = barReceivers.ToImmutableList();
+            this.schedulerRef = schedulerRef;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
-            this.barJobs = new Dictionary<BarJob, ICancelable>();
 
             this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
@@ -78,6 +78,7 @@ namespace Nautilus.Data
         {
             this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
             this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<JobCreated>(msg => this.OnMessage(msg));
             this.Receive<BarJob>(msg => this.OnMessage(msg));
         }
 
@@ -93,7 +94,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Handles the message by creating a <see cref="BarAggregator"/> for the symbol if none
         /// exists, then forwarding the message there. Bar jobs and then registered with the
-        /// <see cref="IScheduler"/>.
+        /// <see cref="Akka.Actor.IScheduler"/>.
         /// </summary>
         /// <param name="message">The received message.</param>
         private void OnMessage(SubscribeBarData message)
@@ -115,12 +116,20 @@ namespace Nautilus.Data
             foreach (var barSpec in message.BarSpecifications)
             {
                 var job = new BarJob(message.Symbol, barSpec);
-                this.AddJob(job);
+
+                this.schedulerRef.Tell(
+                    new CreateJob(
+                        this.Self,
+                        job,
+                        TriggerBuilder
+                            .Create()
+                            .WithCronSchedule("") // TODO
+                            .Build()));
             }
         }
 
         /// <summary>
-        /// Handles the message by cancelling the bar jobs with the <see cref="IScheduler"/>, then
+        /// Handles the message by cancelling the bar jobs with the <see cref="Akka.Actor.IScheduler"/>, then
         /// forwarding the message to the <see cref="BarAggregator"/> for the symbol.
         /// </summary>
         /// <param name="message">The received message.</param>
@@ -131,55 +140,62 @@ namespace Nautilus.Data
 
             foreach (var barSpec in message.BarSpecifications)
             {
-                this.RemoveJob(new BarJob(message.Symbol, barSpec));
+                var job = (new BarJob(message.Symbol, barSpec));
             }
 
             this.barAggregators[message.Symbol].Tell(message);
         }
 
-        /// <summary>
-        /// Adds the given bar job to the <see cref="IScheduler"/>.
-        /// </summary>
-        /// <param name="job">The bar job.</param>
-        private void AddJob(BarJob job)
+        private void OnMessage(JobCreated message)
         {
-            if (!this.barJobs.ContainsKey(job))
-            {
-                var timeNow = this.TimeNow();
-                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpecification.Duration);
-                var startTime = timeNow + Duration.FromMilliseconds(delay);
-                var interval = (int)job.BarSpecification.Duration.TotalMilliseconds;
+            Debug.NotNull(message, nameof(message));
 
-                var cancellationToken = this.scheduler.ScheduleTellRepeatedlyCancelable(
-                    delay,
-                    interval,
-                    this.Self,
-                    job,
-                    this.Self);
-
-                this.barJobs.Add(job, cancellationToken);
-
-                Log.Debug($"Bar job added {job} starting at {startTime.ToIsoString()} " +
-                          $"initial delay {delay} then every {interval / 1000}s");
-            }
+            Log.Debug($"{message.JobKey}, {message.TriggerKey}");
         }
 
-        /// <summary>
-        /// Cancels the associated job token, then removes the given bar job.
-        /// </summary>
-        /// <param name="job">The bar job.</param>
-        private void RemoveJob(BarJob job)
-        {
-            if (this.barJobs.ContainsKey(job))
-            {
-                Log.Debug($"Bar job token {this.barJobs[job]} cancelling...");
-
-                this.barJobs[job].Cancel();
-                this.barJobs.Remove(job);
-
-                Log.Debug($"Bar job removed {job}");
-            }
-        }
+//        /// <summary>
+//        /// Adds the given bar job to the <see cref="IScheduler"/>.
+//        /// </summary>
+//        /// <param name="job">The bar job.</param>
+//        private void AddJob(BarJob job)
+//        {
+//            if (!this.barJobs.ContainsKey(job))
+//            {
+//                var timeNow = this.TimeNow();
+//                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpecification.Duration);
+//                var startTime = timeNow + Duration.FromMilliseconds(delay);
+//                var interval = (int)job.BarSpecification.Duration.TotalMilliseconds;
+//
+//                var cancellationToken = this.scheduler.ScheduleTellRepeatedlyCancelable(
+//                    delay,
+//                    interval,
+//                    this.Self,
+//                    job,
+//                    this.Self);
+//
+//                this.barJobs.Add(job, cancellationToken);
+//
+//                Log.Debug($"Bar job added {job} starting at {startTime.ToIsoString()} " +
+//                          $"initial delay {delay} then every {interval / 1000}s");
+//            }
+//        }
+//
+//        /// <summary>
+//        /// Cancels the associated job token, then removes the given bar job.
+//        /// </summary>
+//        /// <param name="job">The bar job.</param>
+//        private void RemoveJob(BarJob job)
+//        {
+//            if (this.barJobs.ContainsKey(job))
+//            {
+//                Log.Debug($"Bar job token {this.barJobs[job]} cancelling...");
+//
+//                this.barJobs[job].Cancel();
+//                this.barJobs.Remove(job);
+//
+//                Log.Debug($"Bar job removed {job}");
+//            }
+//        }
 
         /// <summary>
         /// Handles the message by forwarding the given <see cref="Tick"/> to the relevant
