@@ -156,7 +156,7 @@ namespace Nautilus.Data
 
                 this.triggerCounts[duration]++;
 
-                Log.Debug($"Added trigger for {barSpec.Period}-{barSpec.Resolution} " +
+                Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
                           $"(count={this.triggerCounts[duration]}).");
             }
         }
@@ -179,7 +179,7 @@ namespace Nautilus.Data
                 {
                     this.triggerCounts[barSpec.Duration]--;
 
-                    Log.Debug($"Removing trigger from durations (count={this.triggerCounts[barSpec.Duration]}).");
+                    Log.Debug($"Subtracting trigger count from durations (count={this.triggerCounts[barSpec.Duration]}).");
                     if (this.triggerCounts[barSpec.Duration] <= 0)
                     {
                         var job = this.barJobs[barSpec.Duration];
