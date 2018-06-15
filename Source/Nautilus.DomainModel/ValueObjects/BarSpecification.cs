@@ -126,12 +126,6 @@ namespace Nautilus.DomainModel.ValueObjects
                 case BarResolution.Day:
                     return NodaTime.Period.FromDays(barPeriod);
 
-                case BarResolution.Week:
-                    return NodaTime.Period.FromWeeks(barPeriod);
-
-                case BarResolution.Month:
-                    return NodaTime.Period.FromMonths(barPeriod);
-
                 default: throw new InvalidOperationException("Bar resolution not recognised.");
             }
         }

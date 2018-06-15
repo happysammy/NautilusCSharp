@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Week, 1),
+                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 5),
                 10,
                 1,
                 1000,
@@ -254,7 +254,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var result = signal.ExpireTime;
 
             // Assert
-            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromDays(7).ToDuration(), result);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromDays(5).ToDuration(), result);
         }
     }
 }

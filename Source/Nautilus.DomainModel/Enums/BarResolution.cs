@@ -37,15 +37,5 @@ namespace Nautilus.DomainModel.Enums
         /// The daily timeframe.
         /// </summary>
         Day = 4,
-
-        /// <summary>
-        /// The weekly timeframe.
-        /// </summary>
-        Week = 5,
-
-        /// <summary>
-        /// The monthly timeframe.
-        /// </summary>
-        Month = 6
     }
 }

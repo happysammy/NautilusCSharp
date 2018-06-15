@@ -8,17 +8,28 @@
 
 namespace Nautilus.Scheduler.Events
 {
+    using System.Runtime.CompilerServices;
     using Quartz;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     ///     Job created event
     /// </summary>
     public class JobCreated : JobEvent
     {
-        public JobCreated(JobKey jobKey, TriggerKey triggerKey) : base(jobKey, triggerKey)
+        public JobCreated(
+            JobKey jobKey,
+            TriggerKey triggerKey,
+            object job) : base(jobKey, triggerKey)
         {
+            Debug.NotNull(job, nameof(job));
+            Debug.NotNull(triggerKey, nameof(triggerKey));
+            Debug.NotNull(job, nameof(job));
+
+            this.Job = job;
         }
 
+        public object Job { get; }
 
         public override string ToString()
         {
@@ -31,10 +42,19 @@ namespace Nautilus.Scheduler.Events
     /// </summary>
     public class JobRemoved : JobEvent
     {
-        public JobRemoved(JobKey jobKey, TriggerKey triggerKey) : base(jobKey, triggerKey)
+        public JobRemoved(
+            JobKey jobKey,
+            TriggerKey triggerKey,
+            object job) : base(jobKey, triggerKey)
         {
+            Debug.NotNull(job, nameof(job));
+            Debug.NotNull(triggerKey, nameof(triggerKey));
+            Debug.NotNull(job, nameof(job));
+
+            this.Job = job;
         }
 
+        public object Job { get; }
 
         public override string ToString()
         {

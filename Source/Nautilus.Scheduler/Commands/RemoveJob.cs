@@ -23,13 +23,18 @@ namespace Nautilus.Scheduler.Commands
         /// </summary>
         /// <param name="jobKey"></param>
         /// <param name="triggerKey"></param>
-        public RemoveJob(JobKey jobKey, TriggerKey triggerKey)
+        public RemoveJob(
+            JobKey jobKey,
+            TriggerKey triggerKey,
+            object job)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
             Debug.NotNull(triggerKey, nameof(triggerKey));
+            Debug.NotNull(job, nameof(job));
 
-            JobKey = jobKey;
-            TriggerKey = triggerKey;
+            this.JobKey = jobKey;
+            this.TriggerKey = triggerKey;
+            this.Job = job;
         }
 
         /// <summary>
@@ -41,5 +46,10 @@ namespace Nautilus.Scheduler.Commands
         /// Gets the jobs trigger key.
         /// </summary>
         public TriggerKey TriggerKey { get; }
+
+        /// <summary>
+        /// Gets the job message object.
+        /// </summary>
+        public object Job { get; }
     }
 }

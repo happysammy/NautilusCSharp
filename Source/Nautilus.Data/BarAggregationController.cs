@@ -13,6 +13,7 @@ namespace Nautilus.Data
     using System.Collections.Immutable;
     using System.Linq;
     using Akka.Actor;
+    using DomainModel.Enums;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -23,7 +24,11 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
+    using NodaTime;
     using Quartz;
+    using Quartz.Spi;
+    using Quartz.Xml.JobSchedulingData20;
+    using Scheduler;
 
     /// <summary>
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
@@ -35,6 +40,9 @@ namespace Nautilus.Data
         private readonly IImmutableList<Enum> barDataReceivers;
         private readonly IActorRef schedulerRef;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
+        private readonly IDictionary<Duration, KeyValuePair<JobKey, TriggerKey>> barJobs;
+        private readonly IDictionary<Duration, ITrigger> triggers;
+        private readonly IDictionary<Duration, int> triggerCounts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
@@ -67,6 +75,9 @@ namespace Nautilus.Data
             this.barDataReceivers = barReceivers.ToImmutableList();
             this.schedulerRef = schedulerRef;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
+            this.barJobs = new Dictionary<Duration, KeyValuePair<JobKey, TriggerKey>>();
+            this.triggers = new Dictionary<Duration, ITrigger>();
+            this.triggerCounts = new Dictionary<Duration, int>();
 
             this.SetupCommandMessageHandling();
             this.SetupEventMessageHandling();
@@ -80,6 +91,8 @@ namespace Nautilus.Data
             this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
             this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
+            this.Receive<JobRemoved>(msg => this.OnMessage(msg));
+            this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
             this.Receive<BarJob>(msg => this.OnMessage(msg));
         }
 
@@ -116,16 +129,35 @@ namespace Nautilus.Data
 
             foreach (var barSpec in message.BarSpecifications)
             {
-                var job = new BarJob(message.Symbol, barSpec);
+                var duration = barSpec.Duration;
 
-                this.schedulerRef.Tell(
-                    new CreateJob(
-                        this.Self,
-                        job,
-                        TriggerBuilder
-                            .Create()
-                            .WithCronSchedule("") // TODO
-                            .Build()));
+                if (!this.triggers.ContainsKey(duration))
+                {
+                    var trigger = this.CreateTrigger(barSpec);
+                    this.triggers.Add(duration, trigger);
+
+                    if (!this.barJobs.ContainsKey(duration))
+                    {
+                        var barJob = new BarJob(message.Symbol, barSpec);
+
+                        var createJob = new CreateJob(
+                            this.Self,
+                            barJob,
+                            this.triggers[duration]);
+
+                        this.schedulerRef.Tell(createJob);
+                    }
+                }
+
+                if (!this.triggerCounts.ContainsKey(duration))
+                {
+                    this.triggerCounts.Add(duration, 0);
+                }
+
+                this.triggerCounts[duration]++;
+
+                Log.Debug($"Added trigger for {barSpec.Period}-{barSpec.Resolution} " +
+                          $"(count={this.triggerCounts[duration]}).");
             }
         }
 
@@ -139,64 +171,61 @@ namespace Nautilus.Data
             Debug.NotNull(message, nameof(message));
             Validate.CollectionContains(message.Symbol, nameof(message.Symbol), this.barAggregators.Keys.ToList().AsReadOnly());
 
+            this.barAggregators[message.Symbol].Tell(message);
+
             foreach (var barSpec in message.BarSpecifications)
             {
-                var job = (new BarJob(message.Symbol, barSpec));
-            }
+                if (this.triggerCounts.ContainsKey(barSpec.Duration))
+                {
+                    this.triggerCounts[barSpec.Duration]--;
 
-            this.barAggregators[message.Symbol].Tell(message);
+                    Log.Debug($"Removing trigger from durations (count={this.triggerCounts[barSpec.Duration]}).");
+                    if (this.triggerCounts[barSpec.Duration] <= 0)
+                    {
+                        var job = this.barJobs[barSpec.Duration];
+                        var removeJob = new RemoveJob(job.Key, job.Value, "null job");
+
+                        this.schedulerRef.Tell(removeJob);
+                    }
+                }
+            }
         }
 
         private void OnMessage(JobCreated message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Debug($"{message.JobKey}, {message.TriggerKey}");
+            var job = message.Job as BarJob;
+
+            if (job != null)
+            {
+                var barSpec = job.BarSpecification;
+                var duration = barSpec.Duration;
+
+                if (!this.barJobs.ContainsKey(duration))
+                {
+                    this.barJobs.Add(duration, new KeyValuePair<JobKey, TriggerKey>(
+                        message.JobKey,
+                        message.TriggerKey));
+                }
+            }
+
+            Log.Debug($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
-//        /// <summary>
-//        /// Adds the given bar job to the <see cref="IScheduler"/>.
-//        /// </summary>
-//        /// <param name="job">The bar job.</param>
-//        private void AddJob(BarJob job)
-//        {
-//            if (!this.barJobs.ContainsKey(job))
-//            {
-//                var timeNow = this.TimeNow();
-//                var delay = timeNow.CeilingOffsetMilliseconds(job.BarSpecification.Duration);
-//                var startTime = timeNow + Duration.FromMilliseconds(delay);
-//                var interval = (int)job.BarSpecification.Duration.TotalMilliseconds;
-//
-//                var cancellationToken = this.scheduler.ScheduleTellRepeatedlyCancelable(
-//                    delay,
-//                    interval,
-//                    this.Self,
-//                    job,
-//                    this.Self);
-//
-//                this.barJobs.Add(job, cancellationToken);
-//
-//                Log.Debug($"Bar job added {job} starting at {startTime.ToIsoString()} " +
-//                          $"initial delay {delay} then every {interval / 1000}s");
-//            }
-//        }
-//
-//        /// <summary>
-//        /// Cancels the associated job token, then removes the given bar job.
-//        /// </summary>
-//        /// <param name="job">The bar job.</param>
-//        private void RemoveJob(BarJob job)
-//        {
-//            if (this.barJobs.ContainsKey(job))
-//            {
-//                Log.Debug($"Bar job token {this.barJobs[job]} cancelling...");
-//
-//                this.barJobs[job].Cancel();
-//                this.barJobs.Remove(job);
-//
-//                Log.Debug($"Bar job removed {job}");
-//            }
-//        }
+        private void OnMessage(JobRemoved message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            Log.Debug($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+        }
+
+        private void OnMessage(RemoveJobFail message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
+        }
 
         /// <summary>
         /// Handles the message by forwarding the given <see cref="Tick"/> to the relevant
@@ -259,6 +288,53 @@ namespace Nautilus.Data
                 this.TimeNow());
 
             this.Send(this.barDataReceivers, @event);
+        }
+
+        private ITrigger CreateTrigger(BarSpecification barSpec)
+        {
+            Debug.NotNull(barSpec, nameof(barSpec));
+            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers.ToImmutableDictionary());
+
+            var duration = barSpec.Duration;
+
+            return TriggerBuilder
+                .Create()
+                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
+                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution}")
+                .WithSchedule(this.CreateSchedule(barSpec))
+                .Build();
+        }
+
+        private IScheduleBuilder CreateSchedule(BarSpecification barSpec)
+        {
+            var scheduleBuilder = SimpleScheduleBuilder
+                .Create()
+                .RepeatForever();
+
+            switch (barSpec.Resolution)
+            {
+                case BarResolution.Tick:
+                    throw new InvalidOperationException("Cannot schedule tick bars.");
+
+                case BarResolution.Second:
+                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
+                    break;
+
+                case BarResolution.Minute:
+                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
+                    break;
+
+                case BarResolution.Hour:
+                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
+                    break;
+
+                case BarResolution.Day:
+                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
+                    break;
+                default: throw new InvalidOperationException("Bar resolution not recognised.");
+            }
+
+            return scheduleBuilder;
         }
     }
 }

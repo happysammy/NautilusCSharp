@@ -164,6 +164,8 @@ namespace Nautilus.DomainModel.Orders
 
         private bool IsExpireTimeGreaterThanTimestamp(Option<ZonedDateTime?> expireTime)
         {
+            Debug.NotNull(expireTime, nameof(expireTime));
+            // ReSharper disable once PossibleInvalidOperationException
             return ZonedDateTime.Comparer.Instant.Compare((ZonedDateTime)expireTime.Value, this.Timestamp) >= 0;
         }
 

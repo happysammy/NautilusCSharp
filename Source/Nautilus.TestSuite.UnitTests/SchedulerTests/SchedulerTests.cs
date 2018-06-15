@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             quartzActor.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/10 * * * * ?").Build()));
             var jobCreated = ExpectMsg<JobCreated>();
             probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(11));
-            quartzActor.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey));
+            quartzActor.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
             ExpectMsg<JobRemoved>();
             Thread.Sleep(TimeSpan.FromSeconds(10));
             probe.ExpectNoMsg(TimeSpan.FromSeconds(10));
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             var probe = CreateTestProbe(Sys);
             var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-            quartzActor.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key")));
+            quartzActor.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
             var failure=ExpectMsg<RemoveJobFail>();
             Assert.IsType<JobNotFoundException>(failure.Reason);
             Sys.Stop(quartzActor);

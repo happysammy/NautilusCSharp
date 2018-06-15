@@ -14,13 +14,18 @@ namespace Nautilus.Scheduler
     using Quartz;
 
     /// <summary>
-    /// Job
+    /// Represents a job.
     /// </summary>
     public class Job : IJob
     {
         private const string MessageKey = "message";
         private const string ActorKey = "actor";
 
+        /// <summary>
+        /// Executes the job task.
+        /// </summary>
+        /// <param name="context">THe context.</param>
+        /// <returns>The task completed token.</returns>
         public Task Execute(IJobExecutionContext context)
         {
             var jdm = context.JobDetail.JobDataMap;
@@ -35,10 +40,17 @@ namespace Nautilus.Scheduler
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Creates and returns a new job builder from the given parameters.
+        /// </summary>
+        /// <param name="actorRef">The actor address.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         public static JobBuilder CreateBuilderWithData(IActorRef actorRef, object message)
         {
             var jdm = new JobDataMap();
             jdm.AddAndReturn(MessageKey, message).Add(ActorKey, actorRef);
+
             return JobBuilder.Create<Job>().UsingJobData(jdm);
         }
     }

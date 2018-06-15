@@ -81,16 +81,23 @@ namespace Nautilus.Scheduler
                 try
                 {
                     var job =
-                   Job.CreateBuilderWithData(createJob.Destination, createJob.Message)
+                    Job.CreateBuilderWithData(createJob.Destination, createJob.Message)
                        .WithIdentity(createJob.Trigger.JobKey)
                        .Build();
+
                     quartzScheduler.ScheduleJob(job, createJob.Trigger);
 
-                    Context.Sender.Tell(new JobCreated(createJob.Trigger.JobKey, createJob.Trigger.Key));
+                    Context.Sender.Tell(new JobCreated(
+                        createJob.Trigger.JobKey,
+                        createJob.Trigger.Key,
+                        createJob.Message));
                 }
                 catch (Exception ex)
                 {
-                    Context.Sender.Tell(new CreateJobFail(createJob.Trigger.JobKey, createJob.Trigger.Key, ex));
+                    Context.Sender.Tell(new CreateJobFail(
+                        createJob.Trigger.JobKey,
+                        createJob.Trigger.Key,
+                        ex));
                 }
             }
         }
@@ -102,7 +109,10 @@ namespace Nautilus.Scheduler
                 var deleted = quartzScheduler.DeleteJob(removeJob.JobKey);
                 if (deleted.Result)
                 {
-                    Context.Sender.Tell(new JobRemoved(removeJob.JobKey, removeJob.TriggerKey));
+                    Context.Sender.Tell(new JobRemoved(
+                        removeJob.JobKey,
+                        removeJob.TriggerKey,
+                        removeJob.Job));
                 }
                 else
                 {

@@ -24,7 +24,6 @@ namespace Nautilus.Core
         /// <returns>The converted decimal.</returns>
         public static Option<decimal?> ToDecimal([CanBeNull] string input)
         {
-            // TODO: Should this be kept??
             return decimal.TryParse(input, out var output)
                  ? output
                  : Option<decimal?>.None();
