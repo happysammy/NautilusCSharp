@@ -78,7 +78,6 @@ namespace Nautilus.Scheduler
             }
             else
             {
-
                 try
                 {
                     var job =

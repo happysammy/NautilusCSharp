@@ -11,6 +11,7 @@ namespace Nautilus.Data
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Linq;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -136,7 +137,7 @@ namespace Nautilus.Data
         private void OnMessage(UnsubscribeBarData message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.DictionaryContainsKey(message.Symbol, nameof(message.Symbol), this.barAggregators);
+            Validate.CollectionContains(message.Symbol, nameof(message.Symbol), this.barAggregators.Keys.ToList().AsReadOnly());
 
             foreach (var barSpec in message.BarSpecifications)
             {
@@ -205,6 +206,7 @@ namespace Nautilus.Data
         private void OnMessage(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
+            Debug.DictionaryContainsKey(tick.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
 
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
@@ -223,6 +225,9 @@ namespace Nautilus.Data
         /// <param name="job">The received job.</param>
         private void OnMessage(BarJob job)
         {
+            Debug.NotNull(job, nameof(job));
+            Debug.DictionaryContainsKey(job.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
+
             if (this.barAggregators.ContainsKey(job.Symbol))
             {
                 var closeBar = new CloseBar(

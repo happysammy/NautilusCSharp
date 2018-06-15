@@ -9,6 +9,7 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using Akka.Actor;
     using Nautilus.Core.Validation;
@@ -43,11 +44,11 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Validate.NotNull(portfolioSymbol, nameof(portfolioSymbol));
             Validate.NotNull(portfolioRef, nameof(portfolioRef));
-            Validate.DictionaryDoesNotContainKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex);
+            Validate.DictionaryDoesNotContainKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex.ToImmutableDictionary());
 
             this.portfolioIndex.Add(portfolioSymbol, portfolioRef);
 
-            Debug.DictionaryContainsKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex);
+            Debug.DictionaryContainsKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex.ToImmutableDictionary());
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Nautilus.BlackBox.Portfolio
         {
             Validate.NotNull(portfolioSymbol, nameof(portfolioSymbol));
             Validate.NotNull(message, nameof(message));
-            Validate.DictionaryContainsKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex);
+            Validate.DictionaryContainsKey(portfolioSymbol, nameof(portfolioSymbol), this.portfolioIndex.ToImmutableDictionary());
 
             this.portfolioIndex[portfolioSymbol].Tell(message);
         }

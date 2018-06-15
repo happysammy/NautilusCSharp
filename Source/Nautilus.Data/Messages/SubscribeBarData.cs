@@ -38,7 +38,7 @@ namespace Nautilus.Data.Messages
             : base(messageId, messageTimestamp)
         {
             Validate.NotNull(symbol, nameof(symbol));
-            Validate.ReadOnlyCollectionNotNullOrEmpty(barSpecs, nameof(barSpecs));
+            Validate.CollectionNotNullOrEmpty(barSpecs, nameof(barSpecs));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 

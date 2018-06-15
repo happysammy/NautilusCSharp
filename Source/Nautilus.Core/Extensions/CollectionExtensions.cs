@@ -30,7 +30,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>An <see cref="int"/>.</returns>
         public static int LastIndex<T>(this ICollection<T> collection)
         {
-            Debug.CollectionNotNullOrEmpty(collection, nameof(collection));
+            Debug.CollectionNotNullOrEmpty(collection.ToArray(), nameof(collection));
 
             return collection.Count - 1;
         }
@@ -46,7 +46,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>The type.</returns>
         public static T GetByReverseIndex<T>(this ICollection<T> collection, int index)
         {
-            Debug.CollectionNotNullOrEmpty(collection, nameof(collection));
+            Debug.CollectionNotNullOrEmpty(collection.ToArray(), nameof(collection));
             Debug.Int32NotOutOfRange(index, nameof(index), 0, collection.LastIndex());
 
             return collection.ElementAtOrDefault(collection.LastIndex() - index);
@@ -65,7 +65,7 @@ namespace Nautilus.Core.Extensions
         /// <exception cref="ValidationException">Throws if the shift is out of the specified range.</exception>
         public static T GetByShiftedReverseIndex<T>(this ICollection<T> collection, int index, int shift)
         {
-            Debug.CollectionNotNullOrEmpty(collection, nameof(collection));
+            Debug.CollectionNotNullOrEmpty(collection.ToArray(), nameof(collection));
             Debug.Int32NotOutOfRange(index, nameof(index), 0, collection.LastIndex());
             Debug.Int32NotOutOfRange(shift, nameof(shift), 0, collection.LastIndex());
             Debug.Int32NotOutOfRange(index + shift, nameof(index) + nameof(shift), 0, collection.LastIndex());

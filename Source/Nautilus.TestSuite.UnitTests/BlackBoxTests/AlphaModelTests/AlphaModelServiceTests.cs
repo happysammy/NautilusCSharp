@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the symbolBarSpec key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -181,8 +181,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             this.alphaModelServiceRef.Tell(message);
 
             // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection already contains the strategyLabel key).",
+                "AlphaModelService: Validation Failed (The dictionary already contains the strategyLabel key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -213,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the symbolBarSpec key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the symbolBarSpec key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -255,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
 
             // Assert
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The collection does not contain the strategyLabel key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the strategyLabel key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

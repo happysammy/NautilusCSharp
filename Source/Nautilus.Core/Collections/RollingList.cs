@@ -96,8 +96,6 @@ namespace Nautilus.Core.Collections
         public void Clear()
         {
             this.internalList.Clear();
-
-            Debug.CollectionEmpty(this.internalList, nameof(this.internalList));
         }
 
         /// <summary>

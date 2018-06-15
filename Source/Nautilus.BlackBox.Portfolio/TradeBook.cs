@@ -74,7 +74,7 @@ namespace Nautilus.BlackBox.Portfolio
                         $"Trade removed ({trade.TradeId}), "
                       + $"TradeStatus={trade.TradeStatus})");
 
-                    Debug.CollectionDoesNotContain(trade, nameof(trade), this.tradeList);
+                    Debug.CollectionDoesNotContain(trade, nameof(trade), this.tradeList.ToList().AsReadOnly());
                 }
             }
         }

@@ -112,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
 
             // Act
             this.controllerRef.Tell(subscribe);
-            Thread.Sleep(60000);
+            //Thread.Sleep(60000);
             this.controllerRef.Tell(unsubscribe);
 
             LogDumper.Dump(this.logger, this.output);
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             // Act
             this.controllerRef.Tell(subscribe);
 
-            Thread.Sleep(200000);
+            //Thread.Sleep(200000);
             LogDumper.Dump(this.logger, this.output);
             // Assert
         }

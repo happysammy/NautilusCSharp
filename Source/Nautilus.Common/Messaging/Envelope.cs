@@ -38,7 +38,7 @@ namespace Nautilus.Common.Messaging
             Guid envelopeId,
             ZonedDateTime timestamp)
         {
-            Debug.ReadOnlyCollectionNotNullOrEmpty(receivers, nameof(receivers));
+            Debug.CollectionNotNullOrEmpty(receivers, nameof(receivers));
             Debug.NotNull(sender, nameof(sender));
             Debug.NotNull(message, nameof(message));
             Debug.NotDefault(envelopeId, nameof(envelopeId));

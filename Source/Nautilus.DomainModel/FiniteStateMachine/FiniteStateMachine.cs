@@ -34,7 +34,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
             IReadOnlyDictionary<StateTransition, State> stateTransitionTable,
             State startingState)
         {
-            Validate.ReadOnlyCollectionNotNullOrEmpty(stateTransitionTable, nameof(stateTransitionTable));
+            Validate.CollectionNotNullOrEmpty(stateTransitionTable, nameof(stateTransitionTable));
             Validate.NotNull(startingState, nameof(startingState));
 
             this.stateTransitionTable = stateTransitionTable.ToImmutableDictionary();

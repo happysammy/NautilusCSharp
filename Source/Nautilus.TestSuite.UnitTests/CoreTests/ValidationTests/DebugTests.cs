@@ -134,17 +134,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyCollectionEmpty_WhenCollectionEmpty_DoesNothing()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = new List<string>().AsReadOnly();
-
-            // Act
-            // Assert
-            Debug.ReadOnlyCollectionEmpty(collection, nameof(collection));
-        }
-
-        [Fact]
         internal void CollectionEmpty_WhenCollectionNotEmpty_Throws()
         {
             // Arrange
@@ -153,17 +142,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.CollectionEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
-        internal void ReadOnlyCollectionEmpty_WhenCollectionNotEmpty_Throws()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = new List<string> { "anElement" }.AsReadOnly();
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionEmpty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -179,18 +157,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyCollectionEmpty_WhenCollectionNull_Throws()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
         internal void CollectionNotNullOrEmpty_WhenCollectionNotEmpty_DoesNothing()
         {
             // Arrange
@@ -199,17 +165,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Debug.CollectionNotNullOrEmpty(collection, nameof(collection));
-        }
-
-        [Fact]
-        internal void ReadOnlyCollectionNotNullOrEmpty_WhenCollectionNotEmpty_DoesNothing()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = new List<string> { "foo" }.AsReadOnly();
-
-            // Act
-            // Assert
-            Debug.ReadOnlyCollectionNotNullOrEmpty(collection, nameof(collection));
         }
 
         [Fact]
@@ -225,18 +180,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyCollectionNotNullOrEmpty_WhenCollectionNull_Throws()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionNotNullOrEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
         internal void CollectionNotNullOrEmpty_WhenCollectionEmpty_Throws()
         {
             // Arrange
@@ -245,17 +188,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.CollectionNotNullOrEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
-        internal void ReadOnlyCollectionNotNullOrEmpty_WhenCollectionEmpty_Throws()
-        {
-            // Arrange
-            IReadOnlyCollection<string> collection = new List<string>().AsReadOnly();
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionNotNullOrEmpty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -294,18 +226,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyCollectionContains_WhenCollectionDoesNotContainElement_Throws()
-        {
-            // Arrange
-            var element = "the_fifth_element";
-            IReadOnlyCollection<string> collection = new List<string>().AsReadOnly();
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionContains(element, nameof(element), collection));
-        }
-
-        [Fact]
         internal void CollectionContains_WhenCollectionContainsElement_DoesNothing()
         {
             // Arrange
@@ -315,18 +235,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Debug.CollectionContains(element, nameof(element), collection);
-        }
-
-        [Fact]
-        internal void ReadOnlyCollectionContains_WhenCollectionContainsElement_DoesNothing()
-        {
-            // Arrange
-            var element = "the_fifth_element";
-            IReadOnlyCollection<string> collection = new List<string> { element }.AsReadOnly();
-
-            // Act
-            // Assert
-            Debug.ReadOnlyCollectionContains(element, nameof(element), collection);
         }
 
         [Fact]
@@ -342,18 +250,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyCollectionDoesNotContain_WhenCollectionDoesNotContainElement_DoesNothing()
-        {
-            // Arrange
-            var element = "the_fifth_element";
-            IReadOnlyCollection<string> collection = new List<string>().AsReadOnly();
-
-            // Act
-            // Assert
-            Debug.ReadOnlyCollectionDoesNotContain(element, nameof(element), collection);
-        }
-
-        [Fact]
         internal void CollectionDoesNotContain_WhenCollectionContainsElement_Throws()
         {
             // Arrange
@@ -363,18 +259,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.CollectionDoesNotContain(element, nameof(element), collection));
-        }
-
-        [Fact]
-        internal void ReadOnlyCollectionDoesNotContain_WhenCollectionContainsElement_Throws()
-        {
-            // Arrange
-            var element = "the_fifth_element";
-            IReadOnlyCollection<string> collection = new List<string> { element }.AsReadOnly();
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyCollectionDoesNotContain(element, nameof(element), collection));
         }
 
         [Fact]
@@ -390,18 +274,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyDictionaryContainsKey_WhenDictionaryDoesContainKey_DoesNothing()
-        {
-            // Arrange
-            var key = "the_key";
-            IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int> { { key, 1 } };
-
-            // Act
-            // Assert
-            Debug.ReadOnlyDictionaryContainsKey(key, nameof(key), dictionary);
-        }
-
-        [Fact]
         internal void DictionaryContainsKey_WhenDictionaryContainsKey_DoesNothing()
         {
             // Arrange
@@ -411,18 +283,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Debug.DictionaryContainsKey(key, nameof(key), collection);
-        }
-
-        [Fact]
-        internal void ReadOnlyDictionaryContainsKey_WhenDictionaryContainsKey_DoesNothing()
-        {
-            // Arrange
-            var key = "the_key";
-            IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int> { { key, 0 } };
-
-            // Act
-            // Assert
-            Debug.ReadOnlyDictionaryContainsKey(key, nameof(key), dictionary);
         }
 
         [Fact]
@@ -438,18 +298,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyDictionaryContainsKey_WhenDictionaryDoesNotContainKey_Throws()
-        {
-            // Arrange
-            var key = "the_key";
-            IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int>();
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyDictionaryContainsKey(key, nameof(key), dictionary));
-        }
-
-        [Fact]
         internal void DictionaryDoesNotContainKey_WhenDictionaryDoesNotContainsKey_DoesNothing()
         {
             // Arrange
@@ -462,18 +310,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void ReadOnlyDictionaryDoesNotContainKey_WhenDictionaryDoesNotContainsKey_DoesNothing()
-        {
-            // Arrange
-            var key = "the_key";
-            IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int> { { "another_key", 2 } };
-
-            // Act
-            // Assert
-            Debug.ReadOnlyDictionaryDoesNotContainKey(key, nameof(key), dictionary);
-        }
-
-        [Fact]
         internal void DictionaryDoesNotContainKey_WhenDictionaryContainsKey_Throws()
         {
             // Arrange
@@ -483,18 +319,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.DictionaryDoesNotContainKey(key, nameof(key), collection));
-        }
-
-        [Fact]
-        internal void ReadOnlyDictionaryDoesNotContainKey_WhenDictionaryContainsKey_Throws()
-        {
-            // Arrange
-            var key = "the_key";
-            IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int> { { key, 1 } };
-
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.ReadOnlyDictionaryDoesNotContainKey(key, nameof(key), dictionary));
         }
 
         [Fact]

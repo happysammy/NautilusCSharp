@@ -22,7 +22,7 @@ namespace Nautilus.Data.Types
     {
         public EconomicEventFrame(IReadOnlyCollection<EconomicEvent> events)
         {
-            Validate.ReadOnlyCollectionNotNullOrEmpty(events, nameof(events));
+            Validate.CollectionNotNullOrEmpty(events, nameof(events));
 
             this.Events = events;
         }

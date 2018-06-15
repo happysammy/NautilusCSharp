@@ -95,7 +95,7 @@ namespace Nautilus.BlackBox.Data
 
             this.Execute(() =>
             {
-                Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex);
+                Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex.ToImmutableDictionary());
 
                 var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
                 var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
@@ -119,7 +119,7 @@ namespace Nautilus.BlackBox.Data
 
             this.Execute(() =>
             {
-                Validate.DictionaryContainsKey(message.Symbol, nameof(this.marketDataProcessorIndex), this.marketDataProcessorIndex);
+                Validate.DictionaryContainsKey(message.Symbol, nameof(this.marketDataProcessorIndex), this.marketDataProcessorIndex.ToImmutableDictionary());
 
                 this.marketDataProcessorIndex[message.Symbol].Tell(message, this.Self);
             });

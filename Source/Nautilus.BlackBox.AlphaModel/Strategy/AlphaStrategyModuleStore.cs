@@ -21,8 +21,14 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     /// </summary>
     public sealed class AlphaStrategyModuleStore
     {
-        private readonly Dictionary<Label, IActorRef> alphaStrategyIndex = new Dictionary<Label, IActorRef>();
-        private readonly Dictionary<SymbolBarSpec, List<IActorRef>> alphaStrategyBarIndex = new Dictionary<SymbolBarSpec, List<IActorRef>>();
+        private readonly Dictionary<Label, IActorRef> alphaStrategyIndex;
+        private readonly Dictionary<SymbolBarSpec, List<IActorRef>> alphaStrategyBarIndex;
+
+        public AlphaStrategyModuleStore()
+        {
+            this.alphaStrategyIndex = new Dictionary<Label, IActorRef>();
+            this.alphaStrategyBarIndex = new Dictionary<SymbolBarSpec, List<IActorRef>>();
+        }
 
         /// <summary>
         /// Gets the count of alpha strategy modules contained in the store.

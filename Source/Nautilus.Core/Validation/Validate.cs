@@ -116,31 +116,7 @@ namespace Nautilus.Core.Validation
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
-        public static void CollectionNotNullOrEmpty<T>(ICollection<T> collection, string paramName)
-        {
-            if (collection == null)
-            {
-                throw new ValidationException(
-                    new ArgumentNullException(
-                        paramName, $"{ExMessage} (The {paramName} collection is null)."));
-            }
-
-            if (collection.Count == 0)
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The {paramName} collection is empty).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyCollection{T}"/> is not null, or empty.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
-        public static void ReadOnlyCollectionNotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void CollectionNotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection == null)
             {
@@ -165,32 +141,7 @@ namespace Nautilus.Core.Validation
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection is not empty.</exception>
-        public static void CollectionEmpty<T>(ICollection<T> collection, string paramName)
-        {
-            if (collection == null)
-            {
-                throw new ValidationException(
-                    new ArgumentNullException(
-                        paramName, $"{ExMessage} (The {paramName} collection is null)."));
-            }
-
-            if (collection.Count != 0)
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The {paramName} collection is not empty).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyCollection{T}"/> is not null, and is
-        /// empty (count zero).
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection is not empty.</exception>
-        public static void ReadOnlyCollectionEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void CollectionEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection == null)
             {
@@ -215,26 +166,10 @@ namespace Nautilus.Core.Validation
         /// <param name="collection">The collection.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection does not contain the element.</exception>
-        public static void CollectionContains<T>(T element, string paramName, ICollection<T> collection)
-        {
-            if (!collection.Contains(element))
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The collection does not contain the {paramName} element).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyCollection{T}"/> contains the
-        /// given element.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <param name="collection">The collection.</param>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection does not contain the element.</exception>
-        public static void ReadOnlyCollectionContains<T>(T element, string paramName, IReadOnlyCollection<T> collection)
+        public static void CollectionContains<T>(
+            T element,
+            string paramName,
+            IReadOnlyCollection<T> collection)
         {
             if (!collection.Contains(element))
             {
@@ -253,26 +188,10 @@ namespace Nautilus.Core.Validation
         /// <param name="collection">The collection.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection contains the element.</exception>
-        public static void CollectionDoesNotContain<T>(T element, string paramName, ICollection<T> collection)
-        {
-            if (collection.Contains(element))
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The collection already contains the {paramName} element).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyCollection{T}"/> does not contain the
-        /// given element.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <param name="collection">The collection.</param>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection contains the element.</exception>
-        public static void ReadOnlyCollectionDoesNotContain<T>(T element, string paramName, IReadOnlyCollection<T> collection)
+        public static void CollectionDoesNotContain<T>(
+            T element,
+            string paramName,
+            IReadOnlyCollection<T> collection)
         {
             if (collection.Contains(element))
             {
@@ -292,33 +211,16 @@ namespace Nautilus.Core.Validation
         /// <typeparam name="T1">The type of the keys.</typeparam>
         /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ValidationException">Throws if the dictionary does not contain the key.</exception>
-        public static void DictionaryContainsKey<T1, T2>(T1 key, string paramName, IDictionary<T1, T2> dictionary)
+        public static void DictionaryContainsKey<T1, T2>(
+            T1 key,
+            string paramName,
+            IReadOnlyDictionary<T1, T2> dictionary)
         {
             if (!dictionary.ContainsKey(key))
             {
                 throw new ValidationException(
                     new ArgumentException(
-                        $"{ExMessage} (The collection does not contain the {paramName} key).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> contains the
-        /// given key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <param name="dictionary">The dictionary.</param>
-        /// <typeparam name="T1">The type of the keys.</typeparam>
-        /// <typeparam name="T2">The type of the values.</typeparam>
-        /// <exception cref="ValidationException">Throws if the dictionary does not contain the key.</exception>
-        public static void ReadOnlyDictionaryContainsKey<T1, T2>(T1 key, string paramName, IReadOnlyDictionary<T1, T2> dictionary)
-        {
-            if (!dictionary.ContainsKey(key))
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The collection does not contain the {paramName} key).", paramName));
+                        $"{ExMessage} (The dictionary does not contain the {paramName} key).", paramName));
             }
         }
 
@@ -332,27 +234,10 @@ namespace Nautilus.Core.Validation
         /// <typeparam name="T1">The type of the keys.</typeparam>
         /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ValidationException">Throws if the dictionary contains the key.</exception>
-        public static void DictionaryDoesNotContainKey<T1, T2>(T1 key, string paramName, IDictionary<T1, T2> dictionary)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                throw new ValidationException(
-                    new ArgumentException(
-                        $"{ExMessage} (The collection already contains the {paramName} key).", paramName));
-            }
-        }
-
-        /// <summary>
-        /// The validation passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> does not
-        /// contain the given key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <param name="dictionary">The dictionary.</param>
-        /// <typeparam name="T1">The type of the keys.</typeparam>
-        /// <typeparam name="T2">The type of the values.</typeparam>
-        /// <exception cref="ValidationException">Throws if the dictionary contains the key.</exception>
-        public static void ReadOnlyDictionaryDoesNotContainKey<T1, T2>(T1 key, string paramName, IReadOnlyDictionary<T1, T2> dictionary)
+        public static void DictionaryDoesNotContainKey<T1, T2>(
+            T1 key,
+            string paramName,
+            IReadOnlyDictionary<T1, T2> dictionary)
         {
             if (dictionary.ContainsKey(key))
             {
