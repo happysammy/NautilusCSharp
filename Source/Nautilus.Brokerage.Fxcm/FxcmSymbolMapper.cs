@@ -97,7 +97,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<string> GetNautilusSymbol(string fxcmSymbol)
         {
-            Validate.NotNull(fxcmSymbol, nameof(fxcmSymbol));
+            Debug.NotNull(fxcmSymbol, nameof(fxcmSymbol));
 
             return Symbols.ContainsKey(fxcmSymbol)
                  ? QueryResult<string>.Ok(Symbols[fxcmSymbol])
@@ -112,7 +112,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<string> GetFxcmSymbol(string nautilusSymbol)
         {
-            Validate.NotNull(nautilusSymbol, nameof(nautilusSymbol));
+            Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));
 
             return Symbols.ContainsValue(nautilusSymbol)
                  ? QueryResult<string>.Ok(Symbols.FirstOrDefault(x => x.Value == nautilusSymbol).Key)

@@ -32,7 +32,7 @@ namespace Nautilus.Database.Build
             log.Information(DatabaseService.NautilusDatabase, "Running StartupVersionChecker...");
             log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
             log.Information(DatabaseService.NautilusDatabase, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(DatabaseService.NautilusDatabase, "Copyright (c) 2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(DatabaseService.NautilusDatabase, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
             log.Information(DatabaseService.NautilusDatabase, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");

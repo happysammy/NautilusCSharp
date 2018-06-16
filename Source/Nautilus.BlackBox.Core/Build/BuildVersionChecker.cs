@@ -31,6 +31,7 @@ namespace Nautilus.BlackBox.Core.Build
 
             logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
             logger.Information(BlackBoxService.Core, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            logger.Information(BlackBoxService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
             logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
             logger.Information(BlackBoxService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             logger.Information(BlackBoxService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
