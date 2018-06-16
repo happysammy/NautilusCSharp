@@ -40,27 +40,35 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         [Fact]
         public void Scheduler_Should_Remove_Job()
         {
+            // Arrange
             var probe = CreateTestProbe(Sys);
-            var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-            quartzActor.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/10 * * * * ?").Build()));
+            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
+
+            // Act
+            // Assert
+            scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/10 * * * * ?").Build()));
             var jobCreated = ExpectMsg<JobCreated>();
             probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(11));
-            quartzActor.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
+            scheduler.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
             ExpectMsg<JobRemoved>();
             Thread.Sleep(TimeSpan.FromSeconds(1));
             probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
-            Sys.Stop(quartzActor);
+            Sys.Stop(scheduler);
         }
 
         [Fact]
         public void Scheduler_Should_Not_Remove_UnExisting_Job()
         {
+            // Arrange
             var probe = CreateTestProbe(Sys);
-            var quartzActor = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-            quartzActor.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
+            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
+
+            // Act
+            // Assert
+            scheduler.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
             var failure=ExpectMsg<RemoveJobFail>();
             Assert.IsType<JobNotFoundException>(failure.Reason);
-            Sys.Stop(quartzActor);
+            Sys.Stop(scheduler);
         }
     }
 }

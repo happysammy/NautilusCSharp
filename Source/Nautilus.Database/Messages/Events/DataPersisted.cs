@@ -19,45 +19,39 @@ namespace Nautilus.Database.Messages.Events
     /// A message representing that all bar data has been persisted.
     /// </summary>
     [Immutable]
-    public sealed class MarketDataPersisted : Event
+    public sealed class DataPersisted<T> : Event
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketDataPersisted"/> class.
+        /// Initializes a new instance of the <see cref="DataPersisted{T}"/> class.
         /// </summary>
-        /// <param name="symbolBarSpec">The message symbol bar specification.</param>
-        /// <param name="lastBarTime">The message last bar time.</param>
+        /// <param name="dataType">The message data type.</param>
+        /// <param name="lastDataTime">The message last data time.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">THe message timestamp</param>
-        public MarketDataPersisted(
-            SymbolBarSpec symbolBarSpec,
-            ZonedDateTime lastBarTime,
+        public DataPersisted(
+            T dataType,
+            ZonedDateTime lastDataTime,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
-            Validate.NotDefault(lastBarTime, nameof(lastBarTime));
-            Validate.NotDefault(identifier, nameof(identifier));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(dataType, nameof(dataType));
+            Debug.NotDefault(lastDataTime, nameof(lastDataTime));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.SymbolBarSpec = symbolBarSpec;
-            this.LastBarTime = lastBarTime;
+            this.DataType = dataType;
+            this.LastDataTime = lastDataTime;
         }
 
         /// <summary>
         /// Gets the messages symbol bar specification.
         /// </summary>
-        public SymbolBarSpec SymbolBarSpec { get; }
+        public T DataType { get; }
 
         /// <summary>
         /// Gets the messages last bar time.
         /// </summary>
-        public ZonedDateTime LastBarTime { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="MarketDataPersisted"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(MarketDataPersisted)}-{this.Id}";
+        public ZonedDateTime LastDataTime { get; }
     }
 }

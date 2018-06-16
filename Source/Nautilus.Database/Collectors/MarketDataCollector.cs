@@ -22,7 +22,9 @@ namespace Nautilus.Database.Collectors
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Enums;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -61,7 +63,7 @@ namespace Nautilus.Database.Collectors
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData>(msg => this.OnMessage(msg));
             this.Receive<DataStatusResponse>(msg => this.OnMessage(msg));
-            this.Receive<MarketDataPersisted>(msg => this.OnMessage(msg));
+            this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(StartSystem message)
@@ -94,7 +96,7 @@ namespace Nautilus.Database.Collectors
 //                    Thread.Sleep(TimeSpan.FromSeconds(30));
 
                     Context.Parent.Tell(
-                        new MarketDataDelivery(
+                        new DataDelivery<BarDataFrame>(
                             csvQuery.Value,
                             Guid.NewGuid(),
                             this.TimeNow()),
@@ -135,11 +137,11 @@ namespace Nautilus.Database.Collectors
                 $"no persisted bar timestamp");
         }
 
-        private void OnMessage(MarketDataPersisted message)
+        private void OnMessage(DataPersisted<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.lastPersistedBarTime = message.LastBarTime;
+            this.lastPersistedBarTime = message.LastDataTime;
         }
     }
 }

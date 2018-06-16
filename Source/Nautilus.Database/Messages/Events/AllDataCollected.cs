@@ -44,11 +44,5 @@ namespace Nautilus.Database.Messages.Events
         /// Gets the messages symbol bar specification.
         /// </summary>
         public SymbolBarSpec SymbolBarSpec { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="AllDataCollected"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(AllDataCollected)}-{this.Id}";
     }
 }

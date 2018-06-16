@@ -12,43 +12,36 @@ namespace Nautilus.Database.Messages
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>
-    /// A delivery message of new market data.
+    /// A delivery message of new data.
     /// </summary>
     [Immutable]
-    public sealed class MarketDataDelivery : Message
+    public sealed class DataDelivery<T> : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketDataDelivery"/> class.
+        /// Initializes a new instance of the <see cref="DataDelivery{T}"/> class.
         /// </summary>
-        /// <param name="barData">The message market data.</param>
+        /// <param name="data">The message data.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        public MarketDataDelivery(
-            BarDataFrame barData,
+        public DataDelivery(
+            T data,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(barData, nameof(barData));
-            Validate.NotDefault(identifier, nameof(barData));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(data, nameof(data));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.BarData = barData;
+            this.Data = data;
         }
 
         /// <summary>
         /// Gets the messages market data.
         /// </summary>
-        public BarDataFrame BarData { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="MarketDataDelivery"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(MarketDataDelivery)}-{this.Id}";
+        public T Data { get; }
     }
 }

@@ -17,7 +17,7 @@ namespace Nautilus.Database.Messages
     [Immutable]
     public abstract class QueryMessage : Message
     {
-        /// <exception cref="T:Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
+
         protected QueryMessage(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

@@ -41,11 +41,5 @@ namespace Nautilus.Database.Messages.Commands
         /// Gets the command messages data type.
         /// </summary>
         public DataType DataType { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="CollectData"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(CollectData)}-{this.Id}";
     }
 }

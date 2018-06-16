@@ -28,6 +28,7 @@ namespace Nautilus.Database
     using Nautilus.Database.Messages.Queries;
     using Nautilus.Database.Orchestration;
     using Nautilus.Database.Readers;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -86,8 +87,8 @@ namespace Nautilus.Database
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData>(msg => this.OnMessage(msg));
-            this.Receive<MarketDataDelivery>(msg => this.OnMessage(msg));
-            this.Receive<MarketDataPersisted>(msg => this.OnMessage(msg));
+            this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
+            this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
             this.Receive<AllDataCollected>(msg => this.OnMessage(msg));
         }
 
@@ -124,15 +125,15 @@ namespace Nautilus.Database
         }
 
         // TODO: Refactor this.
-        private void OnMessage(MarketDataDelivery message)
+        private void OnMessage(DataDelivery<BarDataFrame> message)
         {
             Debug.NotNull(message, nameof(message));
 
             if (this.barDataProvider.IsBarDataCheckOn)
             {
                 var result = BarDataChecker.CheckBars(
-                    message.BarData.SymbolBarSpec,
-                    message.BarData.Bars);
+                    message.Data.SymbolBarSpec,
+                    message.Data.Bars);
 
                 if (result.IsSuccess)
                 {
@@ -161,12 +162,12 @@ namespace Nautilus.Database
             this.databaseTaskActorRef.Forward(message);
         }
 
-        private void OnMessage(MarketDataPersisted message)
+        private void OnMessage(DataPersisted<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.DictionaryContainsKey(message.SymbolBarSpec, nameof(message.SymbolBarSpec.BarSpecification), this.marketDataCollectors);
+            Debug.DictionaryContainsKey(message.DataType, nameof(message.DataType.BarSpecification), this.marketDataCollectors);
 
-            this.marketDataCollectors[message.SymbolBarSpec].Tell(message);
+            this.marketDataCollectors[message.DataType].Tell(message);
         }
 
         private void OnMessage(AllDataCollected message)

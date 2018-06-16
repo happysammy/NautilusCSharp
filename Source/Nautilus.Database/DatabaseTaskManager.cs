@@ -57,7 +57,7 @@ namespace Nautilus.Database
             this.economicEventRepository = economicEventRepository;
 
             this.Receive<DataStatusRequest>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<MarketDataDelivery>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<MarketDataQueryRequest>(msg => this.OnMessage(msg, this.Sender));
         }
 
@@ -70,20 +70,20 @@ namespace Nautilus.Database
             sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
         }
 
-        private void OnMessage(MarketDataDelivery message, IActorRef sender)
+        private void OnMessage(DataDelivery<BarDataFrame> message, IActorRef sender)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var symbolBarData = message.BarData.SymbolBarSpec;
-            var result = this.barRepository.Add(message.BarData);
+            var symbolBarData = message.Data.SymbolBarSpec;
+            var result = this.barRepository.Add(message.Data);
             this.Log.Result(result);
 
             var lastBarTimeQuery = this.barRepository.LastBarTimestamp(symbolBarData);
 
             if (result.IsSuccess && lastBarTimeQuery.IsSuccess && lastBarTimeQuery.Value != default(ZonedDateTime))
             {
-                this.Sender.Tell(new MarketDataPersisted(
+                this.Sender.Tell(new DataPersisted<SymbolBarSpec>(
                     symbolBarData,
                     lastBarTimeQuery.Value,
                     this.NewGuid(),
