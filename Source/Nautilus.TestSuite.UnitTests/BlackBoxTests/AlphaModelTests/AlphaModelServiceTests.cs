@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.Common.MessageStore;
-    using Nautilus.Data.Messages;
+    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;

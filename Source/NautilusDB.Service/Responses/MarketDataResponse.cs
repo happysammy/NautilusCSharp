@@ -9,7 +9,7 @@
 namespace NautilusDB.Service.Responses
 {
     using Nautilus.Core.Validation;
-    using Nautilus.Data.Types;
+    using Nautilus.Database.Types;
     using ServiceStack;
 
     [Api("Market Data Response")]

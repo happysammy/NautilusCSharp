@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
 {
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Data.Types;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using Newtonsoft.Json;
     using NodaTime;

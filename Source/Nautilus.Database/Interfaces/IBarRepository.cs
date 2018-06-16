@@ -10,7 +10,7 @@ namespace Nautilus.Database.Interfaces
 {
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Types;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

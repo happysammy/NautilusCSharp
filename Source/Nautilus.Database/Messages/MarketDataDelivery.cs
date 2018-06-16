@@ -12,7 +12,7 @@ namespace Nautilus.Database.Messages
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Data.Types;
+    using Nautilus.Database.Types;
     using NodaTime;
 
     /// <summary>

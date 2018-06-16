@@ -18,7 +18,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Data.Messages;
+    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

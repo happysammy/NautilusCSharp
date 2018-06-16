@@ -23,8 +23,8 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Data;
-    using Nautilus.Data.Messages;
+    using Nautilus.Database.Aggregators;
+    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler;

@@ -19,7 +19,7 @@ namespace Nautilus.Database.Readers
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Data.Types;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

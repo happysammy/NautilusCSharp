@@ -16,8 +16,8 @@ namespace NautilusDB.Service
     using System.Linq;
     using Nautilus.Core.Extensions;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Types;
     using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.Entities;
 
     /// <summary>

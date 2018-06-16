@@ -12,11 +12,16 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
+    <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="7.1.1" />
     <PackageReference Include="ServiceStack" Version="5.1.0" />
     <PackageReference Include="ServiceStack.Text" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Quartz, Version=3.0.5.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\quartz\3.0.5\lib\netstandard2.0\Quartz.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

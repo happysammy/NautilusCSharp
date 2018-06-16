@@ -15,7 +15,8 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Data.Messages;
+    using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

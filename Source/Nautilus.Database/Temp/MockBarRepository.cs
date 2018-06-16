@@ -3,8 +3,8 @@
 namespace Nautilus.Database.Temp
 {
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Types;
     using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Types;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
