@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Types
+namespace Nautilus.Database.Types
 {
     using System.Linq;
     using Nautilus.Core.Annotations;

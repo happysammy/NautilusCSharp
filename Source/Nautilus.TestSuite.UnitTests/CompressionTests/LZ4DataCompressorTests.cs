@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.CompressionTests
+namespace Nautilus.TestSuite.UnitTests.CompressionTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Compression;

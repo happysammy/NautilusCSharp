@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages
+namespace Nautilus.Database.Messages.Commands
 {
     using System;
     using Nautilus.Common.Messaging;

@@ -8,4 +8,7 @@
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages" />
+  </ItemGroup>
 </Project>

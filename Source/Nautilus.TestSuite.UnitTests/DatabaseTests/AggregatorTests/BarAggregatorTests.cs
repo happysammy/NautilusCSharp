@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System;
     using System.Collections.Generic;

@@ -40,7 +40,6 @@
     <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DatabaseTests\CoreTests" />
     <Folder Include="SchedulerTests" />
   </ItemGroup>
 </Project>

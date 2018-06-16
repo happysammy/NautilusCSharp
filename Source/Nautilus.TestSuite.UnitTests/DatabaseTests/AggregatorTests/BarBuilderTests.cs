@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data;

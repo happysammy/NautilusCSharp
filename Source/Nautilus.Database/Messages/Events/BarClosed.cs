@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages
+namespace Nautilus.Database.Messages.Events
 {
     using System;
     using Nautilus.Core;
@@ -20,6 +20,15 @@ namespace Nautilus.Data.Messages
     [Immutable]
     public sealed class BarClosed : Event
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarClosed"/> message.
+        /// </summary>
+        /// <param name="symbol">The message symbol.</param>
+        /// <param name="barSpecification">the message bar specification.</param>
+        /// <param name="bar">The message bar.</param>
+        /// <param name="lastTick">The message last tick.</param>
+        /// <param name="averageSpread">The message average spread.</param>
+        /// <param name="id">The message identifier.</param>
         public BarClosed(
             Symbol symbol,
             BarSpecification barSpecification,
