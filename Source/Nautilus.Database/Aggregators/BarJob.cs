@@ -19,7 +19,7 @@ namespace Nautilus.Database.Aggregators
     /// Represents a bar job for the given symbol and bar specification (to close a bar).
     /// </summary>
     [Immutable]
-    public class BarJob : ValueObject<BarJob>, IEquatable<BarJob>
+    public sealed class BarJob : ValueObject<BarJob>, IEquatable<BarJob>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarJob"/> class.
