@@ -26,9 +26,6 @@ namespace Nautilus.Data
     using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
-    using Quartz.Spi;
-    using Quartz.Xml.JobSchedulingData20;
-    using Scheduler;
 
     /// <summary>
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
@@ -157,7 +154,7 @@ namespace Nautilus.Data
                 this.triggerCounts[duration]++;
 
                 Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                          $"(count={this.triggerCounts[duration]}).");
+                          $"duration (count={this.triggerCounts[duration]}).");
             }
         }
 
@@ -179,7 +176,9 @@ namespace Nautilus.Data
                 {
                     this.triggerCounts[barSpec.Duration]--;
 
-                    Log.Debug($"Subtracting trigger count from durations (count={this.triggerCounts[barSpec.Duration]}).");
+                    Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+                              $"duration (count={this.triggerCounts[barSpec.Duration]}).");
+
                     if (this.triggerCounts[barSpec.Duration] <= 0)
                     {
                         var job = this.barJobs[barSpec.Duration];
@@ -268,7 +267,7 @@ namespace Nautilus.Data
                 this.barAggregators[job.Symbol].Tell(closeBar);
 
                 // Log for unit testing only.
-                Log.Debug($"Received {job} at {DateTime.UtcNow.Millisecond}.");
+                Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
                 return;
             }
 

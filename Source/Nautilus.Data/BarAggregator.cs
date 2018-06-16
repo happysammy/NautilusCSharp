@@ -19,13 +19,16 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
     /// </summary>
     public sealed class BarAggregator : ActorComponentBase
     {
+        private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
         private readonly Symbol symbol;
+        private readonly SpreadAnalyzer spreadAnalyzer;
         private readonly IDictionary<BarSpecification, BarBuilder> barBuilders;
 
         private Tick lastTick;
@@ -53,6 +56,7 @@ namespace Nautilus.Data
             Validate.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;
+            this.spreadAnalyzer = new SpreadAnalyzer(0.00001m);  // TODO: Hardcoded ticksize.
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
             this.SetupCommandMessageHandling();
@@ -108,6 +112,7 @@ namespace Nautilus.Data
                 }
             }
 
+            this.spreadAnalyzer.Update(tick);
             this.lastTick = tick;
         }
 
@@ -120,9 +125,16 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
+            var barSpec = message.BarSpecification;
+
+            if (barSpec.Duration == OneMinuteDuration)
+            {
+                this.spreadAnalyzer.OnBarUpdate(message.CloseTime);
+            }
+
             if (this.barBuilders.ContainsKey(message.BarSpecification))
             {
-                var barSpec = message.BarSpecification;
+
                 var builder = this.barBuilders[barSpec];
 
                 // No ticks have been received by the builder.
@@ -138,6 +150,7 @@ namespace Nautilus.Data
                     barSpec,
                     bar,
                     this.lastTick,
+                    this.spreadAnalyzer.AverageSpread,
                     this.NewGuid());
                 Context.Parent.Tell(barClosed);
 

@@ -13,7 +13,6 @@ namespace Nautilus.Data.Messages
     using Nautilus.Core.Validation;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// The event where a trade bar was closed.
@@ -26,18 +25,21 @@ namespace Nautilus.Data.Messages
             BarSpecification barSpecification,
             Bar bar,
             Tick lastTick,
+            decimal averageSpread,
             Guid id) : base(id, bar.Timestamp)
         {
             Debug.NotNull(symbol, nameof(symbol));
             Debug.NotNull(barSpecification, nameof(barSpecification));
             Debug.NotNull(bar, nameof(bar));
             Debug.NotNull(lastTick, nameof(lastTick));
+            Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue);
             Debug.NotDefault(id, nameof(id));
 
             this.Symbol = symbol;
             this.BarSpecification = barSpecification;
             this.Bar = bar;
             this.LastTick = lastTick;
+            this.AverageSpread = averageSpread;
         }
 
         /// <summary>
@@ -59,5 +61,10 @@ namespace Nautilus.Data.Messages
         /// Gets the last tick at bar close.
         /// </summary>
         public Tick LastTick { get; }
+
+        /// <summary>
+        /// Gets the messages average spread;
+        /// </summary>
+        public decimal AverageSpread { get; }
     }
 }

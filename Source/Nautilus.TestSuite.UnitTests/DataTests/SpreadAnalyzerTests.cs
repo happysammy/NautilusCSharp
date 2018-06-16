@@ -43,8 +43,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests
             Assert.Equal(0.80000m, this.spreadAnalyzer.CurrentBid.Value);
             Assert.Equal(0.80005m, this.spreadAnalyzer.CurrentAsk.Value);
             Assert.Equal(0.00005m, this.spreadAnalyzer.CurrentSpread);
-            Assert.Equal(0.00005m, this.spreadAnalyzer.MaxSpread.Item2);
-            Assert.Equal(0.00005m, this.spreadAnalyzer.MinSpread.Item2);
+            Assert.Equal(0.00005m, this.spreadAnalyzer.MaxSpread.Spread);
+            Assert.Equal(0.00005m, this.spreadAnalyzer.MinSpread.Spread);
             Assert.Equal(0.00005m, this.spreadAnalyzer.AverageSpread);
         }
 

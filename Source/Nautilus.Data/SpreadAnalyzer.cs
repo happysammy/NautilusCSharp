@@ -17,7 +17,7 @@ namespace Nautilus.Data
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="SpreadAnalyzer"/> class.
+    /// Provides spread analysis for ticks.
     /// </summary>
     public sealed class SpreadAnalyzer
     {
@@ -90,16 +90,22 @@ namespace Nautilus.Data
             this.CurrentBid = tick.Bid;
             this.CurrentAsk = tick.Ask;
 
-            this.thisBarsSpreads.Add(this.CurrentSpread);
+            var spread = this.CurrentSpread;
+            this.thisBarsSpreads.Add(spread);
 
-            if (this.CurrentSpread > this.MaxSpread.Spread)
+            if (spread < decimal.Zero)
             {
-                this.MaxSpread = (tick.Timestamp, this.CurrentSpread);
+                this.negativeSpreads.Add(tick.Timestamp, spread);
             }
 
-            if (this.CurrentSpread < this.MinSpread.Spread)
+            if (spread > this.MaxSpread.Spread)
             {
-                this.MinSpread = (tick.Timestamp, this.CurrentSpread);
+                this.MaxSpread = (tick.Timestamp, spread);
+            }
+
+            if (spread < this.MinSpread.Spread)
+            {
+                this.MinSpread = (tick.Timestamp, spread);
             }
 
             if (this.totalAverageSpreads.Count == 0)

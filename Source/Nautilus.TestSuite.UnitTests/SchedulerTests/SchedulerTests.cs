@@ -47,8 +47,8 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(11));
             quartzActor.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
             ExpectMsg<JobRemoved>();
-            Thread.Sleep(TimeSpan.FromSeconds(10));
-            probe.ExpectNoMsg(TimeSpan.FromSeconds(10));
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
             Sys.Stop(quartzActor);
         }
 

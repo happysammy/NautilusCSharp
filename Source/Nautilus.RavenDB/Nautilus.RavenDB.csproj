@@ -9,7 +9,7 @@
     <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.RavenDB.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RavenDB.Client" Version="4.0.3" />
+    <PackageReference Include="RavenDB.Client" Version="4.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
