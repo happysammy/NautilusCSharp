@@ -13,9 +13,9 @@ namespace NautilusDB.Service.Responses
     using ServiceStack;
 
     [Api("Market Data Response")]
-    public class MarketDataResponse
+    public class BarDataResponse
     {
-        public MarketDataResponse(
+        public BarDataResponse(
             bool isSuccess,
             string message,
             BarDataFrame barData)

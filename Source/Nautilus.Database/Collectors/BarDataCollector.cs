@@ -9,7 +9,6 @@
 namespace Nautilus.Database.Collectors
 {
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages;
     using Nautilus.Database.Messages.Commands;
@@ -21,6 +20,7 @@ namespace Nautilus.Database.Collectors
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
@@ -30,27 +30,27 @@ namespace Nautilus.Database.Collectors
     /// <summary>
     /// Represents a market data collector.
     /// </summary>
-    public class MarketDataCollector : ActorComponentBase
+    public class BarDataCollector : ActorComponentBase
     {
         private readonly IBarDataReader dataReader;
         private readonly DataCollectionSchedule collectionSchedule;
         private Option<ZonedDateTime?> lastPersistedBarTime;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketDataCollector"/> class.
+        /// Initializes a new instance of the <see cref="BarDataCollector"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="dataReader">The bar data reader.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
-        public MarketDataCollector(
+        public BarDataCollector(
             DatabaseSetupContainer container,
             IMessagingAdapter messagingAdapter,
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
             : base(
                 DatabaseService.DataCollection,
-                LabelFactory.Component($"{nameof(MarketDataCollector)}-{dataReader.SymbolBarSpec}"),
+                LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.SymbolBarSpec}"),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -61,8 +61,8 @@ namespace Nautilus.Database.Collectors
             this.collectionSchedule = collectionSchedule;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
-            this.Receive<CollectData>(msg => this.OnMessage(msg));
-            this.Receive<DataStatusResponse>(msg => this.OnMessage(msg));
+            this.Receive<CollectData<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<DataStatusResponse<ZonedDateTime>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
         }
 
@@ -71,7 +71,7 @@ namespace Nautilus.Database.Collectors
             Debug.NotNull(message, nameof(message));
         }
 
-        private void OnMessage(CollectData message)
+        private void OnMessage(CollectData<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -79,7 +79,7 @@ namespace Nautilus.Database.Collectors
             {
                 this.Log.Warning($"No csv files found for {this.dataReader.SymbolBarSpec}");
 
-                Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
+                Context.Parent.Tell(new DataCollected<SymbolBarSpec>(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
 
                 return;
             }
@@ -114,26 +114,26 @@ namespace Nautilus.Database.Collectors
                 }
             }
 
-            Context.Parent.Tell(new AllDataCollected(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
+            Context.Parent.Tell(new DataCollected<SymbolBarSpec>(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
         }
 
-        private void OnMessage(DataStatusResponse message)
+        private void OnMessage(DataStatusResponse<ZonedDateTime> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            if (message.LastTimestampQueryResult.IsSuccess)
+            if (message.LastTimestampQuery.IsSuccess)
             {
-                this.lastPersistedBarTime = message.LastTimestampQueryResult.Value;
+                this.lastPersistedBarTime = message.LastTimestampQuery.Value;
 
                 this.Log.Debug(
-                    $"From {nameof(DataStatusResponse)} " +
+                    $"From {nameof(DataStatusResponse<ZonedDateTime>)} " +
                     $"updated last persisted bar timestamp to {this.lastPersistedBarTime.Value.ToIsoString()}");
 
                 return;
             }
 
             this.Log.Debug(
-                $"From {nameof(DataStatusResponse)} " +
+                $"From {nameof(DataStatusResponse<ZonedDateTime>)} " +
                 $"no persisted bar timestamp");
         }
 

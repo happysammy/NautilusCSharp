@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+    using System.Threading.Tasks;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Scheduler;
@@ -45,13 +46,15 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
 
             // Act
-            // Assert
             scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/10 * * * * ?").Build()));
+
+            // Assert
             var jobCreated = ExpectMsg<JobCreated>();
             probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(11));
             scheduler.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
             ExpectMsg<JobRemoved>();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+
+            Task.Delay(1000);
             probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
             Sys.Stop(scheduler);
         }
@@ -66,6 +69,9 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Act
             // Assert
             scheduler.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
+            Task.Delay(1000);
+
+            // Assert
             var failure=ExpectMsg<RemoveJobFail>();
             Assert.IsType<JobNotFoundException>(failure.Reason);
             Sys.Stop(scheduler);

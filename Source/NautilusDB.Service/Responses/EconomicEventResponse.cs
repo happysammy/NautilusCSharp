@@ -10,9 +10,9 @@ namespace NautilusDB.Service.Responses
 {
     using Nautilus.Database.Types;
 
-    public class NewsEventResponse
+    public class EconomicEventResponse
     {
-        public NewsEventResponse(
+        public EconomicEventResponse(
             bool isSuccess,
             string message,
             EconomicEventFrame economicEvents)

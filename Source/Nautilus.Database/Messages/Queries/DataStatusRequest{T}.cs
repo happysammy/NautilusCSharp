@@ -10,41 +10,36 @@ namespace Nautilus.Database.Messages.Queries
 {
     using System;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
     /// The data status request message.
     /// </summary>
-    public sealed class DataStatusRequest : Message
+    public sealed class DataStatusRequest<T> : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataStatusRequest"/> message.
+        /// Initializes a new instance of the <see cref="DataStatusRequest{T}"/> message.
         /// </summary>
-        /// <param name="symbolBarSpec">The message symbol bar specification.</param>
+        /// <param name="dataType">The message symbol bar specification.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public DataStatusRequest(
-            SymbolBarSpec symbolBarSpec,
+            T dataType,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Debug.NotNull(dataType, nameof(dataType));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.SymbolBarSpec = symbolBarSpec;
+            this.DataType = dataType;
         }
 
         /// <summary>
-        /// Gets the request messages <see cref="BarSpecification"/>.
+        /// Gets the request messages data type..
         /// </summary>
-        public SymbolBarSpec SymbolBarSpec { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="StartSystem"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(DataStatusRequest)}-{this.Id}";
+        public T DataType { get; }
     }
 }

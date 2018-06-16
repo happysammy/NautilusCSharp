@@ -14,7 +14,7 @@ namespace NautilusDB.Service.Requests
     using ServiceStack;
     using Nautilus.DomainModel.Enums;
 
-    public class NewsEventRequest : IReturn<NewsEventResponse>
+    public class EconomicEventRequest : IReturn<EconomicEventResponse>
     {
         public IList<CurrencyCode> Symbols { get; private set; }
 

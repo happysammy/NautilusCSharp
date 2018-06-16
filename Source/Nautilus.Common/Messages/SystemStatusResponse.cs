@@ -13,6 +13,7 @@ namespace Nautilus.Common.Messages
     using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -30,7 +31,7 @@ namespace Nautilus.Common.Messages
         /// <param name="timestamp">The timestamp.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public SystemStatusResponse(
-            string componentName,
+            Label componentName,
             SystemStatus status,
             Guid identifier,
             ZonedDateTime timestamp)
@@ -47,7 +48,7 @@ namespace Nautilus.Common.Messages
         /// <summary>
         /// Gets the messages component name.
         /// </summary>
-        public string ComponentName { get; }
+        public Label ComponentName { get; }
 
         /// <summary>
         /// Gets the messages system status.

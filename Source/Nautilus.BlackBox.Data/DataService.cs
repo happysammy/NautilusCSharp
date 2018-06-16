@@ -22,9 +22,9 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler;
@@ -77,8 +77,8 @@ namespace Nautilus.BlackBox.Data
         private void SetupCommandMessageHandling()
         {
             this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
-            this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
-            this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
         }
 
@@ -88,40 +88,44 @@ namespace Nautilus.BlackBox.Data
         /// <see cref="MarketDataPort"/>. Then subscribes to the market data for the symbol and exchange.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void OnMessage(SubscribeBarData message)
+        private void OnMessage(Subscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(this.brokerageGateway, nameof(this.brokerageGateway));
 
             this.Execute(() =>
             {
-                Validate.DictionaryDoesNotContainKey(message.Symbol, nameof(message.Symbol), this.marketDataProcessorIndex.ToImmutableDictionary());
+                var symbol = message.DataType.Symbol;
 
-                var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
-                var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
-                var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
-                    this.storedContainer,
-                    this.GetMessagingAdapter(),
-                    barReceivers,
-                    schedulerRef,
-                    BlackBoxService.Data)));
+                if (!this.marketDataProcessorIndex.ContainsKey(symbol))
+                {
+                    var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
+                    var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
+                    var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
+                        this.storedContainer,
+                        this.GetMessagingAdapter(),
+                        barReceivers,
+                        schedulerRef,
+                        BlackBoxService.Data)));
 
-                this.marketDataProcessorIndex.Add(message.Symbol, marketDataProcessorRef);
-                this.marketDataProcessorIndex[message.Symbol].Tell(message, this.Self);
-                this.marketDataPortRef.Tell(new MarketDataProcessorIndexUpdate(this.marketDataProcessorIndex, this.NewGuid(), this.TimeNow()));
-                this.brokerageGateway.RequestMarketDataSubscribe(message.Symbol);
+                    this.marketDataProcessorIndex.Add(symbol, marketDataProcessorRef);
+                    this.marketDataProcessorIndex[symbol].Tell(message, this.Self);
+                    this.marketDataPortRef.Tell(new MarketDataProcessorIndexUpdate(this.marketDataProcessorIndex, this.NewGuid(), this.TimeNow()));
+                    this.brokerageGateway.RequestMarketDataSubscribe(symbol);
+                }
             });
         }
 
-        private void OnMessage(UnsubscribeBarData message)
+        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
             this.Execute(() =>
             {
-                Validate.DictionaryContainsKey(message.Symbol, nameof(this.marketDataProcessorIndex), this.marketDataProcessorIndex.ToImmutableDictionary());
+                var symbol = message.DataType.Symbol;
 
-                this.marketDataProcessorIndex[message.Symbol].Tell(message, this.Self);
+                if (this.marketDataProcessorIndex.ContainsKey(symbol))
+                this.marketDataProcessorIndex[symbol].Tell(message, this.Self);
             });
         }
 

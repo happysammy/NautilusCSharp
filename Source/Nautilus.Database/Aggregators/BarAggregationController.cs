@@ -17,6 +17,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Messages.Commands;
@@ -86,8 +87,8 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         private void SetupCommandMessageHandling()
         {
-            this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
-            this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
             this.Receive<JobRemoved>(msg => this.OnMessage(msg));
             this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
@@ -109,54 +110,54 @@ namespace Nautilus.Database.Aggregators
         /// <see cref="Akka.Actor.IScheduler"/>.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(SubscribeBarData message)
+        private void OnMessage(Subscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            if (!this.barAggregators.ContainsKey(message.Symbol))
+            var symbol = message.DataType.Symbol;
+            var barSpec = message.DataType.BarSpecification;
+
+            if (!this.barAggregators.ContainsKey(symbol))
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new BarAggregator(
                     this.storedContainer,
                     this.Service,
-                    message.Symbol)));
+                    symbol)));
 
-                this.barAggregators.Add(message.Symbol, barAggregatorRef);
+                this.barAggregators.Add(message.DataType.Symbol, barAggregatorRef);
             }
 
-            this.barAggregators[message.Symbol].Tell(message);
+            this.barAggregators[symbol].Tell(message);
 
-            foreach (var barSpec in message.BarSpecifications)
+            var duration = barSpec.Duration;
+
+            if (!this.triggers.ContainsKey(duration))
             {
-                var duration = barSpec.Duration;
+                var trigger = this.CreateTrigger(barSpec);
+                this.triggers.Add(duration, trigger);
 
-                if (!this.triggers.ContainsKey(duration))
+                if (!this.barJobs.ContainsKey(duration))
                 {
-                    var trigger = this.CreateTrigger(barSpec);
-                    this.triggers.Add(duration, trigger);
+                    var barJob = new BarJob(symbol, barSpec);
 
-                    if (!this.barJobs.ContainsKey(duration))
-                    {
-                        var barJob = new BarJob(message.Symbol, barSpec);
+                    var createJob = new CreateJob(
+                        this.Self,
+                        barJob,
+                        this.triggers[duration]);
 
-                        var createJob = new CreateJob(
-                            this.Self,
-                            barJob,
-                            this.triggers[duration]);
-
-                        this.schedulerRef.Tell(createJob);
-                    }
+                    this.schedulerRef.Tell(createJob);
                 }
-
-                if (!this.triggerCounts.ContainsKey(duration))
-                {
-                    this.triggerCounts.Add(duration, 0);
-                }
-
-                this.triggerCounts[duration]++;
-
-                Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                          $"duration (count={this.triggerCounts[duration]}).");
             }
+
+            if (!this.triggerCounts.ContainsKey(duration))
+            {
+                this.triggerCounts.Add(duration, 0);
+            }
+
+            this.triggerCounts[duration]++;
+
+            Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+                      $"duration (count={this.triggerCounts[duration]}).");
         }
 
         /// <summary>
@@ -164,31 +165,38 @@ namespace Nautilus.Database.Aggregators
         /// forwarding the message to the <see cref="BarAggregator"/> for the symbol.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(UnsubscribeBarData message)
+        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.CollectionContains(message.Symbol, nameof(message.Symbol), this.barAggregators.Keys.ToList().AsReadOnly());
 
-            this.barAggregators[message.Symbol].Tell(message);
+            var symbol = message.DataType.Symbol;
+            var barSpec = message.DataType.BarSpecification;
 
-            foreach (var barSpec in message.BarSpecifications)
+            if (!this.barAggregators.ContainsKey(symbol))
             {
-                if (this.triggerCounts.ContainsKey(barSpec.Duration))
-                {
-                    this.triggerCounts[barSpec.Duration]--;
-
-                    Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                              $"duration (count={this.triggerCounts[barSpec.Duration]}).");
-
-                    if (this.triggerCounts[barSpec.Duration] <= 0)
-                    {
-                        var job = this.barJobs[barSpec.Duration];
-                        var removeJob = new RemoveJob(job.Key, job.Value, "null job");
-
-                        this.schedulerRef.Tell(removeJob);
-                    }
-                }
+                return;
             }
+
+            this.barAggregators[symbol].Tell(message);
+
+            if (!this.triggerCounts.ContainsKey(barSpec.Duration))
+            {
+                return;
+            }
+
+            this.triggerCounts[barSpec.Duration]--;
+
+            this.Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+                           $"duration (count={this.triggerCounts[barSpec.Duration]}).");
+
+            if (this.triggerCounts[barSpec.Duration] <= 0)
+            {
+                var job = this.barJobs[barSpec.Duration];
+                var removeJob = new RemoveJob(job.Key, job.Value, "null job");
+
+                this.schedulerRef.Tell(removeJob);
+            }
+
         }
 
         private void OnMessage(JobCreated message)

@@ -11,8 +11,8 @@ using ServiceStack;
 
 namespace NautilusDB.Service.Requests
 {
-    [Api("Market Data Request")]
-    public class MarketDataRequest : IReturn<MarketDataResponse>
+    [Api("Bar Data Request")]
+    public class BarDataRequest : IReturn<BarDataResponse>
     {
         [ApiMember(Name = "Symbol", Description = "Ticker (no /)", IsRequired = true)]
         public string Symbol { get; private set; }

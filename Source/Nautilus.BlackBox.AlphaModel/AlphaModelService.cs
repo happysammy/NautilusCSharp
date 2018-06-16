@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Events;
@@ -112,9 +113,8 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.NewGuid(),
                     this.TimeNow());
 
-                var registerSymbolDataType = new SubscribeBarData(
-                    message.Strategy.Instrument.Symbol,
-                    new List<BarSpecification>{message.Strategy.TradeProfile.BarSpecification},
+                var registerSymbolDataType = new Subscribe<SymbolBarSpec>(
+                    symbolBarSpec,
                     this.NewGuid(),
                     this.TimeNow());
 

@@ -8,9 +8,9 @@
 
 namespace Nautilus.Database.Collectors
 {
-    public class EconomicNewsEventCollector
+    public class EconomicEventCollector
     {
-        public EconomicNewsEventCollector()
+        public EconomicEventCollector()
         {
 
         }

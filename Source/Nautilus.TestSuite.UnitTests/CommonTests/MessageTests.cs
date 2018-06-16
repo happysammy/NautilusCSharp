@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messages;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
@@ -24,13 +25,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             var message1 = new SystemStatusResponse(
-                nameof(ServiceContext.CommandBus),
+                LabelFactory.Service(ServiceContext.CommandBus),
                 SystemStatus.OK,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new SystemStatusResponse(
-                nameof(ServiceContext.CommandBus),
+                LabelFactory.Service(ServiceContext.CommandBus),
                 SystemStatus.OK,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -60,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var result = message.ToString();
 
             // Assert
-            Assert.Equal(nameof(SystemStatusRequest), result);
+            Assert.Equal($"{nameof(SystemStatusRequest)}", result);
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var guid = Guid.NewGuid();
             var message = new SystemStatusResponse(
-                nameof(ServiceContext.CommandBus),
+                LabelFactory.Service(ServiceContext.CommandBus),
                 SystemStatus.OK,
                 guid,
                 StubZonedDateTime.UnixEpoch());
@@ -78,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var result = message.ToString();
 
             // Assert
-            Assert.Equal($"{nameof(SystemStatusResponse)}-CommandBus=OK", result);
+            Assert.Equal($"{nameof(SystemStatusResponse)}-CommandBusService=OK", result);
         }
     }
 }

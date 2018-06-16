@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     using Nautilus.BlackBox.AlphaModel;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.MessageStore;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Enums;
@@ -158,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                typeof(SubscribeBarData),
+                typeof(Subscribe<SymbolBarSpec>),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

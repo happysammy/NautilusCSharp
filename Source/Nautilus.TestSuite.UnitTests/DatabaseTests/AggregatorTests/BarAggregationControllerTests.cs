@@ -16,8 +16,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Messages;
     using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler;
@@ -63,20 +63,22 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpecList = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
-            };
-            var subscribe = new SubscribeBarData(
-                symbol,
-                barSpecList,
+            var symbolBarSpec1 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+
+            var subscribe1 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe2 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe);
+            this.controllerRef.Tell(subscribe1);
+            this.controllerRef.Tell(subscribe2);
 
             LogDumper.Dump(this.logger, this.output);
             // Assert
@@ -87,29 +89,38 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpecList = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
-            };
-            var subscribe1 = new SubscribeBarData(
-                symbol1,
-                barSpecList,
+            var symbolBarSpec1 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+
+            var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
+            var symbolBarSpec3 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec4 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+
+            var subscribe1 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
+            var subscribe2 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec2,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
-            var subscribe2 = new SubscribeBarData(
-                symbol2,
-                barSpecList,
+            var subscribe3 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec3,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe4 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec4,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.controllerRef.Tell(subscribe1);
             this.controllerRef.Tell(subscribe2);
+            this.controllerRef.Tell(subscribe3);
+            this.controllerRef.Tell(subscribe4);
 
             LogDumper.Dump(this.logger, this.output);
             // Assert
@@ -119,33 +130,29 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenUnsubscribeBarDataMessage_RemovesJobs()
         {
             // Arrange
-            //this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
             var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpecList1 = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
-            };
-            var subscribe = new SubscribeBarData(
-                symbol,
-                barSpecList1,
+            var symbolBarSpec1 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+
+            var subscribe1 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var barSpecList2 = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-            };
-            var unsubscribe = new UnsubscribeBarData(
-                symbol,
-                barSpecList2,
+            var subscribe2 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe = new Unsubscribe<SymbolBarSpec>(
+                symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe);
-            Thread.Sleep(5000);
+            this.controllerRef.Tell(subscribe1);
+            this.controllerRef.Tell(subscribe2);
+            Thread.Sleep(2000);
             this.controllerRef.Tell(unsubscribe);
 
             LogDumper.Dump(this.logger, this.output);
@@ -156,70 +163,47 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenUnsubscribeBarDataMessage_WithMultipleJobsDoesNotRemoveTrigger()
         {
             // Arrange
-            //this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
-            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpecList1 = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
-            };
-            var subscribe1 = new SubscribeBarData(
-                symbol,
-                barSpecList1,
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
+            var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
+            var symbolBarSpec1 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
             var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
+            var symbolBarSpec3 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec4 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
-            var subscribe2 = new SubscribeBarData(
-                symbol2,
-                barSpecList1,
+            var subscribe1 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var barSpecList2 = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-            };
-            var unsubscribe = new UnsubscribeBarData(
-                symbol,
-                barSpecList2,
+            var subscribe2 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec2,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe3 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec3,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var subscribe4 = new Subscribe<SymbolBarSpec>(
+                symbolBarSpec4,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            var unsubscribe = new Unsubscribe<SymbolBarSpec>(
+                symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             this.controllerRef.Tell(subscribe1);
             this.controllerRef.Tell(subscribe2);
+            this.controllerRef.Tell(subscribe3);
+            this.controllerRef.Tell(subscribe4);
             Thread.Sleep(5000);
             this.controllerRef.Tell(unsubscribe);
 
-            LogDumper.Dump(this.logger, this.output);
-            // Assert
-        }
-
-        [Fact]
-        internal void GivenUnsubscribeBarDataMessage1_RemovesJobs()
-        {
-            // Arrange
-            //this.stubClock.FreezeSetTime(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(2200));
-            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpecList1 = new List<BarSpecification>
-            {
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
-            };
-            var subscribe = new SubscribeBarData(
-                symbol,
-                barSpecList1,
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            this.controllerRef.Tell(subscribe);
-
-            //Thread.Sleep(200000);
             LogDumper.Dump(this.logger, this.output);
             // Assert
         }

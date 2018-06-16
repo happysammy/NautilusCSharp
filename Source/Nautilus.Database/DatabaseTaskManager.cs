@@ -56,18 +56,18 @@ namespace Nautilus.Database
             this.barRepository = barRepository;
             this.economicEventRepository = economicEventRepository;
 
-            this.Receive<DataStatusRequest>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<DataStatusRequest<SymbolBarSpec>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<MarketDataQueryRequest>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<QueryRequest<SymbolBarSpec>>(msg => this.OnMessage(msg, this.Sender));
         }
 
-        private void OnMessage(DataStatusRequest message, IActorRef sender)
+        private void OnMessage(DataStatusRequest<SymbolBarSpec> message, IActorRef sender)
         {
             Debug.NotNull(message, nameof(message));
 
-            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.SymbolBarSpec);
+            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
 
-            sender.Tell(new DataStatusResponse(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
+            sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message, IActorRef sender)
@@ -91,24 +91,18 @@ namespace Nautilus.Database
             }
         }
 
-        private void OnMessage(MarketDataQueryRequest message, IActorRef sender)
+        private void OnMessage(QueryRequest<SymbolBarSpec> message, IActorRef sender)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var marketDataQuery = this.barRepository.Find(
-                new SymbolBarSpec(message.Symbol, message.BarSpecification),
+            var barDataQuery = this.barRepository.Find(
+                message.DataType,
                 message.FromDateTime,
                 message.ToDateTime);
 
-            var marketData = marketDataQuery.IsSuccess
-                           ? marketDataQuery.Value
-                           : Option<BarDataFrame>.None();
-
-                sender.Tell(new MarketDataQueryResponse(
-                    marketData,
-                    marketDataQuery.IsSuccess,
-                    marketDataQuery.Message,
+                sender.Tell(new QueryResponse<BarDataFrame>(
+                    barDataQuery,
                     this.NewGuid(),
                     this.TimeNow()));
         }

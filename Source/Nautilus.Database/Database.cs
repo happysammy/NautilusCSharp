@@ -14,6 +14,7 @@ namespace Nautilus.Database
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Messages;

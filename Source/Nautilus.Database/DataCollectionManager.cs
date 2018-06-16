@@ -19,6 +19,7 @@ namespace Nautilus.Database
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Database.Collectors;
     using Nautilus.Database.Integrity.Checkers;
     using Nautilus.Database.Interfaces;
@@ -31,6 +32,7 @@ namespace Nautilus.Database
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// The manager class which contains the separate data collector types and orchestrates their
@@ -42,7 +44,7 @@ namespace Nautilus.Database
         private readonly IActorRef databaseTaskActorRef;
         private readonly IBarDataProvider barDataProvider;
         private readonly Dictionary<SymbolBarSpec, IActorRef> marketDataCollectors;
-        private readonly EconomicNewsEventCollector newsEventCollector;
+        private readonly EconomicEventCollector eventCollector;
         private readonly DataCollectionSchedule collectionSchedule;
         private readonly DatabaseSetupContainer storedSetupContainer;
 
@@ -80,16 +82,16 @@ namespace Nautilus.Database
             this.databaseTaskActorRef = databaseTaskActorRef;
             this.barDataProvider = barDataProvider;
             this.marketDataCollectors = new Dictionary<SymbolBarSpec, IActorRef>();
-            this.newsEventCollector = new EconomicNewsEventCollector();
+            this.eventCollector = new EconomicEventCollector();
             this.collectionSchedule = collectionSchedule;
             this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
             this.storedSetupContainer = container;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
-            this.Receive<CollectData>(msg => this.OnMessage(msg));
+            this.Receive<CollectData<SymbolBarSpec>>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
-            this.Receive<AllDataCollected>(msg => this.OnMessage(msg));
+            this.Receive<DataCollected<SymbolBarSpec>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(StartSystem message)
@@ -102,26 +104,23 @@ namespace Nautilus.Database
             this.InitializeMarketDataCollectors();
         }
 
-        private void OnMessage(CollectData message)
+        private void OnMessage(CollectData<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            if (message.DataType == DataType.Bar)
+            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
+
+            foreach (var collector in this.marketDataCollectors.Keys)
             {
-                this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
-
-                foreach (var collector in this.marketDataCollectors.Keys)
-                {
-                    this.collectionJobsRoster.Add(collector, false);
-                }
-
-                var timeNow = this.TimeNow();
-                this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
-                this.Log.Information(
-                    $"Updated last collection time to {timeNow.ToIsoString()}.");
-
-                this.CollectMarketData();
+                this.collectionJobsRoster.Add(collector, false);
             }
+
+            var timeNow = this.TimeNow();
+            this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
+            this.Log.Information(
+                $"Updated last collection time to {timeNow.ToIsoString()}.");
+
+            this.CollectMarketData();
         }
 
         // TODO: Refactor this.
@@ -170,13 +169,13 @@ namespace Nautilus.Database
             this.marketDataCollectors[message.DataType].Tell(message);
         }
 
-        private void OnMessage(AllDataCollected message)
+        private void OnMessage(DataCollected<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.collectionJobsRoster[message.SymbolBarSpec] = true;
+            this.collectionJobsRoster[message.DataType] = true;
 
-            if (this.collectionJobsRoster.All(c => c.Value == true))
+            if (this.collectionJobsRoster.All(c => c.Value))
             {
                 this.Log.Information(
                     $"Data collection completed for {this.marketDataCollectors.Count} collectors...");
@@ -201,7 +200,7 @@ namespace Nautilus.Database
                     5);
 
                 var collectorRef = Context.ActorOf(Props.Create(
-                    () => new MarketDataCollector(
+                    () => new BarDataCollector(
                         this.storedSetupContainer,
                         this.GetMessagingAdapter(),
                         dataReader,
@@ -209,18 +208,22 @@ namespace Nautilus.Database
 
                 this.marketDataCollectors.Add(barSpec, collectorRef);
 
-                var message = new DataStatusRequest(barSpec, this.NewGuid(), this.TimeNow());
+                var message = new DataStatusRequest<SymbolBarSpec>(barSpec, this.NewGuid(), this.TimeNow());
 
-                var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
+                var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
                 this.Log.Debug($"Waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
 
                 if (dataStatusTask.IsCompleted)
                 {
-                    this.Log.Debug($"Received a DataStatusResponse for {barSpec} and sending to collector");
+                    this.Log.Debug($"Received a DataStatusResponse for {barSpec} and sending to collector.");
 
                     collectorRef.Tell(dataStatusTask.Result, this.Self);
+                }
+                else
+                {
+                    this.Log.Warning($"No response for DataStatusRequest.");
                 }
             }
 
@@ -229,8 +232,7 @@ namespace Nautilus.Database
 
             this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
 
-            this.Self.Tell(new CollectData(
-                DataType.Bar,
+            this.Self.Tell(new CollectData<SymbolBarSpec>(
                 this.NewGuid(),
                 this.TimeNow()));
         }
@@ -239,13 +241,12 @@ namespace Nautilus.Database
         {
             var nextCollectorOffTheRank = this.collectionJobsRoster.FirstOrDefault(c => c.Value == false);
 
-            this.marketDataCollectors[nextCollectorOffTheRank.Key].Tell(new CollectData(
-                DataType.Bar,
+            this.marketDataCollectors[nextCollectorOffTheRank.Key].Tell(new CollectData<SymbolBarSpec>(
                 this.NewGuid(),
                 this.TimeNow()));
 
             this.Log.Information(
-                $"Initiating market data collection for {nextCollectorOffTheRank.Key}...");
+                $"Initiating bar data collection for {nextCollectorOffTheRank.Key}...");
         }
 
         private void ScheduleNextCollection()
@@ -256,8 +257,7 @@ namespace Nautilus.Database
             this.scheduler.ScheduleTellOnce(
                 timeFromCollection,
                 this.Self,
-                new CollectData(
-                    DataType.Bar,
+                new CollectData<SymbolBarSpec>(
                     this.NewGuid(),
                     this.TimeNow()),
                 this.Self);

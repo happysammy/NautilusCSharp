@@ -14,6 +14,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
@@ -70,8 +71,8 @@ namespace Nautilus.Database.Aggregators
         private void SetupCommandMessageHandling()
         {
             this.Receive<CloseBar>(msg => this.OnMessage(msg));
-            this.Receive<SubscribeBarData>(msg => this.OnMessage(msg));
-            this.Receive<UnsubscribeBarData>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -170,24 +171,23 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="message">The received message.</param>
         /// <exception cref="InvalidOperationException">If the resolution is for tick bars.</exception>
-        private void OnMessage(SubscribeBarData message)
+        private void OnMessage(Subscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            foreach (var barSpec in message.BarSpecifications)
+            var barSpec = message.DataType.BarSpecification;
+
+            if (barSpec.Resolution == BarResolution.Tick)
             {
-                if (barSpec.Resolution == BarResolution.Tick)
-                {
-                    // TODO
-                    throw new InvalidOperationException("Tick bars not yet supported.");
-                }
+                // TODO
+                throw new InvalidOperationException("Tick bars not yet supported.");
+            }
 
-                if (!this.barBuilders.ContainsKey(barSpec))
-                {
-                    this.barBuilders.Add(barSpec, new BarBuilder());
+            if (!this.barBuilders.ContainsKey(barSpec))
+            {
+                this.barBuilders.Add(barSpec, new BarBuilder());
 
-                    Log.Debug($"Added {barSpec} bars.");
-                }
+                Log.Debug($"Added {barSpec} bars.");
             }
         }
 
@@ -195,18 +195,17 @@ namespace Nautilus.Database.Aggregators
         /// Handles the message by removing all bar builders for the relevant bar specifications.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(UnsubscribeBarData message)
+        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            foreach (var barSpec in message.BarSpecifications)
-            {
-                if (this.barBuilders.ContainsKey(barSpec))
-                {
-                    this.barBuilders.Remove(barSpec);
+            var barSpec = message.DataType.BarSpecification;
 
-                    Log.Debug($"Removed {barSpec} bars.");
-                }
+            if (this.barBuilders.ContainsKey(barSpec))
+            {
+                this.barBuilders.Remove(barSpec);
+
+                Log.Debug($"Removed {barSpec} bars.");
             }
         }
     }

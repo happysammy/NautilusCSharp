@@ -12,37 +12,36 @@ namespace Nautilus.Database.Messages.Events
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// A message representing that all data has been collected.
+    /// A message representing that all data of T has been collected.
     /// </summary>
     [Immutable]
-    public sealed class AllDataCollected : Event
+    public sealed class DataCollected<T> : Event
     {
         /// <summary>
-        /// Initializes a new intance of the <see cref="AllDataCollected"/> class.
+        /// Initializes a new intance of the <see cref="DataCollected{T}"/> class.
         /// </summary>
-        /// <param name="symbolBarSpec"></param>
-        /// <param name="identifier"></param>
-        /// <param name="timestamp"></param>
-        public AllDataCollected(
-            SymbolBarSpec symbolBarSpec,
+        /// <param name="dataType">The message data type.</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
+        public DataCollected(
+            T dataType,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
-            Validate.NotDefault(identifier, nameof(identifier));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(dataType, nameof(dataType));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.SymbolBarSpec = symbolBarSpec;
+            this.DataType = dataType;
         }
 
         /// <summary>
-        /// Gets the messages symbol bar specification.
+        /// Gets the messages data type.
         /// </summary>
-        public SymbolBarSpec SymbolBarSpec { get; }
+        public T DataType { get; }
     }
 }

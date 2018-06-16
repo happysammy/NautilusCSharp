@@ -21,7 +21,7 @@ namespace NautilusDB.Service
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// The service which processes incoming <see cref="NewsEventRequest"/>(s).
+    /// The service which processes incoming <see cref="EconomicEventRequest"/>(s).
     /// </summary>
     public class NewsEventService : Service
     {
@@ -39,7 +39,7 @@ namespace NautilusDB.Service
             this.economicEventRepository = economicEventRepository;
         }
 
-        public object Get(NewsEventRequest request)
+        public object Get(EconomicEventRequest request)
         {
             var newsEventsQuery = this.economicEventRepository.GetAll(
                 newsEvent => request.Symbols.Contains(newsEvent.Currency)
@@ -60,8 +60,8 @@ namespace NautilusDB.Service
             var newsEventsFrame = new EconomicEventFrame(newsEvents);
 
             return newsEvents.IsEmpty()
-                       ? new NewsEventResponse(false, "Could not find any news events", newsEventsFrame)
-                       : new NewsEventResponse(true, "Success", newsEventsFrame);
+                       ? new EconomicEventResponse(false, "Could not find any news events", newsEventsFrame)
+                       : new EconomicEventResponse(true, "Success", newsEventsFrame);
         }
     }
 }

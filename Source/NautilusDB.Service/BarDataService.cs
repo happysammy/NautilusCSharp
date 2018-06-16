@@ -13,24 +13,22 @@ namespace NautilusDB.Service
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NautilusDB.Service.Requests;
-    using NautilusDB.Service.Responses;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Messages.Queries;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
-    using StringExtensions = Nautilus.Core.Extensions.StringExtensions;
 
     /// <summary>
-    /// The service which processes incoming <see cref="MarketDataRequest"/>(s).
+    /// The service which processes incoming <see cref="BarDataRequest"/>(s).
     /// </summary>
-    public class MarketDataService : Service
+    public class BarDataService : Service
     {
         private readonly IZonedClock clock;
         private readonly ILoggingAdapter logger;
         private readonly IActorRef databaseTaskManagerRef;
 
-        public MarketDataService(
+        public BarDataService(
             IZonedClock clock,
             ILoggingAdapter logger,
             IActorRef databaseTaskManagerRef)
@@ -44,31 +42,34 @@ namespace NautilusDB.Service
             this.databaseTaskManagerRef = databaseTaskManagerRef;
         }
 
-        public object Get(MarketDataRequest request)
+        public object Get(BarDataRequest request)
         {
-            var requestBarSpec = new BarSpecification(
-                StringExtensions.ToEnum<BarQuoteType>(request.BarQuoteType),
-                StringExtensions.ToEnum<BarResolution>(request.BarResolution),
-                request.BerPeriod);
-
-            var queryMessage = new MarketDataQueryRequest(
-                new Symbol(request.Symbol, StringExtensions.ToEnum<Exchange>(request.Exchange)),
-                requestBarSpec,
-                request.FromDateTime.ToZonedDateTimeFromIso(),
-                request.ToDateTime.ToZonedDateTimeFromIso(),
-                Guid.NewGuid(),
-                this.clock.TimeNow());
-
-            var marketData = this.databaseTaskManagerRef.Ask<MarketDataQueryResponse>(queryMessage);
-
-            while (!marketData.IsCompleted)
-            {
-                // Wait
-            }
-
-            return !marketData.Result.IsSuccess
-                ? new MarketDataResponse(true, marketData.Result.Message, marketData.Result.MarketData.Value)
-                : new MarketDataResponse(false, marketData.Result.Message, null);
+//            Debug.NotNull(request, nameof(request));
+//
+//            var requestBarSpec = new BarSpecification(
+//                request.BarQuoteType.ToEnum<BarQuoteType>(),
+//                request.BarResolution.ToEnum<BarResolution>(),
+//                request.BerPeriod);
+//
+//            var queryMessage = new QueryRequest<SymbolBarSpec>(
+//                new Symbol(request.Symbol, request.Exchange.ToEnum<Exchange>()),
+//                requestBarSpec,
+//                request.FromDateTime.ToZonedDateTimeFromIso(),
+//                request.ToDateTime.ToZonedDateTimeFromIso(),
+//                Guid.NewGuid(),
+//                this.clock.TimeNow());
+//
+//            var barDataQuery = this.databaseTaskManagerRef.Ask<QueryResponse<BarDataFrame>>(queryMessage);
+//
+//            while (!barDataQuery.IsCompleted)
+//            {
+//                // Wait
+//            }
+//
+//            return !barDataQuery.IsSuccess()
+//                ? new BarDataResponse(true, marketData.Result.Message, marketData.Result.MarketData.Value)
+//                : new BarDataResponse(false, marketData.Result.Message, null);
+            return null;
         }
     }
 }

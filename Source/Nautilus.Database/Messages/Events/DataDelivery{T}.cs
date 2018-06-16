@@ -1,50 +1,47 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="QueryResponseMessage.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MarketDataDelivery.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Messages
+namespace Nautilus.Database.Messages.Events
 {
+    using Nautilus.Common.Messaging;
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
 
-    using Nautilus.Common.Messaging;
-
     /// <summary>
-    /// The base class for all response message types.
+    /// A delivery message of new data.
     /// </summary>
     [Immutable]
-    public abstract class QueryResponseMessage : Message
+    public sealed class DataDelivery<T> : Message
     {
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected QueryResponseMessage(
-            bool isSuccess,
-            string message,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataDelivery{T}"/> class.
+        /// </summary>
+        /// <param name="data">The message data.</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
+        public DataDelivery(
+            T data,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(message, nameof(message));
+            Debug.NotNull(data, nameof(data));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.IsSuccess = isSuccess;
-            this.Message = message;
+            this.Data = data;
         }
 
         /// <summary>
-        /// Gets a value indicating whether the result of the response message is successful.
+        /// Gets the messages market data.
         /// </summary>
-        public bool IsSuccess { get; }
-
-        /// <summary>
-        /// Gets the message of the response message.
-        /// </summary>
-        public string Message { get; }
+        public T Data { get; }
     }
 }

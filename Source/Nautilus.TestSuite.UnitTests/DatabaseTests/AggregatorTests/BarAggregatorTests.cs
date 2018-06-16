@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Messages;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
@@ -72,12 +73,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenMatchingSubscriptionButNoTicks_ThenDoesNothing()
         {
             // Arrange
-            var subscribeMessage = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
-                },
+            var subscribeMessage = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -100,12 +99,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenDifferentSubscription_ThenDoesNothing()
         {
             // Arrange
-            var subscribeMessage = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
-                },
+            var subscribeMessage = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -116,7 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Ask, BarResolution.Second, 10),
+                new BarSpecification(BarQuoteType.Ask, BarResolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -135,12 +132,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenMatchingSubscription1_ThenReturnsExpectedBar()
         {
             // Arrange
-            var subscribeMessage = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
-                },
+            var subscribeMessage = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -174,12 +169,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenMatchingSubscription2_ThenReturnsNextBar()
         {
             // Arrange
-            var subscribeMessage = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
-                },
+            var subscribeMessage = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -227,21 +220,17 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenMultipleSubscriptions1_ThenReturnsExpectedBar()
         {
             // Arrange
-            var subscribeMessage1 = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)
-                },
+            var subscribeMessage1 = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribeMessage2 = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10)
-                },
+            var subscribeMessage2 = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -299,12 +288,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenMidBarSubscribed_ThenReturnsNextBar()
         {
             // Arrange
-            var subscribeMessage = new SubscribeBarData(
-                this.symbol,
-                new List<BarSpecification>
-                {
-                    new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1)
-                },
+            var subscribeMessage = new Subscribe<SymbolBarSpec>(
+                new SymbolBarSpec(
+                    symbol,
+                    new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
