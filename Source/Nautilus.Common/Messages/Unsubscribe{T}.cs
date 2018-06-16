@@ -40,7 +40,7 @@ namespace Nautilus.Common.Messages
         }
 
         /// <summary>
-        /// Gets the messages data type..
+        /// Gets the messages data type T.
         /// </summary>
         public T DataType { get; }
     }
