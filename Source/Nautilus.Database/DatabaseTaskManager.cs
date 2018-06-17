@@ -74,10 +74,9 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var barType = message.Data.BarType;
-            var bar = message.Data.Bar;
-
-            var result = this.barRepository.Add(barType, bar);
+            var result = this.barRepository.Add(
+                message.Data.BarType,
+                message.Data.Bar);
             this.Log.Result(result);
         }
 
