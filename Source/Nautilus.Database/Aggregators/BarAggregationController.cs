@@ -137,7 +137,7 @@ namespace Nautilus.Database.Aggregators
 
                 if (!this.barJobs.ContainsKey(duration))
                 {
-                    var barJob = new BarJob(symbol, barSpec);
+                    var barJob = new BarJob(message.DataType);
 
                     var createJob = new CreateJob(
                         this.Self,
@@ -206,7 +206,7 @@ namespace Nautilus.Database.Aggregators
 
             if (job != null)
             {
-                var barSpec = job.BarSpecification;
+                var barSpec = job.BarType.Specification;
                 var duration = barSpec.Duration;
 
                 if (!this.barJobs.ContainsKey(duration))
@@ -262,17 +262,17 @@ namespace Nautilus.Database.Aggregators
         private void OnMessage(BarJob job)
         {
             Debug.NotNull(job, nameof(job));
-            Debug.DictionaryContainsKey(job.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
+            Debug.DictionaryContainsKey(job.BarType.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
 
-            if (this.barAggregators.ContainsKey(job.Symbol))
+            if (this.barAggregators.ContainsKey(job.BarType.Symbol))
             {
                 var closeBar = new CloseBar(
-                    job.BarSpecification,
-                    this.TimeNow().Floor(job.BarSpecification.Duration),
+                    job.BarType.Specification,
+                    this.TimeNow().Floor(job.BarType.Specification.Duration),
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.barAggregators[job.Symbol].Tell(closeBar);
+                this.barAggregators[job.BarType.Symbol].Tell(closeBar);
 
                 // Log for unit testing only.
                 Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");

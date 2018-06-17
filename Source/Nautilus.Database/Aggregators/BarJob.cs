@@ -24,26 +24,18 @@ namespace Nautilus.Database.Aggregators
         /// <summary>
         /// Initializes a new instance of the <see cref="BarJob"/> class.
         /// </summary>
-        /// <param name="symbol">The jobs symbol.</param>
-        /// <param name="barSpecification">The jobs bar specification.</param>
-        public BarJob(Symbol symbol, BarSpecification barSpecification)
+        /// <param name="barType">The jobs bar type..</param>
+        public BarJob(BarType barType)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(barSpecification, nameof(barSpecification));
+            Debug.NotNull(barType, nameof(barType));
 
-            Symbol = symbol;
-            BarSpecification = barSpecification;
+            this.BarType = barType;
         }
 
         /// <summary>
         /// Gets the jobs symbol.
         /// </summary>
-        public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the jobs bar speicifcation.
-        /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public BarType BarType { get; }
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.
@@ -53,8 +45,7 @@ namespace Nautilus.Database.Aggregators
         {
             return new object[]
             {
-                this.Symbol,
-                this.BarSpecification
+                this.BarType
             };
         }
 
@@ -64,7 +55,7 @@ namespace Nautilus.Database.Aggregators
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{nameof(BarJob)}-{this.Symbol}-{this.BarSpecification}";
+            return $"{nameof(BarJob)}-{this.BarType}";
         }
     }
 }
