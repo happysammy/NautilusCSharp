@@ -85,16 +85,18 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var symbolBarData = message.Data.BarType;
+            var barType = message.Data.BarType;
             var result = this.barRepository.Add(message.Data);
             this.Log.Result(result);
 
-            var lastBarTimeQuery = this.barRepository.LastBarTimestamp(symbolBarData);
+            var lastBarTimeQuery = this.barRepository.LastBarTimestamp(barType);
 
-            if (result.IsSuccess && lastBarTimeQuery.IsSuccess && lastBarTimeQuery.Value != default(ZonedDateTime))
+            if (result.IsSuccess
+             && lastBarTimeQuery.IsSuccess
+             && lastBarTimeQuery.Value != default)
             {
                 this.Sender.Tell(new DataPersisted<BarType>(
-                    symbolBarData,
+                    barType,
                     lastBarTimeQuery.Value,
                     this.NewGuid(),
                     this.TimeNow()));
