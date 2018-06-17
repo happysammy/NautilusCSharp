@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The broker label.
+    /// The brokerage enumeration.
     /// </summary>
     public enum Broker
     {
@@ -26,11 +26,13 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The LMAX exchange.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         LMAX,
 
         /// <summary>
         /// The FXCM brokerage.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         FXCM
     }
 }

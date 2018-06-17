@@ -47,7 +47,7 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="tick">]The quote.]</param>
         /// <exception cref="ValidationException">Throws if the quote is null.</exception>
-        public void Update(Tick tick)
+        public void OnTick(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
             Debug.EqualTo(tick.Symbol.Exchange, nameof(tick.Symbol), this.Exchange);

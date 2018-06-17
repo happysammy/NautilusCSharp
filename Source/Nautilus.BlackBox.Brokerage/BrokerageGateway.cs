@@ -34,11 +34,8 @@ namespace Nautilus.BlackBox.Brokerage
     public sealed class BrokerageGateway : ComponentBusConnectedBase, IBrokerageGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IQuoteProvider quoteProvider;
         private readonly IReadOnlyBrokerageAccount brokerageAccount;
         private readonly IBrokerageClient brokerageClient;
-
-        private IActorRef marketDataPortRef;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokerageGateway"/> class.
@@ -62,7 +59,6 @@ namespace Nautilus.BlackBox.Brokerage
             Validate.NotNull(brokerageClient, nameof(brokerageClient));
 
             this.instrumentRepository = container.InstrumentRepository;
-            this.quoteProvider = container.QuoteProvider;
             this.brokerageAccount = container.Account;
             this.brokerageClient = brokerageClient;
         }
@@ -92,22 +88,6 @@ namespace Nautilus.BlackBox.Brokerage
         public ZonedDateTime GetTimeNow()
         {
             return this.TimeNow();
-        }
-
-        /// <summary>
-        /// Registers the given market data port actor address with this brokerage gateway.
-        /// </summary>
-        /// <param name="actorRef">The actor address.</param>
-        public void RegisterMarketDataPort(IActorRef actorRef)
-        {
-            this.Execute(() =>
-            {
-                Validate.NotNull(actorRef, nameof(actorRef));
-
-                this.marketDataPortRef = actorRef;
-
-                this.Log.Information($"MarketDataPort registered at {this.marketDataPortRef}");
-            });
         }
 
         /// <summary>
@@ -355,42 +335,6 @@ namespace Nautilus.BlackBox.Brokerage
                 this.Send(BlackBoxService.Risk, eventMessage);
 
                 this.Log.Debug($"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
-            });
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it to the <see cref="IQuoteProvider"/> and
-        /// the MarketDataPort.
-        /// </summary>
-        /// <param name="symbol">The quote symbol.</param>
-        /// <param name="exchange">The quote exchange.</param>
-        /// <param name="bid">The quote bid.</param>
-        /// <param name="ask">The quote ask.</param>
-        /// <param name="timestamp">The quote timestamp.</param>
-        public void OnQuote(
-            string symbol,
-            Exchange exchange,
-            decimal bid,
-            decimal ask,
-            ZonedDateTime timestamp)
-        {
-            this.Execute(() =>
-            {
-                Validate.NotNull(symbol, nameof(symbol));
-                Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-                Validate.DecimalNotOutOfRange(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-
-                var securitySymbol = new Symbol(symbol, exchange);
-                var tickSize = this.instrumentRepository.GetTickSize(securitySymbol).Value;
-
-            var quote = new Tick(
-                    securitySymbol,
-                    Price.Create(bid, tickSize),
-                    Price.Create(ask, tickSize),
-                    timestamp);
-
-                this.marketDataPortRef.Tell(quote);
-                this.quoteProvider.Update(quote);
             });
         }
 

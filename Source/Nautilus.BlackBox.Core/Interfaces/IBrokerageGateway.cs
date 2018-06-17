@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -53,12 +52,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         ZonedDateTime GetTimeNow();
-
-        /// <summary>
-        /// Registers the given market data port actor address with this brokerage gateway.
-        /// </summary>
-        /// <param name="actorRef">The actor address.</param>
-        void RegisterMarketDataPort(IActorRef actorRef);
 
         /// <summary>
         /// Requests market data for the given symbol from the brokerage.
@@ -166,22 +159,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
             decimal marginUsedLiq,
             decimal marginRatio,
             string marginCallStatus,
-            ZonedDateTime timestamp);
-
-        /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it to the <see cref="IQuoteProvider"/> and
-        /// the MarketDataPort.
-        /// </summary>
-        /// <param name="symbol">The quote symbol.</param>
-        /// <param name="exchange">The quote exchange.</param>
-        /// <param name="bid">The quote bid.</param>
-        /// <param name="ask">The quote ask.</param>
-        /// <param name="timestamp">The quote timestamp.</param>
-        void OnQuote(
-            string symbol,
-            Exchange exchange,
-            decimal bid,
-            decimal ask,
             ZonedDateTime timestamp);
 
         /// <summary>

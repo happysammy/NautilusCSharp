@@ -10,7 +10,9 @@ namespace Nautilus.Backtest
 {
     using System;
     using System.Collections.Generic;
+    using Akka.Actor;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -30,6 +32,14 @@ namespace Nautilus.Backtest
         ///
         /// </summary>
         public bool IsConnected => true;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="processor"></param>
+        public void InitializeTickDataProcessor(ITickDataProcessor processor)
+        {
+        }
 
         /// <summary>
         ///

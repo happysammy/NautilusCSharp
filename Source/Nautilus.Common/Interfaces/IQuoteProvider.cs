@@ -23,7 +23,7 @@ namespace Nautilus.Common.Interfaces
         /// Updates the quote provider with the given tick.
         /// </summary>
         /// <param name="tick">The quote.</param>
-        void Update(Tick tick);
+        void OnTick(Tick tick);
 
         /// <summary>
         /// Returns the last quote corresponding to the given symbol if it is contained by the

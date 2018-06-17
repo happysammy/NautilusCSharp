@@ -137,7 +137,6 @@ namespace Nautilus.BlackBox.Data
             this.Execute(() =>
                 {
                     this.brokerageGateway = message.BrokerageGateway;
-                    this.brokerageGateway.RegisterMarketDataPort(this.marketDataPortRef);
                 });
         }
 

@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.quoteProvider.Update(quote);
+            this.quoteProvider.OnTick(quote);
 
             // Assert
             Assert.Equal(quote, this.quoteProvider.GetLastTick(this.audusd));
@@ -72,8 +72,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.quoteProvider.Update(quote1);
-            this.quoteProvider.Update(quote2);
+            this.quoteProvider.OnTick(quote1);
+            this.quoteProvider.OnTick(quote2);
 
             // Assert
             Assert.Equal(quote2, this.quoteProvider.GetLastTick(this.audusd));
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 Price.Create(0.80006m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.quoteProvider.Update(quote);
+            this.quoteProvider.OnTick(quote);
 
             // Act
             var result = this.quoteProvider.GetLastTick(this.audusd);
@@ -114,8 +114,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 Price.Create(1.20005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.quoteProvider.Update(quote1);
-            this.quoteProvider.Update(quote2);
+            this.quoteProvider.OnTick(quote1);
+            this.quoteProvider.OnTick(quote2);
 
             // Act
             var result = this.quoteProvider.GetSymbolList();
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.quoteProvider.Update(quote);
+            this.quoteProvider.OnTick(quote);
 
             // Act
             var result = this.quoteProvider.GetExchangeRate(CurrencyCode.AUD, CurrencyCode.USD);
@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 Price.Create(0.88005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.quoteProvider.Update(quote);
+            this.quoteProvider.OnTick(quote);
 
             // Act
             var result = this.quoteProvider.GetExchangeRate(CurrencyCode.GBP, CurrencyCode.EUR);
@@ -204,8 +204,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
                 Price.Create(1.20005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
-            this.quoteProvider.Update(quote1);
-            this.quoteProvider.Update(quote2);
+            this.quoteProvider.OnTick(quote1);
+            this.quoteProvider.OnTick(quote2);
 
             // Act
             var result = this.quoteProvider.GetExchangeRate(CurrencyCode.AUD, CurrencyCode.EUR);

@@ -12,7 +12,6 @@ namespace Nautilus.Fix
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Brokerage.FXCM;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -27,10 +26,6 @@ namespace Nautilus.Fix
     /// </summary>
     public class FixClient : FixComponentBase, IBrokerageClient
     {
-        private readonly IList<Symbol> marketDataSubscriptions = new List<Symbol>();
-
-        private IBrokerageGateway brokerageGateway;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
@@ -51,14 +46,6 @@ namespace Nautilus.Fix
             Validate.NotNull(credentials, nameof(credentials));
 
             this.Broker = broker;
-
-            foreach (var symbol in ConversionRateCurrencySymbols.GetList())
-            {
-                if (!this.marketDataSubscriptions.Contains(symbol))
-                {
-                    this.marketDataSubscriptions.Add(symbol);
-                }
-            }
         }
 
         /// <summary>
@@ -73,14 +60,24 @@ namespace Nautilus.Fix
         public bool IsConnected => this.IsFixConnected;
 
         /// <summary>
-        /// The initialize brokerage gateway.
+        /// Initializes the tick data processor.
+        /// </summary>
+        /// <param name="processor">The tick data processor.</param>
+        public void InitializeTickDataProcessor(ITickDataProcessor processor)
+        {
+            Validate.NotNull(processor, nameof(processor));
+
+            this.FixMessageHandler.InitializeTickDataProcessor(processor);
+        }
+
+        /// <summary>
+        /// The initializes the brokerage gateway.
         /// </summary>
         /// <param name="gateway">The brokerage gateway.</param>
         public void InitializeBrokerageGateway(IBrokerageGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.brokerageGateway = gateway;
             this.FixMessageHandler.InitializeBrokerageGateway(gateway);
             this.FixMessageRouter.InitializeBrokerageGateway(gateway);
         }
@@ -110,11 +107,7 @@ namespace Nautilus.Fix
             this.TradingSessionStatus();
             this.RequestAllPositions();
             this.UpdateInstrumentsSubscribeAll();
-
-            foreach (var symbol in this.marketDataSubscriptions)
-            {
-                this.RequestMarketDataSubscribe(symbol);
-            }
+            // TODO: Subscribe to all market data.
         }
 
         /// <summary>
@@ -214,11 +207,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
-            if (!this.marketDataSubscriptions.Contains(symbol))
-            {
-                this.marketDataSubscriptions.Add(symbol);
-            }
-
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
     }

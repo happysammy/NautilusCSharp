@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
-            this.quoteProvider.Update(quote);
+            this.quoteProvider.OnTick(quote);
 
             var signal = StubSignalBuilder.BuyEntrySignal();
             var message = new SignalEvent(

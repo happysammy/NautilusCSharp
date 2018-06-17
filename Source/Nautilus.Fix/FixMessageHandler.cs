@@ -11,10 +11,12 @@ namespace Nautilus.Fix
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Akka.Actor;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Brokerage.FXCM;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -29,14 +31,24 @@ namespace Nautilus.Fix
     /// </summary>
     public class FixMessageHandler
     {
+        private ITickDataProcessor tickDataProcessor;
         private IBrokerageGateway brokerageGateway;
 
         /// <summary>
-        /// The initialize brokerage gateway.
+        /// Initailizes the tick data processor.
         /// </summary>
-        /// <param name="gateway">
-        /// The gateway.
-        /// </param>
+        /// <param name="processor">The tick data processor.</param>
+        public void InitializeTickDataProcessor(ITickDataProcessor processor)
+        {
+            Validate.NotNull(processor, nameof(processor));
+
+            this.tickDataProcessor = processor;
+        }
+
+        /// <summary>
+        /// Initializes the brokerage gateway.
+        /// </summary>
+        /// <param name="gateway">The brokerage gateway.</param>
         public void InitializeBrokerageGateway(IBrokerageGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
@@ -211,7 +223,8 @@ namespace Nautilus.Fix
             message.GetGroup(2, group);
             var ask = group.GetField(Tags.MDEntryPx);
 
-            this.brokerageGateway.OnQuote(
+            // TODO: Hardcoded exchange.
+            this.tickDataProcessor.OnTick(
                 symbol,
                 Exchange.FXCM,
                 Convert.ToDecimal(bid),
