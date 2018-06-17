@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisMarketDataRepository.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisBarRepository.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -136,6 +136,11 @@ namespace Nautilus.Redis
                  : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
         }
 
+        /// <summary>
+        /// Finds and returns all bars matching the given bar type.
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
+        /// <returns>The query result of bars.</returns>
         public QueryResult<BarDataFrame> FindAll(BarType barType)
         {
             var barsQuery = this.barClient.GetAllBars(barType);
@@ -166,12 +171,9 @@ namespace Nautilus.Redis
 
             var barsQuery = this.barClient.GetBarsByDay(lastKey);
 
-            if (barsQuery.IsFailure)
-            {
-                return QueryResult<ZonedDateTime>.Fail(barsQuery.Message);
-            }
-
-            return QueryResult<ZonedDateTime>.Ok(barsQuery.Value.Last().Timestamp);
+            return barsQuery.IsSuccess
+                ? QueryResult<ZonedDateTime>.Ok(barsQuery.Value.Last().Timestamp)
+                : QueryResult<ZonedDateTime>.Fail(barsQuery.Message);
         }
     }
 }

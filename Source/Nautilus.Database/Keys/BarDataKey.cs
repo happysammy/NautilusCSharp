@@ -14,7 +14,7 @@ namespace Nautilus.Database.Keys
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Represents a Redis Key based on the given symbol and bar specification.
+    /// Represents a Redis Key based on the given <see cref="BarType"/> and <see cref="DateKey"/>.
     /// </summary>
     [Immutable]
     public struct BarDataKey : IEquatable<BarDataKey>
@@ -28,18 +28,18 @@ namespace Nautilus.Database.Keys
         /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
         public BarDataKey(BarType barType, DateKey dateKey)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotDefault(dateKey, nameof(dateKey));
-            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotDefault(dateKey, nameof(dateKey));
+            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
 
-            this.barTypeification = barType;
+            this.Type = barType;
             this.DateKey = dateKey;
         }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) bar specification.
         /// </summary>
-        public BarType barTypeification { get; }
+        public BarType Type { get; }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) date key.
@@ -64,7 +64,8 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(BarDataKey other)
         {
-            return this.barTypeification.Equals(other.barTypeification) &&
+            // Do not add null check (causes error).
+            return this.Type.Equals(other.Type) &&
                    this.DateKey.Equals(other.DateKey);
         }
 
@@ -74,7 +75,7 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.barTypeification.GetHashCode() +
+            return this.Type.GetHashCode() +
                    this.DateKey.GetHashCode();
         }
 
@@ -84,10 +85,10 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.BarsNamespace +
-            $":{this.barTypeification.Symbol.Exchange.ToString().ToLower()}" +
-            $":{this.barTypeification.Symbol.Code.ToLower()}" +
-            $":{this.barTypeification.Specification.Resolution.ToString().ToLower()}" +
-            $":{this.barTypeification.Specification.QuoteType.ToString().ToLower()}" +
+            $":{this.Type.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.Type.Symbol.Code.ToLower()}" +
+            $":{this.Type.Specification.Resolution.ToString().ToLower()}" +
+            $":{this.Type.Specification.QuoteType.ToString().ToLower()}" +
             $":{this.DateKey}";
     }
 }

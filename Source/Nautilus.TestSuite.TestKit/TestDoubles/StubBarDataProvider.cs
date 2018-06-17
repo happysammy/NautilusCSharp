@@ -125,19 +125,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                                   "ZARJPY"
                               }.Distinct();
 
-            var symbolbarTypes = new List<BarType>();
+            var barTypes = new List<BarType>();
 
             foreach (var symbol in symbols)
             {
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)));
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Minute, 1)));
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1)));
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Hour, 1)));
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)));
-                symbolbarTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Day, 1)));
             }
 
-            return symbolbarTypes.AsReadOnly();
+            return barTypes.AsReadOnly();
         }
 
         // TODO: Temporary method. Remove once Dukascopy provider removed.

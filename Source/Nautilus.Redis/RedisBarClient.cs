@@ -354,6 +354,11 @@ namespace Nautilus.Redis
                 $"No market data found for {barType} at {timestamp.ToIsoString()}");
         }
 
+        /// <summary>
+        /// Finds and returns bars by the given key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The query result list of bars.</returns>
         public QueryResult<List<Bar>> GetBarsByDay(string key)
         {
             Debug.NotNull(key, nameof(key));

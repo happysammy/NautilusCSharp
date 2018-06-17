@@ -6,13 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-using System;
-using Nautilus.Core.Annotations;
-using NodaTime;
-
 namespace Nautilus.Database.Keys
 {
+    using System;
+    using Nautilus.Core.Annotations;
+    using NodaTime;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents a strongly typed trading session date based on the given inputs.
@@ -28,6 +28,10 @@ namespace Nautilus.Database.Keys
         /// <param name="day">The date key day.</param>
         public DateKey(int year, int month, int day)
         {
+            Debug.Int32NotOutOfRange(year, nameof(year), 0, int.MaxValue);
+            Debug.Int32NotOutOfRange(month, nameof(month), 0, int.MaxValue);
+            Debug.Int32NotOutOfRange(day, nameof(day), 0, int.MaxValue);
+
             this.Year = year;
             this.Month = month;
             this.Day = day;
@@ -43,6 +47,7 @@ namespace Nautilus.Database.Keys
         public DateKey(ZonedDateTime timestamp)
             : this(timestamp.Year, timestamp.Month, timestamp.Day)
         {
+            Debug.NotDefault(timestamp, nameof(timestamp));
         }
 
         /// <summary>
@@ -72,6 +77,8 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public int CompareTo(DateKey other)
         {
+            Debug.NotDefault(other, nameof(other));
+
             return this.StartOfDay.Compare(other.StartOfDay);
         }
 
@@ -92,6 +99,8 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(DateKey other)
         {
+            // Do not add null check (causes error).
+
             return this.Year.Equals(other.Year) &&
                    this.Month.Equals(other.Month) &&
                    this.Day.Equals(other.Day);

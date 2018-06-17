@@ -28,8 +28,8 @@ namespace Nautilus.Database.Keys
         /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
         public TickDataKey(Symbol symbol, DateKey dateKey)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotDefault(dateKey, nameof(dateKey));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotDefault(dateKey, nameof(dateKey));
 
             this.Symbol = symbol;
             this.DateKey = dateKey;
@@ -63,6 +63,8 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(TickDataKey other)
         {
+            // Do not add null check (causes error).
+
             return this.Symbol.Equals(other.Symbol) &&
                    this.DateKey.Equals(other.DateKey);
         }

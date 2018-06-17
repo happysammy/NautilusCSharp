@@ -60,10 +60,10 @@ namespace Nautilus.Database.Keys
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotDefault(fromDateTime, nameof(fromDateTime));
-            Validate.NotDefault(toDateTime, nameof(toDateTime));
-            Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
                 .Select(key => new TickDataKey(symbol, key).ToString())
@@ -98,10 +98,10 @@ namespace Nautilus.Database.Keys
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotDefault(fromDateTime, nameof(fromDateTime));
-            Validate.NotDefault(toDateTime, nameof(toDateTime));
-            Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
                 .Select(key => new BarDataKey(barType, key).ToString())

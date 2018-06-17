@@ -28,9 +28,9 @@ namespace Nautilus.Database.Keys
         /// <remarks>The given time range should have been previously validated.</remarks>
         public static List<DateKey> GetDateKeys(ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
-            Validate.NotDefault(fromDateTime, nameof(fromDateTime));
-            Validate.NotDefault(toDateTime, nameof(toDateTime));
-            Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             var difference = (toDateTime - fromDateTime) / Duration.FromDays(1);
 

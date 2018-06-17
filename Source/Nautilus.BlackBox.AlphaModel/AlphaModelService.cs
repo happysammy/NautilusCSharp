@@ -101,8 +101,8 @@ namespace Nautilus.BlackBox.AlphaModel
                     Context);
 
                 // TODO: Refactor below.
-                var symbolbarType = new BarType(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
-                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, symbolbarType, alphasStrategyModuleRef);
+                var barType = new BarType(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
+                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, barType, alphasStrategyModuleRef);
 
                 var createPortfolio = new CreatePortfolio(
                     message.Strategy.Instrument,
@@ -110,7 +110,7 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.TimeNow());
 
                 var registerSymbolDataType = new Subscribe<BarType>(
-                    symbolbarType,
+                    barType,
                     this.NewGuid(),
                     this.TimeNow());
 
