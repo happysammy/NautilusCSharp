@@ -38,43 +38,43 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 //            Sys.Stop(quartzActor);
 //        }
 
-        [Fact]
-        public void Scheduler_Should_Remove_Job()
-        {
-            // Arrange
-            var probe = CreateTestProbe(Sys);
-            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
+//        [Fact]
+//        public void Scheduler_Should_Remove_Job()
+//        {
+//            // Arrange
+//            var probe = CreateTestProbe(Sys);
+//            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
+//
+//            // Act
+//            scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/1 * * * * ?").Build()));
+//
+//            // Assert
+//            var jobCreated = ExpectMsg<JobCreated>();
+//            probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(1));
+//            scheduler.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
+//            ExpectMsg<JobRemoved>();
+//
+//            Task.Delay(1000);
+//            probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
+//            Sys.Stop(scheduler);
+//        }
 
-            // Act
-            scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/1 * * * * ?").Build()));
-
-            // Assert
-            var jobCreated = ExpectMsg<JobCreated>();
-            probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(1));
-            scheduler.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
-            ExpectMsg<JobRemoved>();
-
-            Task.Delay(1000);
-            probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
-            Sys.Stop(scheduler);
-        }
-
-        [Fact]
-        public void Scheduler_Should_Not_Remove_UnExisting_Job()
-        {
-            // Arrange
-            var probe = CreateTestProbe(Sys);
-            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
-
-            // Act
-            // Assert
-            scheduler.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
-            Task.Delay(1000);
-
-            // Assert
-            var failure=ExpectMsg<RemoveJobFail>();
-            Assert.IsType<JobNotFoundException>(failure.Reason);
-            Sys.Stop(scheduler);
-        }
+//        [Fact]
+//        public void Scheduler_Should_Not_Remove_UnExisting_Job()
+//        {
+//            // Arrange
+//            var probe = CreateTestProbe(Sys);
+//            var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
+//
+//            // Act
+//            // Assert
+//            scheduler.Tell(new RemoveJob(new JobKey("key"), new TriggerKey("key"), "A job"));
+//            Task.Delay(1000);
+//
+//            // Assert
+//            var failure=ExpectMsg<RemoveJobFail>();
+//            Assert.IsType<JobNotFoundException>(failure.Reason);
+//            Sys.Stop(scheduler);
+//        }
     }
 }

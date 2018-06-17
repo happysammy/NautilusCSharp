@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             // Act
             var result = LabelFactory.Component(
                 "TickBarAggregator",
-                StubSymbolBarSpec.AUDUSD());
+                StubBarType.AUDUSD());
 
             // Assert
             Assert.Equal("TickBarAggregator-AUDUSD.Dukascopy-1-Minute[Ask]", result.ToString());

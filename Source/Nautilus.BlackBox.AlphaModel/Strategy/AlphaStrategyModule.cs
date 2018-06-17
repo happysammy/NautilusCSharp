@@ -132,7 +132,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             this.LogReceivedMarketData();
 
-            if (message.BarSpecification.IsOneDayBar)
+            if (message.BarType.Specification.IsOneDayBar)
             {
                 this.UpdateDailyBarStore(message);
 
@@ -168,7 +168,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         private void UpdateBarStore(BarDataEvent message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.EqualTo(message.BarSpecification, nameof(message.BarSpecification), this.barStore.BarSpecification);
+            Debug.EqualTo(message.BarType.Specification, nameof(message.BarType.Specification), this.barStore.BarSpecification);
 
             this.barStore.Update(message.Bar);
             this.entrySignalGenerator.Update(message.Bar);

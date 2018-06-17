@@ -119,8 +119,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
         {
             // Arrange
             var message = new BarDataEvent(
-                new Symbol("some_symbol", Exchange.GLOBEX),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
+                new BarType(
+                    new Symbol("some_symbol", Exchange.GLOBEX),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("some_symbol", Exchange.GLOBEX)),
                 0.00001m,
@@ -135,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The dictionary does not contain the barType key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the BarType key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -199,8 +200,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             var message1 = CreateAlphaStrategyModuleMessage();
 
             var message2 = new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.LMAX),
-                message1.Strategy.TradeProfile.BarSpecification,
+                new BarType(
+                    new Symbol("AUDUSD", Exchange.LMAX),
+                    message1.Strategy.TradeProfile.BarSpecification),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("AUDUSD", Exchange.LMAX)),
                 0.00001m,
@@ -215,7 +217,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The dictionary does not contain the barType key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the BarType key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

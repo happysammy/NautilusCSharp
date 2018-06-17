@@ -84,9 +84,7 @@ namespace Nautilus.BlackBox.AlphaModel
 
             this.Execute(() =>
             {
-                var symbolBarSpec = new BarType(message.Symbol, message.BarSpecification);
-
-                this.alphaStrategyModuleStore.Tell(symbolBarSpec, message);
+                this.alphaStrategyModuleStore.Tell(message);
             });
         }
 

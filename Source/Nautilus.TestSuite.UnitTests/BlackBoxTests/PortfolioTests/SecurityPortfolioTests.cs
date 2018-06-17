@@ -388,8 +388,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         private static BarDataEvent ValidMarketDataEventBullBar()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),

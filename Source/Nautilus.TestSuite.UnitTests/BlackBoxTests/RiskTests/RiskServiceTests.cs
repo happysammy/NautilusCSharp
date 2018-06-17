@@ -240,8 +240,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("AUDUSD", Exchange.FXCM)),
                 decimal.One,

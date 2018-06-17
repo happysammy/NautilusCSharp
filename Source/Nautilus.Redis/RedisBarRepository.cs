@@ -106,7 +106,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns a market data frame populated with the given bar info specification.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar type.</param>
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>A <see cref="QueryResult{MarketDataFrame}"/>.</returns>
@@ -135,7 +135,7 @@ namespace Nautilus.Redis
         /// Returns a query result containing the <see cref="ZonedDateTime"/> timestamp of the last
         /// bar within <see cref="Redis"/> for the given <see cref="BarSpecification"/> (if successful).
         /// </summary>
-        /// <param name="barSpec">The requested bar specification.</param>
+        /// <param name="barType">The requested bar type.</param>
         /// <returns>A <see cref="QueryResult{T}"/> containing the <see cref="Bar"/>.</returns>
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {

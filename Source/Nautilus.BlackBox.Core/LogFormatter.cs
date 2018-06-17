@@ -446,7 +446,7 @@ namespace Nautilus.BlackBox.Core
                 return string.Empty;
             }
 
-            return $"{@event.Symbol} MarketData: {@event.Bar}, "
+            return $"{@event.BarType.Symbol} MarketData: {@event.Bar}, "
                  + $"AverageSpread={@event.AverageSpread}, "
                  + $"IsHistoricalData={@event.IsHistorical}";
         }

@@ -24,8 +24,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="BarDataEvent"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
-        /// <param name="barSpecification">The event bar profile.</param>
+        /// <param name="barType">The bar type.</param>
         /// <param name="bar">The event trade bar.</param>
         /// <param name="lastTick">The event last tick.</param>
         /// <param name="averageSpread">The event average spread.</param>
@@ -35,8 +34,7 @@ namespace Nautilus.DomainModel.Events
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value, or if the average spread is zero or negative.</exception>
         public BarDataEvent(
-            Symbol symbol,
-            BarSpecification barSpecification,
+            BarType barType,
             Bar bar,
             Tick lastTick,
             decimal averageSpread,
@@ -45,14 +43,12 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(barSpecification, nameof(barSpecification));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotNull(bar, nameof(bar));
             Validate.NotNull(lastTick, nameof(lastTick));
             Validate.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
-            this.Symbol = symbol;
-            this.BarSpecification = barSpecification;
+            this.BarType = barType;
             this.Bar = bar;
             this.LastTick = lastTick;
             this.AverageSpread = averageSpread;
@@ -60,14 +56,9 @@ namespace Nautilus.DomainModel.Events
         }
 
         /// <summary>
-        /// Gets the events symbol.
+        /// Gets the events bar type.
         /// </summary>
-        public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the events bar specification.
-        /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public BarType BarType { get; }
 
         /// <summary>
         /// Gets the events bar.

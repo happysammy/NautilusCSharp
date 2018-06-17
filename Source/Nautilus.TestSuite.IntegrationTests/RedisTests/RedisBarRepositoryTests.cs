@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithOneBar_AddsBarToRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barSpec, new[] { bar });
 
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBars_AddsBarsToRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAndBarsAlreadyPersisted_AddsExpectedBarsToRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -130,7 +130,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAlreadyPersisted_AddsNewBarsToRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WithNoMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
 
             // Act
             var result = this.repository.Find(barSpec, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
@@ -179,8 +179,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WithOtherMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barSpec1 = StubSymbolBarSpec.AUDUSD();
-            var barSpec2 = StubSymbolBarSpec.GBPUSD();
+            var barSpec1 = StubBarType.AUDUSD();
+            var barSpec2 = StubBarType.GBPUSD();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barSpec1, new[] { bar });
 
@@ -201,7 +201,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WhenOnlyOneBarPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
             var marketData = new BarDataFrame(barSpec, new[] { bar });
 
@@ -222,7 +222,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WhenMultipleBarsPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barSpec = StubSymbolBarSpec.AUDUSD();
+            var barSpec = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);

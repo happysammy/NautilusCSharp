@@ -16,7 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="RedisTests" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />

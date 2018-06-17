@@ -302,8 +302,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         private static BarDataEvent ValidMarketDataEventBullBar()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),
@@ -325,8 +325,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         private static BarDataEvent ValidMarketDataEventBearBar()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),
@@ -348,8 +348,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         private static BarDataEvent ValidMarketDataEventDailyBar()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),
@@ -371,8 +371,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         private static BarDataEvent HistoricalMarketDataEvent()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),
@@ -395,8 +395,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         private static BarDataEvent InvalidMarketDataEvent()
         {
             return new BarDataEvent(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1),
+                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
                 new Bar(
                     Price.Create(0.80000m, 0.00001m),
                     Price.Create(0.80020m, 0.00001m),

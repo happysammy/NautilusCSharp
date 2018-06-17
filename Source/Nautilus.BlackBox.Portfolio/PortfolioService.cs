@@ -107,7 +107,7 @@ namespace Nautilus.BlackBox.Portfolio
 
             this.Execute(() =>
             {
-                this.portfolioStore.Tell(message.Symbol, message);
+                this.portfolioStore.Tell(message.BarType.Symbol, message);
             });
         }
 

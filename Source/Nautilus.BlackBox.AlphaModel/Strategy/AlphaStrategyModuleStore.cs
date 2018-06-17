@@ -98,18 +98,16 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <summary>
         /// Sends the given message to the strategy corresponding to the given label.
         /// </summary>
-        /// <param name="barType">The symbol bar specification.</param>
-        /// <param name="bar">The bar.</param>
+        /// <param name="barEvent">The bar data event.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public void Tell(BarType barType, BarDataEvent bar)
+        public void Tell(BarDataEvent barEvent)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotNull(bar, nameof(bar));
-            Validate.DictionaryContainsKey(barType, nameof(barType), this.alphaStrategyBarIndex);
+            Debug.NotNull(barEvent, nameof(barEvent));
+            Debug.DictionaryContainsKey(barEvent.BarType, nameof(barEvent.BarType), this.alphaStrategyBarIndex);
 
-            foreach (var strategy in this.alphaStrategyBarIndex[barType])
+            foreach (var strategy in this.alphaStrategyBarIndex[barEvent.BarType])
             {
-                strategy.Tell(bar);
+                strategy.Tell(barEvent.Bar);
             }
         }
     }
