@@ -8,19 +8,17 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using BlackBox.Core.Enums;
     using Moq;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// The stub nautilus setup container.
@@ -48,7 +46,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>The <see cref="BlackBoxContainer"/>.</returns>
         public BlackBoxContainer Create()
         {
-            var environment = NautilusEnvironment.Live;
+            var environment = BlackBoxEnvironment.Live;
 
             this.Clock = new StubClock();;
             this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());

@@ -6,20 +6,20 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Enums
+namespace Nautilus.BlackBox.Core.Enums
 {
     /// <summary>
-    /// The <see cref="NautilusEnvironment"/> enumeration.
+    /// The <see cref="BlackBoxEnvironment"/> enumeration.
     /// </summary>
-    public enum NautilusEnvironment
+    public enum BlackBoxEnvironment
     {
         /// <summary>
-        /// A back test environment.
+        /// A back test black box environment.
         /// </summary>
         Backtest = 0,
 
         /// <summary>
-        /// A live environment.
+        /// A live black box environment.
         /// </summary>
         Live = 1
     }

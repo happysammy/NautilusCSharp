@@ -308,11 +308,11 @@ namespace Nautilus.Database.Aggregators
                 .Create()
                 .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
                 .WithIdentity($"{barSpec.Period}-{barSpec.Resolution}")
-                .WithSchedule(this.CreateSchedule(barSpec))
+                .WithSchedule(this.CreateScheduleBuilder(barSpec))
                 .Build();
         }
 
-        private IScheduleBuilder CreateSchedule(BarSpecification barSpec)
+        private IScheduleBuilder CreateScheduleBuilder(BarSpecification barSpec)
         {
             var scheduleBuilder = SimpleScheduleBuilder
                 .Create()

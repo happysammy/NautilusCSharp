@@ -31,9 +31,9 @@ namespace Nautilus.Scheduler.Commands
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(trigger, nameof(trigger));
 
-            Destination = destination;
-            Message = message;
-            Trigger = trigger;
+            this.Destination = destination;
+            this.Message = message;
+            this.Trigger = trigger;
         }
 
         /// <summary>

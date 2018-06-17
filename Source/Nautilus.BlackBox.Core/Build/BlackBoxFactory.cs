@@ -22,7 +22,7 @@ namespace Nautilus.BlackBox.Core.Build
     public static class BlackBoxFactory
     {
         public static BlackBox Create(
-            NautilusEnvironment environment,
+            BlackBoxEnvironment environment,
             IZonedClock clock,
             ILoggingAdapter loggingAdapter,
             IDatabaseAdapter databaseAdapter,

@@ -10,6 +10,7 @@ namespace Nautilus.BlackBox
 {
     using System;
     using System.Collections.Generic;
+    using Core.Enums;
     using Nautilus.Algorithms.Entry;
     using Nautilus.Algorithms.EntryStop;
     using Nautilus.Algorithms.ProfitTarget;
@@ -27,7 +28,6 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -40,7 +40,7 @@ namespace Nautilus.BlackBox
     {
         private static void Main()
         {
-            var environment = NautilusEnvironment.Live;
+            var environment = BlackBoxEnvironment.Live;
             var clock = new Clock(DateTimeZone.Utc);
             var loggingAdatper = new SerilogLogger();
             var databaseAdapter = new DummyDatabase();

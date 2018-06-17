@@ -8,10 +8,10 @@
 
 namespace Nautilus.BlackBox.Core.Build
 {
+    using Enums;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -33,7 +33,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
         public BlackBoxContainer(
-            NautilusEnvironment environment,
+            BlackBoxEnvironment environment,
             IZonedClock clock,
             IGuidFactory guidFactory,
             ILoggerFactory loggerFactory,
@@ -63,7 +63,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Gets the black box environment.
         /// </summary>
-        public NautilusEnvironment Environment { get; }
+        public BlackBoxEnvironment Environment { get; }
 
         /// <summary>
         /// Gets the containers clock.
