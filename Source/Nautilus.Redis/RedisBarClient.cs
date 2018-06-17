@@ -55,7 +55,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         public CommandResult FlushAll(string areYouSure)
         {
-            Validate.NotNull(areYouSure, nameof(areYouSure));
+            Debug.NotNull(areYouSure, nameof(areYouSure));
 
             if (areYouSure == "YES")
             {
@@ -75,7 +75,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="bool"/>.</returns>
         public bool KeyExists(string key)
         {
-            Validate.NotNull(key, nameof(key));
+            Debug.NotNull(key, nameof(key));
 
             return this.redisClient.Exists(key) == 1;
         }
@@ -88,7 +88,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="bool"/>.</returns>
         public bool KeyExists(BarDataKey key)
         {
-            Validate.NotDefault(key, nameof(key));
+            Debug.NotDefault(key, nameof(key));
 
             return this.KeyExists(key.ToString());
         }
@@ -109,7 +109,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long KeysCount(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
+            Debug.NotNull(barType, nameof(barType));
 
             return this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType)).Length;
         }
@@ -121,7 +121,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long BarsCount(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
+            Debug.NotNull(barType, nameof(barType));
 
             var allKeys = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType));
 
@@ -164,7 +164,7 @@ namespace Nautilus.Redis
         /// <returns>A query result of <see cref="IReadOnlyList{T}"/> strings.</returns>
         public QueryResult<List<string>> GetAllSortedKeys(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
+            Debug.NotNull(barType, nameof(barType));
 
             if (this.KeysCount(barType) == 0)
             {
@@ -183,17 +183,40 @@ namespace Nautilus.Redis
         }
 
         /// <summary>
-        /// Adds the given bars to the <see cref="Redis"/> Lists associated with their <see cref="BarDataKey"/>(s).
+        /// Adds the given bar to the <see cref="Redis"/> List associated with the
+        /// <see cref="BarDataKey"/>.
         /// </summary>
-        /// <param name="barType">The bar specification.</param>
+        /// <param name="barType">The bar type to add.</param>
+        /// <param name="bar">The bar to add.</param>
+        /// <returns>A command result.</returns>
+        [PerformanceOptimized]
+        public CommandResult AddBar(BarType barType, Bar bar)
+        {
+            Debug.NotNull(barType, nameof(barType));
+
+            var dateKey = new DateKey(bar.Timestamp);
+            var key = new BarDataKey(barType, dateKey);
+            var keyString = key.ToString();
+
+            this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
+
+            return CommandResult.Ok(
+                $"Added 1 bar to {barType}");
+        }
+
+        /// <summary>
+        /// Adds the given bars to the <see cref="Redis"/> Lists associated with their
+        /// <see cref="BarDataKey"/>(s).
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
         /// <param name="bars">The bars to add.</param>
         /// <returns>A command result.</returns>
         [PerformanceOptimized]
         public CommandResult AddBars(BarType barType, Bar[] bars)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
-            Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
+            Debug.NotNull(barType, nameof(barType));
+            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
+            Debug.CollectionNotNullOrEmpty(bars, nameof(bars));
 
             var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
             var barsAddedCounter = 0;
@@ -239,8 +262,8 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public QueryResult<BarDataFrame> GetAllBars(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
+            Debug.NotNull(barType, nameof(barType));
+            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
 
             var barKeysQuery = this.GetAllSortedKeys(barType);
 
@@ -270,9 +293,9 @@ namespace Nautilus.Redis
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotDefault(fromDateTime, nameof(fromDateTime));
-            Validate.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
 
             if (this.KeysCount(barType) == 0)
             {
@@ -308,8 +331,8 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public QueryResult<Bar> GetBar(BarType barType, ZonedDateTime timestamp)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             var key = new BarDataKey(barType, new DateKey(timestamp));
             var persistedBarsQuery = this.GetBarsByDay(key.ToString());
@@ -333,7 +356,7 @@ namespace Nautilus.Redis
 
         public QueryResult<List<Bar>> GetBarsByDay(string key)
         {
-            Validate.NotNull(key, nameof(key));
+            Debug.NotNull(key, nameof(key));
 
             if (!this.KeyExists(key))
             {

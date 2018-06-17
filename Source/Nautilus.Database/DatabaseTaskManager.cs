@@ -55,6 +55,7 @@ namespace Nautilus.Database
             this.economicEventRepository = economicEventRepository;
 
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
         }
@@ -66,6 +67,18 @@ namespace Nautilus.Database
             var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
 
             sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
+        }
+
+        private void OnMessage(DataDelivery<BarClosed> message, IActorRef sender)
+        {
+            Debug.NotNull(message, nameof(message));
+            Debug.NotNull(sender, nameof(sender));
+
+            var barType = message.Data.BarType;
+            var bar = message.Data.Bar;
+
+            var result = this.barRepository.Add(barType, bar);
+            this.Log.Result(result);
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message, IActorRef sender)

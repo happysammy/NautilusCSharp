@@ -85,8 +85,8 @@ namespace Nautilus.Database.Processors
                     Price.Create(ask, tickSizeIndex[securitySymbol]),
                     timestamp);
 
-                this.barAggregationControllerRef.Tell(tick);
                 this.quoteProvider.OnTick(tick);
+                this.barAggregationControllerRef.Tell(tick);
             });
         }
     }

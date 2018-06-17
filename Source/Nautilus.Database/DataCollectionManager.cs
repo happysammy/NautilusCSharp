@@ -39,8 +39,7 @@ namespace Nautilus.Database
     /// </summary>
     public class DataCollectionManager : ActorComponentBusConnectedBase
     {
-        private readonly IScheduler scheduler;
-        private readonly IActorRef databaseTaskActorRef;
+        private readonly IActorRef databaseTaskManagerRef;
         private readonly IBarDataProvider barDataProvider;
         private readonly Dictionary<BarType, IActorRef> marketDataCollectors;
         private readonly EconomicEventCollector eventCollector;
@@ -54,16 +53,14 @@ namespace Nautilus.Database
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <param name="databaseTaskActorRef">The database task actor ref.</param>
+        /// <param name="databaseTaskManagerRef">The database task actor ref.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
             DatabaseSetupContainer container,
             IMessagingAdapter messagingAdapter,
-            IScheduler scheduler,
-            IActorRef databaseTaskActorRef,
+            IActorRef databaseTaskManagerRef,
             DataCollectionSchedule collectionSchedule,
             IBarDataProvider barDataProvider)
             : base(
@@ -73,12 +70,10 @@ namespace Nautilus.Database
                 messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(scheduler, nameof(scheduler));
-            Validate.NotNull(databaseTaskActorRef, nameof(databaseTaskActorRef));
+            Validate.NotNull(databaseTaskManagerRef, nameof(databaseTaskManagerRef));
             Validate.NotNull(collectionSchedule, nameof(collectionSchedule));
 
-            this.scheduler = scheduler;
-            this.databaseTaskActorRef = databaseTaskActorRef;
+            this.databaseTaskManagerRef = databaseTaskManagerRef;
             this.barDataProvider = barDataProvider;
             this.marketDataCollectors = new Dictionary<BarType, IActorRef>();
             this.eventCollector = new EconomicEventCollector();
@@ -88,6 +83,7 @@ namespace Nautilus.Database
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
             this.Receive<DataCollected<BarType>>(msg => this.OnMessage(msg));
@@ -120,6 +116,13 @@ namespace Nautilus.Database
                 $"Updated last collection time to {timeNow.ToIsoString()}.");
 
             this.CollectMarketData();
+        }
+
+        private void OnMessage(DataDelivery<BarClosed> message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.databaseTaskManagerRef.Tell(message, this.Self);
         }
 
         // TODO: Refactor this.
@@ -157,7 +160,7 @@ namespace Nautilus.Database
                 }
             }
 
-            this.databaseTaskActorRef.Forward(message);
+            this.databaseTaskManagerRef.Tell(message, this.Self);
         }
 
         private void OnMessage(DataPersisted<BarType> message)
@@ -209,7 +212,7 @@ namespace Nautilus.Database
 
                 var message = new DataStatusRequest<BarType>(barSpec, this.NewGuid(), this.TimeNow());
 
-                var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
+                var dataStatusTask = Task.Run(() => this.databaseTaskManagerRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
                 this.Log.Debug($"Waiting for DataStatusResponse for {barSpec}...");
                 dataStatusTask.Wait();
@@ -253,13 +256,13 @@ namespace Nautilus.Database
             var timeFromCollection = (this.collectionSchedule.NextCollectionTime - this.TimeNow())
                 .ToTimeSpan();
 
-            this.scheduler.ScheduleTellOnce(
-                timeFromCollection,
-                this.Self,
-                new CollectData<BarType>(
-                    this.NewGuid(),
-                    this.TimeNow()),
-                this.Self);
+//            this.scheduler.ScheduleTellOnce(
+//                timeFromCollection,
+//                this.Self,
+//                new CollectData<BarType>(
+//                    this.NewGuid(),
+//                    this.TimeNow()),
+//                this.Self);
 
             this.Log.Information(
                 $"Scheduled next collection time for {this.collectionSchedule.NextCollectionTime.ToIsoString()}");

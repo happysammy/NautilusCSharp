@@ -22,6 +22,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+    using ServiceStack.Validation;
 
     /// <summary>
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
@@ -146,10 +147,11 @@ namespace Nautilus.Database.Aggregators
                 }
 
                 // Close the bar and send to parent.
+                var barType = new BarType(this.symbol, barSpec);
                 var bar = builder.Build(message.CloseTime);
+
                 var barClosed = new BarClosed(
-                    this.symbol,
-                    barSpec,
+                    barType,
                     bar,
                     this.lastTick,
                     this.spreadAnalyzer.AverageSpread,

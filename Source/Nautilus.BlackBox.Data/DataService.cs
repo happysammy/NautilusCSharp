@@ -97,22 +97,22 @@ namespace Nautilus.BlackBox.Data
             {
                 var symbol = message.DataType.Symbol;
 
-                if (!this.marketDataProcessorIndex.ContainsKey(symbol))
-                {
-                    var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
-                    var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
-                    var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
-                        this.storedContainer,
-                        this.GetMessagingAdapter(),
-                        barReceivers,
-                        schedulerRef,
-                        BlackBoxService.Data)));
-
-                    this.marketDataProcessorIndex.Add(symbol, marketDataProcessorRef);
-                    this.marketDataProcessorIndex[symbol].Tell(message, this.Self);
-                    this.marketDataPortRef.Tell(new MarketDataProcessorIndexUpdate(this.marketDataProcessorIndex, this.NewGuid(), this.TimeNow()));
-                    this.brokerageGateway.RequestMarketDataSubscribe(symbol);
-                }
+//                if (!this.marketDataProcessorIndex.ContainsKey(symbol))
+//                {
+//                    var barReceivers = new List<Enum>{BlackBoxService.AlphaModel}.ToImmutableList();
+//                    var schedulerRef = Context.ActorOf(Props.Create(() => new Scheduler()));
+//                    var marketDataProcessorRef = Context.ActorOf(Props.Create(() => new BarAggregationController(
+//                        this.storedContainer,
+//                        this.GetMessagingAdapter(),
+//                        barReceivers,
+//                        schedulerRef,
+//                        BlackBoxService.Data)));
+//
+//                    this.marketDataProcessorIndex.Add(symbol, marketDataProcessorRef);
+//                    this.marketDataProcessorIndex[symbol].Tell(message, this.Self);
+//                    this.marketDataPortRef.Tell(new MarketDataProcessorIndexUpdate(this.marketDataProcessorIndex, this.NewGuid(), this.TimeNow()));
+//                    this.brokerageGateway.RequestMarketDataSubscribe(symbol);
+//                }
             });
         }
 

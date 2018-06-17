@@ -57,7 +57,7 @@ namespace Nautilus.Redis
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public CommandResult FlushAll(string areYouSure)
         {
-            Validate.NotNull(areYouSure, nameof(areYouSure));
+            Debug.NotNull(areYouSure, nameof(areYouSure));
 
             if (areYouSure == "YES")
             {
@@ -86,19 +86,33 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="int"/>.</returns>
         public long BarsCount(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
+            Debug.NotNull(barType, nameof(barType));
 
             return this.barClient.BarsCount(barType);
         }
 
         /// <summary>
+        /// Adds the given bar to the repository.
+        /// </summary>
+        /// <param name="barType">The bar type to add.</param>
+        /// <param name="bar">The bar to add.</param>
+        /// <returns>A <see cref="CommandResult"/>.</returns>
+        public CommandResult Add(BarType barType, Bar bar)
+        {
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotNull(bar, nameof(bar));
+
+            return this.barClient.AddBar(barType, bar);
+        }
+
+        /// <summary>
         /// Adds the given bar(s) to the repository.
         /// </summary>
-        /// <param name="barData">The market data.</param>
+        /// <param name="barData">The data data to add.</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public CommandResult Add(BarDataFrame barData)
         {
-            Validate.NotNull(barData, nameof(barData));
+            Debug.NotNull(barData, nameof(barData));
 
             return this.barClient.AddBars(barData.BarType, barData.Bars);
         }
@@ -139,7 +153,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="QueryResult{T}"/> containing the <see cref="Bar"/>.</returns>
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
-            Validate.NotNull(barType, nameof(barType));
+            Debug.NotNull(barType, nameof(barType));
 
             var barKeysQuery = this.barClient.GetAllSortedKeys(barType);
 

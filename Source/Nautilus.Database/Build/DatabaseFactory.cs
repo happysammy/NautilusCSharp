@@ -19,9 +19,11 @@ namespace Nautilus.Database.Build
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
+    using Nautilus.Database.Aggregators;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.Scheduler;
 
     /// <summary>
     /// The builder for the NautilusDB database infrastructure.
@@ -69,6 +71,9 @@ namespace Nautilus.Database.Build
                 actorSystem,
                 setupContainer);
 
+            var schedulerRef = actorSystem.ActorOf(Props.Create(
+                () => new Scheduler()));
+
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
                     setupContainer,
@@ -79,10 +84,17 @@ namespace Nautilus.Database.Build
                 () => new DataCollectionManager(
                     setupContainer,
                     messagingAdapter,
-                    actorSystem.Scheduler,
                     databaseTaskActorRef,
                     collectionSchedule,
                     barDataProvider)));
+
+            var barAggregationController = actorSystem.ActorOf(Props.Create(
+                () => new BarAggregationController(
+                    setupContainer,
+                    messagingAdapter,
+                    dataCollectionActorRef,
+                    schedulerRef,
+                    ServiceContext.Database)));
 
             var addresses = new Dictionary<Enum, IActorRef>
             {

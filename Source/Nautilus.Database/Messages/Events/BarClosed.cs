@@ -23,43 +23,34 @@ namespace Nautilus.Database.Messages.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="BarClosed"/> message.
         /// </summary>
-        /// <param name="symbol">The message symbol.</param>
-        /// <param name="barSpecification">the message bar specification.</param>
+        /// <param name="barType">The message bar type.</param>
         /// <param name="bar">The message bar.</param>
         /// <param name="lastTick">The message last tick.</param>
         /// <param name="averageSpread">The message average spread.</param>
         /// <param name="id">The message identifier.</param>
         public BarClosed(
-            Symbol symbol,
-            BarSpecification barSpecification,
+            BarType barType,
             Bar bar,
             Tick lastTick,
             decimal averageSpread,
             Guid id) : base(id, bar.Timestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(barSpecification, nameof(barSpecification));
+            Debug.NotNull(barType, nameof(barType));
             Debug.NotNull(bar, nameof(bar));
             Debug.NotNull(lastTick, nameof(lastTick));
             Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue);
             Debug.NotDefault(id, nameof(id));
 
-            this.Symbol = symbol;
-            this.BarSpecification = barSpecification;
+            this.BarType = barType;
             this.Bar = bar;
             this.LastTick = lastTick;
             this.AverageSpread = averageSpread;
         }
 
         /// <summary>
-        /// Gets the messages symbol.
+        /// Gets the messages bar type.
         /// </summary>
-        public Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the messages bar specification.
-        /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public BarType BarType { get; }
 
         /// <summary>
         /// Gets the messages bar.

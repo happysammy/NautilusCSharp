@@ -18,6 +18,11 @@
             throw new System.NotImplementedException();
         }
 
+        public CommandResult Add(BarType barType, Bar bar)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public CommandResult Add(BarDataFrame barData)
         {
             throw new System.NotImplementedException();

@@ -35,7 +35,7 @@ namespace Nautilus.Database.Aggregators
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IImmutableList<Enum> barDataReceivers;
+        private readonly IActorRef dataCollectionManagerRef;
         private readonly IActorRef schedulerRef;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
         private readonly IDictionary<Duration, KeyValuePair<JobKey, TriggerKey>> barJobs;
@@ -47,14 +47,14 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="barReceivers">The bar data receivers.</param>
+        /// <param name="dataCollectionManagerRef">The bar data receivers.</param>
         /// <param name="schedulerRef">The scheduler actor address.</param>
         /// <param name="serviceContext">The service context.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregationController(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IImmutableList<Enum> barReceivers,
+            IActorRef dataCollectionManagerRef,
             IActorRef schedulerRef,
             Enum serviceContext)
             : base(
@@ -65,12 +65,12 @@ namespace Nautilus.Database.Aggregators
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(barReceivers, nameof(barReceivers));
+            Validate.NotNull(dataCollectionManagerRef, nameof(dataCollectionManagerRef));
             Validate.NotNull(schedulerRef, nameof(schedulerRef));
             Validate.NotNull(serviceContext, nameof(serviceContext));
 
             this.storedContainer = container;
-            this.barDataReceivers = barReceivers.ToImmutableList();
+            this.dataCollectionManagerRef = dataCollectionManagerRef;
             this.schedulerRef = schedulerRef;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
             this.barJobs = new Dictionary<Duration, KeyValuePair<JobKey, TriggerKey>>();
@@ -289,12 +289,12 @@ namespace Nautilus.Database.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(BarClosed message)
         {
-            var @event = new EventMessage(
+            var dataDelivery = new DataDelivery<BarClosed>(
                 message,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(this.barDataReceivers, @event);
+            this.dataCollectionManagerRef.Tell(dataDelivery, this.Self);
         }
 
         private ITrigger CreateTrigger(BarSpecification barSpec)

@@ -35,6 +35,14 @@ namespace Nautilus.Database.Interfaces
         /// <summary>
         /// Returns the result of the add bars command.
         /// </summary>
+        /// <param name="barType">The barType to add.</param>
+        /// <param name="bar">The bar to add.</param>
+        /// <returns>A <see cref="CommandResult"/>.</returns>
+        CommandResult Add(BarType barType, Bar bar);
+
+        /// <summary>
+        /// Returns the result of the add bars command.
+        /// </summary>
         /// <param name="barData">The market data to add.</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>
         CommandResult Add(BarDataFrame barData);

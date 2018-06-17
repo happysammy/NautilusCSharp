@@ -22,7 +22,7 @@ namespace Nautilus.Common.Messaging
     [Immutable]
     public sealed class Switchboard : ISwitchboard
     {
-        private readonly ImmutableDictionary<Enum, IActorRef> addresses;
+        private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.

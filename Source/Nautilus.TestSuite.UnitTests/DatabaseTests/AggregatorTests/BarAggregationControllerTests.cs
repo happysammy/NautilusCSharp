@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var props = Props.Create(() => new BarAggregationController(
                 container,
                 messagingAdapter,
-                new List<Enum>{ServiceContext.Database}.ToImmutableList(),
+                this.TestActor,
                 schedulerRef,
                 ServiceContext.Database));
 
