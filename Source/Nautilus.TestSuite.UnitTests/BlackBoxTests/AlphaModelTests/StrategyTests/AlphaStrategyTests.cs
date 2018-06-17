@@ -67,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             var toString = LogFormatter.ToOutput(alphaStrategy);
 
             // Assert
-            Assert.Equal("Symbol=AUDUSD.FXCM, TradeProfile=TradeProfile(TestTrade), BarSpecification=5-Minute[Bid], TradePeriod=20, EntryAlgorithms=1, TrailingStoplossAlgorithms=0, ExitAlgorithms=0", toString);
+            Assert.Equal("Symbol=AUDUSD.FXCM, TradeProfile=TradeProfile(TestTrade), barTypeification=5-Minute[Bid], TradePeriod=20, EntryAlgorithms=1, TrailingStoplossAlgorithms=0, ExitAlgorithms=0", toString);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="Trade"/> class. Represents a financial market trade comprising of
+    /// Represents a financial market trade comprising of
     /// <see cref="TradeUnit"/>(s) to be managed together.
     /// </summary>
     public sealed class Trade : Aggregate<Trade>
@@ -46,12 +46,12 @@ namespace Nautilus.DomainModel.Aggregates
             ZonedDateTime timestamp)
             : base(tradeId, timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(tradeId, nameof(symbol));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(tradeUnits, nameof(tradeUnits));
-            Validate.NotNull(orderIdList, nameof(orderIdList));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(tradeId, nameof(symbol));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotNull(tradeUnits, nameof(tradeUnits));
+            Debug.NotNull(orderIdList, nameof(orderIdList));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.TradeType = tradeType;
@@ -131,9 +131,7 @@ namespace Nautilus.DomainModel.Aggregates
             Validate.NotNull(@event, nameof(@event));
             Validate.True(@event is OrderEvent, nameof(@event));
 
-            var orderEvent = @event as OrderEvent;
-
-            if (orderEvent is null)
+            if (!(@event is OrderEvent orderEvent))
             {
                 return CommandResult.Fail($"The event is not of type {nameof(OrderEvent)}");
             }

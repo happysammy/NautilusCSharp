@@ -59,10 +59,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void KeysCount_WithNoKeys_ReturnsZero()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.client.KeysCount(barSpec);
+            var result = this.client.KeysCount(barType);
 
             // Assert
             Assert.Equal(0, result);
@@ -72,8 +72,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void KeyExists_WithNoKeys_ReturnsFalse()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
-            var marketDataKey = new BarDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var barType = StubBarType.AUDUSD();
+            var marketDataKey = new BarDataKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
 
             // Act
             var result1 = this.client.KeyExists(marketDataKey);
@@ -88,11 +88,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void KeyExists_WithKeyInRedis_ReturnsTrue()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
-            var marketDataKey = new BarDataKey(barSpec, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var barType = StubBarType.AUDUSD();
+            var marketDataKey = new BarDataKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(0.80000M, 0.80010M, 0.79990M, 0.80001M, 1000000, StubZonedDateTime.UnixEpoch());
 
-            this.client.AddBars(barSpec, new[] { bar });
+            this.client.AddBars(barType, new[] { bar });
 
             // Act
             var result1 = this.client.KeyExists(marketDataKey);
@@ -107,10 +107,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetAllKeys_WithNoKeysInRedis_ReturnsQueryFailure()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.client.GetAllSortedKeys(barSpec);
+            var result = this.client.GetAllSortedKeys(barType);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -120,14 +120,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetAllKeys_WithKeysInRedis_ReturnsKeys()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(2));
 
-            this.client.AddBars(barSpec, new[] { bar1, bar2 });
+            this.client.AddBars(barType, new[] { bar1, bar2 });
 
             // Act
-            var result = this.client.GetAllSortedKeys(barSpec);
+            var result = this.client.GetAllSortedKeys(barType);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -163,93 +163,112 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Add_WithOneBar_AddsBarToRedis()
+        internal void AddBar_WithOneBar_AddsBarToRedis()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
 
             // Act
-            var result = this.client.AddBars(barSpec, new[] { bar });
+            var result = this.client.AddBar(barType, bar);
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(1, this.client.BarsCount(barSpec));
-            Assert.Equal(1, this.client.KeysCount(barSpec));
+            Assert.Equal(1, this.client.BarsCount(barType));
+            Assert.Equal(1, this.client.KeysCount(barType));
             Assert.Equal(1, this.client.AllBarsCount());
             Assert.Equal(1, this.client.AllKeysCount());
         }
 
         [Fact]
-        internal void Add_OneBarWithOneBarAlreadyPersisted_AddsBarToRedisAtCorrectIndex()
+        internal void AddBars_WithOneBar_AddsBarToRedis()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
-            var bar1 = StubBarData.Create();
-            var bar2 = StubBarData.Create(1);
-
-            this.client.AddBars(barSpec, new[] { bar1 });
+            var barType = StubBarType.AUDUSD();
+            var bar = StubBarData.Create();
 
             // Act
-            var result = this.client.AddBars(barSpec, new[] { bar2 });
+            var result = this.client.AddBars(barType, new[] { bar });
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(2, this.client.BarsCount(barSpec));
-            Assert.Equal(1, this.client.KeysCount(barSpec));
+            Assert.Equal(1, this.client.BarsCount(barType));
+            Assert.Equal(1, this.client.KeysCount(barType));
+            Assert.Equal(1, this.client.AllBarsCount());
+            Assert.Equal(1, this.client.AllKeysCount());
+        }
+
+        [Fact]
+        internal void AddBars_OneBarWithOneBarAlreadyPersisted_AddsBarToRedisAtCorrectIndex()
+        {
+            // Arrange
+            var barType = StubBarType.AUDUSD();
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(1);
+
+            this.client.AddBars(barType, new[] { bar1 });
+
+            // Act
+            var result = this.client.AddBars(barType, new[] { bar2 });
+
+            // Assert
+            this.output.WriteLine(result.Message);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(2, this.client.BarsCount(barType));
+            Assert.Equal(1, this.client.KeysCount(barType));
             Assert.Equal(2, this.client.AllBarsCount());
             Assert.Equal(1, this.client.AllKeysCount());
         }
 
         [Fact]
-        internal void Add_OneBarWithTwoBarsAlreadyPersistedWithAGap_AddsBarToRedisAtCorrectIndex()
+        internal void AddBars_OneBarWithTwoBarsAlreadyPersistedWithAGap_AddsBarToRedisAtCorrectIndex()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(2);
             var bar3 = StubBarData.Create(4);
 
-            this.client.AddBars(barSpec, new[] { bar1, bar2 });
+            this.client.AddBars(barType, new[] { bar1, bar2 });
 
             // Act
-            var result = this.client.AddBars(barSpec, new[] { bar3 });
+            var result = this.client.AddBars(barType, new[] { bar3 });
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(3, this.client.BarsCount(barSpec));
+            Assert.Equal(3, this.client.BarsCount(barType));
             Assert.Equal(3, this.client.AllBarsCount());
         }
 
         [Fact]
-        internal void Add_OneBarWithTwoAlreadyPersistedAtDifferentDay_AddsBarToRedisAtCorrectIndex()
+        internal void AddBars_OneBarWithTwoAlreadyPersistedAtDifferentDay_AddsBarToRedisAtCorrectIndex()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(1) + Duration.FromMinutes(1));
 
-            this.client.AddBars(barSpec, new[] { bar1, bar2 });
+            this.client.AddBars(barType, new[] { bar1, bar2 });
 
             // Act
-            var result = this.client.AddBars(barSpec, new[] { bar3 });
+            var result = this.client.AddBars(barType, new[] { bar3 });
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(3, this.client.BarsCount(barSpec));
+            Assert.Equal(3, this.client.BarsCount(barType));
             Assert.Equal(3, this.client.AllBarsCount());
         }
 
         [Fact]
-        internal void Add_WithMultipleBars_AddsBarsToRedis()
+        internal void AddBars_WithMultipleBars_AddsBarsToRedis()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -257,12 +276,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar5 = StubBarData.Create(4);
 
             // Act
-            var result = this.client.AddBars(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var result = this.client.AddBars(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
-            Assert.Equal(5, this.client.BarsCount(barSpec));
+            Assert.Equal(5, this.client.BarsCount(barType));
             Assert.Equal(5, this.client.AllBarsCount());
         }
 
@@ -270,13 +289,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBarString_WithOneBar_ReturnsBar()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
 
-            this.client.AddBars(barSpec, new[] { bar });
+            this.client.AddBars(barType, new[] { bar });
 
             // Act
-            var result = this.client.GetBar(barSpec, bar.Timestamp);
+            var result = this.client.GetBar(barType, bar.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Value.ToString());
@@ -288,11 +307,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBar_WithNoBars_ReturnsQueryFailure()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
 
             // Act
-            var result = this.client.GetBar(barSpec, bar.Timestamp);
+            var result = this.client.GetBar(barType, bar.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -303,12 +322,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBar_WithOneBar_ReturnsBar()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
-            this.client.AddBars(barSpec, new[] { bar });
+            this.client.AddBars(barType, new[] { bar });
 
             // Act
-            var result = this.client.GetBar(barSpec, bar.Timestamp);
+            var result = this.client.GetBar(barType, bar.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -320,14 +339,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBar_WithMultipleBars_ReturnsExpectedBar()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
-            this.client.AddBars(barSpec, new[] { bar1, bar2, bar3 });
+            this.client.AddBars(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.client.GetBar(barSpec, bar2.Timestamp);
+            var result = this.client.GetBar(barType, bar2.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -339,10 +358,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithNoBars_ReturnsQueryFailure()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.client.GetBars(barSpec, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
+            var result = this.client.GetBars(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -354,13 +373,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithBarOutOfRange_ReturnsQueryFailure()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create(Duration.FromHours(1));
 
-            this.client.AddBars(barSpec, new[] { bar });
+            this.client.AddBars(barType, new[] { bar });
 
             // Act
-            var result = this.client.GetBars(barSpec, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(2));
+            var result = this.client.GetBars(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(2));
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -372,15 +391,15 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithRangeOfOneBar_ReturnsExpectedBars()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
 
-            this.client.AddBars(barSpec, new[] { bar1, bar2, bar3 });
+            this.client.AddBars(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.client.GetBars(barSpec, bar2.Timestamp, bar2.Timestamp);
+            var result = this.client.GetBars(barType, bar2.Timestamp, bar2.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -393,15 +412,15 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithRangeOfThreeBars_ReturnsExpectedThreeBars()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
 
-            this.client.AddBars(barSpec, new[] { bar1, bar2, bar3 });
+            this.client.AddBars(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.client.GetBars(barSpec, bar1.Timestamp, bar3.Timestamp);
+            var result = this.client.GetBars(barType, bar1.Timestamp, bar3.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);
@@ -413,14 +432,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void GetBars_WithThreeBarsSpreadAcrossThreeDays_ReturnsExpectedBars()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(Duration.FromDays(1));
             var bar3 = StubBarData.Create(Duration.FromDays(2));
-            this.client.AddBars(barSpec, new[] { bar1, bar2, bar3 });
+            this.client.AddBars(barType, new[] { bar1, bar2, bar3 });
 
             // Act
-            var result = this.client.GetBars(barSpec, bar1.Timestamp, bar3.Timestamp);
+            var result = this.client.GetBars(barType, bar1.Timestamp, bar3.Timestamp);
 
             // Assert
             this.output.WriteLine(result.Message);

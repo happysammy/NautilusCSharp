@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="BarSpecificationTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="barTypeificationTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -16,11 +16,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarSpecificationTests
+    public class barTypeificationTests
     {
         private readonly ITestOutputHelper output;
 
-        public BarSpecificationTests(ITestOutputHelper output)
+        public barTypeificationTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -30,14 +30,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithNullObject_ReturnsFalse()
         {
             // Arrange
-            var barSpec = new BarSpecification(
+            var barType = new BarSpecification(
                 BarQuoteType.Bid,
                 BarResolution.Minute,
                 1);
 
             // Act
-            var result1 = barSpec.Equals(null);
-            var result2 = barSpec == null;
+            var result1 = barType.Equals(null);
+            var result2 = barType == null;
 
             // Assert
             Assert.False(result1);
@@ -48,19 +48,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithEqualObject_ReturnsTrue()
         {
             // Arrange
-            var barSpec1 = new BarSpecification(
+            var barType1 = new BarSpecification(
                 BarQuoteType.Bid,
                 BarResolution.Minute,
                 1);
 
-            var barSpec2 = new BarSpecification(
+            var barType2 = new BarSpecification(
                 BarQuoteType.Bid,
                 BarResolution.Minute,
                 1);
 
             // Act
-            var result1 = barSpec1.Equals(barSpec2);
-            var result2 = barSpec1 == barSpec2;
+            var result1 = barType1.Equals(barType2);
+            var result2 = barType1 == barType2;
 
             // Assert
             Assert.True(result1);
@@ -71,13 +71,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void GetHashCode_ReturnsExpectedInt32()
         {
             // Arrange
-            var barSpec = new BarSpecification(
+            var barType = new BarSpecification(
                 BarQuoteType.Bid,
                 BarResolution.Minute,
                 1);
 
             // Act
-            var result = barSpec.GetHashCode();
+            var result = barType.GetHashCode();
 
             // Assert
             Assert.NotEqual(0, result);
@@ -87,13 +87,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var barSpec = new BarSpecification(
+            var barType = new BarSpecification(
                 BarQuoteType.Bid,
                 BarResolution.Minute,
                 1);
 
             // Act
-            var result = barSpec.ToString();
+            var result = barType.ToString();
 
             // Assert
             Assert.Equal("1-Minute[Bid]", result);

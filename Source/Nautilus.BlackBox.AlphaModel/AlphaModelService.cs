@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.AlphaModel
 {
-    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
@@ -19,7 +18,6 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
-    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -103,8 +101,8 @@ namespace Nautilus.BlackBox.AlphaModel
                     Context);
 
                 // TODO: Refactor below.
-                var symbolBarSpec = new BarType(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
-                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, symbolBarSpec, alphasStrategyModuleRef);
+                var symbolbarType = new BarType(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
+                this.alphaStrategyModuleStore.AddStrategy(strategyLabel, symbolbarType, alphasStrategyModuleRef);
 
                 var createPortfolio = new CreatePortfolio(
                     message.Strategy.Instrument,
@@ -112,7 +110,7 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.TimeNow());
 
                 var registerSymbolDataType = new Subscribe<BarType>(
-                    symbolBarSpec,
+                    symbolbarType,
                     this.NewGuid(),
                     this.TimeNow());
 

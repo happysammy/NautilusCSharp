@@ -404,7 +404,7 @@ namespace Nautilus.BlackBox.Core
 
             return $"Symbol={strategy.Instrument.Symbol}, "
                  + $"TradeProfile={strategy.TradeProfile}, "
-                 + $"BarSpecification={strategy.TradeProfile.BarSpecification}, "
+                 + $"barTypeification={strategy.TradeProfile.BarSpecification}, "
                  + $"TradePeriod={strategy.TradeProfile.TradePeriod}, "
                  + $"EntryAlgorithms={strategy.EntryAlgorithms.Count}, "
                  + $"TrailingStoplossAlgorithms={strategy.TrailingStopAlgorithms.Count}, "

@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentSymbolBarSpec_RetusnExpectedLabel()
+        internal void ComponentLabel_WithModuleComponentSymbolbarType_RetusnExpectedLabel()
         {
             // Arrange
 

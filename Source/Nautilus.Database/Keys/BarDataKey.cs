@@ -32,14 +32,14 @@ namespace Nautilus.Database.Keys
             Validate.NotDefault(dateKey, nameof(dateKey));
             Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
 
-            this.BarSpecification = barType;
+            this.barTypeification = barType;
             this.DateKey = dateKey;
         }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) bar specification.
         /// </summary>
-        public BarType BarSpecification { get; }
+        public BarType barTypeification { get; }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) date key.
@@ -64,7 +64,7 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(BarDataKey other)
         {
-            return this.BarSpecification.Equals(other.BarSpecification) &&
+            return this.barTypeification.Equals(other.barTypeification) &&
                    this.DateKey.Equals(other.DateKey);
         }
 
@@ -74,7 +74,7 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.BarSpecification.GetHashCode() +
+            return this.barTypeification.GetHashCode() +
                    this.DateKey.GetHashCode();
         }
 
@@ -84,10 +84,10 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.BarsNamespace +
-            $":{this.BarSpecification.Symbol.Exchange.ToString().ToLower()}" +
-            $":{this.BarSpecification.Symbol.Code.ToLower()}" +
-            $":{this.BarSpecification.Specification.Resolution.ToString().ToLower()}" +
-            $":{this.BarSpecification.Specification.QuoteType.ToString().ToLower()}" +
+            $":{this.barTypeification.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.barTypeification.Symbol.Code.ToLower()}" +
+            $":{this.barTypeification.Specification.Resolution.ToString().ToLower()}" +
+            $":{this.barTypeification.Specification.QuoteType.ToString().ToLower()}" +
             $":{this.DateKey}";
     }
 }

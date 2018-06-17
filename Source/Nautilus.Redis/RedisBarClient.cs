@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisMarketDataClient.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisBarClient.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -143,14 +143,14 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allBarSpecKeys = this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard);
+            var allbarTypeKeys = this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard);
 
-            if (allBarSpecKeys.Length == 0)
+            if (allbarTypeKeys.Length == 0)
             {
                 return 0;
             }
 
-            return allBarSpecKeys
+            return allbarTypeKeys
                 .Select(key => Encoding.Default.GetString(key))
                 .ToList()
                 .Select(this.GetBarsByDay)

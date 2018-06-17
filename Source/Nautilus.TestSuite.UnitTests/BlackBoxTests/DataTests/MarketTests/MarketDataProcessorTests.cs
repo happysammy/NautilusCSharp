@@ -53,14 +53,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         }
 
 //        [Fact]
-//        internal void GivenSubscribeSymbolDataTypeMessage_WithMinuteBarSpecification_SetsUpBarAggregator()
+//        internal void GivenSubscribeSymbolDataTypeMessage_WithMinutebarTypeification_SetsUpBarAggregator()
 //        {
 //            // Arrange
-//            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
+//            var barTypeification = new barTypeification(BarQuoteType.Bid, BarResolution.Minute, 5);
 //            var tradeType = new TradeType("TestScalp");
-//            var message = new SubscribeSymbolBarSpec(
+//            var message = new SubscribeSymbolbarType(
 //                this.symbol,
-//                barSpecification,
+//                barTypeification,
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
@@ -86,14 +86,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 //        }
 //
 //        [Fact]
-//        internal void GivenSubscribeSymbolDataTypeMessage_WithTickBarSpecification_SetsUpBarAggregator()
+//        internal void GivenSubscribeSymbolDataTypeMessage_WithTickbarTypeification_SetsUpBarAggregator()
 //        {
 //            // Arrange
-//            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
+//            var barTypeification = new barTypeification(BarQuoteType.Bid, BarResolution.Tick, 1000);
 //            var tradeType = new TradeType("TestScalp");
-//            var message = new SubscribeSymbolBarSpec(
+//            var message = new SubscribeSymbolbarType(
 //                this.symbol,
-//                barSpecification,
+//                barTypeification,
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
@@ -122,16 +122,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 //        internal void GivenUnsubscribeSymbolDataTypeMessage_RemovesBarAggregator()
 //        {
 //            // Arrange
-//            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
+//            var barTypeification = new barTypeification(BarQuoteType.Bid, BarResolution.Tick, 1000);
 //            var tradeType = new TradeType("TestScalp");
-//            var message1 = new SubscribeSymbolBarSpec(
+//            var message1 = new SubscribeSymbolbarType(
 //                this.symbol,
-//                barSpecification,
+//                barTypeification,
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
 //                StubZonedDateTime.UnixEpoch()()());
-//            var message2 = new UnsubscribeSymbolBarSpec(
+//            var message2 = new UnsubscribeSymbolbarType(
 //                this.symbol,
 //                tradeType,
 //                Guid.NewGuid(),

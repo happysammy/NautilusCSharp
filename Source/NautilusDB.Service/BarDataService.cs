@@ -46,14 +46,14 @@ namespace NautilusDB.Service
         {
 //            Debug.NotNull(request, nameof(request));
 //
-//            var requestBarSpec = new BarSpecification(
+//            var requestbarType = new barTypeification(
 //                request.BarQuoteType.ToEnum<BarQuoteType>(),
 //                request.BarResolution.ToEnum<BarResolution>(),
 //                request.BerPeriod);
 //
-//            var queryMessage = new QueryRequest<SymbolBarSpec>(
+//            var queryMessage = new QueryRequest<SymbolbarType>(
 //                new Symbol(request.Symbol, request.Exchange.ToEnum<Exchange>()),
-//                requestBarSpec,
+//                requestbarType,
 //                request.FromDateTime.ToZonedDateTimeFromIso(),
 //                request.ToDateTime.ToZonedDateTimeFromIso(),
 //                Guid.NewGuid(),

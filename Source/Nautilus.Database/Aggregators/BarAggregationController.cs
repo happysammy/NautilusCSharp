@@ -169,7 +169,7 @@ namespace Nautilus.Database.Aggregators
             Debug.NotNull(message, nameof(message));
 
             var symbol = message.DataType.Symbol;
-            var barSpec = message.DataType.Specification;
+            var barType = message.DataType.Specification;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -178,19 +178,19 @@ namespace Nautilus.Database.Aggregators
 
             this.barAggregators[symbol].Tell(message);
 
-            if (!this.triggerCounts.ContainsKey(barSpec.Duration))
+            if (!this.triggerCounts.ContainsKey(barType.Duration))
             {
                 return;
             }
 
-            this.triggerCounts[barSpec.Duration]--;
+            this.triggerCounts[barType.Duration]--;
 
-            this.Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                           $"duration (count={this.triggerCounts[barSpec.Duration]}).");
+            this.Log.Debug($"Subtracting trigger count for {barType.Period}-{barType.Resolution} " +
+                           $"duration (count={this.triggerCounts[barType.Duration]}).");
 
-            if (this.triggerCounts[barSpec.Duration] <= 0)
+            if (this.triggerCounts[barType.Duration] <= 0)
             {
-                var job = this.barJobs[barSpec.Duration];
+                var job = this.barJobs[barType.Duration];
                 var removeJob = new RemoveJob(job.Key, job.Value, "null job");
 
                 this.schedulerRef.Tell(removeJob);
@@ -206,8 +206,8 @@ namespace Nautilus.Database.Aggregators
 
             if (job != null)
             {
-                var barSpec = job.BarType.Specification;
-                var duration = barSpec.Duration;
+                var barType = job.BarType.Specification;
+                var duration = barType.Duration;
 
                 if (!this.barJobs.ContainsKey(duration))
                 {

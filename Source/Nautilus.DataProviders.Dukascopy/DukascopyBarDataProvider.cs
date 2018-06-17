@@ -40,7 +40,7 @@ namespace Nautilus.DataProviders.Dukascopy
             Validate.NotNull(initialFromDateString, nameof(initialFromDateString));
             Validate.Int32NotOutOfRange(collectionOffsetMinutes, nameof(collectionOffsetMinutes), 0, int.MaxValue);
 
-            this.SymbolBarDatas = BuildBarSpecifications(config.CurrencyPairs, config.BarResolutions);
+            this.SymbolBarDatas = BuildbarTypeifications(config.CurrencyPairs, config.BarResolutions);
             this.DataPath = new DirectoryInfo(config.CsvDataDirectory);
             this.TimestampParsePattern = config.TimestampParsePattern;
             this.VolumeMultiple = config.VolumeMultiple;
@@ -95,22 +95,22 @@ namespace Nautilus.DataProviders.Dukascopy
             }
         }
 
-        private static IReadOnlyCollection<BarType> BuildBarSpecifications(
+        private static IReadOnlyCollection<BarType> BuildbarTypeifications(
             IReadOnlyCollection<string> currencyPairs,
             IReadOnlyCollection<string> barResolutions)
         {
-            var barSpecs = new List<BarType>();
+            var barTypes = new List<BarType>();
 
             foreach (var symbol in currencyPairs.Distinct())
             {
                 foreach (var resolution in barResolutions)
                 {
-                    barSpecs.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1)));
-                    barSpecs.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1)));
+                    barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, resolution.ToEnum<BarResolution>(), 1)));
+                    barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, resolution.ToEnum<BarResolution>(), 1)));
                 }
             }
 
-            return barSpecs;
+            return barTypes;
         }
     }
 }

@@ -22,15 +22,15 @@ namespace Nautilus.Database.Messages.Commands
     public sealed class CloseBar : CommandMessage
     {
         public CloseBar(
-            BarSpecification barSpec,
+            BarSpecification barType,
             ZonedDateTime closeTime,
             Guid id,
             ZonedDateTime timestamp) : base(id, timestamp)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
+            Debug.NotNull(barType, nameof(barType));
             Debug.NotDefault(closeTime, nameof(closeTime));
 
-            this.BarSpecification = barSpec;
+            this.BarSpecification = barType;
             this.CloseTime = closeTime;
         }
 

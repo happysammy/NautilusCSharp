@@ -68,11 +68,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 //        internal void GivenSubscribeSymbolDataTypeMessage_SetsUpBarAggregator()
 //        {
 //            // Arrange
-//            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5);
+//            var barTypeification = new barTypeification(BarQuoteType.Bid, BarResolution.Minute, 5);
 //            var tradeType = new TradeType("TestScalp");
-//            var message = new SubscribeSymbolBarSpec(
+//            var message = new SubscribeSymbolbarType(
 //                this.symbol,
-//                barSpecification,
+//                barTypeification,
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),
@@ -101,11 +101,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
 //        internal void GivenUnsubscribeSymbolDataTypeMessage_RemovesBarAggregator()
 //        {
 //            // Arrange
-//            var barSpecification = new BarSpecification(BarQuoteType.Bid, BarResolution.Tick, 1000);
+//            var barTypeification = new barTypeification(BarQuoteType.Bid, BarResolution.Tick, 1000);
 //            var tradeType = new TradeType("TestScalp");
 //            var message1 = new SubscribeBarData(
 //                this.symbol,
-//                barSpecification,
+//                barTypeification,
 //                tradeType,
 //                0.00001m,
 //                Guid.NewGuid(),

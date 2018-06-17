@@ -55,19 +55,19 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithOneBar_AddsBarToRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
-            var marketData = new BarDataFrame(barSpec, new[] { bar });
+            var marketData = new BarDataFrame(barType, new[] { bar });
 
             // Act
             var result = this.repository.Add(marketData);
 
             // Assert
             this.output.WriteLine(result.Message);
-            this.PrintRepositoryStatus(barSpec);
+            this.PrintRepositoryStatus(barType);
             Assert.True(result.IsSuccess);
             Assert.Equal(1, this.repository.AllBarsCount());
-            Assert.Equal(1, this.repository.BarsCount(barSpec));
+            Assert.Equal(1, this.repository.BarsCount(barType));
             Assert.Equal("Added 1 bars to AUDUSD.Dukascopy-1-Minute[Ask] (TotalCount=1)", result.Message);
         }
 
@@ -75,23 +75,23 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBars_AddsBarsToRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
             var bar4 = StubBarData.Create(3);
             var bar5 = StubBarData.Create(4);
-            var marketData = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             // Act
             var result = this.repository.Add(marketData);
 
             // Assert
             this.output.WriteLine(result.Message);
-            this.PrintRepositoryStatus(barSpec);
+            this.PrintRepositoryStatus(barType);
             Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.AllBarsCount());
-            Assert.Equal(5, this.repository.BarsCount(barSpec));
+            Assert.Equal(5, this.repository.BarsCount(barType));
             Assert.Equal("Added 5 bars to AUDUSD.Dukascopy-1-Minute[Ask] (TotalCount=5)", result.Message);
         }
 
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAndBarsAlreadyPersisted_AddsExpectedBarsToRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -109,8 +109,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar6 = StubBarData.Create(5);
             var bar7 = StubBarData.Create(6);
             var bar8 = StubBarData.Create(7);
-            var marketData1 = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
-            var marketData2 = new BarDataFrame(barSpec, new[] { bar6, bar7, bar8 });
+            var marketData1 = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData2 = new BarDataFrame(barType, new[] { bar6, bar7, bar8 });
 
             this.repository.Add(marketData1);
 
@@ -119,9 +119,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.output.WriteLine(result.Message);
-            this.PrintRepositoryStatus(barSpec);
+            this.PrintRepositoryStatus(barType);
             Assert.True(result.IsSuccess);
-            Assert.Equal(8, this.repository.BarsCount(barSpec));
+            Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
             Assert.Equal("Added 3 bars to AUDUSD.Dukascopy-1-Minute[Ask] (TotalCount=8)", result.Message);
         }
@@ -130,7 +130,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Add_WithMultipleBarsAlreadyPersisted_AddsNewBarsToRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var bar6 = StubBarData.Create(5);
             var bar7 = StubBarData.Create(6);
             var bar8 = StubBarData.Create(7);
-            var marketData1 = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
-            var marketData2 = new BarDataFrame(barSpec, new[] { bar6, bar7, bar8 });
+            var marketData1 = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData2 = new BarDataFrame(barType, new[] { bar6, bar7, bar8 });
 
             this.repository.Add(marketData1);
 
@@ -150,9 +150,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.output.WriteLine(result.Message);
-            this.PrintRepositoryStatus(barSpec);
+            this.PrintRepositoryStatus(barType);
             Assert.True(result.IsSuccess);
-            Assert.Equal(8, this.repository.BarsCount(barSpec));
+            Assert.Equal(8, this.repository.BarsCount(barType));
             Assert.Equal(8, this.repository.AllBarsCount());
             Assert.Equal("Added 3 bars to AUDUSD.Dukascopy-1-Minute[Ask] (TotalCount=8)", result.Message);
         }
@@ -161,17 +161,17 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WithNoMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
 
             // Act
-            var result = this.repository.Find(barSpec, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
 
             // Assert
             this.output.WriteLine(result.Message);
-            this.PrintRepositoryStatus(barSpec);
+            this.PrintRepositoryStatus(barType);
             Assert.True(result.IsFailure);
             Assert.Equal(0, this.repository.AllBarsCount());
-            Assert.Equal(0, this.repository.BarsCount(barSpec));
+            Assert.Equal(0, this.repository.BarsCount(barType));
             Assert.Equal("QueryResult Failure (No market data found for AUDUSD.Dukascopy-1-Minute[Ask]).", result.FullMessage);
         }
 
@@ -179,21 +179,21 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WithOtherMarketData_ReturnsExpectedQueryFailure()
         {
             // Arrange
-            var barSpec1 = StubBarType.AUDUSD();
-            var barSpec2 = StubBarType.GBPUSD();
+            var barType1 = StubBarType.AUDUSD();
+            var barType2 = StubBarType.GBPUSD();
             var bar = StubBarData.Create();
-            var marketData = new BarDataFrame(barSpec1, new[] { bar });
+            var marketData = new BarDataFrame(barType1, new[] { bar });
 
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barSpec2, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
+            var result = this.repository.Find(barType2, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch() + Duration.FromDays(1));
 
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal(1, this.repository.AllBarsCount());
-            Assert.Equal(1, this.repository.BarsCount(barSpec1));
-            Assert.Equal(0, this.repository.BarsCount(barSpec2));
+            Assert.Equal(1, this.repository.BarsCount(barType1));
+            Assert.Equal(0, this.repository.BarsCount(barType2));
             Assert.Equal("QueryResult Failure (No market data found for GBPUSD.Dukascopy-1-Minute[Bid]).", result.FullMessage);
         }
 
@@ -201,46 +201,46 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Find_WhenOnlyOneBarPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar = StubBarData.Create();
-            var marketData = new BarDataFrame(barSpec, new[] { bar });
+            var marketData = new BarDataFrame(barType, new[] { bar });
 
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barSpec, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch());
+            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch(), StubZonedDateTime.UnixEpoch());
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(1, this.repository.AllBarsCount());
             Assert.Single(result.Value.Bars);
-            Assert.Equal(1, this.repository.BarsCount(barSpec));
+            Assert.Equal(1, this.repository.BarsCount(barType));
         }
 
         [Fact]
         internal void Find_WhenMultipleBarsPersisted_ReturnsExpectedMarketDataFromRepository()
         {
             // Arrange
-            var barSpec = StubBarType.AUDUSD();
+            var barType = StubBarType.AUDUSD();
             var bar1 = StubBarData.Create();
             var bar2 = StubBarData.Create(1);
             var bar3 = StubBarData.Create(2);
             var bar4 = StubBarData.Create(3);
             var bar5 = StubBarData.Create(4);
-            var marketData = new BarDataFrame(barSpec, new[] { bar1, bar2, bar3, bar4, bar5 });
+            var marketData = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5 });
 
             this.repository.Add(marketData);
 
             // Act
-            var result = this.repository.Find(barSpec, StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(3));
+            var result = this.repository.Find(barType, StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1), StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(3));
 
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(5, this.repository.AllBarsCount());
             Assert.Equal(3, result.Value.Bars.Length);
-            Assert.Equal(5, this.repository.BarsCount(barSpec));
+            Assert.Equal(5, this.repository.BarsCount(barType));
         }
 
         private void PrintRepositoryStatus(BarType barType)

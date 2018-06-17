@@ -103,7 +103,7 @@ namespace Nautilus.Database.Collectors
 
                     this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
 
-                    //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.BarSpecification} bars");
+                    //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.barTypeification} bars");
                     this.Log.Debug($"Updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
                 }
 

@@ -177,19 +177,19 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(message, nameof(message));
 
-            var barSpec = message.DataType.Specification;
+            var barType = message.DataType.Specification;
 
-            if (barSpec.Resolution == BarResolution.Tick)
+            if (barType.Resolution == BarResolution.Tick)
             {
                 // TODO
                 throw new InvalidOperationException("Tick bars not yet supported.");
             }
 
-            if (!this.barBuilders.ContainsKey(barSpec))
+            if (!this.barBuilders.ContainsKey(barType))
             {
-                this.barBuilders.Add(barSpec, new BarBuilder());
+                this.barBuilders.Add(barType, new BarBuilder());
 
-                Log.Debug($"Added {barSpec} bars.");
+                Log.Debug($"Added {barType} bars.");
             }
         }
 
@@ -201,13 +201,13 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(message, nameof(message));
 
-            var barSpec = message.DataType.Specification;
+            var barType = message.DataType.Specification;
 
-            if (this.barBuilders.ContainsKey(barSpec))
+            if (this.barBuilders.ContainsKey(barType))
             {
-                this.barBuilders.Remove(barSpec);
+                this.barBuilders.Remove(barType);
 
-                Log.Debug($"Removed {barSpec} bars.");
+                Log.Debug($"Removed {barType} bars.");
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Nautilus.Redis
     using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Entities;
 
-    public class RedisEconomicNewsEventRepository : IEconomicEventRepository<EconomicEvent>
+    public class RedisEconomicEventRepository : IEconomicEventRepository<EconomicEvent>
     {
         public CommandResult Add(EconomicEvent entity)
         {

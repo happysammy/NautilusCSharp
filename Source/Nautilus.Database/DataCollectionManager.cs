@@ -194,10 +194,10 @@ namespace Nautilus.Database
         {
             this.Log.Information($"Initializing all market data collectors...");
 
-            foreach (var barSpec in this.barDataProvider.SymbolBarDatas)
+            foreach (var barType in this.barDataProvider.SymbolBarDatas)
             {
                 var dataReader = new CsvBarDataReader(
-                    barSpec,
+                    barType,
                     this.barDataProvider,
                     5);
 
@@ -208,18 +208,18 @@ namespace Nautilus.Database
                         dataReader,
                         this.collectionSchedule)));
 
-                this.marketDataCollectors.Add(barSpec, collectorRef);
+                this.marketDataCollectors.Add(barType, collectorRef);
 
-                var message = new DataStatusRequest<BarType>(barSpec, this.NewGuid(), this.TimeNow());
+                var message = new DataStatusRequest<BarType>(barType, this.NewGuid(), this.TimeNow());
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskManagerRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
-                this.Log.Debug($"Waiting for DataStatusResponse for {barSpec}...");
+                this.Log.Debug($"Waiting for DataStatusResponse for {barType}...");
                 dataStatusTask.Wait();
 
                 if (dataStatusTask.IsCompleted)
                 {
-                    this.Log.Debug($"Received a DataStatusResponse for {barSpec} and sending to collector.");
+                    this.Log.Debug($"Received a DataStatusResponse for {barType} and sending to collector.");
 
                     collectorRef.Tell(dataStatusTask.Result, this.Self);
                 }
