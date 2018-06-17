@@ -13,12 +13,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
-            this.quoteProvider.OnQuote(quote);
+            this.quoteProvider.Update(quote);
 
             var signal = StubSignalBuilder.BuyEntrySignal();
             var message = new SignalEvent(

@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             var setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
-            setupFactory.QuoteProvider.OnQuote(
+            setupFactory.QuoteProvider.Update(
                 new Tick(
                     new Symbol("AUDUSD", Exchange.FXCM),
                     Price.Create(0.80001m, 0.00001m),

@@ -12,10 +12,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Moq;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

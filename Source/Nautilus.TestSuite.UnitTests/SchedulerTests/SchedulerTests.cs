@@ -46,11 +46,11 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var scheduler = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
 
             // Act
-            scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/10 * * * * ?").Build()));
+            scheduler.Tell(new CreateJob(probe, "Hello remove", TriggerBuilder.Create().WithCronSchedule("0/1 * * * * ?").Build()));
 
             // Assert
             var jobCreated = ExpectMsg<JobCreated>();
-            probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(11));
+            probe.ExpectMsg("Hello remove", TimeSpan.FromSeconds(1));
             scheduler.Tell(new RemoveJob(jobCreated.JobKey, jobCreated.TriggerKey, "A job"));
             ExpectMsg<JobRemoved>();
 

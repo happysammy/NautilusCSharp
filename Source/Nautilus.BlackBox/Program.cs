@@ -23,11 +23,11 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Data;
     using Nautilus.BlackBox.Data.Instrument;
-    using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Execution;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
+    using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

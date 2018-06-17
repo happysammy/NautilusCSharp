@@ -390,7 +390,7 @@ namespace Nautilus.BlackBox.Brokerage
                     timestamp);
 
                 this.marketDataPortRef.Tell(quote);
-                this.quoteProvider.OnQuote(quote);
+                this.quoteProvider.Update(quote);
             });
         }
 

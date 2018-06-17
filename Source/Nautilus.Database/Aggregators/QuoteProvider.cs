@@ -6,53 +6,61 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Market
+namespace Nautilus.Database.Aggregators
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Linq;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="QuoteProvider"/> class. Provides quotes for the <see cref="BlackBox"/>
-    /// system.
+    /// Provides quotes for a particular exchange.
     /// </summary>
     public sealed class QuoteProvider : IQuoteProvider
     {
-        private readonly Exchange exchange;
-        private readonly IDictionary<string, Tick> lastQuotes = new ConcurrentDictionary<string, Tick>();
+        private readonly IDictionary<Symbol, Tick> ticks;
+        private readonly IDictionary<string, Symbol> symbolCodes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteProvider"/> class.
         /// </summary>
-        /// <param name="exchange">The exchange.</param>
         public QuoteProvider(Exchange exchange)
         {
-            this.exchange = exchange;
+            Debug.NotDefault(exchange, nameof(exchange));
+
+            this.Exchange = exchange;
+            this.ticks = new ConcurrentDictionary<Symbol, Tick>();
+            this.symbolCodes = new ConcurrentDictionary<string, Symbol>();
         }
+
+        /// <summary>
+        /// Gets the quote providers exchange.
+        /// </summary>
+        public Exchange Exchange { get; }
 
         /// <summary>
         /// Updates the quote provider with the given quote.
         /// </summary>
-        /// <param name="quote">]The quote.]</param>
+        /// <param name="tick">]The quote.]</param>
         /// <exception cref="ValidationException">Throws if the quote is null.</exception>
-        public void OnQuote(Tick quote)
+        public void Update(Tick tick)
         {
-            Validate.NotNull(quote, nameof(quote));
+            Debug.NotNull(tick, nameof(tick));
+            Debug.EqualTo(tick.Symbol.Exchange, nameof(tick.Symbol), this.Exchange);
 
-            if (!this.lastQuotes.ContainsKey(quote.Symbol.Code))
+            if (!this.ticks.ContainsKey(tick.Symbol))
             {
-                this.lastQuotes.Add(quote.Symbol.Code, quote);
+                this.ticks.Add(tick.Symbol, tick);
+                this.symbolCodes.Add(tick.Symbol.Code, tick.Symbol);
 
                 return;
             }
 
-            this.lastQuotes[quote.Symbol.Code] = quote;
+            this.ticks[tick.Symbol] = tick;
         }
 
         /// <summary>
@@ -61,12 +69,12 @@ namespace Nautilus.BlackBox.Data.Market
         /// <param name="symbol">The quote symbol.</param>
         /// <returns>A <see cref="Tick"/>.</returns>
         /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
-        public Option<Tick> GetLastQuote(Symbol symbol)
+        public Option<Tick> GetLastTick(Symbol symbol)
         {
-            Validate.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(symbol, nameof(symbol));
 
-            return this.lastQuotes.ContainsKey(symbol.Code)
-                 ? this.lastQuotes[symbol.Code]
+            return this.ticks.ContainsKey(symbol)
+                 ? this.ticks[symbol]
                  : Option<Tick>.None();
         }
 
@@ -74,12 +82,9 @@ namespace Nautilus.BlackBox.Data.Market
         /// Returns a collection of all quote symbols held by the quote provider.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IReadOnlyCollection<Symbol> GetQuoteSymbolList()
+        public IImmutableList<Symbol> GetSymbolList()
         {
-            return this.lastQuotes
-               .Keys
-               .Select(symbolString => new Symbol(symbolString, this.exchange))
-               .ToImmutableList();
+            return this.ticks.Keys.ToImmutableList();
         }
 
         /// <summary>
@@ -94,8 +99,8 @@ namespace Nautilus.BlackBox.Data.Market
             CurrencyCode accountCurrency,
             CurrencyCode quoteCurrency)
         {
-            Validate.NotDefault(accountCurrency, nameof(accountCurrency));
-            Validate.NotDefault(quoteCurrency, nameof(quoteCurrency));
+            Debug.NotDefault(accountCurrency, nameof(accountCurrency));
+            Debug.NotDefault(quoteCurrency, nameof(quoteCurrency));
 
             if (accountCurrency.Equals(quoteCurrency))
             {
@@ -108,9 +113,9 @@ namespace Nautilus.BlackBox.Data.Market
             var rateSymbol = quoteCurrencyString + accountCurrencyString;
             var rateSymbolSwapped = accountCurrencyString + quoteCurrencyString;
 
-            var exchangeRate = this.lastQuotes.ContainsKey(rateSymbol)
+            var exchangeRate = this.symbolCodes.ContainsKey(rateSymbol)
                                ? 1 / this.GetLastBid(rateSymbol)
-                               : (this.lastQuotes.ContainsKey(rateSymbolSwapped)
+                               : (this.symbolCodes.ContainsKey(rateSymbolSwapped)
                                       ? this.GetLastBid(rateSymbolSwapped).Value
                                       : this.ExchangeRateFromUsd(accountCurrencyString, quoteCurrencyString));
 
@@ -129,20 +134,20 @@ namespace Nautilus.BlackBox.Data.Market
             var conversionRateAccountToUsd = decimal.Zero;
             var exchangeRateFromUsd = decimal.Zero;
 
-            if (this.lastQuotes.ContainsKey(accountCurrency + "USD"))
+            if (this.symbolCodes.ContainsKey(accountCurrency + "USD"))
             {
                 conversionRateAccountToUsd = this.GetLastBid(accountCurrency + "USD").Value;
             }
-            else if (this.lastQuotes.ContainsKey("USD" + accountCurrency))
+            else if (this.symbolCodes.ContainsKey("USD" + accountCurrency))
             {
                 conversionRateAccountToUsd = 1 / this.GetLastBid(accountCurrency + "USD");
             }
 
-            if (this.lastQuotes.ContainsKey(quoteCurrency + "USD"))
+            if (this.symbolCodes.ContainsKey(quoteCurrency + "USD"))
             {
                 exchangeRateFromUsd = conversionRateAccountToUsd / this.GetLastBid(quoteCurrency + "USD");
             }
-            else if (this.lastQuotes.ContainsKey("USD" + quoteCurrency))
+            else if (this.symbolCodes.ContainsKey(CurrencyCode.USD + quoteCurrency))
             {
                 exchangeRateFromUsd = conversionRateAccountToUsd / (1 / this.GetLastBid("USD" + quoteCurrency));
             }
@@ -154,9 +159,7 @@ namespace Nautilus.BlackBox.Data.Market
         {
             Debug.NotNull(symbol, nameof(symbol));
 
-            return this.lastQuotes
-               .FirstOrDefault(q => q.Key == symbol)
-               .Value.Bid;
+            return this.ticks[this.symbolCodes[symbol]].Bid;
         }
     }
 }

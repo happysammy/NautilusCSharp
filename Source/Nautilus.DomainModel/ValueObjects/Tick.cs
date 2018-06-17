@@ -19,11 +19,10 @@ namespace Nautilus.DomainModel.ValueObjects
     using NodaTime;
 
     /// <summary>
-    /// Represents a financial market tick/quote.
+    /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public sealed class Tick
-        : ValueObject<Tick>, IEquatable<Tick>, IComparable<Tick>
+    public sealed class Tick : ValueObject<Tick>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.

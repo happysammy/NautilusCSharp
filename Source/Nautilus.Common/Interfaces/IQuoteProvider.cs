@@ -6,9 +6,9 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Interfaces
+namespace Nautilus.Common.Interfaces
 {
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -20,10 +20,10 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IQuoteProvider
     {
         /// <summary>
-        /// Updates the quote provider with the given quote.
+        /// Updates the quote provider with the given tick.
         /// </summary>
-        /// <param name="quote">The quote.</param>
-        void OnQuote(Tick quote);
+        /// <param name="tick">The quote.</param>
+        void Update(Tick tick);
 
         /// <summary>
         /// Returns the last quote corresponding to the given symbol if it is contained by the
@@ -31,13 +31,13 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>\A <see cref="Option{Tick}"/>.\</returns>
-        Option<Tick> GetLastQuote(Symbol symbol);
+        Option<Tick> GetLastTick(Symbol symbol);
 
         /// <summary>
-        /// Returns a collection of the symbol elements held by the quote provider.
+        /// Returns an immutable collection of the symbols held by the quote provider.
         /// </summary>
-        /// <returns>A <see cref="IReadOnlyCollection{Symbol}"/>.</returns>
-        IReadOnlyCollection<Symbol> GetQuoteSymbolList();
+        /// <returns>The immutable list of symbols.</returns>
+        IImmutableList<Symbol> GetSymbolList();
 
         /// <summary>
         /// Returns the exchange rate decimal if the quote provider contains the required
@@ -45,7 +45,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency">The quote currency.</param>
-        /// <returns>\A <see cref="Option{Decimal}"/>.\</returns>
+        /// <returns>A <see cref="Option{Decimal}"/>.\</returns>
         Option<decimal?> GetExchangeRate(CurrencyCode accountCurrency, CurrencyCode quoteCurrency);
     }
 }
