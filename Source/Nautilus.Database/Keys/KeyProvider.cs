@@ -88,40 +88,40 @@ namespace Nautilus.Database.Keys
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to
         /// <see cref="ZonedDateTime"/> range.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The two date time</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
         public static IEnumerable<string> GetBarsKeyStrings(
-            SymbolBarSpec barSpec,
+            BarType barType,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotDefault(fromDateTime, nameof(fromDateTime));
             Validate.NotDefault(toDateTime, nameof(toDateTime));
             Validate.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
-                .Select(key => new BarDataKey(barSpec, key).ToString())
+                .Select(key => new BarDataKey(barType, key).ToString())
                 .ToList();
         }
 
         /// <summary>
         /// Returns a wildcard string from the given symbol bar spec.
         /// </summary>
-        /// <param name="barSpec">The symbol bar spec.</param>
+        /// <param name="barType">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarsWildcardString(SymbolBarSpec barSpec)
+        public static string GetBarsWildcardString(BarType barType)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
+            Debug.NotNull(barType, nameof(barType));
 
             return BarsNamespaceConst +
-                   $":{barSpec.Symbol.Exchange.ToString().ToLower()}" +
-                   $":{barSpec.Symbol.Code.ToLower()}" +
-                   $":{barSpec.BarSpecification.Resolution.ToString().ToLower()}" +
-                   $":{barSpec.BarSpecification.QuoteType.ToString().ToLower()}" + WildcardConst;
+                   $":{barType.Symbol.Exchange.ToString().ToLower()}" +
+                   $":{barType.Symbol.Code.ToLower()}" +
+                   $":{barType.Specification.Resolution.ToString().ToLower()}" +
+                   $":{barType.Specification.QuoteType.ToString().ToLower()}" + WildcardConst;
         }
     }
 }

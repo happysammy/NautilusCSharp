@@ -10,7 +10,7 @@ namespace Nautilus.Database.Temp
 
     public class MockBarRepository : IBarRepository
     {
-        public long BarsCount(SymbolBarSpec symbolBarSpec)
+        public long BarsCount(BarType barType)
         {
             throw new System.NotImplementedException();
         }
@@ -25,12 +25,12 @@ namespace Nautilus.Database.Temp
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec barSpec)
+        public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
             throw new System.NotImplementedException();
         }
 
-        public QueryResult<BarDataFrame> Find(SymbolBarSpec barSpec, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        public QueryResult<BarDataFrame> Find(BarType barType, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
         {
             throw new System.NotImplementedException();
         }

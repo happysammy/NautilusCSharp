@@ -243,9 +243,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(5, this.repository.BarsCount(barSpec));
         }
 
-        private void PrintRepositoryStatus(SymbolBarSpec barSpec)
+        private void PrintRepositoryStatus(BarType barType)
         {
-            var barsQuery = this.repository.FindAll(barSpec);
+            var barsQuery = this.repository.FindAll(barType);
 
             if (barsQuery.IsFailure)
             {
@@ -254,14 +254,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 return;
             }
 
-            var bars = this.repository.FindAll(barSpec).Value.Bars;
+            var bars = this.repository.FindAll(barType).Value.Bars;
 
             foreach (var bar in bars)
             {
                 this.output.WriteLine(bar.ToString());
             }
 
-            var barsCheck = BarDataChecker.CheckBars(barSpec, this.repository.FindAll(barSpec).Value.Bars);
+            var barsCheck = BarDataChecker.CheckBars(barType, this.repository.FindAll(barType).Value.Bars);
             barsCheck.Value.ForEach(a => this.output.WriteLine(a));
         }
     }

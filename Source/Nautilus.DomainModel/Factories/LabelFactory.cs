@@ -65,11 +65,11 @@ namespace Nautilus.DomainModel.Factories
         /// Creates and returns a new and valid component <see cref="Label"/> from the given inputs.
         /// </summary>
         /// <param name="component">The component name.</param>
-        /// <param name="symbolBarSpec">The symbol bar specification.</param>
+        /// <param name="barType">The symbol bar specification.</param>
         /// <returns>A <see cref="Label"/>.</returns>
-        public static Label Component(string component, SymbolBarSpec symbolBarSpec)
+        public static Label Component(string component, BarType barType)
         {
-            return new Label($"{component}-{symbolBarSpec}");
+            return new Label($"{component}-{barType}");
         }
 
         /// <summary>

@@ -12,33 +12,33 @@ namespace Nautilus.DomainModel.ValueObjects
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents the concept of a <see cref="Symbol"/> and <see cref="BarSpecification"/>.
+    /// Represents the concept of a bar type representing a <see cref="Symbol"/> and
+    /// <see cref="Specification"/>.
     /// </summary>
-    public sealed class SymbolBarSpec
-        : ValueObject<SymbolBarSpec>, IEquatable<SymbolBarSpec>
+    public sealed class BarType : ValueObject<BarType>, IEquatable<BarType>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymbolBarSpec"/> class.
+        /// Initializes a new instance of the <see cref="BarType"/> class.
         /// </summary>
         /// <param name="symbol"></param>
-        /// <param name="barSpecification"></param>
-        public SymbolBarSpec(
+        /// <param name="specification"></param>
+        public BarType(
             Symbol symbol,
-            BarSpecification barSpecification)
+            BarSpecification specification)
         {
             this.Symbol = symbol;
-            this.BarSpecification = barSpecification;
+            this.Specification = specification;
         }
 
         /// <summary>
-        /// Gets the symbol.
+        /// Gets the bar types symbol.
         /// </summary>
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the bar specification.
+        /// Gets the bar types specification.
         /// </summary>
-        public BarSpecification BarSpecification { get; }
+        public BarSpecification Specification { get; }
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.
@@ -49,17 +49,17 @@ namespace Nautilus.DomainModel.ValueObjects
             return new object[]
             {
                 this.Symbol,
-                this.BarSpecification,
+                this.Specification,
             };
         }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="BarSpecification"/>.
+        /// Returns a string representation of the <see cref="Specification"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{this.Symbol}-{this.BarSpecification.Period}-{this.BarSpecification.Resolution}[{this.BarSpecification.QuoteType}]";
+            return $"{this.Symbol}-{this.Specification.Period}-{this.Specification.Resolution}[{this.Specification.QuoteType}]";
         }
     }
 }

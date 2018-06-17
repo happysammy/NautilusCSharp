@@ -11,7 +11,6 @@ namespace Nautilus.Database.Aggregators
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Linq;
     using Akka.Actor;
     using DomainModel.Enums;
     using Nautilus.Core.Validation;
@@ -87,8 +86,8 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         private void SetupCommandMessageHandling()
         {
-            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
             this.Receive<JobRemoved>(msg => this.OnMessage(msg));
             this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
@@ -110,12 +109,12 @@ namespace Nautilus.Database.Aggregators
         /// <see cref="Akka.Actor.IScheduler"/>.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(Subscribe<SymbolBarSpec> message)
+        private void OnMessage(Subscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
             var symbol = message.DataType.Symbol;
-            var barSpec = message.DataType.BarSpecification;
+            var barSpec = message.DataType.Specification;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -165,12 +164,12 @@ namespace Nautilus.Database.Aggregators
         /// forwarding the message to the <see cref="BarAggregator"/> for the symbol.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
+        private void OnMessage(Unsubscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
             var symbol = message.DataType.Symbol;
-            var barSpec = message.DataType.BarSpecification;
+            var barSpec = message.DataType.Specification;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {

@@ -23,23 +23,23 @@ namespace Nautilus.Database.Keys
         /// Initializes a new instance of the <see cref="BarDataKey"/> struct. The bar period
         /// must be 1 for a valid key.
         /// </summary>
-        /// <param name="barSpec">The bar specification the key is based on.</param>
+        /// <param name="barType">The bar specification the key is based on.</param>
         /// <param name="dateKey">The date key the key is based on.</param>
         /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
-        public BarDataKey(SymbolBarSpec barSpec, DateKey dateKey)
+        public BarDataKey(BarType barType, DateKey dateKey)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotDefault(dateKey, nameof(dateKey));
-            Validate.EqualTo(1, nameof(barSpec.BarSpecification.Period), barSpec.BarSpecification.Period);
+            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
 
-            this.BarSpecification = barSpec;
+            this.BarSpecification = barType;
             this.DateKey = dateKey;
         }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) bar specification.
         /// </summary>
-        public SymbolBarSpec BarSpecification { get; }
+        public BarType BarSpecification { get; }
 
         /// <summary>
         /// Gets the <see cref="BarDataKey"/>(s) date key.
@@ -86,8 +86,8 @@ namespace Nautilus.Database.Keys
             KeyProvider.BarsNamespace +
             $":{this.BarSpecification.Symbol.Exchange.ToString().ToLower()}" +
             $":{this.BarSpecification.Symbol.Code.ToLower()}" +
-            $":{this.BarSpecification.BarSpecification.Resolution.ToString().ToLower()}" +
-            $":{this.BarSpecification.BarSpecification.QuoteType.ToString().ToLower()}" +
+            $":{this.BarSpecification.Specification.Resolution.ToString().ToLower()}" +
+            $":{this.BarSpecification.Specification.QuoteType.ToString().ToLower()}" +
             $":{this.DateKey}";
     }
 }

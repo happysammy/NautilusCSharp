@@ -22,12 +22,12 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     public sealed class AlphaStrategyModuleStore
     {
         private readonly Dictionary<Label, IActorRef> alphaStrategyIndex;
-        private readonly Dictionary<SymbolBarSpec, List<IActorRef>> alphaStrategyBarIndex;
+        private readonly Dictionary<BarType, List<IActorRef>> alphaStrategyBarIndex;
 
         public AlphaStrategyModuleStore()
         {
             this.alphaStrategyIndex = new Dictionary<Label, IActorRef>();
-            this.alphaStrategyBarIndex = new Dictionary<SymbolBarSpec, List<IActorRef>>();
+            this.alphaStrategyBarIndex = new Dictionary<BarType, List<IActorRef>>();
         }
 
         /// <summary>
@@ -44,12 +44,12 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// Adds the given strategy label and actor address to the store.
         /// </summary>
         /// <param name="strategyLabel">The strategy label.</param>
-        /// <param name="symbolBarSpec">The symbol bar spec.</param>
+        /// <param name="barType">The symbol bar spec.</param>
         /// <param name="moduleRef">The module actor address.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public void AddStrategy(
             Label strategyLabel,
-            SymbolBarSpec symbolBarSpec,
+            BarType barType,
             IActorRef moduleRef)
         {
             Validate.NotNull(strategyLabel, nameof(strategyLabel));
@@ -58,12 +58,12 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
 
             this.alphaStrategyIndex.Add(strategyLabel, moduleRef);
 
-            if (!this.alphaStrategyBarIndex.ContainsKey(symbolBarSpec))
+            if (!this.alphaStrategyBarIndex.ContainsKey(barType))
             {
-                this.alphaStrategyBarIndex.Add(symbolBarSpec, new List<IActorRef>());
+                this.alphaStrategyBarIndex.Add(barType, new List<IActorRef>());
             }
 
-            this.alphaStrategyBarIndex[symbolBarSpec].Add(moduleRef);
+            this.alphaStrategyBarIndex[barType].Add(moduleRef);
         }
 
         /// <summary>
@@ -98,16 +98,16 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <summary>
         /// Sends the given message to the strategy corresponding to the given label.
         /// </summary>
-        /// <param name="symbolBarSpec">The symbol bar specification.</param>
+        /// <param name="barType">The symbol bar specification.</param>
         /// <param name="bar">The bar.</param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public void Tell(SymbolBarSpec symbolBarSpec, BarDataEvent bar)
+        public void Tell(BarType barType, BarDataEvent bar)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotNull(bar, nameof(bar));
-            Validate.DictionaryContainsKey(symbolBarSpec, nameof(symbolBarSpec), this.alphaStrategyBarIndex);
+            Validate.DictionaryContainsKey(barType, nameof(barType), this.alphaStrategyBarIndex);
 
-            foreach (var strategy in this.alphaStrategyBarIndex[symbolBarSpec])
+            foreach (var strategy in this.alphaStrategyBarIndex[barType])
             {
                 strategy.Tell(bar);
             }

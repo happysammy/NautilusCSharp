@@ -135,7 +135,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The dictionary does not contain the symbolBarSpec key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the barType key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
                 EventuallyContains.PollIntervalMilliseconds);
 
             CustomAssert.EventuallyContains(
-                typeof(Subscribe<SymbolBarSpec>),
+                typeof(Subscribe<BarType>),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -215,7 +215,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                "AlphaModelService: Validation Failed (The dictionary does not contain the symbolBarSpec key).",
+                "AlphaModelService: Validation Failed (The dictionary does not contain the barType key).",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

@@ -33,18 +33,18 @@ namespace Nautilus.Database.Readers
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvBarDataReader"/> class.
         /// </summary>
-        /// <param name="symbolBarSpec">The symbol bar data.</param>
+        /// <param name="barType">The symbol bar data.</param>
         /// <param name="dataProvider">The market data provider.</param>
         /// <exception cref="Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
-            SymbolBarSpec symbolBarSpec,
+            BarType barType,
             IBarDataProvider dataProvider,
             int decimals)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotNull(dataProvider, nameof(dataProvider));
 
-            this.SymbolBarSpec = symbolBarSpec;
+            this.BarType = barType;
             this.DataProvider = dataProvider;
             this.FilePathWildcard = this.BuildFilePathWildcard(dataProvider);
             this.decimals = decimals;
@@ -53,7 +53,7 @@ namespace Nautilus.Database.Readers
         /// <summary>
         /// Gets the CSV market data readers symbol bar data.
         /// </summary>
-        public SymbolBarSpec SymbolBarSpec { get; }
+        public BarType BarType { get; }
 
         /// <summary>
         /// Gets the CSV market data readers data provider.
@@ -120,7 +120,7 @@ namespace Nautilus.Database.Readers
                 if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
                 {
                     QueryResult<BarDataFrame>.Fail(
-                        $"No bars found to collect for {this.SymbolBarSpec} " +
+                        $"No bars found to collect for {this.BarType} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
@@ -139,12 +139,12 @@ namespace Nautilus.Database.Readers
                 if (barsAfterFromDate.Count == 0)
                 {
                     return QueryResult<BarDataFrame>.Fail(
-                        $"No bars found to collect for {this.SymbolBarSpec} " +
+                        $"No bars found to collect for {this.BarType} " +
                         $"after {fromDateTime.ToIsoString()}");
                 }
 
                 return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
-                    this.SymbolBarSpec,
+                    this.BarType,
                     barsAfterFromDate.ToArray()));
             }
 
@@ -169,7 +169,7 @@ namespace Nautilus.Database.Readers
                     .Last();
 
                 return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
-                    this.SymbolBarSpec,
+                    this.BarType,
                     new [] { lastBar }));
             }
 
@@ -233,10 +233,10 @@ namespace Nautilus.Database.Readers
 
                     return barsList.Count > 0
                          ? QueryResult<BarDataFrame>.Ok(new BarDataFrame(
-                            this.SymbolBarSpec,
+                            this.BarType,
                             barsList.ToArray()))
                          : QueryResult<BarDataFrame>.Fail(
-                                   $"No bars to collect for {this.SymbolBarSpec} in {csvFile.Name}");
+                                   $"No bars to collect for {this.BarType} in {csvFile.Name}");
                 }
                 catch (IOException)
                 {
@@ -250,25 +250,25 @@ namespace Nautilus.Database.Readers
             Debug.NotNull(barDataProvider, nameof(barDataProvider));
 
             // TODO: Temporary if to handle Dukas 'Hourly'.
-            if (this.SymbolBarSpec.BarSpecification.Resolution == BarResolution.Hour)
+            if (this.BarType.Specification.Resolution == BarResolution.Hour)
             {
-                return $"{this.SymbolBarSpec.Symbol.Code}_"
-                       + $"{barDataProvider.GetResolutionLabel(this.SymbolBarSpec.BarSpecification.Resolution)}_"
-                       + $"{this.SymbolBarSpec.BarSpecification.QuoteType}_"
+                return $"{this.BarType.Symbol.Code}_"
+                       + $"{barDataProvider.GetResolutionLabel(this.BarType.Specification.Resolution)}_"
+                       + $"{this.BarType.Specification.QuoteType}_"
                        + $"*.csv";
             }
 
-            return $"{this.SymbolBarSpec.Symbol.Code}_"
-                 + $"{this.SymbolBarSpec.BarSpecification.Period} "
-                 + $"{barDataProvider.GetResolutionLabel(this.SymbolBarSpec.BarSpecification.Resolution)}_"
-                 + $"{this.SymbolBarSpec.BarSpecification.QuoteType}_"
+            return $"{this.BarType.Symbol.Code}_"
+                 + $"{this.BarType.Specification.Period} "
+                 + $"{barDataProvider.GetResolutionLabel(this.BarType.Specification.Resolution)}_"
+                 + $"{this.BarType.Specification.QuoteType}_"
                  + $"*.csv";
         }
 
         private QueryResult<BarDataFrame> NoDataFoundQueryResultFailure()
         {
             return QueryResult<BarDataFrame>.Fail(
-                $"No data found for {this.SymbolBarSpec.BarSpecification.ToString()} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
+                $"No data found for {this.BarType.Specification.ToString()} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
         }
     }
 }

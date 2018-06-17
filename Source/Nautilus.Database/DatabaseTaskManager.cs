@@ -10,14 +10,12 @@ namespace Nautilus.Database
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Core;
     using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Messages;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Messages.Queries;
     using Nautilus.Database.Types;
@@ -56,12 +54,12 @@ namespace Nautilus.Database
             this.barRepository = barRepository;
             this.economicEventRepository = economicEventRepository;
 
-            this.Receive<DataStatusRequest<SymbolBarSpec>>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<QueryRequest<SymbolBarSpec>>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
         }
 
-        private void OnMessage(DataStatusRequest<SymbolBarSpec> message, IActorRef sender)
+        private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -75,7 +73,7 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            var symbolBarData = message.Data.SymbolBarSpec;
+            var symbolBarData = message.Data.BarType;
             var result = this.barRepository.Add(message.Data);
             this.Log.Result(result);
 
@@ -83,7 +81,7 @@ namespace Nautilus.Database
 
             if (result.IsSuccess && lastBarTimeQuery.IsSuccess && lastBarTimeQuery.Value != default(ZonedDateTime))
             {
-                this.Sender.Tell(new DataPersisted<SymbolBarSpec>(
+                this.Sender.Tell(new DataPersisted<BarType>(
                     symbolBarData,
                     lastBarTimeQuery.Value,
                     this.NewGuid(),
@@ -91,7 +89,7 @@ namespace Nautilus.Database
             }
         }
 
-        private void OnMessage(QueryRequest<SymbolBarSpec> message, IActorRef sender)
+        private void OnMessage(QueryRequest<BarType> message, IActorRef sender)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));

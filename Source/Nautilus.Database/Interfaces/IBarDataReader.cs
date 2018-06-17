@@ -22,7 +22,7 @@ namespace Nautilus.Database.Interfaces
         /// <summary>
         /// Gets the readers symbol bar specification.
         /// </summary>
-        SymbolBarSpec SymbolBarSpec { get; }
+        BarType BarType { get; }
 
         /// <summary>
         /// Returns a <see cref="BarDataFrame"/> of all bars data.

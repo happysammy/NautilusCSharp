@@ -17,7 +17,6 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
-    using Nautilus.Database.Messages;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>

@@ -23,7 +23,6 @@ namespace Nautilus.Database
     using Nautilus.Database.Collectors;
     using Nautilus.Database.Integrity.Checkers;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Messages;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Messages.Queries;
@@ -43,12 +42,12 @@ namespace Nautilus.Database
         private readonly IScheduler scheduler;
         private readonly IActorRef databaseTaskActorRef;
         private readonly IBarDataProvider barDataProvider;
-        private readonly Dictionary<SymbolBarSpec, IActorRef> marketDataCollectors;
+        private readonly Dictionary<BarType, IActorRef> marketDataCollectors;
         private readonly EconomicEventCollector eventCollector;
         private readonly DataCollectionSchedule collectionSchedule;
         private readonly DatabaseSetupContainer storedSetupContainer;
 
-        private Dictionary<SymbolBarSpec, bool> collectionJobsRoster;
+        private Dictionary<BarType, bool> collectionJobsRoster;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
@@ -81,17 +80,17 @@ namespace Nautilus.Database
             this.scheduler = scheduler;
             this.databaseTaskActorRef = databaseTaskActorRef;
             this.barDataProvider = barDataProvider;
-            this.marketDataCollectors = new Dictionary<SymbolBarSpec, IActorRef>();
+            this.marketDataCollectors = new Dictionary<BarType, IActorRef>();
             this.eventCollector = new EconomicEventCollector();
             this.collectionSchedule = collectionSchedule;
-            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
+            this.collectionJobsRoster = new Dictionary<BarType, bool>();
             this.storedSetupContainer = container;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
-            this.Receive<CollectData<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
-            this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
-            this.Receive<DataCollected<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<DataCollected<BarType>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(StartSystem message)
@@ -104,11 +103,11 @@ namespace Nautilus.Database
             this.InitializeMarketDataCollectors();
         }
 
-        private void OnMessage(CollectData<SymbolBarSpec> message)
+        private void OnMessage(CollectData<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
+            this.collectionJobsRoster = new Dictionary<BarType, bool>();
 
             foreach (var collector in this.marketDataCollectors.Keys)
             {
@@ -131,7 +130,7 @@ namespace Nautilus.Database
             if (this.barDataProvider.IsBarDataCheckOn)
             {
                 var result = BarDataChecker.CheckBars(
-                    message.Data.SymbolBarSpec,
+                    message.Data.BarType,
                     message.Data.Bars);
 
                 if (result.IsSuccess)
@@ -161,15 +160,15 @@ namespace Nautilus.Database
             this.databaseTaskActorRef.Forward(message);
         }
 
-        private void OnMessage(DataPersisted<SymbolBarSpec> message)
+        private void OnMessage(DataPersisted<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.DictionaryContainsKey(message.DataType, nameof(message.DataType.BarSpecification), this.marketDataCollectors);
+            Debug.DictionaryContainsKey(message.DataType, nameof(message.DataType.Specification), this.marketDataCollectors);
 
             this.marketDataCollectors[message.DataType].Tell(message);
         }
 
-        private void OnMessage(DataCollected<SymbolBarSpec> message)
+        private void OnMessage(DataCollected<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
@@ -208,7 +207,7 @@ namespace Nautilus.Database
 
                 this.marketDataCollectors.Add(barSpec, collectorRef);
 
-                var message = new DataStatusRequest<SymbolBarSpec>(barSpec, this.NewGuid(), this.TimeNow());
+                var message = new DataStatusRequest<BarType>(barSpec, this.NewGuid(), this.TimeNow());
 
                 var dataStatusTask = Task.Run(() => this.databaseTaskActorRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
 
@@ -230,9 +229,9 @@ namespace Nautilus.Database
             // Allow above actors to initialize.
             Task.Delay(2000);
 
-            this.collectionJobsRoster = new Dictionary<SymbolBarSpec, bool>();
+            this.collectionJobsRoster = new Dictionary<BarType, bool>();
 
-            this.Self.Tell(new CollectData<SymbolBarSpec>(
+            this.Self.Tell(new CollectData<BarType>(
                 this.NewGuid(),
                 this.TimeNow()));
         }
@@ -241,7 +240,7 @@ namespace Nautilus.Database
         {
             var nextCollectorOffTheRank = this.collectionJobsRoster.FirstOrDefault(c => c.Value == false);
 
-            this.marketDataCollectors[nextCollectorOffTheRank.Key].Tell(new CollectData<SymbolBarSpec>(
+            this.marketDataCollectors[nextCollectorOffTheRank.Key].Tell(new CollectData<BarType>(
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -257,7 +256,7 @@ namespace Nautilus.Database
             this.scheduler.ScheduleTellOnce(
                 timeFromCollection,
                 this.Self,
-                new CollectData<SymbolBarSpec>(
+                new CollectData<BarType>(
                     this.NewGuid(),
                     this.TimeNow()),
                 this.Self);

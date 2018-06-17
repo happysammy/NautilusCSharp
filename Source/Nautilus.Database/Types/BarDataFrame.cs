@@ -23,23 +23,23 @@ namespace Nautilus.Database.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="BarDataFrame"/> class.
         /// </summary>
-        /// <param name="symbolBarSpec">The symbol bar data.</param>
+        /// <param name="barType">The symbol bar data.</param>
         /// <param name="bars">The bars dictionary.</param>
         /// <exception cref="ValidationException">Throws if the bar specification is the default
         /// value, or if the bars collection is null or empty.</exception>
-        public BarDataFrame(SymbolBarSpec symbolBarSpec, Bar[] bars)
+        public BarDataFrame(BarType barType, Bar[] bars)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
 
-            this.SymbolBarSpec = symbolBarSpec;
+            this.BarType = barType;
             this.Bars = bars;
         }
 
         /// <summary>
         /// Gets the data frames symbol.
         /// </summary>
-        public SymbolBarSpec SymbolBarSpec { get; }
+        public BarType BarType { get; }
 
         /// <summary>
         /// Gets the data frames bars.

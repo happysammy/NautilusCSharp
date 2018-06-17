@@ -28,12 +28,12 @@ namespace Nautilus.Database.Integrity.Checkers
         /// Checks the given list of <see cref="Bar"/> for known data anomalies (duplicates,
         /// out of order or missing bars).
         /// </summary>
-        /// <param name="barSpec">The bar specification to check.</param>
+        /// <param name="barType">The bar specification to check.</param>
         /// <param name="bars">The bars to check.</param>
         /// <returns>A result and anomaly list of <see cref="string"/>(s).</returns>
-        public static QueryResult<List<string>> CheckBars(SymbolBarSpec barSpec, Bar[] bars)
+        public static QueryResult<List<string>> CheckBars(BarType barType, Bar[] bars)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotNull(bars, nameof(bars));
 
             var anomalyList = new List<string>();
@@ -43,18 +43,18 @@ namespace Nautilus.Database.Integrity.Checkers
                 return QueryResult<List<string>>.Fail("No bars for BarDataChecker to check");
             }
 
-            CheckDuplicateBars(barSpec, bars, anomalyList);
-            CheckBarsInOrder(barSpec, bars, anomalyList);
-            CheckBarsComplete(barSpec, bars, anomalyList);
+            CheckDuplicateBars(barType, bars, anomalyList);
+            CheckBarsInOrder(barType, bars, anomalyList);
+            CheckBarsComplete(barType, bars, anomalyList);
 
             return anomalyList.IsEmpty()
-                       ? PassResult(barSpec, anomalyList, bars.First().Timestamp, bars.Last().Timestamp)
-                       : FailResult(barSpec, anomalyList, bars.First().Timestamp, bars.Last().Timestamp);
+                       ? PassResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp)
+                       : FailResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp);
         }
 
         [PerformanceOptimized]
         private static void CheckDuplicateBars(
-            SymbolBarSpec barSpec,
+            BarType barType,
             Bar[] bars,
             List<string> anomalyList)
         {
@@ -72,7 +72,7 @@ namespace Nautilus.Database.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsInOrder(
-            SymbolBarSpec barSpec,
+            BarType barType,
             Bar[] bars,
             List<string> anomalyList)
         {
@@ -91,14 +91,14 @@ namespace Nautilus.Database.Integrity.Checkers
 
         [PerformanceOptimized]
         private static void CheckBarsComplete(
-            SymbolBarSpec barSpec,
+            BarType barType,
             Bar[] bars,
             List<string> anomalyList)
         {
             // Don't refactor Length - 1.
             for (var i = 0; i < bars.Length - 1; i++)
             {
-                if (bars[i + 1].Timestamp - bars[i].Timestamp != barSpec.BarSpecification.Duration)
+                if (bars[i + 1].Timestamp - bars[i].Timestamp != barType.Specification.Duration)
                 {
                     anomalyList.Add(
                         $"DataAnomaly: Missing bar "
@@ -109,27 +109,27 @@ namespace Nautilus.Database.Integrity.Checkers
         }
 
         private static QueryResult<List<string>> PassResult(
-            SymbolBarSpec barSpec,
+            BarType barType,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
                 anomalyList,
-                $"Data integrity check for {barSpec} from " +
+                $"Data integrity check for {barType} from " +
                 $"{fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} " +
                 $"passed with no data anomalies");
         }
 
         private static QueryResult<List<string>> FailResult(
-            SymbolBarSpec barSpec,
+            BarType barType,
             List<string> anomalyList,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
                 anomalyList,
-                $"Data integrity check for {barSpec} from " +
+                $"Data integrity check for {barType} from " +
                 $"{fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} " +
                 $"failed with {anomalyList.Count} anomalies");
         }

@@ -10,7 +10,6 @@ namespace Nautilus.Database.Collectors
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Messages;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Orchestration;
@@ -50,7 +49,7 @@ namespace Nautilus.Database.Collectors
             DataCollectionSchedule collectionSchedule)
             : base(
                 DatabaseService.DataCollection,
-                LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.SymbolBarSpec}"),
+                LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -61,9 +60,9 @@ namespace Nautilus.Database.Collectors
             this.collectionSchedule = collectionSchedule;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
-            this.Receive<CollectData<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
             this.Receive<DataStatusResponse<ZonedDateTime>>(msg => this.OnMessage(msg));
-            this.Receive<DataPersisted<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(StartSystem message)
@@ -71,15 +70,15 @@ namespace Nautilus.Database.Collectors
             Debug.NotNull(message, nameof(message));
         }
 
-        private void OnMessage(CollectData<SymbolBarSpec> message)
+        private void OnMessage(CollectData<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
-                this.Log.Warning($"No csv files found for {this.dataReader.SymbolBarSpec}");
+                this.Log.Warning($"No csv files found for {this.dataReader.BarType}");
 
-                Context.Parent.Tell(new DataCollected<SymbolBarSpec>(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
+                Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
 
                 return;
             }
@@ -114,7 +113,7 @@ namespace Nautilus.Database.Collectors
                 }
             }
 
-            Context.Parent.Tell(new DataCollected<SymbolBarSpec>(this.dataReader.SymbolBarSpec, Guid.NewGuid(), this.TimeNow()), this.Self);
+            Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
         }
 
         private void OnMessage(DataStatusResponse<ZonedDateTime> message)
@@ -137,7 +136,7 @@ namespace Nautilus.Database.Collectors
                 $"no persisted bar timestamp");
         }
 
-        private void OnMessage(DataPersisted<SymbolBarSpec> message)
+        private void OnMessage(DataPersisted<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 

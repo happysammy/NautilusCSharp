@@ -84,7 +84,7 @@ namespace Nautilus.BlackBox.AlphaModel
 
             this.Execute(() =>
             {
-                var symbolBarSpec = new SymbolBarSpec(message.Symbol, message.BarSpecification);
+                var symbolBarSpec = new BarType(message.Symbol, message.BarSpecification);
 
                 this.alphaStrategyModuleStore.Tell(symbolBarSpec, message);
             });
@@ -105,7 +105,7 @@ namespace Nautilus.BlackBox.AlphaModel
                     Context);
 
                 // TODO: Refactor below.
-                var symbolBarSpec = new SymbolBarSpec(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
+                var symbolBarSpec = new BarType(message.Symbol, message.Strategy.TradeProfile.BarSpecification);
                 this.alphaStrategyModuleStore.AddStrategy(strategyLabel, symbolBarSpec, alphasStrategyModuleRef);
 
                 var createPortfolio = new CreatePortfolio(
@@ -113,7 +113,7 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.NewGuid(),
                     this.TimeNow());
 
-                var registerSymbolDataType = new Subscribe<SymbolBarSpec>(
+                var registerSymbolDataType = new Subscribe<BarType>(
                     symbolBarSpec,
                     this.NewGuid(),
                     this.TimeNow());

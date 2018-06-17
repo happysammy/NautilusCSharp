@@ -77,8 +77,8 @@ namespace Nautilus.BlackBox.Data
         private void SetupCommandMessageHandling()
         {
             this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
         }
 
@@ -88,7 +88,7 @@ namespace Nautilus.BlackBox.Data
         /// <see cref="MarketDataPort"/>. Then subscribes to the market data for the symbol and exchange.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void OnMessage(Subscribe<SymbolBarSpec> message)
+        private void OnMessage(Subscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(this.brokerageGateway, nameof(this.brokerageGateway));
@@ -116,7 +116,7 @@ namespace Nautilus.BlackBox.Data
             });
         }
 
-        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
+        private void OnMessage(Unsubscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 

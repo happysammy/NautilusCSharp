@@ -105,25 +105,25 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <returns>A <see cref="long"/>.</returns>
-        public long KeysCount(SymbolBarSpec barSpec)
+        public long KeysCount(BarType barType)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
 
-            return this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barSpec)).Length;
+            return this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType)).Length;
         }
 
         /// <summary>
         /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <returns>A <see cref="long"/>.</returns>
-        public long BarsCount(SymbolBarSpec barSpec)
+        public long BarsCount(BarType barType)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
 
-            var allKeys = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barSpec));
+            var allKeys = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType));
 
             if (allKeys.Length == 0)
             {
@@ -160,18 +160,18 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns a list of all market data keys based on the given bar specification.
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <returns>A query result of <see cref="IReadOnlyList{T}"/> strings.</returns>
-        public QueryResult<List<string>> GetAllSortedKeys(SymbolBarSpec barSpec)
+        public QueryResult<List<string>> GetAllSortedKeys(BarType barType)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
 
-            if (this.KeysCount(barSpec) == 0)
+            if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<List<string>>.Fail($"No market data found for {barSpec}");
+                return QueryResult<List<string>>.Fail($"No market data found for {barType}");
             }
 
-            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barSpec));
+            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType));
 
             var keysCollection = allKeysBytes
                 .Select(key => Encoding.Default.GetString(key))
@@ -185,14 +185,14 @@ namespace Nautilus.Redis
         /// <summary>
         /// Adds the given bars to the <see cref="Redis"/> Lists associated with their <see cref="BarDataKey"/>(s).
         /// </summary>
-        /// <param name="barSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <param name="bars">The bars to add.</param>
         /// <returns>A command result.</returns>
         [PerformanceOptimized]
-        public CommandResult AddBars(SymbolBarSpec barSpec, Bar[] bars)
+        public CommandResult AddBars(BarType barType, Bar[] bars)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
-            Validate.EqualTo(1, nameof(barSpec.BarSpecification.Period), barSpec.BarSpecification.Period);
+            Validate.NotNull(barType, nameof(barType));
+            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
             Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
 
             var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
@@ -200,7 +200,7 @@ namespace Nautilus.Redis
 
             foreach (var barsToAddDictionary in barsIndex)
             {
-                var key = new BarDataKey(barSpec, barsToAddDictionary.Key);
+                var key = new BarDataKey(barType, barsToAddDictionary.Key);
                 var keyString = key.ToString();
 
                 if (!this.KeyExists(key))
@@ -228,21 +228,21 @@ namespace Nautilus.Redis
             }
 
             return CommandResult.Ok(
-                $"Added {barsAddedCounter} bars to {barSpec} (TotalCount={this.BarsCount(barSpec)})");
+                $"Added {barsAddedCounter} bars to {barType} (TotalCount={this.BarsCount(barType)})");
         }
 
         /// <summary>
         /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barSpec">The specification of bars to get.</param>
+        /// <param name="barType">The specification of bars to get.</param>
         /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
         [PerformanceOptimized]
-        public QueryResult<BarDataFrame> GetAllBars(SymbolBarSpec barSpec)
+        public QueryResult<BarDataFrame> GetAllBars(BarType barType)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
-            Validate.EqualTo(1, nameof(barSpec.BarSpecification.Period), barSpec.BarSpecification.Period);
+            Validate.NotNull(barType, nameof(barType));
+            Validate.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
 
-            var barKeysQuery = this.GetAllSortedKeys(barSpec);
+            var barKeysQuery = this.GetAllSortedKeys(barType);
 
             if (barKeysQuery.IsFailure)
             {
@@ -254,32 +254,32 @@ namespace Nautilus.Redis
                 .SelectMany(key => BarWrangler.ParseBars(this.redisClient.LRange(key, 0, -1)))
                 .ToArray();
 
-            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barSpec, barsArray));
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
         }
 
         /// <summary>
         /// Returns all bars from <see cref="Redis"/> of the given <see cref="BarSpecification"/> within the given
         /// range of <see cref="ZonedDateTime"/> (inclusive).
         /// </summary>
-        /// <param name="barSpec">The specification of bars to get.</param>
+        /// <param name="barType">The specification of bars to get.</param>
         /// <param name="fromDateTime">The from date time range.</param>
         /// <param name="toDateTime">The to date time range.</param>
         /// <returns>A read only collection of <see cref="Bar"/>(s).</returns>
         public QueryResult<BarDataFrame> GetBars(
-            SymbolBarSpec barSpec,
+            BarType barType,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotDefault(fromDateTime, nameof(fromDateTime));
             Validate.NotDefault(toDateTime, nameof(toDateTime));
 
-            if (this.KeysCount(barSpec) == 0)
+            if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<BarDataFrame>.Fail($"No market data found for {barSpec}");
+                return QueryResult<BarDataFrame>.Fail($"No market data found for {barType}");
             }
 
-            var barKeysQuery = KeyProvider.GetBarsKeyStrings(barSpec, fromDateTime, toDateTime);
+            var barKeysQuery = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
 
             var barsArray = barKeysQuery
                 .Select(key => this.redisClient.LRange(key, 0, -1))
@@ -290,28 +290,28 @@ namespace Nautilus.Redis
             if (barsArray.Length == 0)
             {
                 return QueryResult<BarDataFrame>.Fail(
-                    $"No market data found for {barSpec} in time range from " +
+                    $"No market data found for {barType} in time range from " +
                     $"{fromDateTime.ToIsoString()} to " +
                     $"{toDateTime.ToIsoString()}");
             }
 
-            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barSpec, barsArray));
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
         }
 
         /// <summary>
         /// Returns a query result if success containing the requested bar, or failure containing
         /// a message.
         /// </summary>
-        /// <param name="barSpec">The requested bars specification.</param>
+        /// <param name="barType">The requested bars specification.</param>
         /// <param name="timestamp">The requested bars timestamp.</param>
         /// <returns>A query result of <see cref="Bar"/>.</returns>
         [PerformanceOptimized]
-        public QueryResult<Bar> GetBar(SymbolBarSpec barSpec, ZonedDateTime timestamp)
+        public QueryResult<Bar> GetBar(BarType barType, ZonedDateTime timestamp)
         {
-            Validate.NotNull(barSpec, nameof(barSpec));
+            Validate.NotNull(barType, nameof(barType));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            var key = new BarDataKey(barSpec, new DateKey(timestamp));
+            var key = new BarDataKey(barType, new DateKey(timestamp));
             var persistedBarsQuery = this.GetBarsByDay(key.ToString());
 
             if (persistedBarsQuery.IsFailure)
@@ -328,7 +328,7 @@ namespace Nautilus.Redis
             }
 
             return QueryResult<Bar>.Fail(
-                $"No market data found for {barSpec} at {timestamp.ToIsoString()}");
+                $"No market data found for {barType} at {timestamp.ToIsoString()}");
         }
 
         public QueryResult<List<Bar>> GetBarsByDay(string key)

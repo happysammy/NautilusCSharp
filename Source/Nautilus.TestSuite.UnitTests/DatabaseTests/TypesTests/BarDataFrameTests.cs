@@ -22,13 +22,13 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
     public class BarDataFrameTests
     {
         private readonly ITestOutputHelper output;
-        private readonly SymbolBarSpec stubBarSpec;
+        private readonly BarType _stubBarType;
 
         public BarDataFrameTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
-            this.stubBarSpec = StubSymbolBarSpec.AUDUSD();
+            this._stubBarType = StubSymbolBarSpec.AUDUSD();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this.stubBarSpec,
+                this._stubBarType,
                 bars);
 
             // Act
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this.stubBarSpec,
+                this._stubBarType,
                 bars);
 
             // Act
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this.stubBarSpec,
+                this._stubBarType,
                 bars);
 
             // Act
@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bars = new[] { bar };
 
             var barDataFrame = new BarDataFrame(
-                this.stubBarSpec,
+                this._stubBarType,
                 bars);
 
             // Act
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
             var bars = new[] { bar1, bar2, bar3, bar4 };
 
             var barDataFrame = new BarDataFrame(
-                this.stubBarSpec,
+                this._stubBarType,
                 bars);
 
             // Act

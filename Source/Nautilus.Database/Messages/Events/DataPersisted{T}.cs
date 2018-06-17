@@ -13,7 +13,6 @@ namespace Nautilus.Database.Messages.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// A message representing that all bar data has been persisted.

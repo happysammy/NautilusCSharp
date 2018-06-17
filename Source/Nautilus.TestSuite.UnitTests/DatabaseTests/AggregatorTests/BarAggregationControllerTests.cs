@@ -63,15 +63,15 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var symbolBarSpec1 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec2 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec1 = new BarType(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new BarType(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
-            var subscribe1 = new Subscribe<SymbolBarSpec>(
+            var subscribe1 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe2 = new Subscribe<SymbolBarSpec>(
+            var subscribe2 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -89,29 +89,29 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
-            var symbolBarSpec1 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec2 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec1 = new BarType(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new BarType(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
             var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
-            var symbolBarSpec3 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec4 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec3 = new BarType(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec4 = new BarType(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
-            var subscribe1 = new Subscribe<SymbolBarSpec>(
+            var subscribe1 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe2 = new Subscribe<SymbolBarSpec>(
+            var subscribe2 = new Subscribe<BarType>(
                 symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe3 = new Subscribe<SymbolBarSpec>(
+            var subscribe3 = new Subscribe<BarType>(
                 symbolBarSpec3,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe4 = new Subscribe<SymbolBarSpec>(
+            var subscribe4 = new Subscribe<BarType>(
                 symbolBarSpec4,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -131,20 +131,20 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var symbolBarSpec1 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec2 = new SymbolBarSpec(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec1 = new BarType(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new BarType(symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
-            var subscribe1 = new Subscribe<SymbolBarSpec>(
+            var subscribe1 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe2 = new Subscribe<SymbolBarSpec>(
+            var subscribe2 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var unsubscribe = new Unsubscribe<SymbolBarSpec>(
+            var unsubscribe = new Unsubscribe<BarType>(
                 symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -164,34 +164,34 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
-            var symbolBarSpec1 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec2 = new SymbolBarSpec(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec1 = new BarType(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec2 = new BarType(symbol1, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
             var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
-            var symbolBarSpec3 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
-            var symbolBarSpec4 = new SymbolBarSpec(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
+            var symbolBarSpec3 = new BarType(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1));
+            var symbolBarSpec4 = new BarType(symbol2, new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1));
 
-            var subscribe1 = new Subscribe<SymbolBarSpec>(
+            var subscribe1 = new Subscribe<BarType>(
                 symbolBarSpec1,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe2 = new Subscribe<SymbolBarSpec>(
+            var subscribe2 = new Subscribe<BarType>(
                 symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe3 = new Subscribe<SymbolBarSpec>(
+            var subscribe3 = new Subscribe<BarType>(
                 symbolBarSpec3,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribe4 = new Subscribe<SymbolBarSpec>(
+            var subscribe4 = new Subscribe<BarType>(
                 symbolBarSpec4,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var unsubscribe = new Unsubscribe<SymbolBarSpec>(
+            var unsubscribe = new Unsubscribe<BarType>(
                 symbolBarSpec2,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

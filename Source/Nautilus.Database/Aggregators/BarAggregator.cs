@@ -71,8 +71,8 @@ namespace Nautilus.Database.Aggregators
         private void SetupCommandMessageHandling()
         {
             this.Receive<CloseBar>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<SymbolBarSpec>>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -171,11 +171,11 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="message">The received message.</param>
         /// <exception cref="InvalidOperationException">If the resolution is for tick bars.</exception>
-        private void OnMessage(Subscribe<SymbolBarSpec> message)
+        private void OnMessage(Subscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            var barSpec = message.DataType.BarSpecification;
+            var barSpec = message.DataType.Specification;
 
             if (barSpec.Resolution == BarResolution.Tick)
             {
@@ -195,11 +195,11 @@ namespace Nautilus.Database.Aggregators
         /// Handles the message by removing all bar builders for the relevant bar specifications.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private void OnMessage(Unsubscribe<SymbolBarSpec> message)
+        private void OnMessage(Unsubscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            var barSpec = message.DataType.BarSpecification;
+            var barSpec = message.DataType.Specification;
 
             if (this.barBuilders.ContainsKey(barSpec))
             {

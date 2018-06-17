@@ -82,13 +82,13 @@ namespace Nautilus.Redis
         /// Returns the count of bars persisted within the database with the given
         /// <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="symbolBarSpec">The bar specification.</param>
+        /// <param name="barType">The bar specification.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        public long BarsCount(SymbolBarSpec symbolBarSpec)
+        public long BarsCount(BarType barType)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(barType, nameof(barType));
 
-            return this.barClient.BarsCount(symbolBarSpec);
+            return this.barClient.BarsCount(barType);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nautilus.Redis
         {
             Validate.NotNull(barData, nameof(barData));
 
-            return this.barClient.AddBars(barData.SymbolBarSpec, barData.Bars);
+            return this.barClient.AddBars(barData.BarType, barData.Bars);
         }
 
         /// <summary>
@@ -111,20 +111,20 @@ namespace Nautilus.Redis
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>A <see cref="QueryResult{MarketDataFrame}"/>.</returns>
         public QueryResult<BarDataFrame> Find(
-            SymbolBarSpec symbolBarSpec,
+            BarType barType,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            var barsQuery = this.barClient.GetBars(symbolBarSpec, fromDateTime, toDateTime);
+            var barsQuery = this.barClient.GetBars(barType, fromDateTime, toDateTime);
 
             return barsQuery.IsSuccess
                  ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
                  : QueryResult<BarDataFrame>.Fail(barsQuery.Message);
         }
 
-        public QueryResult<BarDataFrame> FindAll(SymbolBarSpec barSpec)
+        public QueryResult<BarDataFrame> FindAll(BarType barType)
         {
-            var barsQuery = this.barClient.GetAllBars(barSpec);
+            var barsQuery = this.barClient.GetAllBars(barType);
 
             return barsQuery.IsSuccess
                 ? QueryResult<BarDataFrame>.Ok(barsQuery.Value)
@@ -137,11 +137,11 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="barSpec">The requested bar specification.</param>
         /// <returns>A <see cref="QueryResult{T}"/> containing the <see cref="Bar"/>.</returns>
-        public QueryResult<ZonedDateTime> LastBarTimestamp(SymbolBarSpec symbolBarSpec)
+        public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
-            Validate.NotNull(symbolBarSpec, nameof(symbolBarSpec));
+            Validate.NotNull(barType, nameof(barType));
 
-            var barKeysQuery = this.barClient.GetAllSortedKeys(symbolBarSpec);
+            var barKeysQuery = this.barClient.GetAllSortedKeys(barType);
 
             if (barKeysQuery.IsFailure)
             {
