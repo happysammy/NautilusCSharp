@@ -16,7 +16,7 @@ namespace Nautilus.Database.Messages.Queries
     /// <summary>
     /// The data status request message.
     /// </summary>
-    public sealed class DataStatusRequest<T> : Message
+    public sealed class DataStatusRequest<T> : CommandMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStatusRequest{T}"/> message.

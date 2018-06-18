@@ -89,17 +89,13 @@ namespace Nautilus.Database.Build
                 () => new DataCollectionManager(
                     setupContainer,
                     messagingAdapter,
-                    databaseTaskActorRef,
                     collectionSchedule,
                     barDataProvider)));
 
-            var barAggregationController = actorSystem.ActorOf(Props.Create(
+            var barAggregationControllerRef = actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(
                     setupContainer,
-                    messagingAdapter,
-                    dataCollectionActorRef,
-                    schedulerRef,
-                    ServiceContext.Database)));
+                    messagingAdapter)));
 
             var quoteProvider = new QuoteProvider(Exchange.FXCM);  // TODO: Hardcoded quote provider.
 
@@ -107,7 +103,7 @@ namespace Nautilus.Database.Build
                 setupContainer,
                 new Dictionary<Symbol, int>(),
                 quoteProvider,
-                barAggregationController);
+                barAggregationControllerRef);
 
             var fixClient = new FixClient(
                 setupContainer,
@@ -117,6 +113,7 @@ namespace Nautilus.Database.Build
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
+                { DatabaseService.Scheduler, schedulerRef },
                 { DatabaseService.TaskManager, databaseTaskActorRef },
                 { DatabaseService.CollectionManager, dataCollectionActorRef },
             };

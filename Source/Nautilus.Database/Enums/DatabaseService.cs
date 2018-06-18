@@ -19,13 +19,18 @@ namespace Nautilus.Database.Enums
         Core = 0,
 
         /// <summary>
+        /// The core database service.
+        /// </summary>
+        Scheduler = 1,
+
+        /// <summary>
         /// The task manager database service.
         /// </summary>
-        TaskManager = 1,
+        TaskManager = 2,
 
         /// <summary>
         /// The collection manager database service.
         /// </summary>
-        CollectionManager = 2,
+        CollectionManager = 3,
     }
 }

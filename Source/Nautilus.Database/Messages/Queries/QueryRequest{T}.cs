@@ -19,7 +19,7 @@ namespace Nautilus.Database.Messages.Queries
     /// </summary>
     /// <typeparam name="T">The query type.</typeparam>
     [Immutable]
-    public sealed class QueryRequest<T> : Message
+    public sealed class QueryRequest<T> : CommandMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryRequest{T}"/> class.

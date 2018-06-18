@@ -20,7 +20,7 @@ namespace Nautilus.Database.Messages.Queries
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class DataStatusResponse<T> : Message
+    public sealed class DataStatusResponse<T> : DocumentMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStatusResponse{T}"/> class.

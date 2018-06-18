@@ -13,6 +13,7 @@ namespace Nautilus.Database.Aggregators
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
@@ -40,22 +41,19 @@ namespace Nautilus.Database.Aggregators
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="serviceContext">The service context.</param>
         /// <param name="symbol">The symbol.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregator(
             IComponentryContainer container,
-            Enum serviceContext,
             Symbol symbol)
             : base(
-            serviceContext,
+            ServiceContext.Database,
             LabelFactory.Component(
                 nameof(BarAggregator),
                 symbol),
             container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(serviceContext, nameof(serviceContext));
             Validate.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;

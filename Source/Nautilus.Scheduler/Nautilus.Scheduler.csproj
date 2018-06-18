@@ -7,6 +7,7 @@
     <PackageReference Include="Quartz" Version="3.0.5" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
     <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
   </ItemGroup>
 </Project>

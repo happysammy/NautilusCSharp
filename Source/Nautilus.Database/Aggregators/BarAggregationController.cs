@@ -15,10 +15,12 @@ namespace Nautilus.Database.Aggregators
     using DomainModel.Enums;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
+    using Nautilus.Database.Enums;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Factories;
@@ -35,8 +37,6 @@ namespace Nautilus.Database.Aggregators
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IActorRef dataCollectionManagerRef;
-        private readonly IActorRef schedulerRef;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
         private readonly IDictionary<Duration, KeyValuePair<JobKey, TriggerKey>> barJobs;
         private readonly IDictionary<Duration, ITrigger> triggers;
@@ -47,31 +47,20 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="dataCollectionManagerRef">The bar data receivers.</param>
-        /// <param name="schedulerRef">The scheduler actor address.</param>
-        /// <param name="serviceContext">The service context.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregationController(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
-            IActorRef dataCollectionManagerRef,
-            IActorRef schedulerRef,
-            Enum serviceContext)
+            IMessagingAdapter messagingAdapter)
             : base(
-            serviceContext,
+            ServiceContext.Database,
             LabelFactory.Component(nameof(BarAggregationController)),
             container,
             messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(dataCollectionManagerRef, nameof(dataCollectionManagerRef));
-            Validate.NotNull(schedulerRef, nameof(schedulerRef));
-            Validate.NotNull(serviceContext, nameof(serviceContext));
 
             this.storedContainer = container;
-            this.dataCollectionManagerRef = dataCollectionManagerRef;
-            this.schedulerRef = schedulerRef;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
             this.barJobs = new Dictionary<Duration, KeyValuePair<JobKey, TriggerKey>>();
             this.triggers = new Dictionary<Duration, ITrigger>();
@@ -120,7 +109,6 @@ namespace Nautilus.Database.Aggregators
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new BarAggregator(
                     this.storedContainer,
-                    this.Service,
                     symbol)));
 
                 this.barAggregators.Add(message.DataType.Symbol, barAggregatorRef);
@@ -142,9 +130,11 @@ namespace Nautilus.Database.Aggregators
                     var createJob = new CreateJob(
                         this.Self,
                         barJob,
-                        this.triggers[duration]);
+                        this.triggers[duration],
+                        this.NewGuid(),
+                        this.TimeNow());
 
-                    this.schedulerRef.Tell(createJob);
+                    this.Send(DatabaseService.Scheduler, createJob);
                 }
             }
 
@@ -191,9 +181,14 @@ namespace Nautilus.Database.Aggregators
             if (this.triggerCounts[barType.Duration] <= 0)
             {
                 var job = this.barJobs[barType.Duration];
-                var removeJob = new RemoveJob(job.Key, job.Value, "null job");
+                var removeJob = new RemoveJob(
+                    job.Key,
+                    job.Value,
+                    "null job",
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                this.schedulerRef.Tell(removeJob);
+                this.Send(DatabaseService.Scheduler, removeJob);
             }
 
         }
@@ -294,7 +289,7 @@ namespace Nautilus.Database.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.dataCollectionManagerRef.Tell(dataDelivery, this.Self);
+            this.Send(DatabaseService.CollectionManager, dataDelivery);
         }
 
         private ITrigger CreateTrigger(BarSpecification barSpec)

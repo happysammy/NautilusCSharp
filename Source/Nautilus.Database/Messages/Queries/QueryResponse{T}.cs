@@ -19,7 +19,7 @@ namespace Nautilus.Database.Messages.Queries
     /// The base class for all response message types.
     /// </summary>
     [Immutable]
-    public sealed class QueryResponse<T> : Message
+    public sealed class QueryResponse<T> : DocumentMessage
     {
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public QueryResponse(

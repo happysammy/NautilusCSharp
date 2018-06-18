@@ -46,14 +46,10 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             this.logger = setupFactory.LoggingAdapter;
 
             var messagingAdapter = new MockMessagingAdapter(TestActor);
-            var schedulerRef = Sys.ActorOf(Props.Create(() => new Scheduler()), "Scheduler");
 
             var props = Props.Create(() => new BarAggregationController(
                 container,
-                messagingAdapter,
-                this.TestActor,
-                schedulerRef,
-                ServiceContext.Database));
+                messagingAdapter));
 
             this.controllerRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
         }

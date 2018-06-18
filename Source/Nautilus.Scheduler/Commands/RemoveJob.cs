@@ -8,25 +8,34 @@
 
 namespace Nautilus.Scheduler.Commands
 {
+    using System;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using NodaTime;
     using Quartz;
 
     /// <summary>
     /// The job command message to remove a cron scheduler.
     /// </summary>
     [Immutable]
-    public sealed class RemoveJob : IJobCommand
+    public sealed class RemoveJob : CommandMessage, IJobCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveJob"/> class.
         /// </summary>
-        /// <param name="jobKey"></param>
-        /// <param name="triggerKey"></param>
+        /// <param name="jobKey">The job key.</param>
+        /// <param name="triggerKey">The job trigger key.</param>
+        /// <param name="job">The job.</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public RemoveJob(
             JobKey jobKey,
             TriggerKey triggerKey,
-            object job)
+            object job,
+            Guid identifier,
+            ZonedDateTime timestamp)
+            : base(identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
             Debug.NotNull(triggerKey, nameof(triggerKey));

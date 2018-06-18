@@ -18,7 +18,7 @@ namespace Nautilus.Database.Messages.Events
     /// A delivery message of new data.
     /// </summary>
     [Immutable]
-    public sealed class DataDelivery<T> : Message
+    public sealed class DataDelivery<T> : DocumentMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataDelivery{T}"/> class.

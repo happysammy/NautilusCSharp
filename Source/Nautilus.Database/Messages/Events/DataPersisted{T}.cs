@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Events
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -18,7 +18,7 @@ namespace Nautilus.Database.Messages.Events
     /// A message representing that all bar data has been persisted.
     /// </summary>
     [Immutable]
-    public sealed class DataPersisted<T> : Event
+    public sealed class DataPersisted<T> : DocumentMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataPersisted{T}"/> class.

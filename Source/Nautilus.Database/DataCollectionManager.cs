@@ -8,7 +8,6 @@
 
 namespace Nautilus.Database
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -26,13 +25,11 @@ namespace Nautilus.Database
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
-    using Nautilus.Database.Messages.Queries;
     using Nautilus.Database.Orchestration;
     using Nautilus.Database.Readers;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// The manager class which contains the separate data collector types and orchestrates their
@@ -53,14 +50,12 @@ namespace Nautilus.Database
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="databaseTaskManagerRef">The database task actor ref.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IActorRef databaseTaskManagerRef,
             DataCollectionSchedule collectionSchedule,
             IBarDataProvider barDataProvider)
             : base(
@@ -70,8 +65,9 @@ namespace Nautilus.Database
                 messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(databaseTaskManagerRef, nameof(databaseTaskManagerRef));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(collectionSchedule, nameof(collectionSchedule));
+            Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
             this.barDataProvider = barDataProvider;
             this.marketDataCollectors = new Dictionary<BarType, IActorRef>();

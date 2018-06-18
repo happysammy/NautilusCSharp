@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Events
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -18,7 +18,7 @@ namespace Nautilus.Database.Messages.Events
     /// A message representing that all data of T has been collected.
     /// </summary>
     [Immutable]
-    public sealed class DataCollected<T> : Event
+    public sealed class DataCollected<T> : DocumentMessage
     {
         /// <summary>
         /// Initializes a new intance of the <see cref="DataCollected{T}"/> class.
