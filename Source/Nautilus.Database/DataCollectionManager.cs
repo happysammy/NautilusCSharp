@@ -24,6 +24,7 @@ namespace Nautilus.Database
     using Nautilus.Database.Integrity.Checkers;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Orchestration;
     using Nautilus.Database.Readers;
@@ -76,8 +77,11 @@ namespace Nautilus.Database
             this.collectionJobsRoster = new Dictionary<BarType, bool>();
             this.storedContainer = container;
 
+            // Command messages
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
+
+            // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));

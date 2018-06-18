@@ -16,8 +16,9 @@ namespace Nautilus.Database
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
-    using Nautilus.Database.Messages.Queries;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -54,10 +55,13 @@ namespace Nautilus.Database
             this.barRepository = barRepository;
             this.economicEventRepository = economicEventRepository;
 
+            // Command messages
+            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
+
+            // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)

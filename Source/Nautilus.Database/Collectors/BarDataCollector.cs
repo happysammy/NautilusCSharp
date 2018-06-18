@@ -8,20 +8,18 @@
 
 namespace Nautilus.Database.Collectors
 {
+    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Commands;
-    using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Orchestration;
-    using System;
-    using Messages.Queries;
     using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
-    using Nautilus.Database.Enums;
+    using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

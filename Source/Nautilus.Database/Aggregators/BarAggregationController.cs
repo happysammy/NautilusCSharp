@@ -22,6 +22,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Messages.Commands;
+    using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -284,12 +285,12 @@ namespace Nautilus.Database.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(BarClosed message)
         {
-            var dataDelivery = new DataDelivery<BarClosed>(
+            var document = new DataDelivery<BarClosed>(
                 message,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.CollectionManager, dataDelivery);
+            this.Send(DatabaseService.CollectionManager, document);
         }
 
         private ITrigger CreateTrigger(BarSpecification barSpec)

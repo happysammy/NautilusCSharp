@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Messages.Events
+namespace Nautilus.Database.Messages.Documents
 {
     using System;
     using Nautilus.Common.Messaging;

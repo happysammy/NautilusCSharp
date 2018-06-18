@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Messages.Queries
+namespace Nautilus.Database.Messages.Documents
 {
     using System;
     using Nautilus.Core.CQS;
