@@ -34,6 +34,10 @@ namespace Nautilus.Fix
         private readonly ITickDataProcessor tickDataProcessor;
         private IBrokerageGateway brokerageGateway;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixMessageHandler"/> class.
+        /// </summary>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
         public FixMessageHandler(
             ITickDataProcessor tickDataProcessor)
         {
