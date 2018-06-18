@@ -36,14 +36,6 @@ namespace Nautilus.Backtest
         /// <summary>
         ///
         /// </summary>
-        /// <param name="processor"></param>
-        public void InitializeTickDataProcessor(ITickDataProcessor processor)
-        {
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="gateway"></param>
         public void InitializeBrokerageGateway(IBrokerageGateway gateway)
         {

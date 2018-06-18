@@ -8,11 +8,24 @@
 
 namespace Nautilus.Database.Enums
 {
+    /// <summary>
+    /// The database service enumeration.
+    /// </summary>
     public enum DatabaseService
     {
-        NautilusDatabase = 0,
-        DatabaseTaskManager = 1,
-        DatabaseCollectionManager = 2,
-        DataCollection = 3
+        /// <summary>
+        /// The core database service.
+        /// </summary>
+        Core = 0,
+
+        /// <summary>
+        /// The task manager database service.
+        /// </summary>
+        TaskManager = 1,
+
+        /// <summary>
+        /// The collection manager database service.
+        /// </summary>
+        CollectionManager = 2,
     }
 }

@@ -40,15 +40,22 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <returns></returns>
         public IBrokerageClient Create(
-            BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter)
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
+            ITickDataProcessor tickDataProcessor)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            // TODO: Validate tick data processor.
 
-            return new FixClient(container, this.credentials, this.broker);
+            return new FixClient(
+                container,
+                tickDataProcessor,
+                this.credentials,
+                this.broker);
         }
     }
 }

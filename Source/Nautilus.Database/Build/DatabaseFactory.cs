@@ -22,7 +22,11 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Interfaces;
+    using Nautilus.Database.Processors;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Fix;
     using Nautilus.Scheduler;
 
     /// <summary>
@@ -43,6 +47,7 @@ namespace Nautilus.Database.Build
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
+            FixCredentials credentials,
             JObject collectionConfig,
             IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository,
@@ -65,7 +70,7 @@ namespace Nautilus.Database.Build
                 new GuidFactory(),
                 new LoggerFactory(logger));
 
-            var actorSystem = ActorSystem.Create(nameof(Database));
+            var actorSystem = ActorSystem.Create(nameof(Nautilus.Database));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
@@ -96,17 +101,34 @@ namespace Nautilus.Database.Build
                     schedulerRef,
                     ServiceContext.Database)));
 
+            var quoteProvider = new QuoteProvider(Exchange.FXCM);  // TODO: Hardcoded quote provider.
+
+            var tickDataProcessor = new TickDataProcessor(
+                setupContainer,
+                new Dictionary<Symbol, int>(),
+                quoteProvider,
+                barAggregationController);
+
+            var fixClient = new FixClient(
+                setupContainer,
+                tickDataProcessor,
+                credentials,
+                Broker.FXCM);
+
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { DatabaseService.DatabaseTaskManager, databaseTaskActorRef },
-                { DatabaseService.DatabaseCollectionManager, dataCollectionActorRef },
+                { DatabaseService.TaskManager, databaseTaskActorRef },
+                { DatabaseService.CollectionManager, dataCollectionActorRef },
             };
 
             return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
-                addresses);
+                addresses,
+                fixClient,
+                tickDataProcessor,
+                quoteProvider);
         }
     }
 }

@@ -46,14 +46,18 @@ namespace Nautilus.Fix
         /// <param name="component">The component label.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="credentials">The FIX account credentials</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
         protected FixComponentBase(
             Enum service,
             Label component,
             IComponentryContainer container,
+            ITickDataProcessor tickDataProcessor,
             FixCredentials credentials)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
+            Validate.NotNull(credentials, nameof(credentials));
 
             this.service = service;
             this.component = component;
@@ -62,7 +66,7 @@ namespace Nautilus.Fix
             this.logger = container.LoggerFactory.Create(service, this.component);
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
-            this.FixMessageHandler = new FixMessageHandler();
+            this.FixMessageHandler = new FixMessageHandler(tickDataProcessor);
             this.FixMessageRouter = new FixMessageRouter();
         }
 

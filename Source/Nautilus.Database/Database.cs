@@ -14,10 +14,12 @@ namespace Nautilus.Database
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Fix;
 
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
@@ -25,6 +27,8 @@ namespace Nautilus.Database
     public sealed class Database : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
+        private readonly ITickDataProcessor tickDataProcessor;
+        private readonly IQuoteProvider quoteProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -33,12 +37,18 @@ namespace Nautilus.Database
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdatper">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
+        /// <param name="fixClient">The fix client.</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="quoteProvider">The quote provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdatper,
-            IReadOnlyDictionary<Enum, IActorRef> addresses)
+            IReadOnlyDictionary<Enum, IActorRef> addresses,
+            FixClient fixClient,
+            ITickDataProcessor tickDataProcessor,
+            IQuoteProvider quoteProvider)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -48,6 +58,9 @@ namespace Nautilus.Database
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdatper, nameof(messagingAdatper));
+            Validate.NotNull(addresses, nameof(addresses));
+            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
+            Validate.NotNull(quoteProvider, nameof(quoteProvider));
 
             this.actorSystem = actorSystem;
 
@@ -55,6 +68,9 @@ namespace Nautilus.Database
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));
+
+            this.tickDataProcessor = tickDataProcessor;
+            this.quoteProvider = quoteProvider;
         }
 
         /// <summary>
@@ -63,7 +79,7 @@ namespace Nautilus.Database
         public void Start()
         {
             this.Send(
-                DatabaseService.DatabaseCollectionManager,
+                DatabaseService.CollectionManager,
                 new StartSystem(
                     Guid.NewGuid(),
                     this.TimeNow()));

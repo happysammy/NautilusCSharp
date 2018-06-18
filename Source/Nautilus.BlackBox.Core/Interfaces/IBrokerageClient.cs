@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -29,12 +28,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// Gets a value indicating whether the brokerage client is connected.
         /// </summary>
         bool IsConnected { get; }
-
-        /// <summary>
-        /// Initializes the tick data processor.
-        /// </summary>
-        /// <param name="processor">The tick data processor.</param>
-        void InitializeTickDataProcessor(ITickDataProcessor processor);
 
         /// <summary>
         /// Initializes the brokerage gateway.

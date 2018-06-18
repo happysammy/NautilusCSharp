@@ -23,6 +23,8 @@ namespace NautilusDB
     using ServiceStack;
     using Nautilus.Database.Temp;
     using Nautilus.DataProviders.Dukascopy;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.Fix;
     using Nautilus.Serilog;
 
     /// <summary>
@@ -119,8 +121,16 @@ namespace NautilusDB
                 (bool)config[ConfigSection.Database]["compression"],
                 (string)config[ConfigSection.Database]["compressionCodec"]);
 
+            var broker = Broker.FXCM;
+            var username = "D102412895"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
+            var password = "1234"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
+            var accountNumber = "02402856"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
+
+            var fixCredentials = new FixCredentials(username, password, accountNumber);
+
             this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
+                fixCredentials,
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
                 new MockBarRepository(),
                 new MockEconomicEventRepository(),

@@ -31,20 +31,16 @@ namespace Nautilus.Fix
     /// </summary>
     public class FixMessageHandler
     {
-        private ITickDataProcessor tickDataProcessor;
+        private readonly ITickDataProcessor tickDataProcessor;
         private IBrokerageGateway brokerageGateway;
 
-        /// <summary>
-        /// Initailizes the tick data processor.
-        /// </summary>
-        /// <param name="processor">The tick data processor.</param>
-        public void InitializeTickDataProcessor(ITickDataProcessor processor)
+        public FixMessageHandler(
+            ITickDataProcessor tickDataProcessor)
         {
-            Validate.NotNull(processor, nameof(processor));
+            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
 
-            this.tickDataProcessor = processor;
+            this.tickDataProcessor = tickDataProcessor;
         }
-
         /// <summary>
         /// Initializes the brokerage gateway.
         /// </summary>

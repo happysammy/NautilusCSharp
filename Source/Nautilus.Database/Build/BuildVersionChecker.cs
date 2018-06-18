@@ -29,18 +29,18 @@ namespace Nautilus.Database.Build
         {
             Validate.NotNull(log, nameof(log));
 
-            log.Information(DatabaseService.NautilusDatabase, "Running StartupVersionChecker...");
-            log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
-            log.Information(DatabaseService.NautilusDatabase, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(DatabaseService.NautilusDatabase, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(DatabaseService.NautilusDatabase, "----------------------------------------------------------------");
-            log.Information(DatabaseService.NautilusDatabase, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            log.Information(DatabaseService.NautilusDatabase, $"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information(DatabaseService.NautilusDatabase, $"OS {Environment.OSVersion}");
-            log.Information(DatabaseService.NautilusDatabase, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(DatabaseService.NautilusDatabase, $"Akka.NET v1.3.8");
-            log.Information(DatabaseService.NautilusDatabase, $"ServiceStack v5.1.0");
-            log.Information(DatabaseService.NautilusDatabase, log.AssemblyVersion);
+            log.Information(DatabaseService.Core, "Running StartupVersionChecker...");
+            log.Information(DatabaseService.Core, "----------------------------------------------------------------");
+            log.Information(DatabaseService.Core, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(DatabaseService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(DatabaseService.Core, "----------------------------------------------------------------");
+            log.Information(DatabaseService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            log.Information(DatabaseService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information(DatabaseService.Core, $"OS {Environment.OSVersion}");
+            log.Information(DatabaseService.Core, $".NET Core v{GetNetCoreVersion()}");
+            log.Information(DatabaseService.Core, $"Akka.NET v1.3.8");
+            log.Information(DatabaseService.Core, $"ServiceStack v5.1.0");
+            log.Information(DatabaseService.Core, log.AssemblyVersion);
         }
 
         private static string GetNetCoreVersion()

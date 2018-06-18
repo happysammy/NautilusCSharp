@@ -31,15 +31,18 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="broker">The account brokerage.</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         public FixClient(
             IComponentryContainer container,
+            ITickDataProcessor tickDataProcessor,
             FixCredentials credentials,
             Broker broker)
         : base(
             ServiceContext.FIX,
             LabelFactory.Service(BlackBoxService.Brokerage),
             container,
+            tickDataProcessor,
             credentials)
         {
             Validate.NotNull(container, nameof(container));
@@ -58,17 +61,6 @@ namespace Nautilus.Fix
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsConnected => this.IsFixConnected;
-
-        /// <summary>
-        /// Initializes the tick data processor.
-        /// </summary>
-        /// <param name="processor">The tick data processor.</param>
-        public void InitializeTickDataProcessor(ITickDataProcessor processor)
-        {
-            Validate.NotNull(processor, nameof(processor));
-
-            this.FixMessageHandler.InitializeTickDataProcessor(processor);
-        }
 
         /// <summary>
         /// The initializes the brokerage gateway.

@@ -21,6 +21,7 @@ namespace Nautilus.Database
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Database.Collectors;
+    using Nautilus.Database.Enums;
     using Nautilus.Database.Integrity.Checkers;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Commands;
@@ -39,26 +40,25 @@ namespace Nautilus.Database
     /// </summary>
     public class DataCollectionManager : ActorComponentBusConnectedBase
     {
-        private readonly IActorRef databaseTaskManagerRef;
+        private readonly IComponentryContainer storedContainer;
         private readonly IBarDataProvider barDataProvider;
         private readonly Dictionary<BarType, IActorRef> marketDataCollectors;
         private readonly EconomicEventCollector eventCollector;
         private readonly DataCollectionSchedule collectionSchedule;
-        private readonly DatabaseSetupContainer storedSetupContainer;
 
         private Dictionary<BarType, bool> collectionJobsRoster;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
         /// </summary>
-        /// <param name="container">The componentry container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="databaseTaskManagerRef">The database task actor ref.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
         /// <param name="barDataProvider">The market data provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
-            DatabaseSetupContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IActorRef databaseTaskManagerRef,
             DataCollectionSchedule collectionSchedule,
@@ -73,13 +73,12 @@ namespace Nautilus.Database
             Validate.NotNull(databaseTaskManagerRef, nameof(databaseTaskManagerRef));
             Validate.NotNull(collectionSchedule, nameof(collectionSchedule));
 
-            this.databaseTaskManagerRef = databaseTaskManagerRef;
             this.barDataProvider = barDataProvider;
             this.marketDataCollectors = new Dictionary<BarType, IActorRef>();
             this.eventCollector = new EconomicEventCollector();
             this.collectionSchedule = collectionSchedule;
             this.collectionJobsRoster = new Dictionary<BarType, bool>();
-            this.storedSetupContainer = container;
+            this.storedContainer = container;
 
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
@@ -122,7 +121,7 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            this.databaseTaskManagerRef.Tell(message, this.Self);
+            this.Send(DatabaseService.TaskManager, message);
         }
 
         // TODO: Refactor this.
@@ -160,7 +159,7 @@ namespace Nautilus.Database
                 }
             }
 
-            this.databaseTaskManagerRef.Tell(message, this.Self);
+            this.Send(DatabaseService.TaskManager, message);
         }
 
         private void OnMessage(DataPersisted<BarType> message)
@@ -203,30 +202,12 @@ namespace Nautilus.Database
 
                 var collectorRef = Context.ActorOf(Props.Create(
                     () => new BarDataCollector(
-                        this.storedSetupContainer,
+                        this.storedContainer,
                         this.GetMessagingAdapter(),
                         dataReader,
                         this.collectionSchedule)));
 
                 this.marketDataCollectors.Add(barType, collectorRef);
-
-                var message = new DataStatusRequest<BarType>(barType, this.NewGuid(), this.TimeNow());
-
-                var dataStatusTask = Task.Run(() => this.databaseTaskManagerRef.Ask<DataStatusResponse<ZonedDateTime>>(message, TimeSpan.FromSeconds(10), CancellationToken.None));
-
-                this.Log.Debug($"Waiting for DataStatusResponse for {barType}...");
-                dataStatusTask.Wait();
-
-                if (dataStatusTask.IsCompleted)
-                {
-                    this.Log.Debug($"Received a DataStatusResponse for {barType} and sending to collector.");
-
-                    collectorRef.Tell(dataStatusTask.Result, this.Self);
-                }
-                else
-                {
-                    this.Log.Warning($"No response for DataStatusRequest.");
-                }
             }
 
             // Allow above actors to initialize.

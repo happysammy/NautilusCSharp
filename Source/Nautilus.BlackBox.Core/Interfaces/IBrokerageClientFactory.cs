@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.Core.Interfaces
 {
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -22,9 +21,11 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
         IBrokerageClient Create(
-            BlackBoxContainer container,
-            IMessagingAdapter messagingAdapter);
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
+            ITickDataProcessor tickDataProcessor);
     }
 }

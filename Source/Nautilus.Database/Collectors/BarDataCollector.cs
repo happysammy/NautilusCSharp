@@ -15,6 +15,7 @@ namespace Nautilus.Database.Collectors
     using Nautilus.Database.Orchestration;
     using System;
     using Messages.Queries;
+    using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -43,12 +44,12 @@ namespace Nautilus.Database.Collectors
         /// <param name="dataReader">The bar data reader.</param>
         /// <param name="collectionSchedule">The collection schedule.</param>
         public BarDataCollector(
-            DatabaseSetupContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
             : base(
-                DatabaseService.DataCollection,
+                ServiceContext.Database,
                 LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
