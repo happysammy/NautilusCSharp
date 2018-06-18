@@ -11,7 +11,6 @@ namespace Nautilus.Fix
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -24,7 +23,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixComponentBase, IBrokerageClient
+    public class FixClient : FixComponentBase, IDataFeedClient, IBrokerageClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -32,10 +31,14 @@ namespace Nautilus.Fix
         /// <param name="container">The setup container.</param>
         /// <param name="broker">The account brokerage.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="fixMessageHandler">The FIX message handler.</param>
+        /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         public FixClient(
             IComponentryContainer container,
             ITickDataProcessor tickDataProcessor,
+            IFixMessageHandler fixMessageHandler,
+            IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
             Broker broker)
         : base(
@@ -43,6 +46,8 @@ namespace Nautilus.Fix
             LabelFactory.Service(BlackBoxService.Brokerage),
             container,
             tickDataProcessor,
+            fixMessageHandler,
+            fixMessageRouter,
             credentials)
         {
             Validate.NotNull(container, nameof(container));
@@ -70,8 +75,8 @@ namespace Nautilus.Fix
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.FixMessageHandler.InitializeBrokerageGateway(gateway);
-            this.FixMessageRouter.InitializeBrokerageGateway(gateway);
+            this.FxcmFixMessageHandler.InitializeBrokerageGateway(gateway);
+            this.FxcmFixMessageRouter.InitializeBrokerageGateway(gateway);
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                this.FixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
+                this.FxcmFixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
             });
         }
 
@@ -122,7 +127,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                this.FixMessageRouter.SubmitEntryStopOrder(elsOrder);
+                this.FxcmFixMessageRouter.SubmitEntryStopOrder(elsOrder);
             });
         }
 
@@ -132,7 +137,7 @@ namespace Nautilus.Fix
         /// <param name="orderModification">The order modification.</param>
         public void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification)
         {
-            this.FixMessageRouter.ModifyStoplossOrder(orderModification);
+            this.FxcmFixMessageRouter.ModifyStoplossOrder(orderModification);
         }
 
         /// <summary>
@@ -141,7 +146,7 @@ namespace Nautilus.Fix
         /// <param name="order">The order.</param>
         public void CancelOrder(Order order)
         {
-            this.FixMessageRouter.CancelOrder(order);
+            this.FxcmFixMessageRouter.CancelOrder(order);
         }
 
         /// <summary>
@@ -157,7 +162,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void CollateralInquiry()
         {
-            this.FixMessageRouter.CollateralInquiry();
+            this.FxcmFixMessageRouter.CollateralInquiry();
         }
 
         /// <summary>
@@ -165,7 +170,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void TradingSessionStatus()
         {
-            this.FixMessageRouter.TradingSessionStatus();
+            this.FxcmFixMessageRouter.TradingSessionStatus();
         }
 
         /// <summary>
@@ -173,7 +178,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void RequestAllPositions()
         {
-            this.FixMessageRouter.RequestAllPositions();
+            this.FxcmFixMessageRouter.RequestAllPositions();
         }
 
         /// <summary>
@@ -182,7 +187,7 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
+            this.FxcmFixMessageRouter.UpdateInstrumentSubscribe(symbol);
         }
 
         /// <summary>
@@ -190,7 +195,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.FixMessageRouter.UpdateInstrumentsSubscribeAll();
+            this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
         }
 
         /// <summary>
@@ -199,7 +204,7 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
-            this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
+            this.FxcmFixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
     }
 }

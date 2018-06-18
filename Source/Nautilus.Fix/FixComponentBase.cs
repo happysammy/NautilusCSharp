@@ -45,13 +45,17 @@ namespace Nautilus.Fix
         /// <param name="service">The service name.</param>
         /// <param name="component">The component label.</param>
         /// <param name="container">The setup container.</param>
-        /// <param name="credentials">The FIX account credentials</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="fixMessageHandler">The FIX message handler</param>
+        /// <param name="fixMessageRouter">The FIX message router.</param>
+        /// <param name="credentials">The FIX account credentials</param>
         protected FixComponentBase(
             Enum service,
             Label component,
             IComponentryContainer container,
             ITickDataProcessor tickDataProcessor,
+            IFixMessageHandler fixMessageHandler,
+            IFixMessageRouter fixMessageRouter,
             FixCredentials credentials)
         {
             Validate.NotNull(component, nameof(component));
@@ -66,8 +70,8 @@ namespace Nautilus.Fix
             this.logger = container.LoggerFactory.Create(service, this.component);
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
-            this.FixMessageHandler = new FixMessageHandler(tickDataProcessor);
-            this.FixMessageRouter = new FixMessageRouter();
+            this.FxcmFixMessageHandler = fixMessageHandler;
+            this.FxcmFixMessageRouter = fixMessageRouter;
         }
 
         /// <summary>
@@ -78,12 +82,12 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the components FIX message handler.
         /// </summary>
-        protected FixMessageHandler FixMessageHandler { get; }
+        protected IFixMessageHandler FxcmFixMessageHandler { get; }
 
         /// <summary>
         /// Gets the components FIX message router.
         /// </summary>
-        protected FixMessageRouter FixMessageRouter { get; }
+        protected IFixMessageRouter FxcmFixMessageRouter { get; }
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -117,9 +121,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// The is connected.
         /// </summary>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
+        /// <returns>A <see cref="bool"/>.</returns>
         public bool IsFixConnected => this.session.IsLoggedOn;
 
         /// <summary>
@@ -163,9 +165,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// The on create.
         /// </summary>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="sessionId">The session id.</param>
         public void OnCreate(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -176,21 +176,19 @@ namespace Nautilus.Fix
                 {
                     this.Log.Information("Creating session...");
                     this.session = Session.LookupSession(sessionId);
-                    this.FixMessageRouter.ConnectSession(this.session);
+                    this.FxcmFixMessageRouter.ConnectSession(this.session);
                     this.Log.Information($"Session {this.session}");
                 }
 
                 this.sessionMd = Session.LookupSession(sessionId);
-                this.FixMessageRouter.ConnectSessionMd(this.sessionMd);
+                this.FxcmFixMessageRouter.ConnectSessionMd(this.sessionMd);
             });
         }
 
         /// <summary>
         /// The on logon.
         /// </summary>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="sessionId">The session id.</param>
         public void OnLogon(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -198,23 +196,13 @@ namespace Nautilus.Fix
                 Validate.NotNull(sessionId, nameof(sessionId));
 
                 this.Log.Information($"Logon - {sessionId}");
-
-                // allow logon to complete
-                Task.Delay(100).Wait();
-
-                if (sessionId.Equals(this.sessionMd.SessionID))
-                {
-                    return;
-                }
             });
         }
 
         /// <summary>
         /// The on logout.
         /// </summary>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="sessionId">The session id.</param>
         public void OnLogout(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -228,12 +216,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The from admin.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="message">The message.</param>
+        /// <param name="sessionId">The session id.</param>
         public void FromAdmin(Message message, SessionID sessionId)
         {
         }
@@ -241,12 +225,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The to admin.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="message">The message.</param>
+        /// <param name="sessionId">The session id.</param>
         public void ToAdmin(Message message, SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -269,12 +249,8 @@ namespace Nautilus.Fix
         /// <summary>
         /// The from app.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
+        /// <param name="message">The message.</param>
+        /// <param name="sessionId">The session id.</param>
         public void FromApp(Message message, SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -289,15 +265,9 @@ namespace Nautilus.Fix
         /// <summary>
         /// The to app.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="sessionId">
-        /// The session id.
-        /// </param>
-        /// <exception cref="DoNotSend">
-        /// Will not send
-        /// </exception>
+        /// <param name="message">The message.</param>
+        /// <param name="sessionId">The session id.</param>
+        /// <exception cref="DoNotSend">Will not send.</exception>
         public void ToApp(Message message, SessionID sessionId)
         {
             this.commandHandler.Execute<FieldNotFoundException>(() =>
@@ -325,7 +295,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(BusinessMessageReject message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnBusinessMessageReject(message);
+            this.FxcmFixMessageHandler.OnBusinessMessageReject(message);
         }
 
         /// <summary>
@@ -345,7 +315,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(SecurityList message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnSecurityList(message);
+            this.FxcmFixMessageHandler.OnSecurityList(message);
         }
 
         /// <summary>
@@ -355,7 +325,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(CollateralInquiryAck message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnCollateralInquiryAck(message);
+            this.FxcmFixMessageHandler.OnCollateralInquiryAck(message);
         }
 
         /// <summary>
@@ -365,7 +335,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(CollateralReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnCollateralReport(message);
+            this.FxcmFixMessageHandler.OnCollateralReport(message);
         }
 
         /// <summary>
@@ -375,7 +345,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(RequestForPositionsAck message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnRequestForPositionsAck(message);
+            this.FxcmFixMessageHandler.OnRequestForPositionsAck(message);
         }
 
         /// <summary>
@@ -385,7 +355,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(MarketDataSnapshotFullRefresh message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
+            this.FxcmFixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
         }
 
         /// <summary>
@@ -395,7 +365,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(OrderCancelReject message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnOrderCancelReject(message);
+            this.FxcmFixMessageHandler.OnOrderCancelReject(message);
         }
 
         /// <summary>
@@ -405,7 +375,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(ExecutionReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnExecutionReport(message);
+            this.FxcmFixMessageHandler.OnExecutionReport(message);
         }
 
         /// <summary>
@@ -415,7 +385,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         protected void OnMessage(PositionReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnPositionReport(message);
+            this.FxcmFixMessageHandler.OnPositionReport(message);
         }
     }
 }

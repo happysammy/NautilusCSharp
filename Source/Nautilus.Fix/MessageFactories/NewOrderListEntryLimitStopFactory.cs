@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using Nautilus.Brokerage.FXCM;
     using Nautilus.DomainModel.Entities;
     using NodaTime;
 

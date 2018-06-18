@@ -6,24 +6,24 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix
+namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Brokerage.FXCM;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Fix;
     using Nautilus.Fix.MessageFactories;
     using QuickFix;
 
     /// <summary>
-    /// The <see cref="FixMessageRouter"/>.
+    /// The <see cref="FxcmFixMessageRouter"/>.
     /// </summary>
-    public class FixMessageRouter
+    public class FxcmFixMessageRouter : IFixMessageRouter
     {
         private IBrokerageGateway brokerageGateway;
         private Session fixSession;

@@ -13,10 +13,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Moq;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Execution;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;

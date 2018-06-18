@@ -9,8 +9,6 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
 
@@ -20,18 +18,28 @@ namespace Nautilus.Fix
     public class FixClientFactory : IBrokerageClientFactory
     {
         private readonly Broker broker;
+        private readonly IFixMessageHandler fixMessageHandler;
+        private readonly IFixMessageRouter fixMessageRouter;
         private readonly FixCredentials credentials;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClientFactory"/> class.
         /// </summary>
         /// <param name="broker">The FIX client broker.</param>
+        /// <param name="fixMessageHandler">The FIX message handler.</param>
+        /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX credentials.</param>
         public FixClientFactory(
             Broker broker,
+            IFixMessageHandler fixMessageHandler,
+            IFixMessageRouter fixMessageRouter,
             FixCredentials credentials)
         {
+            Validate.NotNull(credentials, nameof(credentials));
+
             this.broker = broker;
+            this.fixMessageHandler = fixMessageHandler;
+            this.fixMessageRouter = fixMessageRouter;
             this.credentials = credentials;
         }
 
@@ -49,11 +57,13 @@ namespace Nautilus.Fix
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            // TODO: Validate tick data processor.
+            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
 
             return new FixClient(
                 container,
                 tickDataProcessor,
+                this.fixMessageHandler,
+                this.fixMessageRouter,
                 this.credentials,
                 this.broker);
         }

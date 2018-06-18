@@ -14,6 +14,7 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Brokerage.FXCM;
     using Nautilus.Compression;
     using Nautilus.Core.Validation;
     using Nautilus.Database;
@@ -130,7 +131,11 @@ namespace NautilusDB
 
             this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
-                fixCredentials,
+                new FixClientFactory(
+                    Broker.FXCM,
+                    new FxcmFixMessageHandler(null),
+                    new FxcmFixMessageRouter(),
+                    fixCredentials),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
                 new MockBarRepository(),
                 new MockEconomicEventRepository(),

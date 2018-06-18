@@ -13,9 +13,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Enums;
     using NodaTime;
     using NodaTime.Text;
-
     using QuickFix.Fields;
-
     using SecurityType = Nautilus.DomainModel.Enums.SecurityType;
     using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 

@@ -77,7 +77,6 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter);
 
-            // TODO: TickDataProcessor.
             var brokerageClient =
                 servicesFactory.BrokerageClient.Create(container, messagingAdapter, null);
 

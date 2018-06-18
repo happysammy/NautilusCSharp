@@ -6,7 +6,7 @@
 // </copyright>
 //---------------------------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using System.Linq;

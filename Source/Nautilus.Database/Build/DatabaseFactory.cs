@@ -11,6 +11,7 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Newtonsoft.Json.Linq;
     using NodaTime;
@@ -47,7 +48,7 @@ namespace Nautilus.Database.Build
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
-            FixCredentials credentials,
+            IBrokerageClientFactory brokerClientFactory,
             JObject collectionConfig,
             IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository,
@@ -105,11 +106,10 @@ namespace Nautilus.Database.Build
                 quoteProvider,
                 barAggregationControllerRef);
 
-            var fixClient = new FixClient(
+            var fixClient = brokerClientFactory.Create(
                 setupContainer,
-                tickDataProcessor,
-                credentials,
-                Broker.FXCM);
+                messagingAdapter,
+                tickDataProcessor);
 
             var addresses = new Dictionary<Enum, IActorRef>
             {

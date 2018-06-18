@@ -11,6 +11,7 @@ namespace Nautilus.Database
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -19,7 +20,6 @@ namespace Nautilus.Database
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Fix;
 
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
@@ -46,7 +46,7 @@ namespace Nautilus.Database
             ActorSystem actorSystem,
             MessagingAdapter messagingAdatper,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            FixClient fixClient,
+            IBrokerageClient fixClient,
             ITickDataProcessor tickDataProcessor,
             IQuoteProvider quoteProvider)
             : base(

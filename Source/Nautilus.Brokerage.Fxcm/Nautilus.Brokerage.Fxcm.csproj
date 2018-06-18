@@ -4,6 +4,11 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
+    <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
+    <ProjectReference Include="..\QuickFix.FIX44\QuickFix.FIX44.csproj" />
+    <ProjectReference Include="..\QuickFix\QuickFix.csproj" />
   </ItemGroup>
 </Project>

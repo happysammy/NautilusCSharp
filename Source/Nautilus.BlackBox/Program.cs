@@ -26,6 +26,7 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.Execution;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Risk;
+    using Nautilus.Brokerage.FXCM;
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel;
@@ -72,7 +73,11 @@ namespace Nautilus.BlackBox
 
             var serviceFactory = new BlackBoxServicesFactory(
                 new BrokerageGatewayFactory(),
-                new FixClientFactory(Broker.FXCM, fixCredentials),
+                new FixClientFactory(
+                    Broker.FXCM,
+                    new FxcmFixMessageHandler(null),
+                    new FxcmFixMessageRouter(),
+                    fixCredentials),
                 new AlphaModelServiceFactory(),
                 new DataServiceFactory(),
                 new ExecutionServiceFactory(),

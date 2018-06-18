@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using NodaTime;
 

@@ -6,20 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix
+namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Brokerage.FXCM;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.Fix;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;
@@ -29,22 +27,23 @@ namespace Nautilus.Fix
     /// <summary>
     /// The FXCM quick fix message handler.
     /// </summary>
-    public class FixMessageHandler
+    public class FxcmFixMessageHandler : IFixMessageHandler
     {
         private readonly ITickDataProcessor tickDataProcessor;
         private IBrokerageGateway brokerageGateway;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FixMessageHandler"/> class.
+        /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="tickDataProcessor">The tick data processor.</param>
-        public FixMessageHandler(
+        public FxcmFixMessageHandler(
             ITickDataProcessor tickDataProcessor)
         {
             Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
 
             this.tickDataProcessor = tickDataProcessor;
         }
+
         /// <summary>
         /// Initializes the brokerage gateway.
         /// </summary>
