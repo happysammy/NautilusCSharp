@@ -25,7 +25,6 @@
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />
-    <ProjectReference Include="..\Nautilus.RavenDB\Nautilus.RavenDB.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
   </ItemGroup>
 </Project>
