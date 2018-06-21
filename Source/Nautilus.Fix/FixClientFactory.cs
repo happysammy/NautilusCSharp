@@ -11,6 +11,7 @@ namespace Nautilus.Fix
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.Fix.Interfaces;
 
     /// <summary>
     /// Provides a factory for creating FIX clients.

@@ -17,6 +17,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Fix.Interfaces;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 

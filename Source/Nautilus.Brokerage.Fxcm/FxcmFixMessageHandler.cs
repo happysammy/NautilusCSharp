@@ -18,6 +18,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
+    using Nautilus.Fix.Interfaces;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;

@@ -15,6 +15,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Fix.Interfaces;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;

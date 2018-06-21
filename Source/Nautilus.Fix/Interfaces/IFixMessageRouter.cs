@@ -6,9 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Interfaces
+namespace Nautilus.Fix.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;

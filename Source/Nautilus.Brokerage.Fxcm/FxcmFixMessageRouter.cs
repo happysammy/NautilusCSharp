@@ -17,6 +17,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
+    using Nautilus.Fix.Interfaces;
     using Nautilus.Fix.MessageFactories;
     using QuickFix;
 

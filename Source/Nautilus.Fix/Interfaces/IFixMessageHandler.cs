@@ -6,8 +6,9 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Interfaces
+namespace Nautilus.Fix.Interfaces
 {
+    using Nautilus.Common.Interfaces;
     using QuickFix.FIX44;
 
     /// <summary>
