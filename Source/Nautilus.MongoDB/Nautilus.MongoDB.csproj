@@ -5,4 +5,7 @@
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.6.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+  </ItemGroup>
 </Project>
