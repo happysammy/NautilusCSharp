@@ -7,7 +7,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.ExtensionsTests
+namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Collections.Generic;
     using Nautilus.Core.Extensions;

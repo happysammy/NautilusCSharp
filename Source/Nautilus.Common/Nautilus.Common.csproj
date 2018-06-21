@@ -9,12 +9,12 @@
     <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Akka" Version="1.3.8" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\QuickFix.FIX44\QuickFix.FIX44.csproj" />
     <ProjectReference Include="..\QuickFix\QuickFix.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Akka" Version="1.3.8" />
   </ItemGroup>
 </Project>

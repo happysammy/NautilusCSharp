@@ -11,9 +11,9 @@
     <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Database.Compression.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
+    <PackageReference Include="lz4net" Version="1.0.15.93" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="lz4net" Version="1.0.15.93" />
+    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
   </ItemGroup>
 </Project>
