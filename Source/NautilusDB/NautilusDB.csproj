@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.2</LangVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -16,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
-    <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.DataProviders.Dukascopy\Nautilus.DataProviders.Dukascopy.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
