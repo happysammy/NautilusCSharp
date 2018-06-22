@@ -21,21 +21,15 @@ namespace Nautilus.Fix.MessageFactories
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <param name="stopLossPrice">
-        /// The stop-loss price.
-        /// </param>
-        /// <param name="transactionTime">
-        /// The transaction time.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderCancelReplaceRequest"/>.
-        /// </returns>
+        /// <param name="brokerSymbol">The brokers symbol.</param>
+        /// <param name="order">The order.</param>
+        /// <param name="stopLossPrice">The stop-loss price.</param>
+        /// <param name="transactionTime">The transaction time.</param>
+        /// <returns>The <see cref="OrderCancelReplaceRequest"/>.</returns>
         public static OrderCancelReplaceRequest Create(
+            string brokerSymbol,
             Order order,
-            DomainModel.ValueObjects.Price stopLossPrice,
+            decimal stopLossPrice,
             ZonedDateTime transactionTime)
         {
             var orderMessage = new OrderCancelReplaceRequest();
@@ -43,12 +37,12 @@ namespace Nautilus.Fix.MessageFactories
             orderMessage.SetField(new OrigClOrdID(order.OrderId.ToString()));
             orderMessage.SetField(new OrderID(order.BrokerOrderId.ToString()));
             orderMessage.SetField(new ClOrdID(order.CurrentOrderId.ToString()));
-            orderMessage.SetField(new Symbol(FxcmSymbolMapper.GetFxcmSymbol(order.Symbol.Code).Value));
+            orderMessage.SetField(new Symbol(brokerSymbol));
             orderMessage.SetField(new Quantity(order.Quantity.Value));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderSide(order.OrderSide));
             orderMessage.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderType(order.OrderType));
-            orderMessage.SetField(new StopPx(stopLossPrice.Value));
+            orderMessage.SetField(new StopPx(stopLossPrice));
 
             return orderMessage;
         }

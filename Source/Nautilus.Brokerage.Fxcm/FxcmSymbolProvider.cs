@@ -6,7 +6,7 @@
 // </copyright>
 //---------------------------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Fix
+namespace Nautilus.Brokerage.FXCM
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,10 +15,10 @@ namespace Nautilus.Fix
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The immutable static <see cref="FxcmSymbolMapper"/> class.
+    /// Maps a given symbol string to the brokers symbol.
     /// </summary>
     [Immutable]
-    public static class FxcmSymbolMapper
+    public static class FxcmSymbolProvider
     {
         private static readonly Dictionary<string, string> Symbols = new Dictionary<string, string>
         {
@@ -92,16 +92,16 @@ namespace Nautilus.Fix
         /// <summary>
         /// Returns the Nautilus symbol <see cref="string"/> from the given FXCM symbol.
         /// </summary>
-        /// <param name="fxcmSymbol">The FXCM symbol.</param>
+        /// <param name="brokerSymbol">The FXCM symbol.</param>
         /// <returns> A <see cref="string"/>.</returns>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public static QueryResult<string> GetNautilusSymbol(string fxcmSymbol)
+        public static QueryResult<string> GetNautilusSymbol(string brokerSymbol)
         {
-            Debug.NotNull(fxcmSymbol, nameof(fxcmSymbol));
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
 
-            return Symbols.ContainsKey(fxcmSymbol)
-                 ? QueryResult<string>.Ok(Symbols[fxcmSymbol])
-                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given FXCM symbol {fxcmSymbol}");
+            return Symbols.ContainsKey(brokerSymbol)
+                 ? QueryResult<string>.Ok(Symbols[brokerSymbol])
+                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {brokerSymbol}");
         }
 
         /// <summary>
@@ -110,13 +110,13 @@ namespace Nautilus.Fix
         /// <param name="nautilusSymbol">The nautilus symbol.</param>
         /// <returns>A <see cref="string"/>.</returns>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public static QueryResult<string> GetFxcmSymbol(string nautilusSymbol)
+        public static QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
         {
             Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));
 
             return Symbols.ContainsValue(nautilusSymbol)
                  ? QueryResult<string>.Ok(Symbols.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
-                 : QueryResult<string>.Fail($"Cannot find the FXCM symbol from the given Nautilus symbol {nautilusSymbol}");
+                 : QueryResult<string>.Fail($"Cannot find the broker symbol from the given Nautilus symbol {nautilusSymbol}");
         }
     }
 }

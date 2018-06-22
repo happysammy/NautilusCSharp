@@ -9,7 +9,6 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using NodaTime;
-
     using QuickFix.Fields;
     using QuickFix.FIX44;
 

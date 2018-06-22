@@ -8,12 +8,11 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using NodaTime;
-
     using QuickFix.Fields;
     using QuickFix.FIX44;
-
     using Account = QuickFix.Fields.Account;
 
     /// <summary>
@@ -24,20 +23,18 @@ namespace Nautilus.Fix.MessageFactories
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="atomicOrder">
-        /// The order.
-        /// </param>
-        /// <param name="timeNow">
-        /// The time now.
-        /// </param>
-        /// <returns>
-        /// The <see cref="NewOrderList"/>.
-        /// </returns>
+        /// <param name="brokerSymbol">The brokers symbol.</param>
+        /// <param name="atomicOrder">The atomic order.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>The <see cref="NewOrderList"/>.</returns>
         public static NewOrderList Create(
+            string brokerSymbol,
             AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
-            var symbol = FxcmSymbolMapper.GetFxcmSymbol(atomicOrder.Symbol.Code).Value;
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotNull(atomicOrder, nameof(atomicOrder));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var orderList = new NewOrderList();
             orderList.SetField(new ListID(timeNow.TickOfDay.ToString()));
@@ -52,14 +49,15 @@ namespace Nautilus.Fix.MessageFactories
             order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.OrderLabel.ToString()));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account("02402856"));
-            order1.SetField(new Symbol(symbol));
+            order1.SetField(new Symbol(brokerSymbol));
             order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.OrderSide));
             order1.SetField(new OrdType(OrdType.STOP));
             order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.EntryOrder.TimeInForce));
 
             if (atomicOrder.EntryOrder.ExpireTime.HasValue)
             {
-                order1.SetField(new ExpireTime(atomicOrder.EntryOrder.ExpireTime.Value.Value.ToDateTimeUtc()));
+                var expireTime = atomicOrder.EntryOrder.ExpireTime.Value.Value.ToDateTimeUtc();
+                order1.SetField(new ExpireTime(expireTime));
             }
 
             order1.SetField(new OrderQty(atomicOrder.EntryOrder.Quantity.Value));
@@ -72,7 +70,7 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.OrderLabel.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account("02402856"));
-            order2.SetField(new Symbol(symbol));
+            order2.SetField(new Symbol(brokerSymbol));
             order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.OrderSide));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.StopLossOrder.TimeInForce));
@@ -86,7 +84,7 @@ namespace Nautilus.Fix.MessageFactories
             order3.SetField(new SecondaryClOrdID(atomicOrder.ProfitTargetOrder.Value.OrderLabel.ToString()));
             order3.SetField(new ClOrdLinkID("2"));
             order3.SetField(new Account("02402856"));
-            order3.SetField(new Symbol(symbol));
+            order3.SetField(new Symbol(brokerSymbol));
             order3.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.ProfitTargetOrder.Value.OrderSide));
             order3.SetField(new OrdType(OrdType.LIMIT));
             order3.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.ProfitTargetOrder.Value.TimeInForce));

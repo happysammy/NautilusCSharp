@@ -87,7 +87,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 message.GetGroup(i, group);
 
-                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolMapper.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM) : new Symbol("AUDUSD", Exchange.FXCM);
+                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM) : new Symbol("AUDUSD", Exchange.FXCM);
                 var symbolId = new EntityId(symbol.ToString());
                 var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -210,7 +210,7 @@ namespace Nautilus.Brokerage.FXCM
             Validate.NotNull(message, nameof(message));
 
             var symbol = message.IsSetField(Tags.Symbol)
-                ? FxcmSymbolMapper.GetNautilusSymbol(message.GetField(Tags.Symbol)).Value
+                ? FxcmSymbolProvider.GetNautilusSymbol(message.GetField(Tags.Symbol)).Value
                 : string.Empty;
 
             var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
@@ -242,7 +242,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(message, nameof(message));
 
-            var symbol = FxcmSymbolMapper.GetNautilusSymbol(GetMessageField(message, Tags.Symbol)).Value;
+            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetMessageField(message, Tags.Symbol)).Value;
             var orderId = message.ClOrdID.ToString();
             var brokerOrderId = message.OrderID.ToString();
             var fxcmcode = message.GetField(9025);
@@ -272,7 +272,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(report, nameof(report));
 
-            var symbol = FxcmSymbolMapper.GetNautilusSymbol(GetMessageField(report, Tags.Symbol)).Value;
+            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetMessageField(report, Tags.Symbol)).Value;
             var orderId = GetMessageField(report, Tags.ClOrdID);
             var brokerOrderId = GetMessageField(report, Tags.OrderID);
             var orderLabel = GetMessageField(report, Tags.SecondaryClOrdID);

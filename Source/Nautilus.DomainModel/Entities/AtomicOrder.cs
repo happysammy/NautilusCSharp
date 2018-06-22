@@ -38,10 +38,10 @@ namespace Nautilus.DomainModel.Entities
                   entryOrder.OrderId,
                   entryOrder.OrderTimestamp)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(entryOrder, nameof(entryOrder));
-            Validate.NotNull(stopLossOrder, nameof(stopLossOrder));
-            Validate.NotNull(profitTargetOrder, nameof(profitTargetOrder));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotNull(entryOrder, nameof(entryOrder));
+            Debug.NotNull(stopLossOrder, nameof(stopLossOrder));
+            Debug.NotNull(profitTargetOrder, nameof(profitTargetOrder));
 
             this.TradeType = tradeType;
             this.EntryOrder = entryOrder;

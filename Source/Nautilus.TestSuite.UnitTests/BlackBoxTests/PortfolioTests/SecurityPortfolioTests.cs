@@ -260,11 +260,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             var message = StubEventMessages.OrderRejectedEvent(order);
 
             // Act
-            Task.Delay(100).Wait();
             this.portfolioRef.Tell(message);
 
             // Assert
-            Task.Delay(100).Wait();
+            Task.Delay(200).Wait();
             Assert.Equal(OrderStatus.Rejected, order.OrderStatus);
         }
 
