@@ -49,12 +49,12 @@ namespace QuickFix
         public const string SOH = "\u0001";
         private int field_ = 0;
         private bool validStructure_;
-        
+
         #region Properties
 
         public Header Header { get; private set; }
         public Trailer Trailer { get; private set; }
-        
+
         #endregion
 
         #region Constructors
@@ -126,7 +126,7 @@ namespace QuickFix
                 int tagend = msgstr.IndexOf("=", pos);
                 int tag = Convert.ToInt32(msgstr.Substring(pos, tagend - pos));
                 pos = tagend + 1;
-                int fieldvalend = msgstr.IndexOf("\u0001", pos);
+                int fieldvalend = msgstr.IndexOf('\u0001', pos);
                 StringField field =  new StringField(tag, msgstr.Substring(pos, fieldvalend - pos));
 
                 /*
@@ -210,7 +210,7 @@ namespace QuickFix
                 case Tags.XmlData:
                 case Tags.MessageEncoding:
                 case Tags.LastMsgSeqNumProcessed:
-                    // case Tags.OnBehalfOfSendingTime: TODO 
+                    // case Tags.OnBehalfOfSendingTime: TODO
                     return true;
                 default:
                     return false;
@@ -330,16 +330,16 @@ namespace QuickFix
         public bool FromStringHeader(string msgstr)
         {
             Clear();
-            
+
             int pos = 0;
             int count = 0;
             while(pos < msgstr.Length)
             {
                 StringField f = ExtractField(msgstr, ref pos);
-                
+
                 if((count < 3) && (Header.HEADER_FIELD_ORDER[count++] != f.Tag))
                     return false;
-                
+
                 if(IsHeaderField(f.Tag))
                     this.Header.SetField(f, false);
                 else
@@ -401,7 +401,7 @@ namespace QuickFix
             while (pos < msgstr.Length)
             {
                 StringField f = ExtractField(msgstr, ref pos, sessionDD, appDD);
-                
+
                 if (validate && (count < 3) && (Header.HEADER_FIELD_ORDER[count++] != f.Tag))
                     throw new InvalidMessage("Header fields out of order");
 
@@ -458,7 +458,7 @@ namespace QuickFix
                         this.RepeatedTags.Add(f);
                     }
 
-                    
+
                     if((null != msgMap) && (msgMap.IsGroup(f.Tag)))
                     {
                         pos = SetGroup(f, msgstr, pos, this, msgMap.GetGroupSpec(f.Tag), sessionDD, appDD, msgFactory);
@@ -549,7 +549,7 @@ namespace QuickFix
                     pos = SetGroup(f, msgstr, pos, grp, dd.GetGroupSpec(f.Tag), sessionDataDictionary, appDD, msgFactory);
                 }
             }
-            
+
             return grpPos;
         }
 

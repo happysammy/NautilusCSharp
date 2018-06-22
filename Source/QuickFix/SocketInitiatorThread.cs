@@ -92,6 +92,7 @@ namespace QuickFix
                 }
 
                 ProcessStream();
+
                 return true;
             }
             catch (System.ObjectDisposedException e)
@@ -105,7 +106,7 @@ namespace QuickFix
                     else
                         Disconnect();
                 }
-                return false;                    
+                return false;
             }
             catch (System.Exception e)
             {
@@ -132,7 +133,7 @@ namespace QuickFix
         /// <exception cref="System.Net.Sockets.SocketException">On connection reset</exception>
         protected int ReadSome(byte[] buffer, int timeoutMilliseconds)
         {
-            // NOTE: THIS FUNCTION IS EXACTLY THE SAME AS THE ONE IN SocketReader any changes here should 
+            // NOTE: THIS FUNCTION IS EXACTLY THE SAME AS THE ONE IN SocketReader any changes here should
             // also be performed there
             try
             {
@@ -145,7 +146,7 @@ namespace QuickFix
 
                 if (currentReadRequest_.IsCompleted)
                 {
-                    // Make sure to set currentReadRequest_ to before retreiving result 
+                    // Make sure to set currentReadRequest_ to before retreiving result
                     // so a new read can be started next time even if an exception is thrown
                     var request = currentReadRequest_;
                     currentReadRequest_ = null;
@@ -164,7 +165,7 @@ namespace QuickFix
                 var inner = ex.InnerException as SocketException;
                 if (inner != null && inner.SocketErrorCode == SocketError.TimedOut)
                 {
-                    // Nothing read 
+                    // Nothing read
                     return 0;
                 }
                 else if (inner != null)

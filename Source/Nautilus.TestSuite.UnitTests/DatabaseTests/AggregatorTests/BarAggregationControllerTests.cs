@@ -9,18 +9,14 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Messages;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

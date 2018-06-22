@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.FixTester
+namespace Nautilus.FixTester
 {
     using System;
     using Akka.Event;
