@@ -48,7 +48,7 @@ namespace Nautilus.Common.Interfaces
 //        void InitializeSession();
 
         /// <summary>
-        /// Returns the current time of the <see cref="BlackBox"/> system clock.
+        /// Returns the current time of the system clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         ZonedDateTime GetTimeNow();
@@ -102,7 +102,7 @@ namespace Nautilus.Common.Interfaces
         void ClosePosition(Position position);
 
         /// <summary>
-        /// Updates the given instruments in the <see cref="IInstrumentRepository"/>.
+        /// Updates the given instruments in the instrument repository.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
         /// <param name="responseId">The response identifier.</param>
