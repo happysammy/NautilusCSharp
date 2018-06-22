@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="FIXFXCM10.xml" />
+    <AdditionalFiles Include="fix_fxcm.cfg" />
+  </ItemGroup>
 </Project>

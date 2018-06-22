@@ -10,8 +10,8 @@ namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -19,7 +19,9 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
@@ -27,8 +29,8 @@ namespace Nautilus.Database
     public sealed class Database : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
-        private readonly ITickDataProcessor tickDataProcessor;
-        private readonly IQuoteProvider quoteProvider;
+        private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
+        private readonly IDataClient dataClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -37,8 +39,7 @@ namespace Nautilus.Database
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdatper">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
-        /// <param name="fixClient">The fix client.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="dataClient">The data client.</param>
         /// <param name="quoteProvider">The quote provider.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
@@ -46,8 +47,7 @@ namespace Nautilus.Database
             ActorSystem actorSystem,
             MessagingAdapter messagingAdatper,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            ITradingClient fixClient,
-            ITickDataProcessor tickDataProcessor,
+            IDataClient dataClient,
             IQuoteProvider quoteProvider)
             : base(
                 ServiceContext.Database,
@@ -59,18 +59,16 @@ namespace Nautilus.Database
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdatper, nameof(messagingAdatper));
             Validate.NotNull(addresses, nameof(addresses));
-            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
             Validate.NotNull(quoteProvider, nameof(quoteProvider));
 
             this.actorSystem = actorSystem;
+            this.addresses = addresses;
+            this.dataClient = dataClient;
 
             messagingAdatper.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));
-
-            this.tickDataProcessor = tickDataProcessor;
-            this.quoteProvider = quoteProvider;
         }
 
         /// <summary>
@@ -83,6 +81,12 @@ namespace Nautilus.Database
                 new StartSystem(
                     Guid.NewGuid(),
                     this.TimeNow()));
+
+            this.dataClient.Connect();
+
+            Task.Delay(5000);
+
+            this.dataClient.RequestMarketDataSubscribe(new Symbol("AUDUSD", Exchange.FXCM));
         }
 
         /// <summary>
@@ -95,14 +99,15 @@ namespace Nautilus.Database
 
             this.Log.Information($"{actorSystemName} ActorSystem shutting down...");
 
-//            var shutdownTasks = new Task[]
-//            {
-//                this.actorReferences.DataCollectionManager.GracefulStop(TimeSpan.FromSeconds(10)),
-//                this.actorReferences.DatabaseTaskManager.GracefulStop(TimeSpan.FromSeconds(10))
-//            };
+            var shutdownTasks = new List<Task>();
+            foreach (var address in this.addresses)
+            {
+                shutdownTasks.Add(address.Value.GracefulStop(TimeSpan.FromSeconds(10)));
+            }
+            shutdownTasks.ToArray();
 
-            this.Log.Information($"waiting for actors to shut down...");
-            //Task.WhenAll(shutdownTasks);
+            this.Log.Information($"Waiting for actors to shut down...");
+            Task.WhenAll(shutdownTasks);
 
             this.actorSystem.Terminate();
             this.Log.Information($"{actorSystemName} terminated");

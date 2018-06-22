@@ -8,7 +8,9 @@
 
 namespace NautilusDB
 {
+    using System;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -88,35 +90,35 @@ namespace NautilusDB
                 initialFromDateString = (string)config[ConfigSection.Dukascopy]["initialFromDate"];
             }
 
-//            if (this.Environment.IsDevelopment())
-//            {
-//                configCsvPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\" + "historicConfig.csv";
-//
-//                this.dukasConfig = new MarketDataProviderConfig(
-//                    (bool)config[ConfigSection.Dukascopy]["run"],
-//                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\",
-//                    new[] { "AUDUSD", "GBPUSD" },
-//                    new[] { "Minute" },
-//                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
-//                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
-//                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
-//            }
-//
-//            if (this.Environment.IsProduction())
-//            {
-//                var currencyPairs = (JArray)config[ConfigSection.Dukascopy]["currencyPairs"];
-//                var barResolutions = (JArray)config[ConfigSection.Dukascopy]["barResolutions"];
-//                configCsvPath = (string)config[ConfigSection.Dukascopy]["configCsvPath"];
-//
-//                this.dukasConfig = new MarketDataProviderConfig(
-//                    (bool)config[ConfigSection.Dukascopy]["run"],
-//                    (string)config[ConfigSection.Dukascopy]["csvDataDirectory"],
-//                    currencyPairs.Select(cp => (string)cp).ToArray(),
-//                    barResolutions.Select(br => (string)br).ToArray(),
-//                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
-//                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
-//                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
-//            }
+            if (this.Environment.IsDevelopment())
+            {
+                configCsvPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\" + "historicConfig.csv";
+
+                this.dukasConfig = new MarketDataProviderConfig(
+                    (bool)config[ConfigSection.Dukascopy]["run"],
+                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\",
+                    new[] { "AUDUSD", "GBPUSD" },
+                    new[] { "Minute" },
+                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
+                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
+                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
+            }
+
+            if (this.Environment.IsProduction())
+            {
+                var currencyPairs = (JArray)config[ConfigSection.Dukascopy]["currencyPairs"];
+                var barResolutions = (JArray)config[ConfigSection.Dukascopy]["barResolutions"];
+                configCsvPath = (string)config[ConfigSection.Dukascopy]["configCsvPath"];
+
+                this.dukasConfig = new MarketDataProviderConfig(
+                    (bool)config[ConfigSection.Dukascopy]["run"],
+                    (string)config[ConfigSection.Dukascopy]["csvDataDirectory"],
+                    currencyPairs.Select(cp => (string)cp).ToArray(),
+                    barResolutions.Select(br => (string)br).ToArray(),
+                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
+                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
+                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
+            }
 
             var compressor = DataCompressorFactory.Create(
                 (bool)config[ConfigSection.Database]["compression"],

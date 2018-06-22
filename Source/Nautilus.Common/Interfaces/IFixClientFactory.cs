@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IBrokerageGatewayFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IFixClientFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,6 +8,8 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Provides various clients for the system from the given inputs.
     /// </summary>
@@ -36,5 +38,11 @@ namespace Nautilus.Common.Interfaces
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickDataProcessor tickDataProcessor);
+
+        /// <summary>
+        /// Returns the tick value index for the client.
+        /// </summary>
+        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
+        IReadOnlyDictionary<string, int> GetTickValueIndex();
     }
 }

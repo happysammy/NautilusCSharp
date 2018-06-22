@@ -11,7 +11,6 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Newtonsoft.Json.Linq;
     using NodaTime;
@@ -26,8 +25,6 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Processors;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix;
     using Nautilus.Scheduler;
 
     /// <summary>
@@ -40,6 +37,7 @@ namespace Nautilus.Database.Build
         /// address to the <see cref="DatabaseTaskManager"/>.
         /// </summary>
         /// <param name="logger">The database logger.</param>
+        /// <param name="fixClientFactory">The FIX client factory.</param>
         /// <param name="collectionConfig">The collection configuration.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="economicEventRepository">The database economic news event repo.</param>
@@ -48,7 +46,7 @@ namespace Nautilus.Database.Build
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
-            IFixClientFactory brokerClientFactory,
+            IFixClientFactory fixClientFactory,
             JObject collectionConfig,
             IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository,
@@ -102,11 +100,11 @@ namespace Nautilus.Database.Build
 
             var tickDataProcessor = new TickDataProcessor(
                 setupContainer,
-                new Dictionary<string, int>(),
+                fixClientFactory.GetTickValueIndex(),
                 quoteProvider,
                 barAggregationControllerRef);
 
-            var fixClient = brokerClientFactory.TradingClient(
+            var fixClient = fixClientFactory.DataClient(
                 setupContainer,
                 messagingAdapter,
                 tickDataProcessor);
@@ -124,7 +122,6 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 addresses,
                 fixClient,
-                tickDataProcessor,
                 quoteProvider);
         }
     }

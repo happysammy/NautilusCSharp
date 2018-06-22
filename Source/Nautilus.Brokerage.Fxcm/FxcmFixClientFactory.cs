@@ -8,6 +8,7 @@
 
 namespace Nautilus.Brokerage.FXCM
 {
+    using System.Collections.Generic;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
@@ -90,5 +91,8 @@ namespace Nautilus.Brokerage.FXCM
                 this.credentials,
                 Broker.FXCM);
         }
+
+        public IReadOnlyDictionary<string, int> GetTickValueIndex() =>
+            FxcmTickSizeProvider.GetIndex();
     }
 }

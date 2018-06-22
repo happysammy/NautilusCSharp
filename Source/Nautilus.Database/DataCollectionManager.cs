@@ -95,7 +95,7 @@ namespace Nautilus.Database
             // Provides system time to instantiate other components.
             Thread.Sleep(300);
 
-            this.InitializeMarketDataCollectors();
+            // this.InitializeMarketDataCollectors();
         }
 
         private void OnMessage(CollectData<BarType> message)
