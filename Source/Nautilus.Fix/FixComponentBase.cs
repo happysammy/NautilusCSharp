@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System;
-    using System.Net;
     using System.Threading.Tasks;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -132,9 +131,9 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                                                     | SecurityProtocolType.Tls11
-                                                     | SecurityProtocolType.Tls12;
+//                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+//                                                     | SecurityProtocolType.Tls11
+//                                                     | SecurityProtocolType.Tls12;
 
                 var settings = new SessionSettings("fix_fxcm.cfg");
                 var storeFactory = new FileStoreFactory(settings);

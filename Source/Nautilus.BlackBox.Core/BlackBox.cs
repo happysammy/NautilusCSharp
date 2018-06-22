@@ -50,7 +50,7 @@ namespace Nautilus.BlackBox.Core
         /// <param name="messagingAdapter"></param>
         /// <param name="switchboard">The service factory.</param>
         /// <param name="brokerageGateway">The brokerage gateway.</param>
-        /// <param name="brokerageClient">The brokerage client.</param>
+        /// <param name="tradingClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
@@ -60,7 +60,7 @@ namespace Nautilus.BlackBox.Core
             MessagingAdapter messagingAdapter,
             Switchboard switchboard,
             IBrokerageGateway brokerageGateway,
-            IBrokerageClient brokerageClient,
+            ITradingClient tradingClient,
             IBrokerageAccount account,
             IRiskModel riskModel)
             : base(
@@ -74,7 +74,7 @@ namespace Nautilus.BlackBox.Core
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(switchboard, nameof(switchboard));
             Validate.NotNull(brokerageGateway, nameof(brokerageGateway));
-            Validate.NotNull(brokerageClient, nameof(brokerageClient));
+            Validate.NotNull(tradingClient, nameof(tradingClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
@@ -105,7 +105,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            brokerageClient.InitializeBrokerageGateway(this.brokerageGateway);
+            tradingClient.InitializeBrokerageGateway(this.brokerageGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -134,10 +134,10 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         public void InitializeSession()
         {
-            this.Execute(() =>
-            {
-                this.brokerageGateway.InitializeSession();
-            });
+//            this.Execute(() =>
+//            {
+//                this.brokerageGateway.InitializeSession();
+//            });
         }
 
         /// <summary>

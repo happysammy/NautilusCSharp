@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Nautilus.Indicators\Nautilus.Indicators.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="fix_fxcm.cfg" />
+    <AdditionalFiles Include="FIXFXCM10.xml" />
+  </ItemGroup>
 </Project>

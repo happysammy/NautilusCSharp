@@ -131,11 +131,7 @@ namespace NautilusDB
 
             this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
-                new FixClientFactory(
-                    Broker.FXCM,
-                    new FxcmFixMessageHandler(null),
-                    new FxcmFixMessageRouter(),
-                    fixCredentials),
+                new FxcmFixClientFactory(username, password, accountNumber),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
                 new MockBarRepository(),
                 new MockEconomicEventRepository(),

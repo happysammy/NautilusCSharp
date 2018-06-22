@@ -27,12 +27,12 @@ namespace Nautilus.Fix
             string accountNumber)
         {
             Validate.NotNull(username, nameof(username));
-            Validate.NotNull(username, nameof(username));
-            Validate.NotNull(username, nameof(username));
+            Validate.NotNull(password, nameof(password));
+            Validate.NotNull(accountNumber, nameof(accountNumber));
 
             this.Username = username;
-            Password = password;
-            AccountNumber = accountNumber;
+            this.Password = password;
+            this.AccountNumber = accountNumber;
         }
 
         /// <summary>

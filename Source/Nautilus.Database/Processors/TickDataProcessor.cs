@@ -26,7 +26,7 @@ namespace Nautilus.Database.Processors
     /// </summary>
     public sealed class TickDataProcessor : ComponentBase, ITickDataProcessor
     {
-        private readonly IReadOnlyDictionary<Symbol, int> tickSizeIndex;
+        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
         private readonly IQuoteProvider quoteProvider;
         private readonly IActorRef barAggregationControllerRef;
 
@@ -39,7 +39,7 @@ namespace Nautilus.Database.Processors
         /// <param name="barAggregationControllerRef">The bar aggregator controller actor address.</param>
         public TickDataProcessor(
             IComponentryContainer container,
-            IReadOnlyDictionary<Symbol, int> tickSizeIndex,
+            IReadOnlyDictionary<string, int> tickSizeIndex,
             IQuoteProvider quoteProvider,
             IActorRef barAggregationControllerRef) : base(
             ServiceContext.Database,
@@ -81,8 +81,8 @@ namespace Nautilus.Database.Processors
                 var securitySymbol = new Symbol(symbol, exchange);
                 var tick = new Tick(
                     securitySymbol,
-                    Price.Create(bid, tickSizeIndex[securitySymbol]),
-                    Price.Create(ask, tickSizeIndex[securitySymbol]),
+                    Price.Create(bid, tickSizeIndex[symbol]),
+                    Price.Create(ask, tickSizeIndex[symbol]),
                     timestamp);
 
                 this.quoteProvider.OnTick(tick);

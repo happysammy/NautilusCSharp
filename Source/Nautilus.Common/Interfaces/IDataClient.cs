@@ -14,7 +14,7 @@ namespace Nautilus.Common.Interfaces
     /// <summary>
     /// The adapter for FIX data feed client.
     /// </summary>
-    public interface IDataFeedClient
+    public interface IDataClient
     {
         /// <summary>
         /// Gets the name of the brokerage.
@@ -36,11 +36,6 @@ namespace Nautilus.Common.Interfaces
         /// Disconnects from the FIX session.
         /// </summary>
         void Disconnect();
-
-        /// <summary>
-        /// Initializes the FIX session. Performs actions on logon.
-        /// </summary>
-        void InitializeSession();
 
         /// <summary>
         /// The request market data subscribe.

@@ -48,7 +48,7 @@ namespace Nautilus.Database.Build
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
-            IBrokerageClientFactory brokerClientFactory,
+            IFixClientFactory brokerClientFactory,
             JObject collectionConfig,
             IBarRepository barRepository,
             IEconomicEventRepository<EconomicEvent> economicEventRepository,
@@ -102,11 +102,11 @@ namespace Nautilus.Database.Build
 
             var tickDataProcessor = new TickDataProcessor(
                 setupContainer,
-                new Dictionary<Symbol, int>(),
+                new Dictionary<string, int>(),
                 quoteProvider,
                 barAggregationControllerRef);
 
-            var fixClient = brokerClientFactory.Create(
+            var fixClient = brokerClientFactory.TradingClient(
                 setupContainer,
                 messagingAdapter,
                 tickDataProcessor);

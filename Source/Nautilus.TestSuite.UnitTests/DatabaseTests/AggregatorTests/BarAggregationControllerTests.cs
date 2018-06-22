@@ -41,9 +41,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             this.output = output;
 
             var setupFactory = new StubSetupContainerFactory();
-            var container = setupFactory.Create();
-
             this.logger = setupFactory.LoggingAdapter;
+            var container = setupFactory.Create();
 
             var messagingAdapter = new MockMessagingAdapter(TestActor);
 

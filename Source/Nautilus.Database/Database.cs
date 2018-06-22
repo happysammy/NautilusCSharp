@@ -46,7 +46,7 @@ namespace Nautilus.Database
             ActorSystem actorSystem,
             MessagingAdapter messagingAdatper,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            IBrokerageClient fixClient,
+            ITradingClient fixClient,
             ITickDataProcessor tickDataProcessor,
             IQuoteProvider quoteProvider)
             : base(

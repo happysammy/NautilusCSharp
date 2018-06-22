@@ -15,9 +15,9 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The <see cref="IBrokerageClient"/> interface.
+    /// Provides an interface for a concrete trading client.
     /// </summary>
-    public interface IBrokerageClient
+    public interface ITradingClient
     {
         /// <summary>
         /// Gets the name of the brokerage.
@@ -44,11 +44,6 @@ namespace Nautilus.Common.Interfaces
         /// Disconnects the brokerage client from the brokerage.
         /// </summary>
         void Disconnect();
-
-        /// <summary>
-        /// Initializes the brokerage session.
-        /// </summary>
-        void InitializeSession();
 
         /// <summary>
         /// Request market data for the given symbol from the brokerage.

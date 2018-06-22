@@ -8,22 +8,31 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Interfaces;
-
     /// <summary>
-    /// Provides <see cref="IBrokerageClient"/>(s) for the <see cref="BlackBox"/> system from the
-    /// given inputs.
+    /// Provides various clients for the system from the given inputs.
     /// </summary>
-    public interface IBrokerageClientFactory
+    public interface IFixClientFactory
     {
+        /// <summary>
+        /// Creates a new <see cref="IDataClient"/>.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adatper.</param>
+        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <returns>The FIX data client.</returns>
+        IDataClient DataClient(
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
+            ITickDataProcessor tickDataProcessor);
+
         /// <summary>
         /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
-        /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
-        IBrokerageClient Create(
+        /// <returns>The FIX trading client.</returns>
+        ITradingClient TradingClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickDataProcessor tickDataProcessor);

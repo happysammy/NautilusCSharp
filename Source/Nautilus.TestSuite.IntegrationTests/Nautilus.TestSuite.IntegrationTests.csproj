@@ -15,8 +15,17 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
     <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Akka.TestKit, Version=1.3.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\akka.testkit\1.3.8\lib\netstandard1.6\Akka.TestKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Akka.TestKit.Xunit2, Version=1.3.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\akka.testkit.xunit2\1.3.8\lib\netstandard1.6\Akka.TestKit.Xunit2.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

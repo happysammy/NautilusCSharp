@@ -57,9 +57,9 @@ namespace Nautilus.BlackBox
                 clock.TimeNow());
 
             var broker = Broker.FXCM;
-            var username = "D102412895"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
-            var password = "1234"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
-            var accountNumber = "02402856"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
+            var username = "D102412895";
+            var password = "1234";
+            var accountNumber = "02402856";
 
             var account = new BrokerageAccount(
                 broker,
@@ -69,15 +69,12 @@ namespace Nautilus.BlackBox
                 CurrencyCode.AUD,
                 clock.TimeNow());
 
-            var fixCredentials = new FixCredentials(username, password, accountNumber);
-
             var serviceFactory = new BlackBoxServicesFactory(
                 new BrokerageGatewayFactory(),
-                new FixClientFactory(
-                    Broker.FXCM,
-                    new FxcmFixMessageHandler(null),
-                    new FxcmFixMessageRouter(),
-                    fixCredentials),
+                new FxcmFixClientFactory(
+                    username,
+                    password,
+                    accountNumber),
                 new AlphaModelServiceFactory(),
                 new DataServiceFactory(),
                 new ExecutionServiceFactory(),

@@ -42,10 +42,10 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         void Disconnect();
 
-        /// <summary>
-        /// Initializes the brokerage session.
-        /// </summary>
-        void InitializeSession();
+//        /// <summary>
+//        /// Initializes the brokerage session.
+//        /// </summary>
+//        void InitializeSession();
 
         /// <summary>
         /// Returns the current time of the <see cref="BlackBox"/> system clock.
