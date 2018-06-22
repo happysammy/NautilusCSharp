@@ -10,6 +10,7 @@ namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Core.Validation;
@@ -84,9 +85,9 @@ namespace Nautilus.Database
 
             this.dataClient.Connect();
 
-            Task.Delay(5000);
+            Thread.Sleep(1000);
 
-            this.dataClient.RequestMarketDataSubscribe(new Symbol("AUDUSD", Exchange.FXCM));
+            this.dataClient.InitializeSession();
         }
 
         /// <summary>

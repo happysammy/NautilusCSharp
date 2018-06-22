@@ -37,6 +37,8 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         void Disconnect();
 
+        void InitializeSession();
+
         /// <summary>
         /// The request market data subscribe.
         /// </summary>

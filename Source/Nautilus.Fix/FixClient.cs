@@ -96,17 +96,17 @@ namespace Nautilus.Fix
             this.DisconnectFix();
         }
 
-//        /// <summary>
-//        /// Initializes the FIX session. Performs actions on logon.
-//        /// </summary>
-//        public void InitializeSession()
-//        {
-//            this.CollateralInquiry();
-//            this.TradingSessionStatus();
-//            this.RequestAllPositions();
-//            this.UpdateInstrumentsSubscribeAll();
-//            // TODO: Subscribe to all market data.
-//        }
+        /// <summary>
+        /// Initializes the FIX session. Performs actions on logon.
+        /// </summary>
+        public void InitializeSession()
+        {
+            this.CollateralInquiry();
+            this.TradingSessionStatus();
+            this.RequestAllPositions();
+            this.UpdateInstrumentsSubscribeAll();
+            // TODO: Subscribe to all market data.
+        }
 
         /// <summary>
         /// The submit entry limit stop order.
