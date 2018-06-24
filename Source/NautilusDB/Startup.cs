@@ -25,7 +25,6 @@ namespace NautilusDB
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Database.Temp;
-    using Nautilus.DataProviders.Dukascopy;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Serilog;
@@ -120,9 +119,9 @@ namespace NautilusDB
                     (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
             }
 
-            var compressor = DataCompressorFactory.Create(
-                (bool)config[ConfigSection.Database]["compression"],
-                (string)config[ConfigSection.Database]["compressionCodec"]);
+            var isCompression = (bool) config[ConfigSection.Database]["compression"];
+            var compressionCodec = (string) config[ConfigSection.Database]["compressionCodec"];
+            var compressor = DataCompressorFactory.Create(isCompression, compressionCodec);
 
             var broker = Broker.FXCM;
             var username = "D102412895"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
@@ -135,12 +134,7 @@ namespace NautilusDB
                 new SerilogLogger(),
                 new FxcmFixClientFactory(username, password, accountNumber),
                 (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
-                new MockBarRepository(),
-                new MockEconomicEventRepository(),
-                new DukascopyBarDataProvider(
-                    this.dukasConfig,
-                    initialFromDateString,
-                    collectionOffsetMinutes));
+                new MockBarRepository());
 
             Task.Run(() => this.nautilusDB.Start());
         }

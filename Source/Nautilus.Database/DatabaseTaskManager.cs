@@ -20,7 +20,6 @@ namespace Nautilus.Database
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Types;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -30,19 +29,16 @@ namespace Nautilus.Database
     public class DatabaseTaskManager : ActorComponentBase
     {
         private readonly IBarRepository barRepository;
-        private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseTaskManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="barRepository">The market data repository.</param>
-        /// <param name="economicEventRepository">The news event repository.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public DatabaseTaskManager(
             IComponentryContainer container,
-            IBarRepository barRepository,
-            IEconomicEventRepository<EconomicEvent> economicEventRepository)
+            IBarRepository barRepository)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(DatabaseTaskManager)),
@@ -50,10 +46,8 @@ namespace Nautilus.Database
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
 
             this.barRepository = barRepository;
-            this.economicEventRepository = economicEventRepository;
 
             // Command messages
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));

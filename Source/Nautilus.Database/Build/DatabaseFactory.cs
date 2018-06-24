@@ -40,23 +40,17 @@ namespace Nautilus.Database.Build
         /// <param name="fixClientFactory">The FIX client factory.</param>
         /// <param name="collectionConfig">The collection configuration.</param>
         /// <param name="barRepository">The database market data repo.</param>
-        /// <param name="economicEventRepository">The database economic news event repo.</param>
-        /// <param name="barDataProvider">The market data provider.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
             JObject collectionConfig,
-            IBarRepository barRepository,
-            IEconomicEventRepository<EconomicEvent> economicEventRepository,
-            IBarDataProvider barDataProvider)
+            IBarRepository barRepository)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(collectionConfig, nameof(collectionConfig));
             Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(economicEventRepository, nameof(economicEventRepository));
-            Validate.NotNull(barDataProvider, nameof(barDataProvider));
 
             logger.Information(ServiceContext.Database, $"Starting {nameof(Database)} builder...");
             StartupVersionChecker.Run(logger);
@@ -81,15 +75,12 @@ namespace Nautilus.Database.Build
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
                     setupContainer,
-                    barRepository,
-                    economicEventRepository)));
+                    barRepository)));
 
             var dataCollectionActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DataCollectionManager(
                     setupContainer,
-                    messagingAdapter,
-                    collectionSchedule,
-                    barDataProvider)));
+                    messagingAdapter)));
 
             var barAggregationControllerRef = actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(

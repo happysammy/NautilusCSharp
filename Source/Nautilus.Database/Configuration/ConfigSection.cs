@@ -8,12 +8,29 @@
 
 namespace Nautilus.Database.Configuration
 {
+    /// <summary>
+    /// Provides configuration sections.
+    /// </summary>
     public static class ConfigSection
     {
+        /// <summary>
+        /// The database configuration section.
+        /// </summary>
         public static string Database => "database";
 
+        /// <summary>
+        /// The service stack configuration section.
+        /// </summary>
         public static string ServiceStack => "serviceStack";
 
+        /// <summary>
+        /// The FXCM configuration section.
+        /// </summary>
+        public static string Fxcm => "fxcm";
+
+        /// <summary>
+        /// The Dukascopy configuration section.
+        /// </summary>
         public static string Dukascopy => "dukascopy";
     }
 }

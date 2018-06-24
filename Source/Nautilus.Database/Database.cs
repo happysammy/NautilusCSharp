@@ -20,9 +20,7 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
@@ -38,7 +36,7 @@ namespace Nautilus.Database
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="messagingAdatper">The messaging adapter.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="dataClient">The data client.</param>
         /// <param name="quoteProvider">The quote provider.</param>
@@ -46,7 +44,7 @@ namespace Nautilus.Database
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
-            MessagingAdapter messagingAdatper,
+            MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
             IDataClient dataClient,
             IQuoteProvider quoteProvider)
@@ -54,11 +52,11 @@ namespace Nautilus.Database
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
                 setupContainer,
-                messagingAdatper)
+                messagingAdapter)
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(actorSystem, nameof(actorSystem));
-            Validate.NotNull(messagingAdatper, nameof(messagingAdatper));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(addresses, nameof(addresses));
             Validate.NotNull(quoteProvider, nameof(quoteProvider));
 
@@ -66,7 +64,7 @@ namespace Nautilus.Database
             this.addresses = addresses;
             this.dataClient = dataClient;
 
-            messagingAdatper.Send(new InitializeMessageSwitchboard(
+            messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));
