@@ -23,12 +23,12 @@ namespace NautilusDB.Service
     /// <summary>
     /// The service which processes incoming <see cref="EconomicEventRequest"/>(s).
     /// </summary>
-    public class NewsEventService : Service
+    public class EconomicEventService : Service
     {
         private readonly ILoggingAdapter logger;
         private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
 
-        public NewsEventService(
+        public EconomicEventService(
             ILoggingAdapter logger,
             IEconomicEventRepository<EconomicEvent> economicEventRepository)
         {

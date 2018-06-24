@@ -12,7 +12,6 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore;
     using Nautilus.Common.Enums;
-
     using global::Serilog;
 
     /// <summary>

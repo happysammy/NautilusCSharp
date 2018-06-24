@@ -8,9 +8,7 @@
 
 namespace NautilusDB
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -24,8 +22,6 @@ namespace NautilusDB
     using Nautilus.Database.Configuration;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.Fix;
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
@@ -37,7 +33,6 @@ namespace NautilusDB
     public class Startup
     {
         private Database nautilusDB;
-        private MarketDataProviderConfig dukasConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
@@ -82,56 +77,26 @@ namespace NautilusDB
             Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
             RedisServiceStack.ConfigureServiceStack();
 
-            var configCsvPath = string.Empty;
-            var initialFromDateSpecified = (bool)config[ConfigSection.Dukascopy]["initialFromDateSpecified"];
-            var initialFromDateString = string.Empty;
-            var collectionOffsetMinutes = (int)config[ConfigSection.Dukascopy]["collectionSchedule"]["collectionOffsetMinutes"];
-
-            if (initialFromDateSpecified)
-            {
-                initialFromDateString = (string)config[ConfigSection.Dukascopy]["initialFromDate"];
-            }
-
             if (this.Environment.IsDevelopment())
             {
-                configCsvPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\" + "historicConfig.csv";
 
-                this.dukasConfig = new MarketDataProviderConfig(
-                    (bool)config[ConfigSection.Dukascopy]["run"],
-                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\")) + "TestData\\",
-                    new[] { "AUDUSD", "GBPUSD" },
-                    new[] { "Minute" },
-                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
-                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
-                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
             }
 
             if (this.Environment.IsProduction())
             {
-                var currencyPairs = (JArray)config[ConfigSection.Dukascopy]["currencyPairs"];
-                var barResolutions = (JArray)config[ConfigSection.Dukascopy]["barResolutions"];
-                configCsvPath = (string)config[ConfigSection.Dukascopy]["configCsvPath"];
 
-                this.dukasConfig = new MarketDataProviderConfig(
-                    (bool)config[ConfigSection.Dukascopy]["run"],
-                    (string)config[ConfigSection.Dukascopy]["csvDataDirectory"],
-                    currencyPairs.Select(cp => (string)cp).ToArray(),
-                    barResolutions.Select(br => (string)br).ToArray(),
-                    (string)config[ConfigSection.Dukascopy]["timestampParsePattern"],
-                    (int)config[ConfigSection.Dukascopy]["volumeMultiple"],
-                    (bool)config[ConfigSection.Dukascopy]["checkBarDataIntegrity"]);
             }
 
-            var isCompression = (bool) config[ConfigSection.Database]["compression"];
-            var compressionCodec = (string) config[ConfigSection.Database]["compressionCodec"];
+            var isCompression = (bool)config[ConfigSection.Database]["compression"];
+            var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var compressor = CompressorFactory.Create(isCompression, compressionCodec);
 
-            var broker = Broker.FXCM;
-            var username = "D102412895";
-            var password = "1234";
-            var accountNumber = "02402856";
+            var username = (string)config[ConfigSection.Fxcm]["username"];;
+            var password = (string)config[ConfigSection.Fxcm]["password"];;
+            var accountNumber = (string)config[ConfigSection.Fxcm]["accountNumber"];;
 
-            var fixCredentials = new FixCredentials(username, password, accountNumber);
+            var currencyPairs = (JArray)config[ConfigSection.Fxcm]["currencyPairs"];
+            var barResolutions = (JArray)config[ConfigSection.Fxcm]["barResolutions"];
 
             var localHost = RedisConstants.LocalHost;
             var clientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
