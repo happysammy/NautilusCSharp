@@ -15,7 +15,7 @@ namespace Nautilus.Compression
     /// <summary>
     /// Provides a factory for the creation of <see cref="IDataCompressor"/>(s).
     /// </summary>
-    public static class DataCompressorFactory
+    public static class CompressorFactory
     {
         /// <summary>
         /// Returns a new <see cref="IDataCompressor"/> from the given arguments.

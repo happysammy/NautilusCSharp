@@ -24,10 +24,12 @@ namespace NautilusDB
     using Nautilus.Database.Configuration;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
-    using Nautilus.Database.Temp;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
+    using Nautilus.Redis;
     using Nautilus.Serilog;
+    using NodaTime;
+    using ServiceStack.Redis;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -78,6 +80,7 @@ namespace NautilusDB
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
             Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
+            RedisServiceStack.ConfigureServiceStack();
 
             var configCsvPath = string.Empty;
             var initialFromDateSpecified = (bool)config[ConfigSection.Dukascopy]["initialFromDateSpecified"];
@@ -121,20 +124,29 @@ namespace NautilusDB
 
             var isCompression = (bool) config[ConfigSection.Database]["compression"];
             var compressionCodec = (string) config[ConfigSection.Database]["compressionCodec"];
-            var compressor = DataCompressorFactory.Create(isCompression, compressionCodec);
+            var compressor = CompressorFactory.Create(isCompression, compressionCodec);
 
             var broker = Broker.FXCM;
-            var username = "D102412895"; //"D102412895"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Username"); // "D102412895";
-            var password = "1234"; //"1234"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "Password"); // "1234";
-            var accountNumber = "02402856"; //ConfigReader.GetArgumentValue(ConfigurationManager.AppSettings, "AccountNumber"); // "02402856";
+            var username = "D102412895";
+            var password = "1234";
+            var accountNumber = "02402856";
 
             var fixCredentials = new FixCredentials(username, password, accountNumber);
 
+            var localHost = RedisConstants.LocalHost;
+            var clientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
+
             this.nautilusDB = DatabaseFactory.Create(
                 new SerilogLogger(),
-                new FxcmFixClientFactory(username, password, accountNumber),
-                (JObject)config[ConfigSection.Dukascopy]["collectionSchedule"],
-                new MockBarRepository());
+                new FxcmFixClientFactory(
+                    username,
+                    password,
+                    accountNumber),
+                new RedisBarRepository(
+                    clientManager,
+                    RedisConstants.LocalHost,
+                    Duration.FromMilliseconds(3000),
+                    compressor));
 
             Task.Run(() => this.nautilusDB.Start());
         }

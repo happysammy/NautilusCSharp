@@ -34,11 +34,11 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.output = output;
             var localHost = RedisConstants.LocalHost;
-            var redisClientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
+            var clientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
 
             // Data compression off so that redis-cli is readable.
             this.repository = new RedisBarRepository(
-                redisClientManager,
+                clientManager,
                 localHost,
                 Duration.FromSeconds(10),
                 new LZ4DataCompressor(false));
