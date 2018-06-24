@@ -1,0 +1,19 @@
+syntax = "proto3";
+option csharp_namespace = "Nautilus.Protobuf.Messages";
+
+message Tick {
+    string symbol = 1;
+    double bid = 2;
+    double ask = 3;
+    string timestamp = 4;
+}
+
+message Bar {
+    string symbol = 1;
+    double open = 2;
+    double high = 3;
+    double low = 4;
+    double close = 5;
+    int32 volume = 6;
+    string timestamp = 7;
+}
