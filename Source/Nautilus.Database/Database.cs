@@ -93,6 +93,8 @@ namespace Nautilus.Database
         /// </summary>
         public void Shutdown()
         {
+            this.dataClient.Disconnect();
+
             // Placeholder for the log events (do not refactor away).
             var actorSystemName = this.actorSystem.Name;
 

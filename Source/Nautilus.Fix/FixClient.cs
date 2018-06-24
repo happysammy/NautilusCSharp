@@ -10,7 +10,6 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
@@ -44,7 +43,7 @@ namespace Nautilus.Fix
             Broker broker)
         : base(
             ServiceContext.FIX,
-            LabelFactory.Service(BlackBoxService.Brokerage),
+            LabelFactory.Service(ServiceContext.FIX),
             container,
             tickDataProcessor,
             fixMessageHandler,
