@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IBarPublisher.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ITickPublisher.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,17 +8,17 @@
 
 namespace Nautilus.Database.Interfaces
 {
-    using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The interface for publishing bar data events to subscribers.
+    /// The interface for publishing ticks to subscibers.
     /// </summary>
-    public interface IBarPublisher
+    public interface ITickPublisher
     {
         /// <summary>
-        /// Publish the given bar data event to all subscribers.
+        /// Publishes the given tick to subscribers.
         /// </summary>
-        /// <param name="barEvent">The bar data event to publish.</param>
-        void Publish(BarDataEvent barEvent);
+        /// <param name="tick">The tick to publish.</param>
+        void Publish(Tick tick);
     }
 }
