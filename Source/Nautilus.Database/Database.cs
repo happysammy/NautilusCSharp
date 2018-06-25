@@ -20,6 +20,7 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
+    using Nautilus.Database.Protobuf;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -30,6 +31,7 @@ namespace Nautilus.Database
         private readonly ActorSystem actorSystem;
         private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
         private readonly IDataClient dataClient;
+        private readonly DataSubscriptionServer subscriptionServer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -39,7 +41,7 @@ namespace Nautilus.Database
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="dataClient">The data client.</param>
-        /// <param name="quoteProvider">The quote provider.</param>
+        /// <param name="subscriptionServer">The subscription server.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
@@ -47,7 +49,7 @@ namespace Nautilus.Database
             MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
             IDataClient dataClient,
-            IQuoteProvider quoteProvider)
+            DataSubscriptionServer subscriptionServer)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -58,11 +60,12 @@ namespace Nautilus.Database
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(addresses, nameof(addresses));
-            Validate.NotNull(quoteProvider, nameof(quoteProvider));
+            Validate.NotNull(subscriptionServer, nameof(subscriptionServer));
 
             this.actorSystem = actorSystem;
             this.addresses = addresses;
             this.dataClient = dataClient;
+            this.subscriptionServer = subscriptionServer;
 
             messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),

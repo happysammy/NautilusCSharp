@@ -22,6 +22,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Enums;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
+    using Nautilus.Database.Protobuf;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
 
@@ -51,10 +52,11 @@ namespace Nautilus.Database.Build
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
+            var guidFactory = new GuidFactory();
 
             var setupContainer = new DatabaseSetupContainer(
                 clock,
-                new GuidFactory(),
+                guidFactory,
                 new LoggerFactory(logger));
 
             var actorSystem = ActorSystem.Create(nameof(Nautilus.Database));
@@ -89,11 +91,6 @@ namespace Nautilus.Database.Build
                 quoteProvider,
                 barAggregationControllerRef);
 
-            var fixClient = fixClientFactory.DataClient(
-                setupContainer,
-                messagingAdapter,
-                tickDataProcessor);
-
             var addresses = new Dictionary<Enum, IActorRef>
             {
                 { DatabaseService.Scheduler, schedulerRef },
@@ -101,13 +98,23 @@ namespace Nautilus.Database.Build
                 { DatabaseService.CollectionManager, dataCollectionActorRef },
             };
 
+            var fixClient = fixClientFactory.DataClient(
+                setupContainer,
+                messagingAdapter,
+                tickDataProcessor);
+
+            var subscriptionServer = new DataSubscriptionServer(
+                clock,
+                guidFactory,
+                dataCollectionActorRef);
+
             return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
                 addresses,
                 fixClient,
-                quoteProvider);
+                subscriptionServer);
         }
     }
 }
