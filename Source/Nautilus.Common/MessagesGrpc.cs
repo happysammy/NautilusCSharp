@@ -17,26 +17,44 @@
 using grpc = global::Grpc.Core;
 
 namespace Nautilus.Common.Messages {
-  public static partial class BarDataServer
+  public static partial class DataServer
   {
-    static readonly string __ServiceName = "invariance_proto.BarDataServer";
+    static readonly string __ServiceName = "invariance_proto.DataServer";
 
+    static readonly grpc::Marshaller<global::Nautilus.Common.Messages.SubscribeTickData> __Marshaller_SubscribeTickData = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.SubscribeTickData.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Nautilus.Common.Messages.SubscribeTickDataResponse> __Marshaller_SubscribeTickDataResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.SubscribeTickDataResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.SubscribeBarData> __Marshaller_SubscribeBarData = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.SubscribeBarData.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.SubscribeBarDataResponse> __Marshaller_SubscribeBarDataResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.SubscribeBarDataResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Nautilus.Common.Messages.UnsubscribeTickData> __Marshaller_UnsubscribeTickData = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.UnsubscribeTickData.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Nautilus.Common.Messages.UnsubscribeTickDataResponse> __Marshaller_UnsubscribeTickDataResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.UnsubscribeTickDataResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.UnsubscribeBarData> __Marshaller_UnsubscribeBarData = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.UnsubscribeBarData.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> __Marshaller_UnsubscribeBarDataResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.UnsubscribeBarDataResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Nautilus.Common.Messages.SubscribeBarData, global::Nautilus.Common.Messages.SubscribeBarDataResponse> __Method_Subscribe = new grpc::Method<global::Nautilus.Common.Messages.SubscribeBarData, global::Nautilus.Common.Messages.SubscribeBarDataResponse>(
+    static readonly grpc::Method<global::Nautilus.Common.Messages.SubscribeTickData, global::Nautilus.Common.Messages.SubscribeTickDataResponse> __Method_OnSubscribeTickData = new grpc::Method<global::Nautilus.Common.Messages.SubscribeTickData, global::Nautilus.Common.Messages.SubscribeTickDataResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "Subscribe",
+        "OnSubscribeTickData",
+        __Marshaller_SubscribeTickData,
+        __Marshaller_SubscribeTickDataResponse);
+
+    static readonly grpc::Method<global::Nautilus.Common.Messages.SubscribeBarData, global::Nautilus.Common.Messages.SubscribeBarDataResponse> __Method_OnSubscribeBarData = new grpc::Method<global::Nautilus.Common.Messages.SubscribeBarData, global::Nautilus.Common.Messages.SubscribeBarDataResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "OnSubscribeBarData",
         __Marshaller_SubscribeBarData,
         __Marshaller_SubscribeBarDataResponse);
 
-    static readonly grpc::Method<global::Nautilus.Common.Messages.UnsubscribeBarData, global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> __Method_Unsubscribe = new grpc::Method<global::Nautilus.Common.Messages.UnsubscribeBarData, global::Nautilus.Common.Messages.UnsubscribeBarDataResponse>(
+    static readonly grpc::Method<global::Nautilus.Common.Messages.UnsubscribeTickData, global::Nautilus.Common.Messages.UnsubscribeTickDataResponse> __Method_OnUnsubscribeTickData = new grpc::Method<global::Nautilus.Common.Messages.UnsubscribeTickData, global::Nautilus.Common.Messages.UnsubscribeTickDataResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "Unsubscribe",
+        "OnUnsubscribeTickData",
+        __Marshaller_UnsubscribeTickData,
+        __Marshaller_UnsubscribeTickDataResponse);
+
+    static readonly grpc::Method<global::Nautilus.Common.Messages.UnsubscribeBarData, global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> __Method_OnUnsubscribeBarData = new grpc::Method<global::Nautilus.Common.Messages.UnsubscribeBarData, global::Nautilus.Common.Messages.UnsubscribeBarDataResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "OnUnsubscribeBarData",
         __Marshaller_UnsubscribeBarData,
         __Marshaller_UnsubscribeBarDataResponse);
 
@@ -46,96 +64,140 @@ namespace Nautilus.Common.Messages {
       get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.Services[0]; }
     }
 
-    /// <summary>Base class for server-side implementations of BarDataServer</summary>
-    public abstract partial class BarDataServerBase
+    /// <summary>Base class for server-side implementations of DataServer</summary>
+    public abstract partial class DataServerBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.SubscribeBarDataResponse> Subscribe(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.SubscribeTickDataResponse> OnSubscribeTickData(global::Nautilus.Common.Messages.SubscribeTickData request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> Unsubscribe(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.SubscribeBarDataResponse> OnSubscribeBarData(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.UnsubscribeTickDataResponse> OnUnsubscribeTickData(global::Nautilus.Common.Messages.UnsubscribeTickData request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> OnUnsubscribeBarData(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
     }
 
-    /// <summary>Client for BarDataServer</summary>
-    public partial class BarDataServerClient : grpc::ClientBase<BarDataServerClient>
+    /// <summary>Client for DataServer</summary>
+    public partial class DataServerClient : grpc::ClientBase<DataServerClient>
     {
-      /// <summary>Creates a new client for BarDataServer</summary>
+      /// <summary>Creates a new client for DataServer</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public BarDataServerClient(grpc::Channel channel) : base(channel)
+      public DataServerClient(grpc::Channel channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for BarDataServer that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for DataServer that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
-      public BarDataServerClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public DataServerClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
-      protected BarDataServerClient() : base()
+      protected DataServerClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
-      protected BarDataServerClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected DataServerClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
-      public virtual global::Nautilus.Common.Messages.SubscribeBarDataResponse Subscribe(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Nautilus.Common.Messages.SubscribeTickDataResponse OnSubscribeTickData(global::Nautilus.Common.Messages.SubscribeTickData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return Subscribe(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return OnSubscribeTickData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Nautilus.Common.Messages.SubscribeBarDataResponse Subscribe(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::CallOptions options)
+      public virtual global::Nautilus.Common.Messages.SubscribeTickDataResponse OnSubscribeTickData(global::Nautilus.Common.Messages.SubscribeTickData request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_Subscribe, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_OnSubscribeTickData, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeBarDataResponse> SubscribeAsync(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeTickDataResponse> OnSubscribeTickDataAsync(global::Nautilus.Common.Messages.SubscribeTickData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return SubscribeAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return OnSubscribeTickDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeBarDataResponse> SubscribeAsync(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeTickDataResponse> OnSubscribeTickDataAsync(global::Nautilus.Common.Messages.SubscribeTickData request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_Subscribe, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_OnSubscribeTickData, null, options, request);
       }
-      public virtual global::Nautilus.Common.Messages.UnsubscribeBarDataResponse Unsubscribe(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Nautilus.Common.Messages.SubscribeBarDataResponse OnSubscribeBarData(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return Unsubscribe(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return OnSubscribeBarData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Nautilus.Common.Messages.UnsubscribeBarDataResponse Unsubscribe(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::CallOptions options)
+      public virtual global::Nautilus.Common.Messages.SubscribeBarDataResponse OnSubscribeBarData(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_Unsubscribe, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_OnSubscribeBarData, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> UnsubscribeAsync(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeBarDataResponse> OnSubscribeBarDataAsync(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return UnsubscribeAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return OnSubscribeBarDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> UnsubscribeAsync(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.SubscribeBarDataResponse> OnSubscribeBarDataAsync(global::Nautilus.Common.Messages.SubscribeBarData request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_Unsubscribe, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_OnSubscribeBarData, null, options, request);
+      }
+      public virtual global::Nautilus.Common.Messages.UnsubscribeTickDataResponse OnUnsubscribeTickData(global::Nautilus.Common.Messages.UnsubscribeTickData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return OnUnsubscribeTickData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Nautilus.Common.Messages.UnsubscribeTickDataResponse OnUnsubscribeTickData(global::Nautilus.Common.Messages.UnsubscribeTickData request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_OnUnsubscribeTickData, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeTickDataResponse> OnUnsubscribeTickDataAsync(global::Nautilus.Common.Messages.UnsubscribeTickData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return OnUnsubscribeTickDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeTickDataResponse> OnUnsubscribeTickDataAsync(global::Nautilus.Common.Messages.UnsubscribeTickData request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_OnUnsubscribeTickData, null, options, request);
+      }
+      public virtual global::Nautilus.Common.Messages.UnsubscribeBarDataResponse OnUnsubscribeBarData(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return OnUnsubscribeBarData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Nautilus.Common.Messages.UnsubscribeBarDataResponse OnUnsubscribeBarData(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_OnUnsubscribeBarData, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> OnUnsubscribeBarDataAsync(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return OnUnsubscribeBarDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Nautilus.Common.Messages.UnsubscribeBarDataResponse> OnUnsubscribeBarDataAsync(global::Nautilus.Common.Messages.UnsubscribeBarData request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_OnUnsubscribeBarData, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
-      protected override BarDataServerClient NewInstance(ClientBaseConfiguration configuration)
+      protected override DataServerClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new BarDataServerClient(configuration);
+        return new DataServerClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
-    public static grpc::ServerServiceDefinition BindService(BarDataServerBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(DataServerBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_Subscribe, serviceImpl.Subscribe)
-          .AddMethod(__Method_Unsubscribe, serviceImpl.Unsubscribe).Build();
+          .AddMethod(__Method_OnSubscribeTickData, serviceImpl.OnSubscribeTickData)
+          .AddMethod(__Method_OnSubscribeBarData, serviceImpl.OnSubscribeBarData)
+          .AddMethod(__Method_OnUnsubscribeTickData, serviceImpl.OnUnsubscribeTickData)
+          .AddMethod(__Method_OnUnsubscribeBarData, serviceImpl.OnUnsubscribeBarData).Build();
     }
 
   }
-  public static partial class BarDataClient
+  public static partial class DataClient
   {
-    static readonly string __ServiceName = "invariance_proto.BarDataClient";
+    static readonly string __ServiceName = "invariance_proto.DataClient";
 
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.HeartBeat> __Marshaller_HeartBeat = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.HeartBeat.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Nautilus.Common.Messages.Tick> __Marshaller_Tick = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Nautilus.Common.Messages.Tick.Parser.ParseFrom);
@@ -169,8 +231,8 @@ namespace Nautilus.Common.Messages {
       get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.Services[1]; }
     }
 
-    /// <summary>Base class for server-side implementations of BarDataClient</summary>
-    public abstract partial class BarDataClientBase
+    /// <summary>Base class for server-side implementations of DataClient</summary>
+    public abstract partial class DataClientBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Nautilus.Common.Messages.HeartBeat> OnHeartBeatRequest(global::Nautilus.Common.Messages.HeartBeat request, grpc::ServerCallContext context)
       {
@@ -189,26 +251,26 @@ namespace Nautilus.Common.Messages {
 
     }
 
-    /// <summary>Client for BarDataClient</summary>
-    public partial class BarDataClientClient : grpc::ClientBase<BarDataClientClient>
+    /// <summary>Client for DataClient</summary>
+    public partial class DataClientClient : grpc::ClientBase<DataClientClient>
     {
-      /// <summary>Creates a new client for BarDataClient</summary>
+      /// <summary>Creates a new client for DataClient</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public BarDataClientClient(grpc::Channel channel) : base(channel)
+      public DataClientClient(grpc::Channel channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for BarDataClient that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for DataClient that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
-      public BarDataClientClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public DataClientClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
-      protected BarDataClientClient() : base()
+      protected DataClientClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
-      protected BarDataClientClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected DataClientClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
@@ -261,15 +323,15 @@ namespace Nautilus.Common.Messages {
         return CallInvoker.AsyncUnaryCall(__Method_OnBarData, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
-      protected override BarDataClientClient NewInstance(ClientBaseConfiguration configuration)
+      protected override DataClientClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new BarDataClientClient(configuration);
+        return new DataClientClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
-    public static grpc::ServerServiceDefinition BindService(BarDataClientBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(DataClientBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_OnHeartBeatRequest, serviceImpl.OnHeartBeatRequest)

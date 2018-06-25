@@ -18,7 +18,7 @@ Commands to compile protobuf messages per language
 CSharp
 ______
 from directory containing proto file;
-protoc -I=. --csharp_out=. --grpc_out=. ./messages.proto --plugin=protoc-gen-grpc=~/.nuget/packages/grpc.tools/1.12.0/tools/linux_x64/grpc_csharp_plugin
+protoc -I=. --csharp_out=. --grpc_out=. ./messages.proto --plugin=protoc-gen-grpc=grpc_csharp_plugin
 
 Python
 ______
@@ -119,12 +119,14 @@ message UnsubscribeBarDataResponse {
     bool success = 1;
 }
 
-service BarDataServer {
-    rpc Subscribe(SubscribeBarData) returns (SubscribeBarDataResponse) {}
-    rpc Unsubscribe(UnsubscribeBarData) returns (UnsubscribeBarDataResponse) {}
+service DataServer {
+    rpc OnSubscribeTickData(SubscribeTickData) returns (SubscribeTickDataResponse) {}
+    rpc OnSubscribeBarData(SubscribeBarData) returns (SubscribeBarDataResponse) {}
+    rpc OnUnsubscribeTickData(UnsubscribeTickData) returns (UnsubscribeTickDataResponse) {}
+    rpc OnUnsubscribeBarData(UnsubscribeBarData) returns (UnsubscribeBarDataResponse) {}
 }
 
-service BarDataClient {
+service DataClient {
     rpc OnHeartBeatRequest(HeartBeat) returns (HeartBeat) {}
     rpc OnTickData(Tick) returns (Empty) {}
     rpc OnBarData(BarData) returns (Empty) {}
