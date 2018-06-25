@@ -96,15 +96,15 @@ namespace Nautilus.Database.Aggregators
             {
                 switch (builder.Key.QuoteType)
                 {
-                    case BarQuoteType.Bid:
+                    case QuoteType.Bid:
                         builder.Value.Update(tick.Bid);
                         break;
 
-                    case BarQuoteType.Ask:
+                    case QuoteType.Ask:
                         builder.Value.Update(tick.Ask);
                         break;
 
-                    case BarQuoteType.Mid:
+                    case QuoteType.Mid:
                         builder.Value.Update(
                             Price.Create(Math.Round((tick.Bid + tick.Ask) / 2, 10), 10));
                         break;
@@ -177,7 +177,7 @@ namespace Nautilus.Database.Aggregators
 
             var barType = message.DataType.Specification;
 
-            if (barType.Resolution == BarResolution.Tick)
+            if (barType.Resolution == Resolution.Tick)
             {
                 // TODO
                 throw new InvalidOperationException("Tick bars not yet supported.");

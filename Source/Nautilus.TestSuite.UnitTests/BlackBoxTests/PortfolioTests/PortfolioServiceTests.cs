@@ -220,7 +220,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new BarDataEvent(
                 new BarType(
                     new Symbol("SYMBOL", Exchange.LMAX),
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),
                 0.00001m,

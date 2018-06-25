@@ -48,10 +48,10 @@ namespace Nautilus.Database.Interfaces
         bool IsBarDataCheckOn { get; }
 
         /// <summary>
-        /// Gets the market data providers label for the given <see cref="BarResolution"/>.
+        /// Gets the market data providers label for the given <see cref="Resolution"/>.
         /// </summary>
         /// <param name="resolution">The bar resolution.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        string GetResolutionLabel(BarResolution resolution);
+        string GetResolutionLabel(Resolution resolution);
     }
 }

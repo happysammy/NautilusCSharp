@@ -30,8 +30,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="period">The bar period.</param>
         /// <exception cref="ValidationException">Throws if the period is zero or negative.</exception>
         public BarSpecification(
-            BarQuoteType quoteType,
-            BarResolution resolution,
+            QuoteType quoteType,
+            Resolution resolution,
             int period)
         {
             Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
@@ -46,12 +46,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bar specifications quote type.
         /// </summary>
-        public BarQuoteType QuoteType { get; }
+        public QuoteType QuoteType { get; }
 
         /// <summary>
         /// Gets the bars specifications resolution.
         /// </summary>
-        public BarResolution Resolution { get; }
+        public Resolution Resolution { get; }
 
         /// <summary>
         /// Gets the bars specifications period.
@@ -71,7 +71,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Returns a value indicating whether this bars time period is one day.
         /// </summary>
-        public bool IsOneDayBar => this.Resolution == BarResolution.Day && this.Period == 1;
+        public bool IsOneDayBar => this.Resolution == Resolution.Day && this.Period == 1;
 
         /// <summary>
         /// Returns the hash code of the <see cref="BarSpecification"/>.
@@ -111,19 +111,19 @@ namespace Nautilus.DomainModel.ValueObjects
 
             switch (this.Resolution)
             {
-                case BarResolution.Tick:
+                case Resolution.Tick:
                     return NodaTime.Period.Zero;
 
-                case BarResolution.Second:
+                case Resolution.Second:
                     return NodaTime.Period.FromSeconds(barPeriod);
 
-                case BarResolution.Minute:
+                case Resolution.Minute:
                     return NodaTime.Period.FromMinutes(barPeriod);
 
-                case BarResolution.Hour:
+                case Resolution.Hour:
                     return NodaTime.Period.FromHours(barPeriod);
 
-                case BarResolution.Day:
+                case Resolution.Day:
                     return NodaTime.Period.FromDays(barPeriod);
 
                 default: throw new InvalidOperationException("Bar resolution not recognised.");

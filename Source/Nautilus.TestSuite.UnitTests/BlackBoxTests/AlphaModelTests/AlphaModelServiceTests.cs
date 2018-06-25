@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
             var message = new BarDataEvent(
                 new BarType(
                     new Symbol("some_symbol", Exchange.GLOBEX),
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("some_symbol", Exchange.GLOBEX)),
                 0.00001m,

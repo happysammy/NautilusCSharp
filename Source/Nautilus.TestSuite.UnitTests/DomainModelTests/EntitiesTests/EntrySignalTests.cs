@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 30),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 30),
                 10,
                 1,
                 1000,
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, barsPeriod),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, barsPeriod),
                 10,
                 1,
                 1000,
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, barsPeriod),
+                new BarSpecification(QuoteType.Bid, Resolution.Minute, barsPeriod),
                 10,
                 1,
                 1000,
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, barsPeriod),
+                new BarSpecification(QuoteType.Bid, Resolution.Hour, barsPeriod),
                 10,
                 1,
                 1000,
@@ -192,7 +192,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, barsPeriod),
+                new BarSpecification(QuoteType.Bid, Resolution.Day, barsPeriod),
                 10,
                 1,
                 1000,
@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var tradeProfile = new TradeProfile(
                 new TradeType("TestTrades"),
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 5),
+                new BarSpecification(QuoteType.Bid, Resolution.Day, 5),
                 10,
                 1,
                 1000,

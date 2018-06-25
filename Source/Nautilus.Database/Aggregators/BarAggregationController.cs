@@ -316,22 +316,22 @@ namespace Nautilus.Database.Aggregators
 
             switch (barSpec.Resolution)
             {
-                case BarResolution.Tick:
+                case Resolution.Tick:
                     throw new InvalidOperationException("Cannot schedule tick bars.");
 
-                case BarResolution.Second:
+                case Resolution.Second:
                     scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
                     break;
 
-                case BarResolution.Minute:
+                case Resolution.Minute:
                     scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
                     break;
 
-                case BarResolution.Hour:
+                case Resolution.Hour:
                     scheduleBuilder.WithIntervalInHours(barSpec.Period);
                     break;
 
-                case BarResolution.Day:
+                case Resolution.Day:
                     scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
                     break;
                 default: throw new InvalidOperationException("Bar resolution not recognised.");

@@ -21,8 +21,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new TradeProfile(
                 new TradeType("TestTrade"),
                 new BarSpecification(
-                    BarQuoteType.Bid,
-                    BarResolution.Minute,
+                    QuoteType.Bid,
+                    Resolution.Minute,
                     5),
                 tradePeriod,
                 2,

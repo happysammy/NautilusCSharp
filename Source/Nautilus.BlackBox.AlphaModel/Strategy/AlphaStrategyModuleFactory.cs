@@ -47,7 +47,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             Validate.NotNull(actorContext, nameof(actorContext));
 
             var barStore = new BarStore(strategy.Instrument.Symbol, strategy.TradeProfile.BarSpecification);
-            var barStoreDaily = new BarStore(strategy.Instrument.Symbol, new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1));
+            var barStoreDaily = new BarStore(strategy.Instrument.Symbol, new BarSpecification(QuoteType.Bid, Resolution.Day, 1));
             var marketDataProvider = new MarketDataProvider(strategy.Instrument.Symbol);
 
             var entrySignalGenerator = new EntrySignalGenerator(

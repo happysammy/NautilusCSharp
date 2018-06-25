@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
-    <ProjectReference Include="..\Nautilus.Protobuf\Nautilus.Protobuf.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
   </ItemGroup>
 </Project>

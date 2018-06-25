@@ -250,7 +250,7 @@ namespace Nautilus.Database.Readers
             Debug.NotNull(barDataProvider, nameof(barDataProvider));
 
             // TODO: Temporary if to handle Dukas 'Hourly'.
-            if (this.BarType.Specification.Resolution == BarResolution.Hour)
+            if (this.BarType.Specification.Resolution == Resolution.Hour)
             {
                 return $"{this.BarType.Symbol.Code}_"
                        + $"{barDataProvider.GetResolutionLabel(this.BarType.Specification.Resolution)}_"

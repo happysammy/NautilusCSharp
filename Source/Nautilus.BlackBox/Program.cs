@@ -122,8 +122,8 @@ namespace Nautilus.BlackBox
             {
                 var instrument = blackBox.GetInstrument(symbol).Value;
                 var barProfile = new BarSpecification(
-                    BarQuoteType.Bid,
-                    BarResolution.Minute,
+                    QuoteType.Bid,
+                    Resolution.Minute,
                     1);
                 var tradePeriod = 20;
 

@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -75,12 +75,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -101,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -112,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Ask, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Ask, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -145,7 +145,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -171,7 +171,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -182,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage1 = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -194,7 +194,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage2 = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -222,14 +222,14 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage1 = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribeMessage2 = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Second, 10)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -246,7 +246,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage1 = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -258,7 +258,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
 
             var closeBarMessage2 = new CloseBar(
-                new BarSpecification(BarQuoteType.Bid, BarResolution.Second, 10),
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 10),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(10),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -290,7 +290,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
                     symbol,
-                    new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1)),
+                    new BarSpecification(QuoteType.Mid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -307,7 +307,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1001));
 
             var closeBarMessage = new CloseBar(
-                new BarSpecification(BarQuoteType.Mid, BarResolution.Second, 1),
+                new BarSpecification(QuoteType.Mid, Resolution.Second, 1),
                 StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

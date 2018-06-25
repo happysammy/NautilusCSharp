@@ -388,7 +388,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             return new BarDataEvent(
                 new BarType(new Symbol("AUDUSD", Exchange.FXCM),
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 5)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
                     Price.Create(0.80200m, 0.00001m),

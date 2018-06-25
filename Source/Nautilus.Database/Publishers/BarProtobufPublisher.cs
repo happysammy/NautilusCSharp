@@ -11,28 +11,15 @@ namespace Nautilus.Database.Publishers
     using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.ProtoBuf;
 
     /// <summary>
     /// Providers a <see cref="ProtoBuf"/> implementation for the <see cref="Bar"/> publisher.
     /// </summary>
     public class BarProtobufPublisher : IBarPublisher
     {
-        private readonly ProtoBufServiceClient publisher;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BarProtobufPublisher"/> class.
-        /// </summary>
-        public BarProtobufPublisher()
-        {
-            this.publisher = new ProtoBufServiceClient("127.0.0.1");
-        }
-        /// <summary>
-        /// Publishes the given bar to subscribers.
-        /// </summary>
-        /// <param name="barEvent"></param>
         public void Publish(BarDataEvent barEvent)
         {
+            throw new System.NotImplementedException();
         }
     }
 }

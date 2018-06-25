@@ -38,20 +38,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         // TODO: Temporary property. Remove once Dukascopy provider removed.
         public bool InitialFromDateSpecified => false;
 
-        public string GetResolutionLabel(BarResolution resolution)
+        public string GetResolutionLabel(Resolution resolution)
         {
             switch (resolution)
             {
-                case BarResolution.Second:
+                case Resolution.Second:
                     return "Second";
 
-                case BarResolution.Minute:
+                case Resolution.Minute:
                     return "Min";
 
-                case BarResolution.Hour:
+                case Resolution.Hour:
                     return "Hour";
 
-                case BarResolution.Day:
+                case Resolution.Day:
                     return "Day";
 
                 default:
@@ -129,12 +129,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             foreach (var symbol in symbols)
             {
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Minute, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Hour, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Hour, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Bid, BarResolution.Day, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(BarQuoteType.Ask, BarResolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Exchange.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Day, 1)));
             }
 
             return barTypes.AsReadOnly();

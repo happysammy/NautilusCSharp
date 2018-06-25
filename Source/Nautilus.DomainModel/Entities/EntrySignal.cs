@@ -104,7 +104,7 @@ namespace Nautilus.DomainModel.Entities
         private Option<ZonedDateTime?> CalculateExpireTime()
         {
             if (this.TradeProfile.BarsValid > 0
-             && this.TradeProfile.BarSpecification.Resolution != BarResolution.Tick)
+             && this.TradeProfile.BarSpecification.Resolution != Resolution.Tick)
             {
                 var expireTime = this.SignalTimestamp.Plus(this.TradeProfile.BarSpecification.Duration * this.TradeProfile.BarsValid);
 

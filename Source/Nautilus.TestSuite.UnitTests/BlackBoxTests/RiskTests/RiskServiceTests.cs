@@ -241,7 +241,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
 
             var message2 = new BarDataEvent(
                 new BarType(new Symbol("AUDUSD", Exchange.FXCM),
-                    new BarSpecification(BarQuoteType.Bid, BarResolution.Minute, 1)),
+                    new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("AUDUSD", Exchange.FXCM)),
                 decimal.One,

@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="BarResolution.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarQuoteType.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,33 +9,28 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The time period resolution used for a trade bar.
+    /// The quote type used to construct a trade bar.
     /// </summary>
-    public enum BarResolution
+    public enum QuoteType
     {
         /// <summary>
-        /// The tick timeframe.
+        /// The bid price quote type.
         /// </summary>
-        Tick = 0,
+        Bid = 0,
 
         /// <summary>
-        /// The second timeframe.
+        /// The ask price quote type.
         /// </summary>
-        Second = 1,
+        Ask = 1,
 
         /// <summary>
-        /// The minute timeframe.
+        /// The last price quote type.
         /// </summary>
-        Minute = 2,
+        Last = 2,
 
         /// <summary>
-        /// The hourly timeframe.
+        /// The mid price quote type.
         /// </summary>
-        Hour = 3,
-
-        /// <summary>
-        /// The daily timeframe.
-        /// </summary>
-        Day = 4,
+        Mid = 3
     }
 }

@@ -31,8 +31,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var barType = new BarSpecification(
-                BarQuoteType.Bid,
-                BarResolution.Minute,
+                QuoteType.Bid,
+                Resolution.Minute,
                 1);
 
             // Act
@@ -49,13 +49,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var barType1 = new BarSpecification(
-                BarQuoteType.Bid,
-                BarResolution.Minute,
+                QuoteType.Bid,
+                Resolution.Minute,
                 1);
 
             var barType2 = new BarSpecification(
-                BarQuoteType.Bid,
-                BarResolution.Minute,
+                QuoteType.Bid,
+                Resolution.Minute,
                 1);
 
             // Act
@@ -72,8 +72,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var barType = new BarSpecification(
-                BarQuoteType.Bid,
-                BarResolution.Minute,
+                QuoteType.Bid,
+                Resolution.Minute,
                 1);
 
             // Act
@@ -88,8 +88,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             var barType = new BarSpecification(
-                BarQuoteType.Bid,
-                BarResolution.Minute,
+                QuoteType.Bid,
+                Resolution.Minute,
                 1);
 
             // Act

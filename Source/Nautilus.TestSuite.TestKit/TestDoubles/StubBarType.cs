@@ -18,8 +18,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("AUDUSD", Exchange.Dukascopy),
                 new BarSpecification(
-                    BarQuoteType.Ask,
-                    BarResolution.Minute,
+                    QuoteType.Ask,
+                    Resolution.Minute,
                     1));
         }
 
@@ -28,8 +28,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("GBPUSD", Exchange.Dukascopy),
                 new BarSpecification(
-                    BarQuoteType.Bid,
-                    BarResolution.Minute,
+                    QuoteType.Bid,
+                    Resolution.Minute,
                     1));
         }
 
@@ -38,8 +38,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("USDJPY", Exchange.Dukascopy),
                 new BarSpecification(
-                    BarQuoteType.Bid,
-                    BarResolution.Minute,
+                    QuoteType.Bid,
+                    Resolution.Minute,
                     1));
         }
 
@@ -48,8 +48,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("CADHKD", Exchange.Dukascopy),
                 new BarSpecification(
-                    BarQuoteType.Bid,
-                    BarResolution.Minute,
+                    QuoteType.Bid,
+                    Resolution.Minute,
                     1));
         }
     }
