@@ -22,6 +22,11 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using Xunit;
     using Xunit.Abstractions;
 
+    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
+    using Resolution = Nautilus.DomainModel.Enums.Resolution;
+    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
+
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarAggregationControllerTests : TestKit

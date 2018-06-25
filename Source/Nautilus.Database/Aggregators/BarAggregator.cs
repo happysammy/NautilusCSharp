@@ -19,11 +19,15 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using ServiceStack.Validation;
+
+    using Resolution = Nautilus.DomainModel.Enums.Resolution;
+    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
+    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
+    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
 
     /// <summary>
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.

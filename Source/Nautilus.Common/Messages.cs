@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Nautilus.Common {
+namespace Nautilus.Common.Messages {
 
   /// <summary>Holder for reflection information generated from messages.proto</summary>
   public static partial class MessagesReflection {
@@ -24,39 +24,60 @@ namespace Nautilus.Common {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5tZXNzYWdlcy5wcm90bxIQaW52YXJpYW5jZV9wcm90byJSCgRUaWNrEg4K",
-            "BnN5bWJvbBgBIAEoCRINCgV2ZW51ZRgCIAEoCRILCgNiaWQYAyABKAESCwoD",
-            "YXNrGAQgASgBEhEKCXRpbWVzdGFtcBgFIAEoCSJgCgNCYXISDAoEb3BlbhgB",
-            "IAEoARIMCgRoaWdoGAIgASgBEgsKA2xvdxgDIAEoARINCgVjbG9zZRgEIAEo",
-            "ARIOCgZ2b2x1bWUYBSABKAUSEQoJdGltZXN0YW1wGAYgASgJIoQBChBCYXJT",
-            "cGVjaWZpY2F0aW9uEi4KCXF1b3RlVHlwZRgBIAEoDjIbLmludmFyaWFuY2Vf",
-            "cHJvdG8uUXVvdGVUeXBlEjAKCnJlc29sdXRpb24YAiABKA4yHC5pbnZhcmlh",
-            "bmNlX3Byb3RvLlJlc29sdXRpb24SDgoGcGVyaW9kGAMgASgFIpkBCglCYXJD",
-            "bG9zZWQSDgoGc3ltYm9sGAEgASgJEg0KBXZlbnVlGAIgASgJEjMKB2JhclNw",
-            "ZWMYAyABKAsyIi5pbnZhcmlhbmNlX3Byb3RvLkJhclNwZWNpZmljYXRpb24S",
-            "IgoDYmFyGAQgASgLMhUuaW52YXJpYW5jZV9wcm90by5CYXISFAoMaXNIaXN0",
-            "b3JpY2FsGAUgASgIIjIKEVN1YnNjcmliZVRpY2tEYXRhEg4KBnN5bWJvbBgB",
-            "IAEoCRINCgV2ZW51ZRgCIAEoCSI0ChNVbnN1YnNjcmliZVRpY2tEYXRhEg4K",
-            "BnN5bWJvbBgBIAEoCRINCgV2ZW51ZRgCIAEoCSJmChBTdWJzY3JpYmVCYXJE",
-            "YXRhEg4KBnN5bWJvbBgBIAEoCRINCgV2ZW51ZRgCIAEoCRIzCgdiYXJTcGVj",
-            "GAMgASgLMiIuaW52YXJpYW5jZV9wcm90by5CYXJTcGVjaWZpY2F0aW9uImgK",
-            "ElVuc3Vic2NyaWJlQmFyRGF0YRIOCgZzeW1ib2wYASABKAkSDQoFdmVudWUY",
-            "AiABKAkSMwoHYmFyU3BlYxgDIAEoCzIiLmludmFyaWFuY2VfcHJvdG8uQmFy",
-            "U3BlY2lmaWNhdGlvbipBCgpSZXNvbHV0aW9uEggKBFRJQ0sQABIKCgZTRUNP",
-            "TkQQARIKCgZNSU5VVEUQAhIICgRIT1VSEAMSBwoDREFZEAQqMAoJUXVvdGVU",
-            "eXBlEgcKA0JJRBAAEgcKA0FTSxABEggKBExBU1QQAhIHCgNNSUQQBEISqgIP",
-            "TmF1dGlsdXMuQ29tbW9uYgZwcm90bzM="));
+            "Cg5tZXNzYWdlcy5wcm90bxIQaW52YXJpYW5jZV9wcm90byIHCgVFbXB0eSIs",
+            "CglIZWFydEJlYXQSDAoEZnJvbRgBIAEoCRIRCgl0aW1lc3RhbXAYAiABKAki",
+            "UgoEVGljaxIOCgZzeW1ib2wYASABKAkSDQoFdmVudWUYAiABKAkSCwoDYmlk",
+            "GAMgASgBEgsKA2FzaxgEIAEoARIRCgl0aW1lc3RhbXAYBSABKAkiYAoDQmFy",
+            "EgwKBG9wZW4YASABKAESDAoEaGlnaBgCIAEoARILCgNsb3cYAyABKAESDQoF",
+            "Y2xvc2UYBCABKAESDgoGdm9sdW1lGAUgASgFEhEKCXRpbWVzdGFtcBgGIAEo",
+            "CSKEAQoQQmFyU3BlY2lmaWNhdGlvbhIuCglxdW90ZVR5cGUYASABKA4yGy5p",
+            "bnZhcmlhbmNlX3Byb3RvLlF1b3RlVHlwZRIwCgpyZXNvbHV0aW9uGAIgASgO",
+            "MhwuaW52YXJpYW5jZV9wcm90by5SZXNvbHV0aW9uEg4KBnBlcmlvZBgDIAEo",
+            "BSKXAQoHQmFyRGF0YRIOCgZzeW1ib2wYASABKAkSDQoFdmVudWUYAiABKAkS",
+            "MwoHYmFyU3BlYxgDIAEoCzIiLmludmFyaWFuY2VfcHJvdG8uQmFyU3BlY2lm",
+            "aWNhdGlvbhIiCgNiYXIYBCABKAsyFS5pbnZhcmlhbmNlX3Byb3RvLkJhchIU",
+            "Cgxpc0hpc3RvcmljYWwYBSABKAgiMgoRU3Vic2NyaWJlVGlja0RhdGESDgoG",
+            "c3ltYm9sGAEgASgJEg0KBXZlbnVlGAIgASgJIiwKGVN1YnNjcmliZVRpY2tE",
+            "YXRhUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCCI0ChNVbnN1YnNjcmliZVRp",
+            "Y2tEYXRhEg4KBnN5bWJvbBgBIAEoCRINCgV2ZW51ZRgCIAEoCSIuChtVbnN1",
+            "YnNjcmliZVRpY2tEYXRhUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCCJmChBT",
+            "dWJzY3JpYmVCYXJEYXRhEg4KBnN5bWJvbBgBIAEoCRINCgV2ZW51ZRgCIAEo",
+            "CRIzCgdiYXJTcGVjGAMgASgLMiIuaW52YXJpYW5jZV9wcm90by5CYXJTcGVj",
+            "aWZpY2F0aW9uIisKGFN1YnNjcmliZUJhckRhdGFSZXNwb25zZRIPCgdzdWNj",
+            "ZXNzGAEgASgIImgKElVuc3Vic2NyaWJlQmFyRGF0YRIOCgZzeW1ib2wYASAB",
+            "KAkSDQoFdmVudWUYAiABKAkSMwoHYmFyU3BlYxgDIAEoCzIiLmludmFyaWFu",
+            "Y2VfcHJvdG8uQmFyU3BlY2lmaWNhdGlvbiItChpVbnN1YnNjcmliZUJhckRh",
+            "dGFSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIKkEKClJlc29sdXRpb24SCAoE",
+            "VElDSxAAEgoKBlNFQ09ORBABEgoKBk1JTlVURRACEggKBEhPVVIQAxIHCgNE",
+            "QVkQBCowCglRdW90ZVR5cGUSBwoDQklEEAASBwoDQVNLEAESCAoETEFTVBAC",
+            "EgcKA01JRBAEMtMBCg1CYXJEYXRhU2VydmVyEl0KCVN1YnNjcmliZRIiLmlu",
+            "dmFyaWFuY2VfcHJvdG8uU3Vic2NyaWJlQmFyRGF0YRoqLmludmFyaWFuY2Vf",
+            "cHJvdG8uU3Vic2NyaWJlQmFyRGF0YVJlc3BvbnNlIgASYwoLVW5zdWJzY3Jp",
+            "YmUSJC5pbnZhcmlhbmNlX3Byb3RvLlVuc3Vic2NyaWJlQmFyRGF0YRosLmlu",
+            "dmFyaWFuY2VfcHJvdG8uVW5zdWJzY3JpYmVCYXJEYXRhUmVzcG9uc2UiADLl",
+            "AQoNQmFyRGF0YUNsaWVudBJQChJPbkhlYXJ0QmVhdFJlcXVlc3QSGy5pbnZh",
+            "cmlhbmNlX3Byb3RvLkhlYXJ0QmVhdBobLmludmFyaWFuY2VfcHJvdG8uSGVh",
+            "cnRCZWF0IgASPwoKT25UaWNrRGF0YRIWLmludmFyaWFuY2VfcHJvdG8uVGlj",
+            "axoXLmludmFyaWFuY2VfcHJvdG8uRW1wdHkiABJBCglPbkJhckRhdGESGS5p",
+            "bnZhcmlhbmNlX3Byb3RvLkJhckRhdGEaFy5pbnZhcmlhbmNlX3Byb3RvLkVt",
+            "cHR5IgBCG6oCGE5hdXRpbHVzLkNvbW1vbi5NZXNzYWdlc2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Nautilus.Common.Resolution), typeof(global::Nautilus.Common.QuoteType), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Tick), global::Nautilus.Common.Tick.Parser, new[]{ "Symbol", "Venue", "Bid", "Ask", "Timestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Bar), global::Nautilus.Common.Bar.Parser, new[]{ "Open", "High", "Low", "Close", "Volume", "Timestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.BarSpecification), global::Nautilus.Common.BarSpecification.Parser, new[]{ "QuoteType", "Resolution", "Period" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.BarClosed), global::Nautilus.Common.BarClosed.Parser, new[]{ "Symbol", "Venue", "BarSpec", "Bar", "IsHistorical" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.SubscribeTickData), global::Nautilus.Common.SubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.UnsubscribeTickData), global::Nautilus.Common.UnsubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.SubscribeBarData), global::Nautilus.Common.SubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.UnsubscribeBarData), global::Nautilus.Common.UnsubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Nautilus.Common.Messages.Resolution), typeof(global::Nautilus.Common.Messages.QuoteType), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Empty), global::Nautilus.Common.Messages.Empty.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.HeartBeat), global::Nautilus.Common.Messages.HeartBeat.Parser, new[]{ "From", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Tick), global::Nautilus.Common.Messages.Tick.Parser, new[]{ "Symbol", "Venue", "Bid", "Ask", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Bar), global::Nautilus.Common.Messages.Bar.Parser, new[]{ "Open", "High", "Low", "Close", "Volume", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.BarSpecification), global::Nautilus.Common.Messages.BarSpecification.Parser, new[]{ "QuoteType", "Resolution", "Period" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.BarData), global::Nautilus.Common.Messages.BarData.Parser, new[]{ "Symbol", "Venue", "BarSpec", "Bar", "IsHistorical" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeTickData), global::Nautilus.Common.Messages.SubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeTickDataResponse), global::Nautilus.Common.Messages.SubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeTickData), global::Nautilus.Common.Messages.UnsubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeTickDataResponse), global::Nautilus.Common.Messages.UnsubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeBarData), global::Nautilus.Common.Messages.SubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeBarDataResponse), global::Nautilus.Common.Messages.SubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeBarData), global::Nautilus.Common.Messages.UnsubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeBarDataResponse), global::Nautilus.Common.Messages.UnsubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null)
           }));
     }
     #endregion
@@ -81,6 +102,264 @@ namespace Nautilus.Common {
   #endregion
 
   #region Messages
+  public sealed partial class Empty : pb::IMessage<Empty> {
+    private static readonly pb::MessageParser<Empty> _parser = new pb::MessageParser<Empty>(() => new Empty());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Empty> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Empty() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Empty(Empty other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Empty Clone() {
+      return new Empty(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Empty);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Empty other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Empty other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class HeartBeat : pb::IMessage<HeartBeat> {
+    private static readonly pb::MessageParser<HeartBeat> _parser = new pb::MessageParser<HeartBeat>(() => new HeartBeat());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<HeartBeat> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public HeartBeat() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public HeartBeat(HeartBeat other) : this() {
+      from_ = other.from_;
+      timestamp_ = other.timestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public HeartBeat Clone() {
+      return new HeartBeat(this);
+    }
+
+    /// <summary>Field number for the "from" field.</summary>
+    public const int FromFieldNumber = 1;
+    private string from_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string From {
+      get { return from_; }
+      set {
+        from_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 2;
+    private string timestamp_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as HeartBeat);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(HeartBeat other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (From != other.From) return false;
+      if (Timestamp != other.Timestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (From.Length != 0) hash ^= From.GetHashCode();
+      if (Timestamp.Length != 0) hash ^= Timestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (From.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(From);
+      }
+      if (Timestamp.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (From.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(From);
+      }
+      if (Timestamp.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Timestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(HeartBeat other) {
+      if (other == null) {
+        return;
+      }
+      if (other.From.Length != 0) {
+        From = other.From;
+      }
+      if (other.Timestamp.Length != 0) {
+        Timestamp = other.Timestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            From = input.ReadString();
+            break;
+          }
+          case 18: {
+            Timestamp = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   public sealed partial class Tick : pb::IMessage<Tick> {
     private static readonly pb::MessageParser<Tick> _parser = new pb::MessageParser<Tick>(() => new Tick());
     private pb::UnknownFieldSet _unknownFields;
@@ -89,7 +368,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -330,7 +609,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -599,7 +878,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -629,9 +908,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "quoteType" field.</summary>
     public const int QuoteTypeFieldNumber = 1;
-    private global::Nautilus.Common.QuoteType quoteType_ = 0;
+    private global::Nautilus.Common.Messages.QuoteType quoteType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.QuoteType QuoteType {
+    public global::Nautilus.Common.Messages.QuoteType QuoteType {
       get { return quoteType_; }
       set {
         quoteType_ = value;
@@ -640,9 +919,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "resolution" field.</summary>
     public const int ResolutionFieldNumber = 2;
-    private global::Nautilus.Common.Resolution resolution_ = 0;
+    private global::Nautilus.Common.Messages.Resolution resolution_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Resolution Resolution {
+    public global::Nautilus.Common.Messages.Resolution Resolution {
       get { return resolution_; }
       set {
         resolution_ = value;
@@ -759,11 +1038,11 @@ namespace Nautilus.Common {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            quoteType_ = (global::Nautilus.Common.QuoteType) input.ReadEnum();
+            quoteType_ = (global::Nautilus.Common.Messages.QuoteType) input.ReadEnum();
             break;
           }
           case 16: {
-            resolution_ = (global::Nautilus.Common.Resolution) input.ReadEnum();
+            resolution_ = (global::Nautilus.Common.Messages.Resolution) input.ReadEnum();
             break;
           }
           case 24: {
@@ -776,15 +1055,15 @@ namespace Nautilus.Common {
 
   }
 
-  public sealed partial class BarClosed : pb::IMessage<BarClosed> {
-    private static readonly pb::MessageParser<BarClosed> _parser = new pb::MessageParser<BarClosed>(() => new BarClosed());
+  public sealed partial class BarData : pb::IMessage<BarData> {
+    private static readonly pb::MessageParser<BarData> _parser = new pb::MessageParser<BarData>(() => new BarData());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<BarClosed> Parser { get { return _parser; } }
+    public static pb::MessageParser<BarData> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -793,14 +1072,14 @@ namespace Nautilus.Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BarClosed() {
+    public BarData() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BarClosed(BarClosed other) : this() {
+    public BarData(BarData other) : this() {
       symbol_ = other.symbol_;
       venue_ = other.venue_;
       barSpec_ = other.barSpec_ != null ? other.barSpec_.Clone() : null;
@@ -810,8 +1089,8 @@ namespace Nautilus.Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public BarClosed Clone() {
-      return new BarClosed(this);
+    public BarData Clone() {
+      return new BarData(this);
     }
 
     /// <summary>Field number for the "symbol" field.</summary>
@@ -838,9 +1117,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.BarSpecification barSpec_;
+    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.BarSpecification BarSpec {
+    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -849,9 +1128,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "bar" field.</summary>
     public const int BarFieldNumber = 4;
-    private global::Nautilus.Common.Bar bar_;
+    private global::Nautilus.Common.Messages.Bar bar_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Bar Bar {
+    public global::Nautilus.Common.Messages.Bar Bar {
       get { return bar_; }
       set {
         bar_ = value;
@@ -871,11 +1150,11 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as BarClosed);
+      return Equals(other as BarData);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(BarClosed other) {
+    public bool Equals(BarData other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -961,7 +1240,7 @@ namespace Nautilus.Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(BarClosed other) {
+    public void MergeFrom(BarData other) {
       if (other == null) {
         return;
       }
@@ -973,13 +1252,13 @@ namespace Nautilus.Common {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.BarSpecification();
+          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
       if (other.bar_ != null) {
         if (bar_ == null) {
-          bar_ = new global::Nautilus.Common.Bar();
+          bar_ = new global::Nautilus.Common.Messages.Bar();
         }
         Bar.MergeFrom(other.Bar);
       }
@@ -1007,14 +1286,14 @@ namespace Nautilus.Common {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.BarSpecification();
+              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
             }
             input.ReadMessage(barSpec_);
             break;
           }
           case 34: {
             if (bar_ == null) {
-              bar_ = new global::Nautilus.Common.Bar();
+              bar_ = new global::Nautilus.Common.Messages.Bar();
             }
             input.ReadMessage(bar_);
             break;
@@ -1037,7 +1316,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1186,6 +1465,135 @@ namespace Nautilus.Common {
 
   }
 
+  public sealed partial class SubscribeTickDataResponse : pb::IMessage<SubscribeTickDataResponse> {
+    private static readonly pb::MessageParser<SubscribeTickDataResponse> _parser = new pb::MessageParser<SubscribeTickDataResponse>(() => new SubscribeTickDataResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SubscribeTickDataResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeTickDataResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeTickDataResponse(SubscribeTickDataResponse other) : this() {
+      success_ = other.success_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeTickDataResponse Clone() {
+      return new SubscribeTickDataResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as SubscribeTickDataResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SubscribeTickDataResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SubscribeTickDataResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   public sealed partial class UnsubscribeTickData : pb::IMessage<UnsubscribeTickData> {
     private static readonly pb::MessageParser<UnsubscribeTickData> _parser = new pb::MessageParser<UnsubscribeTickData>(() => new UnsubscribeTickData());
     private pb::UnknownFieldSet _unknownFields;
@@ -1194,7 +1602,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1343,6 +1751,135 @@ namespace Nautilus.Common {
 
   }
 
+  public sealed partial class UnsubscribeTickDataResponse : pb::IMessage<UnsubscribeTickDataResponse> {
+    private static readonly pb::MessageParser<UnsubscribeTickDataResponse> _parser = new pb::MessageParser<UnsubscribeTickDataResponse>(() => new UnsubscribeTickDataResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<UnsubscribeTickDataResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeTickDataResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeTickDataResponse(UnsubscribeTickDataResponse other) : this() {
+      success_ = other.success_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeTickDataResponse Clone() {
+      return new UnsubscribeTickDataResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as UnsubscribeTickDataResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(UnsubscribeTickDataResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(UnsubscribeTickDataResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   public sealed partial class SubscribeBarData : pb::IMessage<SubscribeBarData> {
     private static readonly pb::MessageParser<SubscribeBarData> _parser = new pb::MessageParser<SubscribeBarData>(() => new SubscribeBarData());
     private pb::UnknownFieldSet _unknownFields;
@@ -1351,7 +1888,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1403,9 +1940,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.BarSpecification barSpec_;
+    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.BarSpecification BarSpec {
+    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -1498,7 +2035,7 @@ namespace Nautilus.Common {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.BarSpecification();
+          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
@@ -1523,9 +2060,138 @@ namespace Nautilus.Common {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.BarSpecification();
+              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
             }
             input.ReadMessage(barSpec_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class SubscribeBarDataResponse : pb::IMessage<SubscribeBarDataResponse> {
+    private static readonly pb::MessageParser<SubscribeBarDataResponse> _parser = new pb::MessageParser<SubscribeBarDataResponse>(() => new SubscribeBarDataResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SubscribeBarDataResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeBarDataResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeBarDataResponse(SubscribeBarDataResponse other) : this() {
+      success_ = other.success_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SubscribeBarDataResponse Clone() {
+      return new SubscribeBarDataResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as SubscribeBarDataResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SubscribeBarDataResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SubscribeBarDataResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
             break;
           }
         }
@@ -1542,7 +2208,7 @@ namespace Nautilus.Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.MessagesReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1594,9 +2260,9 @@ namespace Nautilus.Common {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.BarSpecification barSpec_;
+    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.BarSpecification BarSpec {
+    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -1689,7 +2355,7 @@ namespace Nautilus.Common {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.BarSpecification();
+          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
@@ -1714,9 +2380,138 @@ namespace Nautilus.Common {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.BarSpecification();
+              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
             }
             input.ReadMessage(barSpec_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class UnsubscribeBarDataResponse : pb::IMessage<UnsubscribeBarDataResponse> {
+    private static readonly pb::MessageParser<UnsubscribeBarDataResponse> _parser = new pb::MessageParser<UnsubscribeBarDataResponse>(() => new UnsubscribeBarDataResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<UnsubscribeBarDataResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[13]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeBarDataResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeBarDataResponse(UnsubscribeBarDataResponse other) : this() {
+      success_ = other.success_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UnsubscribeBarDataResponse Clone() {
+      return new UnsubscribeBarDataResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as UnsubscribeBarDataResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(UnsubscribeBarDataResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(UnsubscribeBarDataResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
             break;
           }
         }

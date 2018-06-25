@@ -12,7 +12,6 @@ namespace Nautilus.Database.Aggregators
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Akka.Actor;
-    using DomainModel.Enums;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -30,6 +29,12 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
+
+    using Resolution = Nautilus.DomainModel.Enums.Resolution;
+    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
+    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
+
 
     /// <summary>
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data

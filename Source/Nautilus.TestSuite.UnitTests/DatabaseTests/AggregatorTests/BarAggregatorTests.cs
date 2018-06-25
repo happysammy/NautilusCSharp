@@ -9,11 +9,9 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Messages;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Messages.Commands;
@@ -24,6 +22,12 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
+
+    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
+    using Resolution = Nautilus.DomainModel.Enums.Resolution;
+    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
+    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

@@ -18,7 +18,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.Common.Messages;
     using Nautilus.Common.MessageStore;
-    using Nautilus.Database.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
@@ -27,6 +26,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
+
+    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
+    using Resolution = Nautilus.DomainModel.Enums.Resolution;
+    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
