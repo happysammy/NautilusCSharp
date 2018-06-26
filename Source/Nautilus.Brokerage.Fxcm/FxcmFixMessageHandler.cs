@@ -14,7 +14,6 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -60,27 +59,23 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on business message reject.
+        /// Handles business message reject messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnBusinessMessageReject(BusinessMessageReject message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(BusinessMessageReject message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             this.brokerageGateway.OnBusinessMessage(message.Text.ToString());
         }
 
         /// <summary>
-        /// The on security list.
+        /// Handles security list messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnSecurityList(SecurityList message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(SecurityList message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             var securityList = new List<Instrument>();
             var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
@@ -140,14 +135,12 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on collateral inquiry acknowledgement.
+        /// Handles collateral inquiry acknowledgement messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnCollateralInquiryAck(CollateralInquiryAck message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(CollateralInquiryAck message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             var inquiryId = message.GetField(Tags.CollInquiryID);
             var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
@@ -156,14 +149,12 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on collateral report.
+        /// Handles collateral report messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnCollateralReport(CollateralReport message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(CollateralReport message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             var inquiryId = message.GetField(Tags.CollRptID);
             var accountNumber = message.GetField(Tags.Account);
@@ -190,27 +181,42 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on request for positions acknowledgement.
+        /// Handles request for positions acknowledgement messages.
         /// </summary>
         /// <param name="message">
         /// The message.
         /// </param>
-        public void OnRequestForPositionsAck(RequestForPositionsAck message)
+        public void OnMessage(RequestForPositionsAck message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             this.brokerageGateway.OnRequestForPositionsAck(message.Account.ToString(), message.PosReqID.ToString());
         }
 
         /// <summary>
-        /// The on market data snapshot full refresh.
+        /// Handles market data request reject messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnMarketDataSnapshotFullRefresh(MarketDataSnapshotFullRefresh message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(MarketDataRequestReject message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
+
+            var fxcmSymbol = message.GetField(Tags.Symbol);
+
+            var symbol = message.IsSetField(Tags.Symbol)
+                ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
+                : string.Empty;
+
+            Console.WriteLine(message.GetField(Tags.Text));
+        }
+
+        /// <summary>
+        /// Handles market data snapshot full refresh messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public void OnMessage(MarketDataSnapshotFullRefresh message)
+        {
+            Debug.NotNull(message, nameof(message));
 
             var fxcmSymbol = message.GetField(Tags.Symbol);
 
@@ -239,22 +245,20 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on order cancel reject.
+        /// Handles order cancel reject messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public void OnOrderCancelReject(OrderCancelReject message)
+        /// <param name="message">The message.</param>
+        public void OnMessage(OrderCancelReject message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
-            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetMessageField(message, Tags.Symbol)).Value;
+            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
             var orderId = message.ClOrdID.ToString();
             var brokerOrderId = message.OrderID.ToString();
             var fxcmcode = message.GetField(9025);
             var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
             var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmcode})";
-            var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetMessageField(message, Tags.TransactTime));
+            var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
             this.brokerageGateway.OnOrderCancelReject(
                 symbol,
@@ -267,36 +271,34 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on execution report.
+        /// Handles execution report messages.
         /// </summary>
-        /// <param name="report">
-        /// The report.
-        /// </param>
+        /// <param name="message">The message.</param>
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation",
             Justification = "Reviewed. Suppression is OK here because the actual variable name used for FIX is 'clOrderId'.")]
-        public void OnExecutionReport(ExecutionReport report)
+        public void OnMessage(ExecutionReport message)
         {
-            Validate.NotNull(report, nameof(report));
+            Debug.NotNull(message, nameof(message));
 
-            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetMessageField(report, Tags.Symbol)).Value;
-            var orderId = GetMessageField(report, Tags.ClOrdID);
-            var brokerOrderId = GetMessageField(report, Tags.OrderID);
-            var orderLabel = GetMessageField(report, Tags.SecondaryClOrdID);
-            var orderSide = FxcmFixMessageHelper.GetNautilusOrderSide(GetMessageField(report, Tags.Side));
-            var orderType = FxcmFixMessageHelper.GetNautilusOrderType(GetMessageField(report, Tags.OrdType));
+            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
+            var orderId = GetField(message, Tags.ClOrdID);
+            var brokerOrderId = GetField(message, Tags.OrderID);
+            var orderLabel = GetField(message, Tags.SecondaryClOrdID);
+            var orderSide = FxcmFixMessageHelper.GetNautilusOrderSide(GetField(message, Tags.Side));
+            var orderType = FxcmFixMessageHelper.GetNautilusOrderType(GetField(message, Tags.OrdType));
             var price = FxcmFixMessageHelper.GetOrderPrice(
                 orderType,
-                Convert.ToDecimal(GetMessageField(report, Tags.StopPx)),
-                Convert.ToDecimal(GetMessageField(report, Tags.Price)));
-            var timeInForce = FxcmFixMessageHelper.GetNautilusTimeInForce(GetMessageField(report, Tags.TimeInForce));
-            var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetMessageField(report, Tags.TransactTime));
-            var orderQty = Convert.ToInt32(GetMessageField(report, Tags.OrderQty));
+                Convert.ToDecimal(GetField(message, Tags.StopPx)),
+                Convert.ToDecimal(GetField(message, Tags.Price)));
+            var timeInForce = FxcmFixMessageHelper.GetNautilusTimeInForce(GetField(message, Tags.TimeInForce));
+            var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
+            var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.REJECTED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.REJECTED.ToString())
             {
-                var rejectReasonCode = report.GetField(9025);
-                var fxcmRejectCode = report.GetField(9029);
-                var rejectReasonText = GetMessageField(report, Tags.CxlRejReason);
+                var rejectReasonCode = message.GetField(9025);
+                var fxcmRejectCode = message.GetField(9029);
+                var rejectReasonText = GetField(message, Tags.CxlRejReason);
                 var rejectReason = $"Code({rejectReasonCode})={FxcmFixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
                 this.brokerageGateway.OnOrderRejected(
@@ -307,7 +309,7 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.CANCELED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.CANCELED.ToString())
             {
                 this.brokerageGateway.OnOrderCancelled(
                     symbol,
@@ -318,7 +320,7 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.REPLACED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.REPLACED.ToString())
             {
                 this.brokerageGateway.OnOrderModified(
                     symbol,
@@ -330,10 +332,10 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.NEW.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.NEW.ToString())
             {
-                var expireTime = report.IsSetField(Tags.ExpireTime)
-                                     ? (ZonedDateTime?)FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(report.GetField(Tags.ExpireTime))
+                var expireTime = message.IsSetField(Tags.ExpireTime)
+                                     ? (ZonedDateTime?)FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
                                      : null;
 
                 this.brokerageGateway.OnOrderWorking(
@@ -351,7 +353,7 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.EXPIRED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.EXPIRED.ToString())
             {
                 this.brokerageGateway.OnOrderExpired(
                     symbol,
@@ -362,12 +364,12 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.FILLED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.FILLED.ToString())
             {
-                var executionId = GetMessageField(report, Tags.ExecID);
-                var executionTicket = GetMessageField(report, 9041);
-                var filledQuantity = Convert.ToInt32(GetMessageField(report, Tags.CumQty));
-                var averagePrice = Convert.ToDecimal(GetMessageField(report, Tags.AvgPx));
+                var executionId = GetField(message, Tags.ExecID);
+                var executionTicket = GetField(message, 9041);
+                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
+                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                 this.brokerageGateway.OnOrderFilled(
                     symbol,
@@ -383,13 +385,13 @@ namespace Nautilus.Brokerage.FXCM
                     timestamp);
             }
 
-            if (report.GetField(Tags.OrdStatus) == OrdStatus.PARTIALLY_FILLED.ToString())
+            if (message.GetField(Tags.OrdStatus) == OrdStatus.PARTIALLY_FILLED.ToString())
             {
-                var executionId = GetMessageField(report, Tags.ExecID);
-                var executionTicket = GetMessageField(report, 9041);
-                var filledQuantity = Convert.ToInt32(GetMessageField(report, Tags.CumQty));
-                var leavesQuantity = Convert.ToInt32(GetMessageField(report, Tags.LeavesQty));
-                var averagePrice = Convert.ToDecimal(GetMessageField(report, Tags.AvgPx));
+                var executionId = GetField(message, Tags.ExecID);
+                var executionTicket = GetField(message, 9041);
+                var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
+                var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
+                var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                 this.brokerageGateway.OnOrderPartiallyFilled(
                     symbol,
@@ -408,19 +410,17 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// The on position report.
+        /// Handles position report messages.
         /// </summary>
-        /// <param name="report">
-        /// The message.
-        /// </param>
-        public void OnPositionReport(PositionReport report)
+        /// <param name="message">The message.</param>
+        public void OnMessage(PositionReport message)
         {
-            Validate.NotNull(report, nameof(report));
+            Debug.NotNull(message, nameof(message));
 
-            this.brokerageGateway.OnPositionReport(report.Account.ToString());
+            this.brokerageGateway.OnPositionReport(message.Account.ToString());
         }
 
-        private static string GetMessageField(FieldMap report, int tag)
+        private static string GetField(FieldMap report, int tag)
         {
             Debug.NotNull(report, nameof(report));
 

@@ -267,7 +267,7 @@ namespace Nautilus.Fix
                 }
                 catch(UnsupportedMessageType ex)
                 {
-                    this.Log.Warning($"Received unsupported message type {ex}");
+                    this.Log.Warning($"Received unsupported message type {message.GetType()}");
                 }
             });
         }
@@ -305,7 +305,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(BusinessMessageReject message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnBusinessMessageReject(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(SecurityList message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnSecurityList(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(CollateralInquiryAck message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnCollateralInquiryAck(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(CollateralReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnCollateralReport(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -355,7 +355,17 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(RequestForPositionsAck message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnRequestForPositionsAck(message);
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// The on message.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(MarketDataRequestReject message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -365,7 +375,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(MarketDataSnapshotFullRefresh message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -375,7 +385,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(OrderCancelReject message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnOrderCancelReject(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -385,7 +395,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(ExecutionReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnExecutionReport(message);
+            this.FixMessageHandler.OnMessage(message);
         }
 
         /// <summary>
@@ -395,7 +405,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(PositionReport message, SessionID sessionId)
         {
-            this.FixMessageHandler.OnPositionReport(message);
+            this.FixMessageHandler.OnMessage(message);
         }
     }
 }

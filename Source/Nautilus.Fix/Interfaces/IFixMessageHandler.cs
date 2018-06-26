@@ -23,57 +23,63 @@ namespace Nautilus.Fix.Interfaces
         void InitializeBrokerageGateway(IBrokerageGateway gateway);
 
         /// <summary>
-        /// The on business message reject.
+        /// Handles business message reject messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnBusinessMessageReject(BusinessMessageReject message);
+        void OnMessage(BusinessMessageReject message);
 
         /// <summary>
-        /// The on security list.
+        /// Handles security list messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnSecurityList(SecurityList message);
+        void OnMessage(SecurityList message);
 
         /// <summary>
-        /// The on collateral inquiry acknowledgement.
+        /// Handles collateral inquiry acknowledgement messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnCollateralInquiryAck(CollateralInquiryAck message);
+        void OnMessage(CollateralInquiryAck message);
 
         /// <summary>
-        /// The on collateral report.
+        /// Handles collateral report messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnCollateralReport(CollateralReport message);
+        void OnMessage(CollateralReport message);
 
         /// <summary>
-        /// The on request for positions acknowledgement.
+        /// Handles request for positions acknowledgement messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnRequestForPositionsAck(RequestForPositionsAck message);
+        void OnMessage(RequestForPositionsAck message);
 
         /// <summary>
-        /// The on market data snapshot full refresh.
+        /// Handles market data request reject messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnMarketDataSnapshotFullRefresh(MarketDataSnapshotFullRefresh message);
+        void OnMessage(MarketDataRequestReject message);
 
         /// <summary>
-        /// The on order cancel reject.
+        /// Handles market data snapshot full refresh messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnOrderCancelReject(OrderCancelReject message);
+        void OnMessage(MarketDataSnapshotFullRefresh message);
 
         /// <summary>
-        /// The on execution report.
+        /// Handles order cancel reject messages.
         /// </summary>
-        /// <param name="report">The report.</param>
-        void OnExecutionReport(ExecutionReport report);
+        /// <param name="message">The message.</param>
+        void OnMessage(OrderCancelReject message);
 
         /// <summary>
-        /// The on position report.
+        /// Handles execution report messages.
         /// </summary>
-        /// <param name="report">The message.</param>
-        void OnPositionReport(PositionReport report);
+        /// <param name="message">The report.</param>
+        void OnMessage(ExecutionReport message);
+
+        /// <summary>
+        /// Handles position report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(PositionReport message);
     }
 }

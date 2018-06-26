@@ -79,11 +79,9 @@ namespace QuickFix
         /// <param name="sessionID"></param>
         public void Crack(Message message, SessionID sessionID)
         {
-            Type messageType = message.GetType();
+            var messageType = message.GetType();
 
-            Action<Message, SessionID> onMessage = null;
-
-            if (this._callCache.TryGetValue(messageType, out onMessage))
+            if (this._callCache.TryGetValue(messageType, out var onMessage))
             {
                 onMessage(message, sessionID);
             }
