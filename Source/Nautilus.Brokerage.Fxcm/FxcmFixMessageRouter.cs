@@ -230,5 +230,23 @@ namespace Nautilus.Brokerage.FXCM
         {
 
         }
+
+        /// <summary>
+        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        public IReadOnlyList<string> GetAllBrokerSymbols() => FxcmSymbolProvider.GetAllBrokerSymbols();
+
+        /// <summary>
+        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        public IReadOnlyList<Symbol> GetAllSymbols() => FxcmSymbolProvider.GetAllSymbols();
+
+        /// <summary>
+        /// Returns a read-only list of all tick values provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols</returns>
+        public IReadOnlyDictionary<string, int> GetTickValueIndex() => FxcmTickSizeProvider.GetIndex();
     }
 }

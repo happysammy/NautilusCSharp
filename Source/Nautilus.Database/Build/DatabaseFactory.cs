@@ -23,6 +23,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
     using Nautilus.Database.Publishers;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
 
     /// <summary>
@@ -36,16 +37,23 @@ namespace Nautilus.Database.Build
         /// </summary>
         /// <param name="logger">The database logger.</param>
         /// <param name="fixClientFactory">The FIX client factory.</param>
+        /// <param name="gatewayFactory">The FIX gateway factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
-            IBarRepository barRepository)
+            IGatewayFactory gatewayFactory,
+            IBarRepository barRepository,
+            IInstrumentRepository instrumentRepository)
         {
             Validate.NotNull(logger, nameof(logger));
+            Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
+            Validate.NotNull(gatewayFactory, nameof(gatewayFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
+            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             logger.Information(ServiceContext.Database, $"Starting {nameof(Database)} builder...");
             StartupVersionChecker.Run(logger);
@@ -104,20 +112,26 @@ namespace Nautilus.Database.Build
                 { DatabaseService.BarPublisher, barPublisherRef}
             };
 
-            var fixClient = fixClientFactory.DataClient(
+            var fixClient = fixClientFactory.TradeClient(
                 setupContainer,
                 messagingAdapter,
                 tickDataProcessor);
 
-            var symbols = fixClientFactory.GetAllSymbols();
+            var fixGateway = gatewayFactory.Create(
+                setupContainer,
+                messagingAdapter,
+                fixClient,
+                instrumentRepository,
+                CurrencyCode.GBP);
+
+            fixClient.InitializeGateway(fixGateway);
 
             return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
                 addresses,
-                fixClient,
-                symbols);
+                fixClient);
         }
     }
 }

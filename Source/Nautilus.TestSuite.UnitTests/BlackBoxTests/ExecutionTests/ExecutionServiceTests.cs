@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
                 messagingAdapter)));
 
             var message = new InitializeBrokerageGateway(
-                new Mock<IBrokerageGateway>().Object,
+                new Mock<ITradeGateway>().Object,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

@@ -29,7 +29,7 @@ namespace Nautilus.Common.Interfaces
             ITickProcessor tickProcessor);
 
         /// <summary>
-        /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
+        /// Creates and returns a new <see cref="ITradeGateway"/> from the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
@@ -39,23 +39,5 @@ namespace Nautilus.Common.Interfaces
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickProcessor tickProcessor);
-
-        /// <summary>
-        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        IReadOnlyList<string> GetAllBrokerSymbols();
-
-        /// <summary>
-        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        IReadOnlyList<Symbol> GetAllSymbols();
-
-        /// <summary>
-        /// Returns the tick value index for the client.
-        /// </summary>
-        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
-        IReadOnlyDictionary<string, int> GetTickValueIndex();
     }
 }

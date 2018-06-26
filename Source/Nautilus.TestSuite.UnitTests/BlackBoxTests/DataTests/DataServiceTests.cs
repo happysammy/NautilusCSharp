@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests
                 messagingAdapter,
                 testActorSystem.Scheduler)));
 
-            var mockBrokerageGateway = new Mock<IBrokerageGateway>().Object;
+            var mockBrokerageGateway = new Mock<ITradeGateway>().Object;
             var message = new InitializeBrokerageGateway(mockBrokerageGateway, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             this.dataServiceRef.Tell(message);

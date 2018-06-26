@@ -8,6 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using System.Collections.Generic;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -38,6 +39,30 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
+        /// Initializes the FIX gateway.
+        /// </summary>
+        /// <param name="gateway">The FIX gateway.</param>
+        void InitializeGateway(ITradeGateway gateway);
+
+        /// <summary>
+        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        IReadOnlyList<string> GetAllBrokerSymbols();
+
+        /// <summary>
+        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        IReadOnlyList<Symbol> GetAllSymbols();
+
+        /// <summary>
+        /// Returns the tick value index for the client.
+        /// </summary>
+        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
+        IReadOnlyDictionary<string, int> GetTickValueIndex();
+
+        /// <summary>
         /// Subscribes to market data for the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
@@ -47,5 +72,16 @@ namespace Nautilus.Common.Interfaces
         /// Subscribes to market data for all symbols.
         /// </summary>
         void RequestMarketDataSubscribeAll();
+
+        /// <summary>
+        /// Request an update on the instrument corresponding to the given symbol from the brokerage.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        void UpdateInstrumentSubscribe(Symbol symbol);
+
+        /// <summary>
+        /// Requests an update on all instruments from the brokerage.
+        /// </summary>
+        void UpdateInstrumentsSubscribeAll();
     }
 }

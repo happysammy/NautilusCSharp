@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
     /// A container to store and transport the information and infrastructure needed to instantiate

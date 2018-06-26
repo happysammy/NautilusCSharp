@@ -19,6 +19,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
     /// The sealed <see cref="EntrySignalProcessor"/> class.

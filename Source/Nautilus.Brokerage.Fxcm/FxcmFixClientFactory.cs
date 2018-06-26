@@ -8,11 +8,9 @@
 
 namespace Nautilus.Brokerage.FXCM
 {
-    using System.Collections.Generic;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
 
     /// <summary>
@@ -65,7 +63,10 @@ namespace Nautilus.Brokerage.FXCM
                 new FxcmFixMessageHandler(container, tickProcessor),
                 new FxcmFixMessageRouter(container),
                 this.credentials,
-                Broker.FXCM);
+                Broker.FXCM,
+                FxcmSymbolProvider.GetAllBrokerSymbols(),
+                FxcmSymbolProvider.GetAllSymbols(),
+                FxcmTickSizeProvider.GetIndex());
         }
 
         /// <summary>
@@ -90,25 +91,10 @@ namespace Nautilus.Brokerage.FXCM
                 new FxcmFixMessageHandler(container, tickProcessor),
                 new FxcmFixMessageRouter(container),
                 this.credentials,
-                Broker.FXCM);
+                Broker.FXCM,
+                FxcmSymbolProvider.GetAllBrokerSymbols(),
+                FxcmSymbolProvider.GetAllSymbols(),
+                FxcmTickSizeProvider.GetIndex());
         }
-
-        /// <summary>
-        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<string> GetAllBrokerSymbols() => FxcmSymbolProvider.GetAllBrokerSymbols();
-
-        /// <summary>
-        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<Symbol> GetAllSymbols() => FxcmSymbolProvider.GetAllSymbols();
-
-        /// <summary>
-        /// Returns a read-only list of all tick values provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols</returns>
-        public IReadOnlyDictionary<string, int> GetTickValueIndex() => FxcmTickSizeProvider.GetIndex();
     }
 }

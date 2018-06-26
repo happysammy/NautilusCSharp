@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
 
     /// <summary>

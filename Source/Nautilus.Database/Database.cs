@@ -32,7 +32,6 @@ namespace Nautilus.Database
         private readonly ActorSystem actorSystem;
         private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
         private readonly IDataClient dataClient;
-        private readonly IReadOnlyList<Symbol> symbols;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -42,15 +41,13 @@ namespace Nautilus.Database
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="dataClient">The data client.</param>
-        /// <param name="symbols">The list of symbols.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            IDataClient dataClient,
-            IReadOnlyList<Symbol> symbols)
+            IDataClient dataClient)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -61,12 +58,10 @@ namespace Nautilus.Database
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(addresses, nameof(addresses));
-            Validate.CollectionNotNullOrEmpty(symbols, nameof(symbols));
 
             this.actorSystem = actorSystem;
             this.addresses = addresses;
             this.dataClient = dataClient;
-            this.symbols = symbols;
 
             messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
@@ -107,7 +102,7 @@ namespace Nautilus.Database
                 new BarSpecification(QuoteType.Mid, Resolution.Hour, 1)
             };
 
-            foreach (var symbol in this.symbols)
+            foreach (var symbol in this.dataClient.GetAllSymbols())
             {
                 foreach (var barSpec in barSpecs)
                 {

@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -24,8 +23,12 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixComponentBase, IDataClient, ITradeClient
+    public class FixClient : FixComponentBase, ITradeClient
     {
+        private readonly IReadOnlyList<string> brokerSymbols;
+        private readonly IReadOnlyList<Symbol> symbols;
+        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
@@ -35,13 +38,19 @@ namespace Nautilus.Fix
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
+        /// <param name="brokerSymbols">The list of broker symbols.</param>
+        /// <param name="symbols">The list of symbols.</param>
+        /// <param name="tickSizeIndex">The list of tick sizes.</param>
         public FixClient(
             IComponentryContainer container,
             ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
-            Broker broker)
+            Broker broker,
+            IReadOnlyList<string> brokerSymbols,
+            IReadOnlyList<Symbol> symbols,
+            IReadOnlyDictionary<string, int> tickSizeIndex)
         : base(
             ServiceContext.FIX,
             LabelFactory.Service(ServiceContext.FIX),
@@ -52,9 +61,18 @@ namespace Nautilus.Fix
             credentials)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(tickProcessor, nameof(tickProcessor));
+            Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
+            Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
             Validate.NotNull(credentials, nameof(credentials));
+            Validate.CollectionNotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
+            Validate.CollectionNotNullOrEmpty(symbols, nameof(symbols));
+            Validate.CollectionNotNullOrEmpty(tickSizeIndex, nameof(tickSizeIndex));
 
             this.Broker = broker;
+            this.brokerSymbols = brokerSymbols;
+            this.symbols = symbols;
+            this.tickSizeIndex = tickSizeIndex;
         }
 
         /// <summary>
@@ -72,7 +90,7 @@ namespace Nautilus.Fix
         /// The initializes the brokerage gateway.
         /// </summary>
         /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeBrokerageGateway(IBrokerageGateway gateway)
+        public void InitializeGateway(ITradeGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 
@@ -94,6 +112,24 @@ namespace Nautilus.Fix
         {
             this.DisconnectFix();
         }
+
+        /// <summary>
+        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        public IReadOnlyList<string> GetAllBrokerSymbols() => this.brokerSymbols;
+
+        /// <summary>
+        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        public IReadOnlyList<Symbol> GetAllSymbols() => this.symbols;
+
+        /// <summary>
+        /// Returns the tick value index for the client.
+        /// </summary>
+        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
+        public IReadOnlyDictionary<string, int> GetTickValueIndex() => this.tickSizeIndex;
 
         /// <summary>
         /// The submit entry limit stop order.

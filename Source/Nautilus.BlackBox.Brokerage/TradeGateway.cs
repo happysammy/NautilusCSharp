@@ -9,14 +9,11 @@
 namespace Nautilus.BlackBox.Brokerage
 {
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -27,40 +24,47 @@ namespace Nautilus.BlackBox.Brokerage
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+    using Price = Nautilus.DomainModel.ValueObjects.Price;
+    using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
+    using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 
     /// <summary>
     /// The <see cref="BlackBox"/> boundary for the brokerage implementation.
     /// </summary>
-    public sealed class BrokerageGateway : ComponentBusConnectedBase, IBrokerageGateway
+    public sealed class TradeGateway : ComponentBusConnectedBase, ITradeGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IReadOnlyBrokerageAccount brokerageAccount;
         private readonly ITradeClient tradeClient;
+        private readonly CurrencyCode accountCurrency;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BrokerageGateway"/> class.
+        /// Initializes a new instance of the <see cref="TradeGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradeClient">The brokerage client.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        public BrokerageGateway(
-            BlackBoxContainer container,
+        /// <param name="tradeClient">The trade client.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        public TradeGateway(
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradeClient tradeClient)
+            ITradeClient tradeClient,
+            IInstrumentRepository instrumentRepository,
+            CurrencyCode accountCurrency)
             : base(
                 BlackBoxService.Brokerage,
-                new Label(nameof(BrokerageGateway)),
+                new Label(nameof(TradeGateway)),
                 container,
                 messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(tradeClient, nameof(tradeClient));
+            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
-            this.instrumentRepository = container.InstrumentRepository;
-            this.brokerageAccount = container.Account;
             this.tradeClient = tradeClient;
+            this.instrumentRepository = instrumentRepository;
+            this.accountCurrency = accountCurrency;
         }
 
         /// <summary>
@@ -108,6 +112,14 @@ namespace Nautilus.BlackBox.Brokerage
             Validate.NotNull(symbol, nameof(symbol));
 
             this.tradeClient.RequestMarketDataSubscribe(symbol);
+        }
+
+        /// <summary>
+        /// Requests market data for all symbols from the brokerage.
+        /// </summary>
+        public void RequestMarketDataSubscribeAll()
+        {
+            this.tradeClient.RequestMarketDataSubscribeAll();
         }
 
         /// <summary>
@@ -307,7 +319,7 @@ namespace Nautilus.BlackBox.Brokerage
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
-                    this.brokerageAccount.Broker,
+                    this.tradeClient.Broker,
                     account,
                     this.GetMoneyType(cashBalance),
                     this.GetMoneyType(cashStartDay),
@@ -782,8 +794,8 @@ namespace Nautilus.BlackBox.Brokerage
             Debug.DecimalNotOutOfRange(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
 
             return amount > 0
-                ? Money.Create(amount, this.brokerageAccount.Currency)
-                : Money.Zero(this.brokerageAccount.Currency);
+                ? Money.Create(amount, this.accountCurrency)
+                : Money.Zero(this.accountCurrency);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
+    using Nautilus.DomainModel.Interfaces;
 
     public static class BlackBoxFactory
     {
@@ -80,10 +81,12 @@ namespace Nautilus.BlackBox.Core.Build
             var brokerageClient =
                 servicesFactory.FixClient.TradeClient(container, messagingAdapter, null);
 
-            var brokerageGateway = servicesFactory.BrokerageGateway.Create(
+            var brokerageGateway = servicesFactory.Gateway.Create(
                 container,
                 messagingAdapter,
-                brokerageClient);
+                brokerageClient,
+                instrumentRepository,
+                account.Currency);
 
             var addresses = new Dictionary<Enum, IActorRef>
             {

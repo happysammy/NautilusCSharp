@@ -10,37 +10,40 @@ namespace Nautilus.BlackBox.Brokerage
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// The immutable sealed <see cref="BrokerageGatewayFactory"/> class. Creates an
-    /// <see cref="IBrokerageGateway"/> for the <see cref="BlackBox"/> system.
+    /// Creates a <see cref="ITradeGateway"/> for the system.
     /// </summary>
     [Immutable]
-    public sealed class BrokerageGatewayFactory : IBrokerageGatewayFactory
+    public sealed class GatewayFactory : IGatewayFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="IBrokerageGateway"/> based on the given inputs.
+        /// Creates and returns a new <see cref="ITradeGateway"/> based on the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="tradeClient">The broker client.</param>
-        /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
-        public IBrokerageGateway Create(
-            BlackBoxContainer container,
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <returns>A <see cref="ITradeGateway"/>.</returns>
+        public ITradeGateway Create(
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradeClient tradeClient)
+            ITradeClient tradeClient,
+            IInstrumentRepository instrumentRepository,
+            CurrencyCode accountCurrency)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(tradeClient, nameof(tradeClient));
 
-            return new BrokerageGateway(
+            return new TradeGateway(
                 container,
                 messagingAdapter,
-                tradeClient);
+                tradeClient,
+                instrumentRepository,
+                accountCurrency);
         }
     }
 }

@@ -24,26 +24,26 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
         /// <summary>
         /// Initializes a new instance of the <see cref="InitializeBrokerageGateway"/> class.
         /// </summary>
-        /// <param name="brokerageGateway">The message brokerage gateway.</param>
+        /// <param name="tradeGateway">The message brokerage gateway.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public InitializeBrokerageGateway(
-            IBrokerageGateway brokerageGateway,
+            ITradeGateway tradeGateway,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotNull(brokerageGateway, nameof(brokerageGateway));
+            Validate.NotNull(tradeGateway, nameof(tradeGateway));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
-            this.BrokerageGateway = brokerageGateway;
+            this.TradeGateway = tradeGateway;
         }
 
         /// <summary>
         /// Gets the messages brokerage gateway.
         /// </summary>
-        public IBrokerageGateway BrokerageGateway { get; }
+        public ITradeGateway TradeGateway { get; }
     }
 }

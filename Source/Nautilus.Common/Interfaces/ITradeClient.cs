@@ -11,57 +11,13 @@ namespace Nautilus.Common.Interfaces
     using System.Collections.Generic;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides an interface for a concrete trade client implementation.
     /// </summary>
-    public interface ITradeClient
+    public interface ITradeClient : IDataClient
     {
-        /// <summary>
-        /// Gets the name of the brokerage.
-        /// </summary>
-        Broker Broker { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the brokerage client is connected.
-        /// </summary>
-        bool IsConnected { get; }
-
-        /// <summary>
-        /// Initializes the brokerage gateway.
-        /// </summary>
-        /// <param name="gateway">The brokerage gateway.</param>
-        void InitializeBrokerageGateway(IBrokerageGateway gateway);
-
-        /// <summary>
-        /// Connects the brokerage client to the brokerage.
-        /// </summary>
-        void Connect();
-
-        /// <summary>
-        /// Disconnects the brokerage client from the brokerage.
-        /// </summary>
-        void Disconnect();
-
-        /// <summary>
-        /// Request market data for the given symbol from the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        void RequestMarketDataSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Request an update on the instrument corresponding to the given symbol from the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        void UpdateInstrumentSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Requests an update on all instruments from the brokerage.
-        /// </summary>
-        void UpdateInstrumentsSubscribeAll();
-
         /// <summary>
         /// Submits an entry order with a stop-loss and profit target to the brokerage.
         /// </summary>

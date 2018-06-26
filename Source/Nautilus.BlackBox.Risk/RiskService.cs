@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
     /// The sealed <see cref="RiskService "/> class.

@@ -6,27 +6,28 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Interfaces
+namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
-    /// The <see cref="IBrokerageGatewayFactory"/> interface. Provides
-    /// <see cref="IBrokerageGateway"/>(s) for the <see cref="BlackBox"/> system from the given inputs.
+    /// Provides <see cref="ITradeGateway"/>(s) for the system.
     /// </summary>
-    public interface IBrokerageGatewayFactory
+    public interface IGatewayFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
+        /// Creates and returns a new <see cref="ITradeGateway"/> from the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradeClient">The brokerage client.</param>
-        /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
-        IBrokerageGateway Create(
-            BlackBoxContainer container,
+        /// <param name="tradeClient">The trade client.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <returns>A <see cref="ITradeGateway"/>.</returns>
+        ITradeGateway Create(
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradeClient tradeClient);
+            ITradeClient tradeClient,
+            IInstrumentRepository instrumentRepository,
+            CurrencyCode accountCurrency);
     }
 }

@@ -20,7 +20,7 @@ namespace Nautilus.Fix.Interfaces
         /// Initializes the brokerage gateway.
         /// </summary>
         /// <param name="gateway">The brokerage gateway.</param>
-        void InitializeBrokerageGateway(IBrokerageGateway gateway);
+        void InitializeBrokerageGateway(ITradeGateway gateway);
 
         /// <summary>
         /// Handles business message reject messages.

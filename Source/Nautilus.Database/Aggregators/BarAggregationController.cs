@@ -29,7 +29,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
-    using QuickFix.Fields;
+
     using Resolution = Nautilus.DomainModel.Enums.Resolution;
     using Tick = Nautilus.DomainModel.ValueObjects.Tick;
     using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;

@@ -9,11 +9,13 @@
 namespace NautilusDB
 {
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.BlackBox.Brokerage;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Compression;
     using Nautilus.Core.Validation;
@@ -102,20 +104,29 @@ namespace NautilusDB
             var currencyPairs = (JArray)config[ConfigSection.Fxcm]["currencyPairs"];
             var barResolutions = (JArray)config[ConfigSection.Fxcm]["barResolutions"];
 
-            var localHost = RedisConstants.LocalHost;
-            var clientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
+            var clientManager = new BasicRedisClientManager(
+                new[] { RedisConstants.LocalHost },
+                new[] { RedisConstants.LocalHost });
+
+            var loggingAdapter = new SerilogLogger();
+            var fixClientFactory = new FxcmFixClientFactory(
+                username,
+                password,
+                accountNumber);
+
+            var barRepository = new RedisBarRepository(
+                clientManager,
+                RedisConstants.LocalHost,
+                Duration.FromMilliseconds(3000),
+                compressor);
+            var instrumentRepository = new RedisInstrumentRepository();
 
             this.nautilusDB = DatabaseFactory.Create(
-                new SerilogLogger(),
-                new FxcmFixClientFactory(
-                    username,
-                    password,
-                    accountNumber),
-                new RedisBarRepository(
-                    clientManager,
-                    RedisConstants.LocalHost,
-                    Duration.FromMilliseconds(3000),
-                    compressor));
+                loggingAdapter,
+                fixClientFactory,
+                null,
+                barRepository,
+                instrumentRepository);
 
             Task.Run(() => this.nautilusDB.Start());
         }

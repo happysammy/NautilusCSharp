@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Interfaces
+namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Core.CQS;

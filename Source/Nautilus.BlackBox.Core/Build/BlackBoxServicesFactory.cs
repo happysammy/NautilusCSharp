@@ -23,7 +23,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBoxServicesFactory"/> class.
         /// </summary>
-        /// <param name="brokerageGatewayFactory">The brokerage service factory.</param>
+        /// <param name="gatewayFactory">The brokerage service factory.</param>
         /// <param name="fixClientFactory">The brokerage client factory.</param>
         /// <param name="alphaModelServiceFactory">The alpha model service factory.</param>
         /// <param name="dataServiceFactory">The data service factory.</param>
@@ -31,7 +31,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="portfolioServiceFactory">The portfolio service factory.</param>
         /// <param name="riskServiceFactory">The risk service factory.</param>
         public BlackBoxServicesFactory(
-            IBrokerageGatewayFactory brokerageGatewayFactory,
+            IGatewayFactory gatewayFactory,
             IFixClientFactory fixClientFactory,
             IServiceFactory alphaModelServiceFactory,
             IServiceFactory dataServiceFactory,
@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Core.Build
             IServiceFactory portfolioServiceFactory,
             IServiceFactory riskServiceFactory)
         {
-            Validate.NotNull(brokerageGatewayFactory, nameof(brokerageGatewayFactory));
+            Validate.NotNull(gatewayFactory, nameof(gatewayFactory));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
             Validate.NotNull(alphaModelServiceFactory, nameof(alphaModelServiceFactory));
             Validate.NotNull(dataServiceFactory, nameof(dataServiceFactory));
@@ -47,7 +47,7 @@ namespace Nautilus.BlackBox.Core.Build
             Validate.NotNull(portfolioServiceFactory, nameof(portfolioServiceFactory));
             Validate.NotNull(riskServiceFactory, nameof(riskServiceFactory));
 
-            this.BrokerageGateway = brokerageGatewayFactory;
+            this.Gateway = gatewayFactory;
             this.FixClient = fixClientFactory;
             this.AlphaModelService = alphaModelServiceFactory;
             this.DataService = dataServiceFactory;
@@ -59,7 +59,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Gets the black box brokerage service factory.
         /// </summary>
-        public IBrokerageGatewayFactory BrokerageGateway { get; }
+        public IGatewayFactory Gateway { get; }
 
         /// <summary>
         /// Gets the black box brokerage service factory.

@@ -35,7 +35,8 @@ namespace Nautilus.Brokerage.FXCM
     {
         private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
         private readonly ITickProcessor tickProcessor;
-        private IBrokerageGateway brokerageGateway;
+
+        private ITradeGateway tradeGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
@@ -60,11 +61,11 @@ namespace Nautilus.Brokerage.FXCM
         /// Initializes the brokerage gateway.
         /// </summary>
         /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeBrokerageGateway(IBrokerageGateway gateway)
+        public void InitializeBrokerageGateway(ITradeGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.brokerageGateway = gateway;
+            this.tradeGateway = gateway;
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Nautilus.Brokerage.FXCM
                     decimal.Zero, // TODO margin requirement
                     interestBuy,
                     interestSell,
-                    this.brokerageGateway.GetTimeNow());
+                    this.TimeNow());
 
                 securityList.Add(instrument);
             }
@@ -143,7 +144,7 @@ namespace Nautilus.Brokerage.FXCM
             var responseId = message.GetField(Tags.SecurityResponseID);
             var result = FxcmFixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-            this.brokerageGateway.OnInstrumentsUpdate(securityList, responseId, result);
+            this.tradeGateway.OnInstrumentsUpdate(securityList, responseId, result);
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace Nautilus.Brokerage.FXCM
             var inquiryId = message.GetField(Tags.CollInquiryID);
             var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-            this.brokerageGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
+            this.tradeGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
         }
 
         /// <summary>
@@ -177,9 +178,9 @@ namespace Nautilus.Brokerage.FXCM
             var marginUsedLiq = Convert.ToDecimal(message.GetField(9038));
             var marginRatio = Convert.ToDecimal(message.GetField(Tags.MarginRatio));
             var marginCall = message.GetField(9045);
-            var time = this.brokerageGateway.GetTimeNow(); // TODO: Replace with message time.
+            var time = this.TimeNow(); // TODO: Replace with message time.
 
-            this.brokerageGateway.OnAccountReport(
+            this.tradeGateway.OnAccountReport(
                 inquiryId,
                 accountNumber,
                 cashBalance,
@@ -202,7 +203,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            this.brokerageGateway.OnRequestForPositionsAck(
+            this.tradeGateway.OnRequestForPositionsAck(
                 message.Account.ToString(),
                 message.PosReqID.ToString());
         }
@@ -268,7 +269,7 @@ namespace Nautilus.Brokerage.FXCM
             var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmcode})";
             var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
-            this.brokerageGateway.OnOrderCancelReject(
+            this.tradeGateway.OnOrderCancelReject(
                 symbol,
                 Exchange.FXCM,
                 orderId,
@@ -309,7 +310,7 @@ namespace Nautilus.Brokerage.FXCM
                 var rejectReasonText = GetField(message, Tags.CxlRejReason);
                 var rejectReason = $"Code({rejectReasonCode})={FxcmFixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
-                this.brokerageGateway.OnOrderRejected(
+                this.tradeGateway.OnOrderRejected(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -319,7 +320,7 @@ namespace Nautilus.Brokerage.FXCM
 
             if (message.GetField(Tags.OrdStatus) == OrdStatus.CANCELED.ToString())
             {
-                this.brokerageGateway.OnOrderCancelled(
+                this.tradeGateway.OnOrderCancelled(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -330,7 +331,7 @@ namespace Nautilus.Brokerage.FXCM
 
             if (message.GetField(Tags.OrdStatus) == OrdStatus.REPLACED.ToString())
             {
-                this.brokerageGateway.OnOrderModified(
+                this.tradeGateway.OnOrderModified(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -346,7 +347,7 @@ namespace Nautilus.Brokerage.FXCM
                                      ? (ZonedDateTime?)FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
                                      : null;
 
-                this.brokerageGateway.OnOrderWorking(
+                this.tradeGateway.OnOrderWorking(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -363,7 +364,7 @@ namespace Nautilus.Brokerage.FXCM
 
             if (message.GetField(Tags.OrdStatus) == OrdStatus.EXPIRED.ToString())
             {
-                this.brokerageGateway.OnOrderExpired(
+                this.tradeGateway.OnOrderExpired(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -379,7 +380,7 @@ namespace Nautilus.Brokerage.FXCM
                 var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
                 var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                this.brokerageGateway.OnOrderFilled(
+                this.tradeGateway.OnOrderFilled(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -401,7 +402,7 @@ namespace Nautilus.Brokerage.FXCM
                 var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
                 var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                this.brokerageGateway.OnOrderPartiallyFilled(
+                this.tradeGateway.OnOrderPartiallyFilled(
                     symbol,
                     Exchange.FXCM,
                     orderId,
@@ -425,7 +426,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            this.brokerageGateway.OnPositionReport(message.Account.ToString());
+            this.tradeGateway.OnPositionReport(message.Account.ToString());
         }
 
         private static string GetField(FieldMap report, int tag)

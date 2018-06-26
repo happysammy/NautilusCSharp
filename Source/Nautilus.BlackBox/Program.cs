@@ -30,10 +30,10 @@ namespace Nautilus.BlackBox
     using Nautilus.Common.Componentry;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Fix;
     using Nautilus.Serilog;
     using NodaTime;
 
@@ -70,7 +70,7 @@ namespace Nautilus.BlackBox
                 clock.TimeNow());
 
             var serviceFactory = new BlackBoxServicesFactory(
-                new BrokerageGatewayFactory(),
+                new GatewayFactory(),
                 new FxcmFixClientFactory(
                     username,
                     password,

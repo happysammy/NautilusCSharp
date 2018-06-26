@@ -24,6 +24,7 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using NodaTime.Extensions;
@@ -36,7 +37,7 @@ namespace Nautilus.BlackBox.Core
     {
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IBrokerageGateway brokerageGateway;
+        private readonly ITradeGateway tradeGateway;
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
         private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
 
@@ -49,7 +50,7 @@ namespace Nautilus.BlackBox.Core
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter"></param>
         /// <param name="switchboard">The service factory.</param>
-        /// <param name="brokerageGateway">The brokerage gateway.</param>
+        /// <param name="tradeGateway">The brokerage gateway.</param>
         /// <param name="tradeClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
@@ -59,7 +60,7 @@ namespace Nautilus.BlackBox.Core
             BlackBoxContainer container,
             MessagingAdapter messagingAdapter,
             Switchboard switchboard,
-            IBrokerageGateway brokerageGateway,
+            ITradeGateway tradeGateway,
             ITradeClient tradeClient,
             IBrokerageAccount account,
             IRiskModel riskModel)
@@ -73,14 +74,14 @@ namespace Nautilus.BlackBox.Core
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(switchboard, nameof(switchboard));
-            Validate.NotNull(brokerageGateway, nameof(brokerageGateway));
+            Validate.NotNull(tradeGateway, nameof(tradeGateway));
             Validate.NotNull(tradeClient, nameof(tradeClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
-            this.brokerageGateway = brokerageGateway;
+            this.tradeGateway = tradeGateway;
 
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
@@ -93,7 +94,7 @@ namespace Nautilus.BlackBox.Core
             this.Send(
                 new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution },
                 new InitializeBrokerageGateway(
-                    this.brokerageGateway,
+                    this.tradeGateway,
                     this.NewGuid(),
                     this.TimeNow()));
 
@@ -105,7 +106,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            tradeClient.InitializeBrokerageGateway(this.brokerageGateway);
+            tradeClient.InitializeGateway(this.tradeGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -125,7 +126,7 @@ namespace Nautilus.BlackBox.Core
         {
             this.Execute(() =>
             {
-                this.brokerageGateway.Connect();
+                this.tradeGateway.Connect();
             });
         }
 
@@ -285,7 +286,7 @@ namespace Nautilus.BlackBox.Core
             {
                 //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
 
-                this.brokerageGateway.Disconnect();
+                this.tradeGateway.Disconnect();
 
                 this.StopAlphaStrategyModulesAll();
                 this.RemoveAlphaStrategyModulesAll();

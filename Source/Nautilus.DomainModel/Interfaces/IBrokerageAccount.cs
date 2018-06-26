@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Interfaces
+namespace Nautilus.DomainModel.Interfaces
 {
     using Nautilus.Core;
     using Nautilus.Core.CQS;
