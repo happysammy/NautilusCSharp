@@ -122,7 +122,8 @@ namespace Nautilus.Fix
         /// Returns a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsFixConnected => this.session.IsLoggedOn;
+        public bool IsFixConnected => this.session.IsLoggedOn
+                                      && this.sessionMd.IsLoggedOn;
 
         /// <summary>
         /// Connects to the FIX session.
@@ -191,14 +192,7 @@ namespace Nautilus.Fix
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
-                Task.Delay(1000); // Allow logon of other session.
-
                 this.Log.Information($"Logon - {sessionId}");
-                //this.FxcmFixMessageRouter.CollateralInquiry();
-                //this.FxcmFixMessageRouter.TradingSessionStatus();
-                //this.FxcmFixMessageRouter.RequestAllPositions();
-                //this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
-                this.FixMessageRouter.MarketDataRequestSubscribeAll();
             });
         }
 
@@ -265,7 +259,7 @@ namespace Nautilus.Fix
                 {
                     this.Crack(message, sessionId);
                 }
-                catch(UnsupportedMessageType ex)
+                catch (UnsupportedMessageType ex)
                 {
                     this.Log.Warning($"Received unsupported message type {message.GetType()}");
                 }
@@ -288,7 +282,9 @@ namespace Nautilus.Fix
 
                 if (message.Header.IsSetField(Tags.PossDupFlag))
                 {
-                    possDupFlag = QuickFix.Fields.Converters.BoolConverter.Convert(message.Header.GetField(Tags.PossDupFlag));
+                    possDupFlag =
+                        QuickFix.Fields.Converters.BoolConverter.Convert(
+                            message.Header.GetField(Tags.PossDupFlag));
                 }
 
                 if (possDupFlag)

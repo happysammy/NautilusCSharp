@@ -246,9 +246,8 @@ namespace Nautilus.Database.Aggregators
 
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
+                Log.Debug("added a tick");
                 this.barAggregators[tick.Symbol].Tell(tick);
-
-                return;
             }
         }
 

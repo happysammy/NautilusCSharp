@@ -37,7 +37,6 @@ namespace Nautilus.Brokerage.FXCM
             { "EUR/AUD",  "EURAUD" },
             { "EUR/CAD",  "EURCAD" },
             { "EUR/CHF",  "EURCHF" },
-            { "EUR/CZK",  "EURCZK" },
             { "EUR/GBP",  "EURGBP" },
             { "EUR/JPY",  "EURJPY" },
             { "EUR/NOK",  "EURNOK" },
@@ -55,7 +54,7 @@ namespace Nautilus.Brokerage.FXCM
             { "GBP/USD",  "GBPUSD" },
             { "GER30",    "DE30EUR" },
             { "HKG33",    "HKG33" },
-            { "ITA40",    "ITA40" },
+//            { "ITA40",    "ITA40" },
             { "JPN225",   "JPN225" },
             { "NAS100",   "NAS100" },
             { "NGAS",     "NATGAS" },
@@ -64,7 +63,7 @@ namespace Nautilus.Brokerage.FXCM
             { "NZD/JPY",  "NZDJPY" },
             { "NZD/USD",  "NZDUSD" },
             { "SPX500",   "SPX500" },
-            { "SUI20",    "SUI20" },
+//            { "SUI20",    "SUI20" },
             { "TRY/JPY",  "TRYJPY" },
             { "UK100",    "UK100" },
             { "UKOil",    "BCOUSD" },
@@ -74,7 +73,7 @@ namespace Nautilus.Brokerage.FXCM
             { "USD/CAD",  "USDCAD" },
             { "USD/CHF",  "USDCHF" },
             { "USD/CNH",  "USDCNH" },
-            { "USD/CZK",  "USDCZK" },
+//            { "USD/CZK",  "USDCZK" },
             { "USD/HKD",  "USDHKD" },
             { "USD/JPY",  "USDJPY" },
             { "USD/NOK",  "USDNOK" },
@@ -84,8 +83,6 @@ namespace Nautilus.Brokerage.FXCM
             { "USOil",    "WTIUSD" },
             { "XAG/USD",  "XAGUSD" },
             { "XAU/USD",  "XAUUSD" },
-            { "XPD/USD",  "XPDUSD" },
-            { "XPT/USD",  "XPTUSD" },
             { "ZAR/JPY",  "ZARJPY" }
         };
 

@@ -82,6 +82,8 @@ namespace Nautilus.Database.Processors
 
                 this.tickPublisher.Tell(tick);
                 this.barAggregationControllerRef.Tell(tick);
+
+                //this.Log.Debug($"Received tick {tick}");
             });
         }
     }

@@ -86,8 +86,8 @@ namespace Nautilus.Brokerage.FXCM
             { "USOil",    (1m, CurrencyCode.USD) },
             { "XAG/USD",  (5m, CurrencyCode.USD) },
             { "XAU/USD",  (0.1m, CurrencyCode.USD) },
-            { "XPD/USD",  (1m, CurrencyCode.JPY) },
-            { "XPT/USD",  (1m, CurrencyCode.JPY) },
+            { "XPD/USD",  (1m, CurrencyCode.USD) },
+            { "XPT/USD",  (1m, CurrencyCode.USD) },
             { "ZAR/JPY",  (1m, CurrencyCode.JPY) },
         };
 

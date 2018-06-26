@@ -74,6 +74,13 @@ namespace Nautilus.Database
         {
             this.dataClient.Connect();
 
+            while (!this.dataClient.IsConnected)
+            {
+                // Wait for connection.
+            }
+
+            this.dataClient.RequestMarketDataSubscribeAll();
+
             this.Send(
                 DatabaseService.CollectionManager,
                 new StartSystem(

@@ -94,7 +94,10 @@ namespace Nautilus.Brokerage.FXCM
             {
                 message.GetGroup(i, group);
 
-                var symbol = group.IsSetField(Tags.Symbol) ? new Symbol(FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM) : new Symbol("AUDUSD", Exchange.FXCM);
+                var symbol = group.IsSetField(Tags.Symbol)
+                    ? new Symbol(FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM)
+                    : new Symbol("AUDUSD", Exchange.FXCM);
+
                 var symbolId = new EntityId(symbol.ToString());
                 var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
