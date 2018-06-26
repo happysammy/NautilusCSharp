@@ -191,12 +191,12 @@ namespace Nautilus.Database.Aggregators
                     job.Key,
                     job.Value,
                     "null job",
+                    this.Self,
                     this.NewGuid(),
                     this.TimeNow());
 
                 this.Send(DatabaseService.Scheduler, removeJob);
             }
-
         }
 
         private void OnMessage(JobCreated message)
@@ -246,7 +246,6 @@ namespace Nautilus.Database.Aggregators
 
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
-                Log.Debug("added a tick");
                 this.barAggregators[tick.Symbol].Tell(tick);
             }
         }
@@ -272,7 +271,7 @@ namespace Nautilus.Database.Aggregators
                 this.barAggregators[job.BarType.Symbol].Tell(closeBar);
 
                 // Log for unit testing only.
-                Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
+                // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
                 return;
             }
 

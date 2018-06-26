@@ -9,6 +9,7 @@
 namespace Nautilus.Scheduler.Commands
 {
     using System;
+    using Akka.Actor;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -33,6 +34,7 @@ namespace Nautilus.Scheduler.Commands
             JobKey jobKey,
             TriggerKey triggerKey,
             object job,
+            IActorRef sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
@@ -60,5 +62,7 @@ namespace Nautilus.Scheduler.Commands
         /// Gets the job message object.
         /// </summary>
         public object Job { get; }
+
+        public IActorRef Sender { get; }
     }
 }

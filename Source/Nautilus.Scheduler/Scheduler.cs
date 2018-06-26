@@ -9,10 +9,13 @@
 namespace Nautilus.Scheduler
 {
     using System;
-    using System.Collections.Specialized;
     using Akka.Actor;
     using Quartz.Impl;
-    using Akka;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using Nautilus.Scheduler.Exceptions;
@@ -22,106 +25,97 @@ namespace Nautilus.Scheduler
     /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
     /// and Remove messages.
     /// </summary>
-    public class Scheduler : ActorBase
+    public class Scheduler : ActorComponentBase
     {
         private readonly IScheduler quartzScheduler;
-        private readonly bool externallySupplied;
 
-        public Scheduler()
+        public Scheduler(IComponentryContainer container)
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component(nameof(Scheduler)),
+                container)
         {
+            Validate.NotNull(container, nameof(container));
+
             this.quartzScheduler = new StdSchedulerFactory().GetScheduler().Result;
+
+            this.Receive<CreateJob>(msg => this.OnMessage(msg));
+            this.Receive<RemoveJob>(msg => this.OnMessage(msg));
         }
 
-        public Scheduler(NameValueCollection props)
-        {
-            this.quartzScheduler = new StdSchedulerFactory(props).GetScheduler().Result;
-        }
-
-        public Scheduler(IScheduler quartzScheduler)
-        {
-            this.quartzScheduler = quartzScheduler;
-            this.externallySupplied = true;
-        }
-
-        protected override bool Receive(object message)
-        {
-            return message.Match().With<CreateJob>(CreateJobCommand).With<RemoveJob>(RemoveJobCommand).WasHandled;
-        }
+//        protected override bool Receive(object message)
+//        {
+//            Debug.NotNull(message, nameof(message));
+//
+//            return message.Match().With<CreateJob>(CreateJobCommand).With<RemoveJob>(RemoveJobCommand).WasHandled;
+//        }
 
         protected override void PreStart()
         {
-            if (!this.externallySupplied)
-            {
-                this.quartzScheduler.Start();
-            }
             base.PreStart();
+            this.quartzScheduler.Start();
         }
 
         protected override void PostStop()
         {
-            if (!this.externallySupplied)
-            {
-                this.quartzScheduler.Shutdown();
-            }
+            this.quartzScheduler.Shutdown();
             base.PostStop();
         }
 
-        protected virtual void CreateJobCommand(CreateJob createJob)
+        private void OnMessage(CreateJob message)
         {
-            if (createJob.Destination == null)
-            {
-                Context.Sender.Tell(new CreateJobFail(null, null, new ArgumentNullException(nameof(createJob.Destination))));
-            }
-            if (createJob.Trigger == null)
-            {
-                Context.Sender.Tell(new CreateJobFail(null, null, new ArgumentNullException(nameof(createJob.Trigger))));
-            }
-            else
-            {
-                try
-                {
-                    var job =
-                    Job.CreateBuilderWithData(createJob.Destination, createJob.Message)
-                       .WithIdentity(createJob.Trigger.JobKey)
-                       .Build();
+            Debug.NotNull(message, nameof(message));
 
-                    quartzScheduler.ScheduleJob(job, createJob.Trigger);
+            var destination = message.Destination;
 
-                    Context.Sender.Tell(new JobCreated(
-                        createJob.Trigger.JobKey,
-                        createJob.Trigger.Key,
-                        createJob.Message));
-                }
-                catch (Exception ex)
-                {
-                    Context.Sender.Tell(new CreateJobFail(
-                        createJob.Trigger.JobKey,
-                        createJob.Trigger.Key,
-                        ex));
-                }
+            try
+            {
+                var job = Job.CreateBuilderWithData(
+                        destination,
+                        message.Message)
+                    .WithIdentity(message.Trigger.JobKey)
+                    .Build();
+
+                quartzScheduler.ScheduleJob(job, message.Trigger);
+
+                destination.Tell(new JobCreated(
+                    message.Trigger.JobKey,
+                    message.Trigger.Key,
+                    message.Message));
+            }
+            catch (Exception ex)
+            {
+                destination.Tell(new CreateJobFail(
+                    message.Trigger.JobKey,
+                    message.Trigger.Key,
+                    ex));
             }
         }
 
-        protected virtual void RemoveJobCommand(RemoveJob removeJob)
+        private void OnMessage(RemoveJob message)
         {
+            Debug.NotNull(message, nameof(message));
+
+            var sender = message.Sender;
+
             try
             {
-                var deleted = quartzScheduler.DeleteJob(removeJob.JobKey);
+                var deleted = quartzScheduler.DeleteJob(message.JobKey);
                 if (deleted.Result)
                 {
-                    Context.Sender.Tell(new JobRemoved(
-                        removeJob.JobKey,
-                        removeJob.TriggerKey,
-                        removeJob.Job));
+                    sender.Tell(new JobRemoved(
+                        message.JobKey,
+                        message.TriggerKey,
+                        message.Job));
                 }
                 else
                 {
-                    Context.Sender.Tell(new RemoveJobFail(removeJob.JobKey, removeJob.TriggerKey, new JobNotFoundException()));
+                    sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, new JobNotFoundException()));
                 }
             }
             catch (Exception ex)
             {
-                Context.Sender.Tell(new RemoveJobFail(removeJob.JobKey, removeJob.TriggerKey, ex));
+                sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, ex));
             }
         }
     }

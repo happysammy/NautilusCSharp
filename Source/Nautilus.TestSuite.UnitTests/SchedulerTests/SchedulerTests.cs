@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 //            probe.ExpectMsg("Hello");
 //            Sys.Stop(quartzActor);
 //        }
-
+//
 //        [Fact]
 //        public void Scheduler_Should_Remove_Job()
 //        {
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 //            probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
 //            Sys.Stop(scheduler);
 //        }
-
+//
 //        [Fact]
 //        public void Scheduler_Should_Not_Remove_UnExisting_Job()
 //        {

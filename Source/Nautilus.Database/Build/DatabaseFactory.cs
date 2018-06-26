@@ -65,7 +65,13 @@ namespace Nautilus.Database.Build
                 setupContainer);
 
             var schedulerRef = actorSystem.ActorOf(Props.Create(
-                () => new Scheduler()));
+                () => new Scheduler(setupContainer)));
+
+            var tickPublisherRef = actorSystem.ActorOf(Props.Create(
+                () => new TickPublisher(setupContainer)));
+
+            var barPublisherRef = actorSystem.ActorOf(Props.Create(
+                () => new BarPublisher(setupContainer)));
 
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
@@ -75,18 +81,13 @@ namespace Nautilus.Database.Build
             var dataCollectionActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DataCollectionManager(
                     setupContainer,
-                    messagingAdapter)));
+                    messagingAdapter,
+                    barPublisherRef)));
 
             var barAggregationControllerRef = actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(
                     setupContainer,
                     messagingAdapter)));
-
-            var tickPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new TickPublisher(setupContainer)));
-
-            var barPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new BarPublisher(setupContainer)));
 
             var tickDataProcessor = new TickProcessor(
                 setupContainer,

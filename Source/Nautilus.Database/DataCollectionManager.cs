@@ -8,6 +8,7 @@
 
 namespace Nautilus.Database
 {
+    using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -29,16 +30,19 @@ namespace Nautilus.Database
     public class DataCollectionManager : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
+        private readonly IActorRef barPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="barPublisher">The bar publisher.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            IActorRef barPublisher)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(DataCollectionManager)),
@@ -47,8 +51,10 @@ namespace Nautilus.Database
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(barPublisher, nameof(barPublisher));
 
             this.storedContainer = container;
+            this.barPublisher = barPublisher;
 
             // Command messages
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
@@ -88,6 +94,7 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
+            this.barPublisher.Tell(message.Data);
             this.Send(DatabaseService.TaskManager, message);
         }
 
