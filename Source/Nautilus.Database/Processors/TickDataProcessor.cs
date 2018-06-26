@@ -8,7 +8,6 @@
 
 namespace Nautilus.Database.Processors
 {
-    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -33,7 +32,6 @@ namespace Nautilus.Database.Processors
         /// Initializes a new instance of the <see cref="TickDataProcessor"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="tickSizeIndex">The tick size index.</param>
         /// <param name="quoteProvider">The quote provider.</param>
         /// <param name="barAggregationControllerRef">The bar aggregator controller actor address.</param>
         public TickDataProcessor(
@@ -86,7 +84,7 @@ namespace Nautilus.Database.Processors
                 this.quoteProvider.OnTick(tick);
                 this.barAggregationControllerRef.Tell(tick);
 
-                this.Log.Verbose($"Received tick {tick}");
+                this.Log.Debug($"Received tick {tick}");
             });
         }
     }

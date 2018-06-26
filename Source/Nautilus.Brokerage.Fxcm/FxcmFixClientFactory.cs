@@ -61,8 +61,8 @@ namespace Nautilus.Brokerage.FXCM
             return new FixClient(
                 container,
                 tickDataProcessor,
-                new FxcmFixMessageHandler(tickDataProcessor),
-                new FxcmFixMessageRouter(container.Clock),
+                new FxcmFixMessageHandler(container, tickDataProcessor),
+                new FxcmFixMessageRouter(container),
                 this.credentials,
                 Broker.FXCM);
         }
@@ -86,8 +86,8 @@ namespace Nautilus.Brokerage.FXCM
             return new FixClient(
                 container,
                 tickDataProcessor,
-                new FxcmFixMessageHandler(tickDataProcessor),
-                new FxcmFixMessageRouter(container.Clock),
+                new FxcmFixMessageHandler(container, tickDataProcessor),
+                new FxcmFixMessageRouter(container),
                 this.credentials,
                 Broker.FXCM);
         }

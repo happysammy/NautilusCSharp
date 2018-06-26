@@ -11,12 +11,15 @@ namespace Nautilus.Brokerage.FXCM
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
@@ -28,7 +31,7 @@ namespace Nautilus.Brokerage.FXCM
     /// <summary>
     /// The FXCM quick fix message handler.
     /// </summary>
-    public class FxcmFixMessageHandler : IFixMessageHandler
+    public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
         private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
         private readonly ITickDataProcessor tickDataProcessor;
@@ -37,9 +40,15 @@ namespace Nautilus.Brokerage.FXCM
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
+        /// <param name="container">The setup container.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
         public FxcmFixMessageHandler(
+            IComponentryContainer container,
             ITickDataProcessor tickDataProcessor)
+            : base(
+                ServiceContext.FIX,
+                LabelFactory.Component(nameof(FxcmFixMessageHandler)),
+                container)
         {
             Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
 
@@ -66,7 +75,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            this.brokerageGateway.OnBusinessMessage(message.Text.ToString());
+            this.Log.Debug($"BusinessMessageReject: {message}");
         }
 
         /// <summary>
@@ -190,7 +199,9 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            this.brokerageGateway.OnRequestForPositionsAck(message.Account.ToString(), message.PosReqID.ToString());
+            this.brokerageGateway.OnRequestForPositionsAck(
+                message.Account.ToString(),
+                message.PosReqID.ToString());
         }
 
         /// <summary>
@@ -201,13 +212,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            var fxcmSymbol = message.GetField(Tags.Symbol);
-
-            var symbol = message.IsSetField(Tags.Symbol)
-                ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
-                : string.Empty;
-
-            Console.WriteLine(message.GetField(Tags.Text));
+            this.Log.Warning($"MarketDataRequestReject: {message.GetField(Tags.Text)}");
         }
 
         /// <summary>
