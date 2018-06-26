@@ -38,9 +38,14 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
-        /// The request market data subscribe.
+        /// Subscribes to market data for the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         void RequestMarketDataSubscribe(Symbol symbol);
+
+        /// <summary>
+        /// Subscribes to market data for all symbols.
+        /// </summary>
+        void RequestMarketDataSubscribeAll();
     }
 }

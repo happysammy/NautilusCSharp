@@ -8,8 +8,6 @@
 
 namespace Nautilus.Database.Publishers
 {
-    using System.Collections.Generic;
-    using Grpc.Core;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -22,10 +20,8 @@ namespace Nautilus.Database.Publishers
     /// <summary>
     /// Providers a generic publisher for <see cref="Bar"/> data.
     /// </summary>
-    public class BarPublisher : ActorComponentBase
+    public sealed class BarPublisher : ActorComponentBase
     {
-        private readonly Dictionary<BarType, Channel> subscribers;
-
         /// <summary>
         ///
         /// </summary>
@@ -53,9 +49,7 @@ namespace Nautilus.Database.Publishers
 
         private void OnMessage(BarClosed message)
         {
-            var barType = message.BarType;
 
-            var client = this.subscribers[barType].ConnectAsync();
         }
     }
 }

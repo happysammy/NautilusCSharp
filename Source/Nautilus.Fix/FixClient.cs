@@ -193,5 +193,13 @@ namespace Nautilus.Fix
         {
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
+
+        /// <summary>
+        /// The request market data subscribe all.
+        /// </summary>
+        public void RequestMarketDataSubscribeAll()
+        {
+            this.FixMessageRouter.MarketDataRequestSubscribeAll();
+        }
     }
 }

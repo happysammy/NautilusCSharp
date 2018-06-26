@@ -13,7 +13,6 @@ namespace Nautilus.Database
     using System.Linq;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Grpc.Core;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -31,7 +30,6 @@ namespace Nautilus.Database
         private readonly ActorSystem actorSystem;
         private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
         private readonly IDataClient dataClient;
-        private readonly Server subscriptionServer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -41,15 +39,13 @@ namespace Nautilus.Database
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="dataClient">The data client.</param>
-        /// <param name="subscriptionServer">The subscription server.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            IDataClient dataClient,
-            Server subscriptionServer)
+            IDataClient dataClient)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -60,12 +56,10 @@ namespace Nautilus.Database
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(addresses, nameof(addresses));
-            Validate.NotNull(subscriptionServer, nameof(subscriptionServer));
 
             this.actorSystem = actorSystem;
             this.addresses = addresses;
             this.dataClient = dataClient;
-            this.subscriptionServer = subscriptionServer;
 
             messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
@@ -78,9 +72,6 @@ namespace Nautilus.Database
         /// </summary>
         public void Start()
         {
-            Log.Information($"Starting protobuf rpc data subscription server...");
-            this.subscriptionServer.Start();
-            Log.Information($"Data subscription server listening on ports {this.subscriptionServer.Ports}");
             this.dataClient.Connect();
 
             this.Send(
@@ -95,8 +86,6 @@ namespace Nautilus.Database
         /// </summary>
         public void Shutdown()
         {
-            this.Log.Information($"Data subscription server shutting down...");
-            this.subscriptionServer.ShutdownAsync().Wait();
             this.dataClient.Disconnect();
 
             // Placeholder for the log events (do not refactor away).

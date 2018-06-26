@@ -11,8 +11,6 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Grpc.Core;
-    using Nautilus.BlackBox.Brokerage;
     using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
@@ -24,11 +22,8 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Enums;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
-    using Nautilus.Database.Protobuf;
     using Nautilus.Database.Publishers;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
-    using ServiceStack.Validation;
 
     /// <summary>
     /// The builder for the NautilusDB database infrastructure.
@@ -113,24 +108,12 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 tickDataProcessor);
 
-            var subscriptionImpl = new DataSubscriptionServer(
-                clock,
-                guidFactory,
-                dataCollectionActorRef);
-
-            var subscriptionServer = new Server
-            {
-                Services = {DataServer.BindService(subscriptionImpl)},
-                Ports = {new ServerPort("localhost", 500051, ServerCredentials.Insecure)}
-            };
-
             return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
                 addresses,
-                fixClient,
-                subscriptionServer);
+                fixClient);
         }
     }
 }
