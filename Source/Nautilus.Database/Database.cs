@@ -78,17 +78,16 @@ namespace Nautilus.Database
         /// </summary>
         public void Start()
         {
+            Log.Information($"Starting protobuf rpc data subscription server...");
+            this.subscriptionServer.Start();
+            Log.Information($"Data subscription server listening on ports {this.subscriptionServer.Ports}");
+            this.dataClient.Connect();
+
             this.Send(
                 DatabaseService.CollectionManager,
                 new StartSystem(
                     Guid.NewGuid(),
                     this.TimeNow()));
-
-            this.dataClient.Connect();
-
-            Log.Information($"Starting protobuf rpc data subscription server...");
-            this.subscriptionServer.Start();
-            Log.Information($"Data subscription server listening on ports {this.subscriptionServer.Ports}");
         }
 
         /// <summary>

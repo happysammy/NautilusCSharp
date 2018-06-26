@@ -20,24 +20,24 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns>The FIX data client.</returns>
         IDataClient DataClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITickDataProcessor tickDataProcessor);
+            ITickProcessor tickProcessor);
 
         /// <summary>
         /// Creates and returns a new <see cref="IBrokerageGateway"/> from the given inputs.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns>The FIX trading client.</returns>
         ITradeClient TradeClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITickDataProcessor tickDataProcessor);
+            ITickProcessor tickProcessor);
 
         /// <summary>
         /// Returns the tick value index for the client.

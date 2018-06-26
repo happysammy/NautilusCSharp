@@ -25,6 +25,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
     using Nautilus.Database.Protobuf;
+    using Nautilus.Database.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
     using ServiceStack.Validation;
@@ -86,11 +87,15 @@ namespace Nautilus.Database.Build
                     setupContainer,
                     messagingAdapter)));
 
-            var quoteProvider = new QuoteProvider(Exchange.FXCM);  // TODO: Hardcoded quote provider.
+            var tickPublisherRef = actorSystem.ActorOf(Props.Create(
+                () => new TickPublisher(setupContainer)));
 
-            var tickDataProcessor = new TickDataProcessor(
+            var barPublisherRef = actorSystem.ActorOf(Props.Create(
+                () => new BarPublisher(setupContainer)));
+
+            var tickDataProcessor = new TickProcessor(
                 setupContainer,
-                quoteProvider,
+                tickPublisherRef,
                 barAggregationControllerRef);
 
             var addresses = new Dictionary<Enum, IActorRef>
@@ -98,6 +103,9 @@ namespace Nautilus.Database.Build
                 { DatabaseService.Scheduler, schedulerRef },
                 { DatabaseService.TaskManager, databaseTaskActorRef },
                 { DatabaseService.CollectionManager, dataCollectionActorRef },
+                { DatabaseService.BarAggregationController, barAggregationControllerRef},
+                { DatabaseService.TickPublisher, tickPublisherRef},
+                { DatabaseService.BarPublisher, barPublisherRef}
             };
 
             var fixClient = fixClientFactory.DataClient(

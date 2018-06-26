@@ -22,8 +22,8 @@ namespace Nautilus.Database.Aggregators
     public sealed class SpreadAnalyzer
     {
         private readonly IList<decimal> thisBarsSpreads = new List<decimal>();
-        private readonly IDictionary<ZonedDateTime, decimal> negativeSpreads = new Dictionary<ZonedDateTime, decimal>();
-        private readonly IDictionary<ZonedDateTime, decimal> totalAverageSpreads = new Dictionary<ZonedDateTime, decimal>();
+        private readonly IList<(ZonedDateTime, decimal)> negativeSpreads = new List<(ZonedDateTime, decimal)>();
+        private readonly IList<(ZonedDateTime, decimal)> totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpreadAnalyzer"/> class.
@@ -35,8 +35,8 @@ namespace Nautilus.Database.Aggregators
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             this.AverageSpread = tickSize;
-            this.MaxSpread = (default(ZonedDateTime), decimal.MinValue);
-            this.MinSpread = (default(ZonedDateTime), decimal.MaxValue);
+            this.MaxSpread = (default, decimal.MinValue);
+            this.MinSpread = (default, decimal.MaxValue);
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace Nautilus.Database.Aggregators
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyDictionary<ZonedDateTime, decimal> NegativeSpreads => this.negativeSpreads.ToImmutableDictionary();
+        public IReadOnlyList<(ZonedDateTime, decimal)> NegativeSpreads => this.negativeSpreads.ToImmutableList();
 
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyDictionary<ZonedDateTime, decimal> TotalAverageSpreads => this.totalAverageSpreads.ToImmutableDictionary();
+        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.totalAverageSpreads.ToImmutableList();
 
         /// <summary>
         /// Updates the spread analyzer with the given tick.
@@ -95,7 +95,7 @@ namespace Nautilus.Database.Aggregators
 
             if (spread < decimal.Zero)
             {
-                this.negativeSpreads.Add(tick.Timestamp, spread);
+                this.negativeSpreads.Add((tick.Timestamp, spread));
             }
 
             if (spread > this.MaxSpread.Spread)
@@ -123,7 +123,7 @@ namespace Nautilus.Database.Aggregators
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.AverageSpread = this.CalculateAverageSpread();
-            this.totalAverageSpreads.Add(timestamp, this.AverageSpread);
+            this.totalAverageSpreads.Add((timestamp, this.AverageSpread));
             this.thisBarsSpreads.Clear();
         }
 

@@ -8,18 +8,54 @@
 
 namespace Nautilus.Database.Publishers
 {
-    using Nautilus.Database.Interfaces;
-    using Nautilus.DomainModel.Events;
+    using System.Collections.Generic;
+    using Grpc.Core;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
+    using Nautilus.Core.Validation;
+    using Nautilus.Database.Messages.Events;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Providers a protobuf implementation for the <see cref="Bar"/> publisher.
+    /// Providers a generic publisher for <see cref="Bar"/> data.
     /// </summary>
-    public class BarPublisher : IBarPublisher
+    public class BarPublisher : ActorComponentBase
     {
-        public void Publish(BarDataEvent barEvent)
+        private readonly Dictionary<BarType, Channel> subscribers;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="container"></param>
+        public BarPublisher(IComponentryContainer container)
+            : base(
+                ServiceContext.Database,
+                LabelFactory.Component(nameof(BarPublisher)),
+                container)
         {
-            throw new System.NotImplementedException();
+            Validate.NotNull(container, nameof(container));
+
+            this.Receive<BarClosed>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(Subscribe<Symbol> message)
+        {
+
+        }
+
+        private void OnMessage(Unsubscribe<Symbol> message)
+        {
+
+        }
+
+        private void OnMessage(BarClosed message)
+        {
+            var barType = message.BarType;
+
+            var client = this.subscribers[barType].ConnectAsync();
         }
     }
 }

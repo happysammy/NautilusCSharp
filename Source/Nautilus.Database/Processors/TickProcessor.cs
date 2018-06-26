@@ -23,30 +23,30 @@ namespace Nautilus.Database.Processors
     /// Provides an entry point for ticks into the <see cref="Nautilus.Database"/> system. The given
     /// tick size index must contain all symbols which the processor can expect to receive ticks for.
     /// </summary>
-    public sealed class TickDataProcessor : ComponentBase, ITickDataProcessor
+    public sealed class TickProcessor : ComponentBase, ITickProcessor
     {
-        private readonly IQuoteProvider quoteProvider;
+        private readonly IActorRef tickPublisher;
         private readonly IActorRef barAggregationControllerRef;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TickDataProcessor"/> class.
+        /// Initializes a new instance of the <see cref="TickProcessor"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="quoteProvider">The quote provider.</param>
+        /// <param name="tickPublisher">The tick publisher.</param>
         /// <param name="barAggregationControllerRef">The bar aggregator controller actor address.</param>
-        public TickDataProcessor(
+        public TickProcessor(
             IComponentryContainer container,
-            IQuoteProvider quoteProvider,
+            IActorRef tickPublisher,
             IActorRef barAggregationControllerRef) : base(
             ServiceContext.Database,
-            LabelFactory.Component(nameof(TickDataProcessor)),
+            LabelFactory.Component(nameof(TickProcessor)),
             container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(quoteProvider, nameof(quoteProvider));
+            Validate.NotNull(tickPublisher, nameof(tickPublisher));
             Validate.NotNull(barAggregationControllerRef, nameof(barAggregationControllerRef));
 
-            this.quoteProvider = quoteProvider;
+            this.tickPublisher = tickPublisher;
             this.barAggregationControllerRef = barAggregationControllerRef;
         }
 
@@ -74,17 +74,14 @@ namespace Nautilus.Database.Processors
                 Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.DecimalNotOutOfRange(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
-                var securitySymbol = new Symbol(symbol, exchange);
                 var tick = new Tick(
-                    securitySymbol,
+                    new Symbol(symbol, exchange),
                     Price.Create(bid, decimals),
                     Price.Create(ask, decimals),
                     timestamp);
 
-                this.quoteProvider.OnTick(tick);
+                this.tickPublisher.Tell(tick);
                 this.barAggregationControllerRef.Tell(tick);
-
-                this.Log.Debug($"Received tick {tick}");
             });
         }
     }

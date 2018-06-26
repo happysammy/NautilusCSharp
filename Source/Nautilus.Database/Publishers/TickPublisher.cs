@@ -8,13 +8,48 @@
 
 namespace Nautilus.Database.Publishers
 {
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages;
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Providers a protobuf implementation for the <see cref="Tick"/> publisher.
+    /// Providers a generic publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher
+    public sealed class TickPublisher : ActorComponentBase
     {
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TickPublisher"/> class.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
+        public TickPublisher(IComponentryContainer container)
+        : base(
+            ServiceContext.Database,
+            LabelFactory.Component(nameof(TickPublisher)),
+            container)
+        {
+            Validate.NotNull(container, nameof(container));
+
+            this.Receive<Tick>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(Subscribe<Symbol> message)
+        {
+
+        }
+
+        private void OnMessage(Unsubscribe<Symbol> message)
+        {
+
+        }
+
+        private void OnMessage(Tick message)
+        {
+
+        }
     }
 }

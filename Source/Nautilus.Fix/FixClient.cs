@@ -30,13 +30,13 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="broker">The account brokerage.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         public FixClient(
             IComponentryContainer container,
-            ITickDataProcessor tickDataProcessor,
+            ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
@@ -45,7 +45,7 @@ namespace Nautilus.Fix
             ServiceContext.FIX,
             LabelFactory.Service(ServiceContext.FIX),
             container,
-            tickDataProcessor,
+            tickProcessor,
             fixMessageHandler,
             fixMessageRouter,
             credentials)

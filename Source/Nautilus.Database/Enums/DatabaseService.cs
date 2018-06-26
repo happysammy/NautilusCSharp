@@ -32,5 +32,20 @@ namespace Nautilus.Database.Enums
         /// The collection manager database service.
         /// </summary>
         CollectionManager = 3,
+
+        /// <summary>
+        /// The bar aggregation controller database service.
+        /// </summary>
+        BarAggregationController = 4,
+
+        /// <summary>
+        /// The tick publisher database service.
+        /// </summary>
+        TickPublisher = 5,
+
+        /// <summary>
+        /// The bar publisher database service.
+        /// </summary>
+        BarPublisher = 6,
     }
 }

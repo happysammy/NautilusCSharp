@@ -34,26 +34,26 @@ namespace Nautilus.Brokerage.FXCM
     public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
         private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
-        private readonly ITickDataProcessor tickDataProcessor;
+        private readonly ITickProcessor tickProcessor;
         private IBrokerageGateway brokerageGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
-            ITickDataProcessor tickDataProcessor)
+            ITickProcessor tickProcessor)
             : base(
                 ServiceContext.FIX,
                 LabelFactory.Component(nameof(FxcmFixMessageHandler)),
                 container)
         {
-            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
+            Validate.NotNull(tickProcessor, nameof(tickProcessor));
 
             this.tickSizeIndex = FxcmTickSizeProvider.GetIndex();
-            this.tickDataProcessor = tickDataProcessor;
+            this.tickProcessor = tickProcessor;
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Nautilus.Brokerage.FXCM
             var ask = group.GetField(Tags.MDEntryPx);
 
             // TODO: Hardcoded exchange.
-            this.tickDataProcessor.OnTick(
+            this.tickProcessor.OnTick(
                 symbol,
                 Exchange.FXCM,
                 Convert.ToDecimal(bid),

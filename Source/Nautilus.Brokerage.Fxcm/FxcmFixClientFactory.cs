@@ -47,21 +47,21 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns></returns>
         public IDataClient DataClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITickDataProcessor tickDataProcessor)
+            ITickProcessor tickProcessor)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
+            Validate.NotNull(tickProcessor, nameof(tickProcessor));
 
             return new FixClient(
                 container,
-                tickDataProcessor,
-                new FxcmFixMessageHandler(container, tickDataProcessor),
+                tickProcessor,
+                new FxcmFixMessageHandler(container, tickProcessor),
                 new FxcmFixMessageRouter(container),
                 this.credentials,
                 Broker.FXCM);
@@ -72,21 +72,21 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
-        /// <param name="tickDataProcessor">The tick data processor.</param>
+        /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns></returns>
         public ITradeClient TradeClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITickDataProcessor tickDataProcessor)
+            ITickProcessor tickProcessor)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
+            Validate.NotNull(tickProcessor, nameof(tickProcessor));
 
             return new FixClient(
                 container,
-                tickDataProcessor,
-                new FxcmFixMessageHandler(container, tickDataProcessor),
+                tickProcessor,
+                new FxcmFixMessageHandler(container, tickProcessor),
                 new FxcmFixMessageRouter(container),
                 this.credentials,
                 Broker.FXCM);

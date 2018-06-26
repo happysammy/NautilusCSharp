@@ -18,6 +18,7 @@ namespace Nautilus.Database
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -64,7 +65,16 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            // this.InitializeMarketDataCollectors();
+            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
+            var barSpec = new BarSpecification(QuoteType.Bid, Resolution.Second, 1);
+            var barType = new BarType(symbol, barSpec);
+
+            var subscribe = new Subscribe<BarType>(
+                barType,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.BarAggregationController, subscribe);
         }
 
         private void OnMessage(CollectData<BarType> message)

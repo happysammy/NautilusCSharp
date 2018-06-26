@@ -15,7 +15,7 @@ namespace Nautilus.Common.Interfaces
     /// <summary>
     /// Provides an interface to the tick data processor for the <see cref="Nautilus"/> system.
     /// </summary>
-    public interface ITickDataProcessor
+    public interface ITickProcessor
     {
         /// <summary>
         /// Creates a new validated <see cref="Tick"/> and sends it to the

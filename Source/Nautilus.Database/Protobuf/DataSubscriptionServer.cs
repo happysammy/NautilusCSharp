@@ -46,6 +46,7 @@ namespace Nautilus.Database.Protobuf
             this.guidFactory = guidFactory;
             this.dataCollectionManagerRef = dataCollectionManagerRef;
         }
+
         /// <summary>
         /// Subscribes the sender to the given bar data.
         /// </summary>
