@@ -12,6 +12,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="7.1.1" />
+    <PackageReference Include="Grpc" Version="1.12.0" />
+    <PackageReference Include="Grpc.Core" Version="1.12.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.12.0" />
     <PackageReference Include="ServiceStack" Version="5.1.0" />
     <PackageReference Include="ServiceStack.Text" Version="5.1.0" />
   </ItemGroup>

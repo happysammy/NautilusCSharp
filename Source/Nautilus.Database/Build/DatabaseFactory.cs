@@ -11,12 +11,14 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
+    using Grpc.Core;
     using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Enums;
@@ -103,10 +105,16 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 tickDataProcessor);
 
-            var subscriptionServer = new DataSubscriptionServer(
+            var subscriptionImpl = new DataSubscriptionServer(
                 clock,
                 guidFactory,
                 dataCollectionActorRef);
+
+            var subscriptionServer = new Server
+            {
+                Services = {DataServer.BindService(subscriptionImpl)},
+                Ports = {new ServerPort("localhost", 500051, ServerCredentials.Insecure)}
+            };
 
             return new Database(
                 setupContainer,

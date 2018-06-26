@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Nautilus.Common.Messages {
+namespace Nautilus.Database.Protobuf {
 
   /// <summary>Holder for reflection information generated from messages.proto</summary>
   public static partial class MessagesReflection {
@@ -65,25 +65,25 @@ namespace Nautilus.Common.Messages {
             "b3RvLkhlYXJ0QmVhdCIAEj8KCk9uVGlja0RhdGESFi5pbnZhcmlhbmNlX3By",
             "b3RvLlRpY2saFy5pbnZhcmlhbmNlX3Byb3RvLkVtcHR5IgASQQoJT25CYXJE",
             "YXRhEhkuaW52YXJpYW5jZV9wcm90by5CYXJEYXRhGhcuaW52YXJpYW5jZV9w",
-            "cm90by5FbXB0eSIAQhuqAhhOYXV0aWx1cy5Db21tb24uTWVzc2FnZXNiBnBy",
-            "b3RvMw=="));
+            "cm90by5FbXB0eSIAQh2qAhpOYXV0aWx1cy5EYXRhYmFzZS5Qcm90b2J1ZmIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Nautilus.Common.Messages.Resolution), typeof(global::Nautilus.Common.Messages.QuoteType), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Empty), global::Nautilus.Common.Messages.Empty.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.HeartBeat), global::Nautilus.Common.Messages.HeartBeat.Parser, new[]{ "From", "Timestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Tick), global::Nautilus.Common.Messages.Tick.Parser, new[]{ "Symbol", "Venue", "Bid", "Ask", "Timestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.Bar), global::Nautilus.Common.Messages.Bar.Parser, new[]{ "Open", "High", "Low", "Close", "Volume", "Timestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.BarSpecification), global::Nautilus.Common.Messages.BarSpecification.Parser, new[]{ "QuoteType", "Resolution", "Period" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.BarData), global::Nautilus.Common.Messages.BarData.Parser, new[]{ "Symbol", "Venue", "BarSpec", "Bar", "IsHistorical" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeTickData), global::Nautilus.Common.Messages.SubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeTickDataResponse), global::Nautilus.Common.Messages.SubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeTickData), global::Nautilus.Common.Messages.UnsubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeTickDataResponse), global::Nautilus.Common.Messages.UnsubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeBarData), global::Nautilus.Common.Messages.SubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.SubscribeBarDataResponse), global::Nautilus.Common.Messages.SubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeBarData), global::Nautilus.Common.Messages.UnsubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Common.Messages.UnsubscribeBarDataResponse), global::Nautilus.Common.Messages.UnsubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Nautilus.Database.Protobuf.Resolution), typeof(global::Nautilus.Database.Protobuf.QuoteType), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.Empty), global::Nautilus.Database.Protobuf.Empty.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.HeartBeat), global::Nautilus.Database.Protobuf.HeartBeat.Parser, new[]{ "From", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.Tick), global::Nautilus.Database.Protobuf.Tick.Parser, new[]{ "Symbol", "Venue", "Bid", "Ask", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.Bar), global::Nautilus.Database.Protobuf.Bar.Parser, new[]{ "Open", "High", "Low", "Close", "Volume", "Timestamp" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.BarSpecification), global::Nautilus.Database.Protobuf.BarSpecification.Parser, new[]{ "QuoteType", "Resolution", "Period" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.BarData), global::Nautilus.Database.Protobuf.BarData.Parser, new[]{ "Symbol", "Venue", "BarSpec", "Bar", "IsHistorical" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.SubscribeTickData), global::Nautilus.Database.Protobuf.SubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.SubscribeTickDataResponse), global::Nautilus.Database.Protobuf.SubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.UnsubscribeTickData), global::Nautilus.Database.Protobuf.UnsubscribeTickData.Parser, new[]{ "Symbol", "Venue" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.UnsubscribeTickDataResponse), global::Nautilus.Database.Protobuf.UnsubscribeTickDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.SubscribeBarData), global::Nautilus.Database.Protobuf.SubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.SubscribeBarDataResponse), global::Nautilus.Database.Protobuf.SubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.UnsubscribeBarData), global::Nautilus.Database.Protobuf.UnsubscribeBarData.Parser, new[]{ "Symbol", "Venue", "BarSpec" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Nautilus.Database.Protobuf.UnsubscribeBarDataResponse), global::Nautilus.Database.Protobuf.UnsubscribeBarDataResponse.Parser, new[]{ "Success" }, null, null, null)
           }));
     }
     #endregion
@@ -116,7 +116,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -217,7 +217,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -374,7 +374,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -615,7 +615,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -884,7 +884,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -914,9 +914,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "quoteType" field.</summary>
     public const int QuoteTypeFieldNumber = 1;
-    private global::Nautilus.Common.Messages.QuoteType quoteType_ = 0;
+    private global::Nautilus.Database.Protobuf.QuoteType quoteType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.QuoteType QuoteType {
+    public global::Nautilus.Database.Protobuf.QuoteType QuoteType {
       get { return quoteType_; }
       set {
         quoteType_ = value;
@@ -925,9 +925,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "resolution" field.</summary>
     public const int ResolutionFieldNumber = 2;
-    private global::Nautilus.Common.Messages.Resolution resolution_ = 0;
+    private global::Nautilus.Database.Protobuf.Resolution resolution_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.Resolution Resolution {
+    public global::Nautilus.Database.Protobuf.Resolution Resolution {
       get { return resolution_; }
       set {
         resolution_ = value;
@@ -1044,11 +1044,11 @@ namespace Nautilus.Common.Messages {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            quoteType_ = (global::Nautilus.Common.Messages.QuoteType) input.ReadEnum();
+            quoteType_ = (global::Nautilus.Database.Protobuf.QuoteType) input.ReadEnum();
             break;
           }
           case 16: {
-            resolution_ = (global::Nautilus.Common.Messages.Resolution) input.ReadEnum();
+            resolution_ = (global::Nautilus.Database.Protobuf.Resolution) input.ReadEnum();
             break;
           }
           case 24: {
@@ -1069,7 +1069,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1123,9 +1123,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
+    private global::Nautilus.Database.Protobuf.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
+    public global::Nautilus.Database.Protobuf.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -1134,9 +1134,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "bar" field.</summary>
     public const int BarFieldNumber = 4;
-    private global::Nautilus.Common.Messages.Bar bar_;
+    private global::Nautilus.Database.Protobuf.Bar bar_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.Bar Bar {
+    public global::Nautilus.Database.Protobuf.Bar Bar {
       get { return bar_; }
       set {
         bar_ = value;
@@ -1258,13 +1258,13 @@ namespace Nautilus.Common.Messages {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+          barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
       if (other.bar_ != null) {
         if (bar_ == null) {
-          bar_ = new global::Nautilus.Common.Messages.Bar();
+          bar_ = new global::Nautilus.Database.Protobuf.Bar();
         }
         Bar.MergeFrom(other.Bar);
       }
@@ -1292,14 +1292,14 @@ namespace Nautilus.Common.Messages {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+              barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
             }
             input.ReadMessage(barSpec_);
             break;
           }
           case 34: {
             if (bar_ == null) {
-              bar_ = new global::Nautilus.Common.Messages.Bar();
+              bar_ = new global::Nautilus.Database.Protobuf.Bar();
             }
             input.ReadMessage(bar_);
             break;
@@ -1322,7 +1322,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1479,7 +1479,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1608,7 +1608,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1765,7 +1765,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1894,7 +1894,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1946,9 +1946,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
+    private global::Nautilus.Database.Protobuf.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
+    public global::Nautilus.Database.Protobuf.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -2041,7 +2041,7 @@ namespace Nautilus.Common.Messages {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+          barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
@@ -2066,7 +2066,7 @@ namespace Nautilus.Common.Messages {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+              barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
             }
             input.ReadMessage(barSpec_);
             break;
@@ -2085,7 +2085,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2214,7 +2214,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2266,9 +2266,9 @@ namespace Nautilus.Common.Messages {
 
     /// <summary>Field number for the "barSpec" field.</summary>
     public const int BarSpecFieldNumber = 3;
-    private global::Nautilus.Common.Messages.BarSpecification barSpec_;
+    private global::Nautilus.Database.Protobuf.BarSpecification barSpec_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Nautilus.Common.Messages.BarSpecification BarSpec {
+    public global::Nautilus.Database.Protobuf.BarSpecification BarSpec {
       get { return barSpec_; }
       set {
         barSpec_ = value;
@@ -2361,7 +2361,7 @@ namespace Nautilus.Common.Messages {
       }
       if (other.barSpec_ != null) {
         if (barSpec_ == null) {
-          barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+          barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
         }
         BarSpec.MergeFrom(other.BarSpec);
       }
@@ -2386,7 +2386,7 @@ namespace Nautilus.Common.Messages {
           }
           case 26: {
             if (barSpec_ == null) {
-              barSpec_ = new global::Nautilus.Common.Messages.BarSpecification();
+              barSpec_ = new global::Nautilus.Database.Protobuf.BarSpecification();
             }
             input.ReadMessage(barSpec_);
             break;
@@ -2405,7 +2405,7 @@ namespace Nautilus.Common.Messages {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Nautilus.Common.Messages.MessagesReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Nautilus.Database.Protobuf.MessagesReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

@@ -8,7 +8,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Nautilus.Common.Messages";
+option csharp_namespace = "Nautilus.Database.Protobuf";
 
 package invariance_proto;
 

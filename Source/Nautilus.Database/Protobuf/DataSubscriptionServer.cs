@@ -18,10 +18,6 @@ namespace Nautilus.Database.Protobuf
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
-    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
-    using Resolution = Nautilus.DomainModel.Enums.Resolution;
-
     /// <summary>
     /// Provides a protobuffer endpoint for subscribing to and unsubscribing from market data.
     /// </summary>
@@ -114,9 +110,9 @@ namespace Nautilus.Database.Protobuf
             Validate.NotNull(context, nameof(context));
 
             var symbol = new Symbol(request.Symbol, request.Venue.ToEnum<Exchange>());
-            var barSpec = new BarSpecification(
-                (QuoteType)request.BarSpec.QuoteType,
-                (Resolution)request.BarSpec.Resolution,
+            var barSpec = new DomainModel.ValueObjects.BarSpecification(
+                (DomainModel.Enums.QuoteType)request.BarSpec.QuoteType,
+                (DomainModel.Enums.Resolution)request.BarSpec.Resolution,
                 request.BarSpec.Period);
             var barType = new BarType(symbol, barSpec);
 
@@ -144,9 +140,9 @@ namespace Nautilus.Database.Protobuf
             Validate.NotNull(context, nameof(context));
 
             var symbol = new Symbol(request.Symbol, request.Venue.ToEnum<Exchange>());
-            var barSpec = new BarSpecification(
-                (QuoteType)request.BarSpec.QuoteType,
-                (Resolution)request.BarSpec.Resolution,
+            var barSpec = new DomainModel.ValueObjects.BarSpecification(
+                (DomainModel.Enums.QuoteType)request.BarSpec.QuoteType,
+                (DomainModel.Enums.Resolution)request.BarSpec.Resolution,
                 request.BarSpec.Period);
             var barType = new BarType(symbol, barSpec);
 

@@ -13,6 +13,7 @@ namespace Nautilus.Database
     using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
+    using Grpc.Core;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -20,7 +21,6 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Enums;
-    using Nautilus.Database.Protobuf;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Nautilus.Database
         private readonly ActorSystem actorSystem;
         private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
         private readonly IDataClient dataClient;
-        private readonly DataSubscriptionServer subscriptionServer;
+        private readonly Server subscriptionServer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -49,7 +49,7 @@ namespace Nautilus.Database
             MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
             IDataClient dataClient,
-            DataSubscriptionServer subscriptionServer)
+            Server subscriptionServer)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -89,6 +89,10 @@ namespace Nautilus.Database
             Thread.Sleep(1000);
 
             this.dataClient.InitializeSession();
+
+            Log.Information($"Starting protobuf rpc data subscription server...");
+            this.subscriptionServer.Start();
+            Log.Information($"Data subscription server listening on ports {this.subscriptionServer.Ports}");
         }
 
         /// <summary>
