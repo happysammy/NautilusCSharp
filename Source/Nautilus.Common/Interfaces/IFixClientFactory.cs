@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides various clients for the system from the given inputs.
@@ -38,6 +39,18 @@ namespace Nautilus.Common.Interfaces
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickProcessor tickProcessor);
+
+        /// <summary>
+        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        IReadOnlyList<string> GetAllBrokerSymbols();
+
+        /// <summary>
+        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
+        /// </summary>
+        /// <returns>The list of symbols.</returns>
+        IReadOnlyList<Symbol> GetAllSymbols();
 
         /// <summary>
         /// Returns the tick value index for the client.

@@ -19,7 +19,6 @@ namespace Nautilus.Database
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Types;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -58,6 +57,7 @@ namespace Nautilus.Database
 
             // Command messages
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
 
             // Document messages
@@ -71,23 +71,21 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
-            var barSpec = new BarSpecification(QuoteType.Bid, Resolution.Second, 1);
-            var barType = new BarType(symbol, barSpec);
+            // Do nothing.
+        }
 
-            var subscribe = new Subscribe<BarType>(
-                barType,
-                this.NewGuid(),
-                this.TimeNow());
+        private void OnMessage(Subscribe<BarType> message)
+        {
+            Debug.NotNull(message, nameof(message));
 
-            this.Send(DatabaseService.BarAggregationController, subscribe);
+            this.Send(DatabaseService.BarAggregationController, message);
         }
 
         private void OnMessage(CollectData<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            // do nothing.
+            // Do nothing.
         }
 
         private void OnMessage(DataDelivery<BarClosed> message)

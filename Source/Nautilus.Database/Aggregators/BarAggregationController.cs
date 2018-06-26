@@ -44,7 +44,7 @@ namespace Nautilus.Database.Aggregators
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
-        private readonly IDictionary<Duration, KeyValuePair<JobKey, TriggerKey>> barJobs;
+        private readonly IDictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
         private readonly IDictionary<Duration, ITrigger> triggers;
         private readonly IDictionary<Duration, int> triggerCounts;
 
@@ -68,7 +68,7 @@ namespace Nautilus.Database.Aggregators
 
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
-            this.barJobs = new Dictionary<Duration, KeyValuePair<JobKey, TriggerKey>>();
+            this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
             this.triggers = new Dictionary<Duration, ITrigger>();
             this.triggerCounts = new Dictionary<Duration, int>();
 
@@ -128,20 +128,20 @@ namespace Nautilus.Database.Aggregators
             {
                 var trigger = this.CreateTrigger(barSpec);
                 this.triggers.Add(duration, trigger);
+            }
 
-                if (!this.barJobs.ContainsKey(duration))
-                {
-                    var barJob = new BarJob(message.DataType);
+            if (!this.barJobs.ContainsKey(barSpec))
+            {
+                var barJob = new BarJob(barSpec);
 
-                    var createJob = new CreateJob(
-                        this.Self,
-                        barJob,
-                        this.triggers[duration],
-                        this.NewGuid(),
-                        this.TimeNow());
+                var createJob = new CreateJob(
+                    this.Self,
+                    barJob,
+                    this.triggers[duration],
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                    this.Send(DatabaseService.Scheduler, createJob);
-                }
+                this.Send(DatabaseService.Scheduler, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -165,7 +165,7 @@ namespace Nautilus.Database.Aggregators
             Debug.NotNull(message, nameof(message));
 
             var symbol = message.DataType.Symbol;
-            var barType = message.DataType.Specification;
+            var barSpec = message.DataType.Specification;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -174,19 +174,19 @@ namespace Nautilus.Database.Aggregators
 
             this.barAggregators[symbol].Tell(message);
 
-            if (!this.triggerCounts.ContainsKey(barType.Duration))
+            if (!this.triggerCounts.ContainsKey(barSpec.Duration))
             {
                 return;
             }
 
-            this.triggerCounts[barType.Duration]--;
+            this.triggerCounts[barSpec.Duration]--;
 
-            this.Log.Debug($"Subtracting trigger count for {barType.Period}-{barType.Resolution} " +
-                           $"duration (count={this.triggerCounts[barType.Duration]}).");
+            this.Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+                           $"duration (count={this.triggerCounts[barSpec.Duration]}).");
 
-            if (this.triggerCounts[barType.Duration] <= 0)
+            if (this.triggerCounts[barSpec.Duration] <= 0)
             {
-                var job = this.barJobs[barType.Duration];
+                var job = this.barJobs[barSpec];
                 var removeJob = new RemoveJob(
                     job.Key,
                     job.Value,
@@ -207,12 +207,11 @@ namespace Nautilus.Database.Aggregators
 
             if (job != null)
             {
-                var barType = job.BarType.Specification;
-                var duration = barType.Duration;
+                var barSpec = job.BarSpec;
 
-                if (!this.barJobs.ContainsKey(duration))
+                if (!this.barJobs.ContainsKey(barSpec))
                 {
-                    this.barJobs.Add(duration, new KeyValuePair<JobKey, TriggerKey>(
+                    this.barJobs.Add(barSpec, new KeyValuePair<JobKey, TriggerKey>(
                         message.JobKey,
                         message.TriggerKey));
                 }
@@ -258,17 +257,16 @@ namespace Nautilus.Database.Aggregators
         private void OnMessage(BarJob job)
         {
             Debug.NotNull(job, nameof(job));
-            Debug.DictionaryContainsKey(job.BarType.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
 
-            if (this.barAggregators.ContainsKey(job.BarType.Symbol))
+            foreach (var aggregator in this.barAggregators)
             {
                 var closeBar = new CloseBar(
-                    job.BarType.Specification,
-                    this.TimeNow().Floor(job.BarType.Specification.Duration),
+                    job.BarSpec,
+                    this.TimeNow().Floor(job.BarSpec.Duration),
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.barAggregators[job.BarType.Symbol].Tell(closeBar);
+                aggregator.Value.Tell(closeBar);
 
                 // Log for unit testing only.
                 // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");

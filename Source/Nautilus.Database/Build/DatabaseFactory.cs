@@ -109,12 +109,15 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 tickDataProcessor);
 
+            var symbols = fixClientFactory.GetAllSymbols();
+
             return new Database(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
                 addresses,
-                fixClient);
+                fixClient,
+                symbols);
         }
     }
 }

@@ -21,6 +21,13 @@ namespace Nautilus.Database.Messages.Commands
     [Immutable]
     public sealed class CloseBar : CommandMessage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CloseBar"/> class.
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
+        /// <param name="closeTime">The close time.</param>
+        /// <param name="id">The close identifier.</param>
+        /// <param name="timestamp">The close timestamp.</param>
         public CloseBar(
             BarSpecification barType,
             ZonedDateTime closeTime,

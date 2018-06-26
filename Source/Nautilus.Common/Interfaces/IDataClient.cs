@@ -22,12 +22,6 @@ namespace Nautilus.Common.Interfaces
         Broker Broker { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the FIX session is connected.
-        /// </summary>
-        /// <returns>A <see cref="bool"/>.</returns>
-        bool IsConnected { get; }
-
-        /// <summary>
         /// Connects to the FIX session.
         /// </summary>
         void Connect();
@@ -36,6 +30,12 @@ namespace Nautilus.Common.Interfaces
         /// Disconnects from the FIX session.
         /// </summary>
         void Disconnect();
+
+        /// <summary>
+        /// Returns a value indicating whether the FIX session is connected.
+        /// </summary>
+        /// <returns>A <see cref="bool"/>.</returns>
+        bool IsConnected { get; }
 
         /// <summary>
         /// Subscribes to market data for the given symbol.

@@ -17,7 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -76,7 +75,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             this.controllerRef.Tell(subscribe1);
             this.controllerRef.Tell(subscribe2);
 
-            //LogDumper.Dump(this.logger, this.output);
+            // LogDumper.Dump(this.logger, this.output);
             // Assert
         }
 
@@ -118,7 +117,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             this.controllerRef.Tell(subscribe3);
             this.controllerRef.Tell(subscribe4);
 
-            //LogDumper.Dump(this.logger, this.output);
+            // LogDumper.Dump(this.logger, this.output);
             // Assert
         }
 
@@ -151,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             Thread.Sleep(2000);
             this.controllerRef.Tell(unsubscribe);
 
-            //LogDumper.Dump(this.logger, this.output);
+            // LogDumper.Dump(this.logger, this.output);
             // Assert
         }
 
@@ -200,7 +199,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             Thread.Sleep(5000);
             this.controllerRef.Tell(unsubscribe);
 
-            //LogDumper.Dump(this.logger, this.output);
+            // LogDumper.Dump(this.logger, this.output);
             // Assert
         }
     }

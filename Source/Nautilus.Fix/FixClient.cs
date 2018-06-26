@@ -9,6 +9,7 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;

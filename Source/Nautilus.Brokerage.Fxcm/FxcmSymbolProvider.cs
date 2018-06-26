@@ -13,6 +13,8 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Maps a given symbol string to the brokers symbol.
@@ -33,7 +35,7 @@ namespace Nautilus.Brokerage.FXCM
             { "CAD/JPY",  "CADJPY" },
             { "CHF/JPY",  "CHFJPY" },
             { "Copper",   "XCUUSD" },
-            { "CHN50",    "CHN50" },
+            //{ "CHN50",    "CHN50" },
             { "ESP35",    "ESP35" },
             { "EUR/AUD",  "EURAUD" },
             { "EUR/CAD",  "EURCAD" },
@@ -62,9 +64,8 @@ namespace Nautilus.Brokerage.FXCM
             { "NZD/CHF",  "NZDCHF" },
             { "NZD/JPY",  "NZDJPY" },
             { "NZD/USD",  "NZDUSD" },
-            { "NAS100",   "NAS100" },
             { "SPX500",   "SPX500" },
-            { "SOYF",     "SOYF" },
+            //{ "SOYF",     "SOYF" },
             { "TRY/JPY",  "TRYJPY" },
             { "UK100",    "UK100" },
             { "UKOil",    "BCOUSD" },
@@ -114,6 +115,22 @@ namespace Nautilus.Brokerage.FXCM
             return Symbols.ContainsValue(nautilusSymbol)
                  ? QueryResult<string>.Ok(Symbols.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
                  : QueryResult<string>.Fail($"Cannot find the broker symbol from the given Nautilus symbol {nautilusSymbol}");
+        }
+
+        /// <summary>
+        /// Returns a read only list of all broker symbols.
+        /// </summary>
+        /// <returns>The list of broker symbols.</returns>
+        public static IReadOnlyList<Symbol> GetAllSymbols()
+        {
+            var symbols = new List<Symbol>();
+
+            foreach (var symbol in Symbols.Values)
+            {
+                symbols.Add(new Symbol(symbol, Exchange.FXCM));
+            }
+
+            return symbols;
         }
 
         /// <summary>
