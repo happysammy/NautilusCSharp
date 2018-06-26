@@ -62,7 +62,7 @@ namespace Nautilus.Brokerage.FXCM
                 container,
                 tickDataProcessor,
                 new FxcmFixMessageHandler(tickDataProcessor),
-                new FxcmFixMessageRouter(),
+                new FxcmFixMessageRouter(container.Clock),
                 this.credentials,
                 Broker.FXCM);
         }
@@ -87,7 +87,7 @@ namespace Nautilus.Brokerage.FXCM
                 container,
                 tickDataProcessor,
                 new FxcmFixMessageHandler(tickDataProcessor),
-                new FxcmFixMessageRouter(),
+                new FxcmFixMessageRouter(container.Clock),
                 this.credentials,
                 Broker.FXCM);
         }

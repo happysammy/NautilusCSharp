@@ -87,6 +87,8 @@ namespace Nautilus.Database.Processors
 
                 this.quoteProvider.OnTick(tick);
                 this.barAggregationControllerRef.Tell(tick);
+
+                this.Log.Verbose($"Received tick {tick}");
             });
         }
     }

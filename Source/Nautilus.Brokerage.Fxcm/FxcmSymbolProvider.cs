@@ -118,5 +118,14 @@ namespace Nautilus.Brokerage.FXCM
                  ? QueryResult<string>.Ok(Symbols.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
                  : QueryResult<string>.Fail($"Cannot find the broker symbol from the given Nautilus symbol {nautilusSymbol}");
         }
+
+        /// <summary>
+        /// Returns a read only list of all broker symbols.
+        /// </summary>
+        /// <returns>The list of broker symbols.</returns>
+        public static IReadOnlyList<string> GetAllBrokerSymbols()
+        {
+            return Symbols.Keys.ToList().AsReadOnly();
+        }
     }
 }

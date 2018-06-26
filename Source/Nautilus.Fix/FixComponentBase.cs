@@ -9,6 +9,7 @@
 namespace Nautilus.Fix
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -125,7 +126,7 @@ namespace Nautilus.Fix
         public bool IsFixConnected => this.session.IsLoggedOn;
 
         /// <summary>
-        /// The connect.
+        /// Connects to the FIX session.
         /// </summary>
         public void ConnectFix()
         {
@@ -144,7 +145,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The disconnect.
+        /// Disconnects from the FIX session.
         /// </summary>
         public void DisconnectFix()
         {
@@ -191,7 +192,14 @@ namespace Nautilus.Fix
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
+                Task.Delay(1000); // Allow logon of other session.
+
                 this.Log.Information($"Logon - {sessionId}");
+                this.FxcmFixMessageRouter.CollateralInquiry();
+                this.FxcmFixMessageRouter.TradingSessionStatus();
+                this.FxcmFixMessageRouter.RequestAllPositions();
+                this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
+                //this.FxcmFixMessageRouter.MarketDataRequestSubscribeAll();
             });
         }
 
@@ -254,7 +262,14 @@ namespace Nautilus.Fix
                 Validate.NotNull(message, nameof(message));
                 Validate.NotNull(sessionId, nameof(sessionId));
 
-                this.Crack(message, sessionId);
+                try
+                {
+                    this.Crack(message, sessionId);
+                }
+                catch(UnsupportedMessageType ex)
+                {
+                    this.Log.Warning($"Received unsupported message type {ex}");
+                }
             });
         }
 
@@ -274,7 +289,7 @@ namespace Nautilus.Fix
 
                 if (message.Header.IsSetField(Tags.PossDupFlag))
                 {
-                    possDupFlag = QuickFix.Fields.Converters.BoolConverter.Convert(message.Header.GetField(Tags.PossDupFlag)); // TODO (FIXME)??
+                    possDupFlag = QuickFix.Fields.Converters.BoolConverter.Convert(message.Header.GetField(Tags.PossDupFlag));
                 }
 
                 if (possDupFlag)
@@ -289,7 +304,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(BusinessMessageReject message, SessionID sessionId)
+        public void OnMessage(BusinessMessageReject message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnBusinessMessageReject(message);
         }
@@ -299,7 +314,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(TradingSessionStatus message, SessionID sessionId)
+        public void OnMessage(TradingSessionStatus message, SessionID sessionId)
         {
             // TODO
         }
@@ -309,7 +324,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(SecurityList message, SessionID sessionId)
+        public void OnMessage(SecurityList message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnSecurityList(message);
         }
@@ -319,7 +334,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(CollateralInquiryAck message, SessionID sessionId)
+        public void OnMessage(CollateralInquiryAck message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnCollateralInquiryAck(message);
         }
@@ -329,7 +344,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(CollateralReport message, SessionID sessionId)
+        public void OnMessage(CollateralReport message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnCollateralReport(message);
         }
@@ -339,7 +354,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(RequestForPositionsAck message, SessionID sessionId)
+        public void OnMessage(RequestForPositionsAck message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnRequestForPositionsAck(message);
         }
@@ -349,7 +364,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(MarketDataSnapshotFullRefresh message, SessionID sessionId)
+        public void OnMessage(MarketDataSnapshotFullRefresh message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
         }
@@ -359,7 +374,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(OrderCancelReject message, SessionID sessionId)
+        public void OnMessage(OrderCancelReject message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnOrderCancelReject(message);
         }
@@ -369,7 +384,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(ExecutionReport message, SessionID sessionId)
+        public void OnMessage(ExecutionReport message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnExecutionReport(message);
         }
@@ -379,7 +394,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
-        protected void OnMessage(PositionReport message, SessionID sessionId)
+        public void OnMessage(PositionReport message, SessionID sessionId)
         {
             this.FxcmFixMessageHandler.OnPositionReport(message);
         }

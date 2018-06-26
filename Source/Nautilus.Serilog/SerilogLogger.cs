@@ -9,7 +9,7 @@
 namespace Nautilus.Serilog
 {
     using System;
-    using Nautilus.Common.Enums;
+    using System.Reflection;
     using Nautilus.Common.Interfaces;
     using global::Serilog;
 
@@ -25,11 +25,13 @@ namespace Nautilus.Serilog
         {
             SerilogLogFactory.Create();
 
-            this.Information(ServiceContext.Serilog, $"(version 2.6)"); //TODO://{Assembly.LoadFrom("Serilog.dll").GetName().Version})");
+            this.AssemblyVersion = $"Serilog v{Assembly.GetAssembly(typeof(Log)).GetName().Version}";
         }
 
-        public string AssemblyVersion =>
-            $"Serilog (version )";//{Assembly.LoadFrom("Serilog.dll").GetName().Version})";
+        /// <summary>
+        /// Returns the logging adapters assembly library and version.
+        /// </summary>
+        public string AssemblyVersion { get; }
 
         /// <summary>
         /// The verbose.

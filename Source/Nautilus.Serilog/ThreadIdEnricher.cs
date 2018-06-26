@@ -13,19 +13,15 @@ namespace Nautilus.Serilog
     using global::Serilog.Events;
 
     /// <summary>
-    /// The thread id enricher.
+    /// The Serilog thread identifier enricher.
     /// </summary>
     public class ThreadIdEnricher : ILogEventEnricher
     {
         /// <summary>
-        /// The enrich.
+        /// Enriches log events with the thread identifier.
         /// </summary>
-        /// <param name="logEvent">
-        /// The log event.
-        /// </param>
-        /// <param name="propertyFactory">
-        /// The property factory.
-        /// </param>
+        /// <param name="logEvent">The log event.</param>
+        /// <param name="propertyFactory">The property factory.</param>
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(

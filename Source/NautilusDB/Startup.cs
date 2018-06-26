@@ -30,8 +30,10 @@ namespace NautilusDB
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
+        // ReSharper disable once InconsistentNaming
         private Database nautilusDB;
 
         /// <summary>
@@ -56,11 +58,13 @@ namespace NautilusDB
         /// <summary>
         /// Gets the ASP.NET Core configuration.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the ASP.NEt Core hosting environment.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public IHostingEnvironment Environment { get; }
 
         /// <summary>

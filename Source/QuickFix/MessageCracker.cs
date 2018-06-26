@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using QuickFix.Fields;
 using System.Reflection;
 using System.Linq.Expressions;
 
@@ -86,7 +83,7 @@ namespace QuickFix
 
             Action<Message, SessionID> onMessage = null;
 
-            if (_callCache.TryGetValue(messageType, out onMessage))
+            if (this._callCache.TryGetValue(messageType, out onMessage))
             {
                 onMessage(message, sessionID);
             }

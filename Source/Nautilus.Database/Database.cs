@@ -11,7 +11,6 @@ namespace Nautilus.Database
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
     using Grpc.Core;
@@ -86,10 +85,6 @@ namespace Nautilus.Database
                     this.TimeNow()));
 
             this.dataClient.Connect();
-
-            Thread.Sleep(5000);
-
-            this.dataClient.InitializeSession();
 
             Log.Information($"Starting protobuf rpc data subscription server...");
             this.subscriptionServer.Start();

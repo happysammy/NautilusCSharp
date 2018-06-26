@@ -11,12 +11,12 @@ namespace Nautilus.Serilog
     using global::Serilog;
 
     /// <summary>
-    /// The log factory.
+    /// Provides <see cref="Serilog"/> loggers.
     /// </summary>
     public static class SerilogLogFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates a new global static <see cref="Serilog"/> logger.
         /// </summary>
         public static void Create()
         {

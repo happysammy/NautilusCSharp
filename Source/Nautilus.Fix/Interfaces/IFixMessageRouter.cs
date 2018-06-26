@@ -9,7 +9,6 @@
 namespace Nautilus.Fix.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -20,12 +19,6 @@ namespace Nautilus.Fix.Interfaces
     /// </summary>
     public interface IFixMessageRouter
     {
-        /// <summary>
-        /// The initialize brokerage gateway.
-        /// </summary>
-        /// <param name="gateway">The brokerage gateway.</param>
-        void InitializeBrokerageGateway(IBrokerageGateway gateway);
-
         /// <summary>
         /// Connects the FIX session.
         /// </summary>
@@ -72,6 +65,11 @@ namespace Nautilus.Fix.Interfaces
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         void MarketDataRequestSubscribe(Symbol symbol);
+
+        /// <summary>
+        /// Subscribes to market data for all symbols.
+        /// </summary>
+        void MarketDataRequestSubscribeAll();
 
         /// <summary>
         /// Submits an entry limit stop order.

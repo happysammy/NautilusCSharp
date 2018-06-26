@@ -38,11 +38,6 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
-        /// Performs standard initialization requests.
-        /// </summary>
-        void InitializeSession();
-
-        /// <summary>
         /// The request market data subscribe.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

@@ -76,7 +76,6 @@ namespace Nautilus.Fix
             Validate.NotNull(gateway, nameof(gateway));
 
             this.FxcmFixMessageHandler.InitializeBrokerageGateway(gateway);
-            this.FxcmFixMessageRouter.InitializeBrokerageGateway(gateway);
         }
 
         /// <summary>
@@ -93,20 +92,6 @@ namespace Nautilus.Fix
         public void Disconnect()
         {
             this.DisconnectFix();
-        }
-
-        /// <summary>
-        /// Initializes the FIX session. Performs actions on logon.
-        /// </summary>
-        public void InitializeSession()
-        {
-            Log.Information($"Initializing session");
-
-            this.CollateralInquiry();
-            this.TradingSessionStatus();
-            this.RequestAllPositions();
-            this.UpdateInstrumentsSubscribeAll();
-            // TODO: Subscribe to all market data.
         }
 
         /// <summary>

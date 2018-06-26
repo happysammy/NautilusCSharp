@@ -10,7 +10,6 @@ namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -25,19 +24,14 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageRouter : IFixMessageRouter
     {
-        private IBrokerageGateway brokerageGateway;
+        private readonly IZonedClock clock;
+
         private Session fixSession;
         private Session fixSessionMd;
 
-        /// <summary>
-        /// The initialize brokerage gateway.
-        /// </summary>
-        /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeBrokerageGateway(IBrokerageGateway gateway)
+        public FxcmFixMessageRouter(IZonedClock clock)
         {
-            Validate.NotNull(gateway, nameof(gateway));
-
-            this.brokerageGateway = gateway;
+            this.clock = clock;
         }
 
         /// <summary>
@@ -64,7 +58,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void CollateralInquiry()
         {
-            var message = CollateralInquiryFactory.Create(this.brokerageGateway.GetTimeNow());
+            var message = CollateralInquiryFactory.Create(this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -76,7 +70,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void TradingSessionStatus()
         {
-            var message = TradingSessionStatusRequestFactory.Create(this.brokerageGateway.GetTimeNow());
+            var message = TradingSessionStatusRequestFactory.Create(this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -88,7 +82,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void RequestAllPositions()
         {
-            var message = RequestForOpenPositionsFactory.Create(this.brokerageGateway.GetTimeNow());
+            var message = RequestForOpenPositionsFactory.Create(this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -107,7 +101,7 @@ namespace Nautilus.Brokerage.FXCM
 
             this.fixSession.Send(SecurityListRequestFactory.Create(
                 fxcmSymbol.Value,
-                this.brokerageGateway.GetTimeNow()));
+                this.clock.TimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
         }
@@ -117,7 +111,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.fixSession.Send(SecurityListRequestFactory.Create(this.brokerageGateway.GetTimeNow()));
+            this.fixSession.Send(SecurityListRequestFactory.Create(this.clock.TimeNow()));
 
             Console.WriteLine($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
         }
@@ -132,9 +126,24 @@ namespace Nautilus.Brokerage.FXCM
 
             this.fixSessionMd.Send(MarketDataRequestSubscriptionFactory.Create(
                 fxcmSymbol,
-                this.brokerageGateway.GetTimeNow()));
+                this.clock.TimeNow()));
 
             Console.WriteLine($"MarketDataRequest + SubscribeUpdates ({symbol})...");
+        }
+
+        /// <summary>
+        /// Subscribes to market data for all symbol.
+        /// </summary>
+        public void MarketDataRequestSubscribeAll()
+        {
+            foreach (var fxcmSymbol in FxcmSymbolProvider.GetAllBrokerSymbols())
+            {
+                this.fixSessionMd.Send(MarketDataRequestSubscriptionFactory.Create(
+                    fxcmSymbol,
+                    this.clock.TimeNow()));
+
+                Console.WriteLine($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
+            }
         }
 
         /// <summary>
@@ -146,7 +155,7 @@ namespace Nautilus.Brokerage.FXCM
             var message = NewOrderListEntryLimitStopFactory.Create(
                 FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
                 elsOrder,
-                this.brokerageGateway.GetTimeNow());
+                this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -162,7 +171,7 @@ namespace Nautilus.Brokerage.FXCM
             var message = NewOrderListEntryStopFactory.Create(
                 FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
                 elsOrder,
-                this.brokerageGateway.GetTimeNow());
+                this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -179,7 +188,7 @@ namespace Nautilus.Brokerage.FXCM
                 FxcmSymbolProvider.GetBrokerSymbol(orderModification.Key.Symbol.Code).Value,
                 orderModification.Key,
                 orderModification.Value.Value,
-                this.brokerageGateway.GetTimeNow());
+                this.clock.TimeNow());
 
             this.fixSession.Send(message);
 
@@ -195,7 +204,7 @@ namespace Nautilus.Brokerage.FXCM
             var message = OrderCancelRequestFactory.Create(
                 FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                 order,
-                this.brokerageGateway.GetTimeNow());
+                this.clock.TimeNow());
 
             this.fixSession.Send(message);
 

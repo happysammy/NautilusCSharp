@@ -10,6 +10,7 @@ namespace Nautilus.Database.Build
 {
     using System;
     using System.Reflection;
+    using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
@@ -29,17 +30,17 @@ namespace Nautilus.Database.Build
         {
             Validate.NotNull(log, nameof(log));
 
-            log.Information(DatabaseService.Core, "Running StartupVersionChecker...");
-            log.Information(DatabaseService.Core, "----------------------------------------------------------------");
+            log.Information(DatabaseService.Core, "Running startup version checker...");
+            log.Information(DatabaseService.Core, "---------------------------------------------------------------------");
             log.Information(DatabaseService.Core, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
             log.Information(DatabaseService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(DatabaseService.Core, "----------------------------------------------------------------");
+            log.Information(DatabaseService.Core, "---------------------------------------------------------------------");
             log.Information(DatabaseService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(DatabaseService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
             log.Information(DatabaseService.Core, $"OS {Environment.OSVersion}");
             log.Information(DatabaseService.Core, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(DatabaseService.Core, $"Akka.NET v1.3.8");
-            log.Information(DatabaseService.Core, $"ServiceStack v5.1.0");
+            log.Information(DatabaseService.Core, $"Akka.NET v{Assembly.GetAssembly(typeof(ReceiveActor)).GetName().Version}");
+            log.Information(DatabaseService.Core, $"ServiceStack v{Assembly.GetAssembly(typeof(ServiceStack.Service)).GetName().Version}");
             log.Information(DatabaseService.Core, log.AssemblyVersion);
         }
 
