@@ -29,6 +29,10 @@ namespace Nautilus.Scheduler
     {
         private readonly IScheduler quartzScheduler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Scheduler"/> class.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
         public Scheduler(IComponentryContainer container)
             : base(
                 ServiceContext.Database,
@@ -42,13 +46,6 @@ namespace Nautilus.Scheduler
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
             this.Receive<RemoveJob>(msg => this.OnMessage(msg));
         }
-
-//        protected override bool Receive(object message)
-//        {
-//            Debug.NotNull(message, nameof(message));
-//
-//            return message.Match().With<CreateJob>(CreateJobCommand).With<RemoveJob>(RemoveJobCommand).WasHandled;
-//        }
 
         protected override void PreStart()
         {

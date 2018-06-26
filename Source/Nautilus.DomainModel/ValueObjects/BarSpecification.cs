@@ -92,6 +92,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
 
         /// <summary>
+        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
+        /// </summary>
+        /// <param name="barSpec">The bar specification string.</param>
+        /// <returns>A <see cref="Bar"/>.</returns>
+        public static BarSpecification GetFromString(string barSpec)
+        {
+            Debug.NotNull(barSpec, nameof(barSpec));
+
+            return null; //TODO
+        }
+
+        /// <summary>
         /// Returns a collection of objects to be included in equality checks.
         /// </summary>
         /// <returns>A collection of objects.</returns>
