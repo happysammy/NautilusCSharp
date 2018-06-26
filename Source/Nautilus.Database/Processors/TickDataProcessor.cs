@@ -26,7 +26,6 @@ namespace Nautilus.Database.Processors
     /// </summary>
     public sealed class TickDataProcessor : ComponentBase, ITickDataProcessor
     {
-        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
         private readonly IQuoteProvider quoteProvider;
         private readonly IActorRef barAggregationControllerRef;
 
@@ -39,7 +38,6 @@ namespace Nautilus.Database.Processors
         /// <param name="barAggregationControllerRef">The bar aggregator controller actor address.</param>
         public TickDataProcessor(
             IComponentryContainer container,
-            IReadOnlyDictionary<string, int> tickSizeIndex,
             IQuoteProvider quoteProvider,
             IActorRef barAggregationControllerRef) : base(
             ServiceContext.Database,
@@ -47,11 +45,9 @@ namespace Nautilus.Database.Processors
             container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.CollectionNotNullOrEmpty(tickSizeIndex, nameof(tickSizeIndex));
             Validate.NotNull(quoteProvider, nameof(quoteProvider));
             Validate.NotNull(barAggregationControllerRef, nameof(barAggregationControllerRef));
 
-            this.tickSizeIndex = tickSizeIndex;
             this.quoteProvider = quoteProvider;
             this.barAggregationControllerRef = barAggregationControllerRef;
         }
@@ -64,12 +60,14 @@ namespace Nautilus.Database.Processors
         /// <param name="exchange">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
+        /// <param name="decimals">The number of decimal places in the ticks price.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         public void OnTick(
             string symbol,
             Exchange exchange,
             decimal bid,
             decimal ask,
+            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -81,8 +79,8 @@ namespace Nautilus.Database.Processors
                 var securitySymbol = new Symbol(symbol, exchange);
                 var tick = new Tick(
                     securitySymbol,
-                    Price.Create(bid, 5),
-                    Price.Create(ask, 5),
+                    Price.Create(bid, decimals),
+                    Price.Create(ask, decimals),
                     timestamp);
 
                 this.quoteProvider.OnTick(tick);

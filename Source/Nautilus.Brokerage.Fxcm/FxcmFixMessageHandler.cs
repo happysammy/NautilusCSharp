@@ -14,6 +14,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -30,6 +31,7 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageHandler : IFixMessageHandler
     {
+        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
         private readonly ITickDataProcessor tickDataProcessor;
         private IBrokerageGateway brokerageGateway;
 
@@ -42,6 +44,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(tickDataProcessor, nameof(tickDataProcessor));
 
+            this.tickSizeIndex = FxcmTickSizeProvider.GetIndex();
             this.tickDataProcessor = tickDataProcessor;
         }
 
@@ -209,8 +212,10 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(message, nameof(message));
 
+            var fxcmSymbol = message.GetField(Tags.Symbol);
+
             var symbol = message.IsSetField(Tags.Symbol)
-                ? FxcmSymbolProvider.GetNautilusSymbol(message.GetField(Tags.Symbol)).Value
+                ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
                 : string.Empty;
 
             var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
@@ -229,6 +234,7 @@ namespace Nautilus.Brokerage.FXCM
                 Exchange.FXCM,
                 Convert.ToDecimal(bid),
                 Convert.ToDecimal(ask),
+                this.tickSizeIndex[fxcmSymbol],
                 timestamp);
         }
 

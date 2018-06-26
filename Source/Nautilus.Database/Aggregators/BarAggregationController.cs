@@ -243,7 +243,6 @@ namespace Nautilus.Database.Aggregators
         private void OnMessage(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
-            Debug.DictionaryContainsKey(tick.Symbol, nameof(this.barAggregators), this.barAggregators.ToImmutableDictionary());
 
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
@@ -251,8 +250,6 @@ namespace Nautilus.Database.Aggregators
 
                 return;
             }
-
-            Log.Warning($"Does not contain aggregator for {tick.Symbol} ticks.");
         }
 
         /// <summary>

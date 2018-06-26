@@ -25,12 +25,14 @@ namespace Nautilus.Common.Interfaces
         /// <param name="exchange">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
+        /// <param name="decimals">The number of decimal places in the ticks prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         void OnTick(
             string symbol,
             Exchange exchange,
             decimal bid,
             decimal ask,
+            int decimals,
             ZonedDateTime timestamp);
     }
 }

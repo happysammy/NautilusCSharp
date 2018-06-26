@@ -90,7 +90,6 @@ namespace Nautilus.Database.Build
 
             var tickDataProcessor = new TickDataProcessor(
                 setupContainer,
-                fixClientFactory.GetTickValueIndex(),
                 quoteProvider,
                 barAggregationControllerRef);
 

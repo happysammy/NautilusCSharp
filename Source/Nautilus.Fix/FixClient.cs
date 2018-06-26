@@ -75,7 +75,7 @@ namespace Nautilus.Fix
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.FxcmFixMessageHandler.InitializeBrokerageGateway(gateway);
+            this.FixMessageHandler.InitializeBrokerageGateway(gateway);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                this.FxcmFixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
+                this.FixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
             });
         }
 
@@ -114,7 +114,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                this.FxcmFixMessageRouter.SubmitEntryStopOrder(elsOrder);
+                this.FixMessageRouter.SubmitEntryStopOrder(elsOrder);
             });
         }
 
@@ -124,7 +124,7 @@ namespace Nautilus.Fix
         /// <param name="orderModification">The order modification.</param>
         public void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification)
         {
-            this.FxcmFixMessageRouter.ModifyStoplossOrder(orderModification);
+            this.FixMessageRouter.ModifyStoplossOrder(orderModification);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nautilus.Fix
         /// <param name="order">The order.</param>
         public void CancelOrder(Order order)
         {
-            this.FxcmFixMessageRouter.CancelOrder(order);
+            this.FixMessageRouter.CancelOrder(order);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void CollateralInquiry()
         {
-            this.FxcmFixMessageRouter.CollateralInquiry();
+            this.FixMessageRouter.CollateralInquiry();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void TradingSessionStatus()
         {
-            this.FxcmFixMessageRouter.TradingSessionStatus();
+            this.FixMessageRouter.TradingSessionStatus();
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void RequestAllPositions()
         {
-            this.FxcmFixMessageRouter.RequestAllPositions();
+            this.FixMessageRouter.RequestAllPositions();
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            this.FxcmFixMessageRouter.UpdateInstrumentSubscribe(symbol);
+            this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
+            this.FixMessageRouter.UpdateInstrumentsSubscribeAll();
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
-            this.FxcmFixMessageRouter.MarketDataRequestSubscribe(symbol);
+            this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
     }
 }

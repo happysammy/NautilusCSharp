@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System;
-    using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -71,8 +70,8 @@ namespace Nautilus.Fix
             this.logger = container.LoggerFactory.Create(service, this.component);
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
-            this.FxcmFixMessageHandler = fixMessageHandler;
-            this.FxcmFixMessageRouter = fixMessageRouter;
+            this.FixMessageHandler = fixMessageHandler;
+            this.FixMessageRouter = fixMessageRouter;
         }
 
         /// <summary>
@@ -83,12 +82,12 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the components FIX message handler.
         /// </summary>
-        protected IFixMessageHandler FxcmFixMessageHandler { get; }
+        protected IFixMessageHandler FixMessageHandler { get; }
 
         /// <summary>
         /// Gets the components FIX message router.
         /// </summary>
-        protected IFixMessageRouter FxcmFixMessageRouter { get; }
+        protected IFixMessageRouter FixMessageRouter { get; }
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -173,12 +172,12 @@ namespace Nautilus.Fix
                 {
                     this.Log.Information("Creating session...");
                     this.session = Session.LookupSession(sessionId);
-                    this.FxcmFixMessageRouter.ConnectSession(this.session);
+                    this.FixMessageRouter.ConnectSession(this.session);
                     this.Log.Information($"Session {this.session}");
                 }
 
                 this.sessionMd = Session.LookupSession(sessionId);
-                this.FxcmFixMessageRouter.ConnectSessionMd(this.sessionMd);
+                this.FixMessageRouter.ConnectSessionMd(this.sessionMd);
             });
         }
 
@@ -199,7 +198,7 @@ namespace Nautilus.Fix
                 //this.FxcmFixMessageRouter.TradingSessionStatus();
                 //this.FxcmFixMessageRouter.RequestAllPositions();
                 //this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
-                this.FxcmFixMessageRouter.MarketDataRequestSubscribeAll();
+                this.FixMessageRouter.MarketDataRequestSubscribeAll();
             });
         }
 
@@ -306,7 +305,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(BusinessMessageReject message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnBusinessMessageReject(message);
+            this.FixMessageHandler.OnBusinessMessageReject(message);
         }
 
         /// <summary>
@@ -326,7 +325,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(SecurityList message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnSecurityList(message);
+            this.FixMessageHandler.OnSecurityList(message);
         }
 
         /// <summary>
@@ -336,7 +335,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(CollateralInquiryAck message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnCollateralInquiryAck(message);
+            this.FixMessageHandler.OnCollateralInquiryAck(message);
         }
 
         /// <summary>
@@ -346,7 +345,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(CollateralReport message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnCollateralReport(message);
+            this.FixMessageHandler.OnCollateralReport(message);
         }
 
         /// <summary>
@@ -356,7 +355,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(RequestForPositionsAck message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnRequestForPositionsAck(message);
+            this.FixMessageHandler.OnRequestForPositionsAck(message);
         }
 
         /// <summary>
@@ -366,7 +365,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(MarketDataSnapshotFullRefresh message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
+            this.FixMessageHandler.OnMarketDataSnapshotFullRefresh(message);
         }
 
         /// <summary>
@@ -376,7 +375,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(OrderCancelReject message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnOrderCancelReject(message);
+            this.FixMessageHandler.OnOrderCancelReject(message);
         }
 
         /// <summary>
@@ -386,7 +385,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(ExecutionReport message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnExecutionReport(message);
+            this.FixMessageHandler.OnExecutionReport(message);
         }
 
         /// <summary>
@@ -396,7 +395,7 @@ namespace Nautilus.Fix
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(PositionReport message, SessionID sessionId)
         {
-            this.FxcmFixMessageHandler.OnPositionReport(message);
+            this.FixMessageHandler.OnPositionReport(message);
         }
     }
 }
