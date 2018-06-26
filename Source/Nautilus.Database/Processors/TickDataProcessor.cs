@@ -81,8 +81,8 @@ namespace Nautilus.Database.Processors
                 var securitySymbol = new Symbol(symbol, exchange);
                 var tick = new Tick(
                     securitySymbol,
-                    Price.Create(bid, tickSizeIndex[symbol]),
-                    Price.Create(ask, tickSizeIndex[symbol]),
+                    Price.Create(bid, 5),
+                    Price.Create(ask, 5),
                     timestamp);
 
                 this.quoteProvider.OnTick(tick);

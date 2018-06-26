@@ -12,6 +12,7 @@ namespace Nautilus.Database.Build
     using System.Collections.Generic;
     using Akka.Actor;
     using Grpc.Core;
+    using Nautilus.BlackBox.Brokerage;
     using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
@@ -26,6 +27,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Database.Protobuf;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
+    using ServiceStack.Validation;
 
     /// <summary>
     /// The builder for the NautilusDB database infrastructure.

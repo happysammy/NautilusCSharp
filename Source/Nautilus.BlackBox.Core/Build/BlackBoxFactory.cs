@@ -78,7 +78,7 @@ namespace Nautilus.BlackBox.Core.Build
                 messagingAdapter);
 
             var brokerageClient =
-                servicesFactory.FixClient.TradingClient(container, messagingAdapter, null);
+                servicesFactory.FixClient.TradeClient(container, messagingAdapter, null);
 
             var brokerageGateway = servicesFactory.BrokerageGateway.Create(
                 container,

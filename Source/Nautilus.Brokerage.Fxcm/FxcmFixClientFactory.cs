@@ -74,7 +74,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="messagingAdapter">The messaging adatper.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <returns></returns>
-        public ITradeClient TradingClient(
+        public ITradeClient TradeClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickDataProcessor tickDataProcessor)

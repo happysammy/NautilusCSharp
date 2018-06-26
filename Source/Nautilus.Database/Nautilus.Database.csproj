@@ -19,6 +19,7 @@
     <PackageReference Include="ServiceStack.Text" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nautilus.BlackBox.Brokerage\Nautilus.BlackBox.Brokerage.csproj" />
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />

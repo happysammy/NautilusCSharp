@@ -195,11 +195,11 @@ namespace Nautilus.Fix
                 Task.Delay(1000); // Allow logon of other session.
 
                 this.Log.Information($"Logon - {sessionId}");
-                this.FxcmFixMessageRouter.CollateralInquiry();
-                this.FxcmFixMessageRouter.TradingSessionStatus();
-                this.FxcmFixMessageRouter.RequestAllPositions();
-                this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
-                //this.FxcmFixMessageRouter.MarketDataRequestSubscribeAll();
+                //this.FxcmFixMessageRouter.CollateralInquiry();
+                //this.FxcmFixMessageRouter.TradingSessionStatus();
+                //this.FxcmFixMessageRouter.RequestAllPositions();
+                //this.FxcmFixMessageRouter.UpdateInstrumentsSubscribeAll();
+                this.FxcmFixMessageRouter.MarketDataRequestSubscribeAll();
             });
         }
 

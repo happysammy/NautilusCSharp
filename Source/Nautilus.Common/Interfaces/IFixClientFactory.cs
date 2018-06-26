@@ -34,7 +34,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <returns>The FIX trading client.</returns>
-        ITradeClient TradingClient(
+        ITradeClient TradeClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickDataProcessor tickDataProcessor);
