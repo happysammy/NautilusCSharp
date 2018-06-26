@@ -10,6 +10,7 @@ namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
@@ -100,6 +101,8 @@ namespace Nautilus.Database
         /// </summary>
         public void Shutdown()
         {
+            this.Log.Information($"Data subscription server shutting down...");
+            this.subscriptionServer.ShutdownAsync().Wait();
             this.dataClient.Disconnect();
 
             // Placeholder for the log events (do not refactor away).
@@ -107,12 +110,10 @@ namespace Nautilus.Database
 
             this.Log.Information($"{actorSystemName} ActorSystem shutting down...");
 
-            var shutdownTasks = new List<Task>();
-            foreach (var address in this.addresses)
-            {
-                shutdownTasks.Add(address.Value.GracefulStop(TimeSpan.FromSeconds(10)));
-            }
-            shutdownTasks.ToArray();
+            var shutdownTasks = this.addresses.Select(
+                address => address.Value.GracefulStop(TimeSpan.FromSeconds(10)))
+                .Cast<Task>()
+                .ToList();
 
             this.Log.Information($"Waiting for actors to shut down...");
             Task.WhenAll(shutdownTasks);
