@@ -19,7 +19,7 @@ namespace Nautilus.Backtest
     /// <summary>
     /// The brokerage client.
     /// </summary>
-    public class TradingClient : ITradingClient
+    public class TradeClient : ITradeClient
     {
         /// <summary>
         ///

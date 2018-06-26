@@ -22,11 +22,11 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradingClient">The brokerage client.</param>
+        /// <param name="tradeClient">The brokerage client.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
         IBrokerageGateway Create(
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradingClient tradingClient);
+            ITradeClient tradeClient);
     }
 }

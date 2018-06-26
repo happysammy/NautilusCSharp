@@ -35,19 +35,19 @@ namespace Nautilus.BlackBox.Brokerage
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IReadOnlyBrokerageAccount brokerageAccount;
-        private readonly ITradingClient tradingClient;
+        private readonly ITradeClient tradeClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokerageGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradingClient">The brokerage client.</param>
+        /// <param name="tradeClient">The brokerage client.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BrokerageGateway(
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradingClient tradingClient)
+            ITradeClient tradeClient)
             : base(
                 BlackBoxService.Brokerage,
                 new Label(nameof(BrokerageGateway)),
@@ -56,22 +56,22 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tradingClient, nameof(tradingClient));
+            Validate.NotNull(tradeClient, nameof(tradeClient));
 
             this.instrumentRepository = container.InstrumentRepository;
             this.brokerageAccount = container.Account;
-            this.tradingClient = tradingClient;
+            this.tradeClient = tradeClient;
         }
 
         /// <summary>
         /// Gets the brokerage gateways broker name.
         /// </summary>
-        public Broker Broker => this.tradingClient.Broker;
+        public Broker Broker => this.tradeClient.Broker;
 
         /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
-        public bool IsConnected => this.tradingClient.IsConnected;
+        public bool IsConnected => this.tradeClient.IsConnected;
 
 //        /// <summary>
 //        /// Initializes the brokerage session.
@@ -95,7 +95,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// </summary>
         public void Connect()
         {
-            this.tradingClient.Connect();
+            this.tradeClient.Connect();
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// </summary>
         public void Disconnect()
         {
-            this.tradingClient.Disconnect();
+            this.tradeClient.Disconnect();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(symbol, nameof(symbol));
 
-            this.tradingClient.RequestMarketDataSubscribe(symbol);
+            this.tradeClient.RequestMarketDataSubscribe(symbol);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(symbol, nameof(symbol));
 
-            this.tradingClient.UpdateInstrumentSubscribe(symbol);
+            this.tradeClient.UpdateInstrumentSubscribe(symbol);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Nautilus.BlackBox.Brokerage
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.tradingClient.UpdateInstrumentsSubscribeAll();
+            this.tradeClient.UpdateInstrumentsSubscribeAll();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradingClient.SubmitEntryLimitStopOrder(order);
+            this.tradeClient.SubmitEntryLimitStopOrder(order);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradingClient.SubmitEntryStopOrder(order);
+            this.tradeClient.SubmitEntryStopOrder(order);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(stoplossModification, nameof(stoplossModification));
 
-            this.tradingClient.ModifyStoplossOrder(stoplossModification);
+            this.tradeClient.ModifyStoplossOrder(stoplossModification);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradingClient.CancelOrder(order);
+            this.tradeClient.CancelOrder(order);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Nautilus.BlackBox.Brokerage
         {
             Validate.NotNull(position, nameof(position));
 
-            this.tradingClient.ClosePosition(position);
+            this.tradeClient.ClosePosition(position);
         }
 
         /// <summary>

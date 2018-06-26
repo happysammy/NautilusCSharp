@@ -37,6 +37,9 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         void Disconnect();
 
+        /// <summary>
+        /// Performs standard initialization requests.
+        /// </summary>
         void InitializeSession();
 
         /// <summary>

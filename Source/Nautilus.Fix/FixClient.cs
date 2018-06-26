@@ -23,7 +23,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixComponentBase, IDataClient, ITradingClient
+    public class FixClient : FixComponentBase, IDataClient, ITradeClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -100,6 +100,8 @@ namespace Nautilus.Fix
         /// </summary>
         public void InitializeSession()
         {
+            Log.Information($"Initializing session");
+
             this.CollateralInquiry();
             this.TradingSessionStatus();
             this.RequestAllPositions();

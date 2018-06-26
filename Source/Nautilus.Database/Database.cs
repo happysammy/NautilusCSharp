@@ -87,7 +87,7 @@ namespace Nautilus.Database
 
             this.dataClient.Connect();
 
-            Thread.Sleep(1000);
+            Thread.Sleep(5000);
 
             this.dataClient.InitializeSession();
 

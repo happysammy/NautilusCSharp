@@ -110,7 +110,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
+        /// Passes the given <see cref="Action"/> to the command handler for execution.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         protected void Execute(Action action)
@@ -119,7 +119,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The is connected.
+        /// Returns a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsFixConnected => this.session.IsLoggedOn;
@@ -134,7 +134,7 @@ namespace Nautilus.Fix
                 var settings = new SessionSettings("fix_fxcm.cfg");
                 var storeFactory = new FileStoreFactory(settings);
                 var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
                 this.Log.Information("Starting initiator...");
                 this.initiator.Start();

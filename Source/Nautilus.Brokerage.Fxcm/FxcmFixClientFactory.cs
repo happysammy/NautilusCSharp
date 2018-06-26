@@ -68,13 +68,13 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Creates a new <see cref="ITradingClient"/>.
+        /// Creates a new <see cref="ITradeClient"/>.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
         /// <param name="tickDataProcessor">The tick data processor.</param>
         /// <returns></returns>
-        public ITradingClient TradingClient(
+        public ITradeClient TradingClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickDataProcessor tickDataProcessor)

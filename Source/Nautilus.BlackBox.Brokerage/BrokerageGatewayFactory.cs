@@ -26,21 +26,21 @@ namespace Nautilus.BlackBox.Brokerage
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradingClient">The broker client.</param>
+        /// <param name="tradeClient">The broker client.</param>
         /// <returns>A <see cref="IBrokerageGateway"/>.</returns>
         public IBrokerageGateway Create(
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradingClient tradingClient)
+            ITradeClient tradeClient)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tradingClient, nameof(tradingClient));
+            Validate.NotNull(tradeClient, nameof(tradeClient));
 
             return new BrokerageGateway(
                 container,
                 messagingAdapter,
-                tradingClient);
+                tradeClient);
         }
     }
 }

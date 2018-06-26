@@ -18,7 +18,6 @@ namespace Nautilus.Database.Build
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
-    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Enums;

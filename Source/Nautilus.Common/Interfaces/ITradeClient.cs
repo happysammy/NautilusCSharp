@@ -15,9 +15,9 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides an interface for a concrete trading client.
+    /// Provides an interface for a concrete trade client implementation.
     /// </summary>
-    public interface ITradingClient
+    public interface ITradeClient
     {
         /// <summary>
         /// Gets the name of the brokerage.
