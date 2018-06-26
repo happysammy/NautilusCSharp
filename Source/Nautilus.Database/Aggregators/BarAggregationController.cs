@@ -29,11 +29,13 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
-
+    using QuickFix.Fields;
     using Resolution = Nautilus.DomainModel.Enums.Resolution;
     using Tick = Nautilus.DomainModel.ValueObjects.Tick;
     using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
     using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
+    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
 
     /// <summary>
@@ -45,6 +47,7 @@ namespace Nautilus.Database.Aggregators
         private readonly IComponentryContainer storedContainer;
         private readonly IDictionary<Symbol, IActorRef> barAggregators;
         private readonly IDictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
+        private readonly IDictionary<Duration, IList<BarSpecification>> barTriggers;
         private readonly IDictionary<Duration, ITrigger> triggers;
         private readonly IDictionary<Duration, int> triggerCounts;
 
@@ -69,6 +72,7 @@ namespace Nautilus.Database.Aggregators
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
             this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
+            this.barTriggers = new Dictionary<Duration, IList<BarSpecification>>();
             this.triggers = new Dictionary<Duration, ITrigger>();
             this.triggerCounts = new Dictionary<Duration, int>();
 
@@ -130,8 +134,15 @@ namespace Nautilus.Database.Aggregators
                 this.triggers.Add(duration, trigger);
             }
 
-            if (!this.barJobs.ContainsKey(barSpec))
+            if (!this.barTriggers.ContainsKey(duration))
             {
+                this.barTriggers.Add(duration, new List<BarSpecification>());
+            }
+
+            if (!this.barTriggers[duration].Contains(barSpec))
+            {
+                this.barTriggers[duration].Add(barSpec);
+
                 var barJob = new BarJob(barSpec);
 
                 var createJob = new CreateJob(
@@ -166,6 +177,7 @@ namespace Nautilus.Database.Aggregators
 
             var symbol = message.DataType.Symbol;
             var barSpec = message.DataType.Specification;
+            var duration = barSpec.Duration;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -173,6 +185,14 @@ namespace Nautilus.Database.Aggregators
             }
 
             this.barAggregators[symbol].Tell(message);
+
+            if (this.barTriggers.ContainsKey(duration))
+            {
+                if (this.barTriggers[duration].Contains(barSpec))
+                {
+                    this.barTriggers[duration].Remove(barSpec);
+                }
+            }
 
             if (!this.triggerCounts.ContainsKey(barSpec.Duration))
             {
@@ -258,22 +278,36 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(job, nameof(job));
 
+            var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
             foreach (var aggregator in this.barAggregators)
             {
-                var closeBar = new CloseBar(
-                    job.BarSpec,
-                    this.TimeNow().Floor(job.BarSpec.Duration),
+                var closeBar1 = new CloseBar(
+                    new BarSpecification(QuoteType.Bid, job.BarSpec.Resolution, 1),
+                    closeTime,
                     this.NewGuid(),
                     this.TimeNow());
 
-                aggregator.Value.Tell(closeBar);
+                var closeBar2 = new CloseBar(
+                    new BarSpecification(QuoteType.Ask, job.BarSpec.Resolution, 1),
+                    closeTime,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                var closeBar3 = new CloseBar(
+                    new BarSpecification(QuoteType.Mid, job.BarSpec.Resolution, 1),
+                    closeTime,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+                aggregator.Value.Tell(closeBar1);
+                aggregator.Value.Tell(closeBar2);
+                aggregator.Value.Tell(closeBar3);
 
                 // Log for unit testing only.
                 // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
-                return;
             }
 
-            Log.Warning($"Does not contain aggregator to close bar for {job}.");
+            //Log.Warning($"Does not contain aggregator to close bar for {job}.");
         }
 
         /// <summary>

@@ -9,6 +9,7 @@
 namespace Nautilus.Serilog
 {
     using global::Serilog;
+    using global::Serilog.Events;
 
     /// <summary>
     /// Provides <see cref="Serilog"/> loggers.
@@ -26,7 +27,7 @@ namespace Nautilus.Serilog
                 Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
-                   .WriteTo.Console(outputTemplate: logTemplateDefault)
+                   .WriteTo.Console(LogEventLevel.Debug, logTemplateDefault)
                    .WriteTo.RollingFile("Logs/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }

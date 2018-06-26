@@ -139,7 +139,6 @@ namespace Nautilus.Database.Aggregators
 
             if (this.barBuilders.ContainsKey(message.BarSpecification))
             {
-
                 var builder = this.barBuilders[barSpec];
 
                 // No ticks have been received by the builder.
@@ -179,19 +178,19 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(message, nameof(message));
 
-            var barType = message.DataType.Specification;
+            var barSpec = message.DataType.Specification;
 
-            if (barType.Resolution == Resolution.Tick)
+            if (barSpec.Resolution == Resolution.Tick)
             {
                 // TODO
                 throw new InvalidOperationException("Tick bars not yet supported.");
             }
 
-            if (!this.barBuilders.ContainsKey(barType))
+            if (!this.barBuilders.ContainsKey(barSpec))
             {
-                this.barBuilders.Add(barType, new BarBuilder());
+                this.barBuilders.Add(barSpec, new BarBuilder());
 
-                Log.Debug($"Added {barType} bars.");
+                Log.Debug($"Added {barSpec} bars.");
             }
         }
 

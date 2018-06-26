@@ -9,6 +9,7 @@
 namespace Nautilus.Scheduler
 {
     using System;
+    using System.Collections.Specialized;
     using Akka.Actor;
     using Quartz.Impl;
     using Nautilus.Common.Componentry;
@@ -41,7 +42,8 @@ namespace Nautilus.Scheduler
         {
             Validate.NotNull(container, nameof(container));
 
-            this.quartzScheduler = new StdSchedulerFactory().GetScheduler().Result;
+            var properties = new NameValueCollection { {"quartz.threadPool.threadCount", "20"} };
+            this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
             this.Receive<RemoveJob>(msg => this.OnMessage(msg));

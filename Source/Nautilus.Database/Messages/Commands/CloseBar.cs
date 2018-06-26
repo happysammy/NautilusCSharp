@@ -24,20 +24,20 @@ namespace Nautilus.Database.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBar"/> class.
         /// </summary>
-        /// <param name="barType">The bar type.</param>
+        /// <param name="barSpec">The bar specification.</param>
         /// <param name="closeTime">The close time.</param>
         /// <param name="id">The close identifier.</param>
         /// <param name="timestamp">The close timestamp.</param>
         public CloseBar(
-            BarSpecification barType,
+            BarSpecification barSpec,
             ZonedDateTime closeTime,
             Guid id,
             ZonedDateTime timestamp) : base(id, timestamp)
         {
-            Debug.NotNull(barType, nameof(barType));
+            Debug.NotNull(barSpec, nameof(barSpec));
             Debug.NotDefault(closeTime, nameof(closeTime));
 
-            this.BarSpecification = barType;
+            this.BarSpecification = barSpec;
             this.CloseTime = closeTime;
         }
 
