@@ -104,7 +104,8 @@ namespace Nautilus.Brokerage.FXCM
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
                 var securityType = FxcmFixMessageHelper.GetSecurityType(group.GetField(9080));
                 var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
-                var tickSize = Convert.ToInt32(group.GetField(9001)).ToTickSize();
+                var tickDecimals = Convert.ToInt32(group.GetField(9001));
+                var tickSize = tickDecimals.ToTickSize();
                 var tickValueQuoteCurrency = FxcmTickValueProvider.GetTickValue(brokerSymbol.ToString());
                 var targetDirectSpread = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(brokerSymbol.ToString());
                 var contractSize = 1; // always 1 for FXCM
@@ -123,6 +124,7 @@ namespace Nautilus.Brokerage.FXCM
                     brokerSymbol,
                     quoteCurrency,
                     securityType,
+                    tickDecimals,
                     tickSize,
                     tickValueQuoteCurrency.Value,
                     targetDirectSpread.Value,

@@ -36,6 +36,7 @@ namespace Nautilus.BlackBox.Data.Instrument
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
             this.QuoteCurrency = startingInstrument.QuoteCurrency;
             this.SecurityType = startingInstrument.SecurityType;
+            this.TickDecimals = startingInstrument.TickDecimals;
             this.TickSize = startingInstrument.TickSize;
             this.TickValue = startingInstrument.TickValue;
             this.TargetDirectSpread = startingInstrument.TargetDirectSpread;
@@ -63,6 +64,8 @@ namespace Nautilus.BlackBox.Data.Instrument
         private CurrencyCode QuoteCurrency { get; set; }
 
         private SecurityType SecurityType { get; set; }
+
+        private int TickDecimals { get; set; }
 
         private decimal TickSize { get; set; }
 
@@ -237,6 +240,7 @@ namespace Nautilus.BlackBox.Data.Instrument
                 this.BrokerSymbol,
                 this.QuoteCurrency,
                 this.SecurityType,
+                this.TickDecimals,
                 this.TickSize,
                 this.TickValue,
                 this.TargetDirectSpread,

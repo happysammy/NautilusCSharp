@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Interfaces;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
@@ -58,37 +57,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
-        internal void Test_can_get_all_instrument_keys()
-        {
-            // Arrange
-            var instrument = StubInstrumentFactory.AUDUSD();
-            this.repository.Add(instrument);
-
-            // Act
-            var ids = this.repository.GetAllKeys();
-
-            // Assert
-            this.output.WriteLine(ids.Value[0]);
-            //Assert.Equal(instrument, foundInstrument.Value);
-
-        }
-
-        [Fact]
-        internal void Test_can_find_one_instrument_string()
-        {
-            // Arrange
-            var instrument = StubInstrumentFactory.AUDUSD();
-            this.repository.Add(instrument);
-
-            // Act
-            var foundInstrument = this.repository.GetInstrumentString(instrument.Symbol);
-
-            // Assert
-            this.output.WriteLine(foundInstrument.Value);
-
-        }
-
-        [Fact]
         internal void Test_can_find_one_instrument()
         {
             // Arrange
@@ -96,11 +64,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(instrument);
 
             // Act
-            var foundInstrument = this.repository.GetInstrument(instrument.Symbol);
+            var result = this.repository.GetInstrument(instrument.Symbol);
 
             // Assert
-            this.output.WriteLine(foundInstrument.Value.ToString());
-
+            this.output.WriteLine(result.Message);
+            //Assert.Equal(1, count.Value);
+            Assert.Equal(instrument, result.Value);
         }
     }
 }

@@ -186,7 +186,7 @@ namespace Nautilus.BlackBox.Data.Instrument
             Validate.NotNull(symbol, nameof(symbol));
 
             return this.instrumentIndex.ContainsKey(symbol)
-                ? QueryResult<decimal>.Ok(this.instrumentIndex[symbol].TickSize)
+                ? QueryResult<decimal>.Ok(this.instrumentIndex[symbol].TickDecimals)
                 : QueryResult<decimal>.Fail($"{nameof(InstrumentRepository)} cannot find symbol {symbol}");
         }
 

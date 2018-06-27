@@ -73,6 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.InstrumentTests
                 new EntityId("NONE"),
                 CurrencyCode.CAD,
                 SecurityType.Bond,
+                2,
                 0.25m,
                 10m,
                 3,

@@ -76,7 +76,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 signal.EntryPrice,
                 signal.StopLossPrice);
 
-            var tickValueSize = this.instrument.TickSize * exchangeRate;
+            var tickValueSize = this.instrument.TickDecimals * exchangeRate;
 
             var positionSize = Math.Floor(((riskDollars / riskPoints) / tickValueSize) / this.instrument.ContractSize);
 
@@ -118,7 +118,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             Debug.NotNull(entryPrice, nameof(entryPrice));
             Debug.NotNull(stoplossPrice, nameof(stoplossPrice));
 
-            return Convert.ToInt32(Math.Ceiling(Math.Abs(entryPrice - stoplossPrice) / this.instrument.TickSize));
+            return Convert.ToInt32(Math.Ceiling(Math.Abs(entryPrice - stoplossPrice) / this.instrument.TickDecimals));
         }
 
         private void LogPositionSizing(

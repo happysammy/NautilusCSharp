@@ -28,6 +28,7 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
+        /// <param name="tickDecimals">The instruments tick size.</param>
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="tickValue">The instruments tick value.</param>
         /// <param name="targetDirectSpread">The instruments target direct spread.</param>
@@ -49,6 +50,7 @@ namespace Nautilus.DomainModel.Entities
             EntityId brokerSymbol,
             CurrencyCode quoteCurrency,
             SecurityType securityType,
+            int tickDecimals,
             decimal tickSize,
             decimal tickValue,
             int targetDirectSpread,
@@ -68,6 +70,7 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(instrumentId, nameof(instrumentId));
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Validate.DecimalNotOutOfRange(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.Int32NotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
@@ -84,6 +87,7 @@ namespace Nautilus.DomainModel.Entities
             this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
             this.TickSize = tickSize;
+            this.TickDecimals = tickDecimals;
             this.TickValue = tickValue;
             this.TargetDirectSpread = targetDirectSpread;
             this.ContractSize = contractSize;
@@ -101,92 +105,92 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments symbol.
         /// </summary>
-        public Symbol Symbol { get; private set; }
-
-        /// <summary>
-        /// Gets the instruments identifier.
-        /// </summary>
-        public EntityId InstrumentId => this.Id;
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the instruments broker symbol.
         /// </summary>
-        public EntityId BrokerSymbol { get; private set; }
+        public EntityId BrokerSymbol { get; }
 
         /// <summary>
         /// Gets the instruments quote currency.
         /// </summary>
-        public CurrencyCode QuoteCurrency { get; private set; }
+        public CurrencyCode QuoteCurrency { get; }
 
         /// <summary>
         /// Gets the instruments security type.
         /// </summary>
-        public SecurityType SecurityType { get; private set; }
+        public SecurityType SecurityType { get; }
 
         /// <summary>
         /// Gets the instruments tick size.
         /// </summary>
-        public decimal TickSize { get; private set; }
+        public int TickDecimals { get; }
+
+        /// <summary>
+        /// Gets the instruments tick size.
+        /// </summary>
+        public decimal TickSize { get; }
 
         /// <summary>
         /// Gets the instruments tick value.
         /// </summary>
-        public decimal TickValue { get; private set; }
+        public decimal TickValue { get; }
 
         /// <summary>
         /// Gets the instruments target direct spread.
         /// </summary>
-        public int TargetDirectSpread { get; private set; }
+        public int TargetDirectSpread { get; }
 
         /// <summary>
         /// Gets the instruments contract size.
         /// </summary>
-        public int ContractSize { get; private set; }
+        public int ContractSize { get; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance for entry.
         /// </summary>
-        public int MinStopDistanceEntry { get; private set; }
+        public int MinStopDistanceEntry { get; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance for entry.
         /// </summary>
-        public int MinLimitDistanceEntry { get; private set; }
+        public int MinLimitDistanceEntry { get; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance.
         /// </summary>
-        public int MinStopDistance { get; private set; }
+        public int MinStopDistance { get; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance.
         /// </summary>
-        public int MinLimitDistance { get; private set; }
+        public int MinLimitDistance { get; }
 
         /// <summary>
         /// Gets the instruments minimum trade size.
         /// </summary>
-        public int MinTradeSize { get; private set; }
+        public int MinTradeSize { get; }
 
         /// <summary>
         /// Gets the instruments maximum trade size.
         /// </summary>
-        public int MaxTradeSize { get; private set; }
+        public int MaxTradeSize { get; }
 
         /// <summary>
         /// Gets the instruments margin requirement.
         /// </summary>
-        public decimal MarginRequirement { get; private set; }
+        public decimal MarginRequirement { get; }
 
         /// <summary>
         /// Gets the instruments rollover interest for long positions.
         /// </summary>
-        public decimal RolloverInterestBuy { get; private set; }
+        public decimal RolloverInterestBuy { get; }
 
         /// <summary>
         /// Gets the instruments rollover interest for short positions.
         /// </summary>
-        public decimal RolloverInterestSell { get; private set; }
+        public decimal RolloverInterestSell { get; }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the

@@ -8,13 +8,18 @@
 
 namespace Nautilus.Redis
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
-    using QuickFix.Fields;
+    using Nautilus.DomainModel.Enums;
+    using ServiceStack.Text;
     using ServiceStack.Redis;
+
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
@@ -47,9 +52,9 @@ namespace Nautilus.Redis
         {
             using (var client = this.clientsManager.GetClient())
             {
-                client.As<Instrument>();
-
-                client.Store(instrument);
+                client.Set(
+                    $"instruments:{instrument.Symbol}",
+                    JsonSerializer.SerializeToString(instrument));
 
                 return CommandResult.Ok($"Added the {instrument.Symbol} instrument to the repository");
             }
@@ -59,11 +64,11 @@ namespace Nautilus.Redis
         {
             using (var client = this.clientsManager.GetClient())
             {
-                client.As<Instrument>();
-
                 foreach (var instrument in instruments)
                 {
-                    client.Store(instrument);
+                    client.Set(
+                        $"instruments:{instrument.Symbol}",
+                        JsonSerializer.SerializeToString(instrument));
                 }
 
                 return CommandResult.Ok("Added all instruments to the repository");
@@ -80,47 +85,42 @@ namespace Nautilus.Redis
             return CommandResult.Ok();
         }
 
-        public QueryResult<IList<string>> GetAllKeys()
-        {
-            using (var redis = this.clientsManager.GetClient())
-            {
-                var client = redis.As<Instrument>();
-
-                var ids = client.GetAllKeys();
-
-                return ids != null
-                    ? QueryResult<IList<string>>.Ok(ids)
-                    : QueryResult<IList<string>>.Fail($"Could not find instrument {ids}");
-            }
-        }
-
         public QueryResult<Instrument> GetInstrument(Symbol symbol)
         {
             using (var redis = this.clientsManager.GetClient())
             {
-                var client = redis.As<Instrument>();
+                if (redis.ContainsKey("instruments:" + symbol))
+                {
+                    var serialized = redis.Get<string>("instruments:" + symbol);
+                    var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
+                    var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
 
+                    var instrument = new Instrument(
+                        new Symbol(deserializedSymbol["Code"], deserializedSymbol["Exchange"].ToEnum<Exchange>()),
+                        new EntityId(deserializedSymbol["Value"]),
+                        new EntityId("AUD/USD"),
+                        deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
+                        deserialized["SecurityType"].ToEnum<SecurityType>(),
+                        Convert.ToInt32(deserialized["TickDecimals"]),
+                        Convert.ToDecimal(deserialized["TickSize"]),
+                        Convert.ToInt32(deserialized["TickValue"]),
+                        Convert.ToInt32(deserialized["TargetDirectSpread"]),
+                        Convert.ToInt32(deserialized["ContractSize"]),
+                        Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
+                        Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
+                        Convert.ToInt32(deserialized["MinStopDistance"]),
+                        Convert.ToInt32(deserialized["MinLimitDistance"]),
+                        Convert.ToInt32(deserialized["MinTradeSize"]),
+                        Convert.ToInt32(deserialized["MaxTradeSize"]),
+                        Convert.ToInt32(deserialized["MarginRequirement"]),
+                        Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
+                        Convert.ToDecimal(deserialized["RollOverInterestSell"]),
+                        deserialized["Timestamp"].ToZonedDateTimeFromIso());
 
-                var instrument = client.GetById($"urn:instrument:{symbol}");
+                    return QueryResult<Instrument>.Ok(instrument);
+                }
 
-                return instrument != null
-                    ? QueryResult<Instrument>.Ok(instrument)
-                    : QueryResult<Instrument>.Fail($"Could not find urn:instrument:{symbol}");
-            }
-        }
-
-        public QueryResult<string> GetInstrumentString(Symbol symbol)
-        {
-            using (var redis = this.clientsManager.GetClient())
-            {
-                var client = redis.As<Instrument>();
-
-
-                var instrument = client.GetById(symbol).ToString();
-
-                return instrument != null
-                    ? QueryResult<string>.Ok(instrument)
-                    : QueryResult<string>.Fail($"Could not find urn:instrument:{symbol}");
+                return QueryResult<Instrument>.Fail($"Could not find instrument:{symbol}");
             }
         }
 
@@ -131,7 +131,9 @@ namespace Nautilus.Redis
 
         public CommandResult Dispose()
         {
-            throw new System.NotImplementedException();
+            this.clientsManager.Dispose();
+
+            return CommandResult.Ok();
         }
     }
 }
