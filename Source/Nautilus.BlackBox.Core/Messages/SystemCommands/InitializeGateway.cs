@@ -16,34 +16,34 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="InitializeBrokerageGateway"/> class.
+    /// The immutable sealed <see cref="InitializeGateway"/> class.
     /// </summary>
     [Immutable]
-    public sealed class InitializeBrokerageGateway : CommandMessage
+    public sealed class InitializeGateway : CommandMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InitializeBrokerageGateway"/> class.
+        /// Initializes a new instance of the <see cref="InitializeGateway"/> class.
         /// </summary>
-        /// <param name="tradeGateway">The message brokerage gateway.</param>
+        /// <param name="fixGateway">The message brokerage gateway.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public InitializeBrokerageGateway(
-            ITradeGateway tradeGateway,
+        public InitializeGateway(
+            IFixGateway fixGateway,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotNull(tradeGateway, nameof(tradeGateway));
+            Validate.NotNull(fixGateway, nameof(fixGateway));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
-            this.TradeGateway = tradeGateway;
+            this.FixGateway = fixGateway;
         }
 
         /// <summary>
         /// Gets the messages brokerage gateway.
         /// </summary>
-        public ITradeGateway TradeGateway { get; }
+        public IFixGateway FixGateway { get; }
     }
 }

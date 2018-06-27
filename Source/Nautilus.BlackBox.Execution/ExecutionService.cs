@@ -56,7 +56,7 @@ namespace Nautilus.BlackBox.Execution
         private void SetupCommandMessageHandling()
         {
             // Setup system commands.
-            this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
+            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
 
             // Setup trade commands.
@@ -106,7 +106,7 @@ namespace Nautilus.BlackBox.Execution
             });
         }
 
-        private void OnMessage(InitializeBrokerageGateway message)
+        private void OnMessage(InitializeGateway message)
         {
             Debug.NotNull(message, nameof(message));
 

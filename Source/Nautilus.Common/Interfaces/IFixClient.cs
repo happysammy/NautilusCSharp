@@ -9,13 +9,15 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The adapter for FIX data feed client.
     /// </summary>
-    public interface IDataClient
+    public interface IFixClient
     {
         /// <summary>
         /// Gets the name of the brokerage.
@@ -42,7 +44,7 @@ namespace Nautilus.Common.Interfaces
         /// Initializes the FIX gateway.
         /// </summary>
         /// <param name="gateway">The FIX gateway.</param>
-        void InitializeGateway(ITradeGateway gateway);
+        void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
         /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
@@ -83,5 +85,35 @@ namespace Nautilus.Common.Interfaces
         /// Requests an update on all instruments from the brokerage.
         /// </summary>
         void UpdateInstrumentsSubscribeAll();
+
+        /// <summary>
+        /// Submits an entry order with a stop-loss and profit target to the brokerage.
+        /// </summary>
+        /// <param name="order">The atomic order.</param>
+        void SubmitEntryLimitStopOrder(AtomicOrder order);
+
+        /// <summary>
+        /// Submits an entry order with a stop-loss to the brokerage.
+        /// </summary>
+        /// <param name="order">The atomic order.</param>
+        void SubmitEntryStopOrder(AtomicOrder order);
+
+        /// <summary>
+        /// Submits a request to modify the stop-loss of an existing order.
+        /// </summary>
+        /// <param name="stoplossModification">The stop-loss modification.</param>
+        void ModifyStoplossOrder(KeyValuePair<Order, Price> stoplossModification);
+
+        /// <summary>
+        /// Submits a request to cancel the given order.
+        /// </summary>
+        /// <param name="order">The order.</param>
+        void CancelOrder(Order order);
+
+        /// <summary>
+        /// Submits a request to close the given position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        void ClosePosition(Position position);
     }
 }

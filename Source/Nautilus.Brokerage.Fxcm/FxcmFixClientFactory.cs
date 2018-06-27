@@ -42,41 +42,13 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Creates a new <see cref="IDataClient"/>.
+        /// Creates a new <see cref="IFixClient"/>.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adatper.</param>
         /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns></returns>
-        public IDataClient DataClient(
-            IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
-            ITickProcessor tickProcessor)
-        {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tickProcessor, nameof(tickProcessor));
-
-            return new FixClient(
-                container,
-                tickProcessor,
-                new FxcmFixMessageHandler(container, tickProcessor),
-                new FxcmFixMessageRouter(container),
-                this.credentials,
-                Broker.FXCM,
-                FxcmSymbolProvider.GetAllBrokerSymbols(),
-                FxcmSymbolProvider.GetAllSymbols(),
-                FxcmTickSizeProvider.GetIndex());
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="ITradeClient"/>.
-        /// </summary>
-        /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adatper.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
-        /// <returns></returns>
-        public ITradeClient TradeClient(
+        public IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ITickProcessor tickProcessor)

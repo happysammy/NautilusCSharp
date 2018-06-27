@@ -40,7 +40,7 @@ namespace Nautilus.BlackBox.Data
         private readonly IActorRef marketDataPortRef;
         private readonly IDictionary<Symbol, IActorRef> marketDataProcessorIndex = new Dictionary<Symbol, IActorRef>();
 
-        private ITradeGateway tradeGateway;
+        private IFixGateway fixGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -76,7 +76,7 @@ namespace Nautilus.BlackBox.Data
         /// </summary>
         private void SetupCommandMessageHandling()
         {
-            this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
+            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
@@ -91,7 +91,7 @@ namespace Nautilus.BlackBox.Data
         private void OnMessage(Subscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.NotNull(this.tradeGateway, nameof(this.tradeGateway));
+            Debug.NotNull(this.fixGateway, nameof(this.fixGateway));
 
             this.Execute(() =>
             {
@@ -130,13 +130,13 @@ namespace Nautilus.BlackBox.Data
         }
 
         // Brokerage Gateway should be null before receiving this message.
-        private void OnMessage(InitializeBrokerageGateway message)
+        private void OnMessage(InitializeGateway message)
         {
             Debug.NotNull(message, nameof(message));
 
             this.Execute(() =>
                 {
-                    this.tradeGateway = message.TradeGateway;
+                    this.fixGateway = message.FixGateway;
                 });
         }
 

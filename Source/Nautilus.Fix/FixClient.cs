@@ -23,7 +23,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixComponentBase, ITradeClient
+    public class FixClient : FixComponentBase, IFixClient
     {
         private readonly IReadOnlyList<string> brokerSymbols;
         private readonly IReadOnlyList<Symbol> symbols;
@@ -90,11 +90,11 @@ namespace Nautilus.Fix
         /// The initializes the brokerage gateway.
         /// </summary>
         /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeGateway(ITradeGateway gateway)
+        public void InitializeGateway(IFixGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.FixMessageHandler.InitializeBrokerageGateway(gateway);
+            this.FixMessageHandler.InitializeGateway(gateway);
         }
 
         /// <summary>

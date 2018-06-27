@@ -37,7 +37,7 @@ namespace Nautilus.BlackBox.Core
     {
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly ITradeGateway tradeGateway;
+        private readonly IFixGateway fixGateway;
         private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
         private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
 
@@ -50,8 +50,8 @@ namespace Nautilus.BlackBox.Core
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter"></param>
         /// <param name="switchboard">The service factory.</param>
-        /// <param name="tradeGateway">The brokerage gateway.</param>
-        /// <param name="tradeClient">The brokerage client.</param>
+        /// <param name="fixGateway">The brokerage gateway.</param>
+        /// <param name="fixClient">The brokerage client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
@@ -60,8 +60,8 @@ namespace Nautilus.BlackBox.Core
             BlackBoxContainer container,
             MessagingAdapter messagingAdapter,
             Switchboard switchboard,
-            ITradeGateway tradeGateway,
-            ITradeClient tradeClient,
+            IFixGateway fixGateway,
+            IFixClient fixClient,
             IBrokerageAccount account,
             IRiskModel riskModel)
             : base(
@@ -74,14 +74,14 @@ namespace Nautilus.BlackBox.Core
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(switchboard, nameof(switchboard));
-            Validate.NotNull(tradeGateway, nameof(tradeGateway));
-            Validate.NotNull(tradeClient, nameof(tradeClient));
+            Validate.NotNull(fixGateway, nameof(fixGateway));
+            Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
-            this.tradeGateway = tradeGateway;
+            this.fixGateway = fixGateway;
 
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
@@ -93,8 +93,8 @@ namespace Nautilus.BlackBox.Core
 
             this.Send(
                 new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution },
-                new InitializeBrokerageGateway(
-                    this.tradeGateway,
+                new InitializeGateway(
+                    this.fixGateway,
                     this.NewGuid(),
                     this.TimeNow()));
 
@@ -106,7 +106,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            tradeClient.InitializeGateway(this.tradeGateway);
+            fixClient.InitializeGateway(this.fixGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -126,19 +126,8 @@ namespace Nautilus.BlackBox.Core
         {
             this.Execute(() =>
             {
-                this.tradeGateway.Connect();
+                this.fixGateway.Connect();
             });
-        }
-
-        /// <summary>
-        /// Initializes the brokerage session.
-        /// </summary>
-        public void InitializeSession()
-        {
-//            this.Execute(() =>
-//            {
-//                this.brokerageGateway.InitializeSession();
-//            });
         }
 
         /// <summary>
@@ -286,7 +275,7 @@ namespace Nautilus.BlackBox.Core
             {
                 //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
 
-                this.tradeGateway.Disconnect();
+                this.fixGateway.Disconnect();
 
                 this.StopAlphaStrategyModulesAll();
                 this.RemoveAlphaStrategyModulesAll();

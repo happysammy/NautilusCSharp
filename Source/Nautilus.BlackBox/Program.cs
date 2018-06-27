@@ -96,10 +96,6 @@ namespace Nautilus.BlackBox
 
             Console.ReadLine();
 
-            blackBox.InitializeSession();
-
-            Console.ReadLine();
-
             var tradingSymbols = new List<Symbol>
             {
                 new Symbol("AUDUSD", Exchange.FXCM),

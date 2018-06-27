@@ -58,8 +58,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
                 setupContainer,
                 messagingAdapter)));
 
-            var message = new InitializeBrokerageGateway(
-                new Mock<ITradeGateway>().Object,
+            var message = new InitializeGateway(
+                new Mock<IFixGateway>().Object,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

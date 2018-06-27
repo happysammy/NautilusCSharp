@@ -123,7 +123,6 @@ namespace NautilusDB
             this.nautilusDB = DatabaseFactory.Create(
                 loggingAdapter,
                 fixClientFactory,
-                null,
                 barRepository,
                 instrumentRepository);
 

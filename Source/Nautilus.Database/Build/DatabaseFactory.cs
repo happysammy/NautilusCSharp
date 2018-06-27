@@ -11,6 +11,7 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.Common;
     using Nautilus.Core.Validation;
     using NodaTime;
     using Nautilus.Common.Componentry;
@@ -37,7 +38,6 @@ namespace Nautilus.Database.Build
         /// </summary>
         /// <param name="logger">The database logger.</param>
         /// <param name="fixClientFactory">The FIX client factory.</param>
-        /// <param name="gatewayFactory">The FIX gateway factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <returns>A built Nautilus database.</returns>
@@ -45,13 +45,11 @@ namespace Nautilus.Database.Build
         public static Database Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
-            IGatewayFactory gatewayFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
-            Validate.NotNull(gatewayFactory, nameof(gatewayFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
@@ -112,17 +110,19 @@ namespace Nautilus.Database.Build
                 { DatabaseService.BarPublisher, barPublisherRef}
             };
 
-            var fixClient = fixClientFactory.TradeClient(
+            var fixClient = fixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
                 tickDataProcessor);
 
-            var fixGateway = gatewayFactory.Create(
+            var fixGateway = new FixGateway(
                 setupContainer,
                 messagingAdapter,
                 fixClient,
                 instrumentRepository,
-                CurrencyCode.GBP);
+                CurrencyCode.GBP,
+                ServiceContext.FIX,
+                ServiceContext.FIX);
 
             fixClient.InitializeGateway(fixGateway);
 

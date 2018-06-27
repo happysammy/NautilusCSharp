@@ -11,7 +11,6 @@ namespace Nautilus.BlackBox.Execution
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Core.Build;
@@ -28,7 +27,7 @@ namespace Nautilus.BlackBox.Execution
     [Immutable]
     public sealed class OrderBus : ActorComponentBusConnectedBase
     {
-        private ITradeGateway tradeGateway;
+        private IFixGateway gateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderBus"/> class.
@@ -62,83 +61,83 @@ namespace Nautilus.BlackBox.Execution
 
         private void SetupServiceMessageHandling()
         {
-            this.Receive<InitializeBrokerageGateway>(msg => this.OnMessage(msg));
+            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(InitializeBrokerageGateway message)
+        private void OnMessage(InitializeGateway message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.tradeGateway = message.TradeGateway;
-            this.Log.Information($"{this.tradeGateway} initialized.");
+            this.gateway = message.FixGateway;
+            this.Log.Information($"{this.gateway} initialized.");
 
-            Debug.NotNull(this.tradeGateway, nameof(this.tradeGateway));
+            Debug.NotNull(this.gateway, nameof(this.gateway));
         }
 
         private void OnMessage(SubmitTrade message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.True(this.IsConnectedToBroker(), nameof(this.tradeGateway));
+            Debug.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
             foreach (var atomicOrder in message.OrderPacket.Orders)
             {
                 this.RouteOrder(atomicOrder);
 
-                this.Log.Debug($"Routing ELS Order {atomicOrder.Symbol} => {this.tradeGateway.Broker}");
+                this.Log.Debug($"Routing ELS Order {atomicOrder.Symbol} => {this.gateway.Broker}");
             }
         }
 
         private void OnMessage(CancelOrder message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.tradeGateway));
+            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
-            this.tradeGateway.CancelOrder(message.Order);
+            this.gateway.CancelOrder(message.Order);
         }
 
         private void OnMessage(ModifyStopLoss message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.tradeGateway));
+            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
             foreach (var stoplossModification in message.StopLossModificationsIndex)
             {
                 var orderModification = new KeyValuePair<Order, Price>(stoplossModification.Key, stoplossModification.Value);
-                this.tradeGateway.ModifyStoplossOrder(orderModification);
+                this.gateway.ModifyStoplossOrder(orderModification);
                 var symbol = stoplossModification.Key.Symbol;
 
-                this.Log.Debug($"Routing StoplossReplaceRequest {symbol} => {this.tradeGateway.Broker}");
+                this.Log.Debug($"Routing StoplossReplaceRequest {symbol} => {this.gateway.Broker}");
             }
         }
 
         private void OnMessage(ClosePosition message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.tradeGateway));
+            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
             var tradeUnit = message.ForTradeUnit;
-            this.tradeGateway.ClosePosition(tradeUnit.Position);
+            this.gateway.ClosePosition(tradeUnit.Position);
 
-            this.Log.Debug($"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.tradeGateway.Broker}");
+            this.Log.Debug($"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.gateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.tradeGateway));
+            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
             if (atomicOrder.ProfitTargetOrder.HasNoValue)
             {
-                this.tradeGateway.SubmitEntryStopOrder(atomicOrder);
+                this.gateway.SubmitEntryStopOrder(atomicOrder);
 
                 return;
             }
 
-            this.tradeGateway.SubmitEntryLimitStopOrder(atomicOrder);
+            this.gateway.SubmitEntryLimitStopOrder(atomicOrder);
         }
 
         private bool IsConnectedToBroker()
         {
-            Debug.NotNull(this.tradeGateway, nameof(this.tradeGateway));
+            Debug.NotNull(this.gateway, nameof(this.gateway));
 
-            if (!this.tradeGateway.IsConnected)
+            if (!this.gateway.IsConnected)
             {
                 this.Log.Warning("Cannot process orders (not connected to broker).");
 

@@ -32,41 +32,41 @@ namespace Nautilus.Common
     /// <summary>
     /// The system boundary for the trading implementation.
     /// </summary>
-    public sealed class TradeGateway : ComponentBusConnectedBase, ITradeGateway
+    public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly ITradeClient tradeClient;
+        private readonly IFixClient fixClient;
         private readonly CurrencyCode accountCurrency;
         private readonly Enum riskService;
         private readonly Enum portfolioService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TradeGateway"/> class.
+        /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tradeClient">The trade client.</param>
+        /// <param name="fixClient">The trade client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
-        public TradeGateway(
+        public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITradeClient tradeClient,
+            IFixClient fixClient,
             IInstrumentRepository instrumentRepository,
             CurrencyCode accountCurrency,
             Enum riskService,
             Enum portfolioService)
             : base(
                 ServiceContext.FIX,
-                new Label(nameof(TradeGateway)),
+                new Label(nameof(FixGateway)),
                 container,
                 messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tradeClient, nameof(tradeClient));
+            Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
-            this.tradeClient = tradeClient;
+            this.fixClient = fixClient;
             this.instrumentRepository = instrumentRepository;
             this.accountCurrency = accountCurrency;
             this.riskService = riskService;
@@ -76,12 +76,12 @@ namespace Nautilus.Common
         /// <summary>
         /// Gets the brokerage gateways broker name.
         /// </summary>
-        public Broker Broker => this.tradeClient.Broker;
+        public Broker Broker => this.fixClient.Broker;
 
         /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
-        public bool IsConnected => this.tradeClient.IsConnected;
+        public bool IsConnected => this.fixClient.IsConnected;
 
         /// <summary>
         /// Returns the current time of the <see cref="BlackBox"/> system clock.
@@ -97,7 +97,7 @@ namespace Nautilus.Common
         /// </summary>
         public void Connect()
         {
-            this.tradeClient.Connect();
+            this.fixClient.Connect();
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Nautilus.Common
         /// </summary>
         public void Disconnect()
         {
-            this.tradeClient.Disconnect();
+            this.fixClient.Disconnect();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(symbol, nameof(symbol));
 
-            this.tradeClient.RequestMarketDataSubscribe(symbol);
+            this.fixClient.RequestMarketDataSubscribe(symbol);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Nautilus.Common
         /// </summary>
         public void RequestMarketDataSubscribeAll()
         {
-            this.tradeClient.RequestMarketDataSubscribeAll();
+            this.fixClient.RequestMarketDataSubscribeAll();
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(symbol, nameof(symbol));
 
-            this.tradeClient.UpdateInstrumentSubscribe(symbol);
+            this.fixClient.UpdateInstrumentSubscribe(symbol);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nautilus.Common
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.tradeClient.UpdateInstrumentsSubscribeAll();
+            this.fixClient.UpdateInstrumentsSubscribeAll();
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradeClient.SubmitEntryLimitStopOrder(order);
+            this.fixClient.SubmitEntryLimitStopOrder(order);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradeClient.SubmitEntryStopOrder(order);
+            this.fixClient.SubmitEntryStopOrder(order);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(stoplossModification, nameof(stoplossModification));
 
-            this.tradeClient.ModifyStoplossOrder(stoplossModification);
+            this.fixClient.ModifyStoplossOrder(stoplossModification);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(order, nameof(order));
 
-            this.tradeClient.CancelOrder(order);
+            this.fixClient.CancelOrder(order);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Nautilus.Common
         {
             Validate.NotNull(position, nameof(position));
 
-            this.tradeClient.ClosePosition(position);
+            this.fixClient.ClosePosition(position);
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
-                    this.tradeClient.Broker,
+                    this.fixClient.Broker,
                     account,
                     this.GetMoneyType(cashBalance),
                     this.GetMoneyType(cashStartDay),

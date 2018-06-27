@@ -31,7 +31,7 @@ namespace Nautilus.Database
     {
         private readonly ActorSystem actorSystem;
         private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
-        private readonly IDataClient dataClient;
+        private readonly IFixClient fixClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -40,14 +40,14 @@ namespace Nautilus.Database
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
-        /// <param name="dataClient">The data client.</param>
+        /// <param name="fixClient">The data client.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             IReadOnlyDictionary<Enum, IActorRef> addresses,
-            IDataClient dataClient)
+            IFixClient fixClient)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -61,7 +61,7 @@ namespace Nautilus.Database
 
             this.actorSystem = actorSystem;
             this.addresses = addresses;
-            this.dataClient = dataClient;
+            this.fixClient = fixClient;
 
             messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),
@@ -74,14 +74,14 @@ namespace Nautilus.Database
         /// </summary>
         public void Start()
         {
-            this.dataClient.Connect();
+            this.fixClient.Connect();
 
-            while (!this.dataClient.IsConnected)
+            while (!this.fixClient.IsConnected)
             {
                 // Wait for connection.
             }
 
-            this.dataClient.RequestMarketDataSubscribeAll();
+            this.fixClient.RequestMarketDataSubscribeAll();
 
             this.Send(
                 DatabaseService.CollectionManager,
@@ -102,7 +102,7 @@ namespace Nautilus.Database
                 new BarSpecification(QuoteType.Mid, Resolution.Hour, 1)
             };
 
-            foreach (var symbol in this.dataClient.GetAllSymbols())
+            foreach (var symbol in this.fixClient.GetAllSymbols())
             {
                 foreach (var barSpec in barSpecs)
                 {
@@ -122,7 +122,7 @@ namespace Nautilus.Database
         /// </summary>
         public void Shutdown()
         {
-            this.dataClient.Disconnect();
+            this.fixClient.Disconnect();
 
             // Placeholder for the log events (do not refactor away).
             var actorSystemName = this.actorSystem.Name;
