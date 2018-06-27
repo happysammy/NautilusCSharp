@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments symbol.
         /// </summary>
-        public Symbol Symbol { get; }
+        public Symbol Symbol { get; private set; }
 
         /// <summary>
         /// Gets the instruments identifier.
@@ -111,87 +111,82 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments broker symbol.
         /// </summary>
-        public EntityId BrokerSymbol { get; }
+        public EntityId BrokerSymbol { get; private set; }
 
         /// <summary>
         /// Gets the instruments quote currency.
         /// </summary>
-        public CurrencyCode QuoteCurrency { get; }
+        public CurrencyCode QuoteCurrency { get; private set; }
 
         /// <summary>
         /// Gets the instruments security type.
         /// </summary>
-        public SecurityType SecurityType { get; }
+        public SecurityType SecurityType { get; private set; }
 
         /// <summary>
         /// Gets the instruments tick size.
         /// </summary>
-        public decimal TickSize { get; }
+        public decimal TickSize { get; private set; }
 
         /// <summary>
         /// Gets the instruments tick value.
         /// </summary>
-        public decimal TickValue { get; }
+        public decimal TickValue { get; private set; }
 
         /// <summary>
         /// Gets the instruments target direct spread.
         /// </summary>
-        public int TargetDirectSpread { get; }
+        public int TargetDirectSpread { get; private set; }
 
         /// <summary>
         /// Gets the instruments contract size.
         /// </summary>
-        public int ContractSize { get; }
+        public int ContractSize { get; private set; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance for entry.
         /// </summary>
-        public int MinStopDistanceEntry { get; }
+        public int MinStopDistanceEntry { get; private set; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance for entry.
         /// </summary>
-        public int MinLimitDistanceEntry { get; }
+        public int MinLimitDistanceEntry { get; private set; }
 
         /// <summary>
         /// Gets the instruments minimum stop distance.
         /// </summary>
-        public int MinStopDistance { get; }
+        public int MinStopDistance { get; private set; }
 
         /// <summary>
         /// Gets the instruments minimum limit distance.
         /// </summary>
-        public int MinLimitDistance { get; }
+        public int MinLimitDistance { get; private set; }
 
         /// <summary>
         /// Gets the instruments minimum trade size.
         /// </summary>
-        public int MinTradeSize { get; }
+        public int MinTradeSize { get; private set; }
 
         /// <summary>
         /// Gets the instruments maximum trade size.
         /// </summary>
-        public int MaxTradeSize { get; }
+        public int MaxTradeSize { get; private set; }
 
         /// <summary>
         /// Gets the instruments margin requirement.
         /// </summary>
-        public decimal MarginRequirement { get; }
+        public decimal MarginRequirement { get; private set; }
 
         /// <summary>
         /// Gets the instruments rollover interest for long positions.
         /// </summary>
-        public decimal RolloverInterestBuy { get; }
+        public decimal RolloverInterestBuy { get; private set; }
 
         /// <summary>
         /// Gets the instruments rollover interest for short positions.
         /// </summary>
-        public decimal RolloverInterestSell { get; }
-
-        /// <summary>
-        /// The instruments creation timestamp.
-        /// </summary>
-        public ZonedDateTime Timestamp => base.Timestamp;
+        public decimal RolloverInterestSell { get; private set; }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the
@@ -199,12 +194,14 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="obj">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object obj) => obj is Instrument otherInstrument && otherInstrument.Symbol.Equals(this.Symbol);
+        public override bool Equals(object obj) =>
+            obj is Instrument otherInstrument && otherInstrument.Symbol.Equals(this.Symbol);
 
         /// <summary>
         /// Returns the hash code of the <see cref="Instrument"/>.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
         public override int GetHashCode() => this.Symbol.GetHashCode();
 
         /// <summary>

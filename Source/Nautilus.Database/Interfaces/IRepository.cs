@@ -13,7 +13,7 @@ using Nautilus.Core.CQS;
 
 namespace Nautilus.Database.Interfaces
 {
-    public interface IEconomicEventRepository<T>
+    public interface IRepository<T>
     {
         CommandResult Add(T entity);
 

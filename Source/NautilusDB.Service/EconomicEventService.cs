@@ -26,11 +26,11 @@ namespace NautilusDB.Service
     public class EconomicEventService : Service
     {
         private readonly ILoggingAdapter logger;
-        private readonly IEconomicEventRepository<EconomicEvent> economicEventRepository;
+        private readonly IRepository<EconomicEvent> economicEventRepository;
 
         public EconomicEventService(
             ILoggingAdapter logger,
-            IEconomicEventRepository<EconomicEvent> economicEventRepository)
+            IRepository<EconomicEvent> economicEventRepository)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(economicEventRepository, nameof(economicEventRepository));

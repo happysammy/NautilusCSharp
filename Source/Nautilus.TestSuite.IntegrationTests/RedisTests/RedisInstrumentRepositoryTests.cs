@@ -11,14 +11,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using NodaTime;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Compression;
-    using Nautilus.Database.Integrity.Checkers;
-    using Nautilus.Database.Types;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
 
@@ -27,7 +22,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisInstrumentRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly IInstrumentRepository repository;
+        private readonly RedisInstrumentRepository repository;
 
         public RedisInstrumentRepositoryTests(ITestOutputHelper output)
         {
@@ -35,9 +30,10 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             this.output = output;
             var localHost = RedisConstants.LocalHost;
-            var clientManager = new BasicRedisClientManager(new[] { localHost }, new[] { localHost });
+            var clientManager = new BasicRedisClientManager(
+                new[] { localHost },
+                new[] { localHost });
 
-            // Data compression off so that redis-cli is readable.
             this.repository = new RedisInstrumentRepository(clientManager);
 
             this.repository.DeleteAll();
@@ -45,7 +41,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         public void Dispose()
         {
-            this.repository.DeleteAll();
+            //this.repository.DeleteAll();
         }
 
         [Fact]
@@ -59,6 +55,52 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             this.output.WriteLine(result.Message);
+        }
+
+        [Fact]
+        internal void Test_can_get_all_instrument_keys()
+        {
+            // Arrange
+            var instrument = StubInstrumentFactory.AUDUSD();
+            this.repository.Add(instrument);
+
+            // Act
+            var ids = this.repository.GetAllKeys();
+
+            // Assert
+            this.output.WriteLine(ids.Value[0]);
+            //Assert.Equal(instrument, foundInstrument.Value);
+
+        }
+
+        [Fact]
+        internal void Test_can_find_one_instrument_string()
+        {
+            // Arrange
+            var instrument = StubInstrumentFactory.AUDUSD();
+            this.repository.Add(instrument);
+
+            // Act
+            var foundInstrument = this.repository.GetInstrumentString(instrument.Symbol);
+
+            // Assert
+            this.output.WriteLine(foundInstrument.Value);
+
+        }
+
+        [Fact]
+        internal void Test_can_find_one_instrument()
+        {
+            // Arrange
+            var instrument = StubInstrumentFactory.AUDUSD();
+            this.repository.Add(instrument);
+
+            // Act
+            var foundInstrument = this.repository.GetInstrument(instrument.Symbol);
+
+            // Assert
+            this.output.WriteLine(foundInstrument.Value.ToString());
+
         }
     }
 }

@@ -13,8 +13,9 @@ namespace Nautilus.Redis
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
+    using QuickFix.Fields;
     using ServiceStack.Redis;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
     /// Provides a Redis implementation for the system instrument repository.
@@ -49,7 +50,7 @@ namespace Nautilus.Redis
 
                 client.Store(instrument);
 
-                return CommandResult.Ok();
+                return CommandResult.Ok($"Added the {instrument.Symbol} instrument to the repository");
             }
         }
 
@@ -64,7 +65,7 @@ namespace Nautilus.Redis
                     client.Store(instrument);
                 }
 
-                return CommandResult.Ok();
+                return CommandResult.Ok("Added all instruments to the repository");
             }
         }
 
@@ -78,9 +79,48 @@ namespace Nautilus.Redis
             return CommandResult.Ok();
         }
 
+        public QueryResult<IList<string>> GetAllKeys()
+        {
+            using (var redis = this.clientsManager.GetClient())
+            {
+                var client = redis.As<Instrument>();
+
+                var ids = client.GetAllKeys();
+
+                return ids != null
+                    ? QueryResult<IList<string>>.Ok(ids)
+                    : QueryResult<IList<string>>.Fail($"Could not find instrument {ids}");
+            }
+        }
+
         public QueryResult<Instrument> GetInstrument(Symbol symbol)
         {
-            throw new System.NotImplementedException();
+            using (var redis = this.clientsManager.GetClient())
+            {
+                var client = redis.As<Instrument>();
+
+
+                var instrument = client.GetById($"urn:instrument:{symbol}");
+
+                return instrument != null
+                    ? QueryResult<Instrument>.Ok(instrument)
+                    : QueryResult<Instrument>.Fail($"Could not find urn:instrument:{symbol}");
+            }
+        }
+
+        public QueryResult<string> GetInstrumentString(Symbol symbol)
+        {
+            using (var redis = this.clientsManager.GetClient())
+            {
+                var client = redis.As<Instrument>();
+
+
+                var instrument = client.GetById(symbol).ToString();
+
+                return instrument != null
+                    ? QueryResult<string>.Ok(instrument)
+                    : QueryResult<string>.Fail($"Could not find urn:instrument:{symbol}");
+            }
         }
 
         public QueryResult<decimal> GetTickSize(Symbol symbol)

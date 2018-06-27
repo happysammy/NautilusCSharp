@@ -7,7 +7,7 @@
     using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Entities;
 
-    public class MockEconomicEventRepository : IEconomicEventRepository<EconomicEvent>
+    public class MockEconomicEventRepository : IRepository<EconomicEvent>
     {
         public CommandResult Add(EconomicEvent entity)
         {
