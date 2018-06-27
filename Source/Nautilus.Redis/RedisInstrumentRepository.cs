@@ -11,6 +11,7 @@ namespace Nautilus.Redis
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -53,7 +54,23 @@ namespace Nautilus.Redis
         /// <returns>The result of the operation.</returns>
         public CommandResult CacheAllInstruments()
         {
+            var keys = this.GetAllKeys();
+
+            foreach (var key in keys)
+            {
+                this.Read(key)
+                    .OnSuccess(i => this.instrumentCache.Add(i.Symbol, i));
+            }
+
             return CommandResult.Ok();
+        }
+
+        public IEnumerable<string> GetAllKeys()
+        {
+            using (var client = this.clientsManager.GetClient())
+            {
+                return client.GetKeysByPattern(KeyProvider.InstrumentsWildcard);
+            }
         }
 
         public CommandResult Add(Instrument instrument)
@@ -61,7 +78,7 @@ namespace Nautilus.Redis
             using (var client = this.clientsManager.GetClient())
             {
                 client.Set(
-                    $"{KeyProvider.InstrumentsNamespace}{instrument.Symbol}",
+                    KeyProvider.GetInstrumentKey(instrument.Symbol),
                     JsonSerializer.SerializeToString(instrument));
 
                 return CommandResult.Ok($"Added the {instrument.Symbol} instrument to the repository");
@@ -75,7 +92,7 @@ namespace Nautilus.Redis
                 foreach (var instrument in instruments)
                 {
                     client.Set(
-                        $"{KeyProvider.InstrumentsNamespace}{instrument.Symbol}",
+                        KeyProvider.GetInstrumentKey(instrument.Symbol),
                         JsonSerializer.SerializeToString(instrument));
                 }
 
@@ -110,13 +127,13 @@ namespace Nautilus.Redis
         }
 
 
-        private QueryResult<Instrument> Read(Symbol symbol)
+        public QueryResult<Instrument> Read(string key)
         {
             using (var redis = this.clientsManager.GetClient())
             {
-                if (redis.ContainsKey("instruments:" + symbol))
+                if (redis.ContainsKey(key))
                 {
-                    var serialized = redis.Get<string>("instruments:" + symbol);
+                    var serialized = redis.Get<string>(key);
                     var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
                     var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
 
@@ -145,7 +162,7 @@ namespace Nautilus.Redis
                     return QueryResult<Instrument>.Ok(instrument);
                 }
 
-                return QueryResult<Instrument>.Fail($"Cannot find instrument:{symbol}");
+                return QueryResult<Instrument>.Fail($"Cannot find {key}");
             }
         }
 

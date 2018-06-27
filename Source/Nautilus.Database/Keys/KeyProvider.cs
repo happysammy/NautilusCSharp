@@ -26,6 +26,7 @@ namespace Nautilus.Database.Keys
         private const string BarsConst = "bars";
         private const string InstrumentsConst = "instruments";
         private const string WildcardConst = "*";
+        private const string Seperator = ":";
 
         /// <summary>
         /// Gets the ticks namespace <see cref="string"/>.
@@ -91,8 +92,8 @@ namespace Nautilus.Database.Keys
             Debug.NotNull(symbol, nameof(symbol));
 
             return TicksConst +
-                   $":{symbol.Exchange.ToString().ToLower()}" +
-                   $":{symbol.Code.ToLower()}" + WildcardConst;
+                   $"{Seperator}{symbol.Exchange.ToString().ToLower()}" +
+                   $"{Seperator}{symbol.Code.ToLower()}" + WildcardConst;
         }
 
         /// <summary>
@@ -129,10 +130,22 @@ namespace Nautilus.Database.Keys
             Debug.NotNull(barType, nameof(barType));
 
             return BarsConst +
-                   $":{barType.Symbol.Exchange.ToString().ToLower()}" +
-                   $":{barType.Symbol.Code.ToLower()}" +
-                   $":{barType.Specification.Resolution.ToString().ToLower()}" +
-                   $":{barType.Specification.QuoteType.ToString().ToLower()}" + WildcardConst;
+                   $"{Seperator}{barType.Symbol.Exchange.ToString().ToLower()}" +
+                   $"{Seperator}{barType.Symbol.Code.ToLower()}" +
+                   $"{Seperator}{barType.Specification.Resolution.ToString().ToLower()}" +
+                   $"{Seperator}{barType.Specification.QuoteType.ToString().ToLower()}" + WildcardConst;
+        }
+
+        /// <summary>
+        /// Returns the instruments key.
+        /// </summary>
+        /// <param name="symbol">The instruments symbol.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetInstrumentKey(Symbol symbol)
+        {
+            Debug.NotNull(symbol, nameof(symbol));
+
+            return InstrumentsConst + Seperator + symbol;
         }
     }
 }

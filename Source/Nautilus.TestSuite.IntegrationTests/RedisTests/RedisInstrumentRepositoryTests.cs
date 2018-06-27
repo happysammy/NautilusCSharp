@@ -10,6 +10,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using Nautilus.Database.Keys;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
@@ -62,11 +64,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Arrange
             var instrument = StubInstrumentFactory.AUDUSD();
             this.repository.Add(instrument);
+            this.repository.CacheAllInstruments();
 
             // Act
             var result = this.repository.Find(instrument.Symbol);
 
             // Assert
+            this.output.WriteLine(this.repository.GetAllKeys().First());
+            this.output.WriteLine(KeyProvider.GetInstrumentKey(instrument.Symbol));
             this.output.WriteLine(result.Message);
             //Assert.Equal(1, count.Value);
             Assert.Equal(instrument, result.Value);
