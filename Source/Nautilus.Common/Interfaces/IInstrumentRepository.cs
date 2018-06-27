@@ -34,20 +34,20 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="instrument">The instrument.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult UpdateInstrument(Instrument instrument);
+        CommandResult Add(Instrument instrument);
 
         /// <summary>
         /// Updates the given collection of instruments in the database.
         /// </summary>
         /// <param name="instruments">The instruments collection (cannot be null or empty).</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult UpdateInstruments(IReadOnlyCollection<Instrument> instruments);
+        CommandResult Add(IReadOnlyCollection<Instrument> instruments);
 
         /// <summary>
         /// Deletes all instruments from the database.
         /// </summary>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult DeleteAllInstrumentsFromDatabase();
+        CommandResult DeleteAll();
 
         /// <summary>
         /// Returns the instrument corresponding to the given symbol.

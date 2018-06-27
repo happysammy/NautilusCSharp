@@ -33,18 +33,20 @@ namespace Nautilus.Redis
     public class RedisBarClient
     {
         private readonly RedisNativeClient redisClient;
+        private readonly IDataCompressor compressor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarClient"/> class.
         /// </summary>
-        /// <param name="redisEndpoint">The <see cref="Redis"/> end point.</param>
+        /// <param name="clientsManager">The redis clients manager.</param>
         /// <param name="compressor">The data compressor.</param>
-        public RedisBarClient(RedisEndpoint redisEndpoint, IDataCompressor compressor)
+        public RedisBarClient(IRedisClientsManager clientsManager, IDataCompressor compressor)
         {
-            Validate.NotNull(redisEndpoint, nameof(redisEndpoint));
+            Validate.NotNull(clientsManager, nameof(clientsManager));
             Validate.NotNull(compressor, nameof(compressor));
 
-            this.redisClient = new RedisNativeClient(redisEndpoint);
+            this.redisClient = (RedisNativeClient)clientsManager.GetClient();
+            this.compressor = compressor;
         }
 
         /// <summary>

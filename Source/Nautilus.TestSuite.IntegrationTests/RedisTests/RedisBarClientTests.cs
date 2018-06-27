@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
+    using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -33,15 +34,19 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             RedisServiceStack.ConfigureServiceStack();
 
             this.output = output;
+            var clientManager = new BasicRedisClientManager(
+                new[] { RedisConstants.LocalHost },
+                new[] { RedisConstants.LocalHost });
+            var compressor = new LZ4DataCompressor(false);
 
             // Data compression off so that redis-cli is readable.
-            this.client = new RedisBarClient(RedisConstants.LocalHost, new LZ4DataCompressor(false));
+            this.client = new RedisBarClient(clientManager, compressor);
             this.client.FlushAll("YES");
         }
 
         public void Dispose()
         {
-            //this.client.FlushAll("YES");
+            this.client.FlushAll("YES");
         }
 
         [Fact]

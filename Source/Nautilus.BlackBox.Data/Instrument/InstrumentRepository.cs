@@ -86,7 +86,7 @@ namespace Nautilus.BlackBox.Data.Instrument
         /// The delete all instruments from database.
         /// </summary>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public CommandResult DeleteAllInstrumentsFromDatabase()
+        public CommandResult DeleteAll()
         {
             this.database
                .Query<Instrument>()
@@ -117,7 +117,7 @@ namespace Nautilus.BlackBox.Data.Instrument
         /// </param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public CommandResult UpdateInstrument(Instrument instrument)
+        public CommandResult Add(Instrument instrument)
         {
             Validate.NotNull(instrument, nameof(instrument));
 
@@ -139,7 +139,7 @@ namespace Nautilus.BlackBox.Data.Instrument
         /// <param name="instruments">The instruments (cannot be null or empty).</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public CommandResult UpdateInstruments(IReadOnlyCollection<Instrument> instruments)
+        public CommandResult Add(IReadOnlyCollection<Instrument> instruments)
         {
             Validate.NotNull(instruments, nameof(instruments));
 

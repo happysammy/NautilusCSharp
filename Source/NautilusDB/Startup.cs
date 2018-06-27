@@ -9,7 +9,6 @@
 namespace NautilusDB
 {
     using System.IO;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -25,7 +24,6 @@ namespace NautilusDB
     using ServiceStack;
     using Nautilus.Redis;
     using Nautilus.Serilog;
-    using NodaTime;
     using ServiceStack.Redis;
 
     /// <summary>
@@ -108,6 +106,7 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost });
 
             var loggingAdapter = new SerilogLogger();
+
             var fixClientFactory = new FxcmFixClientFactory(
                 username,
                 password,
@@ -115,10 +114,9 @@ namespace NautilusDB
 
             var barRepository = new RedisBarRepository(
                 clientManager,
-                RedisConstants.LocalHost,
-                Duration.FromMilliseconds(3000),
                 compressor);
-            var instrumentRepository = new RedisInstrumentRepository();
+
+            var instrumentRepository = new RedisInstrumentRepository(clientManager);
 
             this.nautilusDB = DatabaseFactory.Create(
                 loggingAdapter,

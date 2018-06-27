@@ -8,7 +8,6 @@
 
 namespace Nautilus.Redis
 {
-    using System;
     using System.Linq;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
@@ -23,30 +22,19 @@ namespace Nautilus.Redis
     /// </summary>
     public sealed class RedisBarRepository : IBarRepository
     {
-        private readonly IRedisClientsManager clientsManager;
         private readonly RedisBarClient barClient;
-        private readonly TimeSpan operationsExpiry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
         /// <param name="clientsManager">The clients manager.</param>
-        /// <param name="endpoint">The <see cref="Redis"/> endpoint.</param>
-        /// <param name="operationsExpiry">The operations expiry.</param>
         /// <param name="compressor">The data compressor.</param>
-        public RedisBarRepository(
-            IRedisClientsManager clientsManager,
-            RedisEndpoint endpoint,
-            Duration operationsExpiry,
-            IDataCompressor compressor)
+        public RedisBarRepository(IRedisClientsManager clientsManager, IDataCompressor compressor)
         {
             Validate.NotNull(clientsManager, nameof(clientsManager));
-            Validate.NotNull(endpoint, nameof(endpoint));
-            Validate.NotDefault(operationsExpiry, nameof(operationsExpiry));
+            Validate.NotNull(compressor, nameof(compressor));
 
-            this.clientsManager = clientsManager;
-            this.operationsExpiry = operationsExpiry.ToTimeSpan();
-            this.barClient = new RedisBarClient(endpoint, compressor);
+            this.barClient = new RedisBarClient(clientsManager, compressor);
         }
 
         /// <summary>

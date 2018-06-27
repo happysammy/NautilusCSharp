@@ -25,7 +25,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// The base class for all FIX protocol components.
     /// </summary>
-    public class FixComponentBase : MessageCracker, IApplication
+    public class FixMessageCracker : MessageCracker, IApplication
     {
         private readonly Enum service;
         private readonly Label component;
@@ -49,7 +49,7 @@ namespace Nautilus.Fix
         /// <param name="fixMessageHandler">The FIX message handler</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials</param>
-        protected FixComponentBase(
+        protected FixMessageCracker(
             Enum service,
             Label component,
             IComponentryContainer container,

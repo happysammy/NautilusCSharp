@@ -266,7 +266,7 @@ namespace Nautilus.Common
                 Validate.NotNull(responseId, nameof(responseId));
                 Validate.NotNull(result, nameof(result));
 
-                this.instrumentRepository.UpdateInstruments(instruments);
+                this.instrumentRepository.Add(instruments);
 
                 this.Log.Debug($"SecurityListReceived: (SecurityResponseId={responseId}) result={result}");
             });

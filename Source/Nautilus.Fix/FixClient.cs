@@ -23,7 +23,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixComponentBase, IFixClient
+    public class FixClient : FixMessageCracker, IFixClient
     {
         private readonly IReadOnlyList<string> brokerSymbols;
         private readonly IReadOnlyList<Symbol> symbols;
