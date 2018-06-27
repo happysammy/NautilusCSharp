@@ -56,7 +56,7 @@ namespace Nautilus.BlackBox.Data.Instrument
         /// <summary>
         /// Gets the instrument symbol list.
         /// </summary>
-        public IReadOnlyCollection<Symbol> InstrumentSymbolList => this.instrumentIndex.Keys.ToImmutableList();
+        public IReadOnlyCollection<Symbol> SymbolList => this.instrumentIndex.Keys.ToImmutableList();
 
         /// <summary>
         /// Gets the document store count.

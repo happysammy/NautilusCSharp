@@ -23,7 +23,7 @@ namespace Nautilus.Redis
     public class RedisInstrumentRepository : IInstrumentRepository
     {
         private readonly IRedisClientsManager clientsManager;
-
+        private readonly IReadOnlyCollection<Symbol> symbolList;
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
@@ -33,9 +33,10 @@ namespace Nautilus.Redis
             Validate.NotNull(clientsManager, nameof(clientsManager));
 
             this.clientsManager = clientsManager;
+            this.symbolList = new List<Symbol>();
         }
 
-        public IReadOnlyCollection<Symbol> InstrumentSymbolList { get; }
+        public IReadOnlyCollection<Symbol> SymbolList => this.symbolList;
 
         public CommandResult LoadAllInstrumentsFromDatabase()
         {

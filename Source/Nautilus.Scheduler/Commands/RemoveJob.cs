@@ -28,6 +28,7 @@ namespace Nautilus.Scheduler.Commands
         /// <param name="jobKey">The job key.</param>
         /// <param name="triggerKey">The job trigger key.</param>
         /// <param name="job">The job.</param>
+        /// <param name="sender">The message sender.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public RemoveJob(
@@ -46,6 +47,7 @@ namespace Nautilus.Scheduler.Commands
             this.JobKey = jobKey;
             this.TriggerKey = triggerKey;
             this.Job = job;
+            this.Sender = sender;
         }
 
         /// <summary>
@@ -63,6 +65,9 @@ namespace Nautilus.Scheduler.Commands
         /// </summary>
         public object Job { get; }
 
+        /// <summary>
+        /// Gets the job message sender.
+        /// </summary>
         public IActorRef Sender { get; }
     }
 }

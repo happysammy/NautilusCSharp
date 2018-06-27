@@ -21,7 +21,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the instrument symbol list.
         /// </summary>
-        IReadOnlyCollection<Symbol> InstrumentSymbolList { get; }
+        IReadOnlyCollection<Symbol> SymbolList { get; }
 
         /// <summary>
         /// Loads all instruments from the database.

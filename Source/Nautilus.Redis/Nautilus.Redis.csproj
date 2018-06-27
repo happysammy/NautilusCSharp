@@ -11,6 +11,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="ServiceStack" Version="5.1.0" />
     <PackageReference Include="ServiceStack.Redis" Version="5.1.0" />
+    <PackageReference Include="ServiceStack.Server" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
