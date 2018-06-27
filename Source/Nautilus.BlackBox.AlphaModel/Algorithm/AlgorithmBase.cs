@@ -38,8 +38,8 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             this.AlgorithmLabel = algorithmLabel;
             this.TradeProfile = tradeProfile;
             this.Instrument = instrument;
-            this.TickSize = instrument.TickDecimals;
-            this.DecimalPlaces = this.TickSize.GetDecimalPlaces();
+            this.TickSize = instrument.TickSize;
+            this.DecimalPlaces = instrument.TickDecimals;
         }
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace Nautilus.Brokerage.FXCM
             { "USD/CNH",  5 },
             { "USD/CZK",  5 },
             { "USD/HKD",  5 },
-            { "USD/JPY",  5 },
+            { "USD/JPY",  3 },
             { "USD/NOK",  5 },
             { "USD/SEK",  5 },
             { "USD/TRY",  5 },

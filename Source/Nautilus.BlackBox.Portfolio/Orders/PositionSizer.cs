@@ -76,7 +76,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 signal.EntryPrice,
                 signal.StopLossPrice);
 
-            var tickValueSize = this.instrument.TickDecimals * exchangeRate;
+            var tickValueSize = this.instrument.TickSize * exchangeRate;
 
             var positionSize = Math.Floor(((riskDollars / riskPoints) / tickValueSize) / this.instrument.ContractSize);
 
@@ -134,7 +134,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             var logtext3 = $"RiskPerTrade={riskPerTrade} ((RiskDollars={riskDollars} / RiskPoints={riskPoints})";
             var logtext4 = $"/ tickValueSize={tickValueSize}): TotalPositionSize={positionSize}";
             var logtext5 = $"/ Units={units} (Batches={unitBatches}), FinalPositionSize={positionSizeFinal}";
-            this.Log.Debug("{logtext3} {logtext4} {logtext5}");
+            this.Log.Debug($"{logtext3} {logtext4} {logtext5}");
         }
     }
 }
