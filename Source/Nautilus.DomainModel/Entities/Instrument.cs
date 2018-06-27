@@ -86,8 +86,8 @@ namespace Nautilus.DomainModel.Entities
             this.BrokerSymbol = brokerSymbol;
             this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
-            this.TickSize = tickSize;
             this.TickDecimals = tickDecimals;
+            this.TickSize = tickSize;
             this.TickValue = tickValue;
             this.TargetDirectSpread = targetDirectSpread;
             this.ContractSize = contractSize;

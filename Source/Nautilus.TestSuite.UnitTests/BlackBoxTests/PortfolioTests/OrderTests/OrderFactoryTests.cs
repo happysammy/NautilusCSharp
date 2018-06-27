@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -101,6 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 1);
 
             // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal("TestTrade_U1", orderPacket.Value.Orders[0].EntryOrder.OrderLabel.ToString());
             Assert.Equal(500000, orderPacket.Value.Orders[0].EntryOrder.Quantity.Value);
             Assert.Equal(0.81000m, orderPacket.Value.Orders[0].EntryOrder.Price.Value);
