@@ -215,16 +215,19 @@ namespace Nautilus.Redis
                     var serialized = redis.Get<string>(key);
                     var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
                     var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
+                    var symbolCode = deserializedSymbol["Code"];
+                    var exchange = deserializedSymbol["Exchange"];
+                    var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
 
                     var instrument = new Instrument(
-                        new Symbol(deserializedSymbol["Code"], deserializedSymbol["Exchange"].ToEnum<Exchange>()),
+                        new Symbol(symbolCode, exchange.ToEnum<Exchange>()),
                         new EntityId(deserializedSymbol["Value"]),
-                        new EntityId("AUD/USD"),
+                        new EntityId(brokerSymbol),
                         deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
                         deserialized["SecurityType"].ToEnum<SecurityType>(),
                         Convert.ToInt32(deserialized["TickDecimals"]),
                         Convert.ToDecimal(deserialized["TickSize"]),
-                        Convert.ToInt32(deserialized["TickValue"]),
+                        Convert.ToDecimal(deserialized["TickValue"]),
                         Convert.ToInt32(deserialized["TargetDirectSpread"]),
                         Convert.ToInt32(deserialized["ContractSize"]),
                         Convert.ToInt32(deserialized["MinStopDistanceEntry"]),

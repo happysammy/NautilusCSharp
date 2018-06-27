@@ -9,7 +9,10 @@
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.BlackBox.Core;
+    using Nautilus.DomainModel.Entities;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
@@ -75,6 +78,48 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         }
 
         [Fact]
+        internal void Test_can_add_collection_of_instruments()
+        {
+            // Arrange
+            var instruments = new List<Instrument>
+            {
+                StubInstrumentFactory.AUDUSD(),
+                StubInstrumentFactory.EURUSD(),
+                StubInstrumentFactory.USDJPY()
+            };
+
+            // Act
+            var result = this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
+            var count = this.repository.GetAllKeys().Count;
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(3, count);
+            this.output.WriteLine(result.Message);
+        }
+
+        [Fact]
+        internal void Test_can_delete_all_instruments()
+        {
+            // Arrange
+            var instruments = new List<Instrument>
+            {
+                StubInstrumentFactory.AUDUSD(),
+                StubInstrumentFactory.EURUSD(),
+                StubInstrumentFactory.USDJPY()
+            };
+
+            this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.repository.DeleteAll();
+            var result = repository.GetAllKeys();
+
+            // Assert
+            Assert.Equal(0, result.Count);
+        }
+
+        [Fact]
         internal void Test_can_find_one_instrument()
         {
             // Arrange
@@ -87,6 +132,36 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(instrument, result.Value);
+            this.output.WriteLine(LogFormatter.ToOutput(result.Value));
+        }
+
+        [Fact]
+        internal void Test_can_cache_multiple_instruments()
+        {
+            // Arrange
+            var instrument1 = StubInstrumentFactory.AUDUSD();
+            var instrument2 = StubInstrumentFactory.EURUSD();
+            var instrument3 = StubInstrumentFactory.USDJPY();
+
+            var instruments = new List<Instrument>
+            {
+                instrument1,
+                instrument2,
+                instrument3
+            };
+
+            this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
+            this.repository.CacheAll();
+
+            // Act
+            var result1 = this.repository.FindInCache(instrument1.Symbol);
+            var result2 = this.repository.FindInCache(instrument2.Symbol);
+            var result3 = this.repository.FindInCache(instrument3.Symbol);
+
+            // Assert
+            Assert.Equal(instrument1, result1.Value);
+            Assert.Equal(instrument2, result2.Value);
+            Assert.Equal(instrument3, result3.Value);
         }
     }
 }

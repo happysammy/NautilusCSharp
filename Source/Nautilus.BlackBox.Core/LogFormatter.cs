@@ -299,8 +299,9 @@ namespace Nautilus.BlackBox.Core
             }
 
             return $"Instrument: {instrument.Symbol}, " +
-                   $"{instrument.SecurityType}, " +
                    $"BrokerSymbol={instrument.BrokerSymbol}, " +
+                   $"QuoteCurrency={instrument.QuoteCurrency}, " +
+                   $"SecurityType={instrument.SecurityType}, " +
                    $"TickDecimals={instrument.TickDecimals}, " +
                    $"TickSize={instrument.TickSize}, " +
                    $"TickValue={instrument.TickValue}, " +
