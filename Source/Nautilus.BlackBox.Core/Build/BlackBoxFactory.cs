@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -81,12 +82,14 @@ namespace Nautilus.BlackBox.Core.Build
             var brokerageClient =
                 servicesFactory.FixClient.TradeClient(container, messagingAdapter, null);
 
-            var brokerageGateway = servicesFactory.Gateway.Create(
+            var tradeGateway = new TradeGateway(
                 container,
                 messagingAdapter,
                 brokerageClient,
                 instrumentRepository,
-                account.Currency);
+                account.Currency,
+                BlackBoxService.Risk,
+                BlackBoxService.Portfolio);
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
@@ -102,7 +105,7 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter,
                 new Switchboard(addresses),
-                brokerageGateway,
+                tradeGateway,
                 brokerageClient,
                 account,
                 riskModel);

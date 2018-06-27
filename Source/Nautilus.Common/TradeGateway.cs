@@ -6,15 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Brokerage
+namespace Nautilus.Common
 {
+    using System;
     using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel;
@@ -30,13 +30,15 @@ namespace Nautilus.BlackBox.Brokerage
     using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 
     /// <summary>
-    /// The <see cref="BlackBox"/> boundary for the brokerage implementation.
+    /// The system boundary for the trading implementation.
     /// </summary>
     public sealed class TradeGateway : ComponentBusConnectedBase, ITradeGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly ITradeClient tradeClient;
         private readonly CurrencyCode accountCurrency;
+        private readonly Enum riskService;
+        private readonly Enum portfolioService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeGateway"/> class.
@@ -50,9 +52,11 @@ namespace Nautilus.BlackBox.Brokerage
             IMessagingAdapter messagingAdapter,
             ITradeClient tradeClient,
             IInstrumentRepository instrumentRepository,
-            CurrencyCode accountCurrency)
+            CurrencyCode accountCurrency,
+            Enum riskService,
+            Enum portfolioService)
             : base(
-                BlackBoxService.Brokerage,
+                ServiceContext.FIX,
                 new Label(nameof(TradeGateway)),
                 container,
                 messagingAdapter)
@@ -65,6 +69,8 @@ namespace Nautilus.BlackBox.Brokerage
             this.tradeClient = tradeClient;
             this.instrumentRepository = instrumentRepository;
             this.accountCurrency = accountCurrency;
+            this.riskService = riskService;
+            this.portfolioService = portfolioService;
         }
 
         /// <summary>
@@ -336,7 +342,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Risk, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Debug($"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
             });
@@ -378,7 +384,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Warning($"OrderRejected: (OrderId={orderId}, RejectReason={rejectReason}");
             });
@@ -426,7 +432,7 @@ namespace Nautilus.BlackBox.Brokerage
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(BlackBoxService.Portfolio, eventMessage);
+                    this.Send(this.portfolioService, eventMessage);
 
                     this.Log.Warning($"OrderCancelReject: (OrderId={orderId}, CxlRejResponseTo={cancelRejectResponseTo}, Reason={cancelRejectReason}");
                 });
@@ -470,7 +476,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Information($"OrderCancelled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
@@ -521,7 +527,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Information($"OrderModified: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price})");
             });
@@ -589,7 +595,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 var expireTimeString = string.Empty;
 
@@ -640,7 +646,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Information($"OrderExpired: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
             });
@@ -705,7 +711,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Information($"OrderFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice})");
             });
@@ -774,7 +780,7 @@ namespace Nautilus.BlackBox.Brokerage
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
                 this.Log.Information($"OrderPartiallyFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice}, LeavesQty={leavesQuantity})");
             });

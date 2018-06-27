@@ -9,7 +9,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Brokerage;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

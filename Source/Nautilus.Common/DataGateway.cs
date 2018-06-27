@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Brokerage
+namespace Nautilus.Common
 {
     using System.Collections.Generic;
     using Nautilus.Core.Validation;

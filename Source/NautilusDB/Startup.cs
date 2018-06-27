@@ -15,7 +15,6 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.BlackBox.Brokerage;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Compression;
     using Nautilus.Core.Validation;

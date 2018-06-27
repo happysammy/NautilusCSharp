@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Brokerage;
+    using Nautilus.Common;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

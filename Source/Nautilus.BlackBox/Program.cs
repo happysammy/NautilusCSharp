@@ -18,7 +18,6 @@ namespace Nautilus.BlackBox
     using Nautilus.Algorithms.TrailingStop;
     using Nautilus.BlackBox.AlphaModel;
     using Nautilus.BlackBox.AlphaModel.Strategy;
-    using Nautilus.BlackBox.Brokerage;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Data;
@@ -70,7 +69,6 @@ namespace Nautilus.BlackBox
                 clock.TimeNow());
 
             var serviceFactory = new BlackBoxServicesFactory(
-                new GatewayFactory(),
                 new FxcmFixClientFactory(
                     username,
                     password,

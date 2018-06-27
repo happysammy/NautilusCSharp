@@ -6,15 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Brokerage
+namespace Nautilus.Common
 {
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The immutable static <see cref="OrderIdPostfixRemover"/> class. Removes the '_R#' from any
-    /// modified order identifier.
+    /// Removes the '_R#' from any modified order identifier.
     /// </summary>
     [Immutable]
     public static class OrderIdPostfixRemover

@@ -31,7 +31,6 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="portfolioServiceFactory">The portfolio service factory.</param>
         /// <param name="riskServiceFactory">The risk service factory.</param>
         public BlackBoxServicesFactory(
-            IGatewayFactory gatewayFactory,
             IFixClientFactory fixClientFactory,
             IServiceFactory alphaModelServiceFactory,
             IServiceFactory dataServiceFactory,
@@ -39,7 +38,6 @@ namespace Nautilus.BlackBox.Core.Build
             IServiceFactory portfolioServiceFactory,
             IServiceFactory riskServiceFactory)
         {
-            Validate.NotNull(gatewayFactory, nameof(gatewayFactory));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
             Validate.NotNull(alphaModelServiceFactory, nameof(alphaModelServiceFactory));
             Validate.NotNull(dataServiceFactory, nameof(dataServiceFactory));
@@ -47,7 +45,6 @@ namespace Nautilus.BlackBox.Core.Build
             Validate.NotNull(portfolioServiceFactory, nameof(portfolioServiceFactory));
             Validate.NotNull(riskServiceFactory, nameof(riskServiceFactory));
 
-            this.Gateway = gatewayFactory;
             this.FixClient = fixClientFactory;
             this.AlphaModelService = alphaModelServiceFactory;
             this.DataService = dataServiceFactory;
@@ -55,11 +52,6 @@ namespace Nautilus.BlackBox.Core.Build
             this.PortfolioService = portfolioServiceFactory;
             this.RiskService = riskServiceFactory;
         }
-
-        /// <summary>
-        /// Gets the black box brokerage service factory.
-        /// </summary>
-        public IGatewayFactory Gateway { get; }
 
         /// <summary>
         /// Gets the black box brokerage service factory.

@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Algorithms\Nautilus.Algorithms.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
-    <ProjectReference Include="..\Nautilus.BlackBox.Brokerage\Nautilus.BlackBox.Brokerage.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
