@@ -75,6 +75,7 @@ namespace Nautilus.Database
             var result = this.barRepository.Add(
                 message.Data.BarType,
                 message.Data.Bar);
+
             this.Log.Result(result);
         }
 

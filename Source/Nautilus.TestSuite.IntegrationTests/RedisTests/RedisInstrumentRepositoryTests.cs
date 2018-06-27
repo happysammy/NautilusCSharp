@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.repository.Add(instrument);
 
             // Act
-            var result = this.repository.GetInstrument(instrument.Symbol);
+            var result = this.repository.Find(instrument.Symbol);
 
             // Assert
             this.output.WriteLine(result.Message);

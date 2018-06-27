@@ -37,25 +37,25 @@ namespace Nautilus.Redis
             this.barClient = new RedisBarClient(clientsManager, compressor);
         }
 
-        /// <summary>
-        /// Warning: Flushes ALL data from the <see cref="Redis"/> database.
-        /// </summary>
-        /// <param name="areYouSure">The are you sure string.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public CommandResult FlushAll(string areYouSure)
-        {
-            Debug.NotNull(areYouSure, nameof(areYouSure));
-
-            if (areYouSure == "YES")
-            {
-                this.barClient.FlushAll("YES");
-
-                return CommandResult.Ok();
-            }
-
-            return CommandResult.Fail("Database Flush not confirmed");
-        }
+//        /// <summary>
+//        /// Warning: Flushes ALL data from the <see cref="Redis"/> database.
+//        /// </summary>
+//        /// <param name="areYouSure">The are you sure string.</param>
+//        /// <returns>A <see cref="CommandResult"/> result.</returns>
+//        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+//        public CommandResult FlushAll(string areYouSure)
+//        {
+//            Debug.NotNull(areYouSure, nameof(areYouSure));
+//
+//            if (areYouSure == "YES")
+//            {
+//                this.barClient.FlushAll("YES");
+//
+//                return CommandResult.Ok();
+//            }
+//
+//            return CommandResult.Fail("Database Flush not confirmed");
+//        }
 
         /// <summary>
         /// Returns the total count of bars persisted within the database.

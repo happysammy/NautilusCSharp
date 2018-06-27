@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.InstrumentTests
+namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Data.Instrument;
+    using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

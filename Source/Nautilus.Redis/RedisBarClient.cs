@@ -8,6 +8,7 @@
 
 namespace Nautilus.Redis
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -29,7 +30,6 @@ namespace Nautilus.Redis
     /// encapsulated in a thread-safe environment for sequential operations on the
     /// <see cref="Redis"/> database.
     /// </summary>
-    [Immutable]
     public class RedisBarClient
     {
         private readonly RedisNativeClient redisClient;
@@ -49,25 +49,25 @@ namespace Nautilus.Redis
             this.compressor = compressor;
         }
 
-        /// <summary>
-        /// Warning: Flushes ALL data from the <see cref="Redis"/> database.
-        /// </summary>
-        /// <param name="areYouSure">The are you sure string.
-        /// </param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public CommandResult FlushAll(string areYouSure)
-        {
-            Debug.NotNull(areYouSure, nameof(areYouSure));
-
-            if (areYouSure == "YES")
-            {
-                this.redisClient.FlushAll();
-
-                return CommandResult.Ok();
-            }
-
-            return CommandResult.Fail("Database Flush not confirmed");
-        }
+//        /// <summary>
+//        /// Warning: Flushes ALL data from the <see cref="Redis"/> database.
+//        /// </summary>
+//        /// <param name="areYouSure">The are you sure string.
+//        /// </param>
+//        /// <returns>A <see cref="CommandResult"/> result.</returns>
+//        public CommandResult FlushAll(string areYouSure)
+//        {
+//            Debug.NotNull(areYouSure, nameof(areYouSure));
+//
+//            if (areYouSure == "YES")
+//            {
+//                this.redisClient.FlushAll();
+//
+//                return CommandResult.Ok();
+//            }
+//
+//            return CommandResult.Fail("Database Flush not confirmed");
+//        }
 
         /// <summary>
         /// Returns a result indicating whether a <see cref="Redis"/> Key exists for the given
@@ -79,7 +79,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(key, nameof(key));
 
-            return this.redisClient.Exists(key) == 1;
+            return Convert.ToBoolean(redisClient.Exists(key));
         }
 
         /// <summary>
@@ -202,8 +202,7 @@ namespace Nautilus.Redis
 
             this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
 
-            return CommandResult.Ok(
-                $"Added 1 bar to {barType}");
+            return CommandResult.Ok($"Added 1 bar to {barType}");
         }
 
         /// <summary>
@@ -309,7 +308,8 @@ namespace Nautilus.Redis
             var barsArray = barKeysQuery
                 .Select(key => this.redisClient.LRange(key, 0, -1))
                 .SelectMany(BarWrangler.ParseBars)
-                .Where(bar => bar.Timestamp.Compare(fromDateTime) >= 0 && bar.Timestamp.Compare(toDateTime) <= 0)
+                .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
+                           && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
                 .ToArray();
 
             if (barsArray.Length == 0)
@@ -352,8 +352,8 @@ namespace Nautilus.Redis
                 }
             }
 
-            return QueryResult<Bar>.Fail(
-                $"No market data found for {barType} at {timestamp.ToIsoString()}");
+            return QueryResult<Bar>.Fail($"No market data found for {barType} " +
+                                         $"at {timestamp.ToIsoString()}");
         }
 
         /// <summary>
@@ -367,8 +367,7 @@ namespace Nautilus.Redis
 
             if (!this.KeyExists(key))
             {
-                return QueryResult<List<Bar>>.Fail(
-                    $"No market data found for {key}");
+                return QueryResult<List<Bar>>.Fail($"No market data found for {key}");
             }
 
             var barBytes = this.redisClient.LRange(key, 0, -1);

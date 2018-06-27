@@ -26,6 +26,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisBarRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
+        private readonly IRedisClientsManager clientsManager;
         private readonly RedisBarRepository repository;
 
         public RedisBarRepositoryTests(ITestOutputHelper output)
@@ -33,21 +34,20 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             RedisServiceStack.ConfigureServiceStack();
 
             this.output = output;
-            var localHost = RedisConstants.LocalHost;
-            var clientManager = new BasicRedisClientManager(
-                new[] { localHost },
-                new[] { localHost });
+            this.clientsManager = new BasicRedisClientManager(
+                new[] { RedisConstants.LocalHost },
+                new[] { RedisConstants.LocalHost });
             var compressor = new LZ4DataCompressor(false);
 
             // Data compression off so that redis-cli is readable.
-            this.repository = new RedisBarRepository(clientManager, compressor);
+            this.repository = new RedisBarRepository(this.clientsManager, compressor);
 
-            this.repository.FlushAll("YES");
+            this.clientsManager.GetClient().FlushAll();
         }
 
         public void Dispose()
         {
-            this.repository.FlushAll("YES");
+            this.clientsManager.GetClient().FlushAll();
         }
 
         [Fact]

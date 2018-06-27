@@ -22,29 +22,40 @@ namespace Nautilus.Database.Keys
     [Immutable]
     public static class KeyProvider
     {
-        private const string TicksNamespaceConst = "ticks";
-        private const string BarsNamespaceConst = "bars";
+        private const string TicksConst = "ticks";
+        private const string BarsConst = "bars";
+        private const string InstrumentsConst = "instruments";
         private const string WildcardConst = "*";
 
         /// <summary>
         /// Gets the ticks namespace <see cref="string"/>.
         /// </summary>
-        public static string TicksNamespace => TicksNamespaceConst;
+        public static string TicksNamespace => TicksConst;
 
         /// <summary>
         /// Gets the bars namespace <see cref="string"/>.
         /// </summary>
-        public static string BarsNamespace => BarsNamespaceConst;
+        public static string BarsNamespace => BarsConst;
+
+        /// <summary>
+        /// Gets the instruments namespace <see cref="string"/>.
+        /// </summary>
+        public static string InstrumentsNamespace => InstrumentsConst;
 
         /// <summary>
         /// Gets the bars namespace wildcard <see cref="string"/>.
         /// </summary>
-        public static string TicksNamespaceWildcard => TicksNamespaceConst + WildcardConst;
+        public static string TicksNamespaceWildcard => TicksConst + WildcardConst;
 
         /// <summary>
         /// Gets the bars namespace wildcard <see cref="string"/>.
         /// </summary>
-        public static string BarsNamespaceWildcard => BarsNamespaceConst + WildcardConst;
+        public static string BarsNamespaceWildcard => BarsConst + WildcardConst;
+
+        /// <summary>
+        /// Gets the instruments namespace wildcard <see cref="string"/>.
+        /// </summary>
+        public static string InstrumentsWildcard => InstrumentsConst + WildcardConst;
 
         /// <summary>
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to
@@ -79,7 +90,7 @@ namespace Nautilus.Database.Keys
         {
             Debug.NotNull(symbol, nameof(symbol));
 
-            return TicksNamespaceConst +
+            return TicksConst +
                    $":{symbol.Exchange.ToString().ToLower()}" +
                    $":{symbol.Code.ToLower()}" + WildcardConst;
         }
@@ -117,7 +128,7 @@ namespace Nautilus.Database.Keys
         {
             Debug.NotNull(barType, nameof(barType));
 
-            return BarsNamespaceConst +
+            return BarsConst +
                    $":{barType.Symbol.Exchange.ToString().ToLower()}" +
                    $":{barType.Symbol.Code.ToLower()}" +
                    $":{barType.Specification.Resolution.ToString().ToLower()}" +

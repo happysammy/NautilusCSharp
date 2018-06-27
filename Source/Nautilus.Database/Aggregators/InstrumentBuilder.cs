@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Data.Instrument
+namespace Nautilus.Database.Aggregators
 {
     using System.Collections.Generic;
     using System.Globalization;

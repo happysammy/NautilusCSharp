@@ -21,7 +21,6 @@ namespace Nautilus.BlackBox
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Data;
-    using Nautilus.BlackBox.Data.Instrument;
     using Nautilus.BlackBox.Execution;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Risk;
@@ -33,8 +32,10 @@ namespace Nautilus.BlackBox
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
+    using ServiceStack.Redis;
 
     public static class Program
     {
@@ -44,7 +45,10 @@ namespace Nautilus.BlackBox
             var clock = new Clock(DateTimeZone.Utc);
             var loggingAdatper = new SerilogLogger();
             var databaseAdapter = new DummyDatabase();
-            var instrumentRepository = InstrumentRepositoryFactory.Create(clock, databaseAdapter);
+            var clientsManager = new BasicRedisClientManager(
+                new[] { RedisConstants.LocalHost },
+                new[] { RedisConstants.LocalHost });
+            var instrumentRepository = new RedisInstrumentRepository(clientsManager);
             var quoteProvider = new QuoteProvider(Exchange.FXCM);
 
             var riskModel = new RiskModel(

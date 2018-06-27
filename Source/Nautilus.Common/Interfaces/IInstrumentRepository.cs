@@ -19,15 +19,15 @@ namespace Nautilus.Common.Interfaces
     public interface IInstrumentRepository
     {
         /// <summary>
-        /// Gets the instrument symbol list.
+        /// Returns the instrument symbol collection.
         /// </summary>
-        IReadOnlyCollection<Symbol> SymbolList { get; }
+        IReadOnlyCollection<Symbol> GetSymbols();
 
         /// <summary>
         /// Loads all instruments from the database.
         /// </summary>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult LoadAllInstrumentsFromDatabase();
+        CommandResult CacheAllInstruments();
 
         /// <summary>
         /// Updates the given instrument in the database.
@@ -54,7 +54,7 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="QueryResult{Instrument}"/> result.</returns>
-        QueryResult<Instrument> GetInstrument(Symbol symbol);
+        QueryResult<Instrument> Find(Symbol symbol);
 
         /// <summary>
         /// Returns the <see cref="decimal"/> tick size of the <see cref="Instrument"/>
@@ -63,11 +63,5 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="QueryResult{Decimal}"/> result.</returns>
         QueryResult<decimal> GetTickSize(Symbol symbol);
-
-        /// <summary>
-        /// Disposes the instrument repository.
-        /// </summary>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult Dispose();
     }
 }
