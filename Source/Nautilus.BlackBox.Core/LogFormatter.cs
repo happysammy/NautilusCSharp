@@ -301,6 +301,7 @@ namespace Nautilus.BlackBox.Core
             return $"Instrument: {instrument.Symbol}, " +
                    $"{instrument.SecurityType}, " +
                    $"BrokerSymbol={instrument.BrokerSymbol}, " +
+                   $"TickDecimals={instrument.TickDecimals}, " +
                    $"TickSize={instrument.TickSize}, " +
                    $"TickValue={instrument.TickValue}, " +
                    $"MinStopDistance={instrument.MinStopDistance}, " +
