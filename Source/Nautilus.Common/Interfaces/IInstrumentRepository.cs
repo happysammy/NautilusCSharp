@@ -12,6 +12,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// The <see cref="IInstrumentRepository"/> interface.
@@ -24,37 +25,47 @@ namespace Nautilus.Common.Interfaces
         IReadOnlyCollection<Symbol> GetSymbols();
 
         /// <summary>
-        /// Loads all instruments from the database.
+        /// Clears all instruments from the in-memory cache.
         /// </summary>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult CacheAllInstruments();
+        void ResetCache();
+
+        /// <summary>
+        /// Adds all persisted instruments to the in-memory cache.
+        /// </summary>
+        void CacheAll();
+
+        /// <summary>
+        /// Deletes all instruments from the database.
+        /// </summary>
+        void DeleteAll();
+
+        /// <summary>
+        /// Deletes the instrument of the given symbol from the database.
+        /// </summary>
+        void Delete(Symbol symbol);
 
         /// <summary>
         /// Updates the given instrument in the database.
         /// </summary>
         /// <param name="instrument">The instrument.</param>
+        /// <param name="timeNow">The time now.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult Add(Instrument instrument);
+        CommandResult Add(Instrument instrument, ZonedDateTime timeNow);
 
         /// <summary>
         /// Updates the given collection of instruments in the database.
         /// </summary>
-        /// <param name="instruments">The instruments collection (cannot be null or empty).</param>
+        /// <param name="instruments">The instruments collection.</param>
+        /// <param name="timeNow">The time now.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult Add(IReadOnlyCollection<Instrument> instruments);
-
-        /// <summary>
-        /// Deletes all instruments from the database.
-        /// </summary>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult DeleteAll();
+        CommandResult Add(IReadOnlyCollection<Instrument> instruments, ZonedDateTime timeNow);
 
         /// <summary>
         /// Returns the instrument corresponding to the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="QueryResult{Instrument}"/> result.</returns>
-        QueryResult<Instrument> Find(Symbol symbol);
+        QueryResult<Instrument> FindInCache(Symbol symbol);
 
         /// <summary>
         /// Returns the <see cref="decimal"/> tick size of the <see cref="Instrument"/>

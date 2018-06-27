@@ -11,16 +11,18 @@ namespace Nautilus.Redis
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices.WindowsRuntime;
+    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.Database.Aggregators;
     using Nautilus.Database.Keys;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
     using ServiceStack.Text;
     using ServiceStack.Redis;
 
@@ -30,7 +32,7 @@ namespace Nautilus.Redis
     public class RedisInstrumentRepository : IInstrumentRepository, IDisposable
     {
         private readonly IRedisClientsManager clientsManager;
-        private readonly IDictionary<Symbol, Instrument> instrumentCache = new Dictionary<Symbol, Instrument>();
+        private readonly IDictionary<Symbol, Instrument> cache = new Dictionary<Symbol, Instrument>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
@@ -46,68 +48,140 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns the list of instrument symbols currently held in cache.
         /// </summary>
-        public IReadOnlyCollection<Symbol> GetSymbols() => this.instrumentCache.Keys.ToList().AsReadOnly();
+        public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToList().AsReadOnly();
 
         /// <summary>
-        /// Caches all instruments into memory inside the repository.
+        /// Clears all instruments from the in-memory cache.
+        /// </summary>
+        public void ResetCache()
+        {
+            this.cache.Clear();
+        }
+
+        /// <summary>
+        /// Adds all persisted instruments to the in-memory cache.
         /// </summary>
         /// <returns>The result of the operation.</returns>
-        public CommandResult CacheAllInstruments()
+        public void CacheAll()
         {
             var keys = this.GetAllKeys();
 
             foreach (var key in keys)
             {
-                this.Read(key)
-                    .OnSuccess(i => this.instrumentCache.Add(i.Symbol, i));
-            }
+                var query = this.Read(key);
 
-            return CommandResult.Ok();
-        }
-
-        public IEnumerable<string> GetAllKeys()
-        {
-            using (var client = this.clientsManager.GetClient())
-            {
-                return client.GetKeysByPattern(KeyProvider.InstrumentsWildcard);
-            }
-        }
-
-        public CommandResult Add(Instrument instrument)
-        {
-            using (var client = this.clientsManager.GetClient())
-            {
-                client.Set(
-                    KeyProvider.GetInstrumentKey(instrument.Symbol),
-                    JsonSerializer.SerializeToString(instrument));
-
-                return CommandResult.Ok($"Added the {instrument.Symbol} instrument to the repository");
-            }
-        }
-
-        public CommandResult Add(IReadOnlyCollection<Instrument> instruments)
-        {
-            using (var client = this.clientsManager.GetClient())
-            {
-                foreach (var instrument in instruments)
+                if (query.IsSuccess && !this.cache.ContainsKey(query.Value.Symbol))
                 {
-                    client.Set(
-                        KeyProvider.GetInstrumentKey(instrument.Symbol),
-                        JsonSerializer.SerializeToString(instrument));
-                }
+                    var instrument = query.Value;
 
-                return CommandResult.Ok("Added all instruments to the repository");
+                    this.cache.Add(instrument.Symbol, instrument);
+                }
             }
         }
 
-        public CommandResult DeleteAll()
+        /// <summary>
+        /// Deletes the instrument of the given symbol from the Redis database.
+        /// </summary>
+        public void Delete(Symbol symbol)
+        {
+            Debug.NotNull(symbol, nameof(symbol));
+
+            using (var client = this.clientsManager.GetClient())
+            {
+                client.Remove(KeyProvider.GetInstrumentKey(symbol));
+            }
+        }
+
+        /// <summary>
+        /// Deletes all instruments from the Redis database.
+        /// </summary>
+        public void DeleteAll()
         {
             using (var client = this.clientsManager.GetClient())
             {
-                client.FlushAll();
+                var keys = this.GetAllKeys();
+
+                foreach (var key in keys)
+                {
+                    client.Remove(key);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns all instrument keys from the Redis database.
+        /// </summary>
+        /// <returns>The keys.</returns>
+        public IReadOnlyCollection<string> GetAllKeys()
+        {
+            using (var client = this.clientsManager.GetClient())
+            {
+                return client.GetKeysByPattern(KeyProvider.InstrumentsWildcard)
+                    .ToList()
+                    .AsReadOnly();
+            }
+        }
+
+        /// <summary>
+        /// Adds the given instrument to the repository.
+        /// </summary>
+        /// <param name="instrument">The instrument.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>The result of the operation.</returns>
+        public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
+        {
+            Debug.NotNull(instrument, nameof(instrument));
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
+            var symbol = instrument.Symbol;
+
+            if (!this.cache.ContainsKey(symbol))
+            {
+                this.cache.Add(symbol, instrument);
+                return this.Write(instrument);
             }
 
-            return CommandResult.Ok();
+            var instrumentBuilder = new InstrumentBuilder(this.cache[symbol])
+                .Update(instrument);
+
+            if (instrumentBuilder.Changes.Count == 0)
+            {
+                return CommandResult.Ok($"Instrument {symbol} unchanged in cache...");
+            }
+
+            var changesString = new StringBuilder();
+
+            instrumentBuilder.Changes.ForEach(c => changesString.Append(c));
+
+            var updatedInstrument = instrumentBuilder.Build(timeNow);
+
+            this.cache.Add(symbol, updatedInstrument);
+            this.Write(instrument);
+
+            return CommandResult.Ok($"Updated instrument {symbol} " + changesString);
+        }
+
+        /// <summary>
+        /// Adds the given instruments to the repository.
+        /// </summary>
+        /// <param name="instruments">The instruments.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>The result of the operation.</returns>
+        public CommandResult Add(IReadOnlyCollection<Instrument> instruments, ZonedDateTime timeNow)
+        {
+            Debug.NotNull(instruments, nameof(instruments));
+            Debug.NotNull(timeNow, nameof(timeNow));
+
+            var results = new List<CommandResult>();
+
+            foreach (var instrument in instruments)
+            {
+                var result = this.Add(instrument, timeNow);
+
+                results.Add(result);
+            }
+
+            return CommandResult.Combine(results.ToArray());
         }
 
         /// <summary>
@@ -115,20 +189,25 @@ namespace Nautilus.Redis
         /// query).
         /// </summary>
         /// <param name="symbol">The instrument symbol.</param>
-        /// <returns>A <see cref="QueryResult{Instrument}"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public QueryResult<Instrument> Find(Symbol symbol)
+        /// <returns>The result of the query.</returns>
+        public QueryResult<Instrument> FindInCache(Symbol symbol)
         {
-            Validate.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(symbol, nameof(symbol));
 
-            return this.instrumentCache.ContainsKey(symbol)
-                ? QueryResult<Instrument>.Ok(this.instrumentCache[symbol])
+            return this.cache.ContainsKey(symbol)
+                ? QueryResult<Instrument>.Ok(this.cache[symbol])
                 : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol}");
         }
 
-
+        /// <summary>
+        /// Returns the instrument from the Redis database with the given key.
+        /// </summary>
+        /// <param name="key">The instruments key.</param>
+        /// <returns>The result of the query.</returns>
         public QueryResult<Instrument> Read(string key)
         {
+            Debug.NotNull(key, nameof(key));
+
             using (var redis = this.clientsManager.GetClient())
             {
                 if (redis.ContainsKey(key))
@@ -166,53 +245,17 @@ namespace Nautilus.Redis
             }
         }
 
-        private CommandResult StoreInstrument(Instrument instrument)
-        {
-            Debug.NotNull(instrument, nameof(instrument));
-
-//            var symbol = instrument.Symbol;
-//
-//            if (!this.instrumentIndex.ContainsKey(symbol))
-//            {
-//                this.instrumentIndex.Add(symbol, instrument);
-//                this.database.Store(instrument);
-//
-//                return CommandResult.Ok($"Added instrument ({instrument})...");
-//            }
-//
-//            var instrumentBuilder = new InstrumentBuilder(this.instrumentIndex[symbol]).Update(instrument);
-//
-//            if (instrumentBuilder.Changes.Count == 0)
-//            {
-//                return CommandResult.Ok();
-//            }
-//
-//            var changesString = new StringBuilder();
-//
-//            instrumentBuilder.Changes.ForEach(c => changesString.Append(c));
-//
-//            var updatedInstrument = instrumentBuilder.Build(this.clock.TimeNow());
-//
-//            this.database.Delete(this.instrumentIndex[symbol]);
-//            this.instrumentIndex.Remove(symbol);
-//
-//            this.instrumentIndex.Add(symbol, updatedInstrument);
-//            this.database.Store(updatedInstrument);
-
-            return CommandResult.Ok(); //($"Instrument {symbol} updated" + changesString);
-        }
-
         /// <summary>
         /// Returns the tick size for the instrument of the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <returns>The tick size decimal.</returns>
+        /// <returns>The result of the query.</returns>
         public QueryResult<decimal> GetTickSize(Symbol symbol)
         {
             Debug.NotNull(symbol, nameof(symbol));
 
-            return this.instrumentCache.ContainsKey(symbol)
-                ? QueryResult<decimal>.Ok(this.instrumentCache[symbol].TickSize)
+            return this.cache.ContainsKey(symbol)
+                ? QueryResult<decimal>.Ok(this.cache[symbol].TickSize)
                 : QueryResult<decimal>.Fail($"Cannot find instrument {symbol}");
         }
 
@@ -223,6 +266,20 @@ namespace Nautilus.Redis
         public void Dispose()
         {
             this.clientsManager.Dispose();
+        }
+
+        private CommandResult Write(Instrument instrument)
+        {
+            using (var client = this.clientsManager.GetClient())
+            {
+                var symbol = instrument.Symbol;
+
+                client.Set(
+                    KeyProvider.GetInstrumentKey(symbol),
+                    JsonSerializer.SerializeToString(instrument));
+
+                return CommandResult.Ok($"Added instrument ({symbol})...");
+            }
         }
     }
 }

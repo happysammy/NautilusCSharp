@@ -49,26 +49,6 @@ namespace Nautilus.Redis
             this.compressor = compressor;
         }
 
-//        /// <summary>
-//        /// Warning: Flushes ALL data from the <see cref="Redis"/> database.
-//        /// </summary>
-//        /// <param name="areYouSure">The are you sure string.
-//        /// </param>
-//        /// <returns>A <see cref="CommandResult"/> result.</returns>
-//        public CommandResult FlushAll(string areYouSure)
-//        {
-//            Debug.NotNull(areYouSure, nameof(areYouSure));
-//
-//            if (areYouSure == "YES")
-//            {
-//                this.redisClient.FlushAll();
-//
-//                return CommandResult.Ok();
-//            }
-//
-//            return CommandResult.Fail("Database Flush not confirmed");
-//        }
-
         /// <summary>
         /// Returns a result indicating whether a <see cref="Redis"/> Key exists for the given
         /// <see cref="BarDataKey"/>.
@@ -79,7 +59,8 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(key, nameof(key));
 
-            return Convert.ToBoolean(redisClient.Exists(key));
+            // Redis returns 1 if the key exists or 0 if the key does not exist.
+            return redisClient.Exists(key) == 1;
         }
 
         /// <summary>

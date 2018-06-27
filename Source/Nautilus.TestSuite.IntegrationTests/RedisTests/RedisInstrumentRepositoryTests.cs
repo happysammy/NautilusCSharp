@@ -10,8 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Nautilus.Database.Keys;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
@@ -23,6 +21,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisInstrumentRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
+        private readonly IRedisClientsManager clientsManager;
         private readonly RedisInstrumentRepository repository;
 
         public RedisInstrumentRepositoryTests(ITestOutputHelper output)
@@ -30,19 +29,18 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             RedisServiceStack.ConfigureServiceStack();
 
             this.output = output;
-            var localHost = RedisConstants.LocalHost;
-            var clientManager = new BasicRedisClientManager(
-                new[] { localHost },
-                new[] { localHost });
+            this.clientsManager = new BasicRedisClientManager(
+                new[] { RedisConstants.LocalHost },
+                new[] { RedisConstants.LocalHost });
 
-            this.repository = new RedisInstrumentRepository(clientManager);
+            this.repository = new RedisInstrumentRepository(clientsManager);
 
-            this.repository.DeleteAll();
+            this.clientsManager.GetClient().FlushAll();
         }
 
         public void Dispose()
         {
-            //this.repository.DeleteAll();
+            //this.clientsManager.GetClient().FlushAll();
         }
 
         [Fact]
@@ -52,10 +50,28 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var instrument = StubInstrumentFactory.AUDUSD();
 
             // Act
-            var result = this.repository.Add(instrument);
+            var result = this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
+            var count = this.repository.GetAllKeys().Count;
 
             // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, count);
             this.output.WriteLine(result.Message);
+        }
+
+        [Fact]
+        internal void Test_can_delete_one_instrument()
+        {
+            // Arrange
+            var instrument = StubInstrumentFactory.AUDUSD();
+            this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.repository.Delete(instrument.Symbol);
+            var result = repository.GetAllKeys();
+
+            // Assert
+            Assert.Equal(0, result.Count);
         }
 
         [Fact]
@@ -63,17 +79,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var instrument = StubInstrumentFactory.AUDUSD();
-            this.repository.Add(instrument);
-            this.repository.CacheAllInstruments();
+            this.repository.Add(instrument, StubZonedDateTime.UnixEpoch());
+            this.repository.CacheAll();
 
             // Act
-            var result = this.repository.Find(instrument.Symbol);
+            var result = this.repository.FindInCache(instrument.Symbol);
 
             // Assert
-            this.output.WriteLine(this.repository.GetAllKeys().First());
-            this.output.WriteLine(KeyProvider.GetInstrumentKey(instrument.Symbol));
-            this.output.WriteLine(result.Message);
-            //Assert.Equal(1, count.Value);
             Assert.Equal(instrument, result.Value);
         }
     }

@@ -140,7 +140,7 @@ namespace Nautilus.BlackBox.Core
         {
             Validate.NotNull(symbol, nameof(symbol));
 
-            return this.instrumentRepository.Find(symbol);
+            return this.instrumentRepository.FindInCache(symbol);
         }
 
         /// <summary>
