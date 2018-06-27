@@ -123,7 +123,7 @@ namespace Nautilus.DomainModel.Entities
         public SecurityType SecurityType { get; }
 
         /// <summary>
-        /// Gets the instruments tick size.
+        /// Gets the instruments tick decimals.
         /// </summary>
         public int TickDecimals { get; }
 

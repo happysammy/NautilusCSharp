@@ -118,7 +118,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             Debug.NotNull(entryPrice, nameof(entryPrice));
             Debug.NotNull(stoplossPrice, nameof(stoplossPrice));
 
-            return Convert.ToInt32(Math.Ceiling(Math.Abs(entryPrice - stoplossPrice) / this.instrument.TickDecimals));
+            return Convert.ToInt32(Math.Ceiling(Math.Abs(entryPrice - stoplossPrice) / this.instrument.TickSize));
         }
 
         private void LogPositionSizing(
