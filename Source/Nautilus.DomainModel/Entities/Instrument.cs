@@ -70,7 +70,7 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(instrumentId, nameof(instrumentId));
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Validate.DecimalNotOutOfRange(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Validate.DecimalNotOutOfRange(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue);
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.Int32NotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);

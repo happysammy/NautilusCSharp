@@ -81,6 +81,7 @@ namespace Nautilus.Database
                 // Wait for connection.
             }
 
+            this.fixClient.UpdateInstrumentsSubscribeAll();
             this.fixClient.RequestMarketDataSubscribeAll();
 
             this.Send(

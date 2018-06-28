@@ -87,7 +87,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            var securityList = new List<Instrument>();
+            var instruments = new List<Instrument>();
             var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
             var group = new SecurityList.NoRelatedSymGroup();
 
@@ -95,10 +95,19 @@ namespace Nautilus.Brokerage.FXCM
             {
                 message.GetGroup(i, group);
 
-                var symbol = group.IsSetField(Tags.Symbol)
-                    ? new Symbol(FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol)).Value, Exchange.FXCM)
-                    : new Symbol("AUDUSD", Exchange.FXCM);
+                if (!group.IsSetField(Tags.Symbol))
+                {
+                    // Symbol is not set so continue to next item.
+                    continue;
+                }
 
+                var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol));
+                if (symbolQuery.IsFailure)
+                {
+                    throw new InvalidOperationException($"Cannot find symbol for {group.GetField(Tags.Symbol)}");
+                }
+
+                var symbol = new Symbol(symbolQuery.Value, Exchange.FXCM);
                 var symbolId = new EntityId(symbol.ToString());
                 var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                 var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -106,8 +115,21 @@ namespace Nautilus.Brokerage.FXCM
                 var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
                 var tickDecimals = Convert.ToInt32(group.GetField(9001));
                 var tickSize = tickDecimals.ToTickSize();
-                var tickValueQuoteCurrency = FxcmTickValueProvider.GetTickValue(brokerSymbol.ToString());
-                var targetDirectSpread = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(brokerSymbol.ToString());
+
+                var tickValueQuery = FxcmTickValueProvider.GetTickValue(brokerSymbol.ToString());
+                if (tickValueQuery.IsFailure)
+                {
+                    throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
+                }
+                var tickValue = tickValueQuery.Value;
+
+                var targetDirectSpreadQuery = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(brokerSymbol.ToString());
+                if (targetDirectSpreadQuery.IsFailure)
+                {
+                    throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
+                }
+                var targetDirectSpread = targetDirectSpreadQuery.Value;
+
                 var contractSize = 1; // always 1 for FXCM
                 var minStopDistanceEntry = Convert.ToInt32(group.GetField(9092));
                 var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
@@ -126,8 +148,8 @@ namespace Nautilus.Brokerage.FXCM
                     securityType,
                     tickDecimals,
                     tickSize,
-                    tickValueQuoteCurrency.Value,
-                    targetDirectSpread.Value,
+                    tickValue,
+                    targetDirectSpread,
                     contractSize,
                     minStopDistanceEntry,
                     minLimitDistanceEntry,
@@ -140,13 +162,13 @@ namespace Nautilus.Brokerage.FXCM
                     interestSell,
                     this.TimeNow());
 
-                securityList.Add(instrument);
+                instruments.Add(instrument);
             }
 
             var responseId = message.GetField(Tags.SecurityResponseID);
             var result = FxcmFixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-            this.fixGateway.OnInstrumentsUpdate(securityList, responseId, result);
+            this.fixGateway.OnInstrumentsUpdate(instruments, responseId, result);
         }
 
         /// <summary>

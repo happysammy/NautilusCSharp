@@ -84,7 +84,7 @@ namespace Nautilus.Common
         public bool IsConnected => this.fixClient.IsConnected;
 
         /// <summary>
-        /// Returns the current time of the <see cref="BlackBox"/> system clock.
+        /// Returns the current time of the system clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public ZonedDateTime GetTimeNow()
@@ -266,9 +266,11 @@ namespace Nautilus.Common
                 Validate.NotNull(responseId, nameof(responseId));
                 Validate.NotNull(result, nameof(result));
 
-                this.instrumentRepository.Add(instruments, this.TimeNow());
-
                 this.Log.Debug($"SecurityListReceived: (SecurityResponseId={responseId}) result={result}");
+
+                var commandResult = this.instrumentRepository.Add(instruments, this.TimeNow());
+
+                this.Log.Result(commandResult);
             });
         }
 
