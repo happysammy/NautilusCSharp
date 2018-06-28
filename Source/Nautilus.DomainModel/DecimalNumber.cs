@@ -43,8 +43,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static decimal operator +(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value + right.Value;
         }
@@ -58,7 +58,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static decimal operator +(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left + right.Value;
         }
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static decimal operator +(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value + right;
         }
@@ -86,8 +86,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
         public static decimal operator -(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value - right.Value;
         }
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static decimal operator -(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left - right.Value;
         }
@@ -115,7 +115,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static decimal operator -(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value - right;
         }
@@ -129,8 +129,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static decimal operator *(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value * right.Value;
         }
@@ -144,7 +144,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static decimal operator *(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left * right.Value;
         }
@@ -158,7 +158,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static decimal operator *(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value * right;
         }
@@ -173,9 +173,9 @@ namespace Nautilus.DomainModel
         /// value is zero or negative.</exception>
         public static decimal operator /(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
-            Validate.DecimalNotOutOfRange(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
+            Debug.DecimalNotOutOfRange(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             return left.Value / right.Value;
         }
@@ -190,8 +190,8 @@ namespace Nautilus.DomainModel
         /// is zero or negative.</exception>
         public static decimal operator /(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
-            Validate.DecimalNotOutOfRange(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(right, nameof(right));
+            Debug.DecimalNotOutOfRange(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             return left / right.Value;
         }
@@ -206,8 +206,8 @@ namespace Nautilus.DomainModel
         /// negative.</exception>
         public static decimal operator /(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.DecimalNotOutOfRange(right, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(left, nameof(left));
+            Debug.DecimalNotOutOfRange(right, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             return left.Value / right;
         }
@@ -221,9 +221,9 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator >(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
-            Validate.NotEqualTo(right.Value, nameof(right.Value), decimal.Zero);
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
+            Debug.NotEqualTo(right.Value, nameof(right.Value), decimal.Zero);
 
             return left.Value > right.Value;
         }
@@ -237,7 +237,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator >(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left > right.Value;
         }
@@ -251,7 +251,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator >(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value > right;
         }
@@ -265,8 +265,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator >=(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value >= right.Value;
         }
@@ -280,7 +280,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator >=(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left >= right.Value;
         }
@@ -294,7 +294,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator >=(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value >= right;
         }
@@ -308,8 +308,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
         public static bool operator <(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value < right.Value;
         }
@@ -323,7 +323,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator <(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left < right.Value;
         }
@@ -337,7 +337,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator <(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value < right;
         }
@@ -351,8 +351,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator <=(DecimalNumber<T> left, DecimalNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value <= right.Value;
         }
@@ -366,7 +366,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator <=(decimal left, DecimalNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left <= right.Value;
         }
@@ -380,7 +380,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator <=(DecimalNumber<T> left, decimal right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value <= right;
         }
@@ -393,7 +393,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public int CompareTo(DecimalNumber<T> other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return this.Value.CompareTo(other.Value);
         }

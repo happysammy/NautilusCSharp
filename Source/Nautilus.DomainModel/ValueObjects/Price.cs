@@ -30,9 +30,9 @@ namespace Nautilus.DomainModel.ValueObjects
         private Price(decimal value, decimal tickSize)
             : base(value)
         {
-            Validate.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
-            Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue);
-            Validate.True(value.GetDecimalPlaces() <= tickSize.GetDecimalPlaces(), nameof(tickSize));
+            Debug.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue);
+            Debug.True(value.GetDecimalPlaces() <= tickSize.GetDecimalPlaces(), nameof(tickSize));
 
             this.TickSize = tickSize;
             this.Decimals = tickSize.GetDecimalPlaces();
@@ -92,7 +92,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Price Add(Price other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return new Price(this.Value + other.Value, this.TickSize);
         }
@@ -107,7 +107,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Price Subtract(Price other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return new Price(this.Value - other.Value, this.TickSize);
         }

@@ -43,8 +43,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static int operator +(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value + right.Value;
         }
@@ -58,7 +58,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static int operator +(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left + right.Value;
         }
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static int operator +(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value + right;
         }
@@ -86,8 +86,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static int operator -(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value - right.Value;
         }
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static int operator -(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left - right.Value;
         }
@@ -129,8 +129,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static int operator *(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value * right.Value;
         }
@@ -144,7 +144,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static int operator *(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left * right.Value;
         }
@@ -158,7 +158,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static int operator *(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value * right;
         }
@@ -172,9 +172,9 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static int operator /(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
-            Validate.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
+            Debug.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             return left.Value / right.Value;
         }
@@ -188,8 +188,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static int operator /(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
-            Validate.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(right, nameof(right));
+            Debug.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             return left / right.Value;
         }
@@ -203,8 +203,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static int operator /(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.Int32NotOutOfRange(right, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(left, nameof(left));
+            Debug.Int32NotOutOfRange(right, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             return left.Value / right;
         }
@@ -218,9 +218,9 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator >(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
-            Validate.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
+            Debug.Int32NotOutOfRange(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             return left.Value > right.Value;
         }
@@ -234,7 +234,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator >(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left > right.Value;
         }
@@ -248,7 +248,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator >(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value > right;
         }
@@ -262,8 +262,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator >=(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value >= right.Value;
         }
@@ -277,7 +277,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator >=(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left >= right.Value;
         }
@@ -291,7 +291,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator >=(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value >= right;
         }
@@ -305,8 +305,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator <(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value < right.Value;
         }
@@ -320,7 +320,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator <(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left < right.Value;
         }
@@ -334,7 +334,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator <(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value < right;
         }
@@ -348,8 +348,8 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public static bool operator <=(IntegerNumber<T> left, IntegerNumber<T> right)
         {
-            Validate.NotNull(left, nameof(left));
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(left, nameof(left));
+            Debug.NotNull(right, nameof(right));
 
             return left.Value <= right.Value;
         }
@@ -363,7 +363,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the right is null.</exception>
         public static bool operator <=(int left, IntegerNumber<T> right)
         {
-            Validate.NotNull(right, nameof(right));
+            Debug.NotNull(right, nameof(right));
 
             return left <= right.Value;
         }
@@ -377,7 +377,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the left is null.</exception>
         public static bool operator <=(IntegerNumber<T> left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value <= right;
         }
@@ -390,7 +390,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public int CompareTo(IntegerNumber<T> other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return this.Value.CompareTo(other.Value);
         }

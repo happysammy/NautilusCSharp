@@ -210,32 +210,32 @@ namespace Nautilus.Redis
                 {
                     var serialized = redis.Get<string>(key);
                     var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
-                    var deserializedSymbol = deserialized["symbol"].ToStringDictionary();
-                    var symbolCode = deserializedSymbol["code"];
-                    var exchange = deserializedSymbol["exchange"];
-                    var brokerSymbol = deserialized["brokerSymbol"].ToStringDictionary()["value"];
+                    var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
+                    var symbolCode = deserializedSymbol["Code"];
+                    var exchange = deserializedSymbol["Exchange"];
+                    var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
 
                     var instrument = new Instrument(
                         new Symbol(symbolCode, exchange.ToEnum<Exchange>()),
-                        new EntityId(deserializedSymbol["value"]),
+                        new EntityId(deserializedSymbol["Value"]),
                         new EntityId(brokerSymbol),
-                        deserialized["currencyCode"].ToEnum<CurrencyCode>(),
-                        deserialized["securityType"].ToEnum<SecurityType>(),
-                        Convert.ToInt32(deserialized["tickDecimals"]),
-                        Convert.ToDecimal(deserialized["tickSize"]),
-                        Convert.ToDecimal(deserialized["tickValue"]),
-                        Convert.ToDecimal(deserialized["targetDirectSpread"]),
-                        Convert.ToInt32(deserialized["contractSize"]),
-                        Convert.ToInt32(deserialized["minStopDistanceEntry"]),
-                        Convert.ToInt32(deserialized["minLimitDistanceEntry"]),
-                        Convert.ToInt32(deserialized["minStopDistance"]),
-                        Convert.ToInt32(deserialized["minLimitDistance"]),
-                        Convert.ToInt32(deserialized["minTradeSize"]),
-                        Convert.ToInt32(deserialized["maxTradeSize"]),
-                        Convert.ToInt32(deserialized["marginRequirement"]),
-                        Convert.ToDecimal(deserialized["rollOverInterestBuy"]),
-                        Convert.ToDecimal(deserialized["rollOverInterestSell"]),
-                        deserialized["timestamp"].ToZonedDateTimeFromIso());
+                        deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
+                        deserialized["SecurityType"].ToEnum<SecurityType>(),
+                        Convert.ToInt32(deserialized["TickDecimals"]),
+                        Convert.ToDecimal(deserialized["TickSize"]),
+                        Convert.ToDecimal(deserialized["TickValue"]),
+                        Convert.ToDecimal(deserialized["TargetDirectSpread"]),
+                        Convert.ToInt32(deserialized["ContractSize"]),
+                        Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
+                        Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
+                        Convert.ToInt32(deserialized["MinStopDistance"]),
+                        Convert.ToInt32(deserialized["MinLimitDistance"]),
+                        Convert.ToInt32(deserialized["MinTradeSize"]),
+                        Convert.ToInt32(deserialized["MaxTradeSize"]),
+                        Convert.ToInt32(deserialized["MarginRequirement"]),
+                        Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
+                        Convert.ToDecimal(deserialized["RollOverInterestSell"]),
+                        deserialized["Timestamp"].ToZonedDateTimeFromIso());
 
                     return QueryResult<Instrument>.Ok(instrument);
                 }

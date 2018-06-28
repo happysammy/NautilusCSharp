@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 
         public SpreadAnalyzerTests()
         {
-            this.spreadAnalyzer = new SpreadAnalyzer(0.00001m);
+            this.spreadAnalyzer = new SpreadAnalyzer();
         }
 
         [Fact]

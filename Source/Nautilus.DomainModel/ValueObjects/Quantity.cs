@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Quantity(int amount)
             : base(amount)
         {
-            Validate.Int32NotOutOfRange(amount, nameof(amount), 0, int.MaxValue);
+            Debug.Int32NotOutOfRange(amount, nameof(amount), 0, int.MaxValue);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Quantity Add(Quantity other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return new Quantity(this.Value + other.Value);
         }
@@ -75,8 +75,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// other quantity is greater than the value of this quantity.</exception>
         public Quantity Subtract(Quantity other)
         {
-            Validate.NotNull(other, nameof(other));
-            Validate.True(other.Value <= this.Value, nameof(other));
+            Debug.NotNull(other, nameof(other));
+            Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Quantity(this.Value - other.Value);
         }
@@ -90,7 +90,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <exception cref="ValidationException">Throws if the multiplier is negative.</exception>
         public Quantity MultiplyBy(int multiplier)
         {
-            Validate.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
 
             return new Quantity(this.Value * multiplier);
         }

@@ -61,7 +61,7 @@ namespace Nautilus.Database.Aggregators
             Validate.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;
-            this.spreadAnalyzer = new SpreadAnalyzer(0.00001m);  // TODO: Hardcoded ticksize.
+            this.spreadAnalyzer = new SpreadAnalyzer();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
             this.SetupCommandMessageHandling();
@@ -109,11 +109,13 @@ namespace Nautilus.Database.Aggregators
                         break;
 
                     case QuoteType.Mid:
+                        var decimalsPlusOne = tick.Bid.Decimals + 1;
                         builder.Value.Update(
-                            Price.Create(Math.Round((tick.Bid + tick.Ask) / 2, 10), 10));
+                            Price.Create(
+                                Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
+                                decimalsPlusOne));
                         break;
-                    default:
-                        throw new InvalidOperationException();
+                    default: throw new InvalidOperationException("QuoteType not recognized.");
                 }
             }
 
@@ -160,8 +162,7 @@ namespace Nautilus.Database.Aggregators
                 Context.Parent.Tell(barClosed);
 
                 // Create and initialize new builder.
-                this.barBuilders[barSpec] = new BarBuilder();
-                this.barBuilders[barSpec].Update(bar.Close);
+                this.barBuilders[barSpec] = new BarBuilder(bar.Close);
 
                 return;
             }

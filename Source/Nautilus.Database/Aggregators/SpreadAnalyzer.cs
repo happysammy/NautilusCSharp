@@ -25,16 +25,15 @@ namespace Nautilus.Database.Aggregators
         private readonly IList<(ZonedDateTime, decimal)> negativeSpreads = new List<(ZonedDateTime, decimal)>();
         private readonly IList<(ZonedDateTime, decimal)> totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
 
+        // Initialized on first tick.
+        private decimal tickPrecision;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SpreadAnalyzer"/> class.
         /// </summary>
-        /// <param name="tickSize">The tick size.</param>
         /// <exception cref="ValidationException">Throws if the tick size is zero or negative.</exception>
-        public SpreadAnalyzer(decimal tickSize)
+        public SpreadAnalyzer()
         {
-            Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-
-            this.AverageSpread = tickSize;
             this.MaxSpread = (default, decimal.MinValue);
             this.MinSpread = (default, decimal.MaxValue);
         }
@@ -86,6 +85,11 @@ namespace Nautilus.Database.Aggregators
         public void Update(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
+
+            if (this.tickPrecision == decimal.Zero)
+            {
+                this.tickPrecision = tick.Bid.Decimals;
+            }
 
             this.CurrentBid = tick.Bid;
             this.CurrentAsk = tick.Ask;

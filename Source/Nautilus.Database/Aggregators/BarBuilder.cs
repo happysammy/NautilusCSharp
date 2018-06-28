@@ -8,16 +8,37 @@
 
 namespace Nautilus.Database.Aggregators
 {
-    using System;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="BarBuilder"/> class.
+    /// Provides a buider for creating <see cref="Bar"/> objects.
     /// </summary>
     public sealed class BarBuilder
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarBuilder"/> class.
+        /// </summary>
+        public BarBuilder()
+        {
+            // Empty initially.
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarBuilder"/> class.
+        /// </summary>
+        /// <param name="open">The open price for the bar.</param>
+        public BarBuilder(Price open)
+        {
+            Debug.NotNull(open, nameof(open));
+
+            this.Open = open;
+            this.High = open;
+            this.Low = open;
+            this.Close = open;
+        }
+
         /// <summary>
         /// Gets the bar builders open price.
         /// </summary>
@@ -67,8 +88,6 @@ namespace Nautilus.Database.Aggregators
                 this.High = quote;
                 this.Low = quote;
                 this.Close = quote;
-
-                return;
             }
 
             if (quote > this.High)
