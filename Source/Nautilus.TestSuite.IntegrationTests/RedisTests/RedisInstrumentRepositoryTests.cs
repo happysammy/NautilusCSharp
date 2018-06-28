@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         public void Dispose()
         {
-            //this.clientsManager.GetClient().FlushAll();
+            this.clientsManager.GetClient().FlushAll();
         }
 
         [Fact]

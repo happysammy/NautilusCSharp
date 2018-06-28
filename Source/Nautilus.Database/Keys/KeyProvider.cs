@@ -145,7 +145,7 @@ namespace Nautilus.Database.Keys
         {
             Debug.NotNull(symbol, nameof(symbol));
 
-            return InstrumentsConst + Seperator + symbol;
+            return InstrumentsConst + Seperator + symbol.ToString().ToLower();
         }
     }
 }

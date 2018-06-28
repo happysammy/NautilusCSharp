@@ -138,7 +138,7 @@ namespace Nautilus.Fix
                 return SecurityType.Forex;
             }
 
-            return SecurityType.Cfd;
+            return SecurityType.CFD;
         }
 
         /// <summary>

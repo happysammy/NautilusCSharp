@@ -36,7 +36,8 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Contract For Difference security type.
         /// </summary>
-        Cfd = 4,
+        // ReSharper disable once InconsistentNaming
+        CFD = 4,
 
         /// <summary>
         /// Option security type.
