@@ -117,19 +117,13 @@ namespace Nautilus.Fix
         /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<string> GetAllBrokerSymbols() => this.brokerSymbols;
+        public IReadOnlyCollection<string> GetAllBrokerSymbols() => this.brokerSymbols;
 
         /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<Symbol> GetAllSymbols() => this.symbols;
-
-        /// <summary>
-        /// Returns the tick value index for the client.
-        /// </summary>
-        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
-        public IReadOnlyDictionary<string, int> GetTickValueIndex() => this.tickSizeIndex;
+        public IReadOnlyCollection<Symbol> GetAllSymbols() => this.symbols;
 
         /// <summary>
         /// The submit entry limit stop order.

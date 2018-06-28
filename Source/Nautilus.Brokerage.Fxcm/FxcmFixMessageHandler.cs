@@ -11,7 +11,6 @@ namespace Nautilus.Brokerage.FXCM
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Core.Extensions;
@@ -34,7 +33,7 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
-        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
+        private readonly IReadOnlyDictionary<string, int> pricePrecisionIndex;
         private readonly ITickProcessor tickProcessor;
         private IFixGateway fixGateway;
 
@@ -53,7 +52,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(tickProcessor, nameof(tickProcessor));
 
-            this.tickSizeIndex = FxcmTickSizeProvider.GetIndex();
+            this.pricePrecisionIndex = FxcmPricePrecisionProvider.GetIndex();
             this.tickProcessor = tickProcessor;
         }
 
@@ -114,7 +113,7 @@ namespace Nautilus.Brokerage.FXCM
                 var securityType = FxcmFixMessageHelper.GetSecurityType(group.GetField(9080));
                 var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
                 var tickDecimals = Convert.ToInt32(group.GetField(9001));
-                var tickSize = tickDecimals.ToTickSize();
+                var tickSize = Convert.ToDecimal(group.GetField(9002));
 
                 var tickValueQuery = FxcmTickValueProvider.GetTickValue(brokerSymbol.ToString());
                 if (tickValueQuery.IsFailure)
@@ -273,7 +272,7 @@ namespace Nautilus.Brokerage.FXCM
                 Exchange.FXCM,
                 Convert.ToDecimal(bid),
                 Convert.ToDecimal(ask),
-                this.tickSizeIndex[fxcmSymbol],
+                this.pricePrecisionIndex[fxcmSymbol],
                 timestamp);
         }
 
@@ -313,7 +312,12 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(message, nameof(message));
 
-            var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
+            var fxcmSymbol = message.GetField(Tags.Symbol);
+
+            var symbol = message.IsSetField(Tags.Symbol)
+                ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
+                : string.Empty;
+
             var orderId = GetField(message, Tags.ClOrdID);
             var brokerOrderId = GetField(message, Tags.OrderID);
             var orderLabel = GetField(message, Tags.SecondaryClOrdID);
@@ -362,6 +366,7 @@ namespace Nautilus.Brokerage.FXCM
                     brokerOrderId,
                     orderLabel,
                     price,
+                    this.pricePrecisionIndex[fxcmSymbol],
                     timestamp);
             }
 
@@ -381,6 +386,7 @@ namespace Nautilus.Brokerage.FXCM
                     orderType,
                     orderQty,
                     price,
+                    this.pricePrecisionIndex[fxcmSymbol],
                     timeInForce,
                     expireTime,
                     timestamp);
@@ -415,6 +421,7 @@ namespace Nautilus.Brokerage.FXCM
                     orderSide,
                     filledQuantity,
                     averagePrice,
+                    this.pricePrecisionIndex[fxcmSymbol],
                     timestamp);
             }
 
@@ -438,6 +445,7 @@ namespace Nautilus.Brokerage.FXCM
                     filledQuantity,
                     leavesQuantity,
                     averagePrice,
+                    this.pricePrecisionIndex[fxcmSymbol],
                     timestamp);
             }
         }

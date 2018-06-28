@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="Instrument"/> class. Represents a financial market instrument.
+    /// Represents a tradable financial market instrument.
     /// </summary>
     [Immutable]
     public sealed class Instrument : Entity<Instrument>
@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.Entities
             int tickDecimals,
             decimal tickSize,
             decimal tickValue,
-            int targetDirectSpread,
+            decimal targetDirectSpread,
             int contractSize,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
@@ -73,7 +73,7 @@ namespace Nautilus.DomainModel.Entities
             Validate.DecimalNotOutOfRange(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue);
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-            Validate.Int32NotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Validate.DecimalNotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
             Validate.Int32NotOutOfRange(contractSize, nameof(contractSize), 0, int.MaxValue, RangeEndPoints.Exclusive);
             Validate.Int32NotOutOfRange(minStopDistanceEntry, nameof(minStopDistanceEntry), 0, int.MaxValue);
             Validate.Int32NotOutOfRange(minLimitDistanceEntry, nameof(minLimitDistanceEntry), 0, int.MaxValue);
@@ -140,7 +140,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments target direct spread.
         /// </summary>
-        public int TargetDirectSpread { get; }
+        public decimal TargetDirectSpread { get; }
 
         /// <summary>
         /// Gets the instruments contract size.

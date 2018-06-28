@@ -125,6 +125,7 @@ namespace Nautilus.Database.Build
                 ServiceContext.FIX);
 
             fixClient.InitializeGateway(fixGateway);
+            instrumentRepository.CacheAll();
 
             return new Database(
                 setupContainer,

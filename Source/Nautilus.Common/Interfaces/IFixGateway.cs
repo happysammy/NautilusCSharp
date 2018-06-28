@@ -219,6 +219,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="price">The order price.</param>
+        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderModified(
             string symbol,
@@ -227,6 +228,7 @@ namespace Nautilus.Common.Interfaces
             string brokerOrderId,
             string orderLabel,
             decimal price,
+            int decimals,
             ZonedDateTime timestamp);
 
         /// <summary>
@@ -242,6 +244,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="orderType">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price.</param>
+        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
@@ -255,6 +258,7 @@ namespace Nautilus.Common.Interfaces
             OrderType orderType,
             int quantity,
             decimal price,
+            int decimals,
             TimeInForce timeInForce,
             Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp);
@@ -291,6 +295,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="orderSide">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
+        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderFilled(
             string symbol,
@@ -303,6 +308,7 @@ namespace Nautilus.Common.Interfaces
             OrderSide orderSide,
             int filledQuantity,
             decimal averagePrice,
+            int decimals,
             ZonedDateTime timestamp);
 
         /// <summary>
@@ -320,6 +326,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="leavesQuantity">The order leaves quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
+        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderPartiallyFilled(
             string symbol,
@@ -333,6 +340,7 @@ namespace Nautilus.Common.Interfaces
             int filledQuantity,
             int leavesQuantity,
             decimal averagePrice,
+            int decimals,
             ZonedDateTime timestamp);
     }
 }

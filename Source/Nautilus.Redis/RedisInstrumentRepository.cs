@@ -32,7 +32,7 @@ namespace Nautilus.Redis
     public class RedisInstrumentRepository : IInstrumentRepository, IDisposable
     {
         private readonly IRedisClientsManager clientsManager;
-        private readonly IDictionary<Symbol, Instrument> cache = new Dictionary<Symbol, Instrument>();
+        private readonly IDictionary<Symbol, Instrument> cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
@@ -43,12 +43,8 @@ namespace Nautilus.Redis
             Validate.NotNull(clientsManager, nameof(clientsManager));
 
             this.clientsManager = clientsManager;
+            this.cache = new Dictionary<Symbol, Instrument>();
         }
-
-        /// <summary>
-        /// Returns the list of instrument symbols currently held in cache.
-        /// </summary>
-        public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToList().AsReadOnly();
 
         /// <summary>
         /// Clears all instruments from the in-memory cache.
@@ -155,7 +151,7 @@ namespace Nautilus.Redis
 
             var updatedInstrument = instrumentBuilder.Build(timeNow);
 
-            this.cache.Add(symbol, updatedInstrument);
+            this.cache[symbol] =updatedInstrument;
             this.Write(instrument);
 
             return CommandResult.Ok($"Updated instrument {symbol} " + changesString);
@@ -214,32 +210,32 @@ namespace Nautilus.Redis
                 {
                     var serialized = redis.Get<string>(key);
                     var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
-                    var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
-                    var symbolCode = deserializedSymbol["Code"];
-                    var exchange = deserializedSymbol["Exchange"];
-                    var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
+                    var deserializedSymbol = deserialized["symbol"].ToStringDictionary();
+                    var symbolCode = deserializedSymbol["code"];
+                    var exchange = deserializedSymbol["exchange"];
+                    var brokerSymbol = deserialized["brokerSymbol"].ToStringDictionary()["value"];
 
                     var instrument = new Instrument(
                         new Symbol(symbolCode, exchange.ToEnum<Exchange>()),
-                        new EntityId(deserializedSymbol["Value"]),
+                        new EntityId(deserializedSymbol["value"]),
                         new EntityId(brokerSymbol),
-                        deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
-                        deserialized["SecurityType"].ToEnum<SecurityType>(),
-                        Convert.ToInt32(deserialized["TickDecimals"]),
-                        Convert.ToDecimal(deserialized["TickSize"]),
-                        Convert.ToDecimal(deserialized["TickValue"]),
-                        Convert.ToInt32(deserialized["TargetDirectSpread"]),
-                        Convert.ToInt32(deserialized["ContractSize"]),
-                        Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
-                        Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
-                        Convert.ToInt32(deserialized["MinStopDistance"]),
-                        Convert.ToInt32(deserialized["MinLimitDistance"]),
-                        Convert.ToInt32(deserialized["MinTradeSize"]),
-                        Convert.ToInt32(deserialized["MaxTradeSize"]),
-                        Convert.ToInt32(deserialized["MarginRequirement"]),
-                        Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
-                        Convert.ToDecimal(deserialized["RollOverInterestSell"]),
-                        deserialized["Timestamp"].ToZonedDateTimeFromIso());
+                        deserialized["currencyCode"].ToEnum<CurrencyCode>(),
+                        deserialized["securityType"].ToEnum<SecurityType>(),
+                        Convert.ToInt32(deserialized["tickDecimals"]),
+                        Convert.ToDecimal(deserialized["tickSize"]),
+                        Convert.ToDecimal(deserialized["tickValue"]),
+                        Convert.ToDecimal(deserialized["targetDirectSpread"]),
+                        Convert.ToInt32(deserialized["contractSize"]),
+                        Convert.ToInt32(deserialized["minStopDistanceEntry"]),
+                        Convert.ToInt32(deserialized["minLimitDistanceEntry"]),
+                        Convert.ToInt32(deserialized["minStopDistance"]),
+                        Convert.ToInt32(deserialized["minLimitDistance"]),
+                        Convert.ToInt32(deserialized["minTradeSize"]),
+                        Convert.ToInt32(deserialized["maxTradeSize"]),
+                        Convert.ToInt32(deserialized["marginRequirement"]),
+                        Convert.ToDecimal(deserialized["rollOverInterestBuy"]),
+                        Convert.ToDecimal(deserialized["rollOverInterestSell"]),
+                        deserialized["timestamp"].ToZonedDateTimeFromIso());
 
                     return QueryResult<Instrument>.Ok(instrument);
                 }
@@ -249,17 +245,19 @@ namespace Nautilus.Redis
         }
 
         /// <summary>
-        /// Returns the tick size for the instrument of the given symbol.
+        /// Returns the list of instrument symbols currently held in cache.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>The result of the query.</returns>
-        public QueryResult<decimal> GetTickSize(Symbol symbol)
-        {
-            Debug.NotNull(symbol, nameof(symbol));
+        public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToList().AsReadOnly();
 
-            return this.cache.ContainsKey(symbol)
-                ? QueryResult<decimal>.Ok(this.cache[symbol].TickSize)
-                : QueryResult<decimal>.Fail($"Cannot find instrument {symbol}");
+        /// <summary>
+        /// Returns the dictionary index of symbols and their corresponding tick size.
+        /// </summary>
+        /// <returns>The tick size index.</returns>
+        public IReadOnlyDictionary<Symbol, decimal> GetTickSizeIndex()
+        {
+            return this.cache.ToDictionary(
+                symbol => symbol.Key,
+                symbol => symbol.Value.TickSize);
         }
 
         /// <summary>

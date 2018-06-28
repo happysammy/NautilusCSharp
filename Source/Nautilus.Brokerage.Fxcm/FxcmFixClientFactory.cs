@@ -66,7 +66,7 @@ namespace Nautilus.Brokerage.FXCM
                 Broker.FXCM,
                 FxcmSymbolProvider.GetAllBrokerSymbols(),
                 FxcmSymbolProvider.GetAllSymbols(),
-                FxcmTickSizeProvider.GetIndex());
+                FxcmPricePrecisionProvider.GetIndex());
         }
     }
 }

@@ -35,6 +35,7 @@ namespace Nautilus.Common
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
+        private readonly IReadOnlyDictionary<Symbol, decimal> tickSizeIndex;
         private readonly IFixClient fixClient;
         private readonly CurrencyCode accountCurrency;
         private readonly Enum riskService;
@@ -47,6 +48,9 @@ namespace Nautilus.Common
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The trade client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="accountCurrency">The FIX account currency.</param>
+        /// <param name="riskService">The risk service address.</param>
+        /// <param name="portfolioService">the portfolio service address.</param>
         public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
@@ -502,6 +506,7 @@ namespace Nautilus.Common
             string brokerOrderId,
             string orderLabel,
             decimal price,
+            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -519,7 +524,7 @@ namespace Nautilus.Common
                     symbolType,
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
-                    Price.Create(price, this.instrumentRepository.GetTickSize(symbolType).Value),
+                    Price.Create(price, decimals),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -548,6 +553,7 @@ namespace Nautilus.Common
         /// <param name="orderType">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price.</param>
+        /// <param name="decimals">The decimal precision for the price.</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
@@ -561,6 +567,7 @@ namespace Nautilus.Common
             OrderType orderType,
             int quantity,
             decimal price,
+            int decimals,
             TimeInForce timeInForce,
             Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp)
@@ -585,7 +592,7 @@ namespace Nautilus.Common
                     orderSide,
                     orderType,
                     Quantity.Create(quantity),
-                    Price.Create(price, this.instrumentRepository.GetTickSize(symbolType).Value),
+                    Price.Create(price, decimals),
                     timeInForce,
                     expireTime,
                     timestamp,
@@ -668,6 +675,7 @@ namespace Nautilus.Common
         /// <param name="orderSide">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
+        /// <param name="decimals">The decimal precison for the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderFilled(
             string symbol,
@@ -680,6 +688,7 @@ namespace Nautilus.Common
             OrderSide orderSide,
             int filledQuantity,
             decimal averagePrice,
+            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -703,7 +712,7 @@ namespace Nautilus.Common
                     new EntityId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, this.instrumentRepository.GetTickSize(symbolType).Value),
+                    Price.Create(averagePrice, decimals),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -734,6 +743,7 @@ namespace Nautilus.Common
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="leavesQuantity">The order leaves quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
+        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderPartiallyFilled(
             string symbol,
@@ -747,6 +757,7 @@ namespace Nautilus.Common
             int filledQuantity,
             int leavesQuantity,
             decimal averagePrice,
+            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -772,7 +783,7 @@ namespace Nautilus.Common
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, this.instrumentRepository.GetTickSize(symbolType).Value),
+                    Price.Create(averagePrice, decimals),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());

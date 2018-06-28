@@ -20,11 +20,6 @@ namespace Nautilus.Common.Interfaces
     public interface IInstrumentRepository
     {
         /// <summary>
-        /// Returns the instrument symbol collection.
-        /// </summary>
-        IReadOnlyCollection<Symbol> GetSymbols();
-
-        /// <summary>
         /// Clears all instruments from the in-memory cache.
         /// </summary>
         void ResetCache();
@@ -68,11 +63,14 @@ namespace Nautilus.Common.Interfaces
         QueryResult<Instrument> FindInCache(Symbol symbol);
 
         /// <summary>
-        /// Returns the <see cref="decimal"/> tick size of the <see cref="Instrument"/>
-        /// corresponding to the given <see cref="Symbol"/>.
+        /// Returns the instrument symbol collection.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="QueryResult{Decimal}"/> result.</returns>
-        QueryResult<decimal> GetTickSize(Symbol symbol);
+        IReadOnlyCollection<Symbol> GetSymbols();
+
+        /// <summary>
+        /// Returns the dictionary index of symbols and their corresponding tick size.
+        /// </summary>
+        /// <returns>The tick size index.</returns>
+        IReadOnlyDictionary<Symbol, decimal> GetTickSizeIndex();
     }
 }

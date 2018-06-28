@@ -19,8 +19,8 @@ namespace Nautilus.Brokerage.FXCM
     [Immutable]
     public static class FxcmTargetDirectSpreadProvider
     {
-        private static readonly Dictionary<string, int> TargetDirectSpreadIndex =
-                            new Dictionary<string, int>
+        private static readonly Dictionary<string, decimal> TargetDirectSpreadIndex =
+                            new Dictionary<string, decimal>
         {
             { "AUD/CAD",  5 },
             { "AUD/CHF",  5 },
@@ -28,12 +28,12 @@ namespace Nautilus.Brokerage.FXCM
             { "AUD/NZD",  5 },
             { "AUD/USD",  5 },
             { "AUS200",   2 },
-            { "Bund",     2 },
+            { "Bund",     3 },
             { "CAD/CHF",  5 },
             { "CAD/JPY",  5 },
             { "CHF/JPY",  5 },
-            { "CHN50",    5 },
-            { "Copper",   2 },
+            { "CHN50",    15 },
+            { "Copper",   3 },
             { "ESP35",    8 },
             { "EUR/AUD",  5 },
             { "EUR/CAD",  5 },
@@ -54,8 +54,8 @@ namespace Nautilus.Brokerage.FXCM
             { "GBP/JPY",  5 },
             { "GBP/NZD",  5 },
             { "GBP/USD",  5 },
-            { "GER30",    2 },
-            { "HKG33",    15 },
+            { "GER30",    0.9m },
+            { "HKG33",    10 },
             { "ITA40",    5 },
             { "JPN225",   10 },
             { "NAS100",   1 },
@@ -66,7 +66,7 @@ namespace Nautilus.Brokerage.FXCM
             { "NZD/USD",  5 },
             { "SPX500",   5 },
             { "SUI20",    5 },
-            { "SOYF",     5 },
+            { "SOYF",     7.5m },
             { "TRY/JPY",  5 },
             { "UK100",    5 },
             { "UKOil",    5 },
@@ -84,8 +84,8 @@ namespace Nautilus.Brokerage.FXCM
             { "USD/TRY",  5 },
             { "USD/ZAR",  5 },
             { "USOil",    5 },
-            { "XAG/USD",  5 },
-            { "XAU/USD", 50 },
+            { "XAG/USD",  4.5m },
+            { "XAU/USD",  40 },
             { "XPD/USD",  5 },
             { "XPT/USD",  5 },
             { "ZAR/JPY",  5 }
@@ -96,13 +96,13 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="fxcmSymbol">The FXCM symbol.</param>
         /// <returns>An <see cref="int"/>.</returns>
-        public static QueryResult<int> GetTargetDirectSpread(string fxcmSymbol)
+        public static QueryResult<decimal> GetTargetDirectSpread(string fxcmSymbol)
         {
             Validate.NotNull(fxcmSymbol, nameof(fxcmSymbol));
 
             return TargetDirectSpreadIndex.ContainsKey(fxcmSymbol)
-                 ? QueryResult<int>.Ok(TargetDirectSpreadIndex[fxcmSymbol])
-                 : QueryResult<int>.Fail($"Cannot find the target direct spread for {fxcmSymbol}");
+                 ? QueryResult<decimal>.Ok(TargetDirectSpreadIndex[fxcmSymbol])
+                 : QueryResult<decimal>.Fail($"Cannot find the target direct spread for {fxcmSymbol}");
         }
     }
 }

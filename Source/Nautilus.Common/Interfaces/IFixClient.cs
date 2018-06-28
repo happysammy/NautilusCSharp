@@ -47,22 +47,10 @@ namespace Nautilus.Common.Interfaces
         void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
-        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        IReadOnlyList<string> GetAllBrokerSymbols();
-
-        /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        IReadOnlyList<Symbol> GetAllSymbols();
-
-        /// <summary>
-        /// Returns the tick value index for the client.
-        /// </summary>
-        /// <returns>The read only dictionary of symbol keys and tick values.</returns>
-        IReadOnlyDictionary<string, int> GetTickValueIndex();
+        IReadOnlyCollection<Symbol> GetAllSymbols();
 
         /// <summary>
         /// Subscribes to market data for the given symbol.

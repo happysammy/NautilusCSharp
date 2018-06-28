@@ -71,7 +71,7 @@ namespace Nautilus.Database.Aggregators
 
         private decimal TickValue { get; set; }
 
-        private int TargetDirectSpread { get; set; }
+        private decimal TargetDirectSpread { get; set; }
 
         private int ContractSize { get; set; }
 

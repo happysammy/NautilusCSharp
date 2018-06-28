@@ -15,7 +15,7 @@ namespace Nautilus.Brokerage.FXCM
     /// The immutable static <see cref="FxcmTickValueProvider"/> class.
     /// </summary>
     [Immutable]
-    public static class FxcmTickSizeProvider
+    public static class FxcmPricePrecisionProvider
     {
         private static readonly Dictionary<string, int> TickSizeIndex =
                             new Dictionary<string, int>
