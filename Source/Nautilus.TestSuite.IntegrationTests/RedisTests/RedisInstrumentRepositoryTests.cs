@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Core;
     using Nautilus.DomainModel.Entities;
     using ServiceStack.Redis;
     using Xunit;
@@ -43,7 +42,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         public void Dispose()
         {
-            //this.clientsManager.GetClient().FlushAll();
+            this.clientsManager.GetClient().FlushAll();
         }
 
         [Fact]

@@ -27,7 +27,7 @@ namespace Nautilus.Serilog
                 Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
-                   .WriteTo.Console(LogEventLevel.Debug, logTemplateDefault)
+                   .WriteTo.Console(LogEventLevel.Information, logTemplateDefault)
                    .WriteTo.RollingFile("Logs/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }

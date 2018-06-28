@@ -67,6 +67,8 @@ namespace Nautilus.Database.Aggregators
                 this.High = quote;
                 this.Low = quote;
                 this.Close = quote;
+
+                return;
             }
 
             if (quote > this.High)

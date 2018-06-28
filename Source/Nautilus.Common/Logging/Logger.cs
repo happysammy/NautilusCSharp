@@ -125,7 +125,7 @@ namespace Nautilus.Common.Logging
 
             if (result.IsSuccess)
             {
-                this.Information(result.Message);
+                this.Debug(result.Message);
             }
             else
             {
