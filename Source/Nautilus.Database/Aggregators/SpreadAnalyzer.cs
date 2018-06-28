@@ -122,7 +122,7 @@ namespace Nautilus.Database.Aggregators
         {
             Validate.NotDefault(timestamp, nameof(timestamp));
 
-            this.AverageSpread = this.CalculateAverageSpread();
+            this.AverageSpread = Math.Max(this.CalculateAverageSpread(), decimal.Zero);
             this.totalAverageSpreads.Add((timestamp, this.AverageSpread));
             this.thisBarsSpreads.Clear();
         }

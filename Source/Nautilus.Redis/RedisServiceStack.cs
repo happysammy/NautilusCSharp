@@ -12,8 +12,14 @@ namespace Nautilus.Redis
     using NodaTime;
     using ServiceStack.Text;
 
-    public class RedisServiceStack
+    /// <summary>
+    /// Provides configuration options for Service Stack with Redis.
+    /// </summary>
+    public static class RedisServiceStack
     {
+        /// <summary>
+        /// Configures Service Stack to work with Redis.
+        /// </summary>
         public static void ConfigureServiceStack()
         {
             JsConfig<ZonedDateTime>.RawSerializeFn = ZonedDateTimeExtensions.ToIsoString;

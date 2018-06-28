@@ -35,7 +35,6 @@ namespace Nautilus.Common
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IReadOnlyDictionary<Symbol, decimal> tickSizeIndex;
         private readonly IFixClient fixClient;
         private readonly CurrencyCode accountCurrency;
         private readonly Enum riskService;
@@ -498,6 +497,7 @@ namespace Nautilus.Common
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="price">The order price.</param>
+        /// <param name="decimals">The price decimal precision.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderModified(
             string symbol,
@@ -553,7 +553,7 @@ namespace Nautilus.Common
         /// <param name="orderType">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price.</param>
-        /// <param name="decimals">The decimal precision for the price.</param>
+        /// <param name="decimals">The price decimal precision.</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
