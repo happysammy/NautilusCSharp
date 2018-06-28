@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderSubmitted"/> class. Represents an event where an order
-    /// had been submitted by the system to the broker.
+    /// Represents an event where an order had been submitted by the system to the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderSubmitted : OrderEvent
@@ -43,11 +42,11 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotDefault(submittedTime, nameof(submittedTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotDefault(submittedTime, nameof(submittedTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.SubmittedTime = submittedTime;
         }
@@ -56,11 +55,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order submitted time.
         /// </summary>
         public ZonedDateTime SubmittedTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderSubmitted"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderSubmitted);
     }
 }

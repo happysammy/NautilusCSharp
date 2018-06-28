@@ -67,6 +67,7 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(instrumentId, timestamp)
         {
+            // Keep validation logic here.
             Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(instrumentId, nameof(instrumentId));
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));

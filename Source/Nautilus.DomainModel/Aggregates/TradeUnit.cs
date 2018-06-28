@@ -22,8 +22,7 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="TradeUnit"/> class. Represents a trade unit as part of a larger trade
-    /// aggregate.
+    /// Represents a trade unit as part of a larger trade aggregate.
     /// </summary>
     public sealed class TradeUnit : Aggregate<TradeUnit>
     {
@@ -49,12 +48,12 @@ namespace Nautilus.DomainModel.Aggregates
             ZonedDateTime timestamp)
             : base(tradeUnitId, timestamp)
         {
-            Validate.NotNull(tradeUnitId, nameof(tradeUnitId));
-            Validate.NotNull(tradeUnitLabel, nameof(tradeUnitLabel));
-            Validate.NotNull(entry, nameof(entry));
-            Validate.NotNull(stopLoss, nameof(stopLoss));
-            Validate.NotNull(profitTarget, nameof(profitTarget));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(tradeUnitId, nameof(tradeUnitId));
+            Debug.NotNull(tradeUnitLabel, nameof(tradeUnitLabel));
+            Debug.NotNull(entry, nameof(entry));
+            Debug.NotNull(stopLoss, nameof(stopLoss));
+            Debug.NotNull(profitTarget, nameof(profitTarget));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = entry.Symbol;
             this.TradeUnitLabel = tradeUnitLabel;
@@ -141,7 +140,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsOrderContained(EntityId orderId)
         {
-            Validate.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderId, nameof(orderId));
 
             return this.OrderIds.Contains(orderId);
         }
@@ -153,7 +152,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>A <see cref="Option{Order}" />.</returns>
         public Option<Order> GetOrderById(EntityId orderId)
         {
-            Validate.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderId, nameof(orderId));
 
             return this.orders.FirstOrDefault(o => o.OrderId == orderId);
         }
@@ -165,8 +164,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         public override CommandResult Apply(Event @event)
         {
-            Validate.NotNull(@event, nameof(@event));
-            Validate.True(@event is OrderEvent, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
+            Debug.True(@event is OrderEvent, nameof(@event));
 
             var orderEvent = @event as OrderEvent;
 
@@ -187,7 +186,7 @@ namespace Nautilus.DomainModel.Aggregates
 
             return this.orders
                .FirstOrDefault(order => order.OrderId.Equals(orderEvent?.OrderId))
-               .Apply(orderEvent)
+              ?.Apply(orderEvent)
                .OnSuccess(() => this.Events.Add(orderEvent));
         }
 

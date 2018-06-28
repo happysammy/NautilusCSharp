@@ -46,11 +46,11 @@ namespace Nautilus.DomainModel.Orders
                   quantity,
                   timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotNull(orderLabel, nameof(orderLabel));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotNull(quantity, nameof(quantity));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderLabel, nameof(orderLabel));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotNull(quantity, nameof(quantity));
 
             Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.Market);
         }

@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderModified"/> class. Represents an event where an order
-    /// had been modified at the broker.
+    /// Represents an event where an order had been modified at the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderModified : OrderEvent
@@ -47,13 +46,13 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
-            Validate.NotNull(modifiedPrice, nameof(modifiedPrice));
-            Validate.NotDefault(acceptedTime, nameof(acceptedTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(brokerOrderId, nameof(brokerOrderId));
+            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
+            Debug.NotDefault(acceptedTime, nameof(acceptedTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.BrokerOrderId = brokerOrderId;
             this.ModifiedPrice = modifiedPrice;
@@ -74,11 +73,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order modified accepted time.
         /// </summary>
         public ZonedDateTime AcceptedTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderModified"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderModified);
     }
 }

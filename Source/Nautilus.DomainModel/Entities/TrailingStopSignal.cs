@@ -16,8 +16,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="TrailingStopSignal"/> class. Represents a trade trailing
-    /// stop signal.
+    /// Represents a trade trailing stop signal.
     /// </summary>
     [Immutable]
     public sealed class TrailingStopSignal : Signal
@@ -49,14 +48,14 @@ namespace Nautilus.DomainModel.Entities
                   tradeType,
                   signalTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(signalId, nameof(signalId));
-            Validate.NotNull(signalLabel, nameof(signalLabel));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotDefault(forMarketPosition, nameof(forMarketPosition));
-            Validate.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
-            Validate.CollectionNotNullOrEmpty(forUnitStoplossPrices, nameof(forUnitStoplossPrices));
-            Validate.NotDefault(signalTimestamp, nameof(signalTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(signalId, nameof(signalId));
+            Debug.NotNull(signalLabel, nameof(signalLabel));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotDefault(forMarketPosition, nameof(forMarketPosition));
+            Debug.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
+            Debug.CollectionNotNullOrEmpty(forUnitStoplossPrices, nameof(forUnitStoplossPrices));
+            Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.ForMarketPosition = forMarketPosition;
             this.ForUnitStoplossPrices = forUnitStoplossPrices;

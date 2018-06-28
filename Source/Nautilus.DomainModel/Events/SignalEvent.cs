@@ -17,8 +17,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="SignalEvent"/> class. Represents and wraps all signal events
-    /// produced by the system.
+    /// Represents and wraps all signal events produced by the system.
     /// </summary>
     [Immutable]
     public sealed class SignalEvent : Event
@@ -37,9 +36,9 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Validate.NotNull(signal, nameof(signal));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(signal, nameof(signal));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.Signal = signal;
         }
@@ -53,11 +52,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events signal.
         /// </summary>
         public Signal Signal { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="SignalEvent"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(SignalEvent);
     }
 }

@@ -55,14 +55,14 @@ namespace Nautilus.DomainModel.Orders
                 expireTime,
                 timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotNull(orderLabel, nameof(orderLabel));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotNull(quantity, nameof(quantity));
-            Validate.NotNull(price, nameof(price));
-            Validate.NotDefault(timeInForce, nameof(timeInForce));
-            Validate.NotNull(expireTime, nameof(expireTime));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderLabel, nameof(orderLabel));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotNull(quantity, nameof(quantity));
+            Debug.NotNull(price, nameof(price));
+            Debug.NotDefault(timeInForce, nameof(timeInForce));
+            Debug.NotNull(expireTime, nameof(expireTime));
 
             Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.StopLimit);
         }

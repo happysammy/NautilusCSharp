@@ -21,8 +21,8 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// Represents a financial market trade comprising of
-    /// <see cref="TradeUnit"/>(s) to be managed together.
+    /// Represents a financial market trade comprising of a collection of <see cref="TradeUnit"/>s
+    /// to be managed together.
     /// </summary>
     public sealed class Trade : Aggregate<Trade>
     {
@@ -114,7 +114,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="System.ArgumentNullException">Throws if the given argument is null.</exception>
         public Option<Order> GetOrderById(EntityId orderId)
         {
-            Validate.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderId, nameof(orderId));
 
             return this.TradeUnits
                .Select(tradeUnits => tradeUnits.GetOrderById(orderId))
@@ -128,8 +128,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         public override CommandResult Apply(Event @event) // TODO: refactor
         {
-            Validate.NotNull(@event, nameof(@event));
-            Validate.True(@event is OrderEvent, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
+            Debug.True(@event is OrderEvent, nameof(@event));
 
             if (!(@event is OrderEvent orderEvent))
             {

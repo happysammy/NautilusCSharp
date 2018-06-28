@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="AccountEvent"/> class. Represents an account event.
+    /// Represents an account change event.
     /// </summary>
     [Immutable]
     public sealed class AccountEvent : Event
@@ -50,12 +50,12 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Validate.NotNull(accountNumber, nameof(accountNumber));
-            Validate.NotNull(cashBalance, nameof(cashBalance));
-            Validate.NotNull(cashStartDay, nameof(cashStartDay));
-            Validate.NotNull(cashActivityDay, nameof(cashActivityDay));
-            Validate.NotNull(marginUsedLiquidation, nameof(marginUsedLiquidation));
-            Validate.NotNull(marginUsedMaintenance, nameof(marginUsedMaintenance));
+            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotNull(cashBalance, nameof(cashBalance));
+            Debug.NotNull(cashStartDay, nameof(cashStartDay));
+            Debug.NotNull(cashActivityDay, nameof(cashActivityDay));
+            Debug.NotNull(marginUsedLiquidation, nameof(marginUsedLiquidation));
+            Debug.NotNull(marginUsedMaintenance, nameof(marginUsedMaintenance));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;

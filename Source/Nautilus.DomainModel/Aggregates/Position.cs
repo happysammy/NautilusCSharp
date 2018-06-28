@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="Position"/> class. Represents a financial market position.
+    /// Represents a financial market position.
     /// </summary>
     public sealed class Position : Aggregate<Position>
     {

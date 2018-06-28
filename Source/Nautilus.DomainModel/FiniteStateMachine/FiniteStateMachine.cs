@@ -54,7 +54,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the trigger is null.</exception>
         public CommandResult Process(Trigger trigger)
         {
-            Validate.NotNull(trigger, nameof(trigger));
+            Debug.NotNull(trigger, nameof(trigger));
 
             var transition = new StateTransition(this.CurrentState, trigger);
 

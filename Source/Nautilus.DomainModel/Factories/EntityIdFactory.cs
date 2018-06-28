@@ -33,9 +33,9 @@ namespace Nautilus.DomainModel.Factories
         /// symbol is null, or if the order count is negative.</exception>
         public static EntityId Order(ZonedDateTime time, Symbol symbol, int orderCount)
         {
-            Validate.NotDefault(time, nameof(time));
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.Int32NotOutOfRange(orderCount, nameof(orderCount), 0, int.MaxValue);
+            Debug.NotDefault(time, nameof(time));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.Int32NotOutOfRange(orderCount, nameof(orderCount), 0, int.MaxValue);
 
             return new EntityId($"{GetTimeString(time)}_{symbol.Code}_{orderCount}");
         }
@@ -50,8 +50,8 @@ namespace Nautilus.DomainModel.Factories
         /// order identifier count is negative.</exception>
         public static EntityId ModifiedOrderId(EntityId orderId, int orderIdCount)
         {
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.Int32NotOutOfRange(orderIdCount, nameof(orderIdCount), 0, int.MaxValue);
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.Int32NotOutOfRange(orderIdCount, nameof(orderIdCount), 0, int.MaxValue);
 
             return new EntityId($"{orderId}_R{orderIdCount}");
         }
@@ -76,12 +76,12 @@ namespace Nautilus.DomainModel.Factories
             Label signalLabel,
             int signalCount)
         {
-            Validate.NotDefault(time, nameof(time));
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(signalLabel, nameof(signalLabel));
-            Validate.Int32NotOutOfRange(signalCount, nameof(signalCount), 0, int.MaxValue);
+            Debug.NotDefault(time, nameof(time));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotNull(signalLabel, nameof(signalLabel));
+            Debug.Int32NotOutOfRange(signalCount, nameof(signalCount), 0, int.MaxValue);
 
             return new EntityId($"{GetTimeString(time)}|{GetSignalIdString(symbol, tradeType, orderSide)}-{signalLabel}-{signalCount}");
         }
@@ -97,8 +97,8 @@ namespace Nautilus.DomainModel.Factories
         /// trade unit is negative.</exception>
         public static EntityId TradeUnit(EntityId tradeId, int tradeUnit)
         {
-            Validate.NotNull(tradeId, nameof(tradeId));
-            Validate.Int32NotOutOfRange(tradeUnit, nameof(tradeUnit), 0, int.MaxValue);
+            Debug.NotNull(tradeId, nameof(tradeId));
+            Debug.Int32NotOutOfRange(tradeUnit, nameof(tradeUnit), 0, int.MaxValue);
 
             return new EntityId($"{tradeId}_U{tradeUnit}");
         }
@@ -112,7 +112,7 @@ namespace Nautilus.DomainModel.Factories
         /// <exception cref="ValidationException">Throws if the account number is null or white space.</exception>
         public static EntityId Account(Broker broker, string accountNumber)
         {
-            Validate.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotNull(accountNumber, nameof(accountNumber));
 
             return new EntityId($"{broker}-{accountNumber}");
         }

@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="ExitSignal"/> class. Represents a trade exit signal.
+    /// Represents a trade exit signal.
     /// </summary>
     [Immutable]
     public sealed class ExitSignal : Signal
@@ -49,14 +49,14 @@ namespace Nautilus.DomainModel.Entities
                   tradeType,
                   signalTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(signalId, nameof(signalId));
-            Validate.NotNull(signalLabel, nameof(signalLabel));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotDefault(forMarketPosition, nameof(forMarketPosition));
-            Validate.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
-            Validate.NotNull(forUnit, nameof(forUnit));
-            Validate.NotDefault(signalTimestamp, nameof(signalTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(signalId, nameof(signalId));
+            Debug.NotNull(signalLabel, nameof(signalLabel));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotDefault(forMarketPosition, nameof(forMarketPosition));
+            Debug.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
+            Debug.NotNull(forUnit, nameof(forUnit));
+            Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.ForMarketPosition = forMarketPosition;
             this.ForUnit = forUnit.ToImmutableList();

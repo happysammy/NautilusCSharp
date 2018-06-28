@@ -28,8 +28,8 @@ namespace Nautilus.DomainModel
         /// the string values length is greater than 100 characters.</exception>
         protected ValidString(string value)
         {
-            Validate.NotNull(value, nameof(value));
-            Validate.True(value.Length <= 100, nameof(value));
+            Debug.NotNull(value, nameof(value));
+            Debug.True(value.Length <= 100, nameof(value));
 
             this.Value = value.RemoveAllWhitespace();
         }

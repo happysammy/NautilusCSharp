@@ -17,8 +17,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderWorking"/> class. Represents an event where an order
-    /// had been working in the market at the broker.
+    /// Represents an event where an order had been working in the market at the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderWorking : OrderEvent
@@ -61,19 +60,19 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
-            Validate.NotNull(label, nameof(label));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotDefault(orderType, nameof(orderType));
-            Validate.NotNull(quantity, nameof(quantity));
-            Validate.NotNull(price, nameof(price));
-            Validate.NotDefault(timeInForce, nameof(timeInForce));
-            Validate.NotNull(expireTime, nameof(expireTime));
-            Validate.NotDefault(workingTime, nameof(workingTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(brokerOrderId, nameof(brokerOrderId));
+            Debug.NotNull(label, nameof(label));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotDefault(orderType, nameof(orderType));
+            Debug.NotNull(quantity, nameof(quantity));
+            Debug.NotNull(price, nameof(price));
+            Debug.NotDefault(timeInForce, nameof(timeInForce));
+            Debug.NotNull(expireTime, nameof(expireTime));
+            Debug.NotDefault(workingTime, nameof(workingTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.BrokerOrderId = brokerOrderId;
             this.Label = label;
@@ -130,11 +129,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order working time.
         /// </summary>
         public ZonedDateTime WorkingTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderWorking"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderWorking);
     }
 }

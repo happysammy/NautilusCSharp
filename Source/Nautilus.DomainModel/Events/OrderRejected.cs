@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderRejected"/> class. Represents an event where an order
-    /// had been rejected by the broker.
+    /// Represents an event where an order had been rejected by the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderRejected : OrderEvent
@@ -45,12 +44,12 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotDefault(rejectedTime, nameof(rejectedTime));
-            Validate.NotNull(rejectedReason, nameof(rejectedReason));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotDefault(rejectedTime, nameof(rejectedTime));
+            Debug.NotNull(rejectedReason, nameof(rejectedReason));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.RejectedTime = rejectedTime;
             this.RejectedReason = rejectedReason;
@@ -65,11 +64,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order rejected reason.
         /// </summary>
         public string RejectedReason { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderRejected"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderRejected);
     }
 }

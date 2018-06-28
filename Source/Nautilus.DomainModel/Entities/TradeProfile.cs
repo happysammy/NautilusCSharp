@@ -14,8 +14,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="TradeProfile"/>. A collection of properties specifying how to manage
-    /// trades of a given unique trade type.
+    /// A collection of properties specifying how to manage trades of a given unique trade type.
     /// </summary>
     [Immutable]
     public sealed class TradeProfile : Entity<TradeProfile>
@@ -51,6 +50,7 @@ namespace Nautilus.DomainModel.Entities
                   new EntityId(tradeType.ToString()),
                   timestamp)
         {
+            // Validate all trade profiles.
             Validate.NotNull(tradeType, nameof(tradeType));
             Validate.NotNull(barSpecification, nameof(barSpecification));
             Validate.Int32NotOutOfRange(tradePeriod, nameof(tradePeriod), 0, int.MaxValue, RangeEndPoints.LowerExclusive);

@@ -15,8 +15,8 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable sealed <see cref="AtomicOrder"/> class. Represents a collection of orders being
-    /// an entry, stop-loss and profit target (optional) to be managed together.
+    /// Represents a collection of orders being an entry, stop-loss and profit target (optional) to
+    /// be managed together.
     /// </summary>
     [Immutable]
     public sealed class AtomicOrder : Entity<AtomicOrder>

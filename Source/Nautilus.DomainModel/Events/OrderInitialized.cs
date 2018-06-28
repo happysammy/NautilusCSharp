@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderInitialized"/> class. Represents an event where an order
-    /// had been initialized by the system.
+    /// Represents an event where an order had been initialized by the system.
     /// </summary>
     [Immutable]
     public sealed class OrderInitialized : OrderEvent
@@ -41,16 +40,10 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
         }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderInitialized"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderInitialized);
     }
 }

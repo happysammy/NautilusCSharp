@@ -102,7 +102,7 @@ namespace Nautilus.DomainModel.Orders
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         public override CommandResult Apply(Event @event)
         {
-            Validate.NotNull(@event, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
 
             switch (@event)
             {

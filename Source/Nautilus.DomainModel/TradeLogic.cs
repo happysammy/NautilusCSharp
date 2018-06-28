@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static TradeStatus CalculateTradeStatus(TradeUnit tradeUnit)
         {
-            Validate.NotNull(tradeUnit, nameof(tradeUnit));
+            Debug.NotNull(tradeUnit, nameof(tradeUnit));
 
             if (tradeUnit.Position.MarketPosition == MarketPosition.Flat
              && tradeUnit.Entry.OrderStatus == OrderStatus.Initialized)
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static TradeStatus CalculateTradeStatus(IReadOnlyCollection<TradeUnit> tradeUnits)
         {
-            Validate.NotNull(tradeUnits, nameof(tradeUnits));
+            Debug.NotNull(tradeUnits, nameof(tradeUnits));
 
             if (tradeUnits.Any(tradeUnit => tradeUnit.TradeStatus == TradeStatus.Pending)
              && tradeUnits.All(tradeUnit => tradeUnit.Position.MarketPosition == MarketPosition.Flat))
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static MarketPosition CalculateMarketPosition(IReadOnlyCollection<TradeUnit> tradeUnits)
         {
-            Validate.NotNull(tradeUnits, nameof(tradeUnits));
+            Debug.NotNull(tradeUnits, nameof(tradeUnits));
 
             if (tradeUnits.All(tradeUnit => tradeUnit.Position.MarketPosition == MarketPosition.Flat))
             {

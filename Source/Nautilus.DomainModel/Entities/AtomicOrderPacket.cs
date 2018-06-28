@@ -16,8 +16,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="AtomicOrderPacket"/> class. Represents a collection of
-    /// <see cref="AtomicOrder"/>(s) to be managed together.
+    /// Represents a collection of <see cref="AtomicOrder"/>s to be managed together.
     /// </summary>
     [Immutable]
     public sealed class AtomicOrderPacket : Entity<AtomicOrderPacket>
@@ -40,11 +39,11 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(orderPacketId, timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(orders, nameof(orders));
-            Validate.NotNull(orderPacketId, nameof(orderPacketId));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotNull(orders, nameof(orders));
+            Debug.NotNull(orderPacketId, nameof(orderPacketId));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.TradeType = tradeType;

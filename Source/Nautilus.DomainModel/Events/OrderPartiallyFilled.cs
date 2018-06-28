@@ -16,8 +16,8 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderPartiallyFilled"/> class. Represents an event where an
-    /// order had been partially filled in the market (filled quantity less than order quantity).
+    /// Represents an event where an order had been partially filled in the market (filled quantity
+    /// less than order quantity).
     /// </summary>
     [Immutable]
     public sealed class OrderPartiallyFilled : OrderEvent
@@ -56,17 +56,17 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotNull(executionId, nameof(executionId));
-            Validate.NotNull(executionTicket, nameof(executionTicket));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotNull(filledQuantity, nameof(filledQuantity));
-            Validate.NotNull(leavesQuantity, nameof(leavesQuantity));
-            Validate.NotNull(averagePrice, nameof(averagePrice));
-            Validate.NotDefault(executionTime, nameof(executionTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(executionId, nameof(executionId));
+            Debug.NotNull(executionTicket, nameof(executionTicket));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotNull(filledQuantity, nameof(filledQuantity));
+            Debug.NotNull(leavesQuantity, nameof(leavesQuantity));
+            Debug.NotNull(averagePrice, nameof(averagePrice));
+            Debug.NotDefault(executionTime, nameof(executionTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExecutionId = executionId;
             this.ExecutionTicket = executionTicket;
@@ -111,11 +111,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order execution time.
         /// </summary>
         public ZonedDateTime ExecutionTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderPartiallyFilled"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderPartiallyFilled);
     }
 }

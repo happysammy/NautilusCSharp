@@ -157,7 +157,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public void AddModifiedOrderId(EntityId modifiedOrderId)
         {
-            Validate.NotNull(modifiedOrderId, nameof(modifiedOrderId));
+            Debug.NotNull(modifiedOrderId, nameof(modifiedOrderId));
 
             this.orderIdList.Add(modifiedOrderId);
         }
@@ -188,7 +188,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ValidationException">Throws if the event argument is null.</exception>
         public override CommandResult Apply(Event @event)
         {
-            Validate.NotNull(@event, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
 
             switch (@event)
             {

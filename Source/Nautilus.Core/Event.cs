@@ -42,5 +42,11 @@ namespace Nautilus.Core
         /// Gets the events timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
+
+        /// <summary>
+        /// Returns a string representation of the event.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => nameof(this.GetType);
     }
 }

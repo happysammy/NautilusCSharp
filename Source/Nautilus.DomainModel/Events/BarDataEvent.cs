@@ -43,10 +43,10 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.NotNull(bar, nameof(bar));
-            Validate.NotNull(lastTick, nameof(lastTick));
-            Validate.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotNull(bar, nameof(bar));
+            Debug.NotNull(lastTick, nameof(lastTick));
+            Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             this.BarType = barType;
             this.Bar = bar;
@@ -79,11 +79,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets a value indicating whether the market event is historical.
         /// </summary>
         public bool IsHistorical { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="BarDataEvent"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(BarDataEvent);
     }
 }

@@ -42,12 +42,12 @@ namespace Nautilus.DomainModel.ValueObjects
             Quantity volume,
             ZonedDateTime timestamp)
         {
-            Validate.NotNull(open, nameof(open));
-            Validate.NotNull(high, nameof(high));
-            Validate.NotNull(low, nameof(low));
-            Validate.NotNull(close, nameof(close));
-            Validate.NotNull(volume, nameof(volume));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(open, nameof(open));
+            Debug.NotNull(high, nameof(high));
+            Debug.NotNull(low, nameof(low));
+            Debug.NotNull(close, nameof(close));
+            Debug.NotNull(volume, nameof(volume));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Open = open;
             this.High = high;
@@ -76,8 +76,8 @@ namespace Nautilus.DomainModel.ValueObjects
             int volume,
             ZonedDateTime timestamp)
         {
-            Validate.NotNull(volume, nameof(volume));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(volume, nameof(volume));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Open = Price.Create(open, open.GetDecimalPlaces());
             this.High = Price.Create(high, open.GetDecimalPlaces());;

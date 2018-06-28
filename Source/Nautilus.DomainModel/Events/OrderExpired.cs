@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderExpired"/> class. Represents an event where an order
-    /// had expired at the broker.
+    /// Represents an event where an order had expired at the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderExpired : OrderEvent
@@ -43,11 +42,11 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotDefault(expiredTime, nameof(expiredTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotDefault(expiredTime, nameof(expiredTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExpiredTime = expiredTime;
         }
@@ -56,11 +55,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order expired time.
         /// </summary>
         public ZonedDateTime ExpiredTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderExpired"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderExpired);
     }
 }

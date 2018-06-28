@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable abstract <see cref="Signal"/> class. The base class for all signal types.
+    /// The base class for all signal types.
     /// </summary>
     [Immutable]
     public abstract class Signal : Entity<Signal>
@@ -39,11 +39,11 @@ namespace Nautilus.DomainModel.Entities
                   signalId,
                   signalTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(signalId, nameof(signalId));
-            Validate.NotNull(signalLabel, nameof(signalLabel));
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotDefault(signalTimestamp, nameof(signalTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(signalId, nameof(signalId));
+            Debug.NotNull(signalLabel, nameof(signalLabel));
+            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.Symbol = symbol;
             this.SignalLabel = signalLabel;

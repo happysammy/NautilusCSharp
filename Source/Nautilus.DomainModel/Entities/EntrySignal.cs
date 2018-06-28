@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="EntrySignal"/> class. Represents a trade entry signal.
+    /// Represents a trade entry signal.
     /// </summary>
     [Immutable]
     public sealed class EntrySignal : Signal
@@ -54,14 +54,14 @@ namespace Nautilus.DomainModel.Entities
                   tradeProfile.TradeType,
                   signalTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(signalId, nameof(signalId));
-            Validate.NotNull(signalLabel, nameof(signalLabel));
-            Validate.NotNull(tradeProfile, nameof(tradeProfile));
-            Validate.NotDefault(orderSide, nameof(orderSide));
-            Validate.NotNull(entryPrice, nameof(entryPrice));
-            Validate.NotNull(stopLossPrice, nameof(stopLossPrice));
-            Validate.NotNull(profitTargets, nameof(profitTargets));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(signalId, nameof(signalId));
+            Debug.NotNull(signalLabel, nameof(signalLabel));
+            Debug.NotNull(tradeProfile, nameof(tradeProfile));
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotNull(entryPrice, nameof(entryPrice));
+            Debug.NotNull(stopLossPrice, nameof(stopLossPrice));
+            Debug.NotNull(profitTargets, nameof(profitTargets));
 
             this.TradeProfile = tradeProfile;
             this.OrderSide = orderSide;

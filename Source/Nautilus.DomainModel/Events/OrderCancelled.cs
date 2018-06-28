@@ -15,8 +15,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderCancelled"/> class. Represents an event where an order
-    /// had been cancelled by the broker.
+    /// Represents an event where an order had been cancelled by the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderCancelled : OrderEvent
@@ -43,11 +42,11 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(orderId, nameof(orderId));
-            Validate.NotDefault(cancelledTime, nameof(cancelledTime));
-            Validate.NotDefault(eventId, nameof(eventId));
-            Validate.NotDefault(eventTimestamp, nameof(eventTimestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotDefault(cancelledTime, nameof(cancelledTime));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.CancelledTime = cancelledTime;
         }
@@ -56,11 +55,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order cancelled time.
         /// </summary>
         public ZonedDateTime CancelledTime { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="OrderCancelled"/> event.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(OrderCancelled);
     }
 }
