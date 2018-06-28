@@ -160,8 +160,8 @@ namespace Nautilus.Database.Aggregators
                 Context.Parent.Tell(barClosed);
 
                 // Create and initialize new builder.
-                builder = new BarBuilder();
-                builder.Update(bar.Close);
+                this.barBuilders[barSpec] = new BarBuilder();
+                this.barBuilders[barSpec].Update(bar.Close);
 
                 return;
             }
