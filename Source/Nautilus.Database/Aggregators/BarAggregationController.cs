@@ -18,6 +18,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Enums;
     using Nautilus.Database.Messages.Commands;
@@ -42,14 +43,15 @@ namespace Nautilus.Database.Aggregators
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
     /// events from ingested <see cref="Tick"/>s based on bar jobs created from subscriptions.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IDictionary<Symbol, IActorRef> barAggregators;
-        private readonly IDictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
-        private readonly IDictionary<Duration, IList<BarSpecification>> barTriggers;
-        private readonly IDictionary<Duration, ITrigger> triggers;
-        private readonly IDictionary<Duration, int> triggerCounts;
+        private readonly Dictionary<Symbol, IActorRef> barAggregators;
+        private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
+        private readonly Dictionary<Duration, List<BarSpecification>> barTriggers;
+        private readonly Dictionary<Duration, ITrigger> triggers;
+        private readonly Dictionary<Duration, int> triggerCounts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
@@ -72,7 +74,7 @@ namespace Nautilus.Database.Aggregators
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IActorRef>();
             this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
-            this.barTriggers = new Dictionary<Duration, IList<BarSpecification>>();
+            this.barTriggers = new Dictionary<Duration, List<BarSpecification>>();
             this.triggers = new Dictionary<Duration, ITrigger>();
             this.triggerCounts = new Dictionary<Duration, int>();
 

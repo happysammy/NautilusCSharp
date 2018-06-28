@@ -12,11 +12,16 @@ namespace Nautilus.Core.Annotations
 
     /// <summary>
     /// This decorative attribute indicates that the annotated class, struct or method has been
-    /// performance optimized (therefore there is a tendency towards low level implementations such
-    /// as primitive types, arrays and for loops - over typical OO abstractions).
+    /// performance optimized, therefore there is a tendency towards low level implementations over
+    /// typical OO abstractions as follows;
+    /// - primitive types
+    /// - concrete types (avoiding interface dispatch overhead).
+    /// - arrays
+    /// - for loops
     ///
-    /// To meet its design specifications of performance as a priority, refactoring of this method
-    /// towards increasing OO abstractions for code readability and understanding should be avoided.
+    /// To meet its design specifications of performance as a priority, avoid refactoring of this
+    /// class, struct or method towards increasing OO abstractions for code readability and
+    /// understanding.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method)]
     public sealed class PerformanceOptimizedAttribute : Attribute

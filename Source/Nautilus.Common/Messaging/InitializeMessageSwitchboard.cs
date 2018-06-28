@@ -14,7 +14,7 @@ namespace Nautilus.Common.Messaging
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="InitializeMessageSwitchboard"/> class.
+    /// The command message to initialize the messaging system switchboard.
     /// </summary>
     [Immutable]
     public sealed class InitializeMessageSwitchboard : CommandMessage

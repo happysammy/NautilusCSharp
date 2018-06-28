@@ -10,30 +10,29 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.
     /// </summary>
     [Immutable]
-    public sealed class Switchboard : ISwitchboard
+    [PerformanceOptimized]
+    public sealed class Switchboard
     {
-        private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
+        private readonly Dictionary<Enum, IActorRef> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <param name="addresses">The system addresses.</param>
-        /// <exception cref="ValidationException">If the validation fails.</exception>
-        public Switchboard(IReadOnlyDictionary<Enum, IActorRef> addresses)
+        /// <exception cref="ValidationException">If the addresses are null or empty.</exception>
+        public Switchboard(Dictionary<Enum, IActorRef> addresses)
         {
-            Validate.NotNull(addresses, nameof(addresses));
+            Validate.CollectionNotNullOrEmpty(addresses, nameof(addresses));
 
-            this.addresses = addresses.ToImmutableDictionary();
+            this.addresses = addresses;
         }
 
         /// <summary>

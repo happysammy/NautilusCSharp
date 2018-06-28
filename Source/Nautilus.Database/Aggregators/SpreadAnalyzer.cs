@@ -12,6 +12,7 @@ namespace Nautilus.Database.Aggregators
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Linq;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -19,11 +20,12 @@ namespace Nautilus.Database.Aggregators
     /// <summary>
     /// Provides spread analysis for ticks.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class SpreadAnalyzer
     {
-        private readonly IList<decimal> thisBarsSpreads = new List<decimal>();
-        private readonly IList<(ZonedDateTime, decimal)> negativeSpreads = new List<(ZonedDateTime, decimal)>();
-        private readonly IList<(ZonedDateTime, decimal)> totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
+        private readonly List<decimal> thisBarsSpreads = new List<decimal>();
+        private readonly List<(ZonedDateTime, decimal)> negativeSpreads = new List<(ZonedDateTime, decimal)>();
+        private readonly List<(ZonedDateTime, decimal)> totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
 
         // Initialized on first tick.
         private decimal tickPrecision;

@@ -17,6 +17,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Factories;
@@ -32,12 +33,13 @@ namespace Nautilus.Database.Aggregators
     /// <summary>
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class BarAggregator : ActorComponentBase
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
         private readonly Symbol symbol;
         private readonly SpreadAnalyzer spreadAnalyzer;
-        private readonly IDictionary<BarSpecification, BarBuilder> barBuilders;
+        private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
 
         private Tick lastTick;
 

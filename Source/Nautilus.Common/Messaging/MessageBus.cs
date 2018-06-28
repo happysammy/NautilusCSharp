@@ -29,7 +29,7 @@ namespace Nautilus.Common.Messaging
         private readonly IActorRef messageStore;
         private readonly CommandHandler commandHandler;
 
-        private ISwitchboard switchboard;
+        private Switchboard switchboard;
         private int messageCount;
 
         /// <summary>

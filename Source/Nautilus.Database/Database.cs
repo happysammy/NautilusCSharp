@@ -19,6 +19,7 @@ namespace Nautilus.Database
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
     using Nautilus.Database.Enums;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -27,10 +28,11 @@ namespace Nautilus.Database
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class Database : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
-        private readonly IReadOnlyDictionary<Enum, IActorRef> addresses;
+        private readonly Dictionary<Enum, IActorRef> addresses;
         private readonly IFixClient fixClient;
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace Nautilus.Database
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
-            IReadOnlyDictionary<Enum, IActorRef> addresses,
+            Dictionary<Enum, IActorRef> addresses,
             IFixClient fixClient)
             : base(
                 ServiceContext.Database,

@@ -90,7 +90,7 @@ namespace Nautilus.Common.Messaging
         /// <exception cref="ValidationException">Throws if the current time is the default value.</exception>
         public T Open(ZonedDateTime currentTime)
         {
-            Validate.NotDefault(currentTime, nameof(currentTime));
+            Debug.NotDefault(currentTime, nameof(currentTime));
 
             if (this.OpenedTime.HasNoValue)
             {
