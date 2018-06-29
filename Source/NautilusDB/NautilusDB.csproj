@@ -23,8 +23,14 @@
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="config.json" />
-    <AdditionalFiles Include="FIXFXCM10.xml" />
-    <AdditionalFiles Include="fix_fxcm.cfg" />
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FIXFXCM10.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fix_fxcm.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
