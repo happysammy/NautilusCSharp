@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Interfaces;
 
@@ -52,7 +53,8 @@ namespace Nautilus.BlackBox.Core.Build
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
-                container);
+                container,
+                new InMemoryMessageStore());
 
             var alphaModelServiceRef = servicesFactory.AlphaModelService.Create(
                 actorSystem,

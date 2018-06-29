@@ -18,6 +18,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
+    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Enums;
@@ -77,7 +78,8 @@ namespace Nautilus.Database.Build
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
-                setupContainer);
+                setupContainer,
+                new FakeMessageStore());
 
             var schedulerRef = actorSystem.ActorOf(Props.Create(
                 () => new Scheduler(setupContainer)));

@@ -12,6 +12,7 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using System.Linq;
     using Akka.Actor;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
 
@@ -20,14 +21,14 @@ namespace Nautilus.Common.MessageStore
     /// </summary>
     public sealed class MessageStorer : ReceiveActor
     {
-        private readonly InMemoryMessageStore store;
+        private readonly IMessageStore store;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageStorer"/> class.
         /// </summary>
         /// <param name="store">The warehouse.</param>
         /// <exception cref="ValidationException">Throws if the warehouse is null.</exception>
-        public MessageStorer(InMemoryMessageStore store)
+        public MessageStorer(IMessageStore store)
         {
             Validate.NotNull(store, nameof(store));
 

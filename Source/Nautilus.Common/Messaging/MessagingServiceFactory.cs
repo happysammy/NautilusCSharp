@@ -27,16 +27,19 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The container.</param>
+        /// <param name="store">The message store.</param>
         /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
         /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public static MessagingAdapter Create(
             ActorSystem actorSystem,
-            IComponentryContainer container)
+            IComponentryContainer container,
+            IMessageStore store)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(store, nameof(store));
 
-            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(new InMemoryMessageStore())));
+            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(store)));
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 ServiceContext.Messaging,

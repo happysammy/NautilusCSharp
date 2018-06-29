@@ -9,13 +9,14 @@
 namespace Nautilus.Common.MessageStore
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
 
     /// <summary>
     /// Represents an in-memory message store.
     /// </summary>
-    public sealed class InMemoryMessageStore
+    public sealed class InMemoryMessageStore : IMessageStore
     {
         private readonly IList<Envelope<CommandMessage>> commandEnvelopeList = new List<Envelope<CommandMessage>>();
         private readonly IList<Envelope<EventMessage>> eventEnvelopeList = new List<Envelope<EventMessage>>();
@@ -40,7 +41,7 @@ namespace Nautilus.Common.MessageStore
               (IReadOnlyList<Envelope<DocumentMessage>>)this.documentEnvelopeList;
 
         /// <summary>
-        /// Stores the given envelope in the warehouse.
+        /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
@@ -52,7 +53,7 @@ namespace Nautilus.Common.MessageStore
         }
 
         /// <summary>
-        /// Stores the given envelope in the warehouse.
+        /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
@@ -64,7 +65,7 @@ namespace Nautilus.Common.MessageStore
         }
 
         /// <summary>
-        /// Stores the given envelope in the warehouse.
+        /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
