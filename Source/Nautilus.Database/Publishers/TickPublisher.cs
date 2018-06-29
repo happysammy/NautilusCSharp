@@ -59,10 +59,9 @@ namespace Nautilus.Database.Publishers
         {
             Debug.NotNull(message, nameof(message));
 
-            var channel = message.Symbol.ToString().ToLower();
-            var pubMsg = message.ToChannel();
-
-            this.publisher.Publish(channel, pubMsg);
+            this.publisher.Publish(
+                message.Symbol.ToString().ToLower(),
+                message.ToChannel());
         }
     }
 }
