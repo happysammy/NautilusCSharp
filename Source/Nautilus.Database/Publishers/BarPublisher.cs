@@ -13,28 +13,37 @@ namespace Nautilus.Database.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Core.Validation;
+    using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Providers a generic publisher for <see cref="Bar"/> data.
+    /// Provides a generic publisher for <see cref="Bar"/> data.
     /// </summary>
     public sealed class BarPublisher : ActorComponentBase
     {
+        private readonly IChannelPublisher publisher;
+
         /// <summary>
-        ///
+        /// Initializes a new instance of the <see cref="BarPublisher"/> class.
         /// </summary>
-        /// <param name="container"></param>
-        public BarPublisher(IComponentryContainer container)
+        /// <param name="container">The setup container.</param>
+        /// <param name="publisher">The bar publisher.</param>
+        public BarPublisher(IComponentryContainer container, IChannelPublisher publisher)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(BarPublisher)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(publisher, nameof(publisher));
+
+            this.publisher = publisher;
 
             this.Receive<BarClosed>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<Symbol>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<Symbol>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(Subscribe<Symbol> message)
@@ -49,7 +58,12 @@ namespace Nautilus.Database.Publishers
 
         private void OnMessage(BarClosed message)
         {
+            Debug.NotNull(message, nameof(message));
 
+            var channel = message.BarType.ToString();
+            var pubMsg = message.Bar.ToString();
+
+            this.publisher.Publish(channel, pubMsg);
         }
     }
 }

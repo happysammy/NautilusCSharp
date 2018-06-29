@@ -13,28 +13,36 @@ namespace Nautilus.Database.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Core.Validation;
+    using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Providers a generic publisher for <see cref="Tick"/> data.
+    /// Provides a generic publisher for <see cref="Tick"/> data.
     /// </summary>
     public sealed class TickPublisher : ActorComponentBase
     {
+        private readonly IChannelPublisher publisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        public TickPublisher(IComponentryContainer container)
+        /// <param name="publisher">The tick publisher.</param>
+        public TickPublisher(IComponentryContainer container, IChannelPublisher publisher)
         : base(
             ServiceContext.Database,
             LabelFactory.Component(nameof(TickPublisher)),
             container)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(publisher, nameof(publisher));
+
+            this.publisher = publisher;
 
             this.Receive<Tick>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<Symbol>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<Symbol>>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(Subscribe<Symbol> message)
@@ -49,7 +57,12 @@ namespace Nautilus.Database.Publishers
 
         private void OnMessage(Tick message)
         {
+            Debug.NotNull(message, nameof(message));
 
+            var channel = message.Symbol.ToString();
+            var pubMsg = message.ToString();
+
+            this.publisher.Publish(channel, pubMsg);
         }
     }
 }

@@ -116,6 +116,8 @@ namespace NautilusDB
                 password,
                 accountNumber);
 
+            var publisherFactory = new RedisChannelPublisherFactory(clientManager);
+
             var barRepository = new RedisBarRepository(
                 clientManager,
                 compressor);
@@ -125,6 +127,7 @@ namespace NautilusDB
             this.nautilusDB = DatabaseFactory.Create(
                 loggingAdapter,
                 fixClientFactory,
+                publisherFactory,
                 barRepository,
                 instrumentRepository);
 

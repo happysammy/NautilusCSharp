@@ -12,14 +12,19 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore;
     using Nautilus.Common.Enums;
-    using global::Serilog;
     using Serilog.Events;
+    using global::Serilog;
 
     /// <summary>
     /// The main entry point for the program.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
+        /// <summary>
+        /// The main entry point for the program.
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             var logger = new SerilogLogger(LogEventLevel.Information);

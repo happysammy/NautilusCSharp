@@ -38,6 +38,7 @@ namespace Nautilus.Database.Build
         /// </summary>
         /// <param name="logger">The database logger.</param>
         /// <param name="fixClientFactory">The FIX client factory.</param>
+        /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <returns>A built Nautilus database.</returns>
@@ -45,11 +46,13 @@ namespace Nautilus.Database.Build
         public static Database Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
+            IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
+            Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
@@ -74,10 +77,10 @@ namespace Nautilus.Database.Build
                 () => new Scheduler(setupContainer)));
 
             var tickPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new TickPublisher(setupContainer)));
+                () => new TickPublisher(setupContainer, publisherFactory.Create())));
 
             var barPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new BarPublisher(setupContainer)));
+                () => new BarPublisher(setupContainer, publisherFactory.Create())));
 
             var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
