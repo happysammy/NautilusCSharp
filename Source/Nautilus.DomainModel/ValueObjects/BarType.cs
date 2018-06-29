@@ -61,5 +61,17 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             return $"{this.Symbol}-{this.Specification.Period}-{this.Specification.Resolution}[{this.Specification.QuoteType}]";
         }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Specification"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToChannel()
+        {
+            return $"{this.Symbol.ToString().ToLower()}" +
+                   $"-{this.Specification.Period}" +
+                   $"-{this.Specification.Resolution.ToString().ToLower()}" +
+                   $"[{this.Specification.QuoteType.ToString().ToLower()}]";
+        }
     }
 }

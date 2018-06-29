@@ -8,7 +8,9 @@
 
 namespace NautilusDB
 {
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -20,6 +22,7 @@ namespace NautilusDB
     using Nautilus.Database;
     using Nautilus.Database.Build;
     using Nautilus.Database.Configuration;
+    using Nautilus.DomainModel.ValueObjects;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
@@ -98,12 +101,31 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var compressor = CompressorFactory.Create(isCompression, compressionCodec);
 
-            var username = (string)config[ConfigSection.Fxcm]["username"];;
-            var password = (string)config[ConfigSection.Fxcm]["password"];;
-            var accountNumber = (string)config[ConfigSection.Fxcm]["accountNumber"];;
+            var username = (string)config[ConfigSection.Fix]["username"];;
+            var password = (string)config[ConfigSection.Fix]["password"];;
+            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];;
 
-            var currencyPairs = (JArray)config[ConfigSection.Fxcm]["currencyPairs"];
-            var barResolutions = (JArray)config[ConfigSection.Fxcm]["barResolutions"];
+            var symbolsJArray = (JArray)config[ConfigSection.Symbols];
+            var symbolsList = new List<string>();
+            foreach (var ccy in symbolsJArray)
+            {
+                symbolsList.Add(ccy.ToString());
+            }
+            var symbols = symbolsList
+                .Distinct()
+                .ToList()
+                .AsReadOnly();
+
+            var barSpecsJArray = (JArray)config[ConfigSection.BarSpecifications];
+            var barSpecsList = new List<string>();
+            foreach (var barSpec in barSpecsJArray)
+            {
+                barSpecsList.Add(barSpec.ToString());
+            }
+            var barSpecs = barSpecsList
+                .Distinct()
+                .ToList()
+                .AsReadOnly();
 
             var clientManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
@@ -129,7 +151,9 @@ namespace NautilusDB
                 fixClientFactory,
                 publisherFactory,
                 barRepository,
-                instrumentRepository);
+                instrumentRepository,
+                symbols,
+                barSpecs);
 
             Task.Run(() => this.nautilusDB.Start());
         }

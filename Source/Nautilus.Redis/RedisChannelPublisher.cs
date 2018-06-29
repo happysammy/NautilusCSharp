@@ -19,7 +19,6 @@ namespace Nautilus.Redis
     public sealed class RedisChannelPublisher : IChannelPublisher
     {
         private readonly IRedisClientsManager clientsManager;
-        private readonly RedisPubSubServer server;
         private readonly List<string> channelCache;
 
         /// <summary>
@@ -32,8 +31,6 @@ namespace Nautilus.Redis
 
             this.clientsManager = clientsManager;
             this.channelCache = new List<string>();
-            this.server = new RedisPubSubServer(clientsManager);
-            this.server.Start();
         }
 
         /// <summary>
@@ -49,7 +46,6 @@ namespace Nautilus.Redis
             if (!this.channelCache.Contains(channel))
             {
                 this.channelCache.Add(channel);
-                this.server.Channels = this.channelCache.ToArray();
             }
 
             using (var client = this.clientsManager.GetClient())

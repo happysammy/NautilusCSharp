@@ -39,10 +39,10 @@ namespace Nautilus.DomainModel.ValueObjects
             Price ask,
             ZonedDateTime timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(bid, nameof(bid));
-            Validate.NotNull(ask, nameof(ask));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(bid, nameof(bid));
+            Debug.NotNull(ask, nameof(ask));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.Bid = bid;
@@ -65,10 +65,10 @@ namespace Nautilus.DomainModel.ValueObjects
             decimal ask,
             ZonedDateTime timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(bid, nameof(bid));
-            Validate.NotNull(ask, nameof(ask));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(bid, nameof(bid));
+            Debug.NotNull(ask, nameof(ask));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.Bid = Price.Create(bid, bid.GetDecimalPlaces());
@@ -114,6 +114,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Symbol},{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Tick"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public string ToChannel() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
 
         /// <summary>
         /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.

@@ -24,13 +24,18 @@ namespace Nautilus.Database.Configuration
         public static string ServiceStack => "serviceStack";
 
         /// <summary>
-        /// The FXCM configuration section.
+        /// The FIX configuration section.
         /// </summary>
-        public static string Fxcm => "fxcm";
+        public static string Fix => "fix_config";
 
         /// <summary>
-        /// The Dukascopy configuration section.
+        /// The bar specifications configuration section.
         /// </summary>
-        public static string Dukascopy => "dukascopy";
+        public static string BarSpecifications => "barSpecifications";
+
+        /// <summary>
+        /// The symbols to subscribe to configuration section.
+        /// </summary>
+        public static string Symbols => "symbols";
     }
 }

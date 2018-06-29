@@ -41,6 +41,8 @@ namespace Nautilus.Database.Build
         /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="symbols">The symbols to initially subscribe to.</param>
+        /// <param name="barSpecs">The bar specifications to initially create.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
@@ -48,13 +50,17 @@ namespace Nautilus.Database.Build
             IFixClientFactory fixClientFactory,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
-            IInstrumentRepository instrumentRepository)
+            IInstrumentRepository instrumentRepository,
+            IReadOnlyList<string> symbols,
+            IReadOnlyList<string> barSpecs)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
+            Validate.NotNull(symbols, nameof(symbols));
+            Validate.NotNull(barSpecs, nameof(barSpecs));
 
             logger.Information(ServiceContext.Database, $"Starting {nameof(Database)} builder...");
             StartupVersionChecker.Run(logger);

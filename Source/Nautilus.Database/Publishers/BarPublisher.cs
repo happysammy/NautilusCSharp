@@ -60,7 +60,7 @@ namespace Nautilus.Database.Publishers
         {
             Debug.NotNull(message, nameof(message));
 
-            var channel = message.BarType.ToString();
+            var channel = message.BarType.ToChannel();
             var pubMsg = message.Bar.ToString();
 
             this.publisher.Publish(channel, pubMsg);
