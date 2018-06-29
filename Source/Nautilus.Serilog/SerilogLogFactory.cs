@@ -19,7 +19,7 @@ namespace Nautilus.Serilog
         /// <summary>
         /// Creates a new global static <see cref="Serilog"/> logger.
         /// </summary>
-        public static void Create()
+        public static void Create(LogEventLevel logLevel)
         {
             {
                 const string logTemplateDefault = "{Timestamp:yyyy/MM/dd HH:mm:ss.fff} [{ThreadId:00}][{Level:u3}] {Message}{NewLine}{Exception}";
@@ -27,7 +27,7 @@ namespace Nautilus.Serilog
                 Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
-                   .WriteTo.Console(LogEventLevel.Information, logTemplateDefault)
+                   .WriteTo.Console(logLevel, logTemplateDefault)
                    .WriteTo.RollingFile("Logs/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }

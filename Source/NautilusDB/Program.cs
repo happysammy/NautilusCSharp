@@ -13,6 +13,7 @@ namespace NautilusDB
     using Microsoft.AspNetCore;
     using Nautilus.Common.Enums;
     using global::Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// The main entry point for the program.
@@ -21,8 +22,7 @@ namespace NautilusDB
     {
         public static void Main(string[] args)
         {
-            SerilogLogFactory.Create();
-            var logger = new SerilogLogger();
+            var logger = new SerilogLogger(LogEventLevel.Information);
             logger.Information(ServiceContext.AspCoreHost, "Building ASP.NET Core Web Host...");
 
             BuildWebHost(args).Run();

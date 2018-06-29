@@ -24,6 +24,7 @@ namespace NautilusDB
     using ServiceStack;
     using Nautilus.Redis;
     using Nautilus.Serilog;
+    using Serilog.Events;
     using ServiceStack.Redis;
 
     /// <summary>
@@ -90,6 +91,9 @@ namespace NautilusDB
 
             }
 
+            var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
+            var logLevel = logLevelString.ToEnum<LogEventLevel>();
+
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var compressor = CompressorFactory.Create(isCompression, compressionCodec);
@@ -105,7 +109,7 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
-            var loggingAdapter = new SerilogLogger();
+            var loggingAdapter = new SerilogLogger(logLevel);
 
             var fixClientFactory = new FxcmFixClientFactory(
                 username,

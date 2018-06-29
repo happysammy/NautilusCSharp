@@ -11,6 +11,7 @@ namespace Nautilus.BlackBox
     using System;
     using System.Collections.Generic;
     using Core.Enums;
+    using global::Serilog.Events;
     using Nautilus.Algorithms.Entry;
     using Nautilus.Algorithms.EntryStop;
     using Nautilus.Algorithms.ProfitTarget;
@@ -43,7 +44,7 @@ namespace Nautilus.BlackBox
         {
             var environment = BlackBoxEnvironment.Live;
             var clock = new Clock(DateTimeZone.Utc);
-            var loggingAdatper = new SerilogLogger();
+            var loggingAdatper = new SerilogLogger(LogEventLevel.Debug);
             var databaseAdapter = new DummyDatabase();
             var clientsManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },

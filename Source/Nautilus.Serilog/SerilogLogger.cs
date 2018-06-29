@@ -12,6 +12,7 @@ namespace Nautilus.Serilog
     using System.Reflection;
     using Nautilus.Common.Interfaces;
     using global::Serilog;
+    using global::Serilog.Events;
 
     /// <summary>
     /// The <see cref="Serilog"/> adapter.
@@ -21,9 +22,9 @@ namespace Nautilus.Serilog
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogLogger"/> class.
         /// </summary>
-        public SerilogLogger()
+        public SerilogLogger(LogEventLevel logLevel)
         {
-            SerilogLogFactory.Create();
+            SerilogLogFactory.Create(logLevel);
 
             this.AssemblyVersion = $"Serilog v{Assembly.GetAssembly(typeof(Log)).GetName().Version}";
         }
