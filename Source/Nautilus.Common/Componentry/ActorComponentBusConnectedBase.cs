@@ -9,10 +9,10 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -54,9 +54,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
         /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        protected void Send(
-            Enum receiver,
-            Message message)
+        protected void Send(Enum receiver, Message message)
         {
             Validate.NotNull(message, nameof(message));
 
@@ -69,9 +67,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected void Send(
-            IReadOnlyCollection<Enum> receivers,
-            Message message)
+        protected void Send(ReadOnlyList<Enum> receivers, Message message)
         {
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));

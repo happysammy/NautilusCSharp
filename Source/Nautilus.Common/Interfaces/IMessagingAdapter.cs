@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Collections;
 
     /// <summary>
     /// An adapter to facilitate service components sending messages to other service components via
@@ -35,7 +35,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender)
+        void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender)
             where T : Message;
     }
 }

@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public sealed class Switchboard
     {
-        private readonly Dictionary<Enum, IActorRef> addresses;
+        private readonly ReadOnlyDictionary<Enum, IActorRef> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
@@ -32,7 +33,7 @@ namespace Nautilus.Common.Messaging
         {
             Validate.CollectionNotNullOrEmpty(addresses, nameof(addresses));
 
-            this.addresses = addresses;
+            this.addresses = new ReadOnlyDictionary<Enum, IActorRef>(addresses);
         }
 
         /// <summary>

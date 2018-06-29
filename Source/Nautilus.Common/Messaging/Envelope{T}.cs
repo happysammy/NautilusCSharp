@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Envelope.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Envelope{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Core;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -32,13 +32,13 @@ namespace Nautilus.Common.Messaging
         /// <param name="envelopeId">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
-            IReadOnlyCollection<Enum> receivers,
+            ReadOnlyList<Enum> receivers,
             Enum sender,
             T message,
             Guid envelopeId,
             ZonedDateTime timestamp)
         {
-            Debug.CollectionNotNullOrEmpty(receivers, nameof(receivers));
+            Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(sender, nameof(sender));
             Debug.NotNull(message, nameof(message));
             Debug.NotDefault(envelopeId, nameof(envelopeId));
@@ -54,7 +54,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelope receiver(s).
         /// </summary>
-        public IReadOnlyCollection<Enum> Receivers { get; }
+        public ReadOnlyList<Enum> Receivers { get; }
 
         /// <summary>
         /// Gets the envelope sender.

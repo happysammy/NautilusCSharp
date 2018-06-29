@@ -37,8 +37,11 @@ namespace Nautilus.Database.Aggregators
     public sealed class BarAggregator : ActorComponentBase
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
+
         private readonly Symbol symbol;
         private readonly SpreadAnalyzer spreadAnalyzer;
+
+        // Concrete dictionary for performance reasons.
         private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
 
         private Tick lastTick;

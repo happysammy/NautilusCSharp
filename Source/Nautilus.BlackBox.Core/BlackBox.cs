@@ -23,6 +23,7 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -38,8 +39,8 @@ namespace Nautilus.BlackBox.Core
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixGateway fixGateway;
-        private readonly IList<IAlphaStrategy> alphaStrategyList = new List<IAlphaStrategy>();
-        private readonly IList<IAlphaStrategy> startedStrategies = new List<IAlphaStrategy>();
+        private readonly List<IAlphaStrategy> alphaStrategyList;
+        private readonly List<IAlphaStrategy> startedStrategies;
 
         private readonly Stopwatch stopwatch = new Stopwatch();
 
@@ -82,6 +83,8 @@ namespace Nautilus.BlackBox.Core
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
             this.fixGateway = fixGateway;
+            this.alphaStrategyList = new List<IAlphaStrategy>();
+            this.startedStrategies = new List<IAlphaStrategy>();
 
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
@@ -92,7 +95,7 @@ namespace Nautilus.BlackBox.Core
                 this.TimeNow()));
 
             this.Send(
-                new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution },
+                new ReadOnlyList<Enum>(new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution }),
                 new InitializeGateway(
                     this.fixGateway,
                     this.NewGuid(),

@@ -1,10 +1,10 @@
 ﻿namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
-    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Collections;
 
     public class MockMessagingAdapter : IMessagingAdapter
     {
@@ -20,7 +20,7 @@
             this.testActorRef.Tell(message);
         }
 
-        public void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender) where T : Message
+        public void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender) where T : Message
         {
             this.testActorRef.Tell(message);
         }

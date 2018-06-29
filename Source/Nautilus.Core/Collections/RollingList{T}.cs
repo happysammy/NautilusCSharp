@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="RollingList.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="RollingList{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -11,19 +11,21 @@ namespace Nautilus.Core.Collections
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Implements a fixed-capacity List, which uses a collection of objects to store the
-    /// elements. The capacity of the internal collection is set at instantiation,
-    /// elements can be added to the RollingList. When an element is added which
-    /// would exceed the capacity of the RollingList, the element at index[0] is removed.
+    /// Provides a fixed-capacity list. The capacity of the internal collection is set at
+    /// instantiation, elements can be added to the rolling list. When an element is added which
+    /// would exceed the capacity of the rolling list, the element at index[0] is removed.
     /// </summary>
-    /// <typeparam name="T">The list type.</typeparam>
+    /// <typeparam name="T">The list value type.</typeparam>
+    [PerformanceOptimized]
     public class RollingList<T> : IList<T>
     {
+        // Concrete list for performance reasons.
+        private readonly List<T> internalList;
         private readonly int capacity;
-        private readonly IList<T> internalList;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RollingList{T}"/> class.
@@ -34,46 +36,33 @@ namespace Nautilus.Core.Collections
         {
             Validate.Int32NotOutOfRange(capacity, nameof(capacity), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
-            this.capacity = capacity;
-
             this.internalList = new List<T>(capacity);
+            this.capacity = capacity;
         }
 
         /// <summary>
-        /// Gets the number of elements contained in the RollingList.
+        /// Gets the number of elements contained in the rolling list.
         /// </summary>
         public int Count => this.internalList.Count;
 
         /// <summary>
-        /// Gets a value indicating whether the RollingList is read-only.
+        /// Gets a value indicating whether the rolling list is read-only (always false).
         /// </summary>
-        public bool IsReadOnly => this.internalList.IsReadOnly;
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Returns the element at the given index.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <exception cref="NotSupportedException">Throws if there is an attempt to set an element
-        /// of the <see cref="RollingList{T}"/> by index.</exception>
-        /// <exception cref="ValidationException" accessor="get">Throws if the value is out of the
-        /// specified range.</exception>
+        /// <exception cref="NotSupportedException">Throws if called.</exception>
         public T this[int index]
         {
-            get
-            {
-                Debug.Int32NotOutOfRange(index, nameof(index), 0, int.MaxValue);
-
-                lock (this.internalList)
-                {
-                    return this.internalList[index];
-                }
-            }
-
+            get => this.internalList[index];
             set => throw new NotSupportedException("Cannot insert at an index of a rolling list.");
         }
 
         /// <summary>
-        /// If the count of elements held by the <see cref="RollingList{T}"/> equals the capacity,
+        /// If the count of elements held by the rolling list equals the capacity,
         /// then this method will first remove the element at index zero, before adding the new
         /// element to the collection.
         /// </summary>
@@ -91,7 +80,7 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
-        /// Removes all items from the RollingList.
+        /// Removes all items from the rolling list.
         /// </summary>
         public void Clear()
         {
@@ -99,7 +88,7 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
-        /// Returns a result indicating whether the RollingList contains the item.
+        /// Returns a result indicating whether the rolling list contains the item.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>A <see cref="bool"/>.</returns>
@@ -115,23 +104,54 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="array">\The array.</param>
         /// <param name="arrayIndex">\The array index.</param>
-        /// <exception cref="NotSupportedException">Throws if there is an attempt to copy the
-        /// <see cref="RollingList{T}"/> to an <see cref="Array"/>.</exception>
+        /// <exception cref="NotSupportedException">Throws if called.</exception>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotSupportedException("Cannot copy a RollingList to an array.");
+            throw new NotSupportedException("Cannot copy a rolling list to an array.");
         }
 
         /// <summary>
         /// Not implemented.
         /// </summary>
         /// <param name="item">The item to remove.</param>
-        /// <exception cref="NotSupportedException">Throws if there is an attempt to remove an
-        /// element from the rolling list.</exception>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <returns>Not supported.</returns>
+        /// <exception cref="NotSupportedException">Throws if called.</exception>
         public bool Remove(T item)
         {
-            throw new NotSupportedException("Cannot remove an element from a RollingList.");
+            throw new NotSupportedException("Cannot remove an element from a rolling list.");
+        }
+
+        /// <summary>
+        /// Determines the index of a specific item in the rolling list.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>An <see cref="int"/>.</returns>
+        public int IndexOf(T item)
+        {
+            Debug.NotNull(item, nameof(item));
+
+            return this.internalList.IndexOf(item);
+        }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="item">The item.</param>
+        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        public void Insert(int index, T item)
+        {
+            throw new NotSupportedException("Cannot insert at an index of a rolling list.");
+        }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        public void RemoveAt(int index)
+        {
+            throw new NotSupportedException("Cannot remove at an index from a rolling list.");
         }
 
         /// <summary>
@@ -150,41 +170,6 @@ namespace Nautilus.Core.Collections
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Determines the index of a specific item in the RollingList.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>An <see cref="int"/>.</returns>
-        public int IndexOf(T item)
-        {
-            Debug.NotNull(item, nameof(item));
-
-            return this.internalList.IndexOf(item);
-        }
-
-        /// <summary>
-        /// Not implemented.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="item">The item.</param>
-        /// <exception cref="NotSupportedException">Throws if there is an attempt to insert an
-        /// element at a specified index.</exception>
-        public void Insert(int index, T item)
-        {
-            throw new NotSupportedException("Cannot insert at an index of a RollingList.");
-        }
-
-        /// <summary>
-        /// Not implemented.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <exception cref="NotSupportedException">Throws if there is an attempt to remove an
-        /// element at a specified index.</exception>
-        public void RemoveAt(int index)
-        {
-            throw new NotSupportedException("Cannot remove at an index from a RollingList.");
         }
     }
 }

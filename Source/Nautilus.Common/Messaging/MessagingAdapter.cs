@@ -14,6 +14,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Collections;
 
     /// <summary>
     /// The immutable sealed <see cref="MessagingAdapter"/> class.
@@ -21,9 +22,9 @@ namespace Nautilus.Common.Messaging
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
-        private readonly IActorRef commandBus;
-        private readonly IActorRef eventBus;
-        private readonly IActorRef documentBus;
+        private readonly IActorRef commandBusRef;
+        private readonly IActorRef eventBusRef;
+        private readonly IActorRef documentBusRef;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
@@ -41,9 +42,9 @@ namespace Nautilus.Common.Messaging
             Validate.NotNull(eventBusRef, nameof(eventBusRef));
             Validate.NotNull(documentBusRef, nameof(documentBusRef));
 
-            this.commandBus = commandBusRef;
-            this.eventBus = eventBusRef;
-            this.documentBus = documentBusRef;
+            this.commandBusRef = commandBusRef;
+            this.eventBusRef = eventBusRef;
+            this.documentBusRef = documentBusRef;
         }
 
         /// <summary>
@@ -55,9 +56,9 @@ namespace Nautilus.Common.Messaging
         {
             Validate.NotNull(message, nameof(message));
 
-            this.commandBus.Tell(message);
-            this.eventBus.Tell(message);
-            this.documentBus.Tell(message);
+            this.commandBusRef.Tell(message);
+            this.eventBusRef.Tell(message);
+            this.documentBusRef.Tell(message);
         }
 
         /// <summary>
@@ -72,9 +73,9 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Enum receiver, T message, Enum sender)
             where T : Message
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
-            this.Send(new List<Enum> { receiver }, message, sender);
+            this.Send(new ReadOnlyList<Enum>(receiver), message, sender);
         }
 
         /// <summary>
@@ -88,11 +89,11 @@ namespace Nautilus.Common.Messaging
         /// <exception cref="ValidationException">Throws if the receivers are null, or if the message
         /// is null.</exception>
         /// <exception cref="InvalidOperationException">Throws if a receiver is unknown.</exception>
-        public void Send<T>(IReadOnlyCollection<Enum> receivers, T message, Enum sender)
+        public void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender)
             where T : Message
         {
-            Validate.NotNull(receivers, nameof(receivers));
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(receivers, nameof(receivers));
+            Debug.NotNull(message, nameof(message));
 
             switch (message as Message)
             {
@@ -103,7 +104,7 @@ namespace Nautilus.Common.Messaging
                             commandMessage,
                             message.Id,
                             message.Timestamp);
-                    this.commandBus.Tell(commandEvelope);
+                    this.commandBusRef.Tell(commandEvelope);
                     break;
 
                     case EventMessage eventMessage:
@@ -113,7 +114,7 @@ namespace Nautilus.Common.Messaging
                             eventMessage,
                             message.Id,
                             message.Timestamp);
-                    this.eventBus.Tell(eventEnvelope);
+                    this.eventBusRef.Tell(eventEnvelope);
                     break;
 
                     case DocumentMessage serviceMessage:
@@ -123,7 +124,7 @@ namespace Nautilus.Common.Messaging
                             serviceMessage,
                             message.Id,
                             message.Timestamp);
-                    this.documentBus.Tell(serviceEnvelope);
+                    this.documentBusRef.Tell(serviceEnvelope);
                     break;
 
                 default: throw new InvalidOperationException($"{message.GetType()} message type not supported.");
