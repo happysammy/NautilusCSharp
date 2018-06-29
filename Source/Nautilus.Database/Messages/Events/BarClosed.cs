@@ -38,7 +38,7 @@ namespace Nautilus.Database.Messages.Events
             Debug.NotNull(barType, nameof(barType));
             Debug.NotNull(bar, nameof(bar));
             Debug.NotNull(lastTick, nameof(lastTick));
-            Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.MinValue, decimal.MaxValue);
             Debug.NotDefault(id, nameof(id));
 
             this.BarType = barType;
