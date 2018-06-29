@@ -141,7 +141,7 @@ namespace Nautilus.Database
             Task.WhenAll(shutdownTasks);
 
             this.actorSystem.Terminate();
-            this.Log.Information($"{actorSystemName} terminated");
+            this.Log.Information($"{actorSystemName} terminated.");
 
             this.Dispose();
         }

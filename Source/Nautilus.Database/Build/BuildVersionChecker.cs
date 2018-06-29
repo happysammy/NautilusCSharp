@@ -31,10 +31,10 @@ namespace Nautilus.Database.Build
             Validate.NotNull(log, nameof(log));
 
             log.Information(DatabaseService.Core, "Running startup version checker...");
-            log.Information(DatabaseService.Core, "---------------------------------------------------------------------");
+            log.Information(DatabaseService.Core, "------------------------------------------------------------------------");
             log.Information(DatabaseService.Core, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
             log.Information(DatabaseService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(DatabaseService.Core, "---------------------------------------------------------------------");
+            log.Information(DatabaseService.Core, "------------------------------------------------------------------------");
             log.Information(DatabaseService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(DatabaseService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
             log.Information(DatabaseService.Core, $"OS {Environment.OSVersion}");

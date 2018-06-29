@@ -42,7 +42,7 @@ namespace Nautilus.Scheduler
         {
             Validate.NotNull(container, nameof(container));
 
-            var properties = new NameValueCollection { {"quartz.threadPool.threadCount", "20"} };
+            var properties = new NameValueCollection { {"quartz.threadPool.threadCount", "10"} };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
