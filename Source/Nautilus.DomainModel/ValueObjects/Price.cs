@@ -116,7 +116,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Price"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Value.ToString($"N{this.Decimals}", CultureInfo.InvariantCulture)}";
+        public override string ToString() => $"{this.Value.ToString($"F{this.Decimals}", CultureInfo.InvariantCulture)}";
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.

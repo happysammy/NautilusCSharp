@@ -170,6 +170,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(0.01, 0.001, "0.010")]
         [InlineData(0.1, 0.0001, "0.1000")]
         [InlineData(0.0020, 0.00001, "0.00200")]
+        [InlineData(10000, 0.01, "10000.00")]
+        [InlineData(5000, 0.1, "5000.0")]
+        [InlineData(100000, 1, "100000")]
         internal void ToString_VariousValues_ReturnsExpectedString(decimal value, decimal tickSize, string expected)
         {
             // Arrange
