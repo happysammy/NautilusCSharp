@@ -72,6 +72,30 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
+        /// Returns a result indicating whether the read-only contains the item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Contains(T item)
+        {
+            Debug.NotNull(item, nameof(item));
+
+            return this.internalList.Contains(item);
+        }
+
+        /// <summary>
+        /// Determines the index of a specific item in the read-only list.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>An <see cref="int"/>.</returns>
+        public int IndexOf(T item)
+        {
+            Debug.NotNull(item, nameof(item));
+
+            return this.internalList.IndexOf(item);
+        }
+
+        /// <summary>
         /// Not implemented (cannot add to a read-only list).
         /// </summary>
         /// <param name="element">The element which cannot be added.</param>
@@ -88,18 +112,6 @@ namespace Nautilus.Core.Collections
         public void Clear()
         {
             throw new NotSupportedException("Cannot clear a read-only list.");
-        }
-
-        /// <summary>
-        /// Returns a result indicating whether the read-only contains the item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Contains(T item)
-        {
-            Debug.NotNull(item, nameof(item));
-
-            return this.internalList.Contains(item);
         }
 
         /// <summary>
@@ -122,18 +134,6 @@ namespace Nautilus.Core.Collections
         public bool Remove(T item)
         {
             throw new NotSupportedException("Cannot remove an element from a read-only list.");
-        }
-
-        /// <summary>
-        /// Determines the index of a specific item in the read-only list.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>An <see cref="int"/>.</returns>
-        public int IndexOf(T item)
-        {
-            Debug.NotNull(item, nameof(item));
-
-            return this.internalList.IndexOf(item);
         }
 
         /// <summary>

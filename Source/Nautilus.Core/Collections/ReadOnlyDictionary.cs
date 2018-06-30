@@ -84,36 +84,6 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
-        /// Not implemented (cannot add to a read-only dictionary).
-        /// </summary>
-        /// <param name="item">The item which cannot be added.</param>
-        /// <exception cref="NotImplementedException">Throws if called.</exception>
-        public void Add(KeyValuePair<TKey, TValue> item)
-        {
-            throw new NotSupportedException("Cannot add to a read-only dictionary.");
-        }
-
-        /// <summary>
-        /// Not implemented (cannot add to a read-only dictionary).
-        /// </summary>
-        /// <param name="key">The key which cannot be added.</param>
-        /// <param name="value">The value which cannot be added.</param>
-        /// <exception cref="NotImplementedException">Throws if called.</exception>
-        public void Add(TKey key, TValue value)
-        {
-            throw new NotSupportedException("Cannot add to a read-only dictionary.");
-        }
-
-        /// <summary>
-        /// Not implemented (cannot clear a read-only dictionary).
-        /// </summary>
-        /// <exception cref="NotImplementedException">Throws if called.</exception>
-        public void Clear()
-        {
-            throw new NotSupportedException("Cannot clear a read-only dictionary.");
-        }
-
-        /// <summary>
         /// Returns a value indicating whether the read-only dictionary contains the given item.
         /// </summary>
         /// <param name="item">The item to check if the read-only dictionary contins.</param>
@@ -153,14 +123,24 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
-        /// Not implemented (cannot copy to a read-only dictionary).
+        /// Not implemented (cannot add to a read-only dictionary).
         /// </summary>
-        /// <param name="array">The array which cannot be copied.</param>
-        /// <param name="arrayIndex">The array index.</param>
+        /// <param name="item">The item which cannot be added.</param>
         /// <exception cref="NotImplementedException">Throws if called.</exception>
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        public void Add(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotSupportedException("Cannot copy to array from a read-only dictionary.");
+            throw new NotSupportedException("Cannot add to a read-only dictionary.");
+        }
+
+        /// <summary>
+        /// Not implemented (cannot add to a read-only dictionary).
+        /// </summary>
+        /// <param name="key">The key which cannot be added.</param>
+        /// <param name="value">The value which cannot be added.</param>
+        /// <exception cref="NotImplementedException">Throws if called.</exception>
+        public void Add(TKey key, TValue value)
+        {
+            throw new NotSupportedException("Cannot add to a read-only dictionary.");
         }
 
         /// <summary>
@@ -183,6 +163,26 @@ namespace Nautilus.Core.Collections
         public bool Remove(TKey key)
         {
             throw new NotSupportedException("Cannot remove a key from a read-only dictionary.");
+        }
+
+        /// <summary>
+        /// Not implemented (cannot clear a read-only dictionary).
+        /// </summary>
+        /// <exception cref="NotImplementedException">Throws if called.</exception>
+        public void Clear()
+        {
+            throw new NotSupportedException("Cannot clear a read-only dictionary.");
+        }
+
+        /// <summary>
+        /// Not implemented (cannot copy to a read-only dictionary).
+        /// </summary>
+        /// <param name="array">The array which cannot be copied.</param>
+        /// <param name="arrayIndex">The array index.</param>
+        /// <exception cref="NotImplementedException">Throws if called.</exception>
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            throw new NotSupportedException("Cannot copy to array from a read-only dictionary.");
         }
 
         /// <summary>
