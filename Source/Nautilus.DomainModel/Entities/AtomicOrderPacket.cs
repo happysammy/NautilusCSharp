@@ -19,6 +19,7 @@ namespace Nautilus.DomainModel.Entities
     /// Represents a collection of <see cref="AtomicOrder"/>s to be managed together.
     /// </summary>
     [Immutable]
+    [PerformanceOptimized]
     public sealed class AtomicOrderPacket : Entity<AtomicOrderPacket>
     {
         /// <summary>

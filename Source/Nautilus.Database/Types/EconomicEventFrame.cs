@@ -14,17 +14,18 @@ using NodaTime;
 
 namespace Nautilus.Database.Types
 {
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
 
     [Immutable]
     public class EconomicEventFrame
     {
-        public EconomicEventFrame(IReadOnlyCollection<EconomicEvent> events)
+        public EconomicEventFrame(List<EconomicEvent> events)
         {
-            Validate.CollectionNotNullOrEmpty(events, nameof(events));
+            Debug.CollectionNotNullOrEmpty(events, nameof(events));
 
-            this.Events = events;
+            this.Events = new ReadOnlyList<EconomicEvent>(events);
         }
 
         public IReadOnlyCollection<CurrencyCode> CurrencySymbols =>
@@ -36,7 +37,7 @@ namespace Nautilus.Database.Types
         /// <summary>
         /// Gets the economic news event frames list of events.
         /// </summary>
-        public IReadOnlyCollection<EconomicEvent> Events { get; }
+        public ReadOnlyList<EconomicEvent> Events { get; }
 
         /// <summary>
         /// Gets the economic news event frames first event time.

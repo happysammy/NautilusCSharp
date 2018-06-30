@@ -149,8 +149,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ValidationException">Throws if the event is null.</exception>
         public override CommandResult Apply(Event @event)
         {
-            Validate.NotNull(@event, nameof(@event));
-            Validate.True(@event is AccountEvent, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
+            Debug.True(@event is AccountEvent, nameof(@event));
 
             var accountEvent = @event as AccountEvent;
 

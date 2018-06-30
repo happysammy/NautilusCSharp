@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System.Linq;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -23,6 +24,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market trade comprising of a collection of <see cref="TradeUnit"/>s
     /// to be managed together.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class Trade : Aggregate<Trade>
     {
         /// <summary>

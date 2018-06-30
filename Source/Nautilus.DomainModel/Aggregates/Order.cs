@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -23,6 +24,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// The base class for all order types.
     /// </summary>
+    [PerformanceOptimized]
     public abstract class Order : Aggregate<Order>
     {
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
