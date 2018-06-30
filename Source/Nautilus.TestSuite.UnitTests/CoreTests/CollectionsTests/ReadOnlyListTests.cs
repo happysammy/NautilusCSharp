@@ -120,7 +120,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             Assert.Throws<NotSupportedException>(() => readOnlyList.Remove(0));
             Assert.Throws<NotSupportedException>(() => readOnlyList.RemoveAt(0));
             Assert.Throws<NotSupportedException>(() => readOnlyList.Clear());
-            Assert.Throws<NotSupportedException>(() => readOnlyList.CopyTo(new int[1], 0));
         }
     }
 }

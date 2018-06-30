@@ -8,10 +8,9 @@
 
 namespace Nautilus.DomainModel.Aggregates
 {
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -41,8 +40,8 @@ namespace Nautilus.DomainModel.Aggregates
             Symbol symbol,
             EntityId tradeId,
             TradeType tradeType,
-            IReadOnlyCollection<TradeUnit> tradeUnits,
-            IReadOnlyCollection<EntityId> orderIdList,
+            ReadOnlyList<TradeUnit> tradeUnits,
+            ReadOnlyList<EntityId> orderIdList,
             ZonedDateTime timestamp)
             : base(tradeId, timestamp)
         {
@@ -55,8 +54,8 @@ namespace Nautilus.DomainModel.Aggregates
 
             this.Symbol = symbol;
             this.TradeType = tradeType;
-            this.TradeUnits = tradeUnits.ToImmutableList();
-            this.OrderIdList = orderIdList.ToImmutableList();
+            this.TradeUnits = tradeUnits;
+            this.OrderIdList = orderIdList;
             this.TotalQuantity = Quantity.Create(this.TradeUnits.Sum(unit => unit.Entry.Quantity.Value));
         }
 
@@ -78,12 +77,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trades units.
         /// </summary>
-        public IReadOnlyList<TradeUnit> TradeUnits { get; }
+        public ReadOnlyList<TradeUnit> TradeUnits { get; }
 
         /// <summary>
         /// Gets the trades order identifier list.
         /// </summary>
-        public IReadOnlyList<EntityId> OrderIdList { get; }
+        public ReadOnlyList<EntityId> OrderIdList { get; }
 
         /// <summary>
         /// Gets the trades total quantity.

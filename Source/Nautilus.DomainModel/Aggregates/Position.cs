@@ -97,7 +97,7 @@ namespace Nautilus.DomainModel.Aggregates
         [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly", Justification = "Reviewed.")]
         public override CommandResult Apply(Event @event)
         {
-            Validate.NotNull(@event, nameof(@event));
+            Debug.NotNull(@event, nameof(@event));
 
             switch (@event)
             {
@@ -144,6 +144,10 @@ namespace Nautilus.DomainModel.Aggregates
             Price averagePrice,
             ZonedDateTime eventTime)
         {
+            Debug.Int32NotOutOfRange(quantity, nameof(quantity), 0, int.MaxValue);
+            Debug.NotNull(averagePrice, nameof(averagePrice));
+            Debug.NotDefault(eventTime, nameof(eventTime));
+
             if (orderSide == OrderSide.Buy)
             {
                 this.relativeQuantity += quantity;

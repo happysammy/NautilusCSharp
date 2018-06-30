@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using BlackBox.Core.Enums;
     using Moq;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;

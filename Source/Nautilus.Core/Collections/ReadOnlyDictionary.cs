@@ -17,7 +17,7 @@ namespace Nautilus.Core.Collections
 
     /// <summary>
     /// Provides a read-only dictionary instantiated with a standard concrete dictionary which then
-    /// becomes the internal dictionary. The original dictionary cannot be null or empty.
+    /// becomes the internal dictionary.
     /// </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
@@ -32,10 +32,10 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyDictionary{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="dictionary">The original dictionary.</param>
-        /// <exception cref="ValidationException">Throws if the dictionary is null or empty.</exception>
+        /// <exception cref="ValidationException">Throws if the dictionary is null.</exception>
         public ReadOnlyDictionary(Dictionary<TKey, TValue> dictionary)
         {
-            Validate.CollectionNotNullOrEmpty(dictionary, nameof(dictionary));
+            Debug.NotNull(dictionary, nameof(dictionary));
 
             this.internalDictionary = dictionary;
         }
@@ -44,10 +44,10 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyDictionary{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="dictionary">The original read-only dictionary.</param>
-        /// <exception cref="ValidationException">Throws if the dictionary is null or empty.</exception>
+        /// <exception cref="ValidationException">Throws if the dictionary is null.</exception>
         public ReadOnlyDictionary(IReadOnlyDictionary<TKey, TValue> dictionary)
         {
-            Validate.CollectionNotNullOrEmpty(dictionary, nameof(dictionary));
+            Debug.NotNull(dictionary, nameof(dictionary));
 
             this.internalDictionary = new Dictionary<TKey, TValue>(dictionary);
         }

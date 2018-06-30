@@ -9,9 +9,10 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -24,9 +25,10 @@ namespace Nautilus.DomainModel.Aggregates
     /// <summary>
     /// Represents a trade unit as part of a larger trade aggregate.
     /// </summary>
+    [PerformanceOptimized]
     public sealed class TradeUnit : Aggregate<TradeUnit>
     {
-        private readonly IList<Order> orders = new List<Order>();
+        private readonly ReadOnlyList<Order> orders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeUnit" /> class.
@@ -63,17 +65,16 @@ namespace Nautilus.DomainModel.Aggregates
             this.Position = this.CreatePosition(entry, timestamp);
             this.UnitSize = entry.Quantity;
 
-            this.orders.Add(this.Entry);
-            this.orders.Add(this.StopLoss);
-
+            var orderList = new List<Order> {this.Entry, this.StopLoss};
             if (this.ProfitTarget.HasValue)
             {
-                this.orders.Add(this.ProfitTarget.Value);
+                orderList.Add(this.ProfitTarget.Value);
             }
+            this.orders = new ReadOnlyList<Order>(orderList);
 
-            this.orders.ToImmutableList();
-
-            this.OrderIds = this.orders.Select(o => o.OrderId).ToImmutableList();
+            this.OrderIds = new ReadOnlyList<EntityId>(
+                this.orders.Select(o => o.OrderId)
+                    .ToList());
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the trade units order identifiers.
         /// </summary>
         /// <returns>A read only collection of orders.</returns>
-        public IReadOnlyList<EntityId> OrderIds { get; }
+        public ReadOnlyList<EntityId> OrderIds { get; }
 
         /// <summary>
         /// Returns the trade units trade status.
@@ -131,7 +132,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns all of the trade units orders.
         /// </summary>
         /// <returns>A read only collection of orders.</returns>
-        public IReadOnlyCollection<Order> GetAllOrders() => this.orders.ToList();
+        public ReadOnlyList<Order> GetAllOrders() => this.orders;
 
         /// <summary>
         /// Returns a value indicating whether the trade unit contains the given order identifier.

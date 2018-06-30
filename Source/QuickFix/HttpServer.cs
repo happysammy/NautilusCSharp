@@ -1,12 +1,4 @@
 ﻿#if !MISSING_SYSTEMWEBUI
-using System;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Web;
-using QuickFix;
-
 namespace Acceptor
 {
 //    public class HttpServer : IDisposable

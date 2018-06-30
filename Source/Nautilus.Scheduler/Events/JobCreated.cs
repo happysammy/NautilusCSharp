@@ -8,7 +8,6 @@
 
 namespace Nautilus.Scheduler.Events
 {
-    using System.Runtime.CompilerServices;
     using Quartz;
     using Nautilus.Core.Validation;
 

@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel
     using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using NodaTime;

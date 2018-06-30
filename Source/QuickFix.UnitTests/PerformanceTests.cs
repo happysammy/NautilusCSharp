@@ -2,13 +2,7 @@
 
 namespace UnitTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using NUnit.Framework;
-    using QuickFix;
-    using QuickFix.Fields;
-    using QuickFix.UnitTests;
 
     /// <summary>
     /// TODO: Move performance-related tests into PerformanceTests project.

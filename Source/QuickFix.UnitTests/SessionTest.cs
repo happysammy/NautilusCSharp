@@ -6,7 +6,6 @@ namespace QuickFix.UnitTests
     using System.Linq;
     using System.Text.RegularExpressions;
     using NUnit.Framework;
-    using System.Threading;
 
     class MockResponder : QuickFix.IResponder
     {

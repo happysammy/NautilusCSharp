@@ -8,14 +8,10 @@
 
 namespace NautilusDB.Service
 {
-    using System;
     using Akka.Actor;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NautilusDB.Service.Requests;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using ServiceStack;
 
     /// <summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using QuickFix;
+﻿using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;

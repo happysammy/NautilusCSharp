@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Factories
 {
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
 
@@ -37,7 +38,7 @@ namespace Nautilus.DomainModel.Factories
                 orderPacket.Timestamp);
         }
 
-        private static List<TradeUnit> CreateTradeUnits(AtomicOrderPacket orderPacket)
+        private static ReadOnlyList<TradeUnit> CreateTradeUnits(AtomicOrderPacket orderPacket)
         {
             var tradeId = orderPacket.Id;
             var tradeUnits = new List<TradeUnit>();
@@ -53,7 +54,7 @@ namespace Nautilus.DomainModel.Factories
                     orderPacket.Timestamp));
             }
 
-            return tradeUnits;
+            return new ReadOnlyList<TradeUnit>(tradeUnits);
         }
     }
 }

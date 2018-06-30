@@ -1,5 +1,3 @@
-using System;
-
 namespace QuickFix.Fields
 {
     /// <summary>

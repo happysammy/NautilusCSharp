@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
-using QuickFix;
-using QuickFix.Fields;
 using System.Reflection;
 
 

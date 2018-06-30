@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using QuickFix.DataDictionary;
 
 namespace QuickFix.UnitTests.TestHelpers
 {

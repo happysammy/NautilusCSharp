@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using System.Collections.ObjectModel;
     using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;

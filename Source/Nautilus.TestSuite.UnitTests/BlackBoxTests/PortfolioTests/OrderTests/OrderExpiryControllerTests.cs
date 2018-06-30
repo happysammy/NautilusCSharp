@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.Common.MessageStore;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -176,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.orderExpiryController.AddCounters(orderPacket, 1);
             var result1 = this.orderExpiryController.TotalCounters;
 
-            this.orderExpiryController.ProcessCounters(unrecognizedActiveOrders);
+            this.orderExpiryController.ProcessCounters(new ReadOnlyList<EntityId>(unrecognizedActiveOrders));
             var result2 = this.orderExpiryController.TotalCounters;
 
             // Assert

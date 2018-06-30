@@ -23,28 +23,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class AtomicOrderPacketTests
     {
         [Fact]
-        internal void CanZonedDateTimeiate_NewZonedDateTimeiation_ReturnsCorrectDefaultValues()
-        {
-            // Arrange
-            var orderPacket = new AtomicOrderPacket(
-                new Symbol("AUDUSD", Exchange.FXCM),
-                new TradeType("TestTrade"),
-                new List<AtomicOrder>(),
-                new EntityId("StubOrderPacket"),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result1 = orderPacket.Orders.Count;
-            var result2 = orderPacket.OrderIdList.Count;
-            var result3 = orderPacket.Id;
-
-            // Assert
-            Assert.Equal(0, result1);
-            Assert.Equal(0, result2);
-            Assert.Equal("StubOrderPacket", result3.ToString());
-        }
-
-        [Fact]
         internal void AddOrder_NewZonedDateTimeiationELSOrderAdded_ReturnsExpectedResults()
         {
             // Arrange
@@ -112,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var orderPacket = new AtomicOrderPacket(
                 new Symbol("AUDUSD", Exchange.FXCM),
                 new TradeType("TestTrade"),
-                new List<AtomicOrder>(),
+                new List<AtomicOrder>{StubAtomicOrderBuilder.Build()},
                 new EntityId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
@@ -120,7 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var result = orderPacket.OrderIdList.Count;
 
             // Assert
-            Assert.Equal(0, result);
+            Assert.Equal(3, result);
         }
     }
 }

@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Core;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -26,9 +26,11 @@ namespace Nautilus.DomainModel.Aggregates
     public abstract class Order : Aggregate<Order>
     {
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
-        private readonly IList<EntityId> orderIdList = new List<EntityId>();
-        private readonly IList<EntityId> brokerOrderIdList = new List<EntityId>();
-        private readonly IList<EntityId> executionIdList = new List<EntityId>();
+
+        // Concrete lists for performance reasons.
+        private readonly List<EntityId> orderIdList = new List<EntityId>();
+        private readonly List<EntityId> brokerOrderIdList = new List<EntityId>();
+        private readonly List<EntityId> executionIdList = new List<EntityId>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -166,19 +168,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns an immutable collection of the orders.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IReadOnlyCollection<EntityId> GetOrderIdList() => this.orderIdList.ToImmutableList();
+        public ReadOnlyList<EntityId> GetOrderIdList() => new ReadOnlyList<EntityId>(orderIdList);
 
         /// <summary>
         /// Returns an immutable collection of the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IReadOnlyCollection<EntityId> GetBrokerOrderIdList() => this.brokerOrderIdList.ToImmutableList();
+        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.brokerOrderIdList);
 
         /// <summary>
         /// Returns an immutable collection of the order events.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IReadOnlyCollection<Event> GetEvents() => this.Events.ToImmutableList();
+        public ReadOnlyList<Event> GetEvents() => new ReadOnlyList<Event>(this.Events);
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.

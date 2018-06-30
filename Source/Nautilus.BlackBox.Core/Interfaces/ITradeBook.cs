@@ -9,6 +9,7 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
@@ -25,7 +26,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="tradeType">The trade type.</param>
         /// <returns>A <see cref="IList{Trade}"/>.</returns>
-        IReadOnlyList<Trade> GetTradesByTradeType(TradeType tradeType);
+        ReadOnlyList<Trade> GetTradesByTradeType(TradeType tradeType);
 
         /// <summary>
         /// Returns a trade which matches the given order identifier (or a failure result).
@@ -38,6 +39,6 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// Returns a list of all active order identifiers.
         /// </summary>
         /// <returns>A <see cref="IList{T}"/>.</returns>
-        IReadOnlyList<EntityId> GetAllActiveOrderIds();
+        ReadOnlyList<EntityId> GetAllActiveOrderIds();
     }
 }

@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.Entities
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -47,7 +47,7 @@ namespace Nautilus.DomainModel.Entities
 
             this.Symbol = symbol;
             this.TradeType = tradeType;
-            this.Orders = orders.ToImmutableList();
+            this.Orders = new ReadOnlyList<AtomicOrder>(orders);
 
             var tempList = new List<EntityId>();
 
@@ -62,7 +62,7 @@ namespace Nautilus.DomainModel.Entities
                 }
             }
 
-            this.OrderIdList = tempList.ToImmutableList();
+            this.OrderIdList = new ReadOnlyList<EntityId>(tempList);
         }
 
         /// <summary>
@@ -78,11 +78,11 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic order packets list of orders.
         /// </summary>
-        public IImmutableList<AtomicOrder> Orders { get; }
+        public ReadOnlyList<AtomicOrder> Orders { get; }
 
         /// <summary>
         /// Gets the atomic order packets list of order identifiers.
         /// </summary>
-        public IReadOnlyList<EntityId> OrderIdList { get; }
+        public ReadOnlyList<EntityId> OrderIdList { get; }
     }
 }

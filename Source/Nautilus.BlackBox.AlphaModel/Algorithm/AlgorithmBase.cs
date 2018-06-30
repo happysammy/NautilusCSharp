@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;

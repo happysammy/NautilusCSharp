@@ -8,10 +8,10 @@
 
 namespace Nautilus.DomainModel
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -70,7 +70,7 @@ namespace Nautilus.DomainModel
         /// <param name="tradeUnits">The trade units.</param>
         /// <returns>The <see cref="TradeStatus" />.</returns>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public static TradeStatus CalculateTradeStatus(IReadOnlyCollection<TradeUnit> tradeUnits)
+        public static TradeStatus CalculateTradeStatus(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
 
@@ -99,7 +99,7 @@ namespace Nautilus.DomainModel
         /// <param name="tradeUnits">The trade units.</param>
         /// <returns>A <see cref="MarketPosition" />.</returns>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public static MarketPosition CalculateMarketPosition(IReadOnlyCollection<TradeUnit> tradeUnits)
+        public static MarketPosition CalculateMarketPosition(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
 

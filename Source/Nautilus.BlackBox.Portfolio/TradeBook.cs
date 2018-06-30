@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
@@ -17,6 +16,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -28,7 +28,8 @@ namespace Nautilus.BlackBox.Portfolio
     /// </summary>
     public sealed class TradeBook : ComponentBase, ITradeBook
     {
-        private readonly IList<Trade> tradeList = new List<Trade>();
+        // Concreate list for performance reasons.
+        private readonly List<Trade> tradeList = new List<Trade>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeBook"/> class.
@@ -60,7 +61,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <exception cref="ValidationException">Throws if the trade type is null.</exception>
         public void Process(TradeType tradeType)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
+            Debug.NotNull(tradeType, nameof(tradeType));
 
             var tradesByType = this.GetTradesByTradeType(tradeType);
 
@@ -86,7 +87,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <exception cref="ValidationException">Throws if the trade is null.</exception>
         public void AddTrade(Trade trade)
         {
-            Validate.NotNull(trade, nameof(trade));
+            Debug.NotNull(trade, nameof(trade));
 
             this.tradeList.Add(trade);
 
@@ -101,13 +102,13 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="tradeType">The trade type.</param>
         /// <returns>A <see cref="Trade"/>.</returns>
         /// <exception cref="ValidationException">Throws if the trade type is null.</exception>
-        public IReadOnlyList<Trade> GetTradesByTradeType(TradeType tradeType)
+        public ReadOnlyList<Trade> GetTradesByTradeType(TradeType tradeType)
         {
             Validate.NotNull(tradeType, nameof(tradeType));
 
-            return this.tradeList
+            return new ReadOnlyList<Trade>(this.tradeList
                .Where(t => t.TradeType.Equals(tradeType))
-               .ToImmutableList();
+               .ToList());
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <exception cref="ValidationException">Throws if the order identifier is null.</exception>
         public QueryResult<Trade> GetTradeForOrder(EntityId orderId)
         {
-            Validate.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderId, nameof(orderId));
 
             var trade = this.tradeList
                .FirstOrDefault(t => t.OrderIdList.Contains(orderId));
@@ -132,11 +133,11 @@ namespace Nautilus.BlackBox.Portfolio
         /// Returns a list of all active order identifiers.
         /// </summary>
         /// <returns>A <see cref="IList{EntityId}"/>.</returns>
-        public IReadOnlyList<EntityId> GetAllActiveOrderIds()
+        public ReadOnlyList<EntityId> GetAllActiveOrderIds()
         {
-            return this.tradeList
+            return new ReadOnlyList<EntityId>(this.tradeList
                .SelectMany(trade => trade.OrderIdList)
-               .ToImmutableList();
+               .ToList());
         }
     }
 }

@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -17,6 +16,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -28,7 +28,8 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     /// </summary>
     public sealed class OrderExpiryController : ComponentBusConnectedBase
     {
-        private readonly IList<OrderExpiryCounter> orderExpiryCounters = new List<OrderExpiryCounter>();
+        // Concreate list for performance reasons.
+        private readonly List<OrderExpiryCounter> orderExpiryCounters = new List<OrderExpiryCounter>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderExpiryController"/> class.
@@ -62,7 +63,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// </summary>
         /// <param name="orderIdList">The order identifier list.</param>
         /// <exception cref="ValidationException">Throws if the order identifier list is null.</exception>
-        public void ProcessCounters(IReadOnlyList<EntityId> orderIdList)
+        public void ProcessCounters(ReadOnlyList<EntityId> orderIdList)
         {
             Validate.NotNull(orderIdList, nameof(orderIdList));
 
@@ -142,7 +143,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// pending order associated with it.
         /// </summary>
         /// <param name="orderIdList">The list of current active order identifiers.</param>
-        private void ForceRemoveExpiredCounters(IReadOnlyList<EntityId> orderIdList)
+        private void ForceRemoveExpiredCounters(ReadOnlyList<EntityId> orderIdList)
         {
             Debug.NotNull(orderIdList, nameof(orderIdList));
 
@@ -167,11 +168,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             Debug.NotNull(this.orderExpiryCounters, nameof(this.orderExpiryCounters));
         }
 
-        private IReadOnlyCollection<EntityId> GetCounterIdList()
+        private IEnumerable<EntityId> GetCounterIdList()
         {
-            return this.orderExpiryCounters
-               .Select(counter => counter.Order.OrderId)
-               .ToImmutableList();
+            return this.orderExpiryCounters.Select(counter => counter.Order.OrderId);
         }
     }
 }

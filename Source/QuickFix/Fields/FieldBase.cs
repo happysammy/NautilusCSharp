@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuickFix.Fields
+﻿namespace QuickFix.Fields
 {
     /// <summary>
     /// Base class for all field types

@@ -16,7 +16,7 @@ namespace Nautilus.Core.Collections
 
     /// <summary>
     /// Provides a read-only list instantiated with a standard concrete list which then becomes
-    /// the internal list. The original list cannot be null or empty.
+    /// the internal list.
     /// </summary>
     /// <typeparam name="T">The list value type.</typeparam>
     [Immutable]
@@ -30,10 +30,10 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
         /// <param name="list">The original list.</param>
-        /// <exception cref="ValidationException">Throws if the list is null or empty.</exception>
+        /// <exception cref="ValidationException">Throws if the list is null.</exception>
         public ReadOnlyList(List<T> list)
         {
-            Validate.CollectionNotNullOrEmpty(list, nameof(list));
+            Debug.NotNull(list, nameof(list));
 
             this.internalList = list;
         }
@@ -45,7 +45,7 @@ namespace Nautilus.Core.Collections
         /// <exception cref="ValidationException">Throws if the element is null.</exception>
         public ReadOnlyList(T element)
         {
-            Validate.NotNull(element, nameof(element));
+            Debug.NotNull(element, nameof(element));
 
             this.internalList = new List<T> { element };
         }
@@ -122,7 +122,10 @@ namespace Nautilus.Core.Collections
         /// <exception cref="NotSupportedException">Throws if called.</exception>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotSupportedException("Cannot copy a read-only list to an array.");
+            Debug.NotNull(array, nameof(array));
+            Debug.Int32NotOutOfRange(arrayIndex, nameof(arrayIndex), 0, int.MaxValue);
+
+            this.internalList.CopyTo(array, arrayIndex);
         }
 
         /// <summary>

@@ -8,12 +8,9 @@
 
 namespace Nautilus.BlackBox.Data
 {
-    using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Akka.Actor;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.SystemCommands;
     using Nautilus.BlackBox.Core.Messages.TradeCommands;
     using Nautilus.BlackBox.Data.Market;
@@ -27,7 +24,6 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Scheduler;
 
     /// <summary>
     /// The sealed <see cref="DataService"/> class. The <see cref="BlackBox"/> service context

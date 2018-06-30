@@ -22,7 +22,6 @@ namespace NautilusDB
     using Nautilus.Database;
     using Nautilus.Database.Build;
     using Nautilus.Database.Configuration;
-    using Nautilus.DomainModel.ValueObjects;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;

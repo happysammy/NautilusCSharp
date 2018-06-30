@@ -8,18 +8,8 @@
 
 namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Scheduler;
-    using Quartz;
-    using Xunit;
-    using Nautilus.Scheduler.Commands;
-    using Nautilus.Scheduler.Events;
-    using Nautilus.Scheduler.Exceptions;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
