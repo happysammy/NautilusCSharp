@@ -10,6 +10,8 @@ namespace Nautilus.DomainModel
 {
     using System.Collections.Generic;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -19,6 +21,7 @@ namespace Nautilus.DomainModel
     /// aggregation of entities.
     /// </summary>
     /// <typeparam name="T">The aggregate type.</typeparam>
+    [PerformanceOptimized]
     public abstract class Aggregate<T> : Entity<T>
         where T : class
     {
@@ -33,6 +36,9 @@ namespace Nautilus.DomainModel
             : base(identifier, timestamp)
         {
             Debug.NotNull(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
+
+            this.Events = new List<Event>();
         }
 
         /// <summary>
@@ -44,7 +50,7 @@ namespace Nautilus.DomainModel
         /// Gets the aggregates events list.
         /// </summary>
         /// <returns>The <see cref="IList{Event}"/>.</returns>
-        protected IList<Event> Events { get; } = new List<Event>();
+        protected List<Event> Events { get; }
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to the aggregate.

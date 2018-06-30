@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -73,7 +72,9 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Enum receiver, T message, Enum sender)
             where T : Message
         {
+            Debug.NotNull(receiver, nameof(receiver));
             Debug.NotNull(message, nameof(message));
+            Debug.NotNull(sender, nameof(sender));
 
             this.Send(new ReadOnlyList<Enum>(receiver), message, sender);
         }
@@ -94,6 +95,7 @@ namespace Nautilus.Common.Messaging
         {
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
+            Debug.NotNull(sender, nameof(sender));
 
             switch (message as Message)
             {

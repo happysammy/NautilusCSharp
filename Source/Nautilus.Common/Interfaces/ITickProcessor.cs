@@ -18,14 +18,14 @@ namespace Nautilus.Common.Interfaces
     public interface ITickProcessor
     {
         /// <summary>
-        /// Creates a new validated <see cref="Tick"/> and sends it to the
-        /// <see cref="IQuoteProvider"/> and bar data aggregation controller for the system.
+        /// Creates a new validated <see cref="Tick"/> and sends it to the tick publisher and bar
+        /// data aggregation controller for the system.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
         /// <param name="exchange">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
-        /// <param name="decimals">The number of decimal places in the ticks prices.</param>
+        /// <param name="decimals">The decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         void OnTick(
             string symbol,

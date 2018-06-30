@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// </summary>
     public class FiniteStateMachine
     {
-        private readonly IImmutableDictionary<StateTransition, State> stateTransitionTable;
+        private readonly ReadOnlyDictionary<StateTransition, State> stateTransitionTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FiniteStateMachine"/> class.
@@ -31,13 +31,13 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
         /// <exception cref="ArgumentException">Throws if the state transition table is empty.</exception>
         public FiniteStateMachine(
-            IReadOnlyDictionary<StateTransition, State> stateTransitionTable,
+            Dictionary<StateTransition, State> stateTransitionTable,
             State startingState)
         {
             Validate.CollectionNotNullOrEmpty(stateTransitionTable, nameof(stateTransitionTable));
             Validate.NotNull(startingState, nameof(startingState));
 
-            this.stateTransitionTable = stateTransitionTable.ToImmutableDictionary();
+            this.stateTransitionTable = new ReadOnlyDictionary<StateTransition, State>(stateTransitionTable);
             this.CurrentState = startingState;
         }
 

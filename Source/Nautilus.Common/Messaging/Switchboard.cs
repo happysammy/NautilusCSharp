@@ -45,7 +45,7 @@ namespace Nautilus.Common.Messaging
         public void SendToReceivers<T>(Envelope<T> envelope)
             where T : Message
         {
-            Validate.NotNull(envelope, nameof(envelope));
+            Debug.NotNull(envelope, nameof(envelope));
 
             foreach (var receiver in envelope.Receivers)
             {
@@ -56,6 +56,7 @@ namespace Nautilus.Common.Messaging
         private void RouteEnvelope<T>(Enum receiver, Envelope<T> envelope)
             where T : Message
         {
+            Debug.NotNull(receiver, nameof(receiver));
             Debug.NotNull(envelope, nameof(envelope));
 
             if (!this.addresses.ContainsKey(receiver))

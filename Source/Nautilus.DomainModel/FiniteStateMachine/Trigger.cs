@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         public Trigger(string trigger)
         {
-            Validate.NotNull(trigger, nameof(trigger));
+            Debug.NotNull(trigger, nameof(trigger));
 
             this.Value = trigger;
         }
@@ -37,7 +37,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         public Trigger(Enum trigger)
         {
-            Validate.NotNull(trigger, nameof(trigger));
+            Debug.NotNull(trigger, nameof(trigger));
 
             this.Value = trigger.ToString();
         }

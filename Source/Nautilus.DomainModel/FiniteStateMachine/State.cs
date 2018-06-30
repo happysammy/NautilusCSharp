@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         public State(Enum state)
         {
-            Validate.NotNull(state, nameof(state));
+            Debug.NotNull(state, nameof(state));
 
             this.Value = state;
         }

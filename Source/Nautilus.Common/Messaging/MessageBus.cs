@@ -47,6 +47,7 @@ namespace Nautilus.Common.Messaging
             IComponentryContainer container,
             IActorRef messageStoreRef)
         {
+            Validate.NotNull(serviceContext, nameof(serviceContext));
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messageStoreRef, nameof(messageStoreRef));
@@ -87,7 +88,7 @@ namespace Nautilus.Common.Messaging
 
         private void OnMessage(InitializeMessageSwitchboard message)
         {
-            Debug.NotNull(message.Switchboard, nameof(message.Switchboard));
+            Validate.NotNull(message.Switchboard, nameof(message.Switchboard));
 
             this.commandHandler.Execute(() =>
             {

@@ -59,6 +59,7 @@ namespace Nautilus.DomainModel
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals([CanBeNull] T other)
         {
+            // ReSharper disable once UsePatternMatching (causes compiler warning).
             var otherEntity = other as Entity<T>;
             return otherEntity != null & this.Id.Equals(otherEntity?.Id);
         }

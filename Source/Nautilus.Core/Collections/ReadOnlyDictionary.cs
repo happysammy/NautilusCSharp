@@ -41,6 +41,18 @@ namespace Nautilus.Core.Collections
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ReadOnlyDictionary{TKey, TValue}"/> class.
+        /// </summary>
+        /// <param name="dictionary">The original read-only dictionary.</param>
+        /// <exception cref="ValidationException">Throws if the dictionary is null or empty.</exception>
+        public ReadOnlyDictionary(IReadOnlyDictionary<TKey, TValue> dictionary)
+        {
+            Validate.CollectionNotNullOrEmpty(dictionary, nameof(dictionary));
+
+            this.internalDictionary = new Dictionary<TKey, TValue>(dictionary);
+        }
+
+        /// <summary>
         /// Gets the read-only dictionaries keys.
         /// </summary>
         public ICollection<TKey> Keys => this.internalDictionary.Keys;

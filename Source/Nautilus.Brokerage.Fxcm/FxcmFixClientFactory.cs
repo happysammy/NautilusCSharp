@@ -61,7 +61,7 @@ namespace Nautilus.Brokerage.FXCM
                 container,
                 tickProcessor,
                 new FxcmFixMessageHandler(container, tickProcessor),
-                new FxcmFixMessageRouter(container),
+                new FxcmFixMessageRouter(container, this.credentials.AccountNumber),
                 this.credentials,
                 Broker.FXCM,
                 FxcmSymbolProvider.GetAllBrokerSymbols(),
