@@ -8,26 +8,25 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
 
     /// <summary>
-    /// The security list request.
+    /// Provides security list request FIX messages.
     /// </summary>
     public static class SecurityListRequestFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new security list request message for all symbols.
         /// </summary>
-        /// <param name="timeNow">
-        /// The time now.
-        /// </param>
-        /// <returns>
-        /// The <see cref="SecurityListRequestFactory"/>.
-        /// </returns>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>A <see cref="SecurityListRequestFactory"/> message.</returns>
         public static SecurityListRequest Create(ZonedDateTime timeNow)
         {
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var message = new SecurityListRequest();
 
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
@@ -38,19 +37,15 @@ namespace Nautilus.Fix.MessageFactories
         }
 
         /// <summary>
-        /// The create.
+        /// Creates and returns a new security list request message for the given symbol.
         /// </summary>
-        /// <param name="symbol">
-        /// The symbol.
-        /// </param>
-        /// <param name="timeNow">
-        /// The time now.
-        /// </param>
-        /// <returns>
-        /// The <see cref="SecurityListRequestFactory"/>.
-        /// </returns>
+        /// <param name="symbol">The symbol.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>A <see cref="SecurityListRequestFactory"/>.</returns>
         public static SecurityListRequest Create(string symbol, ZonedDateTime timeNow)
         {
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var message = new SecurityListRequest();
 
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));

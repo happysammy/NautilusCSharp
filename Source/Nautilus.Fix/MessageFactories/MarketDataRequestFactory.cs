@@ -8,29 +8,27 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
 
     /// <summary>
-    /// The market data request subscription.
+    /// Provides market data request FIX messages.
     /// </summary>
-    public static class MarketDataRequestSubscriptionFactory
+    public static class MarketDataRequestFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new market data request message.
         /// </summary>
-        /// <param name="symbol">
-        /// The symbol.
-        /// </param>
-        /// <param name="timeNow">
-        /// The time now.
-        /// </param>
-        /// <returns>
-        /// The <see cref="MarketDataRequest"/>.
-        /// </returns>
+        /// <param name="symbol">The symbol.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>A <see cref="MarketDataRequest"/> message.</returns>
         public static MarketDataRequest Create(string symbol, ZonedDateTime timeNow)
         {
+            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var subType = new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES);
             var marketDepth = new MarketDepth(0);
 

@@ -8,30 +8,36 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
 
     /// <summary>
-    /// The order cancel replace request.
+    /// Provides order cancel replace request FIX messages.
     /// </summary>
     public static class OrderCancelReplaceRequestFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new order cancel replace request message.
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>
         /// <param name="stopLossPrice">The stop-loss price.</param>
         /// <param name="transactionTime">The transaction time.</param>
-        /// <returns>The <see cref="OrderCancelReplaceRequest"/>.</returns>
+        /// <returns>The <see cref="OrderCancelReplaceRequest"/> message.</returns>
         public static OrderCancelReplaceRequest Create(
             string brokerSymbol,
             Order order,
             decimal stopLossPrice,
             ZonedDateTime transactionTime)
         {
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotNull(order, nameof(order));
+            Debug.DecimalNotOutOfRange(stopLossPrice, nameof(stopLossPrice), decimal.Zero, decimal.MaxValue);
+            Debug.NotDefault(transactionTime, nameof(transactionTime));
+
             var orderMessage = new OrderCancelReplaceRequest();
 
             orderMessage.SetField(new OrigClOrdID(order.OrderId.ToString()));

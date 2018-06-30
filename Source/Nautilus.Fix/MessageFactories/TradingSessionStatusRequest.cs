@@ -8,26 +8,25 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
 
     /// <summary>
-    /// The trading session status request.
+    /// Provides trading session status request FIX messages.
     /// </summary>
     public static class TradingSessionStatusRequestFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new trading session status request message.
         /// </summary>
-        /// <param name="timeNow">
-        /// The time now.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TradingSessionStatusRequest"/>.
-        /// </returns>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>A <see cref="TradingSessionStatusRequest"/> message.</returns>
         public static TradingSessionStatusRequest Create(ZonedDateTime timeNow)
         {
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var message = new TradingSessionStatusRequest();
 
             message.SetField(new TradSesReqID($"TSS_{timeNow.TickOfDay}"));

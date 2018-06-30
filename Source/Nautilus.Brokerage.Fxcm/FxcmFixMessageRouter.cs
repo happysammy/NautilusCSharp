@@ -27,6 +27,8 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageRouter : ComponentBase, IFixMessageRouter
     {
+        private readonly string accountNumber;
+
         private Session fixSession;
         private Session fixSessionMd;
 
@@ -34,13 +36,17 @@ namespace Nautilus.Brokerage.FXCM
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        public FxcmFixMessageRouter(IComponentryContainer container)
+        /// <param name="accountNumber">The FIX account number.</param>
+        public FxcmFixMessageRouter(IComponentryContainer container, string accountNumber)
         : base(
             ServiceContext.FIX,
             LabelFactory.Component(nameof(FxcmFixMessageRouter)),
             container)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(accountNumber, nameof(accountNumber));
+
+            this.accountNumber = accountNumber;
         }
 
         /// <summary>
@@ -85,7 +91,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                var message = CollateralInquiryFactory.Create(this.TimeNow());
+                var message = CollateralInquiryFactory.Create(this.TimeNow(), Broker.FXCM);
 
                 this.fixSession.Send(message);
 
@@ -170,7 +176,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var fxcmSymbol = FxcmSymbolProvider.GetBrokerSymbol(symbol.Code).Value;
 
-                this.fixSessionMd.Send(MarketDataRequestSubscriptionFactory.Create(
+                this.fixSessionMd.Send(MarketDataRequestFactory.Create(
                     fxcmSymbol,
                     this.TimeNow()));
 
@@ -187,7 +193,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 foreach (var fxcmSymbol in FxcmSymbolProvider.GetAllBrokerSymbols())
                 {
-                    this.fixSessionMd.Send(MarketDataRequestSubscriptionFactory.Create(
+                    this.fixSessionMd.Send(MarketDataRequestFactory.Create(
                         fxcmSymbol,
                         this.TimeNow()));
 
@@ -206,8 +212,9 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var message = NewOrderListEntryLimitStopFactory.Create(
+                var message = NewOrderListEntryFactory.CreateWithLimit(
                     FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
+                    this.accountNumber,
                     elsOrder,
                     this.TimeNow());
 
@@ -227,8 +234,9 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var message = NewOrderListEntryStopFactory.Create(
+                var message = NewOrderListEntryFactory.CreateWithStop(
                     FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
+                    this.accountNumber,
                     elsOrder,
                     this.TimeNow());
 

@@ -8,20 +8,22 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using QuickFix.FIX44;
+
     /// <summary>
-    /// The new order single.
+    /// Provides new order single FIX messages.
     /// </summary>
     public static class NewOrderSingleFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new new order single message.
         /// </summary>
-        /// <returns>
-        /// The <see cref="NewOrderSingleFactory"/>.
-        /// </returns>
+        /// <returns>A <see cref="NewOrderSingle"/> message.</returns>
         public static QuickFix.FIX44.NewOrderSingle Create()
         {
             var message = new QuickFix.FIX44.NewOrderSingle();
+
+            // TODO
 
             return message;
         }

@@ -8,26 +8,25 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
 
     /// <summary>
-    /// The request for open positions.
+    /// Provides request for open position FIX messages.
     /// </summary>
     public static class RequestForOpenPositionsFactory
     {
         /// <summary>
-        /// The create.
+        /// Creates and returns a new request for open positions message.
         /// </summary>
-        /// <param name="timeNow">
-        /// The transaction time.
-        /// </param>
-        /// <returns>
-        /// The <see cref="RequestForPositions"/>.
-        /// </returns>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>A <see cref="RequestForPositions"/> message.</returns>
         public static RequestForPositions Create(ZonedDateTime timeNow)
         {
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var message = new RequestForPositions();
             var transactTime = timeNow.ToDateTimeUtc();
 
