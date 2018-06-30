@@ -131,6 +131,8 @@ namespace Nautilus.Fix
         /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryLimitStopOrder(AtomicOrder elsOrder)
         {
+            Debug.NotNull(elsOrder, nameof(elsOrder));
+
             this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
@@ -143,6 +145,8 @@ namespace Nautilus.Fix
         /// <param name="elsOrder">The ELS order.</param>
         public void SubmitEntryStopOrder(AtomicOrder elsOrder)
         {
+            Debug.NotNull(elsOrder, nameof(elsOrder));
+
             this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitEntryStopOrder(elsOrder);
@@ -155,6 +159,8 @@ namespace Nautilus.Fix
         /// <param name="orderModification">The order modification.</param>
         public void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification)
         {
+            Debug.NotNull(orderModification, nameof(orderModification));
+
             this.FixMessageRouter.ModifyStoplossOrder(orderModification);
         }
 
@@ -164,6 +170,8 @@ namespace Nautilus.Fix
         /// <param name="order">The order.</param>
         public void CancelOrder(Order order)
         {
+            Debug.NotNull(order, nameof(order));
+
             this.FixMessageRouter.CancelOrder(order);
         }
 
@@ -173,6 +181,9 @@ namespace Nautilus.Fix
         /// <param name="position">The position.</param>
         public void ClosePosition(Position position)
         {
+            Debug.NotNull(position, nameof(position));
+
+            this.FixMessageRouter.ClosePosition(position);
         }
 
         /// <summary>
@@ -205,6 +216,8 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
+            Debug.NotNull(symbol, nameof(symbol));
+
             this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
         }
 
@@ -222,6 +235,8 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
+            Debug.NotNull(symbol, nameof(symbol));
+
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
 

@@ -219,9 +219,12 @@ namespace Nautilus.Common
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public void OnPositionReport(string account)
         {
-            Validate.NotNull(account, nameof(account));
+            this.Execute(() =>
+            {
+                Validate.NotNull(account, nameof(account));
 
-            this.Log.Debug($"PositionReport: ({account})");
+                this.Log.Debug($"PositionReport: ({account})");
+            });
         }
 
         /// <summary>
@@ -232,10 +235,15 @@ namespace Nautilus.Common
         /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
         public void OnCollateralInquiryAck(string inquiryId, string accountNumber)
         {
-            Validate.NotNull(inquiryId, nameof(inquiryId));
-            Validate.NotNull(accountNumber, nameof(accountNumber));
+            this.Execute(() =>
+            {
+                Validate.NotNull(inquiryId, nameof(inquiryId));
+                Validate.NotNull(accountNumber, nameof(accountNumber));
 
-            this.Log.Debug($"CollateralInquiryAck: ({this.Broker}-{accountNumber}, InquiryId={inquiryId})");
+                this.Log.Debug(
+                    $"CollateralInquiryAck: ({this.Broker}-{accountNumber}, " +
+                    $"InquiryId={inquiryId})");
+            });
         }
 
         /// <summary>
@@ -269,7 +277,9 @@ namespace Nautilus.Common
                 Validate.NotNull(responseId, nameof(responseId));
                 Validate.NotNull(result, nameof(result));
 
-                this.Log.Debug($"SecurityListReceived: (SecurityResponseId={responseId}) result={result}");
+                this.Log.Debug(
+                    $"SecurityListReceived: " +
+                    $"(SecurityResponseId={responseId}) result={result}");
 
                 var commandResult = this.instrumentRepository.Add(instruments, this.TimeNow());
 
@@ -284,10 +294,14 @@ namespace Nautilus.Common
         /// <param name="positionRequestId">The position request identifier.</param>
         public void OnRequestForPositionsAck(string accountNumber, string positionRequestId)
         {
-            Validate.NotNull(accountNumber, nameof(accountNumber));
-            Validate.NotNull(positionRequestId, nameof(positionRequestId));
+            this.Execute(() =>
+            {
+                Validate.NotNull(accountNumber, nameof(accountNumber));
+                Validate.NotNull(positionRequestId, nameof(positionRequestId));
 
-            this.Log.Debug($"RequestForPositionsAck Received ({accountNumber}-{positionRequestId})");
+                this.Log.Debug(
+                    $"RequestForPositionsAck: ({accountNumber}-{positionRequestId})");
+            });
         }
 
         /// <summary>
@@ -349,7 +363,10 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Debug($"AccountReport: ({Broker.FXCM}-{account}, InquiryId={inquiryId})");
+                this.Log.Debug(
+                    $"AccountReport: " +
+                    $"({this.fixClient.Broker}-{account}, " +
+                    $"InquiryId={inquiryId})");
             });
         }
 
@@ -391,7 +408,10 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Warning($"OrderRejected: (OrderId={orderId}, RejectReason={rejectReason}");
+                this.Log.Warning(
+                    $"OrderRejected: " +
+                    $"(OrderId={orderId}, " +
+                    $"RejectReason={rejectReason}");
             });
         }
 
@@ -416,31 +436,35 @@ namespace Nautilus.Common
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
-                {
-                    Validate.NotNull(symbol, nameof(symbol));
-                    Validate.NotNull(orderId, nameof(orderId));
-                    Validate.NotNull(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
-                    Validate.NotNull(cancelRejectReason, nameof(cancelRejectReason));
-                    Validate.NotDefault(timestamp, nameof(timestamp));
+            {
+                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(orderId, nameof(orderId));
+                Validate.NotNull(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
+                Validate.NotNull(cancelRejectReason, nameof(cancelRejectReason));
+                Validate.NotDefault(timestamp, nameof(timestamp));
 
-                    var orderEvent = new OrderCancelReject(
-                        ConvertStringToSymbol(symbol, exchange),
-                        new EntityId(OrderIdPostfixRemover.Remove(orderId)),
-                        timestamp,
-                        cancelRejectResponseTo,
-                        cancelRejectReason,
-                        this.NewGuid(),
-                        this.TimeNow());
+                var orderEvent = new OrderCancelReject(
+                    new Symbol(symbol, exchange),
+                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
+                    timestamp,
+                    cancelRejectResponseTo,
+                    cancelRejectReason,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                    var eventMessage = new EventMessage(
-                        orderEvent,
-                        this.NewGuid(),
-                        this.TimeNow());
+                var eventMessage = new EventMessage(
+                    orderEvent,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                    this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, eventMessage);
 
-                    this.Log.Warning($"OrderCancelReject: (OrderId={orderId}, CxlRejResponseTo={cancelRejectResponseTo}, Reason={cancelRejectReason}");
-                });
+                this.Log.Warning(
+                    $"OrderCancelReject: " +
+                    $"(OrderId={orderId}, " +
+                    $"CxlRejResponseTo={cancelRejectResponseTo}, " +
+                    $"Reason={cancelRejectReason}");
+            });
         }
 
         /// <summary>
@@ -470,7 +494,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderCancelled(
-                    ConvertStringToSymbol(symbol, exchange),
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -483,7 +507,10 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Information($"OrderCancelled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
+                this.Log.Information(
+                    $"OrderCancelled: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId})");
             });
         }
 
@@ -518,10 +545,8 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(price, nameof(price), decimal.Zero, decimal.MaxValue);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var symbolType = ConvertStringToSymbol(symbol, exchange);
-
                 var orderEvent = new OrderModified(
-                    symbolType,
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
                     Price.Create(price, decimals),
@@ -536,7 +561,11 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Information($"OrderModified: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price})");
+                this.Log.Information(
+                    $"OrderModified: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"Price={price})");
             });
         }
 
@@ -582,10 +611,8 @@ namespace Nautilus.Common
                 Validate.NotNull(expireTime, nameof(expireTime));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var symbolType = ConvertStringToSymbol(symbol, exchange);
-
                 var orderEvent = new OrderWorking(
-                    symbolType,
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
                     new Label(orderLabel),
@@ -613,7 +640,12 @@ namespace Nautilus.Common
                     expireTimeString = expireTime.Value.ToIsoString();
                 }
 
-                this.Log.Information($"OrderWorking: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, Price={price}, ExpireTime={expireTimeString})");
+                this.Log.Information(
+                    $"OrderWorking: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"Price={price}, " +
+                    $"ExpireTime={expireTimeString})");
             });
         }
 
@@ -644,7 +676,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderExpired(
-                    ConvertStringToSymbol(symbol, exchange),
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -657,7 +689,10 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Information($"OrderExpired: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId})");
+                this.Log.Information(
+                    $"OrderExpired: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId})");
             });
         }
 
@@ -703,10 +738,8 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var symbolType = ConvertStringToSymbol(symbol, exchange);
-
                 var orderEvent = new OrderFilled(
-                    symbolType,
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
                     new EntityId(executionTicket),
@@ -724,7 +757,13 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Information($"OrderFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice})");
+                this.Log.Information(
+                    $"OrderFilled: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"ExecutionId={executionId}, " +
+                    $"ExecutionTicket={executionTicket}, " +
+                    $"FilledQty={filledQuantity} at {averagePrice})");
             });
         }
 
@@ -773,10 +812,8 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var symbolType = ConvertStringToSymbol(symbol, exchange);
-
                 var orderEvent = new OrderPartiallyFilled(
-                    symbolType,
+                    new Symbol(symbol, exchange),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
                     new EntityId(executionTicket),
@@ -795,17 +832,15 @@ namespace Nautilus.Common
 
                 this.Send(this.portfolioService, eventMessage);
 
-                this.Log.Information($"OrderPartiallyFilled: {orderLabel} (OrderId={orderId}, BrokerOrderId={brokerOrderId}, ExecutionId={executionId}, ExecutionTicket={executionTicket}, FilledQty={filledQuantity} at {averagePrice}, LeavesQty={leavesQuantity})");
+                this.Log.Information(
+                    $"OrderPartiallyFilled: {orderLabel} " +
+                    $"(OrderId={orderId}, " +
+                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"ExecutionId={executionId}, " +
+                    $"ExecutionTicket={executionTicket}, " +
+                    $"FilledQty={filledQuantity} at {averagePrice}, " +
+                    $"LeavesQty={leavesQuantity})");
             });
-        }
-
-        private static Symbol ConvertStringToSymbol(string symbolString, Exchange exchange)
-        {
-            Debug.NotNull(symbolString, nameof(symbolString));
-
-            return symbolString != "NONE"
-                       ? new Symbol(symbolString, exchange)
-                       : new Symbol("AUDUSD", Exchange.FXCM);
         }
 
         private Money GetMoneyType(decimal amount)

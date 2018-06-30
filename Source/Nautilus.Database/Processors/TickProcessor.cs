@@ -58,7 +58,7 @@ namespace Nautilus.Database.Processors
         /// <param name="exchange">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
-        /// <param name="decimals">The number of decimal places in the ticks price.</param>
+        /// <param name="decimals">The expected decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         public void OnTick(
             string symbol,
@@ -73,6 +73,7 @@ namespace Nautilus.Database.Processors
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.DecimalNotOutOfRange(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+                Debug.Int32NotOutOfRange(decimals, nameof(decimals), 0, int.MaxValue);
 
                 var tick = new Tick(
                     new Symbol(symbol, exchange),
