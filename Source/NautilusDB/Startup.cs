@@ -99,6 +99,7 @@ namespace NautilusDB
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var compressor = CompressorFactory.Create(isCompression, compressionCodec);
+            var rollingWindow = (int) config[ConfigSection.Database]["rollingWindow"];
 
             var username = (string)config[ConfigSection.Fix]["username"];;
             var password = (string)config[ConfigSection.Fix]["password"];;
@@ -152,7 +153,8 @@ namespace NautilusDB
                 barRepository,
                 instrumentRepository,
                 symbols,
-                barSpecs);
+                barSpecs,
+                rollingWindow);
 
             Task.Run(() => this.nautilusDB.Start());
         }

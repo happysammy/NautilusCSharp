@@ -44,6 +44,7 @@ namespace Nautilus.Database.Build
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
         /// <param name="barSpecs">The bar specifications to initially create.</param>
+        /// <param name="rollingWindow">The rolling window size of data to be maintained.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
@@ -53,7 +54,8 @@ namespace Nautilus.Database.Build
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
-            IReadOnlyList<string> barSpecs)
+            IReadOnlyList<string> barSpecs,
+            int rollingWindow)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
@@ -143,7 +145,8 @@ namespace Nautilus.Database.Build
                 actorSystem,
                 messagingAdapter,
                 addresses,
-                fixClient);
+                fixClient,
+                rollingWindow);
         }
     }
 }

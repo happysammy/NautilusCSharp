@@ -34,6 +34,7 @@ namespace Nautilus.Database
         private readonly ActorSystem actorSystem;
         private readonly Dictionary<Enum, IActorRef> addresses;
         private readonly IFixClient fixClient;
+        private readonly int rollingWindow;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Database"/> class.
@@ -43,13 +44,15 @@ namespace Nautilus.Database
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="fixClient">The data client.</param>
+        /// <param name="rollingWindow">The rolling window size of data to be maintained.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Database(
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             Dictionary<Enum, IActorRef> addresses,
-            IFixClient fixClient)
+            IFixClient fixClient,
+            int rollingWindow)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(Database)),
@@ -60,10 +63,12 @@ namespace Nautilus.Database
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(addresses, nameof(addresses));
+            Validate.Int32NotOutOfRange(rollingWindow, nameof(rollingWindow), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
             this.actorSystem = actorSystem;
             this.addresses = addresses;
             this.fixClient = fixClient;
+            this.rollingWindow = rollingWindow;
 
             messagingAdapter.Send(new InitializeMessageSwitchboard(
                 new Switchboard(addresses),

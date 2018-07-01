@@ -23,8 +23,7 @@ namespace Nautilus.Database
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The manager class which contains the separate data collector types and orchestrates their
-    /// operations.
+    /// The manager class which orchestrates data collection operations.
     /// </summary>
     public class DataCollectionManager : ActorComponentBusConnectedBase
     {

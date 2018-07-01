@@ -2,7 +2,8 @@
   "database": {
     "logLevel": "Information",
     "compression":  false,
-    "compressionCodec": "lz4"
+    "compressionCodec": "lz4",
+    "rollingWindow": 5
   },
 
   "serviceStack": {
