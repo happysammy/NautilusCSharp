@@ -20,6 +20,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using Nautilus.Scheduler.Exceptions;
+    using Quartz.Impl.Calendar;
     using IScheduler = Quartz.IScheduler;
 
     /// <summary>

@@ -17,10 +17,10 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Enums;
+    using Nautilus.Database.Jobs;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
@@ -53,6 +53,8 @@ namespace Nautilus.Database.Aggregators
         private readonly Dictionary<Duration, ITrigger> triggers;
         private readonly Dictionary<Duration, int> triggerCounts;
 
+        private bool isMarketOpen;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
         /// </summary>
@@ -78,28 +80,19 @@ namespace Nautilus.Database.Aggregators
             this.triggers = new Dictionary<Duration, ITrigger>();
             this.triggerCounts = new Dictionary<Duration, int>();
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
+            this.isMarketOpen = this.IsFxMarketOpen();
+            this.CreateHourlyMarketStatusJob();
 
-        /// <summary>
-        /// Sets up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
+            // Command messages
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
             this.Receive<JobRemoved>(msg => this.OnMessage(msg));
             this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
             this.Receive<BarJob>(msg => this.OnMessage(msg));
-        }
+            this.Receive<MarketStatusJob>(msg => this.OnMessage(msg));
 
-        /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
+            // Event messages
             this.Receive<Tick>(msg => this.OnMessage(msg));
             this.Receive<BarClosed>(msg => this.OnMessage(msg));
         }
@@ -283,6 +276,7 @@ namespace Nautilus.Database.Aggregators
             var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
             foreach (var aggregator in this.barAggregators)
             {
+                // TODO: Change this logic.
                 var closeBar1 = new CloseBar(
                     new BarSpecification(QuoteType.Bid, job.BarSpec.Resolution, 1),
                     closeTime,
@@ -313,6 +307,42 @@ namespace Nautilus.Database.Aggregators
         }
 
         /// <summary>
+        /// Handles the message by creating a <see cref="CloseBar"/> command message which is then
+        /// forwarded to the relevant <see cref="BarAggregator"/>.
+        /// </summary>
+        /// <param name="job">The received job.</param>
+        private void OnMessage(MarketStatusJob job)
+        {
+            Debug.NotNull(job, nameof(job));
+
+            var isFxMarketOpen = this.IsFxMarketOpen();
+
+            // The market is now open.
+            if (isFxMarketOpen && this.isMarketOpen == false)
+            {
+                this.isMarketOpen = true;
+                var statusChangeJob = new MarketStatusJob();
+
+                foreach (var aggregator in this.barAggregators.Values)
+                {
+                    aggregator.Tell(statusChangeJob);
+                }
+            }
+
+            // The market is now closed.
+            if (!isFxMarketOpen && this.isMarketOpen)
+            {
+                this.isMarketOpen = false;
+                var statusChangeJob = new MarketStatusJob(false);
+
+                foreach (var aggregator in this.barAggregators.Values)
+                {
+                    aggregator.Tell(statusChangeJob);
+                }
+            }
+        }
+
+        /// <summary>
         /// Handles the message by creating a new event message which is then forwarded to the
         /// list of held bar data event receivers.
         /// </summary>
@@ -337,7 +367,7 @@ namespace Nautilus.Database.Aggregators
             return TriggerBuilder
                 .Create()
                 .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
-                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution}")
+                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution}", "barAggregation")
                 .WithSchedule(this.CreateScheduleBuilder(barSpec))
                 .Build();
         }
@@ -346,7 +376,8 @@ namespace Nautilus.Database.Aggregators
         {
             var scheduleBuilder = SimpleScheduleBuilder
                 .Create()
-                .RepeatForever();
+                .RepeatForever()
+                .WithMisfireHandlingInstructionFireNow();
 
             switch (barSpec.Resolution)
             {
@@ -372,6 +403,42 @@ namespace Nautilus.Database.Aggregators
             }
 
             return scheduleBuilder;
+        }
+
+        private void CreateHourlyMarketStatusJob()
+        {
+            var scheduleBuilder = SimpleScheduleBuilder
+                .Create()
+                .RepeatForever()
+                .WithIntervalInHours(1)
+                .WithMisfireHandlingInstructionFireNow();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .StartAt(this.TimeNow().Ceiling(Duration.FromHours(1)).ToDateTimeUtc())
+                .WithIdentity($"checkMarketStatus", "barAggregation")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Self,
+                new MarketStatusJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.Scheduler, createJob);
+        }
+
+        private bool IsFxMarketOpen()
+        {
+            // Market open Sun 21:00 UTC (Start of Sydney session)
+            // Market close Sat 20:00 UTC (End of New York session)
+
+            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                this.TimeNow(),
+                (IsoDayOfWeek.Saturday, 20, 00),
+                (IsoDayOfWeek.Sunday, 21, 00));
         }
     }
 }

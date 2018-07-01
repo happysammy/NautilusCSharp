@@ -268,5 +268,59 @@ namespace Nautilus.Core.Extensions
 
             return (int)(ceilingedMilliseconds - unixMilliseconds);
         }
+
+        /// <summary>
+        /// Returns a value indicating whether the FX market is open based on the given UTC time now.
+        /// </summary>
+        /// <param name="timeNowUtc">The time now (UTC).</param>
+        /// <param name="start">The start of the interval for the week.</param>
+        /// <param name="end">The end of the interval for the week.</param>
+        /// <returns>True is the market is open, otherwise false.</returns>
+        public static bool IsOutsideWeeklyInterval(
+            ZonedDateTime timeNowUtc,
+            (IsoDayOfWeek DayOfWeek, int Hour, int Minute) start,
+            (IsoDayOfWeek DayOfWeek, int Hour, int Minute) end)
+        {
+            Debug.NotDefault(timeNowUtc, nameof(timeNowUtc));
+            Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
+            Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
+            Debug.Int32NotOutOfRange(start.Hour, nameof(start.Hour), 0, 23);
+            Debug.Int32NotOutOfRange(end.Hour, nameof(end.Hour), 0, 23);
+            Debug.Int32NotOutOfRange(start.Minute, nameof(start.Minute), 0, 59);
+            Debug.Int32NotOutOfRange(end.Minute, nameof(end.Minute), 0, 59);
+            Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
+
+            var localUtcNow = new LocalDateTime(
+                timeNowUtc.Year,
+                timeNowUtc.Month,
+                timeNowUtc.Day,
+                timeNowUtc.Hour,
+                timeNowUtc.Minute);
+
+            var startDiff = (int)(6 - timeNowUtc.DayOfWeek);
+            var endDiff = (int)(7 - timeNowUtc.DayOfWeek);
+
+            var localStartDay = startDiff >= 0
+                ? localUtcNow + Period.FromDays(startDiff)
+                : localUtcNow - Period.FromDays(Math.Abs(startDiff));
+
+            var localEndDay = localUtcNow + Period.FromDays(endDiff);
+
+            var localStart = new LocalDateTime(
+                localStartDay.Year,
+                localStartDay.Month,
+                localStartDay.Day,
+                start.Hour,
+                start.Minute);
+
+            var localEnd = new LocalDateTime(
+                localEndDay.Year,
+                localEndDay.Month,
+                localEndDay.Day,
+                end.Hour,
+                end.Minute);
+
+            return localUtcNow < localStart || localUtcNow >= localEnd;
+        }
     }
 }

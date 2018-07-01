@@ -18,6 +18,8 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Database.Jobs;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
     using Nautilus.DomainModel.Factories;
@@ -45,6 +47,7 @@ namespace Nautilus.Database.Aggregators
         private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
 
         private Tick lastTick;
+        private bool isMarketOpen;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
@@ -69,25 +72,15 @@ namespace Nautilus.Database.Aggregators
             this.spreadAnalyzer = new SpreadAnalyzer();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
+            this.isMarketOpen = this.IsFxMarketOpen();
 
-        /// <summary>
-        /// Sets up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
+            // Command messages
             this.Receive<CloseBar>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
-        }
+            this.Receive<MarketStatusJob>(msg => this.OnMessage(msg));
 
-        /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
+            // Event messages
             this.Receive<Tick>(msg => this.OnMessage(msg));
         }
 
@@ -138,6 +131,12 @@ namespace Nautilus.Database.Aggregators
             Debug.NotNull(message, nameof(message));
 
             var barSpec = message.BarSpecification;
+
+            if (!this.isMarketOpen)
+            {
+                // Won't close a bar outside market hours.
+                return;
+            }
 
             if (barSpec.Duration == OneMinuteDuration)
             {
@@ -216,6 +215,22 @@ namespace Nautilus.Database.Aggregators
 
                 Log.Debug($"Removed {barType} bars.");
             }
+        }
+
+        private void OnMessage(MarketStatusJob message)
+        {
+            this.isMarketOpen = message.IsMarketOpen;
+        }
+
+        private bool IsFxMarketOpen()
+        {
+            // Market open Sun 21:00 UTC (Start of Sydney session)
+            // Market close Sat 20:00 UTC (End of New York session)
+
+            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                this.TimeNow(),
+                (IsoDayOfWeek.Saturday, 20, 00),
+                (IsoDayOfWeek.Sunday, 21, 00));
         }
     }
 }

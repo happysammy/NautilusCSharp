@@ -10,6 +10,7 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Text;
+    using Akka.Util;
     using Nautilus.Core.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -298,6 +299,48 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 
             // Assert
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(expectedCeiling), result);
+        }
+
+        [Theory]
+        [InlineData(2018, 6, 30, 19, 59, true)]
+        [InlineData(2018, 7, 1, 20, 00, false)]
+        [InlineData(2018, 7, 1, 20, 59, false)]
+        [InlineData(2018, 7, 1, 21, 0, true)]
+        [InlineData(2018, 7, 2, 12, 0, true)]
+        [InlineData(2018, 7, 3, 21, 0, true)]
+        [InlineData(2018, 7, 4, 00, 0, true)]
+        [InlineData(2018, 7, 7, 19, 59, true)]
+        [InlineData(2018, 7, 7, 20, 00, false)]
+        [InlineData(2018, 7, 7, 20, 01, false)]
+        [InlineData(2008, 1, 26, 19, 59, true)]
+        [InlineData(2008, 1, 26, 20, 00, false)]
+        [InlineData(2008, 1, 26, 20, 59, false)]
+        [InlineData(2008, 1, 27, 21, 0, true)]
+        [InlineData(2008, 1, 27, 21, 0, true)]
+        [InlineData(2008, 1, 28, 00, 0, true)]
+        [InlineData(2008, 1, 29, 00, 0, true)]
+        [InlineData(2008, 2, 2, 19, 59, true)]
+        [InlineData(2008, 2, 2, 20, 00, false)]
+        [InlineData(2008, 2, 2, 20, 01, false)]
+        internal void IsOutSideInterval_WithVariousDateTimes_ReturnsExpectedResult(
+            int year,
+            int month,
+            int day,
+            int hour,
+            int minute,
+            bool expected)
+        {
+            // Arrange
+            var localUtc = new LocalDateTime(year, month, day, hour, minute);
+            var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
+
+            // Act
+            var intervalStart = (IsoDayOfWeek.Saturday, 20, 00);
+            var intervalEnd = (IsoDayOfWeek.Sunday, 21, 00);
+            var result = ZonedDateTimeExtensions.IsOutsideWeeklyInterval(utcNow, intervalStart, intervalEnd);
+
+            // Assert
+            Assert.Equal(expected, result);
         }
     }
 }

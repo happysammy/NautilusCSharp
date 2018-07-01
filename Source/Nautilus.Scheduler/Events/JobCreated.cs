@@ -12,7 +12,7 @@ namespace Nautilus.Scheduler.Events
     using Nautilus.Core.Validation;
 
     /// <summary>
-    ///     Job created event
+    /// Job created event
     /// </summary>
     public class JobCreated : JobEvent
     {

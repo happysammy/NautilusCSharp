@@ -12,7 +12,7 @@ namespace Nautilus.Scheduler.Events
     using Quartz;
 
     /// <summary>
-    ///     Remove job fail
+    /// Remove job fail
     /// </summary>
     public class RemoveJobFail : JobEvent
     {
