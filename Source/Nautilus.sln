@@ -79,6 +79,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickFix.FIX44", "QuickFix.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickFix.UnitTests", "QuickFix.UnitTests\QuickFix.UnitTests.csproj", "{D00E34D2-128C-4437-A81A-ED658947BE99}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StyleCop", "StyleCop", "{74DBD7FD-256B-4D38-B49D-BF981258D8D4}"
+ProjectSection(SolutionItems) = preProject
+	StyleCop\StyleCop.Analyzers.CodeFixes.dll = StyleCop\StyleCop.Analyzers.CodeFixes.dll
+	StyleCop\StyleCop.Analyzers.dll = StyleCop\StyleCop.Analyzers.dll
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
