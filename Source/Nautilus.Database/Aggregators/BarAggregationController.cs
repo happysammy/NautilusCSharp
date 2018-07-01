@@ -81,7 +81,8 @@ namespace Nautilus.Database.Aggregators
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
-            this.CreateHourlyMarketStatusJob();
+            this.CreateMarketOpenedCronJob();
+            this.CreateMarketClosedCronJob();
 
             // Command messages
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
@@ -315,13 +316,11 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(job, nameof(job));
 
-            var isFxMarketOpen = this.IsFxMarketOpen();
-
-            // The market is now open.
-            if (isFxMarketOpen && this.isMarketOpen == false)
+            if (job.IsMarketOpen)
             {
+                // The market is now open.
                 this.isMarketOpen = true;
-                var statusChangeJob = new MarketStatusJob();
+                var statusChangeJob = new MarketStatusJob(true);
 
                 foreach (var aggregator in this.barAggregators.Values)
                 {
@@ -329,9 +328,9 @@ namespace Nautilus.Database.Aggregators
                 }
             }
 
-            // The market is now closed.
-            if (!isFxMarketOpen && this.isMarketOpen)
+            if (!job.IsMarketOpen)
             {
+                // The market is now closed.
                 this.isMarketOpen = false;
                 var statusChangeJob = new MarketStatusJob(false);
 
@@ -367,7 +366,7 @@ namespace Nautilus.Database.Aggregators
             return TriggerBuilder
                 .Create()
                 .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
-                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution}", "barAggregation")
+                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
                 .WithSchedule(this.CreateScheduleBuilder(barSpec))
                 .Build();
         }
@@ -405,24 +404,70 @@ namespace Nautilus.Database.Aggregators
             return scheduleBuilder;
         }
 
-        private void CreateHourlyMarketStatusJob()
+//        private void CreateHourlyMarketStatusJob()
+//        {
+//            var scheduleBuilder = SimpleScheduleBuilder
+//                .Create()
+//                .RepeatForever()
+//                .WithIntervalInHours(1)
+//                .WithMisfireHandlingInstructionFireNow();
+//
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .StartAt(this.TimeNow().Ceiling(Duration.FromHours(1)).ToDateTimeUtc())
+//                .WithIdentity($"check_market_status", "bar_aggregation")
+//                .WithSchedule(scheduleBuilder)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.Self,
+//                new MarketStatusJob(true),
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(DatabaseService.Scheduler, createJob);
+//        }
+
+        private void CreateMarketOpenedCronJob()
         {
-            var scheduleBuilder = SimpleScheduleBuilder
-                .Create()
-                .RepeatForever()
-                .WithIntervalInHours(1)
-                .WithMisfireHandlingInstructionFireNow();
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
             var trigger = TriggerBuilder
                 .Create()
-                .StartAt(this.TimeNow().Ceiling(Duration.FromHours(1)).ToDateTimeUtc())
-                .WithIdentity($"checkMarketStatus", "barAggregation")
+                .WithIdentity($"market_opened", "bar_aggregation")
                 .WithSchedule(scheduleBuilder)
                 .Build();
 
             var createJob = new CreateJob(
                 this.Self,
-                new MarketStatusJob(),
+                new MarketStatusJob(true),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.Scheduler, createJob);
+        }
+
+        private void CreateMarketClosedCronJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"market_closed", "bar_aggregation")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Self,
+                new MarketStatusJob(false),
                 trigger,
                 this.NewGuid(),
                 this.TimeNow());

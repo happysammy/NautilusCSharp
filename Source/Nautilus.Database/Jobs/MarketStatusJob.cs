@@ -20,7 +20,7 @@ namespace Nautilus.Database.Jobs
         /// Initializes a new instance of the <see cref="MarketStatusJob"/> class.
         /// </summary>
         /// <param name="isMarketOpen">The is market open flag.</param>
-        public MarketStatusJob(bool isMarketOpen=true)
+        public MarketStatusJob(bool isMarketOpen)
         {
             this.IsMarketOpen = isMarketOpen;
         }
