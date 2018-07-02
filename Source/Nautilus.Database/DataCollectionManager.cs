@@ -225,7 +225,7 @@ namespace Nautilus.Database
                 this.TimeNow());
 
             this.Send(DatabaseService.Scheduler, createJob);
-            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 UTC");
+            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
 
         private void InitializeMarketDataCollectors()
