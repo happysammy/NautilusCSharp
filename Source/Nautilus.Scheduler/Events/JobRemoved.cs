@@ -1,5 +1,5 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="JobCreated.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="JobRemoved.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,26 +9,25 @@
 namespace Nautilus.Scheduler.Events
 {
     using Nautilus.Core.Annotations;
-    using Quartz;
     using Nautilus.Core.Validation;
+    using Quartz;
 
     /// <summary>
-    /// Represents an event where a job has been created.
+    /// Represents an event where a job has been removed.
     /// </summary>
     [Immutable]
-    public sealed class JobCreated : JobEvent
+    public sealed class JobRemoved : JobEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="JobCreated"/> class.
+        /// Initializes a new instance of the <see cref="JobRemoved"/> class.
         /// </summary>
-        /// <param name="jobKey">The created job key.</param>
-        /// <param name="triggerKey">The created job trigger.</param>
-        /// <param name="job">The created job.</param>
-        public JobCreated(
+        /// <param name="jobKey">The removed job key.</param>
+        /// <param name="triggerKey">The removed trigger key.</param>
+        /// <param name="job">The removed job.</param>
+        public JobRemoved(
             JobKey jobKey,
             TriggerKey triggerKey,
-            object job)
-            : base(jobKey, triggerKey)
+            object job) : base(jobKey, triggerKey)
         {
             Debug.NotNull(job, nameof(job));
             Debug.NotNull(triggerKey, nameof(triggerKey));
@@ -38,17 +37,17 @@ namespace Nautilus.Scheduler.Events
         }
 
         /// <summary>
-        /// Gets the job.
+        /// Gets the removed job.
         /// </summary>
         public object Job { get; }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="JobCreated"/>.
+        /// Returns a string representation of the <see cref="JobRemoved"/>.
         /// </summary>
-        /// <returns>The string.</returns>
+        /// <returns></returns>
         public override string ToString()
         {
-            return $"{this.JobKey} with trigger {this.TriggerKey} has been created.";
+            return $"{this.JobKey} with trigger {this.TriggerKey} has been removed.";
         }
     }
 }

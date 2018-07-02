@@ -12,7 +12,7 @@ namespace Nautilus.Scheduler.Exceptions
 
     public class JobNotFoundException: Exception
     {
-        public JobNotFoundException() : base("job not found")
+        public JobNotFoundException() : base("Job not found.")
         {
         }
     }

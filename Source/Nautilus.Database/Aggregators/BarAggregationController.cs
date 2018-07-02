@@ -411,31 +411,6 @@ namespace Nautilus.Database.Aggregators
             return scheduleBuilder;
         }
 
-//        private void CreateHourlyMarketStatusJob()
-//        {
-//            var scheduleBuilder = SimpleScheduleBuilder
-//                .Create()
-//                .RepeatForever()
-//                .WithIntervalInHours(1)
-//                .WithMisfireHandlingInstructionFireNow();
-//
-//            var trigger = TriggerBuilder
-//                .Create()
-//                .StartAt(this.TimeNow().Ceiling(Duration.FromHours(1)).ToDateTimeUtc())
-//                .WithIdentity($"check_market_status", "bar_aggregation")
-//                .WithSchedule(scheduleBuilder)
-//                .Build();
-//
-//            var createJob = new CreateJob(
-//                this.Self,
-//                new MarketStatusJob(true),
-//                trigger,
-//                this.NewGuid(),
-//                this.TimeNow());
-//
-//            this.Send(DatabaseService.Scheduler, createJob);
-//        }
-
         private void CreateMarketOpenedJob()
         {
             var scheduleBuilder = CronScheduleBuilder

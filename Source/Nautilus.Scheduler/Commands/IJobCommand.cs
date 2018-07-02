@@ -9,7 +9,7 @@
 namespace Nautilus.Scheduler.Commands
 {
     /// <summary>
-    /// The base interface for job commands.
+    /// The base interface for all job commands.
     /// </summary>
     internal interface IJobCommand
     {

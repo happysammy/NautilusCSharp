@@ -17,7 +17,7 @@ namespace Nautilus.Scheduler.Commands
     using Quartz;
 
     /// <summary>
-    /// The job command message to remove a cron scheduler.
+    /// Represents a job command message to remove a job.
     /// </summary>
     [Immutable]
     public sealed class RemoveJob : CommandMessage, IJobCommand
@@ -61,12 +61,12 @@ namespace Nautilus.Scheduler.Commands
         public TriggerKey TriggerKey { get; }
 
         /// <summary>
-        /// Gets the job message object.
+        /// Gets the jobs message object.
         /// </summary>
         public object Job { get; }
 
         /// <summary>
-        /// Gets the job message sender.
+        /// Gets the jobs message sender.
         /// </summary>
         public IActorRef Sender { get; }
     }

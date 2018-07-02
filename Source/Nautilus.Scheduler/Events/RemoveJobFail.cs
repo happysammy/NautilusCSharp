@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="CreateJobFail.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="RemoveJobFail.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,23 +9,48 @@
 namespace Nautilus.Scheduler.Events
 {
     using System;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Quartz;
 
     /// <summary>
-    /// Remove job fail
+    /// Represents a job event where removing a job failed.
     /// </summary>
-    public class RemoveJobFail : JobEvent
+    [Immutable]
+    public sealed class RemoveJobFail : JobEvent
     {
-        public RemoveJobFail(JobKey jobKey, TriggerKey triggerKey, Exception reason) : base(jobKey, triggerKey)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveJobFail"/> class.
+        /// </summary>
+        /// <param name="jobKey">The job key.</param>
+        /// <param name="triggerKey">The job trigger key.</param>
+        /// <param name="reason">The job removal failure reason.</param>
+        public RemoveJobFail(
+            JobKey jobKey,
+            TriggerKey triggerKey,
+            Exception reason)
+            : base(jobKey, triggerKey)
         {
-            Reason = reason;
+            Debug.NotNull(jobKey, nameof(jobKey));
+            Debug.NotNull(triggerKey, nameof(triggerKey));
+            Debug.NotNull(reason, nameof(reason));
+
+            this.Reason = reason;
         }
 
-        public Exception Reason { get; private set; }
+        /// <summary>
+        /// Gets the exception reason why the job removal failed.
+        /// </summary>
+        public Exception Reason { get; }
 
+        /// <summary>
+        /// Returns a string representation of the <see cref="RemoveJobFail"/>.
+        /// </summary>
+        /// <returns>The string.</returns>
         public override string ToString()
         {
-            return string.Format("Remove job {0} with trigger {1} fail. With reason {2}", JobKey, TriggerKey, Reason);
+            return $"Remove job {this.JobKey} with trigger {this.TriggerKey} failed. " +
+                   $"With reason {this.Reason}";
         }
     }
 }

@@ -11,12 +11,14 @@ namespace Nautilus.Scheduler
     using System.Threading.Tasks;
     using Akka.Actor;
     using Akka.Util.Internal;
+    using Nautilus.Core.Annotations;
     using Quartz;
 
     /// <summary>
     /// Represents a job.
     /// </summary>
-    public class Job : IJob
+    [Immutable]
+    public sealed class Job : IJob
     {
         private const string MessageKey = "message";
         private const string ActorKey = "actor";
@@ -45,7 +47,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="actorRef">The actor address.</param>
         /// <param name="message">The message.</param>
-        /// <returns></returns>
+        /// <returns>The job builder.</returns>
         public static JobBuilder CreateBuilderWithData(IActorRef actorRef, object message)
         {
             var jdm = new JobDataMap();

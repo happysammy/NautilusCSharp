@@ -9,36 +9,48 @@
 namespace Nautilus.Scheduler.Events
 {
     using System;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Quartz;
 
     /// <summary>
-    /// The create job fail job event message.
+    /// Represents an event where the creation of a job failed.
     /// </summary>
-    public class CreateJobFail : JobEvent
+    [Immutable]
+    public sealed class CreateJobFail : JobEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateJobFail"/> class.
         /// </summary>
-        /// <param name="jobKey"></param>
-        /// <param name="triggerKey"></param>
-        /// <param name="reason"></param>
+        /// <param name="jobKey">The job key.</param>
+        /// <param name="triggerKey">The job trigger key.</param>
+        /// <param name="reason">The creation failure reason.</param>
         public CreateJobFail(
             JobKey jobKey,
             TriggerKey triggerKey,
             Exception reason)
             : base(jobKey, triggerKey)
         {
-            Reason = reason;
+            Debug.NotNull(jobKey, nameof(jobKey));
+            Debug.NotNull(triggerKey, nameof(triggerKey));
+            Debug.NotNull(reason, nameof(reason));
+
+            this.Reason = reason;
         }
 
         /// <summary>
-        ///     Fail reason
+        /// Gets the job creation failure reason.
         /// </summary>
-        public Exception Reason { get; private set; }
+        public Exception Reason { get; }
 
+        /// <summary>
+        /// Gets a string representation of the <see cref="CreateJobFail"/>.
+        /// </summary>
+        /// <returns>The string.</returns>
         public override string ToString()
         {
-            return string.Format("Create job {0} with trigger {1} fail. With reason {2}", JobKey, TriggerKey, Reason);
+            return $"Creation  of job {this.JobKey} with trigger {this.TriggerKey} failed. " +
+                   $"With reason {this.Reason}";
         }
     }
 }

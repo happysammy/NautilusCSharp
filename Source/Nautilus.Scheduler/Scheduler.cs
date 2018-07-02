@@ -20,14 +20,14 @@ namespace Nautilus.Scheduler
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using Nautilus.Scheduler.Exceptions;
-    using Quartz.Impl.Calendar;
+
     using IScheduler = Quartz.IScheduler;
 
     /// <summary>
     /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
     /// and Remove messages.
     /// </summary>
-    public class Scheduler : ActorComponentBase
+    public sealed class Scheduler : ActorComponentBase
     {
         private readonly IScheduler quartzScheduler;
 
