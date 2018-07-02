@@ -27,6 +27,7 @@ namespace Nautilus.Database
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler.Commands;
+    using Nautilus.Scheduler.Events;
     using Quartz;
 
     /// <summary>
@@ -77,6 +78,9 @@ namespace Nautilus.Database
             this.Receive<TrimBarDataJob>(msg => this.OnMessage(msg));
 
             // Document messages
+            this.Receive<JobCreated>(msg => this.OnMessage(msg));
+            this.Receive<JobRemoved>(msg => this.OnMessage(msg));
+            this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
@@ -90,6 +94,27 @@ namespace Nautilus.Database
             this.CreateTrimBarDataJob();
 
             this.Send(DatabaseService.BarAggregationController, message);
+        }
+
+        private void OnMessage(JobCreated message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+        }
+
+        private void OnMessage(JobRemoved message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+        }
+
+        private void OnMessage(RemoveJobFail message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -176,8 +201,7 @@ namespace Nautilus.Database
                 this.TimeNow());
 
             this.Send(DatabaseService.TaskManager, command);
-
-            this.Log.Debug($"Received {nameof(TrimBarDataJob)}.");
+            this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 
         private void CreateTrimBarDataJob()
@@ -201,8 +225,7 @@ namespace Nautilus.Database
                 this.TimeNow());
 
             this.Send(DatabaseService.Scheduler, createJob);
-
-            this.Log.Debug($"Created {nameof(TrimBarDataJob)}, sent to scheduler.");
+            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 UTC");
         }
 
         private void InitializeMarketDataCollectors()

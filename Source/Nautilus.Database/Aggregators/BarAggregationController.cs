@@ -240,14 +240,14 @@ namespace Nautilus.Database.Aggregators
                 }
             }
 
-            Log.Debug($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(JobRemoved message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Debug($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(RemoveJobFail message)
@@ -457,6 +457,7 @@ namespace Nautilus.Database.Aggregators
                 this.TimeNow());
 
             this.Send(DatabaseService.Scheduler, createJob);
+            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
         }
 
         private void CreateMarketClosedJob()
@@ -480,6 +481,7 @@ namespace Nautilus.Database.Aggregators
                 this.TimeNow());
 
             this.Send(DatabaseService.Scheduler, createJob);
+            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
         private bool IsFxMarketOpen()
