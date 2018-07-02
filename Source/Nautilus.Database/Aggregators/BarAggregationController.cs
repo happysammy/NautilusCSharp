@@ -81,8 +81,8 @@ namespace Nautilus.Database.Aggregators
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
-            this.CreateMarketOpenedCronJob();
-            this.CreateMarketClosedCronJob();
+            this.CreateMarketOpenedJob();
+            this.CreateMarketClosedJob();
 
             // Command messages
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
@@ -429,7 +429,7 @@ namespace Nautilus.Database.Aggregators
 //            this.Send(DatabaseService.Scheduler, createJob);
 //        }
 
-        private void CreateMarketOpenedCronJob()
+        private void CreateMarketOpenedJob()
         {
             var scheduleBuilder = CronScheduleBuilder
                 .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
@@ -452,7 +452,7 @@ namespace Nautilus.Database.Aggregators
             this.Send(DatabaseService.Scheduler, createJob);
         }
 
-        private void CreateMarketClosedCronJob()
+        private void CreateMarketClosedJob()
         {
             var scheduleBuilder = CronScheduleBuilder
                 .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)

@@ -8,11 +8,14 @@
 
 namespace Nautilus.Redis
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using ServiceStack.Redis;
@@ -142,6 +145,36 @@ namespace Nautilus.Redis
             return barsQuery.IsSuccess
                 ? QueryResult<ZonedDateTime>.Ok(barsQuery.Value.Last().Timestamp)
                 : QueryResult<ZonedDateTime>.Fail(barsQuery.Message);
+        }
+
+        /// <summary>
+        /// Removes the difference in date keys for each symbol from the database.
+        /// </summary>
+        /// <param name="resolution">The resolution to trim.</param>
+        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
+        /// <returns>The result of the operation.</returns>
+        public CommandResult TrimToDays(Resolution resolution, int trimToDays)
+        {
+            var results = new List<CommandResult>();
+            var keys = this.barClient.GetSortedKeysBySymbolResolution(resolution);
+
+            foreach (var symbol in keys)
+            {
+                var keyCount = symbol.Value.Count;
+                if (keyCount <= trimToDays)
+                {
+                    continue;
+                }
+
+                var difference = keyCount - trimToDays;
+                for (var i = 0; i < difference; i++)
+                {
+                    var result = this.barClient.Delete(symbol.Value[i]);
+                    results.Add(result);
+                }
+            }
+
+            return CommandResult.Combine(results.ToArray());
         }
     }
 }

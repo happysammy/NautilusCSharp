@@ -44,7 +44,8 @@ namespace Nautilus.Database.Build
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
         /// <param name="barSpecs">The bar specifications to initially create.</param>
-        /// <param name="rollingWindow">The rolling window size of data to be maintained.</param>
+        /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
+        /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Database Create(
@@ -55,7 +56,8 @@ namespace Nautilus.Database.Build
             IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
             IReadOnlyList<string> barSpecs,
-            int rollingWindow)
+            IReadOnlyList<Resolution> resolutions,
+            int barRollingWindow)
         {
             Validate.NotNull(logger, nameof(logger));
             Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
@@ -101,7 +103,9 @@ namespace Nautilus.Database.Build
                 () => new DataCollectionManager(
                     setupContainer,
                     messagingAdapter,
-                    barPublisherRef)));
+                    barPublisherRef,
+                    resolutions,
+                    barRollingWindow)));
 
             var barAggregationControllerRef = actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(
@@ -145,8 +149,7 @@ namespace Nautilus.Database.Build
                 actorSystem,
                 messagingAdapter,
                 addresses,
-                fixClient,
-                rollingWindow);
+                fixClient);
         }
     }
 }

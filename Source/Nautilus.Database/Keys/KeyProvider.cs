@@ -123,9 +123,18 @@ namespace Nautilus.Database.Keys
         /// <summary>
         /// Returns a wildcard string from the given symbol bar spec.
         /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetBarsWildcardString()
+        {
+            return $"{BarsConst}{WildcardConst}";
+        }
+
+        /// <summary>
+        /// Returns a wildcard string from the given symbol bar spec.
+        /// </summary>
         /// <param name="barType">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarsWildcardString(BarType barType)
+        public static string GetBarTypeWildcardString(BarType barType)
         {
             Debug.NotNull(barType, nameof(barType));
 

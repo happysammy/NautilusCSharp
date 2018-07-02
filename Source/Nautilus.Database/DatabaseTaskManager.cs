@@ -52,6 +52,7 @@ namespace Nautilus.Database
             // Command messages
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<TrimBarData>(msg => this.OnMessage(msg));
 
             // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
@@ -116,6 +117,17 @@ namespace Nautilus.Database
                     barDataQuery,
                     this.NewGuid(),
                     this.TimeNow()));
+        }
+
+        private void OnMessage(TrimBarData message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            foreach (var resolution in message.Resolutions)
+            {
+                var result = this.barRepository.TrimToDays(resolution, message.RollingWindowSize);
+                this.Log.Result(result);
+            }
         }
     }
 }

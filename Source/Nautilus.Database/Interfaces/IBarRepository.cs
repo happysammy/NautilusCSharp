@@ -11,6 +11,7 @@ namespace Nautilus.Database.Interfaces
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.CQS;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using NodaTime;
 
     /// <summary>
@@ -65,5 +66,13 @@ namespace Nautilus.Database.Interfaces
         /// <param name="barType">The bar specification.</param>
         /// <returns>A query result of <see cref="ZonedDateTime"/>.</returns>
         QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType);
+
+        /// <summary>
+        /// Removes the difference in date keys for each symbol from the database.
+        /// </summary>
+        /// <param name="resolution">The bar resolution to trim.</param>
+        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
+        /// <returns>The result of the operation.</returns>
+        CommandResult TrimToDays(Resolution resolution, int trimToDays);
     }
 }

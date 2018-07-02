@@ -21,7 +21,7 @@ namespace Nautilus.Core.Collections
     /// <typeparam name="T">The list value type.</typeparam>
     [Immutable]
     [PerformanceOptimized]
-    public sealed class ReadOnlyList<T> : IList<T>
+    public sealed class ReadOnlyList<T> : IList<T>, IReadOnlyList<T>
     {
         // Concrete list for performance reasons.
         private readonly List<T> internalList;
@@ -36,6 +36,18 @@ namespace Nautilus.Core.Collections
             Debug.NotNull(list, nameof(list));
 
             this.internalList = list;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
+        /// </summary>
+        /// <param name="list">The original list.</param>
+        /// <exception cref="ValidationException">Throws if the list is null.</exception>
+        public ReadOnlyList(IReadOnlyCollection<T> list)
+        {
+            Debug.NotNull(list, nameof(list));
+
+            this.internalList = new List<T>(list);
         }
 
         /// <summary>

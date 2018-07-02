@@ -22,6 +22,7 @@ namespace NautilusDB
     using Nautilus.Database;
     using Nautilus.Database.Build;
     using Nautilus.Database.Configuration;
+    using Nautilus.DomainModel.Enums;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
@@ -99,7 +100,7 @@ namespace NautilusDB
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var compressor = CompressorFactory.Create(isCompression, compressionCodec);
-            var rollingWindow = (int) config[ConfigSection.Database]["rollingWindow"];
+            var barRollingWindow = (int) config[ConfigSection.Database]["barDataRollingWindow"];
 
             var username = (string)config[ConfigSection.Fix]["username"];;
             var password = (string)config[ConfigSection.Fix]["password"];;
@@ -126,6 +127,13 @@ namespace NautilusDB
                 .Distinct()
                 .ToList()
                 .AsReadOnly();
+
+            var resolutionsToPersist = new List<Resolution>
+            {
+                Resolution.Second,
+                Resolution.Minute,
+                Resolution.Hour
+            }.ToList().AsReadOnly();
 
             var clientManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
@@ -154,7 +162,8 @@ namespace NautilusDB
                 instrumentRepository,
                 symbols,
                 barSpecs,
-                rollingWindow);
+                resolutionsToPersist,
+                barRollingWindow);
 
             Task.Run(() => this.nautilusDB.Start());
         }

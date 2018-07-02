@@ -3,6 +3,7 @@
     using Nautilus.Core.CQS;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -34,6 +35,11 @@
         }
 
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CommandResult TrimToDays(Resolution resolution, int trimToDays)
         {
             throw new System.NotImplementedException();
         }

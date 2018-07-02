@@ -20,6 +20,7 @@ namespace Nautilus.Redis
     using Nautilus.Database.Keys;
     using Nautilus.Database.Types;
     using Nautilus.Database.Wranglers;
+    using Nautilus.DomainModel.Enums;
     using NodaTime;
     using ServiceStack.Redis;
 
@@ -93,7 +94,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(barType, nameof(barType));
 
-            return this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType)).Length;
+            return this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType)).Length;
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(barType, nameof(barType));
 
-            var allKeys = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType));
+            var allKeys = this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType));
 
             if (allKeys.Length == 0)
             {
@@ -153,15 +154,49 @@ namespace Nautilus.Redis
                 return QueryResult<List<string>>.Fail($"No market data found for {barType}");
             }
 
-            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarsWildcardString(barType));
+            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType));
 
             var keysCollection = allKeysBytes
-                .Select(key => Encoding.Default.GetString(key))
+                .Select(key => Encoding.UTF8.GetString(key))
                 .ToList();
 
             keysCollection.Sort();
 
             return QueryResult<List<string>>.Ok(keysCollection);
+        }
+
+        /// <summary>
+        /// Returns a list of all market data keys based on the given bar specification.
+        /// </summary>
+        /// <param name="resolution">The bar resolution keys.</param>
+        /// <returns>The result of the query.</returns>
+        public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(Resolution resolution)
+        {
+            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarsWildcardString());
+
+            var keysCollection = allKeysBytes
+                .Select(key => Encoding.UTF8.GetString(key))
+                .ToList();
+
+            var keysOfResolution = new Dictionary<string, List<string>>();
+
+            foreach (var key in keysCollection)
+            {
+                var keySymbol = key.Split('-')[0];
+
+                if (!keysOfResolution.ContainsKey(keySymbol))
+                {
+                    keysOfResolution.Add(keySymbol, new List<string>());
+                }
+
+                if (key.Contains(resolution.ToString().ToLower()))
+                {
+                    keysOfResolution[keySymbol].Add(key);
+                    keysOfResolution[keySymbol].Sort();
+                }
+            }
+
+            return keysOfResolution;
         }
 
         /// <summary>
@@ -353,6 +388,25 @@ namespace Nautilus.Redis
             var barBytes = this.redisClient.LRange(key, 0, -1);
 
             return QueryResult<List<Bar>>.Ok(BarWrangler.ParseBars(barBytes));
+        }
+
+        /// <summary>
+        /// Deletes the given key if it exists in the database.
+        /// </summary>
+        /// <param name="key">The key to delete.</param>
+        /// <returns>The result of the operation.</returns>
+        public CommandResult Delete(string key)
+        {
+            Debug.NotNull(key, nameof(key));
+
+            if (!this.KeyExists(key))
+            {
+                return CommandResult.Ok($"Cannot find {key} to delete in the database");
+            }
+
+            this.redisClient.Del(key);
+
+            return CommandResult.Ok($"Removed {key} from the database");
         }
     }
 }

@@ -8,19 +8,26 @@
 
 namespace Nautilus.Database
 {
+    using System;
+    using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
+    using Nautilus.Core.Collections;
     using Nautilus.Database.Enums;
+    using Nautilus.Database.Jobs;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Scheduler.Commands;
+    using Quartz;
 
     /// <summary>
     /// The manager class which orchestrates data collection operations.
@@ -29,6 +36,8 @@ namespace Nautilus.Database
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IActorRef barPublisher;
+        private readonly ReadOnlyList<Resolution> resolutionsToPersist;
+        private readonly int barRollingWindow;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
@@ -36,11 +45,15 @@ namespace Nautilus.Database
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="barPublisher">The bar publisher.</param>
+        /// <param name="resolutionsToPersist">The bar resolutions to persist (with a period of 1).</param>
+        /// <param name="barRollingWindow">The rolling window of persisted bar data (days).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IActorRef barPublisher)
+            IActorRef barPublisher,
+            IReadOnlyList<Resolution> resolutionsToPersist,
+            int barRollingWindow)
             : base(
                 ServiceContext.Database,
                 LabelFactory.Component(nameof(DataCollectionManager)),
@@ -50,14 +63,18 @@ namespace Nautilus.Database
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(barPublisher, nameof(barPublisher));
+            Validate.Int32NotOutOfRange(barRollingWindow, nameof(barRollingWindow), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
             this.storedContainer = container;
             this.barPublisher = barPublisher;
+            this.resolutionsToPersist = new ReadOnlyList<Resolution>(resolutionsToPersist);
+            this.barRollingWindow = barRollingWindow;
 
             // Command messages
             this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<TrimBarDataJob>(msg => this.OnMessage(msg));
 
             // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg));
@@ -144,6 +161,46 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
 
             // Not implemented.
+        }
+
+        private void OnMessage(TrimBarDataJob message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            var command = new TrimBarData(
+                this.resolutionsToPersist,
+                this.barRollingWindow,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.TaskManager, command);
+
+            this.Log.Debug($"Received {nameof(TrimBarDataJob)}.");
+        }
+
+        private void CreateTrimBarDataJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 00, 01)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"trim_bar_data", "data_management")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Self,
+                new TrimBarDataJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.Scheduler, createJob);
+
+            this.Log.Debug($"Created {nameof(TrimBarDataJob)}, sent to scheduler.");
         }
 
         private void InitializeMarketDataCollectors()

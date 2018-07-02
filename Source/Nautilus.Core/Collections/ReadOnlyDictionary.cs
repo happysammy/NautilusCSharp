@@ -23,7 +23,8 @@ namespace Nautilus.Core.Collections
     /// <typeparam name="TValue">The value type.</typeparam>
     [Immutable]
     [PerformanceOptimized]
-    public sealed class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    public sealed class ReadOnlyDictionary<TKey, TValue>
+        : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
         // Concrete dictionary for performance reasons.
         private readonly Dictionary<TKey, TValue> internalDictionary;
@@ -61,6 +62,16 @@ namespace Nautilus.Core.Collections
         /// Gets the read-only dictionaries values.
         /// </summary>
         public ICollection<TValue> Values => this.internalDictionary.Values;
+
+        /// <summary>
+        /// Gets the enumerable for the read-only dictionaries keys.
+        /// </summary>
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => this.Keys;
+
+        /// <summary>
+        /// Gets the enumerable for the read-only dictionaries values.
+        /// </summary>
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => this.Values;
 
         /// <summary>
         /// Gets the count of the read-only dictionary.
