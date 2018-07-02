@@ -11,12 +11,25 @@ namespace Nautilus.Common.Messages
     using System;
     using NodaTime;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
+    /// <summary>
+    /// Represents a command message to start the system.
+    /// </summary>
+    [Immutable]
     public sealed class StartSystem : CommandMessage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StartSystem"/> class.
+        /// </summary>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public StartSystem(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
+            Debug.NotNull(identifier, nameof(identifier));
+            Debug.NotNull(timestamp, nameof(timestamp));
         }
     }
 }

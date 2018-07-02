@@ -209,6 +209,7 @@ namespace Nautilus.Database.Aggregators
         {
             Debug.NotNull(message, nameof(message));
 
+            this.Log.Information("Starting...");
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
         }
