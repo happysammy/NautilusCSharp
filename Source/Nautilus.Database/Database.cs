@@ -86,11 +86,8 @@ namespace Nautilus.Database
             this.fixClient.UpdateInstrumentsSubscribeAll();
             this.fixClient.RequestMarketDataSubscribeAll();
 
-            this.Send(
-                DatabaseService.CollectionManager,
-                new StartSystem(
-                    Guid.NewGuid(),
-                    this.TimeNow()));
+            var startSystem = new StartSystem(Guid.NewGuid(), this.TimeNow());
+            this.Send(DatabaseService.CollectionManager, startSystem);
 
             var barSpecs = new List<BarSpecification>
             {
