@@ -87,7 +87,9 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            // Do nothing.
+            this.CreateTrimBarDataJob();
+
+            this.Send(DatabaseService.BarAggregationController, message);
         }
 
         private void OnMessage(Subscribe<BarType> message)

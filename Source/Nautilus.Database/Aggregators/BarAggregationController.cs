@@ -81,10 +81,9 @@ namespace Nautilus.Database.Aggregators
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
 
             // Command messages
+            this.Receive<StartSystem>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
@@ -96,6 +95,14 @@ namespace Nautilus.Database.Aggregators
             // Event messages
             this.Receive<Tick>(msg => this.OnMessage(msg));
             this.Receive<BarClosed>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(StartSystem message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.CreateMarketOpenedJob();
+            this.CreateMarketClosedJob();
         }
 
         /// <summary>
