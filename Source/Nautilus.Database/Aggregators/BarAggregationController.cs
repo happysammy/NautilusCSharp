@@ -133,7 +133,7 @@ namespace Nautilus.Database.Aggregators
 
             if (!this.triggers.ContainsKey(duration))
             {
-                var trigger = this.CreateTrigger(barSpec);
+                var trigger = this.CreateBarJobTrigger(barSpec);
                 this.triggers.Add(duration, trigger);
             }
 
@@ -363,10 +363,10 @@ namespace Nautilus.Database.Aggregators
             this.Send(DatabaseService.CollectionManager, document);
         }
 
-        private ITrigger CreateTrigger(BarSpecification barSpec)
+        private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
         {
             Debug.NotNull(barSpec, nameof(barSpec));
-            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers.ToImmutableDictionary());
+            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
 
             var duration = barSpec.Duration;
 

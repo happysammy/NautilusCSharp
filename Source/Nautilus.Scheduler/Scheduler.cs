@@ -83,12 +83,56 @@ namespace Nautilus.Scheduler
                     message.Trigger.Key,
                     message.Message));
             }
-            catch (Exception ex)
+            catch (Exception ex) // TODO: Make this exception more specific.
             {
                 destination.Tell(new CreateJobFail(
                     message.Trigger.JobKey,
                     message.Trigger.Key,
                     ex));
+            }
+        }
+
+        private void OnMessage(PauseJob message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            try
+            {
+                var paused = this.quartzScheduler.PauseJob(message.JobKey);
+                if (paused.IsCompletedSuccessfully)
+                {
+                    this.Log.Information($"Job paused successfully {message.JobKey}.");
+                }
+                else
+                {
+                    this.Log.Warning($"Job pause failed for {message.JobKey}.");
+                }
+            }
+            catch (Exception ex)  // TODO: Make this exception more specific.
+            {
+                this.Log.Error($"Job pause failed with error for {message.JobKey}.", ex);
+            }
+        }
+
+        private void OnMessage(ResumeJob message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            try
+            {
+                var resume = this.quartzScheduler.ResumeJob(message.JobKey);
+                if (resume.IsCompletedSuccessfully)
+                {
+                    this.Log.Information($"Job resumed successfully {message.JobKey}.");
+                }
+                else
+                {
+                    this.Log.Warning($"Job resume failed for {message.JobKey}.");
+                }
+            }
+            catch (Exception ex)  // TODO: Make this exception more specific.
+            {
+                this.Log.Error($"Job resume failed with error for {message.JobKey}.", ex);
             }
         }
 
@@ -101,7 +145,7 @@ namespace Nautilus.Scheduler
             try
             {
                 var deleted = quartzScheduler.DeleteJob(message.JobKey);
-                if (deleted.Result)
+                if (deleted.IsCompletedSuccessfully)
                 {
                     sender.Tell(new JobRemoved(
                         message.JobKey,
@@ -113,7 +157,7 @@ namespace Nautilus.Scheduler
                     sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, new JobNotFoundException()));
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex)  // TODO: Make this exception more specific.
             {
                 sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, ex));
             }
