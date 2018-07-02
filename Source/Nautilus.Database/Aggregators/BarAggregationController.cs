@@ -377,6 +377,8 @@ namespace Nautilus.Database.Aggregators
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
                 this.barAggregators[tick.Symbol].Tell(tick);
+
+                return;
             }
 
             // Log for debug purposes.
