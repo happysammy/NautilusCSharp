@@ -174,7 +174,7 @@ namespace Nautilus.Redis
                 }
             }
 
-            return CommandResult.Combine(results.ToArray());
+            return CommandResult.Ok();
         }
     }
 }

@@ -182,18 +182,22 @@ namespace Nautilus.Redis
 
             foreach (var key in keysCollection)
             {
-                var keySymbol = key.Split('-')[0];
-
-                if (!keysOfResolution.ContainsKey(keySymbol))
+                if (!key.Contains(resolution.ToString().ToLower()))
                 {
-                    keysOfResolution.Add(keySymbol, new List<string>());
+                    // Found resolution not applicable.
+                    continue;
                 }
 
-                if (key.Contains(resolution.ToString().ToLower()))
+                var splitKey = key.Split(':');
+                var symbolKey = splitKey[1] + ":" + splitKey[2];
+
+                if (!keysOfResolution.ContainsKey(symbolKey))
                 {
-                    keysOfResolution[keySymbol].Add(key);
-                    keysOfResolution[keySymbol].Sort();
+                    keysOfResolution.Add(symbolKey, new List<string>());
                 }
+
+                keysOfResolution[symbolKey].Add(key);
+                keysOfResolution[symbolKey].Sort();
             }
 
             return keysOfResolution;

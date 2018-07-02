@@ -33,6 +33,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                     1));
         }
 
+        public static BarType GBPUSD_Second()
+        {
+            return new BarType(
+                new Symbol("GBPUSD", Exchange.Dukascopy),
+                new BarSpecification(
+                    QuoteType.Mid,
+                    Resolution.Second,
+                    1));
+        }
+
         public static BarType USDJPY()
         {
             return new BarType(

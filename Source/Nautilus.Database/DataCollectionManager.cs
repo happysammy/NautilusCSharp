@@ -37,7 +37,7 @@ namespace Nautilus.Database
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IActorRef barPublisher;
-        private readonly ReadOnlyList<Resolution> resolutionsToPersist;
+        private readonly ReadOnlyList<Resolution> resolutionsPersisting;
         private readonly int barRollingWindow;
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nautilus.Database
 
             this.storedContainer = container;
             this.barPublisher = barPublisher;
-            this.resolutionsToPersist = new ReadOnlyList<Resolution>(resolutionsToPersist);
+            this.resolutionsPersisting = new ReadOnlyList<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;
 
             // Command messages
@@ -194,13 +194,13 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            var command = new TrimBarData(
-                this.resolutionsToPersist,
+            var trimCommand = new TrimBarData(
+                this.resolutionsPersisting,
                 this.barRollingWindow,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.TaskManager, command);
+            this.Send(DatabaseService.TaskManager, trimCommand);
             this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 

@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Compression;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Database.Keys;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -451,6 +452,41 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Bars.Length);
+        }
+
+        [Fact]
+        internal void Test_can_get_sorted_bar_keys_by_symbol_and_resolution()
+        {
+            // Arrange
+            var barType = StubBarType.AUDUSD();
+            var barType2 = StubBarType.GBPUSD_Second();
+
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(Duration.FromDays(1));
+            var bar3 = StubBarData.Create(Duration.FromDays(2));
+            var bar4 = StubBarData.Create(Duration.FromDays(3));
+            var bar5 = StubBarData.Create(Duration.FromDays(4));
+            var bar6 = StubBarData.Create(Duration.FromDays(5));
+
+            this.client.AddBars(barType, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+            this.client.AddBars(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+
+            // Act
+            var result = this.client.GetSortedKeysBySymbolResolution(Resolution.Minute);
+
+            foreach (var symbol in result)
+            {
+                this.output.WriteLine(symbol.Key);
+
+                foreach (var key in symbol.Value)
+                {
+                    this.output.WriteLine(key);
+                }
+            }
+
+            // Assert
+            Assert.Equal(1, result.Keys.Count);
+            Assert.Equal(6, result["dukascopy:audusd"].Count);
         }
     }
 }

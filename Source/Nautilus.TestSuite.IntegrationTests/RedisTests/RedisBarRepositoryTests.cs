@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Xunit;
     using Xunit.Abstractions;
     using Nautilus.Compression;
-    using Nautilus.Database.Integrity.Checkers;
     using Nautilus.Database.Types;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -242,6 +242,81 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Equal(5, this.repository.BarsCount(barType));
         }
 
+        [Fact]
+        internal void Test_can_trim_bars_leaving_correct_number_of_keys()
+        {
+            // Arrange
+            var barType = StubBarType.AUDUSD();
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(Duration.FromDays(1));
+            var bar3 = StubBarData.Create(Duration.FromDays(2));
+            var bar4 = StubBarData.Create(Duration.FromDays(3));
+            var bar5 = StubBarData.Create(Duration.FromDays(4));
+            var bar6 = StubBarData.Create(Duration.FromDays(5));
+            var marketData = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+
+            this.repository.Add(marketData);
+
+            // Act
+            this.repository.TrimToDays(Resolution.Second, 1);
+            this.repository.TrimToDays(Resolution.Minute, 10);
+
+            // Assert
+            Assert.Equal(6, this.repository.BarsCount(barType));
+        }
+
+        [Fact]
+        internal void Test_can_trim_bars_down_to_correct_number_of_keys()
+        {
+            // Arrange
+            var barType = StubBarType.AUDUSD();
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(Duration.FromDays(1));
+            var bar3 = StubBarData.Create(Duration.FromDays(2));
+            var bar4 = StubBarData.Create(Duration.FromDays(3));
+            var bar5 = StubBarData.Create(Duration.FromDays(4));
+            var bar6 = StubBarData.Create(Duration.FromDays(5));
+            var marketData = new BarDataFrame(barType, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+
+            this.repository.Add(marketData);
+
+            // Act
+            this.repository.TrimToDays(Resolution.Second, 1);
+            this.repository.TrimToDays(Resolution.Minute, 5);
+
+            // Assert
+            Assert.Equal(5, this.repository.BarsCount(barType));
+        }
+
+        [Fact]
+        internal void Test_can_trim_bars_down_to_correct_number_of_keys_when_multiple_resolutions()
+        {
+            // Arrange
+            var barType1 = StubBarType.AUDUSD();
+            var barType2 = StubBarType.GBPUSD_Second();
+
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(Duration.FromDays(1));
+            var bar3 = StubBarData.Create(Duration.FromDays(2));
+            var bar4 = StubBarData.Create(Duration.FromDays(3));
+            var bar5 = StubBarData.Create(Duration.FromDays(4));
+            var bar6 = StubBarData.Create(Duration.FromDays(5));
+            var barData1 = new BarDataFrame(barType1, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+            var barData2 = new BarDataFrame(barType2, new[] { bar1, bar2, bar3, bar4, bar5, bar6 });
+
+            this.repository.Add(barData1);
+            this.repository.Add(barData2);
+
+            // Act
+            this.repository.TrimToDays(Resolution.Minute, 5);
+
+            // Assert
+            this.PrintRepositoryStatus(barType1);
+            this.PrintRepositoryStatus(barType2);
+            Assert.Equal(5, this.repository.BarsCount(barType1));
+            Assert.Equal(6, this.repository.BarsCount(barType2));
+        }
+
         private void PrintRepositoryStatus(BarType barType)
         {
             var barsQuery = this.repository.FindAll(barType);
@@ -260,8 +335,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 this.output.WriteLine(bar.ToString());
             }
 
-            var barsCheck = BarDataChecker.CheckBars(barType, this.repository.FindAll(barType).Value.Bars);
-            barsCheck.Value.ForEach(a => this.output.WriteLine(a));
+            //var barsCheck = BarDataChecker.CheckBars(barType, this.repository.FindAll(barType).Value.Bars);
+            //barsCheck.Value.ForEach(a => this.output.WriteLine(a));
         }
     }
 }
