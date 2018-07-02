@@ -16,12 +16,10 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
-    using Nautilus.Database.Messages.Jobs;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -78,7 +76,8 @@ namespace Nautilus.Database.Aggregators
             this.Receive<CloseBar>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<MarketStatusJob>(msg => this.OnMessage(msg));
+            this.Receive<MarketOpened>(msg => this.OnMessage(msg));
+            this.Receive<MarketClosed>(msg => this.OnMessage(msg));
 
             // Event messages
             this.Receive<Tick>(msg => this.OnMessage(msg));
@@ -217,16 +216,26 @@ namespace Nautilus.Database.Aggregators
             }
         }
 
-        private void OnMessage(MarketStatusJob message)
+        private void OnMessage(MarketOpened message)
         {
-            this.isMarketOpen = message.IsMarketOpen;
+            this.isMarketOpen = true;
+        }
+
+        private void OnMessage(MarketClosed message)
+        {
+            this.isMarketOpen = false;
+
+            // Purge bar builders.
+            foreach (var barSpec in this.barBuilders.Keys)
+            {
+                this.barBuilders[barSpec] = new BarBuilder();
+            }
         }
 
         private bool IsFxMarketOpen()
         {
             // Market open Sun 21:00 UTC (Start of Sydney session)
             // Market close Sat 20:00 UTC (End of New York session)
-
             return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
                 this.TimeNow(),
                 (IsoDayOfWeek.Saturday, 20, 00),

@@ -10,7 +10,6 @@ namespace Nautilus.Database.Aggregators
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
@@ -97,6 +96,115 @@ namespace Nautilus.Database.Aggregators
             this.Receive<BarClosed>(msg => this.OnMessage(msg));
         }
 
+        private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
+        {
+            Debug.NotNull(barSpec, nameof(barSpec));
+
+            var scheduleBuilder = SimpleScheduleBuilder
+                .Create()
+                .RepeatForever()
+                .WithMisfireHandlingInstructionFireNow();
+
+            switch (barSpec.Resolution)
+            {
+                case Resolution.Tick:
+                    throw new InvalidOperationException("Cannot schedule tick bars.");
+
+                case Resolution.Second:
+                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
+                    break;
+
+                case Resolution.Minute:
+                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
+                    break;
+
+                case Resolution.Hour:
+                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
+                    break;
+
+                case Resolution.Day:
+                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
+                    break;
+                default: throw new InvalidOperationException("Bar resolution not recognised.");
+            }
+
+            return scheduleBuilder;
+        }
+
+        private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
+        {
+            Debug.NotNull(barSpec, nameof(barSpec));
+            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
+
+            var duration = barSpec.Duration;
+
+            return TriggerBuilder
+                .Create()
+                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
+                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
+                .WithSchedule(CreateBarJobSchedule(barSpec))
+                .Build();
+        }
+
+        private void CreateMarketOpenedJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"market_opened", "bar_aggregation")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Self,
+                new MarketStatusJob(true),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.Scheduler, createJob);
+            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
+        }
+
+        private void CreateMarketClosedJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"market_closed", "bar_aggregation")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                this.Self,
+                new MarketStatusJob(false),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DatabaseService.Scheduler, createJob);
+            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
+        }
+
+        private bool IsFxMarketOpen()
+        {
+            // Market open Sun 21:00 UTC (Start of Sydney session)
+            // Market close Sat 20:00 UTC (End of New York session)
+
+            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                this.TimeNow(),
+                (IsoDayOfWeek.Saturday, 20, 00),
+                (IsoDayOfWeek.Sunday, 21, 00));
+        }
+
         private void OnMessage(StartSystem message)
         {
             Debug.NotNull(message, nameof(message));
@@ -170,8 +278,8 @@ namespace Nautilus.Database.Aggregators
         }
 
         /// <summary>
-        /// Handles the message by cancelling the bar jobs with the <see cref="Akka.Actor.IScheduler"/>, then
-        /// forwarding the message to the <see cref="BarAggregator"/> for the symbol.
+        /// Handles the message by cancelling the bar jobs with the scheduler, then
+        /// forwarding the message to the <see cref="BarAggregator"/> for the relevant symbol.
         /// </summary>
         /// <param name="message">The received message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
@@ -270,6 +378,9 @@ namespace Nautilus.Database.Aggregators
             {
                 this.barAggregators[tick.Symbol].Tell(tick);
             }
+
+            // Log for debug purposes.
+            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         /// <summary>
@@ -327,11 +438,24 @@ namespace Nautilus.Database.Aggregators
             {
                 // The market is now open.
                 this.isMarketOpen = true;
-                var statusChangeJob = new MarketStatusJob(true);
 
+                // Resume all active bar jobs.
+                foreach (var barJob in this.barJobs.Values)
+                {
+                    var resume = new ResumeJob(
+                        barJob.Key,
+                        this.Self,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.Send(DatabaseService.Scheduler, resume);
+                }
+
+                // Tell all bar aggregators the market is now open.
+                var marketOpened = new MarketOpened(this.NewGuid(), this.TimeNow());
                 foreach (var aggregator in this.barAggregators.Values)
                 {
-                    aggregator.Tell(statusChangeJob);
+                    aggregator.Tell(marketOpened);
                 }
             }
 
@@ -339,11 +463,24 @@ namespace Nautilus.Database.Aggregators
             {
                 // The market is now closed.
                 this.isMarketOpen = false;
-                var statusChangeJob = new MarketStatusJob(false);
 
+                // Pause all active bar jobs.
+                foreach (var barJob in this.barJobs.Values)
+                {
+                    var pause = new PauseJob(
+                        barJob.Key,
+                        this.Self,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.Send(DatabaseService.Scheduler, pause);
+                }
+
+                // Tell all aggregators the market is now closed.
+                var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
                 foreach (var aggregator in this.barAggregators.Values)
                 {
-                    aggregator.Tell(statusChangeJob);
+                    aggregator.Tell(marketClosed);
                 }
             }
         }
@@ -355,119 +492,12 @@ namespace Nautilus.Database.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(BarClosed message)
         {
-            var document = new DataDelivery<BarClosed>(
+            var barClosed = new DataDelivery<BarClosed>(
                 message,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.CollectionManager, document);
-        }
-
-        private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
-        {
-            Debug.NotNull(barSpec, nameof(barSpec));
-            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
-
-            var duration = barSpec.Duration;
-
-            return TriggerBuilder
-                .Create()
-                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
-                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
-                .WithSchedule(this.CreateScheduleBuilder(barSpec))
-                .Build();
-        }
-
-        private IScheduleBuilder CreateScheduleBuilder(BarSpecification barSpec)
-        {
-            var scheduleBuilder = SimpleScheduleBuilder
-                .Create()
-                .RepeatForever()
-                .WithMisfireHandlingInstructionFireNow();
-
-            switch (barSpec.Resolution)
-            {
-                case Resolution.Tick:
-                    throw new InvalidOperationException("Cannot schedule tick bars.");
-
-                case Resolution.Second:
-                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
-                    break;
-
-                case Resolution.Minute:
-                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
-                    break;
-
-                case Resolution.Hour:
-                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
-                    break;
-
-                case Resolution.Day:
-                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
-                    break;
-                default: throw new InvalidOperationException("Bar resolution not recognised.");
-            }
-
-            return scheduleBuilder;
-        }
-
-        private void CreateMarketOpenedJob()
-        {
-            var scheduleBuilder = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity($"market_opened", "bar_aggregation")
-                .WithSchedule(scheduleBuilder)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Self,
-                new MarketStatusJob(true),
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(DatabaseService.Scheduler, createJob);
-            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
-        }
-
-        private void CreateMarketClosedJob()
-        {
-            var scheduleBuilder = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity($"market_closed", "bar_aggregation")
-                .WithSchedule(scheduleBuilder)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Self,
-                new MarketStatusJob(false),
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(DatabaseService.Scheduler, createJob);
-            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
-        }
-
-        private bool IsFxMarketOpen()
-        {
-            // Market open Sun 21:00 UTC (Start of Sydney session)
-            // Market close Sat 20:00 UTC (End of New York session)
-
-            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
-                this.TimeNow(),
-                (IsoDayOfWeek.Saturday, 20, 00),
-                (IsoDayOfWeek.Sunday, 21, 00));
+            this.Send(DatabaseService.CollectionManager, barClosed);
         }
     }
 }
