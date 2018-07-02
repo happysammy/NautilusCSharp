@@ -86,8 +86,7 @@ namespace Nautilus.Common.Messaging
         /// already opened).
         /// </summary>
         /// <param name="currentTime">The current time (cannot be default).</param>
-        /// <returns>The contained message.</returns>
-        /// <exception cref="ValidationException">Throws if the current time is the default value.</exception>
+        /// <returns>The contained message of type T.</returns>
         public T Open(ZonedDateTime currentTime)
         {
             Debug.NotDefault(currentTime, nameof(currentTime));

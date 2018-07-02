@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Jobs
+namespace Nautilus.Database.Messages.Jobs
 {
     using System;
     using System.Collections.Generic;

@@ -18,10 +18,10 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Core.Collections;
     using Nautilus.Database.Enums;
-    using Nautilus.Database.Jobs;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
+    using Nautilus.Database.Messages.Jobs;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;

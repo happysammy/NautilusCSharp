@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="BrokerageGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -710,7 +710,7 @@ namespace Nautilus.Common
         /// <param name="orderSide">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
-        /// <param name="decimals">The decimal precison for the price.</param>
+        /// <param name="decimals">The decimal precision for the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderFilled(
             string symbol,

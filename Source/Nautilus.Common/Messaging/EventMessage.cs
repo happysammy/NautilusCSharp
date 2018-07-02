@@ -46,7 +46,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Returns a string representation of the <see cref="EventMessage"/>.
         /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
+        /// <returns>The event name.</returns>
         public override string ToString() => this.Event.ToString();
     }
 }

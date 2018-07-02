@@ -19,9 +19,9 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Database.Jobs;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Events;
+    using Nautilus.Database.Messages.Jobs;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
