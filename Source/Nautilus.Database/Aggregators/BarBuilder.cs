@@ -13,7 +13,7 @@ namespace Nautilus.Database.Aggregators
     using NodaTime;
 
     /// <summary>
-    /// Provides a buider for creating <see cref="Bar"/> objects.
+    /// Provides a builder for creating <see cref="Bar"/> objects.
     /// </summary>
     public sealed class BarBuilder
     {

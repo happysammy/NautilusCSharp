@@ -52,10 +52,12 @@ namespace Nautilus.Database.Aggregators
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="symbol">The symbol.</param>
+        /// <param name="isMarketOpen">The is market open flag.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregator(
             IComponentryContainer container,
-            Symbol symbol)
+            Symbol symbol,
+            bool isMarketOpen)
             : base(
             ServiceContext.Database,
             LabelFactory.Component(
@@ -70,7 +72,7 @@ namespace Nautilus.Database.Aggregators
             this.spreadAnalyzer = new SpreadAnalyzer();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
-            this.isMarketOpen = this.IsFxMarketOpen();
+            this.isMarketOpen = isMarketOpen;
 
             // Command messages
             this.Receive<CloseBar>(msg => this.OnMessage(msg));
@@ -230,16 +232,6 @@ namespace Nautilus.Database.Aggregators
             {
                 this.barBuilders[barSpec] = new BarBuilder();
             }
-        }
-
-        private bool IsFxMarketOpen()
-        {
-            // Market open Sun 21:00 UTC (Start of Sydney session)
-            // Market close Sat 20:00 UTC (End of New York session)
-            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
-                this.TimeNow(),
-                (IsoDayOfWeek.Saturday, 20, 00),
-                (IsoDayOfWeek.Sunday, 21, 00));
         }
     }
 }

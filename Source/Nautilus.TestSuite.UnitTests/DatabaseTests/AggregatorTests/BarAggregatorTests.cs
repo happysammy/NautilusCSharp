@@ -50,7 +50,8 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 
             var props = Props.Create(() => new BarAggregator(
                 container,
-                this.symbol));
+                this.symbol,
+                true));
 
             this.barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
         }

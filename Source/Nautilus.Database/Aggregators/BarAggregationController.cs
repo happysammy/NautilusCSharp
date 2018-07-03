@@ -198,7 +198,6 @@ namespace Nautilus.Database.Aggregators
         {
             // Market open Sun 21:00 UTC (Start of Sydney session)
             // Market close Sat 20:00 UTC (End of New York session)
-
             return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
                 this.TimeNow(),
                 (IsoDayOfWeek.Saturday, 20, 00),
@@ -231,7 +230,8 @@ namespace Nautilus.Database.Aggregators
             {
                 var barAggregatorRef = Context.ActorOf(Props.Create(() => new BarAggregator(
                     this.storedContainer,
-                    symbol)));
+                    symbol,
+                    this.isMarketOpen)));
 
                 this.barAggregators.Add(message.DataType.Symbol, barAggregatorRef);
             }

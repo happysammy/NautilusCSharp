@@ -18,7 +18,7 @@ namespace Nautilus.Database.Aggregators
     using NodaTime;
 
     /// <summary>
-    /// The instrument builder.
+    /// Provides a builder for creating <see cref="Instrument"/> objects.
     /// </summary>
     public sealed class InstrumentBuilder
     {
