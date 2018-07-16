@@ -25,8 +25,8 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="cancelRejectedTime">The event order rejected time.</param>
-        /// <param name="cancelRejectResponseTo">The event cancel reject response.</param>
+        /// <param name="rejectedTime">The event order rejected time.</param>
+        /// <param name="rejectedResponseTo">The event cancel reject response.</param>
         /// <param name="rejectedReason">The event order cancel rejected reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
@@ -35,8 +35,8 @@ namespace Nautilus.DomainModel.Events
         public OrderCancelReject(
             Symbol symbol,
             EntityId orderId,
-            ZonedDateTime cancelRejectedTime,
-            string cancelRejectResponseTo,
+            ZonedDateTime rejectedTime,
+            string rejectedResponseTo,
             string rejectedReason,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -48,26 +48,26 @@ namespace Nautilus.DomainModel.Events
         {
             Debug.NotNull(symbol, nameof(symbol));
             Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotDefault(cancelRejectedTime, nameof(cancelRejectedTime));
-            Debug.NotNull(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
+            Debug.NotDefault(rejectedTime, nameof(rejectedTime));
+            Debug.NotNull(rejectedResponseTo, nameof(rejectedResponseTo));
             Debug.NotNull(rejectedReason, nameof(rejectedReason));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.CancelRejectedTime = cancelRejectedTime;
-            this.CancelRejectResponseTo = cancelRejectResponseTo;
+            this.RejectedTime = rejectedTime;
+            this.RejectedResponseTo = rejectedResponseTo;
             this.RejectedReason = rejectedReason;
         }
 
         /// <summary>
         /// Gets the events order cancel rejected time.
         /// </summary>
-        public ZonedDateTime CancelRejectedTime { get; }
+        public ZonedDateTime RejectedTime { get; }
 
         /// <summary>
         /// Gets the events order cancel reject response.
         /// </summary>
-        public string CancelRejectResponseTo { get; }
+        public string RejectedResponseTo { get; }
 
         /// <summary>
         /// Gets the events order cancel rejected reason.

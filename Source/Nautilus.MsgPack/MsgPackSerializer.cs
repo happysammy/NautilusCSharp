@@ -10,11 +10,12 @@ namespace Nautilus.MsgPack
 {
     using System.IO;
     using global::MsgPack.Serialization;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a serializer for Message Pack.
     /// </summary>
-    public class MsgPackSerializer
+    public static class MsgPackSerializer
     {
         /// <summary>
         /// Serializes the given object to the Message Pack specification.
@@ -24,6 +25,8 @@ namespace Nautilus.MsgPack
         /// <returns>The serialized object as a byte array.</returns>
         public static byte[] Serialize<T>(T obj)
         {
+            Debug.NotNull(obj, nameof(obj));
+
             var serializer = MessagePackSerializer.Get<T>();
 
             using (var byteStream = new MemoryStream())
@@ -41,6 +44,8 @@ namespace Nautilus.MsgPack
         /// <returns>The deserialized object of type T.</returns>
         public static T Deserialize<T>(byte[] bytes)
         {
+            Debug.NotNull(bytes, nameof(bytes));
+
             var serializer = MessagePackSerializer.Get<T>();
             using (var byteStream = new MemoryStream(bytes))
             {
