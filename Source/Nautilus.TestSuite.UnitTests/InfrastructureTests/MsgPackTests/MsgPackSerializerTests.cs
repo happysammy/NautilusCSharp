@@ -8,13 +8,10 @@
 
 namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using global::MsgPack;
-    using Nautilus.DomainModel.Events;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -61,23 +58,6 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             Assert.Equal("AUDUSD.FXCM", unpacked["symbol"]);
             Assert.Equal("O123456", unpacked["order_id"]);
             Assert.Equal("1970-01-01T00:00:00.000Z", unpacked["timestamp"]);
-        }
-
-        [Fact]
-        internal void Test_can_serialize_and_deserialize_events()
-        {
-            // Arrange
-            var order = new StubOrderBuilder().BuildMarket();
-            var orderAccepted = StubEventMessages.OrderCancelledEvent(order);
-
-            // Act
-            var packed = MsgPackSerializer.Serialize(orderAccepted);
-            var unpacked = MsgPackSerializer.Deserialize<OrderCancelled>(packed);
-
-            // Assert
-            Assert.Equal(orderAccepted, unpacked);
-
-            Console.WriteLine(orderAccepted);
         }
     }
 }

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="EventSerializer.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="MsgPackEventSerializer.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,6 +9,7 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using System.Globalization;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -25,11 +26,15 @@ namespace Nautilus.MsgPack
         private const string KeyEventTimestamp = "event_timestamp";
         private const string KeySymbol = "symbol";
         private const string KeyOrderId = "order_id";
+        private const string KeyOrderIdBroker = "order_id_broker";
+        private const string KeySubmittedTime = "submitted_time";
         private const string KeyAcceptedTime = "accepted_time";
         private const string KeyCancelledTime = "cancelled_time";
         private const string KeyRejectedTime = "rejected_time";
         private const string KeyRejectedResponse = "rejected_response";
         private const string KeyRejectedReason= "rejected_reason";
+        private const string KeyModifiedTime = "modified_time";
+        private const string KeyModifiedPrice = "modified_price";
         private const string KeyExpiredTime = "expired_time";
         private const string ValueOrderAccepted = "order_accepted";
         private const string ValueOrderCancelled = "order_cancelled";
@@ -55,39 +60,51 @@ namespace Nautilus.MsgPack
             var package = new MessagePackObjectDictionary
             {
                 {new MessagePackObject(KeySymbol), orderEvent.Symbol.ToString()},
-                {new MessagePackObject(KeyOrderId), orderEvent.OrderId.ToString()},
+                {new MessagePackObject(KeyOrderId), orderEvent.OrderId.Value},
                 {new MessagePackObject(KeyEventId), orderEvent.Id.ToString()},
                 {new MessagePackObject(KeyEventTimestamp), orderEvent.Timestamp.ToIsoString()}
             };
 
             switch (orderEvent)
             {
-                case OrderAccepted accepted:
+                case OrderSubmitted @event:
+                    package.Add(new MessagePackObject(KeyEventType), ValueOrderSubmitted);
+                    package.Add(new MessagePackObject(KeySubmittedTime), @event.SubmittedTime.ToIsoString());
+                    break;
+
+                case OrderAccepted @event:
                     package.Add(new MessagePackObject(KeyEventType), ValueOrderAccepted);
-                    package.Add(new MessagePackObject(KeyAcceptedTime), accepted.AcceptedTime.ToIsoString());
+                    package.Add(new MessagePackObject(KeyAcceptedTime), @event.AcceptedTime.ToIsoString());
                     break;
 
-                case OrderCancelled cancelled:
+                case OrderCancelled @event:
                     package.Add(new MessagePackObject(KeyEventType), ValueOrderCancelled);
-                    package.Add(new MessagePackObject(KeyCancelledTime), cancelled.CancelledTime.ToIsoString());
+                    package.Add(new MessagePackObject(KeyCancelledTime), @event.CancelledTime.ToIsoString());
                     break;
 
-                case OrderRejected rejected:
-                    package.Add(new MessagePackObject(KeyEventType), ValueOrderCancelled);
-                    package.Add(new MessagePackObject(KeyRejectedTime), rejected.RejectedTime.ToIsoString());
-                    package.Add(new MessagePackObject(KeyRejectedReason), rejected.RejectedReason);
+                case OrderRejected @event:
+                    package.Add(new MessagePackObject(KeyEventType), ValueOrderRejected);
+                    package.Add(new MessagePackObject(KeyRejectedTime), @event.RejectedTime.ToIsoString());
+                    package.Add(new MessagePackObject(KeyRejectedReason), @event.RejectedReason);
                     break;
 
-                case OrderExpired expired:
-                    package.Add(new MessagePackObject(KeyEventType), ValueOrderCancelled);
-                    package.Add(new MessagePackObject(KeyExpiredTime), expired.ExpiredTime.ToIsoString());
+                case OrderExpired @event:
+                    package.Add(new MessagePackObject(KeyEventType), ValueOrderExpired);
+                    package.Add(new MessagePackObject(KeyExpiredTime), @event.ExpiredTime.ToIsoString());
                     break;
 
-                case OrderCancelReject cancelReject:
+                case OrderCancelReject @event:
                     package.Add(new MessagePackObject(KeyEventType), ValueOrderCancelReject);
-                    package.Add(new MessagePackObject(KeyRejectedTime), cancelReject.RejectedTime.ToIsoString());
-                    package.Add(new MessagePackObject(KeyRejectedResponse), cancelReject.RejectedResponseTo);
-                    package.Add(new MessagePackObject(KeyRejectedReason), cancelReject.RejectedReason);
+                    package.Add(new MessagePackObject(KeyRejectedTime), @event.RejectedTime.ToIsoString());
+                    package.Add(new MessagePackObject(KeyRejectedResponse), @event.RejectedResponseTo);
+                    package.Add(new MessagePackObject(KeyRejectedReason), @event.RejectedReason);
+                    break;
+
+                case OrderModified @event:
+                    package.Add(new MessagePackObject(KeyEventType), ValueOrderModified);
+                    package.Add(new MessagePackObject(KeyOrderIdBroker), @event.BrokerOrderId.ToString());
+                    package.Add(new MessagePackObject(KeyModifiedTime), @event.ModifiedTime.ToIsoString());
+                    package.Add(new MessagePackObject(KeyModifiedPrice), @event.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     break;
 
                 default: throw new InvalidOperationException("Cannot serialize order event.");

@@ -187,29 +187,29 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
         /// </summary>
-        /// <param name="event">The event.</param>
+        /// <param name="orderEvent">The order event.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
         /// <exception cref="ValidationException">Throws if the event argument is null.</exception>
-        public override CommandResult Apply(Event @event)
+        public override CommandResult Apply(Event orderEvent)
         {
-            Debug.NotNull(@event, nameof(@event));
+            Debug.NotNull(orderEvent, nameof(orderEvent));
 
-            switch (@event)
+            switch (orderEvent)
             {
-                case OrderRejected orderRejected:
-                    return this.When(orderRejected);
+                case OrderRejected @event:
+                    return this.When(@event);
 
-                case OrderCancelled orderCancelled:
-                    return this.When(orderCancelled);
+                case OrderCancelled @event:
+                    return this.When(@event);
 
-                case OrderWorking orderWorking:
-                    return this.When(orderWorking);
+                case OrderWorking @event:
+                    return this.When(@event);
 
-                case OrderPartiallyFilled orderPartiallyFilled:
-                    return this.When(orderPartiallyFilled);
+                case OrderPartiallyFilled @event:
+                    return this.When(@event);
 
-                case OrderFilled orderFilled:
-                    return this.When(orderFilled);
+                case OrderFilled @event:
+                    return this.When(@event);
 
                 default: return CommandResult.Fail($"The event is not recognized by the order {this}");
             }

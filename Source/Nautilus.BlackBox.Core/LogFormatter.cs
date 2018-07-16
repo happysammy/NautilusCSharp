@@ -525,7 +525,7 @@ namespace Nautilus.BlackBox.Core
             }
 
             return $"{@event.Symbol} OrderModified: {@event.OrderId}, "
-                 + $"AcceptedTime={@event.AcceptedTime}";
+                 + $"AcceptedTime={@event.ModifiedTime}";
         }
 
         /// <summary>
