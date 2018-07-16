@@ -28,9 +28,15 @@
     <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
+    <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
     <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MsgPack, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\msgpack.cli\1.0.0\lib\netstandard2.0\MsgPack.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
