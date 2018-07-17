@@ -38,8 +38,8 @@ namespace Nautilus.Fix.MessageFactories
             var orderMessage = new OrderCancelRequest();
 
             orderMessage.SetField(new OrigClOrdID(order.OrderId.ToString()));
-            orderMessage.SetField(new OrderID(order.BrokerOrderId.ToString()));
-            orderMessage.SetField(new ClOrdID(order.CurrentOrderId.ToString()));
+            orderMessage.SetField(new OrderID(order.OrderIdBroker.ToString()));
+            orderMessage.SetField(new ClOrdID(order.OrderIdCurrent.ToString()));
             orderMessage.SetField(new Symbol(brokerSymbol));
             orderMessage.SetField(new Quantity(order.Quantity.Value));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderSide(order.OrderSide));

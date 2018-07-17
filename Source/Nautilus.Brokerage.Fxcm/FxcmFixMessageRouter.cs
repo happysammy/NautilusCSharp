@@ -267,7 +267,7 @@ namespace Nautilus.Brokerage.FXCM
                 this.Log.Information(
                     $"{orderModification.Key.Symbol} Submitting OrderReplaceRequest: " +
                     $"(ClOrdId={orderModification.Key.OrderId}, " +
-                    $"OrderId={orderModification.Key.BrokerOrderId}) => {Broker.FXCM}");
+                    $"OrderId={orderModification.Key.OrderIdBroker}) => {Broker.FXCM}");
             });
         }
 
@@ -290,7 +290,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
-                    $"(ClOrdId={order.OrderId}, OrderId={order.BrokerOrderId}) => {Broker.FXCM}");
+                    $"(ClOrdId={order.OrderId}, OrderId={order.OrderIdBroker}) => {Broker.FXCM}");
             });
         }
 

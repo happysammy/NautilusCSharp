@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarket();
 
             // Assert
-            Assert.Equal("None", order.BrokerOrderId.Value);
+            Assert.Equal("None", order.OrderIdBroker.Value);
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message);
 
             // Assert
-            Assert.Equal("some_broker_orderId", order.BrokerOrderId.ToString());
+            Assert.Equal("some_broker_orderId", order.OrderIdBroker.ToString());
             Assert.Equal(1, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.OrderStatus);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
@@ -331,7 +331,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(2, order.OrderIdCount);
-            Assert.Equal(new EntityId("StubOrderId_R1"), order.CurrentOrderId);
+            Assert.Equal(new EntityId("StubOrderId_R1"), order.OrderIdCurrent);
         }
 
         [Fact]

@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="brokerOrderId">The event broker order identifier.</param>
+        /// <param name="orderIdBroker">The event order identifier from the broker.</param>
         /// <param name="label">The event order label. </param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.Events
         public OrderWorking(
             Symbol symbol,
             EntityId orderId,
-            EntityId brokerOrderId,
+            EntityId orderIdBroker,
             Label label,
             OrderSide orderSide,
             OrderType orderType,
@@ -62,7 +62,7 @@ namespace Nautilus.DomainModel.Events
         {
             Debug.NotNull(symbol, nameof(symbol));
             Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotNull(brokerOrderId, nameof(brokerOrderId));
+            Debug.NotNull(orderIdBroker, nameof(orderIdBroker));
             Debug.NotNull(label, nameof(label));
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotDefault(orderType, nameof(orderType));
@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.BrokerOrderId = brokerOrderId;
+            this.OrderIdBroker = orderIdBroker;
             this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
@@ -86,9 +86,9 @@ namespace Nautilus.DomainModel.Events
         }
 
         /// <summary>
-        /// Gets the events broker order identifier.
+        /// Gets the events order identifier from the broker.
         /// </summary>
-        public EntityId BrokerOrderId { get; }
+        public EntityId OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events order label.

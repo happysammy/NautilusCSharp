@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_market_order_submitted_event()
+        internal void Test_can_serialize_and_deserialize_market_order_submitted_event()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_market_order_accepted_event()
+        internal void Test_can_serialize_and_deserialize_market_order_accepted_event()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -69,6 +69,30 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var unpacked = serializer.DeserializeOrderEvent(packed) as OrderAccepted;
 
             // Assert
+            Assert.Equal(accepted, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_market_order_rejected_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarket();
+            var rejected = new OrderRejected(
+                order.Symbol,
+                order.OrderId,
+                StubZonedDateTime.UnixEpoch(),
+                "INVALID_ORDER",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(rejected);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderRejected;
+
+            // Assert
+            Assert.Equal(rejected, unpacked);
             this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
         }
     }

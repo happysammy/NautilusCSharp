@@ -65,7 +65,7 @@ namespace Nautilus.DomainModel.Events
         public ZonedDateTime RejectedTime { get; }
 
         /// <summary>
-        /// Gets the events order cancel reject response.
+        /// Gets the events order cancel reject response to.
         /// </summary>
         public string RejectedResponseTo { get; }
 

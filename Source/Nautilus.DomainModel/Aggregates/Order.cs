@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
@@ -31,7 +32,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         // Concrete lists for performance reasons.
         private readonly List<EntityId> orderIdList = new List<EntityId>();
-        private readonly List<EntityId> brokerOrderIdList = new List<EntityId>();
+        private readonly List<EntityId> orderIdBrokerList = new List<EntityId>();
         private readonly List<EntityId> executionIdList = new List<EntityId>();
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Quantity = quantity;
 
             this.orderIdList.Add(this.OrderId);
-            this.brokerOrderIdList.Add(new EntityId("None"));
+            this.orderIdBrokerList.Add(new EntityId("None"));
             this.executionIdList.Add(new EntityId("None"));
         }
 
@@ -90,17 +91,17 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public EntityId CurrentOrderId => this.orderIdList[this.orderIdList.LastIndex()];
+        public EntityId OrderIdCurrent => this.orderIdList.Last();
 
         /// <summary>
-        /// Gets the order current broker identifier.
+        /// Gets the orders current identifier for the broker.
         /// </summary>
-        public EntityId BrokerOrderId => this.brokerOrderIdList[this.brokerOrderIdList.LastIndex()];
+        public EntityId OrderIdBroker => this.orderIdBrokerList.Last();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public EntityId ExecutionId => this.executionIdList[this.executionIdList.LastIndex()];
+        public EntityId ExecutionId => this.executionIdList.Last();
 
         /// <summary>
         /// Gets the orders label.
@@ -176,7 +177,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns an immutable collection of the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.brokerOrderIdList);
+        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.orderIdBrokerList);
 
         /// <summary>
         /// Returns an immutable collection of the order events.
@@ -230,9 +231,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderId, nameof(orderId));
 
-            if (!this.brokerOrderIdList.Contains(orderId))
+            if (!this.orderIdBrokerList.Contains(orderId))
             {
-                this.brokerOrderIdList.Add(orderId);
+                this.orderIdBrokerList.Add(orderId);
             }
         }
 
@@ -286,7 +287,7 @@ namespace Nautilus.DomainModel.Aggregates
             return this.orderState
                 .Process(new Trigger(nameof(OrderWorking)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateBrokerOrderId(orderEvent.BrokerOrderId));
+                .OnSuccess(() => this.UpdateBrokerOrderId(orderEvent.OrderIdBroker));
         }
 
         private CommandResult When(OrderPartiallyFilled orderEvent)
