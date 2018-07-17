@@ -22,6 +22,11 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using NodaTime.Calendars;
+    using QuickFix.Fields;
+    using Price = Nautilus.DomainModel.ValueObjects.Price;
+    using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
+    using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 
     /// <summary>
     /// Provides a serializer for the Message Pack specification.
@@ -149,7 +154,7 @@ namespace Nautilus.MsgPack
             var splitSymbol = unpacked[Key.Symbol].ToString().Split('.');
             var symbol = new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
             var orderId = new EntityId(unpacked[Key.OrderId].ToString());
-            var eventId = unpacked[Key.EventId].ToString();
+            var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
 
             switch (unpacked[Key.EventType].ToString())
@@ -159,7 +164,7 @@ namespace Nautilus.MsgPack
                         symbol,
                         orderId,
                         unpacked[Key.SubmittedTime].ToString().ToZonedDateTimeFromIso(),
-                        Guid.Parse(eventId),
+                        eventId,
                         eventTimestamp);
 
                 case OrderAccepted:
@@ -167,7 +172,7 @@ namespace Nautilus.MsgPack
                         symbol,
                         orderId,
                         unpacked[Key.AcceptedTime].ToString().ToZonedDateTimeFromIso(),
-                        Guid.Parse(eventId),
+                        eventId,
                         eventTimestamp);
 
                 case OrderRejected:
@@ -176,19 +181,10 @@ namespace Nautilus.MsgPack
                         orderId,
                         unpacked[Key.RejectedTime].ToString().ToZonedDateTimeFromIso(),
                         unpacked[Key.RejectedReason].ToString(),
-                        Guid.Parse(eventId),
+                        eventId,
                         eventTimestamp);
 
                 case OrderWorking:
-                    var expireTimeString = unpacked[Key.ExpireTime].ToString();
-                    var expireTime = expireTimeString == None
-                        ? Option<ZonedDateTime?>.None()
-                        : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
-
-                    var priceString = unpacked[Key.Price].ToString();
-                    var priceDecimal = Convert.ToDecimal(priceString);
-                    var decimalPlaces = priceDecimal.GetDecimalPlaces();
-
                     return new OrderWorking(
                         symbol,
                         orderId,
@@ -197,15 +193,93 @@ namespace Nautilus.MsgPack
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderType>(),
                         Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        Price.Create(priceDecimal, decimalPlaces),
+                        GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        expireTime,
+                        GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
-                        Guid.Parse(eventId),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderCancelled:
+                    return new OrderCancelled(
+                        symbol,
+                        orderId,
+                        unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderCancelReject:
+                    return new OrderCancelReject(
+                        symbol,
+                        orderId,
+                        unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
+                        unpacked[Key.RejectedResponse].ToString(),
+                        unpacked[Key.RejectedReason].ToString(),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderModified:
+                    return new OrderModified(
+                        symbol,
+                        orderId,
+                        new EntityId(unpacked[Key.OrderIdBroker].ToString()),
+                        GetPrice(unpacked[Key.Price].ToString()),
+                        unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderExpired:
+                    return new OrderExpired(
+                        symbol,
+                        orderId,
+                        unpacked[Key.ExpiredTime].ToString().ToZonedDateTimeFromIso(),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderPartiallyFilled:
+                    return new OrderPartiallyFilled(
+                        symbol,
+                        orderId,
+                        new EntityId(unpacked[Key.ExecutionId].ToString()),
+                        new EntityId(unpacked[Key.ExecutionTicket].ToString()),
+                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
+                        Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
+                        Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
+                        GetPrice(unpacked[Key.Price].ToString()),
+                        unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
+                        eventId,
+                        eventTimestamp);
+
+                case OrderFilled:
+                    return new OrderFilled(
+                        symbol,
+                        orderId,
+                        new EntityId(unpacked[Key.ExecutionId].ToString()),
+                        new EntityId(unpacked[Key.ExecutionTicket].ToString()),
+                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
+                        Quantity.Create(unpacked[Key.Quantity].AsInt32()),
+                        GetPrice(unpacked[Key.Price].ToString()),
+                        unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
+                        eventId,
                         eventTimestamp);
 
                 default: throw new InvalidOperationException("Cannot deserialize the order event byte array.");
             }
+        }
+
+        private static Price GetPrice(string priceString)
+        {
+            var priceDecimal = Convert.ToDecimal(priceString);
+            var priceDecimalPlaces = priceDecimal.GetDecimalPlaces();
+
+            return Price.Create(priceDecimal, priceDecimalPlaces);
+        }
+
+        private static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
+        {
+            return expireTimeString == None
+                ? Option<ZonedDateTime?>.None()
+                : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
         }
 
         private static class Key
