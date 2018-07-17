@@ -176,7 +176,7 @@ namespace Nautilus.DomainModel.Orders
                 return decimal.Zero;
             }
 
-            return this.OrderSide == OrderSide.Buy
+            return this.OrderSide == OrderSide.BUY
                        ? this.AveragePrice.Value - this.Price
                        : this.Price - this.AveragePrice.Value;
         }

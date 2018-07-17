@@ -55,7 +55,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
                 ? Option<IEntryResponse>.Some(
                     new EntryResponse(
                         this.AlgorithmLabel,
-                        OrderSide.Buy,
+                        OrderSide.BUY,
                         entryPrice,
                         this.BarStore.Timestamp))
 
@@ -78,7 +78,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
                 ? Option<IEntryResponse>.Some(
                     new EntryResponse(
                         this.AlgorithmLabel,
-                        OrderSide.Sell,
+                        OrderSide.SELL,
                         entryPrice,
                         this.BarStore.Timestamp))
 

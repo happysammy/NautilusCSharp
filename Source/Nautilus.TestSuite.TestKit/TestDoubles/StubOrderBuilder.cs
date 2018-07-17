@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private Label OrderLabel { get; set; } = new Label("StubOrderLabel");
 
-        private OrderSide OrderSide { get; set; } = OrderSide.Buy;
+        private OrderSide OrderSide { get; set; } = OrderSide.BUY;
 
         private Quantity Quantity { get; set; } = Quantity.Create(1);
 
@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public StubOrderBuilder WithOrderLabel(string label)
+        public StubOrderBuilder WithLabel(string label)
         {
             this.OrderLabel = new Label(label);
 
@@ -65,14 +65,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public StubOrderBuilder WithOrderQuantity(Quantity quantity)
+        public StubOrderBuilder WithQuantity(Quantity quantity)
         {
             this.Quantity = quantity;
 
             return this;
         }
 
-        public StubOrderBuilder WithOrderPrice(Price price)
+        public StubOrderBuilder WithPrice(Price price)
         {
             this.Price = price;
 
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
             this.OrderId = new EntityId(orderId);
-            this.OrderSide = OrderSide.Buy;
+            this.OrderSide = OrderSide.BUY;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 0.00001m);
             this.TimeInForce = TimeInForce.GTD;
@@ -113,11 +113,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public StubOrderBuilder StoplossOrder(string orderId)
+        public StubOrderBuilder StopLossOrder(string orderId)
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
             this.OrderId = new EntityId(orderId);
-            this.OrderSide = OrderSide.Sell;
+            this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.79900m, 0.00001m);
             this.TimeInForce = TimeInForce.GTC;
@@ -129,7 +129,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
             this.OrderId = new EntityId(orderId);
-            this.OrderSide = OrderSide.Sell;
+            this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80100m, 0.00001m);
             this.TimeInForce = TimeInForce.GTC;
@@ -137,7 +137,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public MarketOrder BuildMarket()
+        public MarketOrder BuildMarketOrder()
         {
             return new MarketOrder(
                 this.Symbol,
@@ -148,7 +148,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Timestamp);
         }
 
-        public StopMarketOrder BuildStopMarket()
+        public StopMarketOrder BuildStopMarketOrder()
         {
             return new StopMarketOrder(
                 this.Symbol,
@@ -162,7 +162,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Timestamp);
         }
 
-        public StopLimitOrder BuildStopLimit()
+        public StopLimitOrder BuildStopLimitOrder()
         {
             return new StopLimitOrder(
                 this.Symbol,

@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
-                OrderSide.Buy,
+                OrderSide.BUY,
                 Quantity.Create(10),
                 StubZonedDateTime.UnixEpoch());
 
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
-            Assert.Equal(OrderSide.Buy, order.OrderSide);
+            Assert.Equal(OrderSide.BUY, order.OrderSide);
             Assert.Equal(OrderType.Market, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
-                OrderSide.Buy,
+                OrderSide.BUY,
                 Quantity.Create(10),
                 Price.Create(2000, 0.1m),
                 TimeInForce.GTD,
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
-            Assert.Equal(OrderSide.Buy, order.OrderSide);
+            Assert.Equal(OrderSide.BUY, order.OrderSide);
             Assert.Equal(OrderType.StopMarket, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(2000, order.Price.Value);
@@ -97,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
             Assert.Equal("None", order.OrderIdBroker.Value);
@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
             Assert.Equal("None", order.ExecutionId.Value);
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Rejected_ParametersValid_ReturnsExpectedResult()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message = StubEventMessages.OrderRejectedEvent(order);
 
             // Act
@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Cancelled_ParametersValid_ReturnsExpectedResult()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = StubEventMessages.OrderCancelledEvent(order);
 
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Expired_ParametersValid_ReturnsExpectedResult()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = StubEventMessages.OrderExpiredEvent(order);
 
@@ -170,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Working_ParametersValid_ReturnsExpectedResult()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message = StubEventMessages.OrderWorkingEvent(order);
 
             // Act
@@ -187,7 +187,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Apply_OrderFilled_ReturnsCorrectOrderStatus()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = StubEventMessages.OrderFilledEvent(order);
 
@@ -204,7 +204,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Apply_OrderPartiallyFilled_ReturnsCorrectOrderStatus()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = StubEventMessages.OrderPartiallyFilledEvent(order, order.Quantity / 2, order.Quantity / 2);
 
@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void IsComplete_OrderInitialized_ReturnsFalse()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
             var result = order.IsComplete;
@@ -234,7 +234,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void IsComplete_OrderWorking_ReturnsFalse()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             var message = new OrderWorking(
                 new Symbol("AUDUSD", Venue.LMAX),
@@ -264,8 +264,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder()
-               .WithOrderQuantity(Quantity.Create(100000))
-               .BuildStopMarket();
+               .WithQuantity(Quantity.Create(100000))
+               .BuildStopMarketOrder();
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderPartiallyFilled(
@@ -296,7 +296,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void IsComplete_OrderFilled_ReturnsTrue()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
                 order.Symbol,
@@ -323,7 +323,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void AddOrderIdModification_ReturnsExpectedModificationId()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var modifiedOrderId = EntityIdFactory.ModifiedOrderId(order.OrderId, order.OrderIdCount);
 
             // Act
@@ -338,7 +338,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void GetSlippage_UnfilledOrder_ReturnsZero()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
             var result = order.Slippage;
@@ -355,9 +355,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder()
-               .WithOrderSide(OrderSide.Buy)
-               .WithOrderPrice(Price.Create(0.80000m, 0.00001m))
-               .BuildStopMarket();
+               .WithOrderSide(OrderSide.BUY)
+               .WithPrice(Price.Create(0.80000m, 0.00001m))
+               .BuildStopMarketOrder();
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
@@ -391,9 +391,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder()
-               .WithOrderSide(OrderSide.Sell)
-               .WithOrderPrice(Price.Create(1.20000m, 0.00001m))
-               .BuildStopMarket();
+               .WithOrderSide(OrderSide.SELL)
+               .WithPrice(Price.Create(1.20000m, 0.00001m))
+               .BuildStopMarketOrder();
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
@@ -423,8 +423,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_OrderWithTheSameOrderId_ReturnsFalse()
         {
             // Arrange
-            var order1 = new StubOrderBuilder().WithOrderId("1234567").BuildStopMarket();
-            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarket();
+            var order1 = new StubOrderBuilder().WithOrderId("1234567").BuildStopMarketOrder();
+            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
 
             // Act
             var result = order1.Equals(order2);
@@ -437,8 +437,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_OrderWithTheSameOrderId_ReturnsTrue()
         {
             // Arrange
-            var order1 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarket();
-            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarket();
+            var order1 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
+            var order2 = new StubOrderBuilder().WithOrderId("123456789").BuildStopMarketOrder();
 
             // Act
             var result = order1.Equals(order2);
@@ -454,7 +454,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_NullObject_ReturnsFalse()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
             var result = order.Equals(null);
@@ -467,7 +467,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         internal void Equals_ObjectSomeOtherType_ReturnsFalse()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act - ignore warning, this is why the test returns false!
             var result = order.Equals(string.Empty);

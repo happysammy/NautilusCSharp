@@ -150,12 +150,12 @@ namespace Nautilus.Fix
         {
             if (side == Side.BUY.ToString())
             {
-                return OrderSide.Buy;
+                return OrderSide.BUY;
             }
 
             if (side == Side.SELL.ToString())
             {
-                return OrderSide.Sell;
+                return OrderSide.SELL;
             }
 
             return OrderSide.Undefined;
@@ -168,7 +168,7 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetFixOrderSide(OrderSide orderSide)
         {
-            if (orderSide == OrderSide.Buy)
+            if (orderSide == OrderSide.BUY)
             {
                 return new Side(Side.BUY);
             }
@@ -183,7 +183,7 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetOppositeFixOrderSide(OrderSide orderSide)
         {
-            if (orderSide == OrderSide.Buy)
+            if (orderSide == OrderSide.BUY)
             {
                 return new Side(Side.SELL);
             }

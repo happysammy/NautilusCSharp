@@ -10,7 +10,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -34,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
-            var order = new StubOrderBuilder().BuildMarket();
+            var order = new StubOrderBuilder().BuildMarketOrder();
             var submitted = new OrderSubmitted(
                 order.Symbol,
                 order.OrderId,
@@ -56,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
-            var order = new StubOrderBuilder().BuildMarket();
+            var order = new StubOrderBuilder().BuildMarketOrder();
             var accepted = new OrderAccepted(
                 order.Symbol,
                 order.OrderId,
@@ -78,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
-            var order = new StubOrderBuilder().BuildMarket();
+            var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = new OrderRejected(
                 order.Symbol,
                 order.OrderId,
@@ -93,6 +95,187 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(rejected, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_market_order_working_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
+            var working = new OrderWorking(
+                order.Symbol,
+                order.OrderId,
+                new EntityId("B123456"),
+                new Label("O123456_E"),
+                order.OrderSide,
+                order.OrderType,
+                order.Quantity,
+                order.Price,
+                order.TimeInForce,
+                order.ExpireTime,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(working);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderWorking;
+
+            // Assert
+            Assert.Equal(working, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_limit_order_cancelled_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildStopLimitOrder();
+            var cancelled = new OrderCancelled(
+                order.Symbol,
+                order.OrderId,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(cancelled);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderCancelled;
+
+            // Assert
+            Assert.Equal(cancelled, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_limit_order_cancel_reject_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildStopLimitOrder();
+            var cancelReject = new OrderCancelReject(
+                order.Symbol,
+                order.OrderId,
+                StubZonedDateTime.UnixEpoch(),
+                "REJECT_RESPONSE?",
+                "ORDER_NOT_FOUND",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(cancelReject);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderCancelReject;
+
+            // Assert
+            Assert.Equal(cancelReject, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_limit_order_modified_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildStopLimitOrder();
+            var modified = new OrderModified(
+                order.Symbol,
+                order.OrderId,
+                new EntityId("B123456"),
+                Price.Create(2, 1),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(modified);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderModified;
+
+            // Assert
+            Assert.Equal(modified, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_market_expired_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var expired = new OrderExpired(
+                order.Symbol,
+                order.OrderId,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(expired);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderExpired;
+
+            // Assert
+            Assert.Equal(expired, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_limit_order_partially_filled_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder()
+                .WithQuantity(Quantity.Create(100000))
+                .BuildStopLimitOrder();
+            var partiallyFilled = new OrderPartiallyFilled(
+                order.Symbol,
+                order.OrderId,
+                new EntityId("E123456"),
+                new EntityId("P123456"),
+                order.OrderSide,
+                Quantity.Create(order.Quantity / 2),
+                Quantity.Create(order.Quantity / 2),
+                Price.Create(2, 1),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(partiallyFilled);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderPartiallyFilled;
+
+            // Assert
+            Assert.Equal(partiallyFilled, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_limit_order_filled_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder()
+                .WithQuantity(Quantity.Create(100000))
+                .BuildStopLimitOrder();
+            var filled = new OrderFilled(
+                order.Symbol,
+                order.OrderId,
+                new EntityId("E123456"),
+                new EntityId("P123456"),
+                order.OrderSide,
+                order.Quantity,
+                Price.Create(2, 1),
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(filled);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderFilled;
+
+            // Assert
+            Assert.Equal(filled, unpacked);
             this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
         }
     }

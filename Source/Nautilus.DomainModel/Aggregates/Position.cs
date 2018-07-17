@@ -148,12 +148,12 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotNull(averagePrice, nameof(averagePrice));
             Debug.NotDefault(eventTime, nameof(eventTime));
 
-            if (orderSide == OrderSide.Buy)
+            if (orderSide == OrderSide.BUY)
             {
                 this.relativeQuantity += quantity;
             }
 
-            if (orderSide == OrderSide.Sell)
+            if (orderSide == OrderSide.SELL)
             {
                 this.relativeQuantity -= quantity;
             }

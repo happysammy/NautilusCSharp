@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         [Fact]
         internal void CanInitializeTradeUnit_ReturnsTradeStatusInitializedAndUnitSize()
         {
-            var order = new StubOrderBuilder().BuildStopMarket();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
             var tradeUnit = new TradeUnit(
@@ -47,9 +47,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         [Fact]
         internal void OrderStatus_EntryOrderWorking_ReturnsTradeStatusPendingAndMarketPositionFlat()
         {
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarket();
-            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarketOrder();
+            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
                 new EntityId("NONE"),
@@ -86,9 +86,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         internal void OrderStatus_AllOrdersFilled_ReturnsCompleted()
         {
             // Arrange
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().StoplossOrder("StoplossOrderId").BuildStopMarket();
-            var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
                 new EntityId("NONE"),
@@ -115,8 +115,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         internal void OrderStatus_EntryAndStoplossFilledWithNullProfitTargetOrder_ReturnsCompleted()
         {
             // Arrange
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().StoplossOrder("StoplossOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = Option<StopOrder>.None();
 
             var tradeUnit = new TradeUnit(
@@ -142,9 +142,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         internal void GetOrderById_OrderIsInTradeUnit_ReturnsCorrectOrder()
         {
             // Arrange
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarket();
-            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarketOrder();
+            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
                 new EntityId("NONE"),
@@ -165,9 +165,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         internal void GetOrderById_OrderIsNotInTradeUnit_ReturnsOrderNull()
         {
             // Arrange
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarket();
-            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().EntryOrder("StoplossOrderId").BuildStopMarketOrder();
+            var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
                 new EntityId("NONE"),

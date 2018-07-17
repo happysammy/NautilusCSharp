@@ -19,9 +19,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().WithOrderId("EntryOrderId").BuildStopMarket(),
-                new StubOrderBuilder().WithOrderId("StoplossOrderId").BuildStopMarket(),
-                new StubOrderBuilder().WithOrderId("ProfitTargetOrderId").BuildStopMarket());
+                new StubOrderBuilder().WithOrderId("EntryOrderId").BuildStopMarketOrder(),
+                new StubOrderBuilder().WithOrderId("StoplossOrderId").BuildStopMarketOrder(),
+                new StubOrderBuilder().WithOrderId("ProfitTargetOrderId").BuildStopMarketOrder());
         }
     }
 }

@@ -114,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
             var stopLossModificationsIndex = new Dictionary<Order, Price> { { trade.TradeUnits[0].StopLoss, Price.Create(0.79000m, 0.00001m) } };
-            var order = new StubOrderBuilder().StoplossOrder("1234");
+            var order = new StubOrderBuilder().StopLossOrder("1234");
 
             var message = new ModifyStopLoss(trade, stopLossModificationsIndex, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 

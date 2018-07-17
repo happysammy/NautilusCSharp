@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);
-            var entryOrder = new StubOrderBuilder().BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
             var orderExpiryCounter = new OrderExpiryCounter(entryOrder, tradeProfile.BarsValid);
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);
-            var entryOrder = new StubOrderBuilder().BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().BuildStopMarketOrder();
             var orderExpiryCounter = new OrderExpiryCounter(entryOrder, tradeProfile.BarsValid);
 
             // Act
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);
-            var entryOrder = new StubOrderBuilder().BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().BuildStopMarketOrder();
             var orderExpiryCounter = new OrderExpiryCounter(entryOrder, tradeProfile.BarsValid);
 
             // Act
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);
-            var entryOrder = new StubOrderBuilder().BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().BuildStopMarketOrder();
             var orderExpiryCounter = new OrderExpiryCounter(entryOrder, tradeProfile.BarsValid);
 
             // Act
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);
-            var entryOrder = new StubOrderBuilder().BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().BuildStopMarketOrder();
             var orderExpiryCounter = new OrderExpiryCounter(entryOrder, tradeProfile.BarsValid);
 
             // Act

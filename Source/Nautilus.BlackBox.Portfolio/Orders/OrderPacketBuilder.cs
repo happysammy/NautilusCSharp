@@ -161,7 +161,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         // Orderside cannot be Undefined (as it was already checked by the signal).
         private static OrderSide GetOppositeSide(OrderSide orderSide)
         {
-            return orderSide == OrderSide.Buy ? OrderSide.Sell : OrderSide.Buy;
+            return orderSide == OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
         }
     }
 }

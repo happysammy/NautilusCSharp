@@ -26,9 +26,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId").BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder };
             var orderPacket = new AtomicOrderPacket(
@@ -45,9 +45,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId").WithOrderSide(OrderSide.Sell).BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId").WithOrderSide(OrderSide.Buy).WithOrderPrice(Price.Create(1.30000m, 0.00001m)).BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").WithOrderSide(OrderSide.Buy).BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId").WithOrderSide(OrderSide.BUY).WithPrice(Price.Create(1.30000m, 0.00001m)).BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder());
             var atomicOrders = new List<AtomicOrder> { atomicOrder };
             var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
@@ -63,20 +63,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId1").BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder());
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId2").BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId2").BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId2").BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").BuildStopMarketOrder());
 
             var atomicOrder3 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId3").BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId3").BuildStopMarket(),
+                new StubOrderBuilder().EntryOrder("EntryOrderId3").BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder(),
                 Option<StopOrder>.None());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder1, atomicOrder2, atomicOrder3 };
@@ -94,20 +94,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId1").WithOrderSide(OrderSide.Sell).BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId1").WithOrderSide(OrderSide.Buy).BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId1").WithOrderSide(OrderSide.Buy).BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId1").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId1").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId1").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder());
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId2").WithOrderSide(OrderSide.Sell).BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId2").WithOrderSide(OrderSide.Buy).BuildStopMarket(),
-                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").WithOrderSide(OrderSide.Buy).BuildStopMarket());
+                new StubOrderBuilder().EntryOrder("EntryOrderId2").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId2").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder(),
+                new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder());
 
             var atomicOrder3 = new AtomicOrder(
                 new TradeType("TestTrade"),
-                new StubOrderBuilder().EntryOrder("EntryOrderId3").WithOrderSide(OrderSide.Sell).BuildStopMarket(),
-                new StubOrderBuilder().StoplossOrder("StoplossOrderId3").WithOrderSide(OrderSide.Buy).BuildStopMarket(),
+                new StubOrderBuilder().EntryOrder("EntryOrderId3").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StoplossOrderId3").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder(),
                 Option<StopOrder>.None());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder1, atomicOrder2, atomicOrder3 };

@@ -11,8 +11,7 @@ namespace Nautilus.DomainModel.Enums
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// The <see cref="OrderSide"/> enumeration. Represents the relative direction of an
-    /// <see cref="Order"/>.
+    /// Represents the execution direction of an <see cref="Order"/>.
     /// </summary>
     public enum OrderSide
     {
@@ -24,11 +23,11 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// A buy order side.
         /// </summary>
-        Buy = 1,
+        BUY = 1,
 
         /// <summary>
         /// A sell order side.
         /// </summary>
-        Sell = 2
+        SELL = 2
     }
 }

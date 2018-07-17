@@ -26,9 +26,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static AtomicOrderPacket Build()
         {
-            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarket();
-            var stoplossOrder = new StubOrderBuilder().StoplossOrder("StoplossOrderId").BuildStopMarket();
-            var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarket();
+            var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
+            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
@@ -48,16 +48,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static AtomicOrderPacket ThreeUnitsAndExpireTime(ZonedDateTime expireTime)
         {
-            var entryOrder1 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId1").WithExpireTime(expireTime).BuildStopMarket();
-            var stoplossOrder1 = new StubOrderBuilder().StoplossOrder("StoplossOrderId1").BuildStopMarket();
-            var profitTargetOrder1 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId1").BuildStopMarket();
+            var entryOrder1 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId1").WithExpireTime(expireTime).BuildStopMarketOrder();
+            var stoplossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
+            var profitTargetOrder1 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId1").BuildStopMarketOrder();
 
-            var entryOrder2 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId2").WithExpireTime(expireTime).BuildStopMarket();
-            var stoplossOrder2 = new StubOrderBuilder().StoplossOrder("StoplossOrderId2").BuildStopMarket();
-            var profitTargetOrder2 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").BuildStopMarket();
+            var entryOrder2 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId2").WithExpireTime(expireTime).BuildStopMarketOrder();
+            var stoplossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
+            var profitTargetOrder2 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").BuildStopMarketOrder();
 
-            var entryOrder3 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId3").WithExpireTime(expireTime).BuildStopMarket();
-            var stoplossOrder3 = new StubOrderBuilder().StoplossOrder("StoplossOrderId3").BuildStopMarket();
+            var entryOrder3 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId3").WithExpireTime(expireTime).BuildStopMarketOrder();
+            var stoplossOrder3 = new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder();
             var profitTargetOrder3 = Option<StopOrder>.None();
 
             var atomicOrder1 = new AtomicOrder(

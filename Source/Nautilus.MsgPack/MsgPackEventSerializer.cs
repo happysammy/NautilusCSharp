@@ -9,7 +9,6 @@
 namespace Nautilus.MsgPack
 {
     using System;
-    using System.Data;
     using System.Globalization;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
@@ -21,8 +20,6 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using NodaTime.Calendars;
-    using QuickFix.Fields;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
@@ -85,6 +82,12 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.EventType), OrderWorking);
                     package.Add(new MessagePackObject(Key.OrderIdBroker), @event.OrderIdBroker.ToString());
                     package.Add(new MessagePackObject(Key.Label), @event.Label.ToString());
+                    package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
+                    package.Add(new MessagePackObject(Key.OrderType), @event.OrderType.ToString());
+                    package.Add(new MessagePackObject(Key.Quantity), @event.Quantity.Value);
+                    package.Add(new MessagePackObject(Key.Price), @event.Price.ToString());
+                    package.Add(new MessagePackObject(Key.TimeInForce), @event.TimeInForce.ToString());
+                    package.Add(new MessagePackObject(Key.ExpireTime), GetExpireTimeString(@event.ExpireTime));
                     package.Add(new MessagePackObject(Key.WorkingTime), @event.WorkingTime.ToIsoString());
                     break;
 
@@ -115,25 +118,25 @@ namespace Nautilus.MsgPack
                 case OrderPartiallyFilled @event:
                     package.Add(new MessagePackObject(Key.EventType), OrderPartiallyFilled);
                     package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
-                    package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionTicket.Value);
+                    package.Add(new MessagePackObject(Key.ExecutionTicket), @event.ExecutionTicket.Value);
                     package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
                     package.Add(new MessagePackObject(Key.FilledQuantity), @event.FilledQuantity.Value);
                     package.Add(new MessagePackObject(Key.LeavesQuantity), @event.LeavesQuantity.Value);
                     package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
-                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.OrderSide.ToString());
+                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
 
                 case OrderFilled @event:
                     package.Add(new MessagePackObject(Key.EventType), OrderFilled);
                     package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
-                    package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionTicket.Value);
+                    package.Add(new MessagePackObject(Key.ExecutionTicket), @event.ExecutionTicket.Value);
                     package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
                     package.Add(new MessagePackObject(Key.FilledQuantity), @event.FilledQuantity.Value);
                     package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
-                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.OrderSide.ToString());
+                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
 
-                default: throw new InvalidOperationException("Cannot serialize the order event.");
+                default: throw new InvalidOperationException("Cannot serialize the order event object.");
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -191,7 +194,7 @@ namespace Nautilus.MsgPack
                         new EntityId(unpacked[Key.OrderIdBroker].ToString()),
                         new Label(unpacked[Key.Label].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        unpacked[Key.OrderSide].ToString().ToEnum<OrderType>(),
+                        unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
                         Quantity.Create(unpacked[Key.Quantity].AsInt32()),
                         GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
@@ -212,7 +215,7 @@ namespace Nautilus.MsgPack
                     return new OrderCancelReject(
                         symbol,
                         orderId,
-                        unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
+                        unpacked[Key.RejectedTime].ToString().ToZonedDateTimeFromIso(),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
@@ -223,7 +226,7 @@ namespace Nautilus.MsgPack
                         symbol,
                         orderId,
                         new EntityId(unpacked[Key.OrderIdBroker].ToString()),
-                        GetPrice(unpacked[Key.Price].ToString()),
+                        GetPrice(unpacked[Key.ModifiedPrice].ToString()),
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -245,7 +248,7 @@ namespace Nautilus.MsgPack
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
                         Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
-                        GetPrice(unpacked[Key.Price].ToString()),
+                        GetPrice(unpacked[Key.AveragePrice].ToString()),
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -257,8 +260,8 @@ namespace Nautilus.MsgPack
                         new EntityId(unpacked[Key.ExecutionId].ToString()),
                         new EntityId(unpacked[Key.ExecutionTicket].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        GetPrice(unpacked[Key.Price].ToString()),
+                        Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
+                        GetPrice(unpacked[Key.AveragePrice].ToString()),
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -280,6 +283,13 @@ namespace Nautilus.MsgPack
             return expireTimeString == None
                 ? Option<ZonedDateTime?>.None()
                 : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
+        }
+
+        private static string GetExpireTimeString(Option<ZonedDateTime?> expireTime)
+        {
+            return expireTime.HasNoValue
+                ? None
+                : expireTime.Value.ToIsoString();
         }
 
         private static class Key
