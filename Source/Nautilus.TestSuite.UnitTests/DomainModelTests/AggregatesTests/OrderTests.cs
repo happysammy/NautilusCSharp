@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = new MarketOrder(
-                new Symbol("SYMBOL", Exchange.LMAX),
+                new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
                 OrderSide.Buy,
@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Exchange.LMAX), order.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.Buy, order.OrderSide);
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = new StopMarketOrder(
-                new Symbol("SYMBOL", Exchange.LMAX),
+                new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
                 OrderSide.Buy,
@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Exchange.LMAX), order.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.Buy, order.OrderSide);
@@ -237,7 +237,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarket();
 
             var message = new OrderWorking(
-                new Symbol("AUDUSD", Exchange.LMAX),
+                new Symbol("AUDUSD", Venue.LMAX),
                 order.OrderId,
                 new EntityId("some_broker_orderId"),
                 order.OrderLabel,
@@ -269,7 +269,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderPartiallyFilled(
-                new Symbol("AUDUSD", Exchange.LMAX),
+                new Symbol("AUDUSD", Venue.LMAX),
                 order.OrderId,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),

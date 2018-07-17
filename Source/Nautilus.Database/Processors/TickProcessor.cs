@@ -55,14 +55,14 @@ namespace Nautilus.Database.Processors
         /// the <see cref="BarAggregationController"/>.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
-        /// <param name="exchange">The tick exchange.</param>
+        /// <param name="venue">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
         /// <param name="decimals">The expected decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         public void OnTick(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             decimal bid,
             decimal ask,
             int decimals,
@@ -76,7 +76,7 @@ namespace Nautilus.Database.Processors
                 Debug.Int32NotOutOfRange(decimals, nameof(decimals), 0, int.MaxValue);
 
                 var tick = new Tick(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     Price.Create(bid, decimals),
                     Price.Create(ask, decimals),
                     timestamp);

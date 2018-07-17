@@ -27,7 +27,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 StubZonedDateTime.UnixEpoch());
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             position.Apply(message);
 
             // Assert
-            Assert.Equal(new Symbol("SYMBOL", Exchange.GLOBEX), position.Symbol);
+            Assert.Equal(new Symbol("SYMBOL", Venue.GLOBEX), position.Symbol);
             Assert.Equal("NONE", position.FromEntryOrderId.ToString());
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
@@ -62,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 StubZonedDateTime.UnixEpoch());
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 StubZonedDateTime.UnixEpoch());
@@ -187,7 +187,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 StubZonedDateTime.UnixEpoch());

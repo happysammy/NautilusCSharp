@@ -85,7 +85,7 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.BarsNamespace +
-            $":{this.Type.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.Type.Symbol.Venue.ToString().ToLower()}" +
             $":{this.Type.Symbol.Code.ToLower()}" +
             $":{this.Type.Specification.Resolution.ToString().ToLower()}" +
             $":{this.Type.Specification.QuoteType.ToString().ToLower()}" +

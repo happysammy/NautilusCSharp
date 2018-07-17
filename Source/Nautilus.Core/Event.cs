@@ -44,7 +44,25 @@ namespace Nautilus.Core
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a string representation of the event.
+        /// Returns a value indicating whether this event is equal to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals([CanBeNull] object other)
+        {
+            // ReSharper disable once UsePatternMatching (causes compiler warning).
+            var otherEvent = other as Event;
+            return otherEvent != null & this.Id.Equals(otherEvent?.Id);
+        }
+
+        /// <summary>
+        /// Returns the hash code for this event.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode() => this.Id.ToString().GetHashCode();
+
+        /// <summary>
+        /// Returns a string representation of this event.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => nameof(this.GetType);

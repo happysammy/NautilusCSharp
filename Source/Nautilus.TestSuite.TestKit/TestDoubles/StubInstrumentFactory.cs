@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static Instrument AUDUSD()
         {
-            var symbol = new Symbol($"AUDUSD", Exchange.FXCM);
+            var symbol = new Symbol($"AUDUSD", Venue.FXCM);
 
             var instrument = new Instrument(
                     symbol,
@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument EURUSD()
         {
-            var symbol = new Symbol($"EURUSD", Exchange.FXCM);
+            var symbol = new Symbol($"EURUSD", Venue.FXCM);
 
             var instrument = new Instrument(
                     symbol,
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument USDJPY()
         {
-            var symbol = new Symbol($"USDJPY", Exchange.FXCM);
+            var symbol = new Symbol($"USDJPY", Venue.FXCM);
 
             var instrument = new Instrument(
                    symbol,

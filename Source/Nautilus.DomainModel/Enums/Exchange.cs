@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// The venue an instrument is traded on.
     /// </summary>
-    public enum Exchange
+    public enum Venue
     {
         /// <summary>
         /// The simulated exchange venue (backtesting).

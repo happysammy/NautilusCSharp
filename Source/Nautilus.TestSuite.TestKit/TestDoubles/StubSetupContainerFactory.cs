@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var guidFactory = new GuidFactory();
             var instrumentRepository = new Mock<IInstrumentRepository>().Object;
-            this.QuoteProvider = new QuoteProvider(Exchange.FXCM);
+            this.QuoteProvider = new QuoteProvider(Venue.FXCM);
 
             var riskModel = new RiskModel(
                 new EntityId("None"),

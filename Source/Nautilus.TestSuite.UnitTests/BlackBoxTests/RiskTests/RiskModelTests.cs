@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var result = riskModel.GetHardLimitQuantity(new Symbol("SYMBOL", Exchange.GLOBEX));
+            var result = riskModel.GetHardLimitQuantity(new Symbol("SYMBOL", Venue.GLOBEX));
 
             // Assert
             Assert.True(result.HasNoValue);
@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         internal void UpdatePositionSizeHardLimit_ValidValues_ReturnsExpectedResultAndLogs()
         {
             // Arrange
-            var symbol = new Symbol("SYMBOL", Exchange.GLOBEX);
+            var symbol = new Symbol("SYMBOL", Venue.GLOBEX);
             var riskModel = new RiskModel(
                 new EntityId("NONE"),
                 Percentage.Create(10),
@@ -234,7 +234,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         internal void UpdatePositionSizeHardLimit_WhenHardLimitInPlaceWithValidValues_UpdatesAndLogs()
         {
             // Arrange
-            var symbol = new Symbol("SYMBOL", Exchange.GLOBEX);
+            var symbol = new Symbol("SYMBOL", Venue.GLOBEX);
             var riskModel = new RiskModel(
                 new EntityId("NONE"),
                 Percentage.Create(10),

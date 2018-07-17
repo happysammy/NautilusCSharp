@@ -43,7 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             setupFactory.QuoteProvider.OnTick(
                 new Tick(
-                    new Symbol("AUDUSD", Exchange.FXCM),
+                    new Symbol("AUDUSD", Venue.FXCM),
                     Price.Create(0.80001m, 0.00001m),
                     Price.Create(0.80005m, 0.00001m),
                     StubZonedDateTime.UnixEpoch()));

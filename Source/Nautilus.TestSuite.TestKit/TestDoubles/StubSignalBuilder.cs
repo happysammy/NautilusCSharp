@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
             return new EntrySignal(
-                new Symbol("AUDUSD", Exchange.GLOBEX),
+                new Symbol("AUDUSD", Venue.GLOBEX),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeProfile,
@@ -44,7 +44,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var tradeProfile = StubTradeProfileFactory.Create(20);
 
             return new EntrySignal(
-                new Symbol("EURUSD", Exchange.FXCM),
+                new Symbol("EURUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeProfile,
@@ -60,7 +60,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new ExitSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new ExitSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new ExitSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new ExitSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new TrailingStopSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Period signalTimeOffset)
         {
             return new TrailingStopSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,

@@ -112,7 +112,7 @@ namespace Nautilus.Brokerage.FXCM
                         throw new InvalidOperationException($"Cannot find symbol for {group.GetField(Tags.Symbol)}");
                     }
 
-                    var symbol = new Symbol(symbolQuery.Value, Exchange.FXCM);
+                    var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
                     var symbolId = new EntityId(symbol.ToString());
                     var brokerSymbol = new EntityId(group.GetField(Tags.Symbol));
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -289,7 +289,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.tickProcessor.OnTick(
                     symbol,
-                    Exchange.FXCM,
+                    Venue.FXCM,
                     Convert.ToDecimal(bid),
                     Convert.ToDecimal(ask),
                     this.pricePrecisionIndex[fxcmSymbol],
@@ -317,7 +317,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.fixGateway.OnOrderCancelReject(
                     symbol,
-                    Exchange.FXCM,
+                    Venue.FXCM,
                     orderId,
                     brokerOrderId,
                     cancelRejectResponseTo,
@@ -366,7 +366,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderRejected(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         rejectReason,
                         timestamp);
@@ -376,7 +376,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderCancelled(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -387,7 +387,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderModified(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -404,7 +404,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderWorking(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -422,7 +422,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderExpired(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -438,7 +438,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderFilled(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         executionId,
@@ -461,7 +461,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderPartiallyFilled(
                         symbol,
-                        Exchange.FXCM,
+                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         executionId,

@@ -219,10 +219,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             return new BarDataEvent(
                 new BarType(
-                    new Symbol("SYMBOL", Exchange.LMAX),
+                    new Symbol("SYMBOL", Venue.LMAX),
                     new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)),
                 StubBarBuilder.Build(),
-                StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),
+                StubTickFactory.Create(new Symbol("SYMBOL", Venue.LMAX)),
                 0.00001m,
                 false,
                 Guid.NewGuid(),
@@ -233,7 +233,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             return new SignalEvent(
                 new EntrySignal(
-                    new Symbol("SYMBOL", Exchange.LMAX),
+                    new Symbol("SYMBOL", Venue.LMAX),
                     new EntityId("NONE"),
                     new Label("TestSignal"),
                     StubTradeProfileFactory.Create(20),
@@ -265,7 +265,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         private static OrderFilled DummyOrderFilledEventWrapper()
         {
             return new OrderFilled(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("some_orderId"),
                 new EntityId("some_executionId"),
                 new EntityId("some_executionTicket"),

@@ -9,11 +9,11 @@
 namespace Nautilus.MsgPack
 {
     using System.IO;
-    using global::MsgPack.Serialization;
     using Nautilus.Core.Validation;
+    using global::MsgPack.Serialization;
 
     /// <summary>
-    /// Provides a serializer for Message Pack.
+    /// Provides a serializer for Message Pack specification.
     /// </summary>
     public static class MsgPackSerializer
     {
@@ -37,7 +37,7 @@ namespace Nautilus.MsgPack
         }
 
         /// <summary>
-        /// Deserializes the given byte array to the specified type.
+        /// Deserializes the given Message Pack byte array to the specified type.
         /// </summary>
         /// <param name="bytes">The bytes to deserialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>

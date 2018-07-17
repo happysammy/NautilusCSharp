@@ -196,7 +196,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             this.tradeBook.AddTrade(trade);
 
             var exitSignal = new ExitSignal(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("Test"),
                 new Label("TestSignal"),
                 new TradeType("TestTrade"),
@@ -227,7 +227,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             this.tradeBook.AddTrade(trade);
 
             var exitSignal = new ExitSignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("Test"),
                 new Label("Test"),
                 new TradeType("TestTrade"),

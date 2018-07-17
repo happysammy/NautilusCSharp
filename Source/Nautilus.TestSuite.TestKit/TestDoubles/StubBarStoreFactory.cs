@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarStore Create()
         {
             var barStore = new BarStore(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new BarSpecification(QuoteType.Bid, Resolution.Minute, 5));
 
             foreach (var bar in StubBarBuilder.BuildList())

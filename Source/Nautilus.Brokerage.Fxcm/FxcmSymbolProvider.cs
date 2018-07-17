@@ -127,7 +127,7 @@ namespace Nautilus.Brokerage.FXCM
 
             foreach (var symbol in Symbols.Values)
             {
-                symbols.Add(new Symbol(symbol, Exchange.FXCM));
+                symbols.Add(new Symbol(symbol, Venue.FXCM));
             }
 
             return symbols;

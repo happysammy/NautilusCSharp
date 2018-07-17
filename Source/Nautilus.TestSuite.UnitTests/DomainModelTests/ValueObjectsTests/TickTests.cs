@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         public TickTests()
         {
             // Fixture Setup
-            this.symbol = new Symbol("AUDUSD", Exchange.FXCM);
+            this.symbol = new Symbol("AUDUSD", Venue.FXCM);
         }
         [Fact]
         internal void Zero_ReturnsPriceWithAValueOfZero()

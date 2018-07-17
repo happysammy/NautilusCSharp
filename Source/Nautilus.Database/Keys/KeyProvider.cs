@@ -92,7 +92,7 @@ namespace Nautilus.Database.Keys
             Debug.NotNull(symbol, nameof(symbol));
 
             return TicksConst +
-                   $"{Seperator}{symbol.Exchange.ToString().ToLower()}" +
+                   $"{Seperator}{symbol.Venue.ToString().ToLower()}" +
                    $"{Seperator}{symbol.Code.ToLower()}" + WildcardConst;
         }
 
@@ -139,7 +139,7 @@ namespace Nautilus.Database.Keys
             Debug.NotNull(barType, nameof(barType));
 
             return BarsConst +
-                   $"{Seperator}{barType.Symbol.Exchange.ToString().ToLower()}" +
+                   $"{Seperator}{barType.Symbol.Venue.ToString().ToLower()}" +
                    $"{Seperator}{barType.Symbol.Code.ToLower()}" +
                    $"{Seperator}{barType.Specification.Resolution.ToString().ToLower()}" +
                    $"{Seperator}{barType.Specification.QuoteType.ToString().ToLower()}" + WildcardConst;

@@ -160,13 +160,13 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="rejectReason">The order reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderRejected(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string rejectReason,
             ZonedDateTime timestamp);
@@ -176,7 +176,7 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
@@ -184,7 +184,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderCancelReject(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string cancelRejectResponseTo,
@@ -196,14 +196,14 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderCancelled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -214,7 +214,7 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -223,7 +223,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderModified(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -236,7 +236,7 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -250,7 +250,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderWorking(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -268,14 +268,14 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderExpired(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -286,7 +286,7 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -299,7 +299,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderFilled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string executionId,
@@ -316,7 +316,7 @@ namespace Nautilus.Common.Interfaces
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -330,7 +330,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderPartiallyFilled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string executionId,

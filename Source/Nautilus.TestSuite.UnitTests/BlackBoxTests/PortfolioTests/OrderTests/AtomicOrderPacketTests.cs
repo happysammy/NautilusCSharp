@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         {
             // Arrange
             var orderPacket = new AtomicOrderPacket(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new TradeType("TestTrade"),
                 new List<AtomicOrder>{StubAtomicOrderBuilder.Build()},
                 new EntityId("NONE"),

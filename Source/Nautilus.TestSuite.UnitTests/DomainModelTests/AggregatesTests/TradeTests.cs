@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(TradeStatus.Initialized, trade.TradeStatus);
             Assert.Equal("TestTrade", trade.TradeType.ToString());
-            Assert.Equal(new Symbol("AUDUSD", Exchange.FXCM), trade.Symbol);
+            Assert.Equal(new Symbol("AUDUSD", Venue.FXCM), trade.Symbol);
             Assert.Equal("TestTrade", trade.TradeId.ToString());
             Assert.Equal(MarketPosition.Flat, trade.MarketPosition);
             Assert.Equal(9, trade.OrderIdList.Count); // 3 ELS orders with 3 order each = 9 orderId's

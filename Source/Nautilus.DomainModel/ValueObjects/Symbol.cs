@@ -22,14 +22,14 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Symbol"/> class.
         /// </summary>
         /// <param name="code">The symbols code.</param>
-        /// <param name="exchange">The symbols exchange.</param>
-        /// <exception cref="ValidationException">Throws if the code is null.</exception>
-        public Symbol(string code, Exchange exchange) : base($"{code}.{exchange}")
+        /// <param name="venue">The symbols exchange.</param>
+        public Symbol(string code, Venue venue)
+            : base($"{code}.{venue}")
         {
-            Validate.NotNull(code, nameof(code));
+            Debug.NotNull(code, nameof(code));
 
-            this.Code = code;
-            this.Exchange = exchange;
+            this.Code = code.ToUpper();
+            this.Venue = venue;
         }
 
         /// <summary>
@@ -40,6 +40,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the symbols exchange.
         /// </summary>
-        public Exchange Exchange { get; }
+        public Venue Venue { get; }
     }
 }

@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new Label("NONE"),
                 tradeProfile,
@@ -81,7 +81,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("NONE"),
                 new Label("Test Signal"),
                 tradeProfile,
@@ -122,7 +122,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
@@ -164,7 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
@@ -205,7 +205,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             // Arrange
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
@@ -240,7 +240,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             var signal = new EntrySignal(
-                new Symbol("SYMBOL", Exchange.GLOBEX),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 new EntityId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,

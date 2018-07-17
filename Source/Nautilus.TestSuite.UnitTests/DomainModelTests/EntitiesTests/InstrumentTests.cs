@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var symbol = deserialized["Symbol"].ToStringDictionary();
 
             var deserializedInstrument = new Instrument(
-                new Symbol(symbol["Code"], symbol["Exchange"].ToEnum<Exchange>()),
+                new Symbol(symbol["Code"], symbol["Exchange"].ToEnum<Venue>()),
                 new EntityId(symbol["Value"]),
                 new EntityId("AUD/USD"),
                 deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),

@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
             var result = this.barStore.Symbol;
 
             // Assert
-            Assert.Equal(new Symbol("AUDUSD", Exchange.FXCM), result);
+            Assert.Equal(new Symbol("AUDUSD", Venue.FXCM), result);
         }
 
         [Fact]

@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var tick = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
@@ -53,19 +53,19 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var tick1 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
             var tick2 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         {
             // Arrange
             var tick1 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80000m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
@@ -93,13 +93,13 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             this.spreadAnalyzer.OnBarUpdate(tick1.Timestamp);
 
             var tick2 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80006m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
 
             var tick3 = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80004m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());

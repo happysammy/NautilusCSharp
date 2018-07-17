@@ -31,8 +31,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="bid">The quoted bid price.</param>
         /// <param name="ask">The quoted ask price.</param>
         /// <param name="timestamp">The quote timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if the
-        /// timestamp is the default struct value.</exception>
         public Tick(
             Symbol symbol,
             Price bid,
@@ -57,8 +55,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="bid">The quoted bid price.</param>
         /// <param name="ask">The quoted ask price.</param>
         /// <param name="timestamp">The quote timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if the
-        /// timestamp is the default struct value.</exception>
         public Tick(
             Symbol symbol,
             decimal bid,
@@ -145,7 +141,7 @@ namespace Nautilus.DomainModel.ValueObjects
             var exchange = header[1];
 
             return new Tick(
-                new Symbol(code, exchange.ToEnum<Exchange>()),
+                new Symbol(code, exchange.ToEnum<Venue>()),
                 SafeConvert.ToDecimalOr(values[1], 0m),
                 SafeConvert.ToDecimalOr(values[2], 0m),
                 values[3].ToZonedDateTimeFromIso());

@@ -44,11 +44,32 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.SerializeOrderEvent(submitted);
-            var hexString = ByteHelpers.ByteArrayToString(packed);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderSubmitted;
 
             // Assert
-            this.output.WriteLine(hexString);
+            Assert.Equal(submitted, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
 
+        [Fact]
+        internal void Test_can_serialize_market_order_accepted_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarket();
+            var accepted = new OrderAccepted(
+                order.Symbol,
+                order.OrderId,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(accepted);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderAccepted;
+
+            // Assert
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
         }
     }
 }

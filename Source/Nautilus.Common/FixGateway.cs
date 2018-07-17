@@ -375,13 +375,13 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="rejectReason">The order reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderRejected(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string rejectReason,
             ZonedDateTime timestamp)
@@ -394,7 +394,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderRejected(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     rejectReason,
@@ -420,7 +420,7 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
@@ -428,7 +428,7 @@ namespace Nautilus.Common
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderCancelReject(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string cancelRejectResponseTo,
@@ -444,7 +444,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderCancelReject(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     cancelRejectResponseTo,
@@ -472,14 +472,14 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderCancelled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -494,7 +494,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderCancelled(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -519,7 +519,7 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -528,7 +528,7 @@ namespace Nautilus.Common
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderModified(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -546,7 +546,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderModified(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
                     Price.Create(price, decimals),
@@ -574,7 +574,7 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -588,7 +588,7 @@ namespace Nautilus.Common
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderWorking(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -612,7 +612,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderWorking(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
                     new Label(orderLabel),
@@ -654,14 +654,14 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderExpired(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string orderLabel,
@@ -676,7 +676,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderExpired(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -701,7 +701,7 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -714,7 +714,7 @@ namespace Nautilus.Common
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderFilled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string executionId,
@@ -739,7 +739,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderFilled(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
                     new EntityId(executionTicket),
@@ -772,7 +772,7 @@ namespace Nautilus.Common
         /// Service via the Messaging system.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
-        /// <param name="exchange">The order exchange.</param>
+        /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -786,7 +786,7 @@ namespace Nautilus.Common
         /// <param name="timestamp">The event timestamp.</param>
         public void OnOrderPartiallyFilled(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             string orderId,
             string brokerOrderId,
             string executionId,
@@ -813,7 +813,7 @@ namespace Nautilus.Common
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderEvent = new OrderPartiallyFilled(
-                    new Symbol(symbol, exchange),
+                    new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
                     new EntityId(executionTicket),

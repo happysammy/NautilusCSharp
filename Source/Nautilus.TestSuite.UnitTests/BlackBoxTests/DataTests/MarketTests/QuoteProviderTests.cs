@@ -31,11 +31,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
         {
             // Fixture;
             this.output = output;
-            this.quoteProvider = new QuoteProvider(Exchange.LMAX);
+            this.quoteProvider = new QuoteProvider(Venue.LMAX);
 
-            this.audusd = new Symbol("AUDUSD", Exchange.LMAX);
-            this.eurusd = new Symbol("EURUSD", Exchange.LMAX);
-            this.eurgbp = new Symbol("EURGBP", Exchange.LMAX);
+            this.audusd = new Symbol("AUDUSD", Venue.LMAX);
+            this.eurusd = new Symbol("EURUSD", Venue.LMAX);
+            this.eurgbp = new Symbol("EURGBP", Venue.LMAX);
         }
 
         [Fact]

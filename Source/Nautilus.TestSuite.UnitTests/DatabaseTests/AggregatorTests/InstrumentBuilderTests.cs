@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             var instrument = new Instrument(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 CurrencyCode.CAD,

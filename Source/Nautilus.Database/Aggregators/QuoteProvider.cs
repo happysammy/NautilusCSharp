@@ -28,11 +28,11 @@ namespace Nautilus.Database.Aggregators
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteProvider"/> class.
         /// </summary>
-        public QuoteProvider(Exchange exchange)
+        public QuoteProvider(Venue venue)
         {
-            Debug.NotDefault(exchange, nameof(exchange));
+            Debug.NotDefault(venue, nameof(venue));
 
-            this.Exchange = exchange;
+            this.Venue = venue;
             this.ticks = new ConcurrentDictionary<Symbol, Tick>();
             this.symbolCodes = new ConcurrentDictionary<string, Symbol>();
         }
@@ -40,7 +40,7 @@ namespace Nautilus.Database.Aggregators
         /// <summary>
         /// Gets the quote providers exchange.
         /// </summary>
-        public Exchange Exchange { get; }
+        public Venue Venue { get; }
 
         /// <summary>
         /// Updates the quote provider with the given quote.
@@ -50,7 +50,7 @@ namespace Nautilus.Database.Aggregators
         public void OnTick(Tick tick)
         {
             Debug.NotNull(tick, nameof(tick));
-            Debug.EqualTo(tick.Symbol.Exchange, nameof(tick.Symbol), this.Exchange);
+            Debug.EqualTo(tick.Symbol.Venue, nameof(tick.Symbol), this.Venue);
 
             if (!this.ticks.ContainsKey(tick.Symbol))
             {

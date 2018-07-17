@@ -63,8 +63,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The price value.</param>
         /// <param name="tickSize">The price tick size.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is negative, or if the
-        /// decimal places of the value is greater than the decimal places of the tick size.</exception>
         public static Price Create(decimal value, decimal tickSize)
         {
             return new Price(value, tickSize);
@@ -76,8 +74,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="value">The price value.</param>
         /// <param name="decimals">The price decimal places.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is negative, or if the
-        /// decimal places of the value is greater than the decimal places of the tick size.</exception>
         public static Price Create(decimal value, int decimals)
         {
             return new Price(value, decimals.ToTickSize());
@@ -89,7 +85,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other price.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Price Add(Price other)
         {
             Debug.NotNull(other, nameof(other));
@@ -104,7 +99,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other price.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Price Subtract(Price other)
         {
             Debug.NotNull(other, nameof(other));

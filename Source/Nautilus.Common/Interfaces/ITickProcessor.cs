@@ -22,14 +22,14 @@ namespace Nautilus.Common.Interfaces
         /// data aggregation controller for the system.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
-        /// <param name="exchange">The tick exchange.</param>
+        /// <param name="venue">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
         /// <param name="decimals">The decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         void OnTick(
             string symbol,
-            Exchange exchange,
+            Venue venue,
             decimal bid,
             decimal ask,
             int decimals,

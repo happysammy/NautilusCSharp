@@ -85,7 +85,7 @@ namespace Nautilus.Database.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.TicksNamespace +
-            $":{this.Symbol.Exchange.ToString().ToLower()}" +
+            $":{this.Symbol.Venue.ToString().ToLower()}" +
             $":{this.Symbol.Code.ToLower()}" +
             $":{this.DateKey}";
     }

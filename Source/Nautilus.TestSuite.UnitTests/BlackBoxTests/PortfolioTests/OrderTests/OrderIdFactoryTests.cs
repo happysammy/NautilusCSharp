@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void Create_ReturnsExpectedOrderId()
         {
             // Arrange
-            var orderIdFactory = new OrderIdFactory(new Symbol("AUDUSD", Exchange.LMAX));
+            var orderIdFactory = new OrderIdFactory(new Symbol("AUDUSD", Venue.LMAX));
 
             // Act
             var result = orderIdFactory.Create(StubZonedDateTime.UnixEpoch()).ToString();

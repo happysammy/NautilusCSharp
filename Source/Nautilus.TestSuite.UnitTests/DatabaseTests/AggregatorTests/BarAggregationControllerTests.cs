@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenSubscribeBarDataMessage_CreatesAggregatorAndJobs()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
+            var symbol = new Symbol("AUDUSD", Venue.FXCM);
             var barType1 = new BarType(symbol, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType2 = new BarType(symbol, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 
@@ -83,11 +83,11 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenMultipleSubscribeBarDataMessages_CreatesNeededJobs()
         {
             // Arrange
-            var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
+            var symbol1 = new Symbol("AUDUSD", Venue.FXCM);
             var barType1 = new BarType(symbol1, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType2 = new BarType(symbol1, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 
-            var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
+            var symbol2 = new Symbol("GBPUSD", Venue.FXCM);
             var barType3 = new BarType(symbol2, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType4 = new BarType(symbol2, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenUnsubscribeBarDataMessage_RemovesJobs()
         {
             // Arrange
-            var symbol = new Symbol("AUDUSD", Exchange.FXCM);
+            var symbol = new Symbol("AUDUSD", Venue.FXCM);
             var barType1 = new BarType(symbol, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType2 = new BarType(symbol, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 
@@ -158,11 +158,11 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         internal void GivenUnsubscribeBarDataMessage_WithMultipleJobsDoesNotRemoveTrigger()
         {
             // Arrange
-            var symbol1 = new Symbol("AUDUSD", Exchange.FXCM);
+            var symbol1 = new Symbol("AUDUSD", Venue.FXCM);
             var barType1 = new BarType(symbol1, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType2 = new BarType(symbol1, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 
-            var symbol2 = new Symbol("GBPUSD", Exchange.FXCM);
+            var symbol2 = new Symbol("GBPUSD", Venue.FXCM);
             var barType3 = new BarType(symbol2, new BarSpecification(QuoteType.Bid, Resolution.Second, 1));
             var barType4 = new BarType(symbol2, new BarSpecification(QuoteType.Bid, Resolution.Minute, 1));
 

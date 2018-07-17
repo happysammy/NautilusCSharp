@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             // Act
             var result = LabelFactory.Component(
                 "Portfolio",
-                new Symbol("AUDUSD", Exchange.LMAX));
+                new Symbol("AUDUSD", Venue.LMAX));
 
             // Assert
             Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             // Act
             var result = LabelFactory.Component(
                 "Portfolio",
-                new Symbol("AUDUSD", Exchange.LMAX),
+                new Symbol("AUDUSD", Venue.LMAX),
                 new TradeType("TestScalps"));
 
             // Assert
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             // Act
             var result = LabelFactory.Component(
                 "TradeBook",
-                new Symbol("AUDUSD", Exchange.LMAX));
+                new Symbol("AUDUSD", Venue.LMAX));
 
             // Assert
             Assert.Equal("TradeBook-AUDUSD.LMAX", result.ToString());

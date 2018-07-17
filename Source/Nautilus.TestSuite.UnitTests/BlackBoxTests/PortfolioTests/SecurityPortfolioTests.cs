@@ -171,7 +171,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             // Arrange
             var quote = new Tick(
-                new Symbol("AUDUSD", Exchange.FXCM),
+                new Symbol("AUDUSD", Venue.FXCM),
                 Price.Create(0.80001m, 0.00001m),
                 Price.Create(0.80005m, 0.00001m),
                 StubZonedDateTime.UnixEpoch());
@@ -387,7 +387,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         private static BarDataEvent ValidMarketDataEventBullBar()
         {
             return new BarDataEvent(
-                new BarType(new Symbol("AUDUSD", Exchange.FXCM),
+                new BarType(new Symbol("AUDUSD", Venue.FXCM),
                     new BarSpecification(QuoteType.Bid, Resolution.Minute, 5)),
                 new Bar(
                     Price.Create(0.80100m, 0.00001m),
@@ -396,7 +396,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                     Price.Create(0.80150m, 0.00001m),
                     Quantity.Create(1000),
                     StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
-                StubTickFactory.Create(new Symbol("SYMBOL", Exchange.LMAX)),
+                StubTickFactory.Create(new Symbol("SYMBOL", Venue.LMAX)),
                 0.00001m,
                 false,
                 Guid.NewGuid(),

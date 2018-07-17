@@ -216,7 +216,7 @@ namespace Nautilus.Redis
                     var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
 
                     var instrument = new Instrument(
-                        new Symbol(symbolCode, exchange.ToEnum<Exchange>()),
+                        new Symbol(symbolCode, exchange.ToEnum<Venue>()),
                         new EntityId(deserializedSymbol["Value"]),
                         new EntityId(brokerSymbol),
                         deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),

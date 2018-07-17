@@ -24,8 +24,6 @@ namespace Nautilus.DomainModel
         /// Initializes a new instance of the <see cref="ValidString"/> class.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <exception cref="ValidationException">Throws if the value is null or white space, or if
-        /// the string values length is greater than 100 characters.</exception>
         protected ValidString(string value)
         {
             Debug.NotNull(value, nameof(value));

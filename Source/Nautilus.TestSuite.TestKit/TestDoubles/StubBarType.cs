@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType AUDUSD()
         {
             return new BarType(
-                new Symbol("AUDUSD", Exchange.Dukascopy),
+                new Symbol("AUDUSD", Venue.Dukascopy),
                 new BarSpecification(
                     QuoteType.Ask,
                     Resolution.Minute,
@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType GBPUSD()
         {
             return new BarType(
-                new Symbol("GBPUSD", Exchange.Dukascopy),
+                new Symbol("GBPUSD", Venue.Dukascopy),
                 new BarSpecification(
                     QuoteType.Bid,
                     Resolution.Minute,
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType GBPUSD_Second()
         {
             return new BarType(
-                new Symbol("GBPUSD", Exchange.Dukascopy),
+                new Symbol("GBPUSD", Venue.Dukascopy),
                 new BarSpecification(
                     QuoteType.Mid,
                     Resolution.Second,
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType USDJPY()
         {
             return new BarType(
-                new Symbol("USDJPY", Exchange.Dukascopy),
+                new Symbol("USDJPY", Venue.Dukascopy),
                 new BarSpecification(
                     QuoteType.Bid,
                     Resolution.Minute,
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static BarType CADHKD()
         {
             return new BarType(
-                new Symbol("CADHKD", Exchange.Dukascopy),
+                new Symbol("CADHKD", Venue.Dukascopy),
                 new BarSpecification(
                     QuoteType.Bid,
                     Resolution.Minute,
