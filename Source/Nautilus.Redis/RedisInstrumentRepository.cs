@@ -212,7 +212,7 @@ namespace Nautilus.Redis
                     var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
                     var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
                     var symbolCode = deserializedSymbol["Code"];
-                    var exchange = deserializedSymbol["Exchange"];
+                    var exchange = deserializedSymbol["Venue"];
                     var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
 
                     var instrument = new Instrument(

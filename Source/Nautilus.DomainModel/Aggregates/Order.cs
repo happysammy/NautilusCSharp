@@ -31,9 +31,9 @@ namespace Nautilus.DomainModel.Aggregates
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
 
         // Concrete lists for performance reasons.
-        private readonly List<EntityId> orderIdList = new List<EntityId>();
-        private readonly List<EntityId> orderIdBrokerList = new List<EntityId>();
-        private readonly List<EntityId> executionIdList = new List<EntityId>();
+        private readonly List<EntityId> orderIds = new List<EntityId>();
+        private readonly List<EntityId> orderIdsBroker = new List<EntityId>();
+        private readonly List<EntityId> executionIds = new List<EntityId>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -68,9 +68,9 @@ namespace Nautilus.DomainModel.Aggregates
             this.OrderType = orderType;
             this.Quantity = quantity;
 
-            this.orderIdList.Add(this.OrderId);
-            this.orderIdBrokerList.Add(new EntityId("None"));
-            this.executionIdList.Add(new EntityId("None"));
+            this.orderIds.Add(this.OrderId);
+            this.orderIdsBroker.Add(new EntityId("None"));
+            this.executionIds.Add(new EntityId("None"));
         }
 
         /// <summary>
@@ -86,22 +86,22 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders identifiers count.
         /// </summary>
-        public int OrderIdCount => this.orderIdList.Count;
+        public int OrderIdCount => this.orderIds.Count;
 
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public EntityId OrderIdCurrent => this.orderIdList.Last();
+        public EntityId OrderIdCurrent => this.orderIds.Last();
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        public EntityId OrderIdBroker => this.orderIdBrokerList.Last();
+        public EntityId OrderIdBroker => this.orderIdsBroker.Last();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public EntityId ExecutionId => this.executionIdList.Last();
+        public EntityId ExecutionId => this.executionIds.Last();
 
         /// <summary>
         /// Gets the orders label.
@@ -164,20 +164,20 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(modifiedOrderId, nameof(modifiedOrderId));
 
-            this.orderIdList.Add(modifiedOrderId);
+            this.orderIds.Add(modifiedOrderId);
         }
 
         /// <summary>
         /// Returns an immutable collection of the orders.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetOrderIdList() => new ReadOnlyList<EntityId>(orderIdList);
+        public ReadOnlyList<EntityId> GetOrderIdList() => new ReadOnlyList<EntityId>(this.orderIds);
 
         /// <summary>
         /// Returns an immutable collection of the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.orderIdBrokerList);
+        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.orderIdsBroker);
 
         /// <summary>
         /// Returns an immutable collection of the order events.
@@ -231,9 +231,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderId, nameof(orderId));
 
-            if (!this.orderIdBrokerList.Contains(orderId))
+            if (!this.orderIdsBroker.Contains(orderId))
             {
-                this.orderIdBrokerList.Add(orderId);
+                this.orderIdsBroker.Add(orderId);
             }
         }
 
@@ -246,9 +246,9 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(executionId, nameof(executionId));
 
-            if (!this.executionIdList.Contains(executionId))
+            if (!this.executionIds.Contains(executionId))
             {
-                this.executionIdList.Add(executionId);
+                this.executionIds.Add(executionId);
             }
         }
 

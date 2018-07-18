@@ -42,7 +42,7 @@ namespace Nautilus.DomainModel.Orders
                   orderId,
                   orderLabel,
                   orderSide,
-                  OrderType.Market,
+                  OrderType.MARKET,
                   quantity,
                   timestamp)
         {
@@ -52,7 +52,7 @@ namespace Nautilus.DomainModel.Orders
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotNull(quantity, nameof(quantity));
 
-            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.Market);
+            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.MARKET);
         }
     }
 }

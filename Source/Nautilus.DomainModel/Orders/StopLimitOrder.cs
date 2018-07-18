@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.Orders
                 orderId,
                 orderLabel,
                 orderSide,
-                OrderType.StopLimit,
+                OrderType.STOP_LIMIT,
                 quantity,
                 price,
                 timeInForce,
@@ -64,7 +64,7 @@ namespace Nautilus.DomainModel.Orders
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotNull(expireTime, nameof(expireTime));
 
-            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.StopLimit);
+            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.STOP_LIMIT);
         }
     }
 }

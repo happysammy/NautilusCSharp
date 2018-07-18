@@ -199,11 +199,11 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_market_expired_event()
+        internal void Test_can_serialize_and_deserialize_stop_market_order_expired_event()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
-            var order = new StubOrderBuilder().BuildMarketOrder();
+            var order = new StubOrderBuilder().BuildStopMarketOrder();
             var expired = new OrderExpired(
                 order.Symbol,
                 order.OrderId,

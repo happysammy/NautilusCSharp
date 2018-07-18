@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.Orders
                 orderId,
                 orderLabel,
                 orderSide,
-                OrderType.StopMarket,
+                OrderType.STOP_MARKET,
                 quantity,
                 price,
                 timeInForce,
@@ -65,7 +65,7 @@ namespace Nautilus.DomainModel.Orders
             Debug.NotNull(expireTime, nameof(expireTime));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.StopMarket);
+            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.STOP_MARKET);
         }
     }
 }

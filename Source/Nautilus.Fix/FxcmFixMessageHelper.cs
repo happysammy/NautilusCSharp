@@ -200,27 +200,27 @@ namespace Nautilus.Fix
         {
             if (fixType == OrdType.MARKET.ToString())
             {
-                return OrderType.Market;
+                return OrderType.MARKET;
             }
 
             if (fixType == OrdType.STOP.ToString())
             {
-                return OrderType.StopMarket;
+                return OrderType.STOP_MARKET;
             }
 
             if (fixType == OrdType.STOP_LIMIT.ToString())
             {
-                return OrderType.StopLimit;
+                return OrderType.STOP_LIMIT;
             }
 
             if (fixType == OrdType.LIMIT.ToString())
             {
-                return OrderType.Limit;
+                return OrderType.LIMIT;
             }
 
             if (fixType == OrdType.MARKET_IF_TOUCHED.ToString())
             {
-                return OrderType.MarketIfTouched;
+                return OrderType.MIT;
             }
 
             return OrderType.Unknown;
@@ -233,27 +233,27 @@ namespace Nautilus.Fix
         /// <returns>The <see cref="OrdType"/>.</returns>
         public static OrdType GetFixOrderType(OrderType orderType)
         {
-            if (orderType == OrderType.Market)
+            if (orderType == OrderType.MARKET)
             {
                 return new OrdType(OrdType.MARKET);
             }
 
-            if (orderType == OrderType.StopMarket)
+            if (orderType == OrderType.STOP_MARKET)
             {
                 return new OrdType(OrdType.STOP);
             }
 
-            if (orderType == OrderType.StopLimit)
+            if (orderType == OrderType.STOP_LIMIT)
             {
                 return new OrdType(OrdType.STOP_LIMIT);
             }
 
-            if (orderType == OrderType.Limit)
+            if (orderType == OrderType.LIMIT)
             {
                 return new OrdType(OrdType.LIMIT);
             }
 
-            if (orderType == OrderType.MarketIfTouched)
+            if (orderType == OrderType.MIT)
             {
                 return new OrdType(OrdType.MARKET_IF_TOUCHED);
             }
@@ -415,7 +415,7 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal GetOrderPrice(OrderType orderType, decimal stopPrice, decimal limitPrice)
         {
-            if (orderType == OrderType.StopMarket)
+            if (orderType == OrderType.STOP_MARKET)
             {
                 return stopPrice;
             }

@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal("StubOrderId", order.OrderId.ToString());
             Assert.Equal("StubOrderLabel", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
             Assert.Equal(Quantity.Create(1), order.Quantity);
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal("TestOrderId", order.OrderId.ToString());
             Assert.Equal("TestOrderLabel", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.SELL, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
             Assert.Equal(Price.Create(1.00000m, 0.00001m), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildMarketOrder();
 
             // Assert
-            Assert.Equal(OrderType.Market, order.OrderType);
+            Assert.Equal(OrderType.MARKET, order.OrderType);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Assert
-            Assert.Equal(OrderType.StopLimit, order.OrderType);
+            Assert.Equal(OrderType.STOP_LIMIT, order.OrderType);
         }
     }
 }

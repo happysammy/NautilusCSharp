@@ -8,39 +8,52 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
-    /// The order type.
+    /// The order type enumeration.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum OrderType
     {
         /// <summary>
-        /// The unknown.
+        /// An unknown order type.
         /// </summary>
         Unknown = 0,
 
         /// <summary>
-        /// Market order.
+        /// A Market order type.
         /// </summary>
-        Market = 1,
+        MARKET = 1,
 
         /// <summary>
-        /// Limit order.
+        /// A Limit order type.
         /// </summary>
-        Limit = 2,
+        LIMIT = 2,
 
         /// <summary>
-        /// Stop Limit order.
+        /// A Stop Limit order type.
         /// </summary>
-        StopLimit = 3,
+        STOP_LIMIT = 3,
 
         /// <summary>
-        /// Stop Market order.
+        /// A Stop Market order type.
         /// </summary>
-        StopMarket = 4,
+        STOP_MARKET = 4,
 
         /// <summary>
-        /// Market If Touched order.
+        /// A Market If Touched order type.
         /// </summary>
-        MarketIfTouched = 5
+        MIT = 5,
+
+        /// <summary>
+        /// A Fill Or Kill order type.
+        /// </summary>
+        FOC = 6,
+
+        /// <summary>
+        /// A Immediate Or Cancel order type.
+        /// </summary>
+        IOC = 7
     }
 }

@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.Market, order.OrderType);
+            Assert.Equal(OrderType.MARKET, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("some_orderId", order.OrderId.ToString());
             Assert.Equal("some_label", order.OrderLabel.ToString());
             Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.StopMarket, order.OrderType);
+            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(2000, order.Price.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
