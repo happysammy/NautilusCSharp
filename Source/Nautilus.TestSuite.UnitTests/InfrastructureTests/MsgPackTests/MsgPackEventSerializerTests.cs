@@ -11,11 +11,13 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -104,6 +106,39 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             // Arrange
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopMarketOrder();
+            var working = new OrderWorking(
+                order.Symbol,
+                order.OrderId,
+                new EntityId("B123456"),
+                new Label("O123456_E"),
+                order.OrderSide,
+                order.OrderType,
+                order.Quantity,
+                order.Price,
+                order.TimeInForce,
+                order.ExpireTime,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.SerializeOrderEvent(working);
+            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderWorking;
+
+            // Assert
+            Assert.Equal(working, unpacked);
+            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_stop_market_order_working_with_expire_time_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder()
+                .WithTimeInForce(TimeInForce.GTD)
+                .WithExpireTime(StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1))
+                .BuildStopMarketOrder();
             var working = new OrderWorking(
                 order.Symbol,
                 order.OrderId,
