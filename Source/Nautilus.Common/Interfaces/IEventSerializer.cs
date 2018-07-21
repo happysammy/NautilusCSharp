@@ -16,14 +16,14 @@ namespace Nautilus.Common.Interfaces
     public interface IEventSerializer
     {
         /// <summary>
-        /// Serialize the given event.
+        /// Serialize the given event object.
         /// </summary>
         /// <param name="event">The event object to serialize.</param>
         /// <returns>The serialized event.</returns>
         byte[] SerializeEvent(Event @event);
 
         /// <summary>
-        /// Serialize the given order event.
+        /// Deserialize the given event byte[].
         /// </summary>
         /// <param name="bytes">The event bytes to deserialize.</param>
         /// <returns>The deserialized event.</returns>
