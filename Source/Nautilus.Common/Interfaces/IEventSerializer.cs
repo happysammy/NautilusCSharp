@@ -8,7 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.DomainModel.Events;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides an interface for event serializers.
@@ -16,10 +16,17 @@ namespace Nautilus.Common.Interfaces
     public interface IEventSerializer
     {
         /// <summary>
+        /// Serialize the given event.
+        /// </summary>
+        /// <param name="event">The event object to serialize.</param>
+        /// <returns>The serialized event.</returns>
+        byte[] SerializeEvent(Event @event);
+
+        /// <summary>
         /// Serialize the given order event.
         /// </summary>
-        /// <param name="orderEvent">The order event.</param>
-        /// <returns>The serialized order event.</returns>
-        byte[] SerializeOrderEvent(OrderEvent orderEvent);
+        /// <param name="bytes">The event bytes to deserialize.</param>
+        /// <returns>The deserialized event.</returns>
+        Event DeserializeEvent(byte[] bytes);
     }
 }

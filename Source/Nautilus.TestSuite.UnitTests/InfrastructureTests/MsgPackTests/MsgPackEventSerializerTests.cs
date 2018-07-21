@@ -47,8 +47,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(submitted);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderSubmitted;
+            var packed = serializer.SerializeEvent(submitted);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderSubmitted;
 
             // Assert
             Assert.Equal(submitted, unpacked);
@@ -69,8 +69,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(accepted);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderAccepted;
+            var packed = serializer.SerializeEvent(accepted);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderAccepted;
 
             // Assert
             Assert.Equal(accepted, unpacked);
@@ -92,8 +92,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(rejected);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderRejected;
+            var packed = serializer.SerializeEvent(rejected);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderRejected;
 
             // Assert
             Assert.Equal(rejected, unpacked);
@@ -122,8 +122,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(working);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderWorking;
+            var packed = serializer.SerializeEvent(working);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderWorking;
 
             // Assert
             Assert.Equal(working, unpacked);
@@ -155,8 +155,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(working);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderWorking;
+            var packed = serializer.SerializeEvent(working);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderWorking;
 
             // Assert
             Assert.Equal(working, unpacked);
@@ -177,8 +177,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(cancelled);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderCancelled;
+            var packed = serializer.SerializeEvent(cancelled);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderCancelled;
 
             // Assert
             Assert.Equal(cancelled, unpacked);
@@ -201,8 +201,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(cancelReject);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderCancelReject;
+            var packed = serializer.SerializeEvent(cancelReject);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderCancelReject;
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
@@ -225,8 +225,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(modified);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderModified;
+            var packed = serializer.SerializeEvent(modified);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderModified;
 
             // Assert
             Assert.Equal(modified, unpacked);
@@ -247,8 +247,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(expired);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderExpired;
+            var packed = serializer.SerializeEvent(expired);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderExpired;
 
             // Assert
             Assert.Equal(expired, unpacked);
@@ -277,8 +277,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(partiallyFilled);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderPartiallyFilled;
+            var packed = serializer.SerializeEvent(partiallyFilled);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderPartiallyFilled;
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
@@ -306,8 +306,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var packed = serializer.SerializeOrderEvent(filled);
-            var unpacked = serializer.DeserializeOrderEvent(packed) as OrderFilled;
+            var packed = serializer.SerializeEvent(filled);
+            var unpacked = serializer.DeserializeEvent(packed) as OrderFilled;
 
             // Assert
             Assert.Equal(filled, unpacked);
