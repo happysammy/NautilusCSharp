@@ -26,6 +26,7 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {
+        private const string None = "NONE";
         private const string AccountEvent = "account_event";
         private const string OrderEvent = "order_event";
         private const string OrderSubmitted = "order_submitted";
@@ -38,7 +39,6 @@ namespace Nautilus.MsgPack
         private const string OrderExpired = "order_expired";
         private const string OrderPartiallyFilled = "order_partially_filled";
         private const string OrderFilled = "order_filled";
-        private const string None = "NONE";
 
         /// <summary>
         /// Serialize the given order event to a byte array.
@@ -46,7 +46,7 @@ namespace Nautilus.MsgPack
         /// <param name="event">The order event to serialize.</param>
         /// <returns>The serialized order event.</returns>
         /// <exception cref="InvalidOperationException">Throws if the event cannot be serialized.</exception>
-        public byte[] SerializeEvent(Event @event)
+        public byte[] Serialize(Event @event)
         {
             Debug.NotNull(@event, nameof(@event));
 
@@ -55,7 +55,8 @@ namespace Nautilus.MsgPack
                 case OrderEvent orderEvent:
                     return SerializeOrderEvent(orderEvent);
 
-                default: throw new InvalidOperationException("Cannot serialize the event to a byte[].");
+                default: throw new InvalidOperationException(
+                    "Cannot serialize the event (unrecognized event).");
             }
         }
 
@@ -65,7 +66,7 @@ namespace Nautilus.MsgPack
         /// <param name="bytes">The order event to deserialize.</param>
         /// <returns>The deserialized order event.</returns>
         /// <exception cref="InvalidOperationException">Throws if the event cannot be deserialized.</exception>
-        public Event DeserializeEvent(byte[] bytes)
+        public Event Deserialize(byte[] bytes)
         {
             Debug.NotNull(bytes, nameof(bytes));
 
@@ -76,7 +77,8 @@ namespace Nautilus.MsgPack
                 case OrderEvent:
                     return DeserializeOrderEvent(unpacked);
 
-                default: throw new InvalidOperationException("Cannot deserialize the byte[] to an event.");
+                default: throw new InvalidOperationException(
+                    "Cannot deserialize the event (unrecognized byte[] pattern).");
             }
         }
 
@@ -189,7 +191,8 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
 
-                default: throw new InvalidOperationException("Cannot serialize the order event object.");
+                default: throw new InvalidOperationException(
+                    "Cannot serialize the order event (unrecognized order event).");
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -309,7 +312,8 @@ namespace Nautilus.MsgPack
                         eventId,
                         eventTimestamp);
 
-                default: throw new InvalidOperationException("Cannot deserialize the order event byte array.");
+                default: throw new InvalidOperationException(
+                    "Cannot deserialize the order event (unrecognized byte[] pattern).");
             }
         }
 

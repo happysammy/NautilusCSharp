@@ -20,13 +20,13 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="event">The event object to serialize.</param>
         /// <returns>The serialized event.</returns>
-        byte[] SerializeEvent(Event @event);
+        byte[] Serialize(Event @event);
 
         /// <summary>
         /// Deserialize the given event byte[].
         /// </summary>
         /// <param name="bytes">The event bytes to deserialize.</param>
         /// <returns>The deserialized event.</returns>
-        Event DeserializeEvent(byte[] bytes);
+        Event Deserialize(byte[] bytes);
     }
 }
