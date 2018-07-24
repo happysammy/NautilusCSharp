@@ -10,7 +10,7 @@ namespace Nautilus.Scheduler.Commands
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -20,7 +20,7 @@ namespace Nautilus.Scheduler.Commands
     /// Represents a job command message to resume a job.
     /// </summary>
     [Immutable]
-    public sealed class ResumeJob : CommandMessage, IJobCommand
+    public sealed class ResumeJob : Command, IJobCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ResumeJob"/> class.

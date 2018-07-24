@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using NodaTime;
 
@@ -19,7 +19,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     /// The immutable sealed <see cref="SubmitTrade"/> class.
     /// </summary>
     [Immutable]
-    public sealed class SubmitTrade : CommandMessage
+    public sealed class SubmitTrade : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SubmitTrade"/> class.

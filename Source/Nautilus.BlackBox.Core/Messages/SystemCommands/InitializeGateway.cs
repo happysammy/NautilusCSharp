@@ -12,14 +12,14 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>
     /// The immutable sealed <see cref="InitializeGateway"/> class.
     /// </summary>
     [Immutable]
-    public sealed class InitializeGateway : CommandMessage
+    public sealed class InitializeGateway : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InitializeGateway"/> class.

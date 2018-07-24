@@ -12,7 +12,7 @@ namespace Nautilus.Database.Messages.Documents
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -20,7 +20,7 @@ namespace Nautilus.Database.Messages.Documents
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class DataStatusResponse<T> : DocumentMessage
+    public sealed class DataStatusResponse<T> : Document
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStatusResponse{T}"/> class.

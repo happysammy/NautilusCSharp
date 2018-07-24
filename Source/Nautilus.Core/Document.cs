@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="Event.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Document.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -14,17 +14,17 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all events.
+    /// The base class for all documents.
     /// </summary>
     [Immutable]
-    public abstract class Event : ISendable<Event>
+    public abstract class Document : ISendable<Document>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Event"/> class.
+        /// Initializes a new instance of the <see cref="Document"/> class.
         /// </summary>
-        /// <param name="id">The event identifier.</param>
-        /// <param name="timestamp">The event timestamp.</param>
-        protected Event(Guid id, ZonedDateTime timestamp)
+        /// <param name="id">The command identifier.</param>
+        /// <param name="timestamp">The command timestamp.</param>
+        protected Document(Guid id, ZonedDateTime timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -34,27 +34,27 @@ namespace Nautilus.Core
         }
 
         /// <summary>
-        /// Gets the events identifier.
+        /// Gets the documents identifier.
         /// </summary>
         public Guid Id { get; }
 
         /// <summary>
-        /// Gets the events timestamp.
+        /// Gets the documents timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a value indicating whether this event is equal to the given <see cref="Event"/>.
+        /// Returns a value indicating whether this documents is equal to the given <see cref="Document"/>.
         /// </summary>
-        /// <param name="other">The other event.</param>
+        /// <param name="other">The other document.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Event other)
+        public bool Equals(Document other)
         {
             return other != null & this.Id.Equals(other?.Id);
         }
 
         /// <summary>
-        /// Returns a value indicating whether this event is equal to the given <see cref="object"/>.
+        /// Returns a value indicating whether this document is equal to the given <see cref="object"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
@@ -66,13 +66,13 @@ namespace Nautilus.Core
         }
 
         /// <summary>
-        /// Returns the hash code for this event.
+        /// Returns the hash code for this command.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode() => this.Id.ToString().GetHashCode();
 
         /// <summary>
-        /// Returns a string representation of this event.
+        /// Returns a string representation of this command.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => nameof(this.GetType);

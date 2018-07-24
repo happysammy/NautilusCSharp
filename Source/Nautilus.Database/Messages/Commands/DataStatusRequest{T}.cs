@@ -9,14 +9,14 @@
 namespace Nautilus.Database.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
     /// The data status request message.
     /// </summary>
-    public sealed class DataStatusRequest<T> : CommandMessage
+    public sealed class DataStatusRequest<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStatusRequest{T}"/> message.

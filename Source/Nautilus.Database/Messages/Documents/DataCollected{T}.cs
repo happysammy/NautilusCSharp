@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Documents
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -18,7 +18,7 @@ namespace Nautilus.Database.Messages.Documents
     /// A message representing that all data of T has been collected.
     /// </summary>
     [Immutable]
-    public sealed class DataCollected<T> : DocumentMessage
+    public sealed class DataCollected<T> : Document
     {
         /// <summary>
         /// Initializes a new intance of the <see cref="DataCollected{T}"/> class.

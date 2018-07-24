@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -17,18 +18,36 @@ namespace Nautilus.Common.Messaging
     /// The base class for all document messages.
     /// </summary>
     [Immutable]
-    public abstract class DocumentMessage : Message
+    public sealed class DocumentMessage : Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DocumentMessage"/> class.
         /// </summary>
+        /// <param name="document">The document</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        protected DocumentMessage(Guid id, ZonedDateTime timestamp)
+        public DocumentMessage(
+            Document document,
+            Guid id,
+            ZonedDateTime timestamp)
             : base(id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(Document, nameof(Document));
+
+            this.Document = document;
         }
+
+        /// <summary>
+        /// Gets the messages document.
+        /// </summary>
+        public Document Document { get; }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="DocumentMessage"/>.
+        /// </summary>
+        /// <returns>The event name.</returns>
+        public override string ToString() => this.Document.ToString();
     }
 }

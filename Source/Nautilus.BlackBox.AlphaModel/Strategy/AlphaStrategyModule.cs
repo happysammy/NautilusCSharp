@@ -220,11 +220,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendEventMessageToPortfolio(
-                    new EventMessage(
-                        signalEvent,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                this.Send(BlackBoxService.Portfolio, signalEvent);
             }
 
             if (trailingStopSignalLong.HasNoValue)
@@ -241,11 +237,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendEventMessageToPortfolio(
-                    new EventMessage(
-                        signalEvent,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                this.Send(BlackBoxService.Portfolio, signalEvent);
             }
 
             if (trailingStopSignalShort.HasNoValue)
@@ -265,11 +257,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendEventMessageToPortfolio(
-                    new EventMessage(
-                        signalEvent,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                this.Send(BlackBoxService.Portfolio, signalEvent);
             }
         }
 
@@ -292,11 +280,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendEventMessageToPortfolio(
-                    new EventMessage(
-                        signalEvent,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                this.Send(BlackBoxService.Portfolio, signalEvent);
             }
 
             if (exitSignalShort.HasNoValue)
@@ -311,19 +295,8 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendEventMessageToPortfolio(
-                    new EventMessage(
-                        signalEvent,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                this.Send(BlackBoxService.Portfolio, signalEvent);
             }
-        }
-
-        private void SendEventMessageToPortfolio(EventMessage message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Send(BlackBoxService.Portfolio, message);
         }
     }
 }

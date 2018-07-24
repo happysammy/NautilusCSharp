@@ -11,14 +11,14 @@ namespace Nautilus.Common.Messages
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>
     /// The command message to unsubscribe from data of type T.
     /// </summary>
     [Immutable]
-    public sealed class Unsubscribe<T> : CommandMessage
+    public sealed class Unsubscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.

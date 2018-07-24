@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -19,7 +19,7 @@ namespace Nautilus.Database.Messages.Commands
     /// The command message to close the bar of the given bar specification at the given close time.
     /// </summary>
     [Immutable]
-    public sealed class CloseBar : CommandMessage
+    public sealed class CloseBar : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBar"/> class.

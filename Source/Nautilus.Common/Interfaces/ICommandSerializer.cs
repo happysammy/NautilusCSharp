@@ -8,7 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides an interface for command serializers.
@@ -20,13 +20,13 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="command">The command message to serialize.</param>
         /// <returns>The serialized command.</returns>
-        byte[] Serialize(CommandMessage command);
+        byte[] Serialize(Command command);
 
         /// <summary>
         /// Deserialize the given command byte[].
         /// </summary>
         /// <param name="commandBytes">The command bytes to deserialize.</param>
         /// <returns>The deserialized command.</returns>
-        CommandMessage Deserialize(byte[] commandBytes);
+        Command Deserialize(byte[] commandBytes);
     }
 }

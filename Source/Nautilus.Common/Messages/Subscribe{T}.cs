@@ -9,16 +9,16 @@
 namespace Nautilus.Common.Messages
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
     using NodaTime;
 
     /// <summary>
     /// The command message to subscribe to data of type T.
     /// </summary>
     [Immutable]
-    public sealed class Subscribe<T> : CommandMessage
+    public sealed class Subscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.

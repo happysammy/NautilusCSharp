@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Documents
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -18,7 +18,7 @@ namespace Nautilus.Database.Messages.Documents
     /// A delivery message of new data.
     /// </summary>
     [Immutable]
-    public sealed class DataDelivery<T> : DocumentMessage
+    public sealed class DataDelivery<T> : Document
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataDelivery{T}"/> class.

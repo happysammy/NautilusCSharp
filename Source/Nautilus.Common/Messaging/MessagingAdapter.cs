@@ -100,13 +100,13 @@ namespace Nautilus.Common.Messaging
             switch (message as Message)
             {
                     case CommandMessage commandMessage:
-                        var commandEvelope = new Envelope<CommandMessage>(
+                        var commandEnvelope = new Envelope<CommandMessage>(
                             receivers,
                             sender,
                             commandMessage,
                             message.Id,
                             message.Timestamp);
-                    this.commandBusRef.Tell(commandEvelope);
+                    this.commandBusRef.Tell(commandEnvelope);
                     break;
 
                     case EventMessage eventMessage:
@@ -129,7 +129,8 @@ namespace Nautilus.Common.Messaging
                     this.documentBusRef.Tell(serviceEnvelope);
                     break;
 
-                default: throw new InvalidOperationException($"{message.GetType()} message type not supported.");
+                default: throw new InvalidOperationException(
+                    $"Cannot send message ({message.GetType()} message type is not supported).");
             }
         }
     }

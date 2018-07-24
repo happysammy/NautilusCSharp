@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
 
-            var requestTradeApproval = this.inMemoryMessageStore.CommandEnvelopes[0].Open(StubZonedDateTime.UnixEpoch()) as RequestTradeApproval;
+            var requestTradeApproval = this.inMemoryMessageStore.CommandEnvelopes[0].Open(StubZonedDateTime.UnixEpoch()).Command as RequestTradeApproval;
 
             Assert.Equal(2, requestTradeApproval?.OrderPacket.Orders.Count);
         }

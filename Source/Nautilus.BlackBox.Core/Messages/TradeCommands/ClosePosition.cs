@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
@@ -19,7 +19,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     /// The immutable sealed <see cref="ClosePosition"/> class.
     /// </summary>
     [Immutable]
-    public sealed class ClosePosition : CommandMessage
+    public sealed class ClosePosition : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ClosePosition"/> class.

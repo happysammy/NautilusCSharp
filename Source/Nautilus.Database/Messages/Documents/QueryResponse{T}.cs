@@ -12,14 +12,14 @@ namespace Nautilus.Database.Messages.Documents
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.CQS;
 
     /// <summary>
     /// The base class for all response message types.
     /// </summary>
     [Immutable]
-    public sealed class QueryResponse<T> : DocumentMessage
+    public sealed class QueryResponse<T> : Document
     {
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public QueryResponse(

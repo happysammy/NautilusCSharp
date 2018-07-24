@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -21,7 +22,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// The immutable sealed <see cref="MarketDataProcessorIndexUpdate"/> class.
     /// </summary>
     [Immutable]
-    public sealed class MarketDataProcessorIndexUpdate : CommandMessage
+    public sealed class MarketDataProcessorIndexUpdate : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketDataProcessorIndexUpdate"/> class.

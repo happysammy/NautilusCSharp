@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Interfaces;
     using NodaTime;
 
@@ -20,7 +20,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// The immutable sealed <see cref="InitializeRiskModel"/> class.
     /// </summary>
     [Immutable]
-    public sealed class InitializeRiskModel : CommandMessage
+    public sealed class InitializeRiskModel : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InitializeRiskModel"/> class.

@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -21,7 +21,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// create a new portfolio.
     /// </summary>
     [Immutable]
-    public sealed class CreatePortfolio : CommandMessage
+    public sealed class CreatePortfolio : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatePortfolio"/> class.

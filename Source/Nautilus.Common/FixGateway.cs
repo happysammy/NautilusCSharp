@@ -356,12 +356,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     timestamp);
 
-                var eventMessage = new EventMessage(
-                    accountEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, accountEvent);
 
                 this.Log.Debug(
                     $"AccountReport: " +
@@ -393,7 +388,7 @@ namespace Nautilus.Common
                 Validate.NotNull(rejectReason, nameof(rejectReason));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderRejected(
+                var orderRejected = new OrderRejected(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
@@ -401,12 +396,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -443,7 +433,7 @@ namespace Nautilus.Common
                 Validate.NotNull(cancelRejectReason, nameof(cancelRejectReason));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderCancelReject(
+                var orderCancelReject = new OrderCancelReject(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
@@ -452,12 +442,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -493,19 +478,14 @@ namespace Nautilus.Common
                 Validate.NotNull(orderLabel, nameof(orderLabel));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderCancelled(
+                var orderCancelled = new OrderCancelled(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {orderLabel} " +
@@ -545,7 +525,7 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(price, nameof(price), decimal.Zero, decimal.MaxValue);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderModified(
+                var orderModified = new OrderModified(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
@@ -554,12 +534,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {orderLabel} " +
@@ -611,7 +586,7 @@ namespace Nautilus.Common
                 Validate.NotNull(expireTime, nameof(expireTime));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderWorking(
+                var orderWorking = new OrderWorking(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(brokerOrderId),
@@ -626,12 +601,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -675,19 +645,14 @@ namespace Nautilus.Common
                 Validate.NotNull(orderLabel, nameof(orderLabel));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderExpired(
+                var orderExpired = new OrderExpired(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {orderLabel} " +
@@ -738,7 +703,7 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderFilled(
+                var orderFilled = new OrderFilled(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
@@ -750,12 +715,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: {orderLabel} " +
@@ -812,7 +772,7 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
-                var orderEvent = new OrderPartiallyFilled(
+                var orderPartiallyFilled = new OrderPartiallyFilled(
                     new Symbol(symbol, venue),
                     new EntityId(OrderIdPostfixRemover.Remove(orderId)),
                     new EntityId(executionId),
@@ -825,12 +785,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                var eventMessage = new EventMessage(
-                    orderEvent,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(this.portfolioService, eventMessage);
+                this.Send(this.portfolioService, orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: {orderLabel} " +

@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -17,18 +18,36 @@ namespace Nautilus.Common.Messaging
     /// The base class for all command messages.
     /// </summary>
     [Immutable]
-    public abstract class CommandMessage : Message
+    public sealed class CommandMessage : Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
         /// </summary>
-        /// <param name="id">The message identifier.</param>
-        /// <param name="timestamp">The message timestamp.</param>
-        protected CommandMessage(Guid id, ZonedDateTime timestamp)
+        /// <param name="command">The command.</param>
+        /// <param name="id">The command message identifier.</param>
+        /// <param name="timestamp">The command message timestamp.</param>
+        public CommandMessage(
+            Command command,
+            Guid id,
+            ZonedDateTime timestamp)
             : base(id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(command, nameof(command));
+
+            this.Command = command;
         }
+
+        /// <summary>
+        /// Gets the messages command.
+        /// </summary>
+        public Command Command { get; }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="CommandMessage"/>.
+        /// </summary>
+        /// <returns>The event name.</returns>
+        public override string ToString() => this.Command.ToString();
     }
 }

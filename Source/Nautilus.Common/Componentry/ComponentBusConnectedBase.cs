@@ -12,6 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -48,16 +49,33 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given message to the given black box service via the messaging system.
+        /// Sends the given object to the given endpoint via the messaging system.
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
-        /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        protected void Send(Enum receiver, Message message)
+        protected void Send<T>(Enum receiver, ISendable<T> message)
+            where T : class
         {
             Debug.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receiver, message, this.Service);
+            switch (message)
+            {
+                case Command command:
+                    var commandMessage = new CommandMessage(
+                        command,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receiver, commandMessage, this.Service);
+                    break;
+
+                case Event @event:
+                    var eventMessage = new EventMessage(
+                        @event,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receiver, eventMessage, this.Service);
+                    break;
+            }
         }
 
         /// <summary>
@@ -65,13 +83,30 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        protected void Send(ReadOnlyList<Enum> receivers, Message message)
+        protected void Send<T>(ReadOnlyList<Enum> receivers, ISendable<T> message)
+            where T : class
         {
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receivers, message, this.Service);
+            switch (message)
+            {
+                case Command command:
+                    var commandMessage = new CommandMessage(
+                        command,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receivers, commandMessage, this.Service);
+                    break;
+
+                case Event @event:
+                    var eventMessage = new EventMessage(
+                        @event,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receivers, eventMessage, this.Service);
+                    break;
+            }
         }
 
         /// <summary>

@@ -11,14 +11,14 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>
     /// The immutable sealed <see cref="ShutdownSystem"/> class.
     /// </summary>
     [Immutable]
-    public sealed class ShutdownSystem : CommandMessage
+    public sealed class ShutdownSystem : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShutdownSystem"/> class.

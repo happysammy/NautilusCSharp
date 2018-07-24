@@ -11,7 +11,7 @@ namespace Nautilus.Database.Messages.Commands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>
@@ -19,7 +19,7 @@ namespace Nautilus.Database.Messages.Commands
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Immutable]
-    public sealed class CollectData<T> : CommandMessage
+    public sealed class CollectData<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectData{T}"/> class.

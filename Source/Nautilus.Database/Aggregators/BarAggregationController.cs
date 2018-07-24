@@ -16,6 +16,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Database.Enums;
@@ -448,6 +449,11 @@ namespace Nautilus.Database.Aggregators
                     var resume = new ResumeJob(
                         barJob.Key,
                         this.Self,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    var command = new CommandMessage(
+                        resume,
                         this.NewGuid(),
                         this.TimeNow());
 

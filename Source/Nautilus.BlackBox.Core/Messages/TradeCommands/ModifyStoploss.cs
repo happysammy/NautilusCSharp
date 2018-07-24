@@ -13,7 +13,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -22,7 +22,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     /// The immutable sealed <see cref="ModifyStopLoss"/> class.
     /// </summary>
     [Immutable]
-    public sealed class ModifyStopLoss : CommandMessage
+    public sealed class ModifyStopLoss : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyStopLoss"/> class.

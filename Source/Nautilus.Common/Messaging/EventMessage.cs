@@ -15,7 +15,7 @@ namespace Nautilus.Common.Messaging
     using NodaTime;
 
     /// <summary>
-    /// The message wrapper for all <see cref="Event"/>(s) messages system.
+    /// The message wrapper for all system event messages.
     /// </summary>
     [Immutable]
     public sealed class EventMessage : Message
@@ -39,7 +39,7 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Gets the event.
+        /// Gets the messages event.
         /// </summary>
         public Event Event { get; }
 

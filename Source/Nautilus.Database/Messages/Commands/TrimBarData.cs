@@ -9,7 +9,7 @@
 namespace Nautilus.Database.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
@@ -21,7 +21,7 @@ namespace Nautilus.Database.Messages.Commands
     /// to be equal to the size of the given rolling window.
     /// </summary>
     [Immutable]
-    public class TrimBarData : CommandMessage
+    public class TrimBarData : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrimBarData"/> class.

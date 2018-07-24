@@ -9,17 +9,17 @@
 namespace Nautilus.Database.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
-    /// A query request for type T from and to the given datetimes.
+    /// A query request for type T from and to the given datetime(s).
     /// </summary>
     /// <typeparam name="T">The query type.</typeparam>
     [Immutable]
-    public sealed class QueryRequest<T> : CommandMessage
+    public sealed class QueryRequest<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryRequest{T}"/> class.

@@ -10,7 +10,7 @@ namespace Nautilus.Scheduler.Commands
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -20,7 +20,7 @@ namespace Nautilus.Scheduler.Commands
     /// The job command to create a new job..
     /// </summary>
     [Immutable]
-    public sealed class CreateJob : CommandMessage, IJobCommand
+    public sealed class CreateJob : Command, IJobCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateJob"/> class.

@@ -151,6 +151,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.orderExpiryController.ProcessCounters(orderPacket.OrderIdList);
 
             // Assert
+            Task.Delay(100).Wait();
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
                 typeof(CancelOrder),

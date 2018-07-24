@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -21,7 +21,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// message to create a new alpha strategy module.
     /// </summary>
     [Immutable]
-    public sealed class CreateAlphaStrategyModule : CommandMessage
+    public sealed class CreateAlphaStrategyModule : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateAlphaStrategyModule"/> class.

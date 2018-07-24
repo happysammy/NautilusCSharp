@@ -12,6 +12,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using NodaTime;
 
@@ -19,7 +20,7 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     /// The immutable sealed <see cref="RequestTradeApproval"/> class.
     /// </summary>
     [Immutable]
-    public sealed class RequestTradeApproval : CommandMessage
+    public sealed class RequestTradeApproval : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestTradeApproval"/> class.

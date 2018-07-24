@@ -15,7 +15,7 @@ namespace Nautilus.Core
     /// <summary>
     /// Wraps a potentially null value of type T.
     /// </summary>
-    /// <typeparam name="T">The option type.</typeparam>
+    /// <typeparam name="T">The option object type.</typeparam>
     [Immutable]
     public struct Option<T> : IEquatable<Option<T>>
     {
