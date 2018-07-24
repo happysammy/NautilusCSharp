@@ -13,7 +13,7 @@ namespace Nautilus.Common.Componentry
     using NodaTime;
 
     /// <summary>
-    /// The clock for the system with an imbedded timezone.
+    /// The system clock with an imbedded timezone.
     /// </summary>
     public class Clock : IZonedClock
     {
