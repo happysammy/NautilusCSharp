@@ -67,6 +67,11 @@ namespace Nautilus.Common.Messaging
         public Guid EnvelopeId { get; }
 
         /// <summary>
+        /// Gets the message type.
+        /// </summary>
+        public Type Type => this.message.GetType();
+
+        /// <summary>
         /// Gets the envelope creation timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }

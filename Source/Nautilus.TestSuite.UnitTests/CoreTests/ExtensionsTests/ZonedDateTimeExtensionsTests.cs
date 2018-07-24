@@ -10,7 +10,6 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Text;
-    using Akka.Util;
     using Nautilus.Core.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;

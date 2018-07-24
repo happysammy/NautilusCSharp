@@ -45,6 +45,11 @@ namespace Nautilus.Common.Messaging
         public Command Command { get; }
 
         /// <summary>
+        /// Gets the message type.
+        /// </summary>
+        public override Type Type => this.Command.GetType();
+
+        /// <summary>
         /// Returns a string representation of the <see cref="CommandMessage"/>.
         /// </summary>
         /// <returns>The event name.</returns>

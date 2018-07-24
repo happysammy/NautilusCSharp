@@ -117,7 +117,8 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             Type typeToContain,
             IReadOnlyList<Envelope<T>> envelopeList,
             int timeoutMilliseconds,
-            int pollIntervalMilliseconds) where T : Message
+            int pollIntervalMilliseconds)
+            where T : Message
         {
             ValidateParameters(timeoutMilliseconds, pollIntervalMilliseconds);
 
@@ -170,12 +171,14 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             Assert.True(ListContains<T>(envelopeList.ToList(), eventToContain));
         }
 
-        private static bool ListContains<T>(IEnumerable<Envelope<T>> envelopeList, Type typeToContain) where T : Message
+        private static bool ListContains<T>(IEnumerable<Envelope<T>> envelopeList, Type typeToContain)
+            where T : Message
         {
-            return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).GetType().Name == typeToContain.Name);
+            return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).Type == typeToContain);
         }
 
-        private static bool ListContains<T>(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToContain) where T : Event
+        private static bool ListContains<T>(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToContain)
+            where T : Event
         {
             switch (typeof(T).Name)
             {

@@ -35,6 +35,11 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
+        /// Gets the message type.
+        /// </summary>
+        public abstract Type Type { get; }
+
+        /// <summary>
         /// Gets the message identifier.
         /// </summary>
         public Guid Id { get; }
@@ -43,11 +48,6 @@ namespace Nautilus.Common.Messaging
         /// Gets the message timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
-
-        /// <summary>
-        /// Gets the message type.
-        /// </summary>
-        public Type Type => this.GetType();
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Message"/>(s) are equal.
@@ -120,6 +120,6 @@ namespace Nautilus.Common.Messaging
         /// Returns a string representation of this <see cref="Message"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Type.Name}";
+        public override string ToString() => $"{this.GetType().Name}";
     }
 }

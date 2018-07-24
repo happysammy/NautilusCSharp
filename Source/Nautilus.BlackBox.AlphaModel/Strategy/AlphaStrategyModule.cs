@@ -18,7 +18,6 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;

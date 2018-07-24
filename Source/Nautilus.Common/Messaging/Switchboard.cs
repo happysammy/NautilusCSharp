@@ -61,7 +61,8 @@ namespace Nautilus.Common.Messaging
 
             if (!this.addresses.ContainsKey(receiver))
             {
-                throw new InvalidOperationException("Message envelope receiver address unknown.");
+                throw new InvalidOperationException(
+                    "Cannot send message (envelope receiver endpoint address unknown).");
             }
 
             this.addresses[receiver].Tell(envelope);

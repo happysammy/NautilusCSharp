@@ -11,7 +11,6 @@ namespace Nautilus.Redis
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Types;

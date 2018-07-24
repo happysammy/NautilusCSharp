@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -20,7 +20,7 @@ namespace Nautilus.Common.Messages
     /// The system status request message.
     /// </summary>
     [Immutable]
-    public sealed class SystemStatusResponse : Message
+    public sealed class SystemStatusResponse : Document
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemStatusResponse"/> class.

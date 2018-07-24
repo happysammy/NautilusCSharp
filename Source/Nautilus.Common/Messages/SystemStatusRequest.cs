@@ -11,14 +11,14 @@ namespace Nautilus.Common.Messages
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>
     /// The system status request message.
     /// </summary>
     [Immutable]
-    public sealed class SystemStatusRequest : Message
+    public sealed class SystemStatusRequest : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.

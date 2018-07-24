@@ -45,6 +45,11 @@ namespace Nautilus.Common.Messaging
         public Document Document { get; }
 
         /// <summary>
+        /// Gets the message type.
+        /// </summary>
+        public override Type Type => this.Document.GetType();
+
+        /// <summary>
         /// Returns a string representation of the <see cref="DocumentMessage"/>.
         /// </summary>
         /// <returns>The event name.</returns>

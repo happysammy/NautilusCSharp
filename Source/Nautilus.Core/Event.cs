@@ -75,6 +75,6 @@ namespace Nautilus.Core
         /// Returns a string representation of this event.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(this.GetType);
+        public override string ToString() => this.GetType().Name;
     }
 }
