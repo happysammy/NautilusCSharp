@@ -10,7 +10,6 @@ namespace Nautilus.MsgPack
 {
     using System;
     using System.Globalization;
-    using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
@@ -18,6 +17,7 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
+    using global::MsgPack;
 
     public class MsgPackOrderSerializer : IOrderSerializer
     {
@@ -44,14 +44,14 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.ExpireTime), None);
                     break;
 
-                case StopOrder stopOrder:
-                    package.Add(new MessagePackObject(Key.Price), stopOrder
+                case PricedOrder pricedOrder:
+                    package.Add(new MessagePackObject(Key.Price), pricedOrder
                         .Price
                         .Value
                         .ToString(CultureInfo.InvariantCulture));
-                    package.Add(new MessagePackObject(Key.TimeInForce), stopOrder.TimeInForce.ToString());
+                    package.Add(new MessagePackObject(Key.TimeInForce), pricedOrder.TimeInForce.ToString());
                     package.Add(new MessagePackObject(Key.ExpireTime),
-                        MsgPackSerializationHelper.GetExpireTimeString(stopOrder.ExpireTime));
+                        MsgPackSerializationHelper.GetExpireTimeString(pricedOrder.ExpireTime));
                     break;
 
                 default: throw new InvalidOperationException(
@@ -95,6 +95,9 @@ namespace Nautilus.MsgPack
                         label,
                         side,
                         quantity,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
+                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
 
                 case OrderType.STOP_LIMIT:

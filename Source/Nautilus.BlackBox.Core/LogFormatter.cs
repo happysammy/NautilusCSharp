@@ -337,7 +337,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         /// <param name="order">The stop order.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string ToOutput(StopOrder order)
+        public static string ToOutput(PricedOrder order)
         {
             Debug.NotNull(order, nameof(order));
 

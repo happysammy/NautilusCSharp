@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Orders
     /// <summary>
     /// Represents a stop-limit order type.
     /// </summary>
-    public class StopLimitOrder : StopOrder
+    public class StopLimitOrder : PricedOrder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StopLimitOrder"/> class.

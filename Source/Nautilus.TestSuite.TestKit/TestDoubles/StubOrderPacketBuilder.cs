@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var entryOrder3 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId3").WithExpireTime(expireTime).BuildStopMarketOrder();
             var stoplossOrder3 = new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder();
-            var profitTargetOrder3 = Option<StopOrder>.None();
+            var profitTargetOrder3 = Option<PricedOrder>.None();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),

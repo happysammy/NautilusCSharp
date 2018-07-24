@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderFilled"/>.
         /// </returns>
-        public static OrderFilled OrderFilledEvent(StopOrder order)
+        public static OrderFilled OrderFilledEvent(PricedOrder order)
         {
             return new OrderFilled(
                 order.Symbol,
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderPartiallyFilled"/>.
         /// </returns>
-        public static OrderPartiallyFilled OrderPartiallyFilledEvent(StopOrder order, int filledQuantity, int leavesQuantity)
+        public static OrderPartiallyFilled OrderPartiallyFilledEvent(PricedOrder order, int filledQuantity, int leavesQuantity)
         {
             return new OrderPartiallyFilled(
                 order.Symbol,
@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderWorking"/>.
         /// </returns>
-        public static OrderWorking OrderWorkingEvent(StopOrder order)
+        public static OrderWorking OrderWorkingEvent(PricedOrder order)
         {
             return new OrderWorking(
                 order.Symbol,

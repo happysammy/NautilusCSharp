@@ -8,8 +8,8 @@
 
 namespace Nautilus.DomainModel.Orders
 {
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Orders
     /// <summary>
     /// Represents a limit order type.
     /// </summary>
-    public class LimitOrder : Order
+    public class LimitOrder : PricedOrder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LimitOrder" /> class.
@@ -27,6 +27,9 @@ namespace Nautilus.DomainModel.Orders
         /// <param name="orderLabel">The order label.</param>
         /// <param name="orderSide">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
+        /// <param name="price">The order entry price.</param>
+        /// <param name="timeInForce">The order time in force.</param>
+        /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
         public LimitOrder(
             Symbol symbol,
@@ -34,15 +37,21 @@ namespace Nautilus.DomainModel.Orders
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
+            Price price,
+            TimeInForce timeInForce,
+            Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp)
             : base(
-                  symbol,
-                  orderId,
-                  orderLabel,
-                  orderSide,
-                  OrderType.LIMIT,
-                  quantity,
-                  timestamp)
+                symbol,
+                orderId,
+                orderLabel,
+                orderSide,
+                OrderType.LIMIT,
+                quantity,
+                price,
+                timeInForce,
+                expireTime,
+                timestamp)
         {
             Debug.NotNull(symbol, nameof(symbol));
             Debug.NotNull(orderId, nameof(orderId));
@@ -51,5 +60,7 @@ namespace Nautilus.DomainModel.Orders
             Debug.EqualTo(this.Type, nameof(this.Type), OrderType.LIMIT);
             Debug.NotNull(quantity, nameof(quantity));
         }
+
+
     }
 }

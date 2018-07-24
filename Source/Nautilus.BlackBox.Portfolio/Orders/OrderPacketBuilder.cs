@@ -125,7 +125,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                     Option<ZonedDateTime?>.None(),
                     signal.SignalTimestamp);
 
-                var profitTargetOrder = Option<StopOrder>.None();
+                var profitTargetOrder = Option<PricedOrder>.None();
 
                 if (signal.ProfitTargets.Count >= unit)
                 {
@@ -158,7 +158,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 signal.SignalTimestamp));
         }
 
-        // Orderside cannot be Undefined (as it was already checked by the signal).
+        // OrderSide cannot be undefined (as it was already checked by the signal).
         private static OrderSide GetOppositeSide(OrderSide orderSide)
         {
             return orderSide == OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;

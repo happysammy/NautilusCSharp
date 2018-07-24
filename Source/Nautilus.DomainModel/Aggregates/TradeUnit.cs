@@ -44,9 +44,9 @@ namespace Nautilus.DomainModel.Aggregates
         public TradeUnit(
             EntityId tradeUnitId,
             Label tradeUnitLabel,
-            StopOrder entry,
+            PricedOrder entry,
             StopMarketOrder stopLoss,
-            Option<StopOrder> profitTarget,
+            Option<PricedOrder> profitTarget,
             ZonedDateTime timestamp)
             : base(tradeUnitId, timestamp)
         {
@@ -95,12 +95,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trade units entry order.
         /// </summary>
-        public StopOrder Entry { get; }
+        public PricedOrder Entry { get; }
 
         /// <summary>
         /// Gets the trade units profit target (optional).
         /// </summary>
-        public Option<StopOrder> ProfitTarget { get; }
+        public Option<PricedOrder> ProfitTarget { get; }
 
         /// <summary>
         /// Gets the trade units stop-loss order.

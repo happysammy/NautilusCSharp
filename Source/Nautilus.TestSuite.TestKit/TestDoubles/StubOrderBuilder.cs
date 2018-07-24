@@ -148,6 +148,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Timestamp);
         }
 
+        public LimitOrder BuildLimitOrder()
+        {
+            return new LimitOrder(
+                this.Symbol,
+                this.OrderId,
+                this.OrderLabel,
+                this.OrderSide,
+                this.Quantity,
+                this.Price,
+                this.TimeInForce,
+                this.ExpireTime,
+                this.Timestamp);
+        }
+
         public StopMarketOrder BuildStopMarketOrder()
         {
             return new StopMarketOrder(

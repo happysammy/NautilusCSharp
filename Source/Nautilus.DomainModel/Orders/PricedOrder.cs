@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // <copyright file="StopOrder.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
@@ -20,12 +20,12 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The base class for all stop order types.
+    /// The base class for all order types which have prices.
     /// </summary>
-    public abstract class StopOrder : Order
+    public abstract class PricedOrder : Order
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StopOrder" /> class.
+        /// Initializes a new instance of the <see cref="PricedOrder" /> class.
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
@@ -37,7 +37,7 @@ namespace Nautilus.DomainModel.Orders
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        protected StopOrder(
+        protected PricedOrder(
             Symbol symbol,
             EntityId orderId,
             Label orderLabel,

@@ -123,7 +123,7 @@ namespace Nautilus.DomainModel
             return MarketPosition.Unknown;
         }
 
-        private static bool ProfitTargetHasValueAndIsComplete(Option<StopOrder> order)
+        private static bool ProfitTargetHasValueAndIsComplete(Option<PricedOrder> order)
         {
             return order.HasValue && order.Value.IsComplete;
         }

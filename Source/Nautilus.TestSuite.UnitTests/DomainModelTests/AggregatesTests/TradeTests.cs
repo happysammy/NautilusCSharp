@@ -591,12 +591,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder2));
             trade.Apply(StubEventMessages.OrderModifiedEvent(stoplossOrder2, Price.Create(0.79950m, 0.00001m)));
 
-            var result = trade.GetOrderById(new EntityId("StoplossOrderId2")).Value as StopOrder;
+            var result = trade.GetOrderById(new EntityId("StoplossOrderId2")).Value as PricedOrder;
 
             // Assert
             Assert.Equal(TradeStatus.Active, trade.TradeStatus);
             Assert.Equal(MarketPosition.Long, trade.MarketPosition);
-            Assert.Equal(0.79950m, result.Price.Value);
+            Assert.Equal(0.79950m, result?.Price.Value);
         }
 
         [Fact]
@@ -604,33 +604,33 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder1 = new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarketOrder();
-            var stoplossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
+            var stopLossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
             var profitTargetOrder1 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId1").BuildStopLimitOrder();
 
             var entryOrder2 = new StubOrderBuilder().EntryOrder("EntryOrderId2").BuildStopMarketOrder();
-            var stoplossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
+            var stopLossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
             var profitTargetOrder2 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId2").BuildStopLimitOrder();
 
             var entryOrder3 = new StubOrderBuilder().EntryOrder("EntryOrderId3").BuildStopMarketOrder();
-            var stoplossOrder3 = new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder();
+            var stopLossOrder3 = new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder();
             var profitTargetOrder3 = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId3").BuildStopLimitOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder1,
-                stoplossOrder1,
+                stopLossOrder1,
                 profitTargetOrder1);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder2,
-                stoplossOrder2,
+                stopLossOrder2,
                 profitTargetOrder2);
 
             var atomicOrder3 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder3,
-                stoplossOrder3,
+                stopLossOrder3,
                 profitTargetOrder3);
 
             var atomicOrders = new List<AtomicOrder>
@@ -652,20 +652,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder1));
             trade.Apply(StubEventMessages.OrderFilledEvent(entryOrder1));
-            trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder1));
-            trade.Apply(StubEventMessages.OrderFilledEvent(stoplossOrder1));
+            trade.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder1));
+            trade.Apply(StubEventMessages.OrderFilledEvent(stopLossOrder1));
             trade.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder1));
 
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder2));
             trade.Apply(StubEventMessages.OrderFilledEvent(entryOrder2));
-            trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder2));
-            trade.Apply(StubEventMessages.OrderFilledEvent(stoplossOrder2));
+            trade.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder2));
+            trade.Apply(StubEventMessages.OrderFilledEvent(stopLossOrder2));
             trade.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder2));
 
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder3));
             trade.Apply(StubEventMessages.OrderFilledEvent(entryOrder3));
-            trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder3));
-            trade.Apply(StubEventMessages.OrderFilledEvent(stoplossOrder3));
+            trade.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder3));
+            trade.Apply(StubEventMessages.OrderFilledEvent(stopLossOrder3));
             trade.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder3));
 
             // Assert

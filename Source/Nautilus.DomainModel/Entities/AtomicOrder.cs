@@ -31,9 +31,9 @@ namespace Nautilus.DomainModel.Entities
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public AtomicOrder(
             TradeType tradeType,
-            StopOrder entryOrder,
+            PricedOrder entryOrder,
             StopMarketOrder stopLossOrder,
-            Option<StopOrder> profitTargetOrder)
+            Option<PricedOrder> profitTargetOrder)
             : base(
                   entryOrder.OrderId,
                   entryOrder.OrderTimestamp)
@@ -67,7 +67,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders entry order.
         /// </summary>
-        public StopOrder EntryOrder { get; }
+        public PricedOrder EntryOrder { get; }
 
         /// <summary>
         /// Gets the atomic orders stop-loss order.
@@ -77,6 +77,6 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public Option<StopOrder> ProfitTargetOrder { get; }
+        public Option<PricedOrder> ProfitTargetOrder { get; }
     }
 }
