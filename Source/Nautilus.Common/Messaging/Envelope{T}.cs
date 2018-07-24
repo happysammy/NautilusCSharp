@@ -67,7 +67,7 @@ namespace Nautilus.Common.Messaging
         public Guid EnvelopeId { get; }
 
         /// <summary>
-        /// Gets the message type.
+        /// Gets the envelopes message type.
         /// </summary>
         public Type Type => this.message.GetType();
 

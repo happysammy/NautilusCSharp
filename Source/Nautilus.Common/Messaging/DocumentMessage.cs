@@ -45,7 +45,7 @@ namespace Nautilus.Common.Messaging
         public Document Document { get; }
 
         /// <summary>
-        /// Gets the message type.
+        /// Gets the messages type.
         /// </summary>
         public override Type Type => this.Document.GetType();
 

@@ -45,7 +45,7 @@ namespace Nautilus.Common.Messaging
         public Command Command { get; }
 
         /// <summary>
-        /// Gets the message type.
+        /// Gets the messages type.
         /// </summary>
         public override Type Type => this.Command.GetType();
 

@@ -44,7 +44,7 @@ namespace Nautilus.Common.Messaging
         public Event Event { get; }
 
         /// <summary>
-        /// Gets the message type.
+        /// Gets the messages type.
         /// </summary>
         public override Type Type => this.Event.GetType();
 
