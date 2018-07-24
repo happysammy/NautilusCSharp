@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.SystemCommands
+namespace Nautilus.BlackBox.Core.Messages.Commands
 {
     using System;
     using System.Collections.Generic;

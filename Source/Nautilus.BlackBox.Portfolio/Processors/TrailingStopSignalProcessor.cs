@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
@@ -93,7 +93,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
 
                     if (stopLossModificationsIndex.Count > 0)
                     {
-                        var modifyStoploss = new ModifyStopLoss(
+                        var modifyStoploss = new ModifyOrder(
                             trade,
                             stopLossModificationsIndex,
                             this.NewGuid(),

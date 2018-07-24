@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Portfolio
     using System;
     using Akka.Actor;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.BlackBox.Core.Build;

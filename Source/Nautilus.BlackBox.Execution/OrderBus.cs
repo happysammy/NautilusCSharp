@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Execution
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
@@ -55,7 +55,7 @@ namespace Nautilus.BlackBox.Execution
         {
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
-            this.Receive<ModifyStopLoss>(msg => this.OnMessage(msg));
+            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
             this.Receive<ClosePosition>(msg => this.OnMessage(msg));
         }
 
@@ -94,7 +94,7 @@ namespace Nautilus.BlackBox.Execution
             this.gateway.CancelOrder(message.Order);
         }
 
-        private void OnMessage(ModifyStopLoss message)
+        private void OnMessage(ModifyOrder message)
         {
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 

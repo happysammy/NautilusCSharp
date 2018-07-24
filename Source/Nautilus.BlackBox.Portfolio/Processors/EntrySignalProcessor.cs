@@ -11,7 +11,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using System;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;

@@ -1,12 +1,12 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="RequestTradeApproval.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SubmitTrade.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.SystemCommands
+namespace Nautilus.Common.Commands
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -16,51 +16,49 @@ namespace Nautilus.BlackBox.Core.Messages.SystemCommands
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="RequestTradeApproval"/> class.
+    /// Represents a command to submit a trade comprising of an atomic orders packet.
     /// </summary>
     [Immutable]
-    public sealed class RequestTradeApproval : Command
+    public sealed class SubmitTrade : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTradeApproval"/> class.
+        /// Initializes a new instance of the <see cref="SubmitTrade"/> class.
         /// </summary>
         /// <param name="orderPacket">The message order packet.</param>
-        /// <param name="signal">The message entry signal.</param>
+        /// <param name="minStopDistanceEntry">The message minimum stop distance (cannot be negative).</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
-        public RequestTradeApproval(
-            AtomicOrderPacket orderPacket,
-            EntrySignal signal,
+        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        public SubmitTrade(
+            AtomicOrdersPacket orderPacket,
+            decimal minStopDistanceEntry,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
             Validate.NotNull(orderPacket, nameof(orderPacket));
-            Validate.NotNull(signal, nameof(signal));
+            Validate.DecimalNotOutOfRange(minStopDistanceEntry, nameof(minStopDistanceEntry), decimal.Zero, decimal.MaxValue);
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
             this.OrderPacket = orderPacket;
-            this.Signal = signal;
+            this.MinStopDistanceEntry = minStopDistanceEntry;
         }
 
         /// <summary>
-        /// Gets the messages order packet.
+        /// Gets the messages atomic order packet.
         /// </summary>
-        public AtomicOrderPacket OrderPacket { get; }
+        public AtomicOrdersPacket OrderPacket { get; }
 
         /// <summary>
-        /// Gets the messages symbol.
+        /// Gets the messages minimum stop distance for entry.
         /// </summary>
-        public EntrySignal Signal { get; }
+        public decimal MinStopDistanceEntry { get; }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="RequestTradeApproval"/>
-        /// service message.
+        /// Returns a string representation of the <see cref="SubmitTrade"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.Signal}";
+        public override string ToString() => $"{base.ToString()}-{this.OrderPacket.Id}";
     }
 }

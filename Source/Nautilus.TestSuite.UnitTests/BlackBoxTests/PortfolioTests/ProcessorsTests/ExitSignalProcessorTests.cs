@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.Common.MessageStore;

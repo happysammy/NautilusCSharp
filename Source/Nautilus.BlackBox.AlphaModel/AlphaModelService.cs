@@ -13,7 +13,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;

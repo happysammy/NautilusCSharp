@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var atomicOrders = new List<AtomicOrder> { StubAtomicOrderBuilder.Build() };
 
             // Act
-            var orderPacket = new AtomicOrderPacket(
+            var orderPacket = new AtomicOrdersPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void OrderIdList_NewOrderPacket_ReturnsEmptyListOfStrings()
         {
             // Arrange
-            var orderPacket = new AtomicOrderPacket(
+            var orderPacket = new AtomicOrdersPacket(
                 new Symbol("AUDUSD", Venue.FXCM),
                 new TradeType("TestTrade"),
                 new List<AtomicOrder>{StubAtomicOrderBuilder.Build()},

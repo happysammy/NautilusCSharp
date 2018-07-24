@@ -1,49 +1,55 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="InitializeBrokerageGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ClosePosition.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.SystemCommands
+namespace Nautilus.Common.Commands
 {
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="InitializeGateway"/> class.
+    /// Represents a command to close a trade position.
     /// </summary>
     [Immutable]
-    public sealed class InitializeGateway : Command
+    public sealed class ClosePosition : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InitializeGateway"/> class.
+        /// Initializes a new instance of the <see cref="ClosePosition"/> class.
         /// </summary>
-        /// <param name="fixGateway">The message brokerage gateway.</param>
+        /// <param name="forTradeUnit">The message for trade unit.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public InitializeGateway(
-            IFixGateway fixGateway,
+        public ClosePosition(
+            TradeUnit forTradeUnit,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotNull(fixGateway, nameof(fixGateway));
+            Validate.NotNull(forTradeUnit, nameof(forTradeUnit));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
-            this.FixGateway = fixGateway;
+            this.ForTradeUnit = forTradeUnit;
         }
 
         /// <summary>
-        /// Gets the messages brokerage gateway.
+        /// Gets the messages for trade unit.
         /// </summary>
-        public IFixGateway FixGateway { get; }
+        public TradeUnit ForTradeUnit { get; }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="ClosePosition"/> command message.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{base.ToString()}-{this.ForTradeUnit.Symbol}-{this.ForTradeUnit}";
     }
 }

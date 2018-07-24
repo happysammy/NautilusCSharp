@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.TradeCommands
+namespace Nautilus.Common.Commands
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -15,7 +15,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="ShutdownSystem"/> class.
+    /// Represents a command to shutdown the system.
     /// </summary>
     [Immutable]
     public sealed class ShutdownSystem : Command

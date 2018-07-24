@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Data
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Core.Build;

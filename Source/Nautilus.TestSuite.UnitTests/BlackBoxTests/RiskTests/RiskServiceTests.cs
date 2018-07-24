@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;

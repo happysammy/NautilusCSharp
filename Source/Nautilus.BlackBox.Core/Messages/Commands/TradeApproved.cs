@@ -1,55 +1,64 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ClosePosition.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TradeApproved.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.TradeCommands
+namespace Nautilus.BlackBox.Core.Messages.Commands
 {
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Core;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="ClosePosition"/> class.
+    /// The immutable sealed <see cref="TradeApproved"/> class.
     /// </summary>
     [Immutable]
-    public sealed class ClosePosition : Command
+    public sealed class TradeApproved : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClosePosition"/> class.
+        /// Initializes a new instance of the <see cref="TradeApproved"/> class.
         /// </summary>
-        /// <param name="forTradeUnit">The message for trade unit.</param>
+        /// <param name="orderPacket">The message order packet.</param>
+        /// <param name="barsValid">The message bars valid (cannot be zero or negative).</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public ClosePosition(
-            TradeUnit forTradeUnit,
+        public TradeApproved(
+            AtomicOrdersPacket orderPacket,
+            int barsValid,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotNull(forTradeUnit, nameof(forTradeUnit));
+            Validate.NotNull(orderPacket, nameof(orderPacket));
+            Validate.Int32NotOutOfRange(barsValid, nameof(barsValid), 0, int.MaxValue, RangeEndPoints.Exclusive);
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
-            this.ForTradeUnit = forTradeUnit;
+            this.OrderPacket = orderPacket;
+            this.BarsValid = barsValid;
         }
 
         /// <summary>
-        /// Gets the messages for trade unit.
+        /// The messages symbol.
         /// </summary>
-        public TradeUnit ForTradeUnit { get; }
+        public Symbol Symbol => this.OrderPacket.Symbol;
 
         /// <summary>
-        /// Returns a string representation of the <see cref="ClosePosition"/> command message.
+        /// Gets the messages order packet.
         /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.ForTradeUnit.Symbol}-{this.ForTradeUnit}";
+        public AtomicOrdersPacket OrderPacket { get; }
+
+        /// <summary>
+        /// Gets the messages bars valid for entry.
+        /// </summary>
+        public int BarsValid { get; }
     }
 }

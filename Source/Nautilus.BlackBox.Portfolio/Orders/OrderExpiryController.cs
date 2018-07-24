@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using System.Linq;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -98,7 +98,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="barsValid">The bars valid.</param>
         /// <exception cref="ValidationException">Throws if the order packet is null, or if the
         /// bars valid is zero or negative.</exception>
-        public void AddCounters(AtomicOrderPacket orderPacket, int barsValid)
+        public void AddCounters(AtomicOrdersPacket orderPacket, int barsValid)
         {
             Validate.NotNull(orderPacket, nameof(orderPacket));
             Validate.Int32NotOutOfRange(barsValid, nameof(barsValid), 0, int.MaxValue, RangeEndPoints.Exclusive);

@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
     using Nautilus.Common.MessageStore;
@@ -163,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
             CustomAssert.EventuallyContains(
-                typeof(ModifyStopLoss),
+                typeof(ModifyOrder),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.TimeoutMilliseconds);
@@ -189,7 +189,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].TradeStatus);
             Assert.Equal(MarketPosition.Short, this.tradeBook.GetTradesByTradeType(new TradeType("TestTrade"))[0].MarketPosition);
             CustomAssert.EventuallyContains(
-                typeof(ModifyStopLoss),
+                typeof(ModifyOrder),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.TimeoutMilliseconds);

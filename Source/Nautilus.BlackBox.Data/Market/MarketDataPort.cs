@@ -12,7 +12,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;

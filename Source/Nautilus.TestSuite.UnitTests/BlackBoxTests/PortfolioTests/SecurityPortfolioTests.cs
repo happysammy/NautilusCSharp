@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
@@ -243,7 +243,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                typeof(ModifyStopLoss),
+                typeof(ModifyOrder),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

@@ -24,7 +24,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubOrderPacketBuilder
     {
-        public static AtomicOrderPacket Build()
+        public static AtomicOrdersPacket Build()
         {
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
             var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder };
 
-            return new AtomicOrderPacket(
+            return new AtomicOrdersPacket(
                 entryOrder.Symbol,
                 new TradeType("TestTrade"),
                 atomicOrders,
@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static AtomicOrderPacket ThreeUnitsAndExpireTime(ZonedDateTime expireTime)
+        public static AtomicOrdersPacket ThreeUnitsAndExpireTime(ZonedDateTime expireTime)
         {
             var entryOrder1 = new StubOrderBuilder().WithTimeInForce(TimeInForce.GTD).WithOrderId("EntryOrderId1").WithExpireTime(expireTime).BuildStopMarketOrder();
             var stoplossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
@@ -80,7 +80,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder1, atomicOrder2, atomicOrder3 };
 
-            return new AtomicOrderPacket(
+            return new AtomicOrdersPacket(
                 entryOrder1.Symbol,
                 new TradeType("TestTrade"),
                 atomicOrders,

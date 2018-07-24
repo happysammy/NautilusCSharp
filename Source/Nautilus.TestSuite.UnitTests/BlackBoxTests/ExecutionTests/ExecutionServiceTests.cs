@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Moq;
-    using Nautilus.BlackBox.Core.Messages.SystemCommands;
-    using Nautilus.BlackBox.Core.Messages.TradeCommands;
+    using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Execution;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
@@ -116,7 +116,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             var stopLossModificationsIndex = new Dictionary<Order, Price> { { trade.TradeUnits[0].StopLoss, Price.Create(0.79000m, 0.00001m) } };
             var order = new StubOrderBuilder().StopLossOrder("1234");
 
-            var message = new ModifyStopLoss(trade, stopLossModificationsIndex, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var message = new ModifyOrder(trade, stopLossModificationsIndex, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.TradeCommands
+namespace Nautilus.Common.Commands
 {
     using System;
     using System.Collections.Generic;
@@ -19,20 +19,20 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="ModifyStopLoss"/> class.
+    /// Represents a command to modify an order.
     /// </summary>
     [Immutable]
-    public sealed class ModifyStopLoss : Command
+    public sealed class ModifyOrder : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModifyStopLoss"/> class.
+        /// Initializes a new instance of the <see cref="ModifyOrder"/> class.
         /// </summary>
         /// <param name="forTrade">The message for trade.</param>
         /// <param name="stopLossModificationsIndex">The message stop-loss modifications index.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public ModifyStopLoss(
+        public ModifyOrder(
             Trade forTrade,
             Dictionary<Order, Price> stopLossModificationsIndex,
             Guid messageId,
@@ -59,7 +59,7 @@ namespace Nautilus.BlackBox.Core.Messages.TradeCommands
         public IReadOnlyDictionary<Order, Price> StopLossModificationsIndex { get; }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="ModifyStopLoss"/> command message.
+        /// Returns a string representation of the <see cref="ModifyOrder"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{base.ToString()}-{this.ForTrade.Symbol}-{this.ForTrade}";
