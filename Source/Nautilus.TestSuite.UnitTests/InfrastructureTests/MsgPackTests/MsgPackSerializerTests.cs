@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var python_hex = "84a6686561646572af6f726465725f63616e63656c6c6564a673796d626f6cab415544" +
                              "5553442e4658434da86f726465725f6964a74f313233343536a974696d657374616d70" +
                              "b8313937302d30312d30315430303a30303a30302e3030305a";
-            var data = ByteHelpers.StringToByteArray(python_hex);
+            var data = ByteHelpers.HexStringToByteArray(python_hex);
 
             // Act
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(data);

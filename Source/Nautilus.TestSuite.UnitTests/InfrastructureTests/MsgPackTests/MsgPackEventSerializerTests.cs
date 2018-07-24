@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(submitted, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(accepted, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(rejected, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelled, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(modified, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -252,7 +252,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(expired, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(filled, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToString(packed));
+            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
         }
     }
 }

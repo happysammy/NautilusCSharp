@@ -14,14 +14,14 @@ namespace Nautilus.TestSuite.TestKit
 
     public static class ByteHelpers
     {
-        public static byte[] StringToByteArray(string hex) {
+        public static byte[] HexStringToByteArray(string hex) {
             return Enumerable.Range(0, hex.Length)
                 .Where(x => x % 2 == 0)
                 .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                 .ToArray();
         }
 
-        public static string ByteArrayToString(byte[] ba)
+        public static string ByteArrayToHexString(byte[] ba)
         {
             var hex = new StringBuilder(ba.Length * 2);
             foreach (var b in ba)
