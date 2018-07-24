@@ -49,11 +49,11 @@ namespace Nautilus.Fix.MessageFactories
            var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(atomicOrder.EntryOrder.OrderId.ToString()));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.OrderLabel.ToString()));
+            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.Label.ToString()));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.OrderSide));
+            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.Side));
             order1.SetField(new OrdType(OrdType.STOP));
             order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.EntryOrder.TimeInForce));
 
@@ -71,11 +71,11 @@ namespace Nautilus.Fix.MessageFactories
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(atomicOrder.StopLossOrder.OrderId.ToString()));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.OrderLabel.ToString()));
+            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.Label.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account("02402856"));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.OrderSide));
+            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.Side));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.StopLossOrder.TimeInForce));
             order2.SetField(new OrderQty(atomicOrder.StopLossOrder.Quantity.Value));
@@ -114,11 +114,11 @@ namespace Nautilus.Fix.MessageFactories
            var order1 = new NewOrderList.NoOrdersGroup();
             order1.SetField(new ClOrdID(atomicOrder.EntryOrder.OrderId.ToString()));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.OrderLabel.ToString()));
+            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.Label.ToString()));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.OrderSide));
+            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.Side));
             order1.SetField(new OrdType(OrdType.STOP));
             order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.EntryOrder.TimeInForce));
 
@@ -136,11 +136,11 @@ namespace Nautilus.Fix.MessageFactories
             var order2 = new NewOrderList.NoOrdersGroup();
             order2.SetField(new ClOrdID(atomicOrder.StopLossOrder.OrderId.ToString()));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.OrderLabel.ToString()));
+            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.Label.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.OrderSide));
+            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.Side));
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.StopLossOrder.TimeInForce));
             order2.SetField(new OrderQty(atomicOrder.StopLossOrder.Quantity.Value));
@@ -150,11 +150,11 @@ namespace Nautilus.Fix.MessageFactories
             var order3 = new NewOrderList.NoOrdersGroup();
             order3.SetField(new ClOrdID(atomicOrder.ProfitTargetOrder.Value.OrderId.ToString()));
             order3.SetField(new ListSeqNo(2));
-            order3.SetField(new SecondaryClOrdID(atomicOrder.ProfitTargetOrder.Value.OrderLabel.ToString()));
+            order3.SetField(new SecondaryClOrdID(atomicOrder.ProfitTargetOrder.Value.Label.ToString()));
             order3.SetField(new ClOrdLinkID("2"));
             order3.SetField(new Account(accountNumber));
             order3.SetField(new Symbol(brokerSymbol));
-            order3.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.ProfitTargetOrder.Value.OrderSide));
+            order3.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.ProfitTargetOrder.Value.Side));
             order3.SetField(new OrdType(OrdType.LIMIT));
             order3.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.ProfitTargetOrder.Value.TimeInForce));
             order3.SetField(new OrderQty(atomicOrder.ProfitTargetOrder.Value.Quantity.Value));

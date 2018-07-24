@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// Represents a StopLimit order type.
+    /// Represents a stop-limit order type.
     /// </summary>
     public class StopLimitOrder : StopOrder
     {
@@ -31,8 +31,6 @@ namespace Nautilus.DomainModel.Orders
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public StopLimitOrder(
             Symbol symbol,
             EntityId orderId,
@@ -59,12 +57,11 @@ namespace Nautilus.DomainModel.Orders
             Debug.NotNull(orderId, nameof(orderId));
             Debug.NotNull(orderLabel, nameof(orderLabel));
             Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.EqualTo(this.Type, nameof(this.Type), OrderType.STOP_LIMIT);
             Debug.NotNull(quantity, nameof(quantity));
             Debug.NotNull(price, nameof(price));
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotNull(expireTime, nameof(expireTime));
-
-            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.STOP_LIMIT);
         }
     }
 }

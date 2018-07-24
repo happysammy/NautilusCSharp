@@ -34,13 +34,13 @@ namespace Nautilus.DomainModel
             Debug.NotNull(tradeUnit, nameof(tradeUnit));
 
             if (tradeUnit.Position.MarketPosition == MarketPosition.Flat
-             && tradeUnit.Entry.OrderStatus == OrderStatus.Initialized)
+             && tradeUnit.Entry.Status == OrderStatus.Initialized)
             {
                 return TradeStatus.Initialized;
             }
 
             if (tradeUnit.Position.MarketPosition == MarketPosition.Flat
-             && tradeUnit.Entry.OrderStatus == OrderStatus.Working)
+             && tradeUnit.Entry.Status == OrderStatus.Working)
             {
                 return TradeStatus.Pending;
             }

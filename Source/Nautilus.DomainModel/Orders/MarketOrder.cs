@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// Represents a Market order type.
+    /// Represents a market order type.
     /// </summary>
     public class MarketOrder : Order
     {
@@ -28,8 +28,6 @@ namespace Nautilus.DomainModel.Orders
         /// <param name="orderSide">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public MarketOrder(
             Symbol symbol,
             EntityId orderId,
@@ -50,9 +48,8 @@ namespace Nautilus.DomainModel.Orders
             Debug.NotNull(orderId, nameof(orderId));
             Debug.NotNull(orderLabel, nameof(orderLabel));
             Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.EqualTo(this.Type, nameof(this.Type), OrderType.MARKET);
             Debug.NotNull(quantity, nameof(quantity));
-
-            Debug.EqualTo(this.OrderType, nameof(this.OrderType), OrderType.MARKET);
         }
     }
 }

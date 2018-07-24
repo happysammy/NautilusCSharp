@@ -329,7 +329,7 @@ namespace Nautilus.BlackBox.Core
                 return string.Empty;
             }
 
-            return $"{order}: {order.OrderSide}-{order.OrderType} {order.Quantity:N0} {order.OrderLabel}";
+            return $"{order}: {order.Side}-{order.Type} {order.Quantity:N0} {order.Label}";
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Nautilus.BlackBox.Core
                 return string.Empty;
             }
 
-            return $"{order}: {order.OrderSide}-{order.OrderType} {order.Quantity:N0} at {order.Price}, {order.OrderLabel}";
+            return $"{order}: {order.Side}-{order.Type} {order.Quantity:N0} at {order.Price}, {order.Label}";
         }
 
         /// <summary>

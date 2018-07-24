@@ -49,14 +49,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
-            Assert.Equal("some_label", order.OrderLabel.ToString());
-            Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.MARKET, order.OrderType);
+            Assert.Equal("some_label", order.Label.ToString());
+            Assert.Equal(OrderSide.BUY, order.Side);
+            Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
-            Assert.Equal(OrderStatus.Initialized, order.OrderStatus);
+            Assert.Equal(OrderStatus.Initialized, order.Status);
         }
 
         [Fact]
@@ -78,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
             Assert.Equal("some_orderId", order.OrderId.ToString());
-            Assert.Equal("some_label", order.OrderLabel.ToString());
-            Assert.Equal(OrderSide.BUY, order.OrderSide);
-            Assert.Equal(OrderType.STOP_MARKET, order.OrderType);
+            Assert.Equal("some_label", order.Label.ToString());
+            Assert.Equal(OrderSide.BUY, order.Side);
+            Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(2000, order.Price.Value);
             Assert.Equal(decimal.Zero, order.AveragePrice.Value);
@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
-            Assert.Equal(OrderStatus.Initialized, order.OrderStatus);
+            Assert.Equal(OrderStatus.Initialized, order.Status);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(1, order.EventCount);
-            Assert.Equal(OrderStatus.Rejected, order.OrderStatus);
+            Assert.Equal(OrderStatus.Rejected, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
@@ -144,7 +144,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(2, order.EventCount);
-            Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Cancelled, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
@@ -162,7 +162,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(2, order.EventCount);
-            Assert.Equal(OrderStatus.Expired, order.OrderStatus);
+            Assert.Equal(OrderStatus.Expired, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal("some_broker_orderId", order.OrderIdBroker.ToString());
             Assert.Equal(1, order.EventCount);
-            Assert.Equal(OrderStatus.Working, order.OrderStatus);
+            Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
 
@@ -194,7 +194,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             order.Apply(message1);
             order.Apply(message2);
-            var result = order.OrderStatus;
+            var result = order.Status;
 
             // Assert
             Assert.Equal(OrderStatus.Filled, result);
@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             order.Apply(message1);
             order.Apply(message2);
-            var result = order.OrderStatus;
+            var result = order.Status;
 
             // Assert
             Assert.Equal(OrderStatus.PartiallyFilled, result);
@@ -240,9 +240,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new Symbol("AUDUSD", Venue.LMAX),
                 order.OrderId,
                 new EntityId("some_broker_orderId"),
-                order.OrderLabel,
-                order.OrderSide,
-                order.OrderType,
+                order.Label,
+                order.Side,
+                order.Type,
                 order.Quantity,
                 order.Price,
                 order.TimeInForce,
@@ -273,7 +273,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderId,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
-                order.OrderSide,
+                order.Side,
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
                 order.Price,
@@ -288,7 +288,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.IsComplete;
 
             // Assert
-            Assert.True(order.OrderStatus == OrderStatus.PartiallyFilled);
+            Assert.True(order.Status == OrderStatus.PartiallyFilled);
             Assert.False(result);
         }
 
@@ -303,7 +303,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderId,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
-                order.OrderSide,
+                order.Side,
                 order.Quantity,
                 order.Price,
                 StubZonedDateTime.UnixEpoch(),
@@ -315,7 +315,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message2);
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Filled, order.Status);
             Assert.True(order.IsComplete);
         }
 
@@ -365,7 +365,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderId,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
-                order.OrderSide,
+                order.Side,
                 order.Quantity,
                 Price.Create(averagePrice, 0.00001m),
                 StubZonedDateTime.UnixEpoch(),
@@ -379,7 +379,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.Slippage;
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Filled, order.Status);
             Assert.Equal(expectedSlippage, result);
         }
 
@@ -401,7 +401,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.OrderId,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
-                order.OrderSide,
+                order.Side,
                 order.Quantity,
                 Price.Create(averagePrice, 0.00001m),
                 StubZonedDateTime.UnixEpoch(),
@@ -415,7 +415,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var result = order.Slippage;
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Filled, order.Status);
             Assert.Equal(expectedSlippage, result);
         }
 

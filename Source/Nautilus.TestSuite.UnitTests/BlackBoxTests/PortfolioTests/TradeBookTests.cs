@@ -135,7 +135,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             trade.Apply(StubEventMessages.OrderCancelledEvent(trade.TradeUnits[0].ProfitTarget.Value));
 
             // Assert
-            Assert.Equal(OrderStatus.Cancelled, order1.OrderStatus);
+            Assert.Equal(OrderStatus.Cancelled, order1.Status);
             Assert.Equal(TradeStatus.Completed, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].TradeStatus);
             Assert.Equal(MarketPosition.Flat, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].MarketPosition);
         }
@@ -156,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             trade.Apply(StubEventMessages.OrderCancelledEvent(trade.TradeUnits[0].ProfitTarget.Value));
 
             // Assert
-            Assert.Equal(OrderStatus.Expired, order1.OrderStatus);
+            Assert.Equal(OrderStatus.Expired, order1.Status);
             Assert.Equal(TradeStatus.Completed, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].TradeStatus);
             Assert.Equal(MarketPosition.Flat, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].MarketPosition);
         }
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             Assert.Equal(100000, order.Quantity.Value);
             Assert.Equal(50000, order.FilledQuantity.Value);
-            Assert.Equal(OrderStatus.PartiallyFilled, order.OrderStatus);
+            Assert.Equal(OrderStatus.PartiallyFilled, order.Status);
             Assert.Equal(TradeStatus.Active, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, this.tradeBook.GetTradesByTradeType(trade.TradeType)[0].MarketPosition);
         }

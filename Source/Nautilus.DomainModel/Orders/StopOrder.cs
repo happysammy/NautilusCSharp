@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.Orders
     using NodaTime;
 
     /// <summary>
-    /// The base class for all Stop order types.
+    /// The base class for all stop order types.
     /// </summary>
     public abstract class StopOrder : Order
     {
@@ -37,8 +37,6 @@ namespace Nautilus.DomainModel.Orders
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         protected StopOrder(
             Symbol symbol,
             EntityId orderId,
@@ -176,7 +174,7 @@ namespace Nautilus.DomainModel.Orders
                 return decimal.Zero;
             }
 
-            return this.OrderSide == OrderSide.BUY
+            return this.Side == OrderSide.BUY
                        ? this.AveragePrice.Value - this.Price
                        : this.Price - this.AveragePrice.Value;
         }

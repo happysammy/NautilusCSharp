@@ -122,7 +122,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static TimeInForce GetNautilusTimeInForce(string timeInForce)
         {
-            return TimeInForceStringIndex.ContainsKey(timeInForce) ? TimeInForceStringIndex[timeInForce] : TimeInForce.Unknown;
+            return TimeInForceStringIndex.ContainsKey(timeInForce)
+                ? TimeInForceStringIndex[timeInForce]
+                : TimeInForce.UNKNOWN;
         }
 
         /// <summary>
@@ -223,7 +225,7 @@ namespace Nautilus.Fix
                 return OrderType.MIT;
             }
 
-            return OrderType.Unknown;
+            return OrderType.UNKNOWN;
         }
 
         /// <summary>

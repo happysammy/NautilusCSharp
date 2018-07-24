@@ -18,7 +18,6 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
     using global::MsgPack;
 
     /// <summary>
@@ -26,7 +25,6 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {
-        private const string None = "NONE";
         private const string AccountEvent = "account_event";
         private const string OrderEvent = "order_event";
         private const string OrderSubmitted = "order_submitted";
@@ -82,28 +80,6 @@ namespace Nautilus.MsgPack
             }
         }
 
-        private static Price GetPrice(string priceString)
-        {
-            var priceDecimal = Convert.ToDecimal(priceString);
-            var priceDecimalPlaces = priceDecimal.GetDecimalPlaces();
-
-            return Price.Create(priceDecimal, priceDecimalPlaces);
-        }
-
-        private static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
-        {
-            return expireTimeString == None
-                ? Option<ZonedDateTime?>.None()
-                : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
-        }
-
-        private static string GetExpireTimeString(Option<ZonedDateTime?> expireTime)
-        {
-            return expireTime.HasNoValue
-                ? None
-                : expireTime.Value.ToIsoString();
-        }
-
         private static byte[] SerializeOrderEvent(OrderEvent orderEvent)
         {
             var package = new MessagePackObjectDictionary
@@ -142,7 +118,7 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.Quantity), @event.Quantity.Value);
                     package.Add(new MessagePackObject(Key.Price), @event.Price.ToString());
                     package.Add(new MessagePackObject(Key.TimeInForce), @event.TimeInForce.ToString());
-                    package.Add(new MessagePackObject(Key.ExpireTime), GetExpireTimeString(@event.ExpireTime));
+                    package.Add(new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(@event.ExpireTime));
                     package.Add(new MessagePackObject(Key.WorkingTime), @event.WorkingTime.ToIsoString());
                     break;
 
@@ -200,8 +176,7 @@ namespace Nautilus.MsgPack
 
         private static OrderEvent DeserializeOrderEvent(MessagePackObjectDictionary unpacked)
         {
-            var splitSymbol = unpacked[Key.Symbol].ToString().Split('.');
-            var symbol = new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
+            var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
             var orderId = new EntityId(unpacked[Key.OrderId].ToString());
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
@@ -242,9 +217,9 @@ namespace Nautilus.MsgPack
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
                         Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        GetPrice(unpacked[Key.Price].ToString()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -272,7 +247,7 @@ namespace Nautilus.MsgPack
                         symbol,
                         orderId,
                         new EntityId(unpacked[Key.OrderIdBroker].ToString()),
-                        GetPrice(unpacked[Key.ModifiedPrice].ToString()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -294,7 +269,7 @@ namespace Nautilus.MsgPack
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
                         Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
-                        GetPrice(unpacked[Key.AveragePrice].ToString()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()).Value,
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -307,7 +282,7 @@ namespace Nautilus.MsgPack
                         new EntityId(unpacked[Key.ExecutionTicket].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
-                        GetPrice(unpacked[Key.AveragePrice].ToString()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()).Value,
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -315,40 +290,6 @@ namespace Nautilus.MsgPack
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the order event (unrecognized byte[] pattern).");
             }
-        }
-
-        private static class Key
-        {
-            internal static string EventType => "event_type";
-            internal static string EventId => "event_id";
-            internal static string EventTimestamp => "event_timestamp";
-            internal static string OrderEvent => "order_event";
-            internal static string Symbol => "symbol";
-            internal static string OrderId => "order_id";
-            internal static string OrderIdBroker => "order_id_broker";
-            internal static string Label => "label";
-            internal static string SubmittedTime => "submitted_time";
-            internal static string AcceptedTime => "accepted_time";
-            internal static string CancelledTime => "cancelled_time";
-            internal static string RejectedTime => "rejected_time";
-            internal static string RejectedResponse => "rejected_response";
-            internal static string RejectedReason => "rejected_reason";
-            internal static string WorkingTime => "working_time";
-            internal static string ModifiedTime => "modified_time";
-            internal static string ModifiedPrice => "modified_price";
-            internal static string ExpireTime => "expire_time";
-            internal static string ExpiredTime => "expired_time";
-            internal static string ExecutionTime => "execution_time";
-            internal static string ExecutionId => "execution_id";
-            internal static string ExecutionTicket => "execution_ticket";
-            internal static string OrderSide => "order_side";
-            internal static string OrderType => "order_type";
-            internal static string Price => "price";
-            internal static string Quantity => "quantity";
-            internal static string TimeInForce => "time_in_force";
-            internal static string FilledQuantity => "filled_quantity";
-            internal static string LeavesQuantity => "leaves_quantity";
-            internal static string AveragePrice => "average_price";
         }
     }
 }

@@ -264,7 +264,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(200).Wait();
-            Assert.Equal(OrderStatus.Rejected, order.OrderStatus);
+            Assert.Equal(OrderStatus.Rejected, order.Status);
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(100).Wait();
-            Assert.Equal(OrderStatus.Expired, order.OrderStatus);
+            Assert.Equal(OrderStatus.Expired, order.Status);
         }
 
         [Fact]
@@ -302,7 +302,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(150).Wait();
-            Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Cancelled, order.Status);
         }
 
         [Fact]
@@ -320,7 +320,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(100).Wait();
-            Assert.Equal(OrderStatus.Working, order.OrderStatus);
+            Assert.Equal(OrderStatus.Working, order.Status);
         }
 
         [Fact]
@@ -340,7 +340,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(100).Wait();
-            Assert.Equal(OrderStatus.Filled, order.OrderStatus);
+            Assert.Equal(OrderStatus.Filled, order.Status);
         }
 
         [Fact]
@@ -360,7 +360,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(100).Wait();
-            Assert.Equal(OrderStatus.PartiallyFilled, order.OrderStatus);
+            Assert.Equal(OrderStatus.PartiallyFilled, order.Status);
         }
 
         [Fact]
@@ -380,7 +380,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
 
             // Assert
             Task.Delay(100).Wait();
-            Assert.Equal(OrderStatus.Working, order.OrderStatus);
+            Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(Price.Create(0.80050m, 0.00001m), order.Price);
         }
 

@@ -63,9 +63,9 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotNull(quantity, nameof(quantity));
 
             this.Symbol = symbol;
-            this.OrderLabel = orderLabel;
-            this.OrderSide = orderSide;
-            this.OrderType = orderType;
+            this.Label = orderLabel;
+            this.Side = orderSide;
+            this.Type = orderType;
             this.Quantity = quantity;
 
             this.orderIds.Add(this.OrderId);
@@ -106,17 +106,17 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders label.
         /// </summary>
-        public Label OrderLabel { get; }
+        public Label Label { get; }
 
         /// <summary>
         /// Gets the orders type.
         /// </summary>
-        public OrderType OrderType { get; }
+        public OrderType Type { get; }
 
         /// <summary>
         /// Gets the orders side.
         /// </summary>
-        public OrderSide OrderSide { get; }
+        public OrderSide Side { get; }
 
         /// <summary>
         /// Gets the orders quantity.
@@ -136,7 +136,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the current order status.
         /// </summary>
-        public OrderStatus OrderStatus => (OrderStatus)this.orderState.CurrentState.Value;
+        public OrderStatus Status => (OrderStatus)this.orderState.CurrentState.Value;
 
         /// <summary>
         /// Gets the orders last event time.
@@ -315,10 +315,10 @@ namespace Nautilus.DomainModel.Aggregates
 
         private bool IsCompleteResult()
         {
-            return this.OrderStatus == OrderStatus.Cancelled
-                || this.OrderStatus == OrderStatus.Expired
-                || this.OrderStatus == OrderStatus.Filled
-                || this.OrderStatus == OrderStatus.Rejected;
+            return this.Status == OrderStatus.Cancelled
+                || this.Status == OrderStatus.Expired
+                || this.Status == OrderStatus.Filled
+                || this.Status == OrderStatus.Rejected;
         }
 
         private static class OrderStateMachine

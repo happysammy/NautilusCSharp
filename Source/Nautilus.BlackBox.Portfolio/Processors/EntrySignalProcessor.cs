@@ -132,7 +132,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                     return false;
                 }
 
-                var currentOrderSide = trades[0].TradeUnits[0].Entry.OrderSide;
+                var currentOrderSide = trades[0].TradeUnits[0].Entry.Side;
 
                 if (currentOrderSide != signal.OrderSide)
                 {
