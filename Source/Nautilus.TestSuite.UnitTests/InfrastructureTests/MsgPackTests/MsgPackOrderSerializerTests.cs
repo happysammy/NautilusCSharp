@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Orders;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(typeof(MarketOrder), order.GetType());
+            Assert.Equal(OrderType.MARKET, order.Type);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(typeof(LimitOrder), order.GetType());
+            Assert.Equal(OrderType.LIMIT, order.Type);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = serializer.Deserialize(orderBytes);
 
             // Assert
-            Assert.Equal(typeof(StopLimitOrder), order.GetType());
+            Assert.Equal(OrderType.STOP_LIMIT, order.Type);
         }
     }
 }

@@ -18,7 +18,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -34,31 +33,31 @@ namespace Nautilus.DomainModel.Aggregates
         /// Initializes a new instance of the <see cref="TradeUnit" /> class.
         /// </summary>
         /// <param name="tradeUnitId">The trade unit identifier.</param>
-        /// <param name="tradeUnitLabel">The trade unit label.</param>
+        /// <param name="label">The trade unit label.</param>
         /// <param name="entry">The entry order.</param>
         /// <param name="stopLoss">The stop-loss order.</param>
         /// <param name="profitTarget">The profit target order.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
+        /// <param name="timestamp">The initialization timestamp.</param>
         public TradeUnit(
             EntityId tradeUnitId,
-            Label tradeUnitLabel,
-            PricedOrder entry,
-            StopMarketOrder stopLoss,
-            Option<PricedOrder> profitTarget,
+            Label label,
+            Order entry,
+            Order stopLoss,
+            Option<Order> profitTarget,
             ZonedDateTime timestamp)
             : base(tradeUnitId, timestamp)
         {
             Debug.NotNull(tradeUnitId, nameof(tradeUnitId));
-            Debug.NotNull(tradeUnitLabel, nameof(tradeUnitLabel));
+            Debug.NotNull(label, nameof(label));
             Debug.NotNull(entry, nameof(entry));
+            Debug.True(entry.Price.HasValue, nameof(entry.Price));
+            Debug.True(stopLoss.Type == OrderType.STOP_MARKET, nameof(stopLoss.Type));
             Debug.NotNull(stopLoss, nameof(stopLoss));
             Debug.NotNull(profitTarget, nameof(profitTarget));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = entry.Symbol;
-            this.TradeUnitLabel = tradeUnitLabel;
+            this.Label = label;
             this.Entry = entry;
             this.StopLoss = stopLoss;
             this.ProfitTarget = profitTarget;
@@ -73,14 +72,9 @@ namespace Nautilus.DomainModel.Aggregates
             this.orders = new ReadOnlyList<Order>(orderList);
 
             this.OrderIds = new ReadOnlyList<EntityId>(
-                this.orders.Select(o => o.OrderId)
+                this.orders.Select(o => o.Id)
                     .ToList());
         }
-
-        /// <summary>
-        /// Gets the trade units identifier.
-        /// </summary>
-        public EntityId TradeUnitId => this.Id;
 
         /// <summary>
         /// Gets the trade units symbol.
@@ -90,22 +84,22 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trade units label.
         /// </summary>
-        public Label TradeUnitLabel { get; }
+        public Label Label { get; }
 
         /// <summary>
         /// Gets the trade units entry order.
         /// </summary>
-        public PricedOrder Entry { get; }
+        public Order Entry { get; }
 
         /// <summary>
         /// Gets the trade units profit target (optional).
         /// </summary>
-        public Option<PricedOrder> ProfitTarget { get; }
+        public Option<Order> ProfitTarget { get; }
 
         /// <summary>
         /// Gets the trade units stop-loss order.
         /// </summary>
-        public StopMarketOrder StopLoss { get; }
+        public Order StopLoss { get; }
 
         /// <summary>
         /// Gets the trade units position.
@@ -155,7 +149,7 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.NotNull(orderId, nameof(orderId));
 
-            return this.orders.FirstOrDefault(o => o.OrderId == orderId);
+            return this.orders.FirstOrDefault(o => o.Id == orderId);
         }
 
         /// <summary>
@@ -186,7 +180,7 @@ namespace Nautilus.DomainModel.Aggregates
             }
 
             return this.orders
-               .FirstOrDefault(order => order.OrderId.Equals(orderEvent?.OrderId))
+               .FirstOrDefault(order => order.Id.Equals(orderEvent?.OrderId))
               ?.Apply(orderEvent)
                .OnSuccess(() => this.Events.Add(orderEvent));
         }
@@ -195,7 +189,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a string representation of the <see cref="TradeUnit"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(TradeUnit)}({this.TradeUnitId})";
+        public override string ToString() => $"{nameof(TradeUnit)}({this.Id})";
 
         private Position CreatePosition(Order entry, ZonedDateTime timestamp)
         {
@@ -203,8 +197,8 @@ namespace Nautilus.DomainModel.Aggregates
 
             return new Position(
                 this.Symbol,
-                entry.OrderId,
-                new EntityId($"{this.TradeUnitId}_{nameof(Position)}"),
+                entry.Id,
+                new EntityId($"{this.Id}_{nameof(Position)}"),
                 timestamp);
         }
     }

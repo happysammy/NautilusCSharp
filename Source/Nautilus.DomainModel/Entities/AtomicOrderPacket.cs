@@ -54,12 +54,12 @@ namespace Nautilus.DomainModel.Entities
 
             foreach (var order in this.Orders)
             {
-                tempList.Add(order.EntryOrder.OrderId);
-                tempList.Add(order.StopLossOrder.OrderId);
+                tempList.Add(order.Entry.Id);
+                tempList.Add(order.StopLoss.Id);
 
-                if (order.ProfitTargetOrder.HasValue)
+                if (order.ProfitTarget.HasValue)
                 {
-                    tempList.Add(order.ProfitTargetOrder.Value.OrderId);
+                    tempList.Add(order.ProfitTarget.Value.Id);
                 }
             }
 

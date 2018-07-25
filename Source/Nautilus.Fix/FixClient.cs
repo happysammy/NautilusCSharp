@@ -9,6 +9,7 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -16,6 +17,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.Fix.Interfaces;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
@@ -126,64 +128,65 @@ namespace Nautilus.Fix
         public IReadOnlyCollection<Symbol> GetAllSymbols() => this.symbols;
 
         /// <summary>
-        /// The submit entry limit stop order.
+        /// Submit a command to execute the given order.
         /// </summary>
-        /// <param name="elsOrder">The ELS order.</param>
-        public void SubmitEntryLimitStopOrder(AtomicOrder elsOrder)
-        {
-            Debug.NotNull(elsOrder, nameof(elsOrder));
-
-            this.Execute(() =>
-            {
-                this.FixMessageRouter.SubmitEntryLimitStopOrder(elsOrder);
-            });
-        }
-
-        /// <summary>
-        /// The submit entry stop order.
-        /// </summary>
-        /// <param name="elsOrder">The ELS order.</param>
-        public void SubmitEntryStopOrder(AtomicOrder elsOrder)
-        {
-            Debug.NotNull(elsOrder, nameof(elsOrder));
-
-            this.Execute(() =>
-            {
-                this.FixMessageRouter.SubmitEntryStopOrder(elsOrder);
-            });
-        }
-
-        /// <summary>
-        /// The modify stop-loss order.
-        /// </summary>
-        /// <param name="orderModification">The order modification.</param>
-        public void ModifyOrder(KeyValuePair<Order, Price> orderModification)
-        {
-            Debug.NotNull(orderModification, nameof(orderModification));
-
-            this.FixMessageRouter.ModifyOrder(orderModification);
-        }
-
-        /// <summary>
-        /// The cancel order.
-        /// </summary>
-        /// <param name="order">The order.</param>
-        public void CancelOrder(Order order)
+        /// <param name="order">The order to submit.</param>
+        public void SubmitOrder(IOrder order)
         {
             Debug.NotNull(order, nameof(order));
 
-            this.FixMessageRouter.CancelOrder(order);
+            this.Execute(() =>
+            {
+                this.FixMessageRouter.SubmitOrder(order);
+            });
         }
 
         /// <summary>
-        /// The close position.
+        /// Submit a command to execute the given trade.
         /// </summary>
-        /// <param name="position">The position.</param>
-        public void ClosePosition(Position position)
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        public void SubmitOrder(IAtomicOrder atomicOrder)
         {
-            Debug.NotNull(position, nameof(position));
+            Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
-            this.FixMessageRouter.ClosePosition(position);
+            this.Execute(() =>
+            {
+                this.FixMessageRouter.SubmitOrder(atomicOrder);
+            });
+        }
+
+        /// <summary>
+        /// Submit a command to the execution system to modify the given order.
+        /// </summary>
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        public void ModifyOrder(IOrder order, Price modifiedPrice)
+        {
+            Debug.NotNull(order, nameof(order));
+
+            this.FixMessageRouter.ModifyOrder(order, modifiedPrice);
+        }
+
+        /// <summary>
+        /// Submit the command to the execution system to cancel the given order.
+        /// </summary>
+        /// <param name="command">The cancel order command.</param>
+        public void CancelOrder(IOrder command)
+        {
+            Debug.NotNull(command, nameof(command));
+
+            this.FixMessageRouter.CancelOrder(command);
+        }
+
+        /// <summary>
+        /// Submit the command to the execution system to close the given position.
+        /// </summary>
+        /// <param name="command">The close position command.</param>
+        public void ClosePosition(IPosition command)
+        {
+            Debug.NotNull(command, nameof(command));
+
+            this.FixMessageRouter.ClosePosition(command);
         }
 
         /// <summary>

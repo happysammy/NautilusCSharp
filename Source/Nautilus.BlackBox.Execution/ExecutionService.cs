@@ -60,10 +60,21 @@ namespace Nautilus.BlackBox.Execution
             this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
 
             // Setup trade commands.
+            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
             this.Receive<CloseTradeUnit>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(SubmitOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Execute(() =>
+            {
+                this.orderBusRef.Tell(message, this.Self);
+            });
         }
 
         private void OnMessage(SubmitTrade message)

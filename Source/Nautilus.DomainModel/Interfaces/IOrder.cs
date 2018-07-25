@@ -8,12 +8,13 @@
 
 namespace Nautilus.DomainModel.Interfaces
 {
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Represents a read-only interface for all orders.
+    /// Represents a read-only interface for orders.
     /// </summary>
     public interface IOrder
     {
@@ -25,27 +26,27 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the orders identifier.
         /// </summary>
-        EntityId OrderId { get; }
+        EntityId Id { get; }
 
         /// <summary>
-        /// Gets the orders identifiers count.
+        /// Gets the orders identifier count.
         /// </summary>
-        int OrderIdCount { get; }
+        int IdCount { get; }
 
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        EntityId OrderIdCurrent { get; }
+        EntityId IdCurrent { get; }
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        EntityId OrderIdBroker { get; }
+        Option<EntityId> IdBroker { get; }
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        EntityId ExecutionId { get; }
+        Option<EntityId> ExecutionId { get; }
 
         /// <summary>
         /// Gets the orders label.
@@ -73,14 +74,29 @@ namespace Nautilus.DomainModel.Interfaces
         Quantity FilledQuantity { get; }
 
         /// <summary>
-        /// Gets the orders average fill price.
+        /// Gets the orders price (optional).
         /// </summary>
-        Price AveragePrice { get; }
+        Option<Price> Price { get; }
 
         /// <summary>
-        /// Gets the current order status.
+        /// Gets the orders average fill price (optional, may be unfilled).
         /// </summary>
-        OrderStatus Status { get; }
+        Option<Price> AveragePrice { get; }
+
+        /// <summary>
+        /// The orders slippage.
+        /// </summary>
+        decimal Slippage { get; }
+
+        /// <summary>
+        /// Gets the orders time in force.
+        /// </summary>
+        TimeInForce TimeInForce { get; }
+
+        /// <summary>
+        /// Gets the orders expire time (optional).
+        /// </summary>
+        Option<ZonedDateTime?> ExpireTime { get; }
 
         /// <summary>
         /// Gets the orders last event time.
@@ -88,9 +104,14 @@ namespace Nautilus.DomainModel.Interfaces
         ZonedDateTime LastEventTime { get; }
 
         /// <summary>
-        /// Gets the orders timestamp.
+        /// Gets the orders initialization timestamp.
         /// </summary>
-        ZonedDateTime OrderTimestamp { get; }
+        ZonedDateTime Timestamp { get; }
+
+        /// <summary>
+        /// Gets the current order status.
+        /// </summary>
+        OrderStatus Status { get; }
 
         /// <summary>
         /// Gets a result indicating whether the order status is complete.

@@ -92,7 +92,6 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="brokerSymbol">The FXCM symbol.</param>
         /// <returns> A <see cref="string"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<string> GetNautilusSymbol(string brokerSymbol)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -107,7 +106,6 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="nautilusSymbol">The nautilus symbol.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
         {
             Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));

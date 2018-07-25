@@ -82,7 +82,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                                 var stopLossOrder = tradeUnit.StopLoss;
                                 var modifiedOrderId = EntityIdFactory.ModifiedOrderId(
                                     stopLossOrder.OrderId,
-                                    stopLossOrder.OrderIdCount);
+                                    stopLossOrder.IdCount);
 
                                 stopLossOrder.AddModifiedOrderId(modifiedOrderId);
 
@@ -155,7 +155,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             }
 
             if (forUnitStoploss.Key != 0
-             && tradeUnit.TradeUnitLabel.ToString() != "U" + forUnitStoploss.Key)
+             && tradeUnit.Label.ToString() != "U" + forUnitStoploss.Key)
             {
                 return false;
             }

@@ -53,6 +53,7 @@ namespace Nautilus.BlackBox.Execution
 
         private void SetupCommandMessageHandling()
         {
+            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
@@ -72,6 +73,14 @@ namespace Nautilus.BlackBox.Execution
             this.Log.Information($"{this.gateway} initialized.");
 
             Debug.NotNull(this.gateway, nameof(this.gateway));
+        }
+
+        private void OnMessage(SubmitOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+            Debug.True(this.IsConnectedToBroker(), nameof(this.gateway));
+
+            this.gateway.SubmitOrder(message.Order);
         }
 
         private void OnMessage(SubmitTrade message)
@@ -98,24 +107,19 @@ namespace Nautilus.BlackBox.Execution
         {
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
-            foreach (var stoplossModification in message.StopLossModificationsIndex)
-            {
-                var orderModification = new KeyValuePair<Order, Price>(stoplossModification.Key, stoplossModification.Value);
-                this.gateway.ModifyOrder(orderModification);
-                var symbol = stoplossModification.Key.Symbol;
+            this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
 
-                this.Log.Debug($"Routing StoplossReplaceRequest {symbol} => {this.gateway.Broker}");
-            }
+            this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
         }
 
-        private void OnMessage(CloseTradeUnit message)
+        private void OnMessage(ClosePosition message)
         {
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
-            var tradeUnit = message.ForTradeUnit;
-            this.gateway.ClosePosition(tradeUnit.Position);
+            var tradeUnit = message.Order;
+            this.gateway.ClosePosition(message.);
 
-            this.Log.Debug($"Routing ClosePosition ({tradeUnit.TradeUnitLabel} => {this.gateway.Broker}");
+            this.Log.Debug($"Routing ClosePosition ({message.Order.Label} => {this.gateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)
@@ -123,14 +127,7 @@ namespace Nautilus.BlackBox.Execution
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
-            if (atomicOrder.ProfitTargetOrder.HasNoValue)
-            {
-                this.gateway.SubmitEntryStopOrder(atomicOrder);
-
-                return;
-            }
-
-            this.gateway.SubmitEntryLimitStopOrder(atomicOrder);
+            this.gateway.SubmitOrder(atomicOrder);
         }
 
         private bool IsConnectedToBroker()

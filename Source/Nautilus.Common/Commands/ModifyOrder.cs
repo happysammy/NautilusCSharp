@@ -12,7 +12,7 @@ namespace Nautilus.Common.Commands
     using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -25,37 +25,27 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyOrder"/> class.
         /// </summary>
-        /// <param name="orderSymbol">The command order symbol.</param>
-        /// <param name="forOrderId">The command for order identifier.</param>
-        /// <param name="modifiedPrice">The command modified price.</param>
+        /// <param name="order">The commands order to modify.</param>
+        /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The command timestamp (cannot be default).</param>
         public ModifyOrder(
-            Symbol orderSymbol,
-            EntityId forOrderId,
+            IOrder order,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                orderSymbol,
-                forOrderId,
+                order,
                 commandId,
                 commandTimestamp)
         {
-            Debug.NotNull(orderSymbol, nameof(orderSymbol));
-            Debug.NotNull(forOrderId, nameof(forOrderId));
+            Debug.NotNull(order, nameof(order));
             Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.ForOrderId = forOrderId;
             this.ModifiedPrice = modifiedPrice;
         }
-
-        /// <summary>
-        /// Gets the commands for order identifier.
-        /// </summary>
-        public EntityId ForOrderId { get; }
 
         /// <summary>
         /// Gets the commands modified order price.

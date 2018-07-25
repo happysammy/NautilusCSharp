@@ -8,6 +8,9 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Interfaces;
+    using NodaTime;
     using QuickFix.FIX44;
 
     /// <summary>
@@ -19,8 +22,17 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new new order single message.
         /// </summary>
         /// <returns>A <see cref="NewOrderSingle"/> message.</returns>
-        public static QuickFix.FIX44.NewOrderSingle Create()
+        public static QuickFix.FIX44.NewOrderSingle Create(
+            string brokerSymbol,
+            string accountNumber,
+            IOrder order,
+            ZonedDateTime timeNow)
         {
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotNull(order, nameof(order));
+            Debug.NotDefault(timeNow, nameof(timeNow));
+
             var message = new QuickFix.FIX44.NewOrderSingle();
 
             // TODO

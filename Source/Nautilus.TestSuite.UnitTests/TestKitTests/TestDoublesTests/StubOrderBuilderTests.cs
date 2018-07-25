@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
 
             // Assert
             Assert.Equal(new Symbol("AUDUSD", Venue.FXCM), order.Symbol);
-            Assert.Equal("StubOrderId", order.OrderId.ToString());
+            Assert.Equal("StubOrderId", order.Id.ToString());
             Assert.Equal("StubOrderLabel", order.Label.ToString());
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
             Assert.True(order.ExpireTime.HasNoValue);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.OrderTimestamp);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.Timestamp);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
 
             // Assert
             Assert.Equal(new Symbol("AUDUSD", Venue.FXCM), order.Symbol);
-            Assert.Equal("TestOrderId", order.OrderId.ToString());
+            Assert.Equal("TestOrderId", order.Id.ToString());
             Assert.Equal("TestOrderLabel", order.Label.ToString());
             Assert.Equal(OrderSide.SELL, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(Price.Create(1.00000m, 0.00001m), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
-            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(), order.OrderTimestamp);
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(), order.Timestamp);
         }
 
         [Fact]

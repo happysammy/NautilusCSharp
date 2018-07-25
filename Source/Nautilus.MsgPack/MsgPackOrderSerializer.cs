@@ -9,23 +9,26 @@
 namespace Nautilus.MsgPack
 {
     using System;
-    using System.Globalization;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Factories;
     using global::MsgPack;
 
     public class MsgPackOrderSerializer : IOrderSerializer
     {
-        private const string None = "NONE";
 
+        /// <summary>
+        /// Serialize the given order to Message Pack specification bytes.
+        /// </summary>
+        /// <param name="order">The order to serialize.</param>
+        /// <returns>The serialized order.</returns>
         public byte[] Serialize(Order order)
         {
-            var package = new MessagePackObjectDictionary
+            return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
                 {new MessagePackObject(Key.Symbol), order.Symbol.ToString()},
                 {new MessagePackObject(Key.OrderId), order.Id.Value},
@@ -33,32 +36,11 @@ namespace Nautilus.MsgPack
                 {new MessagePackObject(Key.OrderSide), order.Side.ToString()},
                 {new MessagePackObject(Key.OrderType), order.Type.ToString()},
                 {new MessagePackObject(Key.Quantity), order.Quantity.Value},
+                {new MessagePackObject(Key.Price), MsgPackSerializationHelper.GetPriceString(order.Price)},
+                {new MessagePackObject(Key.TimeInForce), order.TimeInForce.ToString()},
+                {new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(order.ExpireTime)},
                 {new MessagePackObject(Key.Timestamp), order.Timestamp.ToIsoString()},
-            };
-
-            switch (order)
-            {
-                case MarketOrder marketOrder:
-                    package.Add(new MessagePackObject(Key.Price), None);
-                    package.Add(new MessagePackObject(Key.TimeInForce), None);
-                    package.Add(new MessagePackObject(Key.ExpireTime), None);
-                    break;
-
-                case PricedOrder pricedOrder:
-                    package.Add(new MessagePackObject(Key.Price), pricedOrder
-                        .Price
-                        .Value
-                        .ToString(CultureInfo.InvariantCulture));
-                    package.Add(new MessagePackObject(Key.TimeInForce), pricedOrder.TimeInForce.ToString());
-                    package.Add(new MessagePackObject(Key.ExpireTime),
-                        MsgPackSerializationHelper.GetExpireTimeString(pricedOrder.ExpireTime));
-                    break;
-
-                default: throw new InvalidOperationException(
-                    "Cannot serialize the order (unrecognized order).");
-            }
-
-            return MsgPackSerializer.Serialize(package.Freeze());
+            }.Freeze());
         }
 
         public Order Deserialize(byte[] orderBytes)
@@ -80,7 +62,7 @@ namespace Nautilus.MsgPack
                         "Cannot deserialize order (the type is unknown).");
 
                 case OrderType.MARKET:
-                    return new MarketOrder(
+                    return OrderFactory.Market(
                         symbol,
                         id,
                         label,
@@ -89,7 +71,7 @@ namespace Nautilus.MsgPack
                         timestamp);
 
                 case OrderType.LIMIT:
-                    return new LimitOrder(
+                    return OrderFactory.Limit(
                         symbol,
                         id,
                         label,
@@ -101,7 +83,7 @@ namespace Nautilus.MsgPack
                         timestamp);
 
                 case OrderType.STOP_LIMIT:
-                    return new StopLimitOrder(
+                    return OrderFactory.StopLimit(
                         symbol,
                         id,
                         label,
@@ -113,7 +95,7 @@ namespace Nautilus.MsgPack
                         timestamp);
 
                 case OrderType.STOP_MARKET:
-                    return new StopMarketOrder(
+                    return OrderFactory.StopMarket(
                         symbol,
                         id,
                         label,
@@ -125,7 +107,7 @@ namespace Nautilus.MsgPack
                         timestamp);
 
                 case OrderType.MIT:
-                    return new StopLimitOrder(
+                    return OrderFactory.MarketIfTouched(
                         symbol,
                         id,
                         label,

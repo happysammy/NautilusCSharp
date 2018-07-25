@@ -9,17 +9,16 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Commands;
     using Nautilus.Core;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Provides a gateway and anticorruption layer into the system.
+    /// Provides a gateway and anti-corruption layer into the system.
     /// </summary>
     public interface IFixGateway
     {
@@ -67,6 +66,43 @@ namespace Nautilus.Common.Interfaces
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
+        /// Event handler for receiving FIX Position Reports.
+        /// </summary>
+        /// <param name="account">The account.</param>
+        void OnPositionReport(string account);
+
+        /// <summary>
+        /// Submits an entry order with a stop-loss and profit target to the brokerage.
+        /// </summary>
+        /// <param name="order">The order to submit.</param>
+        void SubmitOrder(IOrder order);
+
+        /// <summary>
+        /// Submits an entry order with a stop-loss to the brokerage.
+        /// </summary>
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        void SubmitOrder(IAtomicOrder atomicOrder);
+
+        /// <summary>
+        /// Submits a request to modify the stop-loss of an existing order.
+        /// </summary>
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        void ModifyOrder(IOrder order, Price modifiedPrice);
+
+        /// <summary>
+        /// Submits a request to cancel the given order.
+        /// </summary>
+        /// <param name="order">The order to cancel.</param>
+        void CancelOrder(IOrder order);
+
+        /// <summary>
+        /// Submits a request to close the given position to the brokerage client.
+        /// </summary>
+        /// <param name="position">The position to close.</param>
+        void ClosePosition(IPosition position);
+
+        /// <summary>
         /// Updates the given instruments in the instrument repository.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
@@ -93,42 +129,6 @@ namespace Nautilus.Common.Interfaces
         /// <param name="accountNumber">The account number.</param>
         /// <param name="positionRequestId">The position request identifier.</param>
         void OnRequestForPositionsAck(string accountNumber, string positionRequestId);
-
-        /// <summary>
-        /// Event handler for receiving FIX Position Reports.
-        /// </summary>
-        /// <param name="account">The account.</param>
-        void OnPositionReport(string account);
-
-        /// <summary>
-        /// Submits an entry order with a stop-loss and profit target to the brokerage.
-        /// </summary>
-        /// <param name="order">The atomic order.</param>
-        void SubmitEntryLimitStopOrder(AtomicOrder order);
-
-        /// <summary>
-        /// Submits an entry order with a stop-loss to the brokerage.
-        /// </summary>
-        /// <param name="order">The atomic order.</param>
-        void SubmitEntryStopOrder(AtomicOrder order);
-
-        /// <summary>
-        /// Submits a request to modify the stop-loss of an existing order.
-        /// </summary>
-        /// <param name="command">The modify order command.</param>
-        void ModifyOrder(ModifyOrder command);
-
-        /// <summary>
-        /// Submits a request to cancel the given order.
-        /// </summary>
-        /// <param name="command">The cancel order command.</param>
-        void CancelOrder(CancelOrder command);
-
-        /// <summary>
-        /// Submits a request to close the given position to the brokerage client.
-        /// </summary>
-        /// <param name="command">The close position command.</param>
-        void ClosePosition(ClosePosition command);
 
         /// <summary>
         /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the

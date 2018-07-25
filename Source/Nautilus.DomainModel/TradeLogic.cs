@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Orders;
 
     /// <summary>
     /// Provides generic trade logic.
@@ -123,7 +122,7 @@ namespace Nautilus.DomainModel
             return MarketPosition.Unknown;
         }
 
-        private static bool ProfitTargetHasValueAndIsComplete(Option<PricedOrder> order)
+        private static bool ProfitTargetHasValueAndIsComplete(Option<Order> order)
         {
             return order.HasValue && order.Value.IsComplete;
         }

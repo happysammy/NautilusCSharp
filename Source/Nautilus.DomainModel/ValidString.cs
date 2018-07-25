@@ -23,7 +23,7 @@ namespace Nautilus.DomainModel
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidString"/> class.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The string value.</param>
         protected ValidString(string value)
         {
             Debug.NotNull(value, nameof(value));

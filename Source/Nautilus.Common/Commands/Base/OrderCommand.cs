@@ -12,8 +12,7 @@ namespace Nautilus.Common.Commands.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -25,40 +24,31 @@ namespace Nautilus.Common.Commands.Base
         /// <summary>
         /// Initialize a new instance of the <see cref="OrderCommand"/> abstract base class.
         /// </summary>
-        /// <param name="orderSymbol">The commands order symbol.</param>
-        /// <param name="orderId">The commands order identifier.</param>
+        /// <param name="order">The commands order.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         protected OrderCommand(
-            Symbol orderSymbol,
-            EntityId orderId,
+            IOrder order,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
         {
-            Debug.NotNull(orderSymbol, nameof(orderSymbol));
-            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(order, nameof(order));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.OrderSymbol = orderSymbol;
-            this.OrderId = orderId;
+            this.Order = order;
         }
 
         /// <summary>
         /// Gets the commands order symbol.
         /// </summary>
-        public Symbol OrderSymbol { get; }
-
-        /// <summary>
-        /// Gets the commands order identifier.
-        /// </summary>
-        public EntityId OrderId { get; }
+        public IOrder Order { get; }
 
         /// <summary>
         /// Returns a string representation of the <see cref="CancelOrder"/> command message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.OrderSymbol}-{this.OrderId}";
+        public override string ToString() => $"{base.ToString()}-{this.Order.Symbol}-{this.Order.Id}";
     }
 }

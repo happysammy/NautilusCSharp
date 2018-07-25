@@ -10,6 +10,7 @@ namespace Nautilus.Common
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -17,10 +18,10 @@ namespace Nautilus.Common
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using Price = Nautilus.DomainModel.ValueObjects.Price;
@@ -114,10 +115,9 @@ namespace Nautilus.Common
         /// Requests market data for the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
-            Validate.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(symbol, nameof(symbol));
 
             this.fixClient.RequestMarketDataSubscribe(symbol);
         }
@@ -135,10 +135,9 @@ namespace Nautilus.Common
         /// and subscribe to updates.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            Validate.NotNull(symbol, nameof(symbol));
+            Debug.NotNull(symbol, nameof(symbol));
 
             this.fixClient.UpdateInstrumentSubscribe(symbol);
         }
@@ -154,47 +153,44 @@ namespace Nautilus.Common
         /// <summary>
         /// Submits an entry order with a stop-loss and profit target to the brokerage.
         /// </summary>
-        /// <param name="order">The atomic order.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void SubmitEntryLimitStopOrder(AtomicOrder order)
+        /// <param name="order">The order to submit.</param>
+        public void SubmitOrder(IOrder order)
         {
-            Validate.NotNull(order, nameof(order));
+            Debug.NotNull(order, nameof(order));
 
-            this.fixClient.SubmitEntryLimitStopOrder(order);
+            this.fixClient.SubmitOrder(order);
         }
 
         /// <summary>
         /// Submits an entry order with a stop-loss to the brokerage.
         /// </summary>
-        /// <param name="order">The atomic order.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void SubmitEntryStopOrder(AtomicOrder order)
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        public void SubmitOrder(IAtomicOrder atomicOrder)
         {
-            Validate.NotNull(order, nameof(order));
+            Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
-            this.fixClient.SubmitEntryStopOrder(order);
+            this.fixClient.SubmitOrder(atomicOrder);
         }
 
         /// <summary>
         /// Submits a request to modify the stop-loss of an existing order.
         /// </summary>
-        /// <param name="stoplossModification">The stop-loss modification.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void ModifyOrder(KeyValuePair<Order, Price> stoplossModification)
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        public void ModifyOrder(IOrder order, Price modifiedPrice)
         {
-            Validate.NotNull(stoplossModification, nameof(stoplossModification));
+            Debug.NotNull(order, nameof(order));
 
-            this.fixClient.ModifyOrder(stoplossModification);
+            this.fixClient.ModifyOrder(order, modifiedPrice);
         }
 
         /// <summary>
         /// Submits a request to cancel the given order.
         /// </summary>
-        /// <param name="order">The order.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void CancelOrder(Order order)
+        /// <param name="order">The order to cancel.</param>
+        public void CancelOrder(IOrder order)
         {
-            Validate.NotNull(order, nameof(order));
+            Debug.NotNull(order, nameof(order));
 
             this.fixClient.CancelOrder(order);
         }
@@ -202,11 +198,10 @@ namespace Nautilus.Common
         /// <summary>
         /// Submits a request to close the given position to the brokerage client.
         /// </summary>
-        /// <param name="position">The position.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void ClosePosition(Position position)
+        /// <param name="position">The position to close.</param>
+        public void ClosePosition(IPosition position)
         {
-            Validate.NotNull(position, nameof(position));
+            Debug.NotNull(position, nameof(position));
 
             this.fixClient.ClosePosition(position);
         }
@@ -215,7 +210,6 @@ namespace Nautilus.Common
         /// Event handler for receiving FIX Position Reports.
         /// </summary>
         /// <param name="account">The account.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public void OnPositionReport(string account)
         {
             this.Execute(() =>
@@ -231,7 +225,6 @@ namespace Nautilus.Common
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
         /// <param name="accountNumber">The account number.</param>
-        /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
         public void OnCollateralInquiryAck(string inquiryId, string accountNumber)
         {
             this.Execute(() =>

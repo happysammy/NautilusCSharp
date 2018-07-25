@@ -46,12 +46,12 @@ namespace Nautilus.Common.Commands.Base
         }
 
         /// <summary>
-        /// Gets the commands order symbol.
+        /// Gets the commands trade symbol.
         /// </summary>
         public Symbol TradeSymbol { get; }
 
         /// <summary>
-        /// Gets the commands order identifier.
+        /// Gets the commands trade identifier.
         /// </summary>
         public EntityId TradeId { get; }
 

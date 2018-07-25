@@ -10,6 +10,7 @@ namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -28,7 +29,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The <see cref="OrderCancelRequest"/> message.</returns>
         public static OrderCancelRequest Create(
             string brokerSymbol,
-            Order order,
+            IOrder order,
             ZonedDateTime transactionTime)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -37,9 +38,9 @@ namespace Nautilus.Fix.MessageFactories
 
             var orderMessage = new OrderCancelRequest();
 
-            orderMessage.SetField(new OrigClOrdID(order.OrderId.ToString()));
-            orderMessage.SetField(new OrderID(order.OrderIdBroker.ToString()));
-            orderMessage.SetField(new ClOrdID(order.OrderIdCurrent.ToString()));
+            orderMessage.SetField(new OrigClOrdID(order.Id.ToString()));
+            orderMessage.SetField(new OrderID(order.IdBroker.ToString()));
+            orderMessage.SetField(new ClOrdID(order.IdCurrent.ToString()));
             orderMessage.SetField(new Symbol(brokerSymbol));
             orderMessage.SetField(new Quantity(order.Quantity.Value));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderSide(order.Side));

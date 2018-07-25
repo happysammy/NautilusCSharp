@@ -11,6 +11,7 @@ namespace Nautilus.MsgPack
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -24,6 +25,8 @@ namespace Nautilus.MsgPack
 
         internal static Symbol GetSymbol(string symbolString)
         {
+            Debug.NotNull(symbolString, nameof(symbolString));
+
             var splitSymbol = symbolString.Split('.');
             return new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
         }
@@ -35,6 +38,8 @@ namespace Nautilus.MsgPack
         /// <returns>The optional price.</returns>
         internal static Option<Price> GetPrice(string priceString)
         {
+            Debug.NotNull(priceString, nameof(priceString));
+
             if (priceString == None)
             {
                 return Option<Price>.None();
@@ -46,8 +51,24 @@ namespace Nautilus.MsgPack
             return Price.Create(priceDecimal, priceDecimalPlaces);
         }
 
+        /// <summary>
+        /// Return a string from the given price.
+        /// </summary>
+        /// <param name="price">The price.</param>
+        /// <returns>The optional price.</returns>
+        internal static string GetPriceString(Option<Price> price)
+        {
+            Debug.NotNull(price, nameof(price));
+
+            return price.HasValue
+                ? None
+                : price.ToString();
+        }
+
         internal static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
         {
+            Debug.NotNull(expireTimeString, nameof(expireTimeString));
+
             return expireTimeString == None
                 ? Option<ZonedDateTime?>.None()
                 : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
@@ -55,6 +76,8 @@ namespace Nautilus.MsgPack
 
         internal static string GetExpireTimeString(Option<ZonedDateTime?> expireTime)
         {
+            Debug.NotNull(expireTime, nameof(expireTime));
+
             return expireTime.HasNoValue
                 ? None
                 : expireTime.Value.ToIsoString();

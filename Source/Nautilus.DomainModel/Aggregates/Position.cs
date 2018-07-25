@@ -11,17 +11,20 @@ namespace Nautilus.DomainModel.Aggregates
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
     /// Represents a financial market position.
     /// </summary>
-    public sealed class Position : Aggregate<Position>
+    [PerformanceOptimized]
+    public sealed class Position : Aggregate<Position>, IPosition
     {
         private int relativeQuantity;
 
@@ -80,14 +83,9 @@ namespace Nautilus.DomainModel.Aggregates
         public Option<ZonedDateTime?> EntryTime { get; private set; }
 
         /// <summary>
-        /// Gets the positions average entry price.
+        /// Gets the positions average entry price (optional).
         /// </summary>
-        public Price AverageEntryPrice { get; private set; }
-
-        /// <summary>
-        /// Returns the positions timestamp.
-        /// </summary>
-        public ZonedDateTime PositionTimestamp => this.Timestamp;
+        public Option<Price> AverageEntryPrice { get; private set; }
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to this position.

@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -29,16 +28,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderFilled"/>.
         /// </returns>
-        public static OrderFilled OrderFilledEvent(PricedOrder order)
+        public static OrderFilled OrderFilledEvent(Order order)
         {
             return new OrderFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 order.Side,
                 order.Quantity,
-                order.Price,
+                order.Price.Value,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -59,17 +58,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderPartiallyFilled"/>.
         /// </returns>
-        public static OrderPartiallyFilled OrderPartiallyFilledEvent(PricedOrder order, int filledQuantity, int leavesQuantity)
+        public static OrderPartiallyFilled OrderPartiallyFilledEvent(
+            Order order,
+            int filledQuantity,
+            int leavesQuantity)
         {
             return new OrderPartiallyFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("NONE"),
                 new EntityId("NONE"),
                 order.Side,
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
-                order.Price,
+                order.Price.Value,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -88,7 +90,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderRejected(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
@@ -104,17 +106,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <returns>
         /// The <see cref="OrderWorking"/>.
         /// </returns>
-        public static OrderWorking OrderWorkingEvent(PricedOrder order)
+        public static OrderWorking OrderWorkingEvent(Order order)
         {
             return new OrderWorking(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("some_broker_orderId"),
                 order.Label,
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price,
+                order.Price.Value,
                 order.TimeInForce,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
                 StubZonedDateTime.UnixEpoch(),
@@ -138,7 +140,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderModified(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("NONE"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
@@ -159,7 +161,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderCancelled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -178,7 +180,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderExpired(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

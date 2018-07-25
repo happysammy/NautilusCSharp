@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -28,10 +28,10 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>A <see cref="NewOrderList"/> message.</returns>
-        public static NewOrderList CreateWithStop(
+        public static NewOrderList CreateWithStopLoss(
             string brokerSymbol,
             string accountNumber,
-            AtomicOrder atomicOrder,
+            IAtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -46,40 +46,42 @@ namespace Nautilus.Fix.MessageFactories
             orderList.SetField(new NoOrders(2));
             orderList.SetField(new BidType(3));
 
-           var order1 = new NewOrderList.NoOrdersGroup();
-            order1.SetField(new ClOrdID(atomicOrder.EntryOrder.OrderId.ToString()));
+            var entry = atomicOrder.Entry;
+            var order1 = new NewOrderList.NoOrdersGroup();
+            order1.SetField(new ClOrdID(entry.Id.ToString()));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.Label.ToString()));
+            order1.SetField(new SecondaryClOrdID(entry.Label.ToString()));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.Side));
+            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(entry.Side));
             order1.SetField(new OrdType(OrdType.STOP));
-            order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.EntryOrder.TimeInForce));
+            order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(entry.TimeInForce));
 
-            if (atomicOrder.EntryOrder.ExpireTime.HasValue)
+            if (entry.ExpireTime.HasValue)
             {
                 // ReSharper disable once PossibleInvalidOperationException (checked above)
-                var expireTime = atomicOrder.EntryOrder.ExpireTime.Value.Value.ToDateTimeUtc();
+                var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }
 
-            order1.SetField(new OrderQty(atomicOrder.EntryOrder.Quantity.Value));
-            order1.SetField(new StopPx(atomicOrder.EntryOrder.Price.Value));
+            order1.SetField(new OrderQty(entry.Quantity.Value));
+            order1.SetField(new StopPx(entry.Price.Value.Value));
             orderList.AddGroup(order1);
 
+            var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
-            order2.SetField(new ClOrdID(atomicOrder.StopLossOrder.OrderId.ToString()));
+            order2.SetField(new ClOrdID(stopLoss.Id.ToString()));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.Label.ToString()));
+            order2.SetField(new SecondaryClOrdID(stopLoss.Label.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account("02402856"));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.Side));
+            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(stopLoss.Side));
             order2.SetField(new OrdType(OrdType.STOP));
-            order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.StopLossOrder.TimeInForce));
-            order2.SetField(new OrderQty(atomicOrder.StopLossOrder.Quantity.Value));
-            order2.SetField(new StopPx(atomicOrder.StopLossOrder.Price.Value));
+            order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
+            order2.SetField(new OrderQty(stopLoss.Quantity.Value));
+            order2.SetField(new StopPx(stopLoss.Price.Value.Value));
             orderList.AddGroup(order2);
 
             return orderList;
@@ -93,10 +95,10 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>A <see cref="NewOrderList"/> message.</returns>
-        public static NewOrderList CreateWithLimit(
+        public static NewOrderList CreateWithStopLossAndProfitTarget(
             string brokerSymbol,
             string accountNumber,
-            AtomicOrder atomicOrder,
+            IAtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -111,54 +113,57 @@ namespace Nautilus.Fix.MessageFactories
             orderList.SetField(new NoOrders(3));
             orderList.SetField(new BidType(3));
 
-           var order1 = new NewOrderList.NoOrdersGroup();
-            order1.SetField(new ClOrdID(atomicOrder.EntryOrder.OrderId.ToString()));
+            var entry = atomicOrder.Entry;
+            var order1 = new NewOrderList.NoOrdersGroup();
+            order1.SetField(new ClOrdID(entry.Id.ToString()));
             order1.SetField(new ListSeqNo(0));
-            order1.SetField(new SecondaryClOrdID(atomicOrder.EntryOrder.Label.ToString()));
+            order1.SetField(new SecondaryClOrdID(entry.Label.ToString()));
             order1.SetField(new ClOrdLinkID("1"));
             order1.SetField(new Account(accountNumber));
             order1.SetField(new Symbol(brokerSymbol));
-            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.EntryOrder.Side));
+            order1.SetField(FxcmFixMessageHelper.GetFixOrderSide(entry.Side));
             order1.SetField(new OrdType(OrdType.STOP));
-            order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.EntryOrder.TimeInForce));
+            order1.SetField(FxcmFixMessageHelper.GetFixTimeInForce(entry.TimeInForce));
 
-            if (atomicOrder.EntryOrder.ExpireTime.HasValue)
+            if (entry.ExpireTime.HasValue)
             {
                 // ReSharper disable once PossibleInvalidOperationException (checked above)
-                var expireTime = atomicOrder.EntryOrder.ExpireTime.Value.Value.ToDateTimeUtc();
+                var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }
 
-            order1.SetField(new OrderQty(atomicOrder.EntryOrder.Quantity.Value));
-            order1.SetField(new StopPx(atomicOrder.EntryOrder.Price.Value));
+            order1.SetField(new OrderQty(entry.Quantity.Value));
+            order1.SetField(new StopPx(entry.Price.Value.Value));
             orderList.AddGroup(order1);
 
+            var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
-            order2.SetField(new ClOrdID(atomicOrder.StopLossOrder.OrderId.ToString()));
+            order2.SetField(new ClOrdID(stopLoss.Id.ToString()));
             order2.SetField(new ListSeqNo(1));
-            order2.SetField(new SecondaryClOrdID(atomicOrder.StopLossOrder.Label.ToString()));
+            order2.SetField(new SecondaryClOrdID(stopLoss.Label.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
             order2.SetField(new Account(accountNumber));
             order2.SetField(new Symbol(brokerSymbol));
-            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.StopLossOrder.Side));
+            order2.SetField(FxcmFixMessageHelper.GetFixOrderSide(stopLoss.Side));
             order2.SetField(new OrdType(OrdType.STOP));
-            order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.StopLossOrder.TimeInForce));
-            order2.SetField(new OrderQty(atomicOrder.StopLossOrder.Quantity.Value));
-            order2.SetField(new StopPx(atomicOrder.StopLossOrder.Price.Value));
+            order2.SetField(FxcmFixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
+            order2.SetField(new OrderQty(stopLoss.Quantity.Value));
+            order2.SetField(new StopPx(stopLoss.Price.Value.Value));
             orderList.AddGroup(order2);
 
+            var profitTarget = atomicOrder.ProfitTarget;
             var order3 = new NewOrderList.NoOrdersGroup();
-            order3.SetField(new ClOrdID(atomicOrder.ProfitTargetOrder.Value.OrderId.ToString()));
+            order3.SetField(new ClOrdID(profitTarget.Value.Id.ToString()));
             order3.SetField(new ListSeqNo(2));
-            order3.SetField(new SecondaryClOrdID(atomicOrder.ProfitTargetOrder.Value.Label.ToString()));
+            order3.SetField(new SecondaryClOrdID(profitTarget.Value.Label.ToString()));
             order3.SetField(new ClOrdLinkID("2"));
             order3.SetField(new Account(accountNumber));
             order3.SetField(new Symbol(brokerSymbol));
-            order3.SetField(FxcmFixMessageHelper.GetFixOrderSide(atomicOrder.ProfitTargetOrder.Value.Side));
+            order3.SetField(FxcmFixMessageHelper.GetFixOrderSide(profitTarget.Value.Side));
             order3.SetField(new OrdType(OrdType.LIMIT));
-            order3.SetField(FxcmFixMessageHelper.GetFixTimeInForce(atomicOrder.ProfitTargetOrder.Value.TimeInForce));
-            order3.SetField(new OrderQty(atomicOrder.ProfitTargetOrder.Value.Quantity.Value));
-            order3.SetField(new Price(atomicOrder.ProfitTargetOrder.Value.Price.Value));
+            order3.SetField(FxcmFixMessageHelper.GetFixTimeInForce(profitTarget.Value.TimeInForce));
+            order3.SetField(new OrderQty(profitTarget.Value.Quantity.Value));
+            order3.SetField(new Price(profitTarget.Value.Price.Value.Value));
             orderList.AddGroup(order3);
 
             return orderList;

@@ -107,10 +107,10 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             {
                 if (barsValid > 0)
                 {
-                    this.orderExpiryCounters.Add(new OrderExpiryCounter(atomicOrder.EntryOrder, barsValid));
+                    this.orderExpiryCounters.Add(new OrderExpiryCounter(atomicOrder.Entry, barsValid));
 
                     this.Log.Debug(
-                        $"Added OrderExpiryCounter ({atomicOrder.EntryOrder.OrderId}) "
+                        $"Added OrderExpiryCounter ({atomicOrder.Entry.OrderId}) "
                       + $"BarsValid={barsValid}");
                 }
             }

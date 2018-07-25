@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

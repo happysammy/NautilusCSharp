@@ -9,6 +9,7 @@
 namespace Nautilus.Brokerage.FXCM
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -17,6 +18,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
     using Nautilus.Fix.MessageFactories;
@@ -203,71 +205,86 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Submits an ELS order.
+        /// Submits an order.
         /// </summary>
-        /// <param name="elsOrder">The atomic order.</param>
-        public void SubmitEntryLimitStopOrder(AtomicOrder elsOrder)
+        /// <param name="order">The order to submit.</param>
+        public void SubmitOrder(IOrder order)
         {
-            Debug.NotNull(elsOrder, nameof(elsOrder));
+            Debug.NotNull(order, nameof(order));
 
             this.Execute(() =>
             {
-                var message = NewOrderListEntryFactory.CreateWithLimit(
-                    FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
+                var message = NewOrderSingleFactory.Create(
+                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     this.accountNumber,
-                    elsOrder,
+                    order,
                     this.TimeNow());
 
                 this.fixSession.Send(message);
+
+                this.Log.Information($"Submitting Order => {Broker.FXCM}");
+            });
+        }
+
+        /// <summary>
+        /// Submits a trade.
+        /// </summary>
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        public void SubmitOrder(IAtomicOrder atomicOrder)
+        {
+            Debug.NotNull(atomicOrder, nameof(atomicOrder));
+
+            this.Execute(() =>
+            {
+                var brokerSymbol = FxcmSymbolProvider.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+
+                if (atomicOrder.ProfitTarget.HasValue)
+                {
+                    var message = NewOrderListEntryFactory.CreateWithStopLossAndProfitTarget(
+                        brokerSymbol,
+                        this.accountNumber,
+                        atomicOrder,
+                        this.TimeNow());
+                    this.fixSession.Send(message);
+                }
+                else
+                {
+                    var message = NewOrderListEntryFactory.CreateWithStopLoss(
+                        brokerSymbol,
+                        this.accountNumber,
+                        atomicOrder,
+                        this.TimeNow());
+                    this.fixSession.Send(message);
+                }
 
                 this.Log.Information($"Submitting ELS Order => {Broker.FXCM}");
             });
         }
 
         /// <summary>
-        /// Submits an ELS order.
+        /// Submits a FIX order cancel replace request.
         /// </summary>
-        /// <param name="elsOrder">The atomic order.</param>
-        public void SubmitEntryStopOrder(AtomicOrder elsOrder)
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        public void ModifyOrder(IOrder order, Price modifiedPrice)
         {
-            Debug.NotNull(elsOrder, nameof(elsOrder));
-
-            this.Execute(() =>
-            {
-                var message = NewOrderListEntryFactory.CreateWithStop(
-                    FxcmSymbolProvider.GetBrokerSymbol(elsOrder.Symbol.Code).Value,
-                    this.accountNumber,
-                    elsOrder,
-                    this.TimeNow());
-
-                this.fixSession.Send(message);
-
-                this.Log.Information($"Submitting ELS Order => {Broker.FXCM}");
-            });
-        }
-
-        /// <summary>
-        /// Submits a modify stop-loss order.
-        /// </summary>
-        /// <param name="orderModification">The order modification.</param>
-        public void ModifyOrder(KeyValuePair<Order, Price> orderModification)
-        {
-            Debug.NotNull(orderModification, nameof(orderModification));
+            Debug.NotNull(order, nameof(order));
+            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
 
             this.Execute(() =>
             {
                 var message = OrderCancelReplaceRequestFactory.Create(
-                    FxcmSymbolProvider.GetBrokerSymbol(orderModification.Key.Symbol.Code).Value,
-                    orderModification.Key,
-                    orderModification.Value.Value,
+                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                    order,
+                    modifiedPrice,
                     this.TimeNow());
 
                 this.fixSession.Send(message);
 
                 this.Log.Information(
-                    $"{orderModification.Key.Symbol} Submitting OrderReplaceRequest: " +
-                    $"(ClOrdId={orderModification.Key.OrderId}, " +
-                    $"OrderId={orderModification.Key.OrderIdBroker}) => {Broker.FXCM}");
+                    $"{order.Symbol} Submitting OrderReplaceRequest: " +
+                    $"(ClOrdId={order.Id}, " +
+                    $"OrderId={order.IdBroker}) => {Broker.FXCM}");
             });
         }
 
@@ -275,7 +292,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits a cancel order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        public void CancelOrder(Order order)
+        public void CancelOrder(IOrder order)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -290,18 +307,17 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
-                    $"(ClOrdId={order.OrderId}, OrderId={order.OrderIdBroker}) => {Broker.FXCM}");
+                    $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Broker.FXCM}");
             });
         }
 
         /// <summary>
         /// Submits a request to close a position.
         /// </summary>
-        /// <param name="position">The position to close.
-        /// </param>
-        public void ClosePosition(Position position)
+        /// <param name="command">The close position command.</param>
+        public void ClosePosition(IPosition command)
         {
-            Debug.NotNull(position, nameof(position));
+            Debug.NotNull(command, nameof(command));
 
             this.Execute(() =>
             {

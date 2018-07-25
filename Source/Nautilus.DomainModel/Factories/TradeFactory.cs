@@ -48,9 +48,9 @@ namespace Nautilus.DomainModel.Factories
                 tradeUnits.Add(new TradeUnit(
                     EntityIdFactory.TradeUnit(tradeId, tradeUnits.Count),
                     LabelFactory.TradeUnit(tradeUnits.Count),
-                    atomicOrder.EntryOrder,
-                    atomicOrder.StopLossOrder,
-                    atomicOrder.ProfitTargetOrder,
+                    atomicOrder.Entry,
+                    atomicOrder.StopLoss,
+                    atomicOrder.ProfitTarget,
                     orderPacket.Timestamp));
             }
 

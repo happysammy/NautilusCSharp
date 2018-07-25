@@ -9,9 +9,11 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -75,33 +77,34 @@ namespace Nautilus.Common.Interfaces
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
-        /// Submits an entry order with a stop-loss and profit target to the brokerage.
-        /// </summary>
-        /// <param name="order">The atomic order.</param>
-        void SubmitEntryLimitStopOrder(AtomicOrder order);
-
-        /// <summary>
-        /// Submits an entry order with a stop-loss to the brokerage.
-        /// </summary>
-        /// <param name="order">The atomic order.</param>
-        void SubmitEntryStopOrder(AtomicOrder order);
-
-        /// <summary>
-        /// Submits a request to modify the stop-loss of an existing order.
-        /// </summary>
-        /// <param name="stoplossModification">The stop-loss modification.</param>
-        void ModifyOrder(KeyValuePair<Order, Price> stoplossModification);
-
-        /// <summary>
-        /// Submits a request to cancel the given order.
+        /// Submits an order.
         /// </summary>
         /// <param name="order">The order.</param>
-        void CancelOrder(Order order);
+        void SubmitOrder(IOrder order);
 
         /// <summary>
-        /// Submits a request to close the given position.
+        /// Submits an atomic order
         /// </summary>
-        /// <param name="position">The position.</param>
-        void ClosePosition(Position position);
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        void SubmitOrder(IAtomicOrder atomicOrder);
+
+        /// <summary>
+        /// Submits a request to modify an order to a new price.
+        /// </summary>
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        void ModifyOrder(IOrder order, Price modifiedPrice);
+
+        /// <summary>
+        /// Submits a request to cancel an order.
+        /// </summary>
+        /// <param name="order">The order to cancel.</param>
+        void CancelOrder(IOrder order);
+
+        /// <summary>
+        /// Submits a request to close a position.
+        /// </summary>
+        /// <param name="position">The position to close.</param>
+        void ClosePosition(IPosition position);
     }
 }

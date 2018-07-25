@@ -11,11 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var order = new MarketOrder(
+            var order = OrderFactory.Market(
                 new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
@@ -48,12 +48,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
-            Assert.Equal("some_orderId", order.OrderId.ToString());
+            Assert.Equal("some_orderId", order.Id.ToString());
             Assert.Equal("some_label", order.Label.ToString());
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
-            Assert.Equal(decimal.Zero, order.AveragePrice.Value);
+            Assert.True(order.AveragePrice.HasNoValue);
             Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             // Act
-            var order = new StopMarketOrder(
+            var order = OrderFactory.StopMarket(
                 new Symbol("SYMBOL", Venue.LMAX),
                 new EntityId("some_orderId"),
                 new Label("some_label"),
@@ -77,17 +77,17 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.LMAX), order.Symbol);
-            Assert.Equal("some_orderId", order.OrderId.ToString());
+            Assert.Equal("some_orderId", order.Id.ToString());
             Assert.Equal("some_label", order.Label.ToString());
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
-            Assert.Equal(2000, order.Price.Value);
-            Assert.Equal(decimal.Zero, order.AveragePrice.Value);
+            Assert.Equal(Price.Create(2000, 0), order.Price);
+            Assert.True(order.AveragePrice.HasNoValue);
             Assert.Equal(decimal.Zero, order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
-            Assert.Equal(new List<EntityId> { new EntityId("some_orderId") }, order.GetOrderIdList());
+            Assert.Equal(new ReadOnlyList<EntityId>(new EntityId("some_orderId")), order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
@@ -100,7 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.Equal("None", order.OrderIdBroker.Value);
+            Assert.True(order.IdBroker.HasNoValue);
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.Equal("None", order.ExecutionId.Value);
+            Assert.True(order.ExecutionId.HasNoValue);
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message);
 
             // Assert
-            Assert.Equal("some_broker_orderId", order.OrderIdBroker.ToString());
+            Assert.Equal("some_broker_orderId", order.IdBroker.ToString());
             Assert.Equal(1, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
@@ -238,13 +238,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message = new OrderWorking(
                 new Symbol("AUDUSD", Venue.LMAX),
-                order.OrderId,
+                order.Id,
                 new EntityId("some_broker_orderId"),
                 order.Label,
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price,
+                order.Price.Value,
                 order.TimeInForce,
                 order.ExpireTime,
                 StubZonedDateTime.UnixEpoch(),
@@ -270,13 +270,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderPartiallyFilled(
                 new Symbol("AUDUSD", Venue.LMAX),
-                order.OrderId,
+                order.Id,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
                 order.Side,
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
-                order.Price,
+                order.Price.Value,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -300,12 +300,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
                 order.Side,
                 order.Quantity,
-                order.Price,
+                order.Price.Value,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -324,14 +324,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var modifiedOrderId = EntityIdFactory.ModifiedOrderId(order.OrderId, order.OrderIdCount);
+            var modifiedOrderId = EntityIdFactory.ModifiedOrderId(order.Id, order.IdCount);
 
             // Act
             order.AddModifiedOrderId(modifiedOrderId);
 
             // Assert
-            Assert.Equal(2, order.OrderIdCount);
-            Assert.Equal(new EntityId("StubOrderId_R1"), order.OrderIdCurrent);
+            Assert.Equal(2, order.IdCount);
+            Assert.Equal(new EntityId("StubOrderId_R1"), order.IdCurrent);
         }
 
         [Fact]
@@ -362,7 +362,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
                 order.Side,
@@ -398,7 +398,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("some_execution_id"),
                 new EntityId("some_execution_ticket"),
                 order.Side,
@@ -470,6 +470,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act - ignore warning, this is why the test returns false!
+            // ReSharper disable once SuspiciousTypeConversion.Global
             var result = order.Equals(string.Empty);
 
             // Assert

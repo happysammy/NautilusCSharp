@@ -12,8 +12,7 @@ namespace Nautilus.Common.Commands
     using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -25,23 +24,19 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelOrder"/> class.
         /// </summary>
-        /// <param name="orderSymbol">The commands order symbol to cancel.</param>
-        /// <param name="orderId">The commands order identifier to cancel.</param>
+        /// <param name="order">The commands order to cancel.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public CancelOrder(
-            Symbol orderSymbol,
-            EntityId orderId,
+            IOrder order,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                orderSymbol,
-                orderId,
+                order,
                 commandId,
                 commandTimestamp)
         {
-            Debug.NotNull(orderSymbol, nameof(orderSymbol));
-            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(order, nameof(order));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
         }

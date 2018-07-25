@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -24,31 +24,31 @@ namespace Nautilus.Fix.MessageFactories
         /// </summary>
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>
-        /// <param name="stopLossPrice">The stop-loss price.</param>
+        /// <param name="modifiedPrice">The price to modify the order to.</param>
         /// <param name="transactionTime">The transaction time.</param>
         /// <returns>The <see cref="OrderCancelReplaceRequest"/> message.</returns>
         public static OrderCancelReplaceRequest Create(
             string brokerSymbol,
-            Order order,
-            decimal stopLossPrice,
+            IOrder order,
+            Nautilus.DomainModel.ValueObjects.Price modifiedPrice,
             ZonedDateTime transactionTime)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
             Debug.NotNull(order, nameof(order));
-            Debug.DecimalNotOutOfRange(stopLossPrice, nameof(stopLossPrice), decimal.Zero, decimal.MaxValue);
+            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
             Debug.NotDefault(transactionTime, nameof(transactionTime));
 
             var orderMessage = new OrderCancelReplaceRequest();
 
-            orderMessage.SetField(new OrigClOrdID(order.OrderId.ToString()));
-            orderMessage.SetField(new OrderID(order.OrderIdBroker.ToString()));
-            orderMessage.SetField(new ClOrdID(order.OrderIdCurrent.ToString()));
+            orderMessage.SetField(new OrigClOrdID(order.Id.ToString()));
+            orderMessage.SetField(new OrderID(order.IdBroker.ToString()));
+            orderMessage.SetField(new ClOrdID(order.IdCurrent.ToString()));
             orderMessage.SetField(new Symbol(brokerSymbol));
             orderMessage.SetField(new Quantity(order.Quantity.Value));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderSide(order.Side));
             orderMessage.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
             orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderType(order.Type));
-            orderMessage.SetField(new StopPx(stopLossPrice));
+            orderMessage.SetField(new StopPx(modifiedPrice.Value));
 
             return orderMessage;
         }

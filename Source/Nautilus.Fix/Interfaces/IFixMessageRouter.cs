@@ -9,8 +9,10 @@
 namespace Nautilus.Fix.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using QuickFix;
 
@@ -72,34 +74,34 @@ namespace Nautilus.Fix.Interfaces
         void MarketDataRequestSubscribeAll();
 
         /// <summary>
-        /// Submits an entry limit stop order.
+        /// Submits an order.
         /// </summary>
-        /// <param name="elsOrder">The ELS order.</param>
-        void SubmitEntryLimitStopOrder(AtomicOrder elsOrder);
+        /// <param name="order">The order.</param>
+        void SubmitOrder(IOrder order);
 
         /// <summary>
-        /// Submits an entry stop order.
+        /// Submits an atomic order
         /// </summary>
-        /// <param name="elsOrder">The ELS order.</param>
-        void SubmitEntryStopOrder(AtomicOrder elsOrder);
+        /// <param name="atomicOrder">The atomic order to submit.</param>
+        void SubmitOrder(IAtomicOrder atomicOrder);
 
         /// <summary>
         /// Submits a modify stop-loss order.
         /// </summary>
-        /// <param name="orderModification">The order modification.</param>
-        void ModifyOrder(KeyValuePair<Order, Price> orderModification);
+        /// <param name="order">The order to modify.</param>
+        /// <param name="modifiedPrice">The modified order price.</param>
+        void ModifyOrder(IOrder order, Price modifiedPrice);
 
         /// <summary>
         /// Submits a cancel order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        void CancelOrder(Order order);
+        void CancelOrder(IOrder order);
 
         /// <summary>
         /// Submits a request to close a position.
         /// </summary>
-        /// <param name="position">The position to close.
-        /// </param>
-        void ClosePosition(Position position);
+        /// <param name="position">The position to close.</param>
+        void ClosePosition(IPosition position);
     }
 }

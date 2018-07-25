@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// The base class for all order types.
     /// </summary>
     [PerformanceOptimized]
-    public abstract class Order : Aggregate<Order>, IOrder
+    public sealed class Order : Aggregate<Order>, IOrder
     {
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
 
@@ -45,16 +45,20 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="orderSide">The order side.</param>
         /// <param name="orderType">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
+        /// <param name="price">The order price (optional).</param>
+        /// <param name="timeInForce">The order time in force.</param>
+        /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
-        protected Order(
+        public Order(
             Symbol symbol,
             EntityId orderId,
             Label orderLabel,
             OrderSide orderSide,
             OrderType orderType,
             Quantity quantity,
+            Option<Price> price,
+            TimeInForce timeInForce,
+            Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp)
             : base(orderId, timestamp)
         {
@@ -62,16 +66,19 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotNull(orderId, nameof(orderId));
             Debug.NotNull(orderLabel, nameof(orderLabel));
             Debug.NotNull(quantity, nameof(quantity));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.Label = orderLabel;
             this.Side = orderSide;
             this.Type = orderType;
             this.Quantity = quantity;
+            this.Price = price;
+            this.TimeInForce = timeInForce;
+            this.ExpireTime = expireTime;
+            this.orderIds.Add(this.Id);
 
-            this.orderIds.Add(this.OrderId);
-            this.orderIdsBroker.Add(new EntityId("None"));
-            this.executionIds.Add(new EntityId("None"));
+            ValidateExpireTime(expireTime);
         }
 
         /// <summary>
@@ -80,29 +87,28 @@ namespace Nautilus.DomainModel.Aggregates
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the orders identifier.
+        /// Gets the orders identifier count.
         /// </summary>
-        public EntityId OrderId => this.Id;
-
-        /// <summary>
-        /// Gets the orders identifiers count.
-        /// </summary>
-        public int OrderIdCount => this.orderIds.Count;
+        public int IdCount => this.orderIds.Count;
 
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public EntityId OrderIdCurrent => this.orderIds.Last();
+        public EntityId IdCurrent => this.orderIds.Last();
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        public EntityId OrderIdBroker => this.orderIdsBroker.Last();
+        public Option<EntityId> IdBroker => this.orderIdsBroker.Count > 0
+            ? this.orderIdsBroker.Last()
+            : Option<EntityId>.None();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public EntityId ExecutionId => this.executionIds.Last();
+        public Option<EntityId> ExecutionId => this.executionIds.Count > 0
+            ? this.executionIds.Last()
+            : Option<EntityId>.None();
 
         /// <summary>
         /// Gets the orders label.
@@ -130,26 +136,41 @@ namespace Nautilus.DomainModel.Aggregates
         public Quantity FilledQuantity { get; private set; } = Quantity.Zero();
 
         /// <summary>
-        /// Gets the orders average fill price.
+        /// Gets the orders price.
         /// </summary>
-        public Price AveragePrice { get; private set; } = Price.Zero();
+        public Option<Price> Price { get; private set; }
 
         /// <summary>
-        /// Gets the current order status.
+        /// Gets the orders average fill price (optional, may be unfilled).
         /// </summary>
-        public OrderStatus Status => (OrderStatus)this.orderState.CurrentState.Value;
+        public Option<Price> AveragePrice { get; private set; }
+
+        /// <summary>
+        /// Gets the orders slippage.
+        /// </summary>
+        public decimal Slippage => this.CalculateSlippage();
+
+        /// <summary>
+        /// Gets the orders time in force.
+        /// </summary>
+        public TimeInForce TimeInForce { get; }
+
+        /// <summary>
+        /// Gets the orders expire time (optional).
+        /// </summary>
+        public Option<ZonedDateTime?> ExpireTime { get; }
 
         /// <summary>
         /// Gets the orders last event time.
         /// </summary>
         public ZonedDateTime LastEventTime => this.Events.Count > 0
             ? this.Events[this.Events.LastIndex()].Timestamp
-            : this.OrderTimestamp;
+            : this.Timestamp;
 
         /// <summary>
-        /// Gets the orders timestamp.
+        /// Gets the current order status.
         /// </summary>
-        public ZonedDateTime OrderTimestamp => this.Timestamp;
+        public OrderStatus Status => (OrderStatus)this.orderState.CurrentState.Value;
 
         /// <summary>
         /// Gets a result indicating whether the order status is complete.
@@ -169,16 +190,22 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Returns an immutable collection of the orders.
+        /// Returns a read-only list of the orders.
         /// </summary>
         /// <returns>A read only collection.</returns>
         public ReadOnlyList<EntityId> GetOrderIdList() => new ReadOnlyList<EntityId>(this.orderIds);
 
         /// <summary>
-        /// Returns an immutable collection of the broker order identifiers.
+        /// Returns a read-only list of broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
         public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.orderIdsBroker);
+
+        /// <summary>
+        /// Returns a read-only list of execution identifiers.
+        /// </summary>
+        /// <returns>A read only collection.</returns>
+        public ReadOnlyList<EntityId> GetExecutionIdList() => new ReadOnlyList<EntityId>(this.executionIds);
 
         /// <summary>
         /// Returns an immutable collection of the order events.
@@ -190,8 +217,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
         /// </summary>
         /// <param name="orderEvent">The order event.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        /// <exception cref="ValidationException">Throws if the event argument is null.</exception>
+        /// <returns>The result of the operation.</returns>
         public override CommandResult Apply(Event orderEvent)
         {
             Debug.NotNull(orderEvent, nameof(orderEvent));
@@ -213,6 +239,12 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderFilled @event:
                     return this.When(@event);
 
+                case OrderExpired orderExpired:
+                    return this.When(orderExpired);
+
+                case OrderModified orderModified:
+                    return this.When(orderModified);
+
                 default: return CommandResult.Fail($"The event is not recognized by the order {this}");
             }
         }
@@ -221,14 +253,14 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a string representation of the <see cref="Order"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Order)}-{this.Symbol}-{this.OrderId}";
+        public override string ToString() => $"{nameof(Order)}-{this.Symbol}-{this.Id}";
 
         /// <summary>
         /// Updates the broker order identifier list with the given <see cref="EntityId"/>
         /// (if not already present).
         /// </summary>
         /// <param name="orderId">The broker order identifier.</param>
-        protected void UpdateBrokerOrderId(EntityId orderId)
+        private void UpdateBrokerOrderIds(EntityId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 
@@ -243,7 +275,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// (if not already present).
         /// </summary>
         /// <param name="executionId">The execution identifier.</param>
-        protected void UpdateExecutionId(EntityId executionId)
+        private void UpdateExecutionIds(EntityId executionId)
         {
             Debug.NotNull(executionId, nameof(executionId));
 
@@ -258,7 +290,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="trigger">The trigger.</param>
         /// <returns>The result of the trigger process.</returns>
-        protected CommandResult Process(Trigger trigger)
+        private CommandResult Process(Trigger trigger)
         {
             return this.orderState.Process(trigger);
         }
@@ -288,7 +320,7 @@ namespace Nautilus.DomainModel.Aggregates
             return this.orderState
                 .Process(new Trigger(nameof(OrderWorking)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateBrokerOrderId(orderEvent.OrderIdBroker));
+                .OnSuccess(() => this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker));
         }
 
         private CommandResult When(OrderPartiallyFilled orderEvent)
@@ -298,7 +330,7 @@ namespace Nautilus.DomainModel.Aggregates
             return this.orderState
                 .Process(new Trigger(nameof(OrderPartiallyFilled)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateExecutionId(orderEvent.ExecutionId))
+                .OnSuccess(() => this.UpdateExecutionIds(orderEvent.ExecutionId))
                 .OnSuccess(() => { this.FilledQuantity = orderEvent.FilledQuantity; })
                 .OnSuccess(() => { this.AveragePrice = orderEvent.AveragePrice; });
         }
@@ -312,6 +344,52 @@ namespace Nautilus.DomainModel.Aggregates
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => { this.FilledQuantity = orderEvent.FilledQuantity; })
                 .OnSuccess(() => { this.AveragePrice = orderEvent.AveragePrice; });
+        }
+
+        private CommandResult When(OrderExpired orderEvent)
+        {
+            Debug.NotNull(orderEvent, nameof(orderEvent));
+
+            return this.Process(new Trigger(nameof(OrderExpired)))
+                .OnSuccess(() => this.Events.Add(orderEvent));
+        }
+
+        private CommandResult When(OrderModified orderEvent)
+        {
+            Debug.NotNull(orderEvent, nameof(orderEvent));
+
+            return this.Process(new Trigger(nameof(OrderModified)))
+                .OnSuccess(() => this.Events.Add(orderEvent))
+                .OnSuccess(() => this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId))
+                .OnSuccess(() => { this.Price = orderEvent.ModifiedPrice; });
+        }
+
+        private Option<ZonedDateTime?> ValidateExpireTime(Option<ZonedDateTime?> expireTime)
+        {
+            Debug.NotNull(expireTime, nameof(expireTime));
+
+            if (expireTime.HasValue)
+            {
+                // ReSharper disable once PossibleInvalidOperationException
+                // TODO: Refactor this "GTD" string.
+                var expireTimeValue = (ZonedDateTime)expireTime.Value;
+                Validate.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Validate.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+            }
+
+            return expireTime;
+        }
+
+        private decimal CalculateSlippage()
+        {
+            if (this.Price.HasNoValue || this.AveragePrice.HasNoValue)
+            {
+                return decimal.Zero;
+            }
+
+            return this.Side == OrderSide.BUY
+                ? this.AveragePrice.Value - this.Price.Value
+                : this.Price.Value - this.AveragePrice.Value;
         }
 
         private bool IsCompleteResult()
@@ -328,6 +406,7 @@ namespace Nautilus.DomainModel.Aggregates
             {
                 var stateTransitionTable = new Dictionary<StateTransition, State>
                 {
+                    { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderSubmitted))), new State(OrderStatus.Submitted) },
                     { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderRejected))), new State(OrderStatus.Rejected) },
                     { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
                     { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderWorking))), new State(OrderStatus.Working) },

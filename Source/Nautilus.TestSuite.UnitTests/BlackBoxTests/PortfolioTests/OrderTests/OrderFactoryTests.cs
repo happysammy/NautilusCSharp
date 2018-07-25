@@ -85,8 +85,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 1);
 
             // Assert
-            Assert.Equal(this.entrySignal.ExpireTime, orderPacket.Value.Orders[0].EntryOrder.ExpireTime);
-            this.output.WriteLine(orderPacket.Value.Orders[0].EntryOrder.ExpireTime.ToString());
+            Assert.Equal(this.entrySignal.ExpireTime, orderPacket.Value.Orders[0].Entry.ExpireTime);
+            this.output.WriteLine(orderPacket.Value.Orders[0].Entry.ExpireTime.ToString());
         }
 
         [Fact]
@@ -103,9 +103,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Equal("TestTrade_U1", orderPacket.Value.Orders[0].EntryOrder.Label.ToString());
-            Assert.Equal(500000, orderPacket.Value.Orders[0].EntryOrder.Quantity.Value);
-            Assert.Equal(0.81000m, orderPacket.Value.Orders[0].EntryOrder.Price.Value);
+            Assert.Equal("TestTrade_U1", orderPacket.Value.Orders[0].Entry.Label.ToString());
+            Assert.Equal(500000, orderPacket.Value.Orders[0].Entry.Quantity.Value);
+            Assert.Equal(0.81000m, orderPacket.Value.Orders[0].Entry.Price.Value);
         }
 
         [Fact]
@@ -121,9 +121,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 1);
 
             // Assert
-            Assert.Equal("TestTrade_U1_SL", orderPacket.Value.Orders[0].StopLossOrder.Label.ToString());
-            Assert.Equal(500000, orderPacket.Value.Orders[0].StopLossOrder.Quantity.Value);
-            Assert.Equal(0.80900m, orderPacket.Value.Orders[0].StopLossOrder.Price.Value);
+            Assert.Equal("TestTrade_U1_SL", orderPacket.Value.Orders[0].StopLoss.Label.ToString());
+            Assert.Equal(500000, orderPacket.Value.Orders[0].StopLoss.Quantity.Value);
+            Assert.Equal(0.80900m, orderPacket.Value.Orders[0].StopLoss.Price.Value);
         }
 
         [Fact]
@@ -139,9 +139,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 1);
 
             // Assert
-            Assert.Equal("TestTrade_U1_PT", orderPacket.Value.Orders[0].ProfitTargetOrder.Value.Label.ToString());
-            Assert.Equal(500000, orderPacket.Value.Orders[0].ProfitTargetOrder.Value.Quantity.Value);
-            Assert.Equal(0.81100m, orderPacket.Value.Orders[0].ProfitTargetOrder.Value.Price.Value);
+            Assert.Equal("TestTrade_U1_PT", orderPacket.Value.Orders[0].ProfitTarget.Value.Label.ToString());
+            Assert.Equal(500000, orderPacket.Value.Orders[0].ProfitTarget.Value.Quantity.Value);
+            Assert.Equal(0.81100m, orderPacket.Value.Orders[0].ProfitTarget.Value.Price.Value);
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 1);
 
             // Assert
-            Assert.True(orderPacket.Value.Orders[1].ProfitTargetOrder.HasNoValue);
+            Assert.True(orderPacket.Value.Orders[1].ProfitTarget.HasNoValue);
         }
     }
 }

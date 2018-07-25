@@ -10,8 +10,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Orders;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -137,9 +138,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public MarketOrder BuildMarketOrder()
+        public Order BuildMarketOrder()
         {
-            return new MarketOrder(
+            return OrderFactory.Market(
                 this.Symbol,
                 this.OrderId,
                 this.OrderLabel,
@@ -148,23 +149,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Timestamp);
         }
 
-        public LimitOrder BuildLimitOrder()
+        public Order BuildLimitOrder()
         {
-            return new LimitOrder(
-                this.Symbol,
-                this.OrderId,
-                this.OrderLabel,
-                this.OrderSide,
-                this.Quantity,
-                this.Price,
-                this.TimeInForce,
-                this.ExpireTime,
-                this.Timestamp);
-        }
-
-        public StopMarketOrder BuildStopMarketOrder()
-        {
-            return new StopMarketOrder(
+            return OrderFactory.Limit(
                 this.Symbol,
                 this.OrderId,
                 this.OrderLabel,
@@ -176,9 +163,23 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 this.Timestamp);
         }
 
-        public StopLimitOrder BuildStopLimitOrder()
+        public Order BuildStopMarketOrder()
         {
-            return new StopLimitOrder(
+            return OrderFactory.StopMarket(
+                this.Symbol,
+                this.OrderId,
+                this.OrderLabel,
+                this.OrderSide,
+                this.Quantity,
+                this.Price,
+                this.TimeInForce,
+                this.ExpireTime,
+                this.Timestamp);
+        }
+
+        public Order BuildStopLimitOrder()
+        {
+            return OrderFactory.StopLimit(
                 this.Symbol,
                 this.OrderId,
                 this.OrderLabel,

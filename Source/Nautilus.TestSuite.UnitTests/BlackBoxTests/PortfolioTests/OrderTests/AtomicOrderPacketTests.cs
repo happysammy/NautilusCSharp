@@ -39,9 +39,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Assert
             Assert.Equal(1, orderPacket.Orders.Count);
             Assert.Equal(3, orderPacket.OrderIdList.Count);
-            Assert.Equal(atomicOrders[0].EntryOrder, orderPacket.Orders[0].EntryOrder);
-            Assert.Equal(atomicOrders[0].StopLossOrder, orderPacket.Orders[0].StopLossOrder);
-            Assert.Equal(atomicOrders[0].ProfitTargetOrder, orderPacket.Orders[0].ProfitTargetOrder);
+            Assert.Equal(atomicOrders[0].Entry, orderPacket.Orders[0].Entry);
+            Assert.Equal(atomicOrders[0].StopLoss, orderPacket.Orders[0].StopLoss);
+            Assert.Equal(atomicOrders[0].ProfitTarget, orderPacket.Orders[0].ProfitTarget);
         }
 
         [Fact]

@@ -205,7 +205,7 @@ namespace Nautilus.Core
         public override string ToString()
         {
             return this.HasNoValue
-                 ? nameof(this.HasNoValue)
+                 ? "NONE"
                  : this.value.ToString();
         }
 

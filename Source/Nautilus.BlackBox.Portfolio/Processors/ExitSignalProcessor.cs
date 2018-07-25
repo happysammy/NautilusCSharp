@@ -94,7 +94,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             Debug.Int32NotOutOfRange(forUnit, nameof(forUnit), 0, int.MaxValue);
             Debug.NotNull(tradeUnit, nameof(tradeUnit));
 
-            return (forUnit == 0 || tradeUnit.TradeUnitLabel.ToString() != "U" + forUnit)
+            return (forUnit == 0 || tradeUnit.Label.ToString() != "U" + forUnit)
                  && tradeUnit.Position.MarketPosition != MarketPosition.Flat;
         }
 

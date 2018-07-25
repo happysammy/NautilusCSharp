@@ -15,7 +15,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -27,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder(),
-                new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StopLossOrderId").BuildStopMarketOrder(),
                 new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder };
@@ -77,7 +76,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new TradeType("TestTrade"),
                 new StubOrderBuilder().EntryOrder("EntryOrderId3").BuildStopMarketOrder(),
                 new StubOrderBuilder().StopLossOrder("StoplossOrderId3").BuildStopMarketOrder(),
-                Option<PricedOrder>.None());
+                Option<Order>.None());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder1, atomicOrder2, atomicOrder3 };
             var orderPacket = new AtomicOrdersPacket(
@@ -108,7 +107,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new TradeType("TestTrade"),
                 new StubOrderBuilder().EntryOrder("EntryOrderId3").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
                 new StubOrderBuilder().StopLossOrder("StoplossOrderId3").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder(),
-                Option<PricedOrder>.None());
+                Option<Order>.None());
 
             var atomicOrders = new List<AtomicOrder> { atomicOrder1, atomicOrder2, atomicOrder3 };
 

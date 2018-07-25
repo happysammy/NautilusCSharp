@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var submitted = new OrderSubmitted(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -63,7 +63,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var accepted = new OrderAccepted(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = new OrderRejected(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "INVALID_ORDER",
                 Guid.NewGuid(),
@@ -108,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
             var working = new OrderWorking(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 .BuildStopMarketOrder();
             var working = new OrderWorking(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
@@ -171,7 +171,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelled = new OrderCancelled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -193,7 +193,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelReject = new OrderCancelReject(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 "REJECT_RESPONSE?",
                 "ORDER_NOT_FOUND",
@@ -217,7 +217,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var modified = new OrderModified(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("B123456"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
@@ -241,7 +241,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
             var expired = new OrderExpired(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -265,7 +265,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 .BuildStopLimitOrder();
             var partiallyFilled = new OrderPartiallyFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("E123456"),
                 new EntityId("P123456"),
                 order.Side,
@@ -295,7 +295,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                 .BuildStopLimitOrder();
             var filled = new OrderFilled(
                 order.Symbol,
-                order.OrderId,
+                order.Id,
                 new EntityId("E123456"),
                 new EntityId("P123456"),
                 order.Side,
