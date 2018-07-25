@@ -19,6 +19,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -26,7 +27,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// The base class for all order types.
     /// </summary>
     [PerformanceOptimized]
-    public abstract class Order : Aggregate<Order>
+    public abstract class Order : Aggregate<Order>, IOrder
     {
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
 
