@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="CancelOrder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CloseTradeUnit.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,33 +17,43 @@ namespace Nautilus.Common.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to cancel an order.
+    /// Represents a command to close a trade position by trade unit id.
     /// </summary>
     [Immutable]
-    public sealed class CancelOrder : OrderCommand
+    public sealed class CloseTradeUnit : TradeCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CancelOrder"/> class.
+        /// Initializes a new instance of the <see cref="CloseTradeUnit"/> class.
         /// </summary>
-        /// <param name="orderSymbol">The commands order symbol to cancel.</param>
-        /// <param name="orderId">The commands order identifier to cancel.</param>
+        /// <param name="tradeSymbol">The command trade symbol to close.</param>
+        /// <param name="tradeId">The commands for trade identifier.</param>
+        /// <param name="tradeUnitId">The commands trade unit identifier.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
-        public CancelOrder(
-            Symbol orderSymbol,
-            EntityId orderId,
+        public CloseTradeUnit(
+            Symbol tradeSymbol,
+            EntityId tradeId,
+            EntityId tradeUnitId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                orderSymbol,
-                orderId,
+                tradeSymbol,
+                tradeId,
                 commandId,
                 commandTimestamp)
         {
-            Debug.NotNull(orderSymbol, nameof(orderSymbol));
-            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(tradeSymbol, nameof(tradeSymbol));
+            Debug.NotNull(tradeId, nameof(tradeId));
+            Debug.NotNull(tradeUnitId, nameof(tradeUnitId));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
+
+            this.TradeUnitId = tradeUnitId;
         }
+
+        /// <summary>
+        /// Gets the commands trade unit identifier to close.
+        /// </summary>
+        public EntityId TradeUnitId { get; }
     }
 }

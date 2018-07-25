@@ -216,7 +216,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                typeof(ClosePosition),
+                typeof(CloseTradeUnit),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

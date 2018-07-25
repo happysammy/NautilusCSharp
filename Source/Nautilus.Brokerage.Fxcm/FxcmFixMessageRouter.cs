@@ -250,7 +250,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits a modify stop-loss order.
         /// </summary>
         /// <param name="orderModification">The order modification.</param>
-        public void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification)
+        public void ModifyOrder(KeyValuePair<Order, Price> orderModification)
         {
             Debug.NotNull(orderModification, nameof(orderModification));
 

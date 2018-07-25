@@ -62,7 +62,7 @@ namespace Nautilus.BlackBox.Execution
             // Setup trade commands.
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<ClosePosition>(msg => this.OnMessage(msg));
+            this.Receive<CloseTradeUnit>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
         }
 
@@ -86,7 +86,7 @@ namespace Nautilus.BlackBox.Execution
             });
         }
 
-        private void OnMessage(ClosePosition message)
+        private void OnMessage(CloseTradeUnit message)
         {
             Debug.NotNull(message, nameof(message));
 

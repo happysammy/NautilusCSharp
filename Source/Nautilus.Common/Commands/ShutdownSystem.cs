@@ -23,16 +23,15 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ShutdownSystem"/> class.
         /// </summary>
-        /// <param name="messageId">The message identifier (cannot be default).</param>
-        /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="messageId">The commands identifier (cannot be default).</param>
+        /// <param name="messageTimestamp">The commands timestamp (cannot be default).</param>
         public ShutdownSystem(
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotDefault(messageId, nameof(messageId));
-            Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
+            Debug.NotDefault(messageId, nameof(messageId));
+            Debug.NotDefault(messageTimestamp, nameof(messageTimestamp));
         }
     }
 }

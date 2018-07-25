@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Common.Commands;
     using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -114,20 +115,20 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Submits a request to modify the stop-loss of an existing order.
         /// </summary>
-        /// <param name="stoplossModification">The stop-loss modification.</param>
-        void ModifyStoplossOrder(KeyValuePair<Order, Price> stoplossModification);
+        /// <param name="command">The modify order command.</param>
+        void ModifyOrder(ModifyOrder command);
 
         /// <summary>
         /// Submits a request to cancel the given order.
         /// </summary>
-        /// <param name="order">The order.</param>
-        void CancelOrder(Order order);
+        /// <param name="command">The cancel order command.</param>
+        void CancelOrder(CancelOrder command);
 
         /// <summary>
         /// Submits a request to close the given position to the brokerage client.
         /// </summary>
-        /// <param name="position">The position.</param>
-        void ClosePosition(Position position);
+        /// <param name="command">The close position command.</param>
+        void ClosePosition(ClosePosition command);
 
         /// <summary>
         /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the

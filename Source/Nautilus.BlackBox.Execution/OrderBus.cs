@@ -56,7 +56,7 @@ namespace Nautilus.BlackBox.Execution
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<ClosePosition>(msg => this.OnMessage(msg));
+            this.Receive<CloseTradeUnit>(msg => this.OnMessage(msg));
         }
 
         private void SetupServiceMessageHandling()
@@ -101,14 +101,14 @@ namespace Nautilus.BlackBox.Execution
             foreach (var stoplossModification in message.StopLossModificationsIndex)
             {
                 var orderModification = new KeyValuePair<Order, Price>(stoplossModification.Key, stoplossModification.Value);
-                this.gateway.ModifyStoplossOrder(orderModification);
+                this.gateway.ModifyOrder(orderModification);
                 var symbol = stoplossModification.Key.Symbol;
 
                 this.Log.Debug($"Routing StoplossReplaceRequest {symbol} => {this.gateway.Broker}");
             }
         }
 
-        private void OnMessage(ClosePosition message)
+        private void OnMessage(CloseTradeUnit message)
         {
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 

@@ -180,11 +180,11 @@ namespace Nautilus.Common
         /// </summary>
         /// <param name="stoplossModification">The stop-loss modification.</param>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void ModifyStoplossOrder(KeyValuePair<Order, Price> stoplossModification)
+        public void ModifyOrder(KeyValuePair<Order, Price> stoplossModification)
         {
             Validate.NotNull(stoplossModification, nameof(stoplossModification));
 
-            this.fixClient.ModifyStoplossOrder(stoplossModification);
+            this.fixClient.ModifyOrder(stoplossModification);
         }
 
         /// <summary>

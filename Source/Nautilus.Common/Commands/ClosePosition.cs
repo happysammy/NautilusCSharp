@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // <copyright file="ClosePosition.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
@@ -9,47 +9,50 @@
 namespace Nautilus.Common.Commands
 {
     using System;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.Core.Collections;
+    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to close a trade position.
+    /// Represents a command to close a trade position by execution tickets.
     /// </summary>
     [Immutable]
-    public sealed class ClosePosition : Command
+    public sealed class ClosePosition : OrderCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClosePosition"/> class.
+        /// Initializes a new instance of the <see cref="CloseTradeUnit"/> class.
         /// </summary>
-        /// <param name="forTradeUnit">The message for trade unit.</param>
-        /// <param name="messageId">The message identifier (cannot be default).</param>
-        /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="orderSymbol">The commands position symbol to close.</param>
+        /// <param name="fromOrderId">The commands position from entry order identifier.</param>
+        /// <param name="tickets">The commands position tickets to close.</param>
+        /// <param name="commandId">The commands identifier (cannot be default).</param>
+        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public ClosePosition(
-            TradeUnit forTradeUnit,
-            Guid messageId,
-            ZonedDateTime messageTimestamp)
-            : base(messageId, messageTimestamp)
+            Symbol orderSymbol,
+            EntityId fromOrderId,
+            ReadOnlyList<EntityId> tickets,
+            Guid commandId,
+            ZonedDateTime commandTimestamp)
+            : base(
+                orderSymbol,
+                fromOrderId,
+                commandId,
+                commandTimestamp)
         {
-            Validate.NotNull(forTradeUnit, nameof(forTradeUnit));
-            Validate.NotDefault(messageId, nameof(messageId));
-            Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
+            Debug.NotNull(tickets, nameof(tickets));
+            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.ForTradeUnit = forTradeUnit;
+            this.Tickets = tickets;
         }
 
         /// <summary>
-        /// Gets the messages for trade unit.
+        /// Gets the commands for trade unit.
         /// </summary>
-        public TradeUnit ForTradeUnit { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="ClosePosition"/> command message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.ForTradeUnit.Symbol}-{this.ForTradeUnit}";
+        public ReadOnlyList<EntityId> Tickets { get; }
     }
 }

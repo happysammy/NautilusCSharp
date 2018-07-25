@@ -90,7 +90,7 @@ namespace Nautilus.Common.Interfaces
         /// Submits a request to modify the stop-loss of an existing order.
         /// </summary>
         /// <param name="stoplossModification">The stop-loss modification.</param>
-        void ModifyStoplossOrder(KeyValuePair<Order, Price> stoplossModification);
+        void ModifyOrder(KeyValuePair<Order, Price> stoplossModification);
 
         /// <summary>
         /// Submits a request to cancel the given order.

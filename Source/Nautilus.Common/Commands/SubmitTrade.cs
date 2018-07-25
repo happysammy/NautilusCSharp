@@ -9,56 +9,53 @@
 namespace Nautilus.Common.Commands
 {
     using System;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to submit a trade comprising of an atomic orders packet.
+    /// Represents a command to submit a trade comprising of a packet of atomic orders.
     /// </summary>
     [Immutable]
-    public sealed class SubmitTrade : Command
+    public sealed class SubmitTrade : TradeCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SubmitTrade"/> class.
         /// </summary>
-        /// <param name="orderPacket">The message order packet.</param>
-        /// <param name="minStopDistanceEntry">The message minimum stop distance (cannot be negative).</param>
-        /// <param name="messageId">The message identifier (cannot be default).</param>
-        /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="orderPacket">The commands order packet.</param>
+        /// <param name="minStopDistanceEntry">The commands minimum stop distance (cannot be negative).</param>
+        /// <param name="commandId">The commands identifier (cannot be default).</param>
+        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public SubmitTrade(
             AtomicOrdersPacket orderPacket,
             decimal minStopDistanceEntry,
-            Guid messageId,
-            ZonedDateTime messageTimestamp)
-            : base(messageId, messageTimestamp)
+            Guid commandId,
+            ZonedDateTime commandTimestamp)
+            : base(
+                orderPacket.Symbol,
+                orderPacket.Id,
+                commandId,
+                commandTimestamp)
         {
-            Validate.NotNull(orderPacket, nameof(orderPacket));
-            Validate.DecimalNotOutOfRange(minStopDistanceEntry, nameof(minStopDistanceEntry), decimal.Zero, decimal.MaxValue);
-            Validate.NotDefault(messageId, nameof(messageId));
-            Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
+            Debug.NotNull(orderPacket, nameof(orderPacket));
+            Debug.DecimalNotOutOfRange(minStopDistanceEntry, nameof(minStopDistanceEntry), decimal.Zero, decimal.MaxValue);
+            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.OrderPacket = orderPacket;
             this.MinStopDistanceEntry = minStopDistanceEntry;
         }
 
         /// <summary>
-        /// Gets the messages atomic order packet.
+        /// Gets the commands atomic order packet.
         /// </summary>
         public AtomicOrdersPacket OrderPacket { get; }
 
         /// <summary>
-        /// Gets the messages minimum stop distance for entry.
+        /// Gets the commands minimum stop distance for entry.
         /// </summary>
         public decimal MinStopDistanceEntry { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="SubmitTrade"/> command message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.OrderPacket.Id}";
     }
 }

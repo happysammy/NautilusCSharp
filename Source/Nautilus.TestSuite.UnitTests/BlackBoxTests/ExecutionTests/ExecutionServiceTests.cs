@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
 
-            var message = new ClosePosition(trade.TradeUnits[0], Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var message = new CloseTradeUnit(trade.TradeUnits[0], Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);

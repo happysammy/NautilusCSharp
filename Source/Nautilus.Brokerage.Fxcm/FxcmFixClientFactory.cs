@@ -45,7 +45,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Creates a new <see cref="IFixClient"/>.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adatper.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="tickProcessor">The tick data processor.</param>
         /// <returns></returns>
         public IFixClient Create(

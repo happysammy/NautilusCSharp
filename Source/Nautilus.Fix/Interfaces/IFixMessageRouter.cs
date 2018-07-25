@@ -87,7 +87,7 @@ namespace Nautilus.Fix.Interfaces
         /// Submits a modify stop-loss order.
         /// </summary>
         /// <param name="orderModification">The order modification.</param>
-        void ModifyStoplossOrder(KeyValuePair<Order, Price> orderModification);
+        void ModifyOrder(KeyValuePair<Order, Price> orderModification);
 
         /// <summary>
         /// Submits a cancel order.
