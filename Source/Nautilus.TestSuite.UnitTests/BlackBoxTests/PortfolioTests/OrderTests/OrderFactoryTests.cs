@@ -105,11 +105,11 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal("TestTrade_U1", orderPacket.Value.Orders[0].Entry.Label.ToString());
             Assert.Equal(500000, orderPacket.Value.Orders[0].Entry.Quantity.Value);
-            Assert.Equal(0.81000m, orderPacket.Value.Orders[0].Entry.Price.Value);
+            Assert.Equal(0.81000m, orderPacket.Value.Orders[0].Entry.Price.Value.Value);
         }
 
         [Fact]
-        internal void Create_StubEntrySignalBuy_ReturnsCorrectStoplossOrder()
+        internal void Create_StubEntrySignalBuy_ReturnsCorrectStopLossOrder()
         {
             // Arrange
             // Act
@@ -123,7 +123,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Assert
             Assert.Equal("TestTrade_U1_SL", orderPacket.Value.Orders[0].StopLoss.Label.ToString());
             Assert.Equal(500000, orderPacket.Value.Orders[0].StopLoss.Quantity.Value);
-            Assert.Equal(0.80900m, orderPacket.Value.Orders[0].StopLoss.Price.Value);
+            Assert.Equal(0.80900m, orderPacket.Value.Orders[0].StopLoss.Price.Value.Value);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Assert
             Assert.Equal("TestTrade_U1_PT", orderPacket.Value.Orders[0].ProfitTarget.Value.Label.ToString());
             Assert.Equal(500000, orderPacket.Value.Orders[0].ProfitTarget.Value.Quantity.Value);
-            Assert.Equal(0.81100m, orderPacket.Value.Orders[0].ProfitTarget.Value.Price.Value);
+            Assert.Equal(0.81100m, orderPacket.Value.Orders[0].ProfitTarget.Value.Price.Value.Value);
         }
 
         [Fact]

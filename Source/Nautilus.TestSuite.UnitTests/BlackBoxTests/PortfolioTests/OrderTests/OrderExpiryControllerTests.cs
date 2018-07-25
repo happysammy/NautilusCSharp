@@ -96,9 +96,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             this.orderExpiryController.AddCounters(orderPacket, barsValid);
             var result1 = this.orderExpiryController.TotalCounters;
 
-            this.orderExpiryController.RemoveCounter(orderPacket.Orders[0].Entry.OrderId);
-            this.orderExpiryController.RemoveCounter(orderPacket.Orders[1].Entry.OrderId);
-            this.orderExpiryController.RemoveCounter(orderPacket.Orders[2].Entry.OrderId);
+            this.orderExpiryController.RemoveCounter(orderPacket.Orders[0].Entry.Id);
+            this.orderExpiryController.RemoveCounter(orderPacket.Orders[1].Entry.Id);
+            this.orderExpiryController.RemoveCounter(orderPacket.Orders[2].Entry.Id);
             var result2 = this.orderExpiryController.TotalCounters;
 
             // Assert

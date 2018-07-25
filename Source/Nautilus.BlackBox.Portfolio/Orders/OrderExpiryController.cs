@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     /// </summary>
     public sealed class OrderExpiryController : ComponentBusConnectedBase
     {
-        // Concreate list for performance reasons.
+        // Concrete list for performance reasons.
         private readonly List<OrderExpiryCounter> orderExpiryCounters = new List<OrderExpiryCounter>();
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                     this.orderExpiryCounters.Add(new OrderExpiryCounter(atomicOrder.Entry, barsValid));
 
                     this.Log.Debug(
-                        $"Added OrderExpiryCounter ({atomicOrder.Entry.OrderId}) "
+                        $"Added OrderExpiryCounter ({atomicOrder.Entry.Id}) "
                       + $"BarsValid={barsValid}");
                 }
             }
@@ -127,7 +127,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 
             foreach (var counter in this.orderExpiryCounters.ToList())
             {
-                if (counter.Order.OrderId.Equals(orderId))
+                if (counter.Order.Id.Equals(orderId))
                 {
                     this.orderExpiryCounters.Remove(counter);
 
@@ -153,7 +153,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             {
                 foreach (var counter in this.orderExpiryCounters.ToList())
                 {
-                    if (counter.Order.OrderId.Equals(orderId))
+                    if (counter.Order.Id.Equals(orderId))
                     {
                         this.orderExpiryCounters.Remove(counter);
 
@@ -170,7 +170,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 
         private IEnumerable<EntityId> GetCounterIdList()
         {
-            return this.orderExpiryCounters.Select(counter => counter.Order.OrderId);
+            return this.orderExpiryCounters.Select(counter => counter.Order.Id);
         }
     }
 }

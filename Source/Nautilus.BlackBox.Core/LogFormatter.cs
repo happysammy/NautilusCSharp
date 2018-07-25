@@ -20,7 +20,6 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -209,20 +208,20 @@ namespace Nautilus.BlackBox.Core
                 return string.Empty;
             }
 
-            if (signal.ForUnitStoplossPrices.Count == 1)
+            if (signal.ForUnitStopLossPrices.Count == 1)
             {
-                if (signal.ForUnitStoplossPrices.ContainsKey(0))
+                if (signal.ForUnitStopLossPrices.ContainsKey(0))
                 {
-                    return $"(ALL){signal.ForUnitStoplossPrices[0]}";
+                    return $"(ALL){signal.ForUnitStopLossPrices[0]}";
                 }
 
-                foreach (var kvp in signal.ForUnitStoplossPrices)
+                foreach (var kvp in signal.ForUnitStopLossPrices)
                 {
                     return $"(U{kvp.Key}){kvp.Value}";
                 }
             }
 
-            return signal.ForUnitStoplossPrices.Aggregate(string.Empty, (current, unitStoploss) => ForUnitStoplossPrintMaker(unitStoploss, current));
+            return signal.ForUnitStopLossPrices.Aggregate(string.Empty, (current, unitStoploss) => ForUnitStoplossPrintMaker(unitStoploss, current));
         }
 
         private static string ForUnitStoplossPrintMaker(KeyValuePair<int, Price> unitStoploss, string forUnitStoplossPrint)
@@ -318,26 +317,9 @@ namespace Nautilus.BlackBox.Core
         /// <summary>
         /// Returns a formatted output string from the given input.
         /// </summary>
-        /// <param name="order">The market order.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string ToOutput(MarketOrder order)
-        {
-            Debug.NotNull(order, nameof(order));
-
-            if (order is null)
-            {
-                return string.Empty;
-            }
-
-            return $"{order}: {order.Side}-{order.Type} {order.Quantity:N0} {order.Label}";
-        }
-
-        /// <summary>
-        /// Returns a formatted output string from the given input.
-        /// </summary>
         /// <param name="order">The stop order.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string ToOutput(PricedOrder order)
+        public static string ToOutput(Order order)
         {
             Debug.NotNull(order, nameof(order));
 

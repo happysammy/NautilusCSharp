@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -590,12 +591,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder2));
             trade.Apply(StubEventMessages.OrderModifiedEvent(stoplossOrder2, Price.Create(0.79950m, 0.00001m)));
 
-            var result = trade.GetOrderById(new EntityId("StoplossOrderId2")).Value as PricedOrder;
+            var result = trade.GetOrderById(new EntityId("StoplossOrderId2")).Value as Order;
 
             // Assert
             Assert.Equal(TradeStatus.Active, trade.TradeStatus);
             Assert.Equal(MarketPosition.Long, trade.MarketPosition);
-            Assert.Equal(0.79950m, result?.Price.Value);
+            Assert.Equal(0.79950m, result?.Price.Value.Value);
         }
 
         [Fact]

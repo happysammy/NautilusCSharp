@@ -67,6 +67,6 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// Returns a string representation of the <see cref="OrderExpiryCounter"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"ExpiryCounter_{this.Order.OrderId}";
+        public override string ToString() => $"ExpiryCounter_{this.Order.Id}";
     }
 }

@@ -14,10 +14,10 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Orders;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -103,7 +103,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             {
                 unit++;
 
-                var entryOrder = new StopMarketOrder(
+                var entryOrder = OrderFactory.StopMarket(
                     signal.Symbol,
                     this.orderIdFactory.Create(signal.SignalTimestamp),
                     LabelFactory.EntryOrder(signal.SignalLabel, unit),
@@ -114,7 +114,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                     signal.ExpireTime,
                     signal.SignalTimestamp);
 
-                var stoplossOrder = new StopMarketOrder(
+                var stopLossOrder = OrderFactory.StopMarket(
                     signal.Symbol,
                     this.orderIdFactory.Create(signal.SignalTimestamp),
                     LabelFactory.StopLossOrder(signal.SignalLabel, unit),
@@ -125,11 +125,11 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                     Option<ZonedDateTime?>.None(),
                     signal.SignalTimestamp);
 
-                var profitTargetOrder = Option<PricedOrder>.None();
+                var profitTargetOrder = Option<Order>.None();
 
                 if (signal.ProfitTargets.Count >= unit)
                 {
-                    profitTargetOrder = new StopLimitOrder(
+                    profitTargetOrder = OrderFactory.StopLimit(
                         signal.Symbol,
                         this.orderIdFactory.Create(signal.SignalTimestamp),
                         LabelFactory.ProfitTargetOrder(signal.SignalLabel, unit),
@@ -144,7 +144,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 var atomicOrder = new AtomicOrder(
                     signal.TradeType,
                     entryOrder,
-                    stoplossOrder,
+                    stopLossOrder,
                     profitTargetOrder);
 
                 atomicOrders.Add(atomicOrder);

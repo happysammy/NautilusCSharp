@@ -120,6 +120,7 @@ namespace Nautilus.DomainModel.Aggregates
                 positionEvent.AveragePrice,
                 positionEvent.ExecutionTime);
             this.Events.Add(positionEvent);
+
             return CommandResult.Ok();
         }
 
@@ -133,6 +134,7 @@ namespace Nautilus.DomainModel.Aggregates
                 positionEvent.AveragePrice,
                 positionEvent.ExecutionTime);
             this.Events.Add(positionEvent);
+
             return CommandResult.Ok();
         }
 

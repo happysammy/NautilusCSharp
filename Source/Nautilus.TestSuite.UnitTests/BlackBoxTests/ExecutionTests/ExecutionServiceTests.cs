@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Moq;
@@ -113,10 +112,12 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
         {
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
-            var stopLossModificationsIndex = new Dictionary<Order, Price> { { trade.TradeUnits[0].StopLoss, Price.Create(0.79000m, 0.00001m) } };
-            var order = new StubOrderBuilder().StopLossOrder("1234");
 
-            var message = new ModifyOrder(trade, stopLossModificationsIndex, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var message = new ModifyOrder(
+                trade.TradeUnits[0].StopLoss,
+                Price.Create(0.79000m, 0.00001m),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);
@@ -131,7 +132,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
             // Arrange
             var trade = StubTradeBuilder.BuyOneUnit();
 
-            var message = new CloseTradeUnit(trade.TradeUnits[0], Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var message = new ClosePosition(
+                trade.TradeUnits[0].Position,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);

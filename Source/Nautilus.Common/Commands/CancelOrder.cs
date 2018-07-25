@@ -25,10 +25,12 @@ namespace Nautilus.Common.Commands
         /// Initializes a new instance of the <see cref="CancelOrder"/> class.
         /// </summary>
         /// <param name="order">The commands order to cancel.</param>
+        /// <param name="cancelReason">The commands cancel reason.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public CancelOrder(
             IOrder order,
+            string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -37,8 +39,16 @@ namespace Nautilus.Common.Commands
                 commandTimestamp)
         {
             Debug.NotNull(order, nameof(order));
+            Debug.NotNull(cancelReason, nameof(cancelReason));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
+
+            this.Reason = cancelReason;
         }
+
+        /// <summary>
+        /// Gets the commands cancel reason.
+        /// </summary>
+        public string Reason { get; }
     }
 }

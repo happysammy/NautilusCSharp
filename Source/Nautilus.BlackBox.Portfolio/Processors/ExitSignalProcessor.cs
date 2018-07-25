@@ -76,8 +76,8 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                         {
                             if (IsValidSignalForUnit(forUnit, tradeUnit))
                             {
-                                var closePosition = new CloseTradeUnit(
-                                    tradeUnit,
+                                var closePosition = new ClosePosition(
+                                    tradeUnit.Position,
                                     this.NewGuid(),
                                     this.TimeNow());
 

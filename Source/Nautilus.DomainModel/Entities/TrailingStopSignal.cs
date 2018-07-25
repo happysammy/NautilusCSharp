@@ -58,7 +58,7 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.ForMarketPosition = forMarketPosition;
-            this.ForUnitStoplossPrices = forUnitStoplossPrices;
+            this.ForUnitStopLossPrices = forUnitStoplossPrices;
         }
 
         /// <summary>
@@ -69,6 +69,6 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the trailing stop signals unit stop-loss prices read-only dictionary.
         /// </summary>
-        public IReadOnlyDictionary<int, Price> ForUnitStoplossPrices { get; }
+        public IReadOnlyDictionary<int, Price> ForUnitStopLossPrices { get; }
     }
 }

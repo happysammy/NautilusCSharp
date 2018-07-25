@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS0", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(100m, result.Value.ForUnitStoplossPrices[0].Value);
+            Assert.Equal(100m, result.Value.ForUnitStopLossPrices[0].Value);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS0", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(110m, result.Value.ForUnitStoplossPrices[0].Value);
+            Assert.Equal(110m, result.Value.ForUnitStopLossPrices[0].Value);
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -283,7 +283,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -329,7 +329,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -377,7 +377,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -424,7 +424,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             // Assert
             Assert.True(result.HasValue);
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -468,7 +468,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -512,7 +512,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -572,7 +572,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2_TS3", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Long, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
 
         [Fact]
@@ -645,7 +645,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             Assert.True(result.HasValue);
             Assert.Equal("TS1_TS2_TS3_TS4", result.Value.SignalLabel.ToString());
             Assert.Equal(MarketPosition.Short, result.Value.ForMarketPosition);
-            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStoplossPrices);
+            Assert.Equal(expectedForUnitStopPrices, result.Value.ForUnitStopLossPrices);
         }
     }
 }

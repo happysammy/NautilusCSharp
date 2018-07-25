@@ -71,35 +71,27 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             {
                 if (this.IsValidSignalForTrade(trade, signal))
                 {
-                    var stopLossModificationsIndex = new Dictionary<Order, Price>();
-
                     foreach (var tradeUnit in trade.TradeUnits)
                     {
-                        foreach (var forUnitStoploss in signal.ForUnitStoplossPrices)
+                        foreach (var forUnitStopLoss in signal.ForUnitStopLossPrices)
                         {
-                            if (IsValidSignalForStoploss(tradeUnit, forUnitStoploss, signal))
+                            if (IsValidSignalForStopLoss(tradeUnit, forUnitStopLoss, signal))
                             {
                                 var stopLossOrder = tradeUnit.StopLoss;
                                 var modifiedOrderId = EntityIdFactory.ModifiedOrderId(
-                                    stopLossOrder.OrderId,
+                                    stopLossOrder.Id,
                                     stopLossOrder.IdCount);
-
                                 stopLossOrder.AddModifiedOrderId(modifiedOrderId);
 
-                                stopLossModificationsIndex.Add(tradeUnit.StopLoss, forUnitStoploss.Value);
+                                var modifyOrder= new ModifyOrder(
+                                    stopLossOrder,
+                                    forUnitStopLoss.Value,
+                                    this.NewGuid(),
+                                    this.TimeNow());
+
+                                this.Send(BlackBoxService.Execution, modifyOrder);
                             }
                         }
-                    }
-
-                    if (stopLossModificationsIndex.Count > 0)
-                    {
-                        var modifyStoploss = new ModifyOrder(
-                            trade,
-                            stopLossModificationsIndex,
-                            this.NewGuid(),
-                            this.TimeNow());
-
-                        this.Send(BlackBoxService.Execution, modifyStoploss);
                     }
                 }
             }
@@ -140,13 +132,13 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             return true;
         }
 
-        private static bool IsValidSignalForStoploss(
+        private static bool IsValidSignalForStopLoss(
             TradeUnit tradeUnit,
-            KeyValuePair<int, Price> forUnitStoploss,
+            KeyValuePair<int, Price> forUnitStopLoss,
             TrailingStopSignal signal)
         {
             Debug.NotNull(tradeUnit, nameof(tradeUnit));
-            Debug.NotDefault(forUnitStoploss, nameof(forUnitStoploss));
+            Debug.NotDefault(forUnitStopLoss, nameof(forUnitStopLoss));
             Debug.NotNull(signal, nameof(signal));
 
             if (tradeUnit.TradeStatus != TradeStatus.Active)
@@ -154,20 +146,20 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                 return false;
             }
 
-            if (forUnitStoploss.Key != 0
-             && tradeUnit.Label.ToString() != "U" + forUnitStoploss.Key)
+            if (forUnitStopLoss.Key != 0
+             && tradeUnit.Label.ToString() != "U" + forUnitStopLoss.Key)
             {
                 return false;
             }
 
             if (signal.ForMarketPosition == MarketPosition.Long
-             && tradeUnit.StopLoss.Price > forUnitStoploss.Value)
+             && tradeUnit.StopLoss.Price.Value > forUnitStopLoss.Value)
             {
                 return false;
             }
 
             if (signal.ForMarketPosition == MarketPosition.Short
-             && tradeUnit.StopLoss.Price < forUnitStoploss.Value)
+             && tradeUnit.StopLoss.Price.Value < forUnitStopLoss.Value)
             {
                 return false;
             }

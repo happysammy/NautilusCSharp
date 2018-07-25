@@ -57,7 +57,7 @@ namespace Nautilus.BlackBox.Execution
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<CloseTradeUnit>(msg => this.OnMessage(msg));
+            this.Receive<ClosePosition>(msg => this.OnMessage(msg));
         }
 
         private void SetupServiceMessageHandling()
@@ -116,10 +116,9 @@ namespace Nautilus.BlackBox.Execution
         {
             Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
-            var tradeUnit = message.Order;
-            this.gateway.ClosePosition(message.);
+            this.gateway.ClosePosition(message.Position);
 
-            this.Log.Debug($"Routing ClosePosition ({message.Order.Label} => {this.gateway.Broker}");
+            this.Log.Debug($"Routing ClosePosition ({message.Position} => {this.gateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)
