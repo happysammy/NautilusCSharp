@@ -50,7 +50,7 @@ namespace Nautilus.DomainModel
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as Entity<T>);
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as T);
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.
@@ -58,7 +58,10 @@ namespace Nautilus.DomainModel
         /// <param name="other">The other entity</param>
         /// <returns>A <see cref="bool"/>.</returns>
         // ReSharper disable once PossibleNullReferenceException (already checked for null?).
-        public bool Equals([CanBeNull] Entity<T> other) => other != null & this.Id.Equals(other.Id);
+        public bool Equals([CanBeNull] T other)
+        {
+            return other != null && this.Id.Equals(other.Id);
+        }
 
         /// <summary>
         /// Returns the hash code of the wrapped object.
