@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessCounters_WithNoCounters_DoesNothing()
         {
             // Arrange
-            var expireTime = StubZonedDateTime.UnixEpoch();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
 
             // Act
@@ -121,10 +121,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         }
 
         [Fact]
-        internal void ProcessCounters_OrderPacketWithThreeUnitsWhichHaventExpired_DoesNothing()
+        internal void ProcessCounters_OrderPacketWithThreeUnitsWhichHaveNotExpired_DoesNothing()
         {
             // Arrange
-            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromSeconds(60).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 2;
             this.orderExpiryController.AddCounters(orderPacket, barsValid);
@@ -142,7 +142,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessTimers_OrderPacketWithThreeUnitsExpired_SendsCorrectMessageToCommandBusRemovesTimers()
         {
             // Arrange
-            var expireTime = StubZonedDateTime.UnixEpoch();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1);
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var barsValid = 1;
             this.orderExpiryController.AddCounters(orderPacket, barsValid);
@@ -166,7 +166,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         internal void ProcessTimers_OrderPacketWithThreeUnitsNotExpiredThenProcessListOfUnrecognizedOrders_ResultsInForceRemoveAndReturnsTimerCountZero()
         {
             // Arrange
-            var expireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
+            var expireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(5);
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
             var unrecognizedActiveOrders = new List<EntityId>
                                                {

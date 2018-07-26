@@ -154,7 +154,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(
-                typeof(CloseTradeUnit),
+                typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -182,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(MarketPosition.Short, result[0].MarketPosition);
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             CustomAssert.EventuallyContains(
-                typeof(CloseTradeUnit),
+                typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -249,7 +249,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
             Assert.Equal(TradeStatus.Active, result[0].TradeStatus);
             Assert.Equal(MarketPosition.Long, result[0].MarketPosition);
             CustomAssert.EventuallyContains(
-                typeof(CloseTradeUnit),
+                typeof(ClosePosition),
                 this.inMemoryMessageStore.CommandEnvelopes,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

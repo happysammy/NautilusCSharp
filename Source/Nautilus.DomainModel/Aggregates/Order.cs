@@ -364,20 +364,21 @@ namespace Nautilus.DomainModel.Aggregates
                 .OnSuccess(() => { this.Price = orderEvent.ModifiedPrice; });
         }
 
-        private Option<ZonedDateTime?> ValidateExpireTime(Option<ZonedDateTime?> expireTime)
+        private void ValidateExpireTime(Option<ZonedDateTime?> expireTime)
         {
             Debug.NotNull(expireTime, nameof(expireTime));
 
-            if (expireTime.HasValue)
+            if (expireTime.HasNoValue)
+            {
+                Validate.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+            }
+            else
             {
                 // ReSharper disable once PossibleInvalidOperationException
-                // TODO: Refactor this "GTD" string.
                 var expireTimeValue = (ZonedDateTime)expireTime.Value;
                 Validate.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
                 Validate.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
-
-            return expireTime;
         }
 
         private decimal CalculateSlippage()

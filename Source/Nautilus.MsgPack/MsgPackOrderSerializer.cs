@@ -77,7 +77,7 @@ namespace Nautilus.MsgPack
                         label,
                         side,
                         quantity,
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
@@ -89,7 +89,7 @@ namespace Nautilus.MsgPack
                         label,
                         side,
                         quantity,
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
@@ -101,7 +101,7 @@ namespace Nautilus.MsgPack
                         label,
                         side,
                         quantity,
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
@@ -113,7 +113,7 @@ namespace Nautilus.MsgPack
                         label,
                         side,
                         quantity,
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);

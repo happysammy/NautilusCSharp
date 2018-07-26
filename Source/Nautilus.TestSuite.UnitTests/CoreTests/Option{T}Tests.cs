@@ -224,7 +224,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var result = option.ToString();
 
             // Assert
-            Assert.Equal("HasNoValue", result);
+            Assert.Equal("NONE", result);
         }
 
         [Fact]

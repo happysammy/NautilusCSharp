@@ -53,7 +53,10 @@ namespace Nautilus.DomainModel.Entities
             this.TradeType = tradeType;
             this.Entry = entry;
             this.StopLoss = stopLoss;
-            this.ProfitTarget = Option<IOrder>.Some(profitTarget.Value);
+
+            this.ProfitTarget = profitTarget.HasValue
+                ? Option<IOrder>.Some(profitTarget.Value)
+                : Option<IOrder>.None();
         }
 
         /// <summary>
