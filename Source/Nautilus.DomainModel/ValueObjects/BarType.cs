@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="SymbolbarType.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarType.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.ValueObjects
 
     /// <summary>
     /// Represents the concept of a bar type representing a <see cref="Symbol"/> and
-    /// <see cref="Specification"/>.
+    /// <see cref="BarSpecification"/>.
     /// </summary>
     public sealed class BarType : ValueObject<BarType>, IEquatable<BarType>
     {
@@ -54,7 +54,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="Specification"/>.
+        /// Returns a string representation of the <see cref="BarType"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
@@ -63,7 +63,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="Specification"/>.
+        /// Returns a string representation of the <see cref="BarType"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public string ToChannel()

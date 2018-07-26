@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Percentage(decimal percent)
             : base(percent)
         {
-            Validate.DecimalNotOutOfRange(percent, nameof(percent), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(percent, nameof(percent), decimal.Zero, decimal.MaxValue);
         }
 
         /// <summary>
@@ -44,7 +44,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="percent">The percent value.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if percent is negative.</exception>
         public static Percentage Create(decimal percent)
         {
             return new Percentage(percent);
@@ -56,10 +55,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other percentage.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public Percentage Add(Percentage other)
         {
-            Validate.NotNull(other, nameof(other));
+            Debug.NotNull(other, nameof(other));
 
             return new Percentage(this.Value + other.Value);
         }
@@ -70,12 +68,10 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other percentage.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null, or if the other
-        /// value is greater than this value.</exception>
         public Percentage Subtract(Percentage other)
         {
-            Validate.NotNull(other, nameof(other));
-            Validate.True(other.Value <= this.Value, nameof(other));
+            Debug.NotNull(other, nameof(other));
+            Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Percentage(this.Value - other.Value);
         }
@@ -86,10 +82,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="multiplier">The other percentage.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the multiplier is negative.</exception>
         public Percentage MultiplyBy(decimal multiplier)
         {
-            Validate.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
 
             return new Percentage(this.Value * multiplier);
         }
@@ -99,10 +94,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the value is negative.</exception>
         public decimal PercentOf(decimal value)
         {
-            Validate.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
 
             return (value * this.Value) / 100;
         }
@@ -113,10 +107,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="divisor">The other price.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the divisor is zero or negative.</exception>
         public Percentage DivideBy(decimal divisor)
         {
-            Validate.DecimalNotOutOfRange(divisor, nameof(divisor), decimal.Zero, decimal.MaxValue);
+            Debug.DecimalNotOutOfRange(divisor, nameof(divisor), decimal.Zero, decimal.MaxValue);
 
             return new Percentage(this.Value / divisor);
         }

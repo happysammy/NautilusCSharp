@@ -44,7 +44,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="amount">The amount.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the amount is negative.</exception>
         public static Quantity Create(int amount)
         {
             return new Quantity(amount);
@@ -56,7 +55,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other quantity.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null.</exception>
         public Quantity Add(Quantity other)
         {
             Debug.NotNull(other, nameof(other));
@@ -71,8 +69,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other quantity.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null, or if the value of the
-        /// other quantity is greater than the value of this quantity.</exception>
         public Quantity Subtract(Quantity other)
         {
             Debug.NotNull(other, nameof(other));
@@ -87,7 +83,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="multiplier">The multiplier.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the multiplier is negative.</exception>
         public Quantity MultiplyBy(int multiplier)
         {
             Debug.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
