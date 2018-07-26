@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been initialized by the system.
+    /// Represents an event where an order has been initialized by the system.
     /// </summary>
     [Immutable]
     public sealed class OrderInitialized : OrderEvent

@@ -11,7 +11,7 @@ namespace Nautilus.Core.Annotations
     using System;
 
     /// <summary>
-    /// This decorative attribute indicates that the annotated stuct parameter could be the default
+    /// This decorative attribute indicates that the annotated struct parameter could be the default
     /// value (therefore an explicit check for default is not required).
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]

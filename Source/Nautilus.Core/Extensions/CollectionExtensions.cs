@@ -26,7 +26,6 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <param name="collection">The collection (cannot be null or empty).</param>
         /// <typeparam name="T">The collection type.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
         /// <returns>An <see cref="int"/>.</returns>
         public static int LastIndex<T>(this ICollection<T> collection)
         {
@@ -41,8 +40,6 @@ namespace Nautilus.Core.Extensions
         /// <param name="collection">The collection (cannot be null or empty).</param>
         /// <param name="index">The index (cannot be negative).</param>
         /// <typeparam name="T">The collection type.</typeparam>
-        /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
-        /// <exception cref="ValidationException">Throws if the index is out of the specified range.</exception>
         /// <returns>The type.</returns>
         public static T GetByReverseIndex<T>(this ICollection<T> collection, int index)
         {
@@ -60,9 +57,6 @@ namespace Nautilus.Core.Extensions
         /// <param name="shift">The shift (cannot be negative).</param>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <returns>The type.</returns>
-        /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
-        /// <exception cref="ValidationException">Throws if the index is out of the specified range.</exception>
-        /// <exception cref="ValidationException">Throws if the shift is out of the specified range.</exception>
         public static T GetByShiftedReverseIndex<T>(this ICollection<T> collection, int index, int shift)
         {
             Debug.CollectionNotNullOrEmpty(collection.ToArray(), nameof(collection));
@@ -79,7 +73,6 @@ namespace Nautilus.Core.Extensions
         /// <param name="source">The source (cannot be null).</param>
         /// <param name="action">The action (cannot be null).</param>
         /// <typeparam name="T">The type.</typeparam>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Reviewed. Multiple enumerations ok in Debug configuration.")]
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
