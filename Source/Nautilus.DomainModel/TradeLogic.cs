@@ -26,8 +26,7 @@ namespace Nautilus.DomainModel
         /// Returns the <see cref="TradeStatus"/> of the given <see cref="TradeUnit"/>.
         /// </summary>
         /// <param name="tradeUnit">The trade unit.</param>
-        /// <returns>A <see cref="TradeStatus"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        /// <returns>The current trade status.</returns>
         public static TradeStatus CalculateTradeStatus(TradeUnit tradeUnit)
         {
             Debug.NotNull(tradeUnit, nameof(tradeUnit));
@@ -67,8 +66,7 @@ namespace Nautilus.DomainModel
         /// Returns the <see cref="TradeStatus"/> of the given collection of <see cref="TradeUnit"/>(s).
         /// </summary>
         /// <param name="tradeUnits">The trade units.</param>
-        /// <returns>The <see cref="TradeStatus" />.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        /// <returns>The current trade status.</returns>
         public static TradeStatus CalculateTradeStatus(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
@@ -96,8 +94,7 @@ namespace Nautilus.DomainModel
         /// Returns the <see cref="MarketPosition"/> of the given collection of <see cref="TradeUnit"/>(s).
         /// </summary>
         /// <param name="tradeUnits">The trade units.</param>
-        /// <returns>A <see cref="MarketPosition" />.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        /// <returns>The current market condition.</returns>
         public static MarketPosition CalculateMarketPosition(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
