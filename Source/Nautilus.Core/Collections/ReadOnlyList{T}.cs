@@ -43,6 +43,18 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="list">The original list.</param>
         /// <exception cref="ValidationException">Throws if the list is null.</exception>
+        public ReadOnlyList(IList<T> list)
+        {
+            Debug.NotNull(list, nameof(list));
+
+            this.internalList = new List<T>(list);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
+        /// </summary>
+        /// <param name="list">The original list.</param>
+        /// <exception cref="ValidationException">Throws if the list is null.</exception>
         public ReadOnlyList(IReadOnlyCollection<T> list)
         {
             Debug.NotNull(list, nameof(list));
@@ -53,7 +65,7 @@ namespace Nautilus.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
-        /// <param name="element">The element for the list to contain.</param>
+        /// <param name="element">The single element for the list to contain.</param>
         /// <exception cref="ValidationException">Throws if the element is null.</exception>
         public ReadOnlyList(T element)
         {
