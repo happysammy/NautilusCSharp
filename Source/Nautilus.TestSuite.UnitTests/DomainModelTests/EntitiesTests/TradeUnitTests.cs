@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

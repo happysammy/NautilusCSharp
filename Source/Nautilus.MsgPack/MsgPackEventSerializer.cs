@@ -15,7 +15,6 @@ namespace Nautilus.MsgPack
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.Core;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using global::MsgPack;

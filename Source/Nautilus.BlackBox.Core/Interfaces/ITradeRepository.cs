@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Core.Interfaces
 {
     using Nautilus.Core;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
 

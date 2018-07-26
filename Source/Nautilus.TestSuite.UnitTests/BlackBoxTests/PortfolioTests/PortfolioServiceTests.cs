@@ -17,7 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.Common.MessageStore;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

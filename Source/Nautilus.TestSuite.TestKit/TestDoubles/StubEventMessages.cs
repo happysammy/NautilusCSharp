@@ -8,7 +8,6 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;

@@ -14,7 +14,6 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;

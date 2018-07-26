@@ -17,7 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
     using Nautilus.BlackBox.Execution;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;

@@ -11,7 +11,6 @@ namespace Nautilus.BlackBox.Core.Build
     using Enums;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Interfaces;
 

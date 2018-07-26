@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

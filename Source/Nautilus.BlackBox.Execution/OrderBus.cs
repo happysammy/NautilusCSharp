@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.Execution
 {
-    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.Commands;
@@ -17,7 +16,6 @@ namespace Nautilus.BlackBox.Execution
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 

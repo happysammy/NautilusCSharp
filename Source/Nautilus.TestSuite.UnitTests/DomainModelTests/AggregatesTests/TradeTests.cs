@@ -10,8 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;

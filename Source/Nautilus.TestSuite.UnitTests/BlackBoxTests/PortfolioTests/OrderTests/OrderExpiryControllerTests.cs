@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.Common.MessageStore;
     using Nautilus.Core.Collections;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;

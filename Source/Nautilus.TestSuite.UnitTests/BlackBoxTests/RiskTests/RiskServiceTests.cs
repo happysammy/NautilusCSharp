@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.MessageStore;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

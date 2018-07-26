@@ -9,13 +9,10 @@
 namespace Nautilus.Brokerage.FXCM
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;

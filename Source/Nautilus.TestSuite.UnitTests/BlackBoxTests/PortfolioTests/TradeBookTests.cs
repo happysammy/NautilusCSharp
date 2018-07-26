@@ -12,7 +12,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.BlackBox.Portfolio;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
