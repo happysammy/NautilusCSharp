@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -26,8 +27,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var instrument = new Instrument(
                     symbol,
-                    new EntityId(symbol.ToString()),
-                    new EntityId("AUD/USD"),
+                    new InstrumentId(symbol.ToString()),
+                    new ValidString("AUD/USD"),
                     CurrencyCode.AUD,
                     SecurityType.Forex,
                     5,
@@ -55,8 +56,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var instrument = new Instrument(
                     symbol,
-                    new EntityId(symbol.ToString()),
-                    new EntityId("EUR/USD"),
+                    new InstrumentId(symbol.ToString()),
+                    new ValidString("EUR/USD"),
                     CurrencyCode.EUR,
                     SecurityType.Forex,
                     5,
@@ -84,8 +85,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var instrument = new Instrument(
                    symbol,
-                   new EntityId(symbol.ToString()),
-                   new EntityId("USD/JPY"),
+                   new InstrumentId(symbol.ToString()),
+                   new ValidString("USD/JPY"),
                    CurrencyCode.JPY,
                    SecurityType.Forex,
                    3,

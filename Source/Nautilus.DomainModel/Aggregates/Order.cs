@@ -83,6 +83,11 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
+        /// Gets the orders identifier.
+        /// </summary>
+        public new OrderId Id => base.Id as OrderId;
+
+        /// <summary>
         /// Gets the orders symbol.
         /// </summary>
         public Symbol Symbol { get; }

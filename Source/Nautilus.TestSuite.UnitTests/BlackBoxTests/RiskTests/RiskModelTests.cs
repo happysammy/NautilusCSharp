@@ -12,7 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Risk;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -22,13 +24,13 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     public class RiskModelTests
     {
         [Fact]
-        internal void NewZonedDateTimeiation_ReturnsExpectedResults()
+        internal void NewZonedDateTime_ReturnsExpectedResults()
         {
             // Arrange
 
             // Act
             var riskModel = new RiskModel(
-                new EntityId("12345"),
+                new RiskModelId("12345"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -36,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal("12345", riskModel.RiskModelId.ToString());
+            Assert.Equal("12345", riskModel.Id.ToString());
             Assert.Equal(10, riskModel.GlobalMaxRiskExposure.Value);
             Assert.Equal(1, riskModel.GlobalMaxRiskPerTrade.Value);
             Assert.True(riskModel.PositionSizeHardLimits);
@@ -49,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -68,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -87,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -106,7 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -126,7 +128,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -147,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -169,7 +171,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -190,7 +192,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -213,7 +215,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var symbol = new Symbol("SYMBOL", Venue.GLOBEX);
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -236,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var symbol = new Symbol("SYMBOL", Venue.GLOBEX);
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -259,7 +261,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -278,7 +280,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
         {
             // Arrange
             var riskModel = new RiskModel(
-                new EntityId("NONE"),
+                new RiskModelId("NONE"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),

@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -33,8 +34,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderFilled(
                 order.Symbol,
                 order.Id,
-                new EntityId("NONE"),
-                new EntityId("NONE"),
+                new ExecutionId("NONE"),
+                new ExecutionId("NONE"),
                 order.Side,
                 order.Quantity,
                 order.Price.Value,
@@ -66,8 +67,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderPartiallyFilled(
                 order.Symbol,
                 order.Id,
-                new EntityId("NONE"),
-                new EntityId("NONE"),
+                new ExecutionId("NONE"),
+                new ExecutionId("NONE"),
                 order.Side,
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
@@ -111,7 +112,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderWorking(
                 order.Symbol,
                 order.Id,
-                new EntityId("some_broker_orderId"),
+                new OrderId("some_broker_orderId"),
                 order.Label,
                 order.Side,
                 order.Type,
@@ -141,7 +142,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new OrderModified(
                 order.Symbol,
                 order.Id,
-                new EntityId("NONE"),
+                new OrderId("NONE"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),

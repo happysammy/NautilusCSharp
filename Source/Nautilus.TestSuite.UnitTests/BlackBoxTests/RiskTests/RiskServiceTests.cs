@@ -15,8 +15,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Nautilus.BlackBox.Risk;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -92,7 +94,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var account = StubAccountFactory.Create();
             var riskModel = new RiskModel(
-                new EntityId(Guid.NewGuid().ToString()),
+                new RiskModelId(Guid.NewGuid().ToString()),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -120,7 +122,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var account = StubAccountFactory.Create();
             var riskModel = new RiskModel(
-                new EntityId(Guid.NewGuid().ToString()),
+                new RiskModelId(Guid.NewGuid().ToString()),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -153,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var account = StubAccountFactory.ZeroCash();
             var riskModel = new RiskModel(
-                new EntityId(Guid.NewGuid().ToString()),
+                new RiskModelId(Guid.NewGuid().ToString()),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -188,7 +190,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var account = StubAccountFactory.Create();
             var riskModel = new RiskModel(
-                new EntityId(Guid.NewGuid().ToString()),
+                new RiskModelId(Guid.NewGuid().ToString()),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),
@@ -230,7 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             // Arrange
             var account = StubAccountFactory.Create();
             var riskModel = new RiskModel(
-                new EntityId(Guid.NewGuid().ToString()),
+                new RiskModelId(Guid.NewGuid().ToString()),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),

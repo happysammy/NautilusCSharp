@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.Common.MessageStore;
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -168,17 +169,17 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             // Arrange
             var expireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(5);
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(expireTime);
-            var unrecognizedActiveOrders = new List<EntityId>
+            var unrecognizedActiveOrders = new List<OrderId>
                                                {
-                                                   new EntityId("some_other_orderId1"),
-                                                   new EntityId("some_other_orderId2")
+                                                   new OrderId("some_other_orderId1"),
+                                                   new OrderId("some_other_orderId2")
                                                };
 
             // Act
             this.orderExpiryController.AddCounters(orderPacket, 1);
             var result1 = this.orderExpiryController.TotalCounters;
 
-            this.orderExpiryController.ProcessCounters(new ReadOnlyList<EntityId>(unrecognizedActiveOrders));
+            this.orderExpiryController.ProcessCounters(new ReadOnlyList<OrderId>(unrecognizedActiveOrders));
             var result2 = this.orderExpiryController.TotalCounters;
 
             // Assert

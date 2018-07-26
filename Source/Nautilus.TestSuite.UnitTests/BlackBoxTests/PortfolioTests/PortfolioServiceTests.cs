@@ -21,6 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -234,7 +235,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
             return new SignalEvent(
                 new EntrySignal(
                     new Symbol("SYMBOL", Venue.LMAX),
-                    new EntityId("NONE"),
+                    new SignalId("NONE"),
                     new Label("TestSignal"),
                     StubTradeProfileFactory.Create(20),
                     OrderSide.BUY,
@@ -266,9 +267,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             return new OrderFilled(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("some_orderId"),
-                new EntityId("some_executionId"),
-                new EntityId("some_executionTicket"),
+                new OrderId("some_orderId"),
+                new ExecutionId("some_executionId"),
+                new ExecutionId("some_executionTicket"),
                 OrderSide.BUY,
                 Quantity.Create(100),
                 Price.Create(100m, 0.01m),

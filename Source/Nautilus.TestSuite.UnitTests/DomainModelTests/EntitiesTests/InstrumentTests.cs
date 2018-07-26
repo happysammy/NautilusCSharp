@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -40,8 +41,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var deserializedInstrument = new Instrument(
                 new Symbol(symbol["Code"], symbol["Venue"].ToEnum<Venue>()),
-                new EntityId(symbol["Value"]),
-                new EntityId("AUD/USD"),
+                new InstrumentId(symbol["Value"]),
+                new ValidString("AUD/USD"),
                 deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
                 deserialized["SecurityType"].ToEnum<SecurityType>(),
                 Convert.ToInt32(deserialized["TickDecimals"]),

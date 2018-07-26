@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -38,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
@@ -48,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(TradeStatus.Initialized, trade.TradeStatus);
             Assert.Equal("TestTrade", trade.TradeType.ToString());
             Assert.Equal(new Symbol("AUDUSD", Venue.FXCM), trade.Symbol);
-            Assert.Equal("TestTrade", trade.TradeId.ToString());
+            Assert.Equal("TestTrade", trade.Id.ToString());
             Assert.Equal(MarketPosition.Flat, trade.MarketPosition);
             Assert.Equal(9, trade.OrderIdList.Count); // 3 ELS orders with 3 order each = 9 orderId's
             Assert.Equal(Quantity.Create(3), trade.TotalQuantity);
@@ -60,20 +61,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
-            var stoplossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
+            var stopLossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
+            var stopLossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder1,
+                stopLossOrder1,
                 profitTargetOrder);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder2,
+                stopLossOrder2,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -87,16 +88,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
             // Act
-            var result = trade.GetOrderById(new EntityId("StoplossOrderId1"));
+            var result = trade.GetOrderById(new OrderId("StoplossOrderId1"));
 
             // Assert
-            Assert.Equal(stoplossOrder1, result);
+            Assert.Equal(stopLossOrder1, result);
         }
 
         [Fact]
@@ -104,13 +105,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StopLossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -124,13 +125,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
             // Act
-            var result = trade.GetOrderById(new EntityId("bad_StoplossOrderId"));
+            var result = trade.GetOrderById(new OrderId("bad_StopLossOrderId"));
 
             // Assert
             Assert.True(result.HasNoValue);
@@ -141,13 +142,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -161,7 +162,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -179,13 +180,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -199,7 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -217,13 +218,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -237,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -255,13 +256,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -275,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -293,13 +294,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -313,14 +314,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
 
             // Act
             trade.Apply(StubEventMessages.OrderRejectedEvent(entryOrder));
-            trade.Apply(StubEventMessages.OrderRejectedEvent(stoplossOrder));
+            trade.Apply(StubEventMessages.OrderRejectedEvent(stopLossOrder));
             trade.Apply(StubEventMessages.OrderRejectedEvent(profitTargetOrder));
 
             // Assert
@@ -334,19 +335,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var entryOrder1 = new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarketOrder();
             var entryOrder2 = new StubOrderBuilder().EntryOrder("EntryOrderId2").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder1,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder2,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -360,7 +361,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -380,19 +381,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var entryOrder1 = new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarketOrder();
             var entryOrder2 = new StubOrderBuilder().EntryOrder("EntryOrderId2").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder1,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder2,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -406,7 +407,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -426,19 +427,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var entryOrder1 = new StubOrderBuilder().EntryOrder("EntryOrderId1").BuildStopMarketOrder();
             var entryOrder2 = new StubOrderBuilder().EntryOrder("EntryOrderId2").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder1,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder2,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -452,7 +453,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -460,7 +461,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             trade.Apply(StubEventMessages.OrderCancelledEvent(entryOrder1));
             trade.Apply(StubEventMessages.OrderCancelledEvent(entryOrder2));
-            trade.Apply(StubEventMessages.OrderCancelledEvent(stoplossOrder));
+            trade.Apply(StubEventMessages.OrderCancelledEvent(stopLossOrder));
             trade.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder));
 
             // Assert
@@ -473,13 +474,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -493,7 +494,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -512,13 +513,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StoplossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -532,7 +533,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -540,7 +541,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
             trade.Apply(StubEventMessages.OrderExpiredEvent(entryOrder));
-            trade.Apply(StubEventMessages.OrderCancelledEvent(stoplossOrder));
+            trade.Apply(StubEventMessages.OrderCancelledEvent(stopLossOrder));
             trade.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder));
 
             // Assert
@@ -553,20 +554,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
-            var stoplossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
+            var stopLossOrder1 = new StubOrderBuilder().StopLossOrder("StoplossOrderId1").BuildStopMarketOrder();
+            var stopLossOrder2 = new StubOrderBuilder().StopLossOrder("StoplossOrderId2").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var atomicOrder1 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder1,
+                stopLossOrder1,
                 profitTargetOrder);
 
             var atomicOrder2 = new AtomicOrder(
                 new TradeType("TestTrade"),
                 entryOrder,
-                stoplossOrder2,
+                stopLossOrder2,
                 profitTargetOrder);
 
             var atomicOrders = new List<AtomicOrder>
@@ -580,7 +581,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);
@@ -588,10 +589,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
             trade.Apply(StubEventMessages.OrderFilledEvent(entryOrder));
-            trade.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder2));
-            trade.Apply(StubEventMessages.OrderModifiedEvent(stoplossOrder2, Price.Create(0.79950m, 0.00001m)));
+            trade.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder2));
+            trade.Apply(StubEventMessages.OrderModifiedEvent(stopLossOrder2, Price.Create(0.79950m, 0.00001m)));
 
-            var result = trade.GetOrderById(new EntityId("StoplossOrderId2")).Value as Order;
+            var result = trade.GetOrderById(new OrderId("StoplossOrderId2")).Value;
 
             // Assert
             Assert.Equal(TradeStatus.Active, trade.TradeStatus);
@@ -644,7 +645,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             var trade = TradeFactory.Create(orderPacket);

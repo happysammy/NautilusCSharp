@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
 
             // Assert
             Assert.Equal(Broker.FXCM, account.Broker);
-            Assert.Equal("FXCM-123456789", account.AccountId.ToString());
+            Assert.Equal("FXCM-123456789", account.Id.ToString());
             Assert.Equal(this.currency, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
         }

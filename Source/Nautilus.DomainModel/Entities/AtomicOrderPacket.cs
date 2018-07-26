@@ -12,7 +12,6 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -56,12 +55,12 @@ namespace Nautilus.DomainModel.Entities
 
             foreach (var order in this.Orders)
             {
-                tempList.Add(order.Entry.Id as OrderId);
-                tempList.Add(order.StopLoss.Id as OrderId);
+                tempList.Add(order.Entry.Id);
+                tempList.Add(order.StopLoss.Id);
 
                 if (order.ProfitTarget.HasValue)
                 {
-                    tempList.Add(order.ProfitTarget.Value.Id as OrderId);
+                    tempList.Add(order.ProfitTarget.Value.Id);
                 }
             }
 

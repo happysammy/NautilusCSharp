@@ -19,6 +19,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -197,7 +198,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             var exitSignal = new ExitSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("Test"),
+                new SignalId("Test"),
                 new Label("TestSignal"),
                 new TradeType("TestTrade"),
                 MarketPosition.Short,
@@ -228,7 +229,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
 
             var exitSignal = new ExitSignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("Test"),
+                new SignalId("Test"),
                 new Label("Test"),
                 new TradeType("TestTrade"),
                 MarketPosition.Long,

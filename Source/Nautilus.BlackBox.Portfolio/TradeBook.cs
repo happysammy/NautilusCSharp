@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.Portfolio
     /// </summary>
     public sealed class TradeBook : ComponentBase, ITradeBook
     {
-        // Concreate list for performance reasons.
+        // Concrete list for performance reasons.
         private readonly List<Trade> tradeList = new List<Trade>();
 
         /// <summary>

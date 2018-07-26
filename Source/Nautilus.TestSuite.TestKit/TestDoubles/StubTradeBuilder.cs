@@ -10,11 +10,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
@@ -83,7 +83,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("TestTrade"),
+                new OrderPacketId("TestTrade"),
                 StubZonedDateTime.UnixEpoch());
 
             return TradeFactory.Create(orderPacket);

@@ -11,13 +11,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using BlackBox.Core.Enums;
     using Moq;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Risk;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Database.Aggregators;
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.QuoteProvider = new QuoteProvider(Venue.FXCM);
 
             var riskModel = new RiskModel(
-                new EntityId("None"),
+                new RiskModelId("None"),
                 Percentage.Create(10),
                 Percentage.Create(1),
                 Quantity.Create(2),

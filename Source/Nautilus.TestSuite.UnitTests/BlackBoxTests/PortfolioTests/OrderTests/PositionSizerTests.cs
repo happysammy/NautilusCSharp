@@ -13,9 +13,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.Core;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Portfolio.Orders;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -114,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.SELL,
@@ -146,7 +146,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.SELL,
@@ -182,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -217,7 +217,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
 
             var signal = new EntrySignal(
                 instrument.Symbol,
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("TestSignal"),
                 tradeProfile,
                 OrderSide.SELL,

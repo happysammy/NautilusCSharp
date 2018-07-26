@@ -82,9 +82,9 @@ namespace Nautilus.DomainModel.Factories
                 orderSide,
                 OrderType.MIT,
                 quantity,
-                Option<Price>.None(),
+                price,
                 timeInForce,
-                Option<ZonedDateTime?>.None(),
+                expireTime,
                 timestamp);
         }
 

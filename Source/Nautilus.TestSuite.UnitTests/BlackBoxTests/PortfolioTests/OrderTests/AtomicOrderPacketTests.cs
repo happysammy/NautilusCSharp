@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -23,7 +24,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     public class AtomicOrderPacketTests
     {
         [Fact]
-        internal void AddOrder_NewZonedDateTimeiationELSOrderAdded_ReturnsExpectedResults()
+        internal void AddOrder_NewZonedDateTimeELSOrderAdded_ReturnsExpectedResults()
         {
             // Arrange
             var atomicOrders = new List<AtomicOrder> { StubAtomicOrderBuilder.Build() };
@@ -33,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
-                new EntityId("NONE"),
+                new OrderPacketId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
@@ -45,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         }
 
         [Fact]
-        internal void Label_NewZonedDateTimeiationWithOneELSOrder_ReturnsCorrectLabel()
+        internal void Label_NewZonedDateTimeWithOneELSOrder_ReturnsCorrectLabel()
         {
             // Arrange
             var orderPacket = StubOrderPacketBuilder.Build();
@@ -64,16 +65,16 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var orderPacket = StubOrderPacketBuilder.ThreeUnitsAndExpireTime(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration());
 
             // Act
-            var expectedList = new List<EntityId>
+            var expectedList = new List<OrderId>
                                    {
-                                       new EntityId("EntryOrderId1"),
-                                       new EntityId("StoplossOrderId1"),
-                                       new EntityId("ProfitTargetOrderId1"),
-                                       new EntityId("EntryOrderId2"),
-                                       new EntityId("StoplossOrderId2"),
-                                       new EntityId("ProfitTargetOrderId2"),
-                                       new EntityId("EntryOrderId3"),
-                                       new EntityId("StoplossOrderId3")
+                                       new OrderId("EntryOrderId1"),
+                                       new OrderId("StoplossOrderId1"),
+                                       new OrderId("ProfitTargetOrderId1"),
+                                       new OrderId("EntryOrderId2"),
+                                       new OrderId("StoplossOrderId2"),
+                                       new OrderId("ProfitTargetOrderId2"),
+                                       new OrderId("EntryOrderId3"),
+                                       new OrderId("StoplossOrderId3")
                                    };
 
             var result = orderPacket.OrderIdList;
@@ -91,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 new Symbol("AUDUSD", Venue.FXCM),
                 new TradeType("TestTrade"),
                 new List<AtomicOrder>{StubAtomicOrderBuilder.Build()},
-                new EntityId("NONE"),
+                new OrderPacketId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             // Act

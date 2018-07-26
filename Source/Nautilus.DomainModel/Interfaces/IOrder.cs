@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Interfaces
 {
     using Nautilus.Core;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -21,15 +20,14 @@ namespace Nautilus.DomainModel.Interfaces
     public interface IOrder
     {
         /// <summary>
+        /// Gets the orders identifier.
+        /// </summary>
+        OrderId Id { get; }
+
+        /// <summary>
         /// Gets the orders symbol.
         /// </summary>
         Symbol Symbol { get; }
-
-        /// <summary>
-        /// Gets the orders identifier.
-        /// </summary>
-        EntityId<Order> Id { get; }
-
         /// <summary>
         /// Gets the orders identifier count.
         /// </summary>

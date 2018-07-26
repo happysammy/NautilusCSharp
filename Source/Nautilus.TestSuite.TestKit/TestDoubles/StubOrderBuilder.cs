@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -22,7 +23,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         private Symbol Symbol { get; set; } = new Symbol("AUDUSD", Venue.FXCM);
 
-        private EntityId OrderId { get; set; } = new EntityId("StubOrderId");
+        private OrderId OrderId { get; set; } = new OrderId("StubOrderId");
 
         private Label OrderLabel { get; set; } = new Label("StubOrderLabel");
 
@@ -47,7 +48,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public StubOrderBuilder WithOrderId(string orderId)
         {
-            this.OrderId = new EntityId(orderId);
+            this.OrderId = new OrderId(orderId);
 
             return this;
         }
@@ -104,7 +105,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public StubOrderBuilder EntryOrder(string orderId)
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
-            this.OrderId = new EntityId(orderId);
+            this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.BUY;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 0.00001m);
@@ -117,7 +118,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public StubOrderBuilder StopLossOrder(string orderId)
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
-            this.OrderId = new EntityId(orderId);
+            this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.79900m, 0.00001m);
@@ -129,7 +130,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public StubOrderBuilder ProfitTargetOrder(string orderId)
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
-            this.OrderId = new EntityId(orderId);
+            this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80100m, 0.00001m);

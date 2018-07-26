@@ -10,11 +10,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -43,7 +42,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 entryOrder.Symbol,
                 new TradeType("TestTrade"),
                 atomicOrders,
-                new EntityId("StubOrderPacket"),
+                new OrderPacketId("StubOrderPacket"),
                 StubZonedDateTime.UnixEpoch());
         }
 
@@ -85,7 +84,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 entryOrder1.Symbol,
                 new TradeType("TestTrade"),
                 atomicOrders,
-                new EntityId("StubOrderPacket"),
+                new OrderPacketId("StubOrderPacket"),
                 StubZonedDateTime.UnixEpoch());
         }
     }

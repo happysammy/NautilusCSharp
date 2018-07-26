@@ -10,9 +10,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new EntrySignal(
                 new Symbol("AUDUSD", Venue.GLOBEX),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             return new EntrySignal(
                 new Symbol("EURUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeProfile,
                 OrderSide.SELL,
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new ExitSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Long,
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new ExitSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Short,
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new ExitSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Long,
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new ExitSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Short,
@@ -115,31 +115,31 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static TrailingStopSignal LongTrailingStopSignal(
             TradeType tradeType,
-            Dictionary<int, Price> forUnitStoplossPrices,
+            Dictionary<int, Price> forUnitStopLossPrices,
             Period signalTimeOffset)
         {
             return new TrailingStopSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Long,
-                forUnitStoplossPrices,
+                forUnitStopLossPrices,
                 StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
 
         public static TrailingStopSignal ShortTrailingStopSignal(
             TradeType tradeType,
-            Dictionary<int, Price> forUnitStoplossPrices,
+            Dictionary<int, Price> forUnitStopLossPrices,
             Period signalTimeOffset)
         {
             return new TrailingStopSignal(
                 new Symbol("AUDUSD", Venue.FXCM),
-                new EntityId("TestSignal"),
+                new SignalId("TestSignal"),
                 new Label("TestTrade"),
                 tradeType,
                 MarketPosition.Short,
-                forUnitStoplossPrices,
+                forUnitStopLossPrices,
                 StubZonedDateTime.UnixEpoch() + signalTimeOffset.ToDuration());
         }
     }

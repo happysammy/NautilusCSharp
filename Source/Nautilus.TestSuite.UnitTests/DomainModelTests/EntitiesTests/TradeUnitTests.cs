@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
@@ -30,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             // Act
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 order,
                 order,
@@ -51,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 entryOrder,
                 stopLossOrder,
@@ -61,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var message = new OrderWorking(
                 entryOrder.Symbol,
                 entryOrder.Id,
-                new EntityId("NONE"),
+                new OrderId("NONE"),
                 entryOrder.Label,
                 entryOrder.Side,
                 entryOrder.Type,
@@ -86,23 +87,23 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
         {
             // Arrange
             var entryOrder = new StubOrderBuilder().EntryOrder("EntryOrderId").BuildStopMarketOrder();
-            var stoplossOrder = new StubOrderBuilder().StopLossOrder("StopLossOrderId").BuildStopMarketOrder();
+            var stopLossOrder = new StubOrderBuilder().StopLossOrder("StopLossOrderId").BuildStopMarketOrder();
             var profitTargetOrder = new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 entryOrder,
-                stoplossOrder,
+                stopLossOrder,
                 profitTargetOrder,
                 StubZonedDateTime.UnixEpoch());
 
             // Act
             tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
             tradeUnit.Apply(StubEventMessages.OrderFilledEvent(entryOrder));
-            tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(stoplossOrder));
+            tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder));
             tradeUnit.Apply(StubEventMessages.OrderWorkingEvent(profitTargetOrder));
-            tradeUnit.Apply(StubEventMessages.OrderFilledEvent(stoplossOrder));
+            tradeUnit.Apply(StubEventMessages.OrderFilledEvent(stopLossOrder));
             tradeUnit.Apply(StubEventMessages.OrderCancelledEvent(profitTargetOrder));
 
             // Assert
@@ -119,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var profitTargetOrder = Option<Order>.None();
 
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 entryOrder,
                 stopLossOrder,
@@ -146,7 +147,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 entryOrder,
                 stopLossOrder,
@@ -154,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var result = tradeUnit.GetOrderById(new EntityId("EntryOrderId"));
+            var result = tradeUnit.GetOrderById(new OrderId("EntryOrderId"));
 
             // Assert
             Assert.Equal(entryOrder, result);
@@ -169,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             var profitTargetOrder = new StubOrderBuilder().EntryOrder("ProfitTargetOrderId").BuildStopMarketOrder();
 
             var tradeUnit = new TradeUnit(
-                new EntityId("NONE"),
+                new TradeUnitId("NONE"),
                 LabelFactory.TradeUnit(1),
                 entryOrder,
                 stopLossOrder,
@@ -177,7 +178,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            var result = tradeUnit.GetOrderById(new EntityId("bad_order_id"));
+            var result = tradeUnit.GetOrderById(new OrderId("bad_order_id"));
 
             // Assert
             Assert.Equal(Option<Order>.None(), result);

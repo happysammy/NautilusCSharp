@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -41,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("NONE"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -82,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("NONE"),
+                new SignalId("NONE"),
                 new Label("Test Signal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -123,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("Test_Strategy"),
+                new SignalId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -165,7 +166,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("Test_Strategy"),
+                new SignalId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -206,7 +207,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
             // Arrange
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("Test_Strategy"),
+                new SignalId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
                 OrderSide.BUY,
@@ -241,7 +242,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             var signal = new EntrySignal(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new EntityId("Test_Strategy"),
+                new SignalId("Test_Strategy"),
                 new Label("Test Signal"),
                 tradeProfile,
                 OrderSide.BUY,

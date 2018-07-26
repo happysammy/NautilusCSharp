@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
@@ -70,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         {
             // Arrange
             // Act
-            var result = this.tradeBook.GetTradeForOrder(new EntityId("some_order_id"));
+            var result = this.tradeBook.GetTradeForOrder(new OrderId("some_order_id"));
 
             // Assert
             Assert.True(result.IsFailure);

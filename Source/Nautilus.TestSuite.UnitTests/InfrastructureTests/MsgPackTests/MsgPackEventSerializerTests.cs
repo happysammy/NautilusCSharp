@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
@@ -109,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var working = new OrderWorking(
                 order.Symbol,
                 order.Id,
-                new EntityId("B123456"),
+                new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
                 order.Type,
@@ -142,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var working = new OrderWorking(
                 order.Symbol,
                 order.Id,
-                new EntityId("B123456"),
+                new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
                 order.Type,
@@ -218,7 +219,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var modified = new OrderModified(
                 order.Symbol,
                 order.Id,
-                new EntityId("B123456"),
+                new OrderId("B123456"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
@@ -266,8 +267,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var partiallyFilled = new OrderPartiallyFilled(
                 order.Symbol,
                 order.Id,
-                new EntityId("E123456"),
-                new EntityId("P123456"),
+                new ExecutionId("E123456"),
+                new ExecutionId("P123456"),
                 order.Side,
                 Quantity.Create(order.Quantity / 2),
                 Quantity.Create(order.Quantity / 2),
@@ -296,8 +297,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var filled = new OrderFilled(
                 order.Symbol,
                 order.Id,
-                new EntityId("E123456"),
-                new EntityId("P123456"),
+                new ExecutionId("E123456"),
+                new ExecutionId("P123456"),
                 order.Side,
                 order.Quantity,
                 Price.Create(2, 1),
