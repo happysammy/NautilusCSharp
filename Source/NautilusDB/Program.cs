@@ -28,11 +28,11 @@ namespace NautilusDB
         public static void Main(string[] args)
         {
             var logger = new SerilogLogger(LogEventLevel.Information);
-            logger.Information(ServiceContext.AspCoreHost, "Building ASP.NET Core Web Host...");
+            logger.Information(NautilusService.AspCoreHost, "Building ASP.NET Core Web Host...");
 
             BuildWebHost(args).Run();
 
-            logger.Information(ServiceContext.AspCoreHost, "Closing and flushing Serilog...");
+            logger.Information(NautilusService.AspCoreHost, "Closing and flushing Serilog...");
             Log.CloseAndFlush();
         }
 

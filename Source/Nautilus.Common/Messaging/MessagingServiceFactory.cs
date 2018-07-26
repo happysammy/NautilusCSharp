@@ -14,6 +14,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -42,20 +43,17 @@ namespace Nautilus.Common.Messaging
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(store)));
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.CommandBus.ToString()),
+                LabelFactory.Component(Messaging.CommandBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.EventBus.ToString()),
+                LabelFactory.Component(Messaging.EventBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.DocumentBus.ToString()),
+                LabelFactory.Component(Messaging.DocumentBus.ToString()),
                 container,
                 messageStoreRef)));
 

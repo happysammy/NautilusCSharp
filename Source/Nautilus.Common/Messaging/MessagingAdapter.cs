@@ -10,6 +10,7 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using Akka.Actor;
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
@@ -31,7 +32,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="commandBusRef">The command bus actor address.</param>
         /// <param name="eventBusRef">The event bus actor address.</param>
         /// <param name="documentBusRef">The document bus actor address.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MessagingAdapter(
             IActorRef commandBusRef,
             IActorRef eventBusRef,
@@ -50,7 +50,6 @@ namespace Nautilus.Common.Messaging
         /// Sends the message switchboard to the message bus(s) for initialization.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <exception cref="ValidationException">Throws if the message is null.</exception>
         public void Send(InitializeMessageSwitchboard message)
         {
             Validate.NotNull(message, nameof(message));
@@ -68,15 +67,14 @@ namespace Nautilus.Common.Messaging
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        /// <exception cref="ValidationException">Throws if the message is null.</exception>
-        public void Send<T>(Enum receiver, T message, Enum sender)
+        public void Send<T>(NautilusService receiver, T message, NautilusService sender)
             where T : Message
         {
             Debug.NotNull(receiver, nameof(receiver));
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            this.Send(new ReadOnlyList<Enum>(receiver), message, sender);
+            this.Send(new ReadOnlyList<NautilusService>(receiver), message, sender);
         }
 
         /// <summary>
@@ -87,10 +85,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        /// <exception cref="ValidationException">Throws if the receivers are null, or if the message
-        /// is null.</exception>
-        /// <exception cref="InvalidOperationException">Throws if a receiver is unknown.</exception>
-        public void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender)
+        public void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
             where T : Message
         {
             Debug.NotNull(receivers, nameof(receivers));

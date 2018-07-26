@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Factories
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
@@ -27,27 +26,6 @@ namespace Nautilus.DomainModel.Factories
         public static Label Component(string componentName)
         {
             return new Label(componentName);
-        }
-
-        /// <summary>
-        /// Creates and returns a new and valid service <see cref="Label"/> from the given input.
-        /// </summary>
-        /// <param name="service">The black box service.</param>
-        /// <returns>A <see cref="Label"/>.</returns>
-        public static Label Service(Enum service)
-        {
-            return new Label(service + nameof(Service));
-        }
-
-        /// <summary>
-        /// Creates and returns a new and valid strategy <see cref="Label"/> from the given inputs.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <param name="tradeType">The trade type.</param>
-        /// <returns>A <see cref="Label"/>.</returns>
-        public static Label StrategyLabel(Symbol symbol, TradeType tradeType)
-        {
-            return new Label($"{symbol}({tradeType})");
         }
 
         /// <summary>
@@ -82,6 +60,17 @@ namespace Nautilus.DomainModel.Factories
         public static Label Component(string component, Symbol symbol, TradeType tradeType)
         {
             return new Label($"{component}-{symbol}-{tradeType}");
+        }
+
+        /// <summary>
+        /// Creates and returns a new and valid strategy <see cref="Label"/> from the given inputs.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <param name="tradeType">The trade type.</param>
+        /// <returns>A <see cref="Label"/>.</returns>
+        public static Label StrategyLabel(Symbol symbol, TradeType tradeType)
+        {
+            return new Label($"{symbol}({tradeType})");
         }
 
         /// <summary>

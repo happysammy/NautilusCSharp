@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -27,21 +28,21 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
-        /// <param name="service">The service name.</param>
+        /// <param name="serviceContext">The service name.</param>
         /// <param name="component">The component label.</param>
         /// <param name="container">The setup container.</param>
         protected ComponentBase(
-            Enum service,
+            NautilusService serviceContext,
             Label component,
             IComponentryContainer container)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
 
-            this.Service = service;
+            this.Service = serviceContext;
             this.Component = component;
             this.clock = container.Clock;
-            this.logger = container.LoggerFactory.Create(service, this.Component);
+            this.logger = container.LoggerFactory.Create(serviceContext, this.Component);
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.logger);
         }
@@ -49,7 +50,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the black box service context.
         /// </summary>
-        protected Enum Service { get; }
+        protected NautilusService Service { get; }
 
         /// <summary>
         /// Gets the components label.

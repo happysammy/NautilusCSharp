@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -29,17 +30,17 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
         /// </summary>
-        /// <param name="service">The service context.</param>
+        /// <param name="serviceContext">The service context.</param>
         /// <param name="component">The component label.</param>
         /// <param name="container">The container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         protected ComponentBusConnectedBase(
-            Enum service,
+            NautilusService serviceContext,
             Label component,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
-            : base(service, component, container)
+            : base(serviceContext, component, container)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
@@ -53,7 +54,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
-        protected void Send<T>(Enum receiver, ISendable<T> message)
+        protected void Send<T>(NautilusService receiver, ISendable<T> message)
             where T : class
         {
             Debug.NotNull(message, nameof(message));
@@ -83,7 +84,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
-        protected void Send<T>(ReadOnlyList<Enum> receivers, ISendable<T> message)
+        protected void Send<T>(ReadOnlyList<NautilusService> receivers, ISendable<T> message)
             where T : class
         {
             Debug.NotNull(receivers, nameof(receivers));

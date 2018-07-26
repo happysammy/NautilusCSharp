@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Akka.Actor;
+    using Nautilus.Common.Enums;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
@@ -33,7 +34,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="component">The component label.</param>
         /// <param name="setupContainer">The setup container.</param>
         protected ActorComponentBase(
-            Enum service,
+            NautilusService service,
             Label component,
             IComponentryContainer setupContainer)
         {
@@ -52,7 +53,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the components service context.
         /// </summary>
-        protected Enum Service { get; }
+        protected NautilusService Service { get; }
 
         /// <summary>
         /// Gets the components logger.

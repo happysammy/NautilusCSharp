@@ -37,7 +37,7 @@ namespace Nautilus.Scheduler
         /// <param name="container">The setup container.</param>
         public Scheduler(IComponentryContainer container)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component(nameof(Scheduler)),
                 container)
         {

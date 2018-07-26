@@ -20,7 +20,6 @@ namespace Nautilus.Database
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.Database.Enums;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -51,7 +50,7 @@ namespace Nautilus.Database
             Dictionary<Enum, IActorRef> addresses,
             IFixClient fixClient)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component(nameof(Database)),
                 setupContainer,
                 messagingAdapter)
@@ -87,7 +86,7 @@ namespace Nautilus.Database
             this.fixClient.RequestMarketDataSubscribeAll();
 
             var startSystem = new StartSystem(Guid.NewGuid(), this.TimeNow());
-            this.Send(DatabaseService.CollectionManager, startSystem);
+            this.Send(NautilusService.DataCollectionManager, startSystem);
 
             var barSpecs = new List<BarSpecification>
             {
@@ -112,7 +111,7 @@ namespace Nautilus.Database
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(DatabaseService.CollectionManager, subscribe);
+                    this.Send(NautilusService.DataCollectionManager, subscribe);
                 }
             }
         }

@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Enums;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -29,14 +30,14 @@ namespace Nautilus.BlackBox.Core.Build
         {
             Validate.NotNull(logger, nameof(logger));
 
-            logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
-            logger.Information(BlackBoxService.Core, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            logger.Information(BlackBoxService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            logger.Information(BlackBoxService.Core, "---------------------------------------------------------------------------");
-            logger.Information(BlackBoxService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            logger.Information(BlackBoxService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
-            logger.Information(BlackBoxService.Core, $"{Environment.OSVersion}");
-            logger.Information(BlackBoxService.Core, $"Microsoft.NET Framework (version {Environment.Version})");
+            logger.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
+            logger.Information(NautilusService.BlackBox, "NautilusBlackBox - Automated Algorithmic Trading Platform (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            logger.Information(NautilusService.BlackBox, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            logger.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
+            logger.Information(NautilusService.BlackBox, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            logger.Information(NautilusService.BlackBox, $"Is64BitProcess={Environment.Is64BitProcess}");
+            logger.Information(NautilusService.BlackBox, $"{Environment.OSVersion}");
+            logger.Information(NautilusService.BlackBox, $"Microsoft.NET Framework (version {Environment.Version})");
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -35,7 +36,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             BlackBoxContainer container,
             Instrument instrument)
             : base(
-            BlackBoxService.Portfolio,
+            NautilusService.Portfolio,
             LabelFactory.Component(nameof(PositionSizer), instrument.Symbol),
             container)
         {

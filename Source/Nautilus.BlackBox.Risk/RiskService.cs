@@ -13,6 +13,7 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
@@ -37,8 +38,8 @@ namespace Nautilus.BlackBox.Risk
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
-            BlackBoxService.Risk,
-            LabelFactory.Service(BlackBoxService.Risk),
+            NautilusService.Risk,
+            LabelFactory.Component(nameof(RiskService)),
             container,
             messagingAdapter)
         {
@@ -100,7 +101,7 @@ namespace Nautilus.BlackBox.Risk
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, tradeApproval);
+                this.Send(NautilusService.Portfolio, tradeApproval);
             });
         }
 

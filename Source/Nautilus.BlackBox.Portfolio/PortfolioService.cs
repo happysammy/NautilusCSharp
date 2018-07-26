@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
@@ -39,8 +40,8 @@ namespace Nautilus.BlackBox.Portfolio
             IMessagingAdapter messagingAdapter,
             SecurityPortfolioStore portfolioStore)
             : base(
-            BlackBoxService.Portfolio,
-            LabelFactory.Service(BlackBoxService.Portfolio),
+            NautilusService.Portfolio,
+            LabelFactory.Component(nameof(PortfolioService)),
             container,
             messagingAdapter)
         {

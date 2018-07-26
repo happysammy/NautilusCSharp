@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
@@ -46,24 +45,21 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             ActorSystem actorSystem,
             IComponentryContainer container)
         {
-            var messageWarhouse = new InMemoryMessageStore();
-            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarhouse))); // TODO: make disposable so that test don't break
+            var messageWarehouse = new InMemoryMessageStore();
+            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))); // TODO: make disposable so that test don't break
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.CommandBus.ToString()),
+                new Label(Messaging.CommandBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.EventBus.ToString()),
+                new Label(Messaging.EventBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.DocumentBus.ToString()),
+                new Label(Messaging.DocumentBus.ToString()),
                 container,
                 messageStoreRef)));
 
@@ -71,12 +67,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { BlackBoxService.AlphaModel, new StandardOutLogger() },
-                { BlackBoxService.Brokerage, new StandardOutLogger() },
-                { BlackBoxService.Data, new StandardOutLogger() },
-                { BlackBoxService.Portfolio, new StandardOutLogger() },
-                { BlackBoxService.Risk, new StandardOutLogger() },
-                { BlackBoxService.Execution, new StandardOutLogger() }
+                { NautilusService.AlphaModel, new StandardOutLogger() },
+                { NautilusService.Brokerage, new StandardOutLogger() },
+                { NautilusService.Data, new StandardOutLogger() },
+                { NautilusService.Portfolio, new StandardOutLogger() },
+                { NautilusService.Risk, new StandardOutLogger() },
+                { NautilusService.Execution, new StandardOutLogger() }
             };
 
             var switchboard = new Switchboard(addresses);
@@ -88,7 +84,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             messagingAdapter.Send(initializeSwitchboard);
 
             this.MessagingAdapter = messagingAdapter;
-            this.InMemoryMessageStore = messageWarhouse;
+            this.InMemoryMessageStore = messageWarehouse;
         }
     }
 }

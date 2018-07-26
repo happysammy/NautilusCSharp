@@ -12,9 +12,9 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
@@ -23,7 +23,7 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides a message end point into the <see cref="BlackBoxService.AlphaModel"/> service.
+    /// Provides a message end point into the <see cref="NautilusService.AlphaModel"/> service.
     /// </summary>
     public sealed class AlphaModelService : ActorComponentBusConnectedBase
     {
@@ -42,8 +42,8 @@ namespace Nautilus.BlackBox.AlphaModel
             IMessagingAdapter messagingAdapter,
             AlphaStrategyModuleStore alphaStrategyModuleStore)
             : base(
-            BlackBoxService.AlphaModel,
-            LabelFactory.Service(BlackBoxService.AlphaModel),
+            NautilusService.AlphaModel,
+            LabelFactory.Component(nameof(AlphaModelService)),
             container,
             messagingAdapter)
         {
@@ -114,8 +114,8 @@ namespace Nautilus.BlackBox.AlphaModel
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, createPortfolio);
-                this.Send(BlackBoxService.Data, registerSymbolDataType);
+                this.Send(NautilusService.Portfolio, createPortfolio);
+                this.Send(NautilusService.Data, registerSymbolDataType);
 
                 this.Log.Debug($"{strategyLabel} created");
             });

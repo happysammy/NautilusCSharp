@@ -25,14 +25,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             var message1 = new SystemStatusResponse(
-                LabelFactory.Service(ServiceContext.CommandBus),
-                SystemStatus.OK,
+                LabelFactory.Component(Messaging.CommandBus.ToString()),
+                ComponentStatus.OK,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new SystemStatusResponse(
-                LabelFactory.Service(ServiceContext.CommandBus),
-                SystemStatus.OK,
+                LabelFactory.Component(Messaging.CommandBus.ToString()),
+                ComponentStatus.OK,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -70,8 +70,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             var guid = Guid.NewGuid();
             var message = new SystemStatusResponse(
-                LabelFactory.Service(ServiceContext.CommandBus),
-                SystemStatus.OK,
+                LabelFactory.Component(Messaging.CommandBus.ToString()),
+                ComponentStatus.OK,
                 guid,
                 StubZonedDateTime.UnixEpoch());
 
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var result = message.ToString();
 
             // Assert
-            Assert.Equal($"{nameof(SystemStatusResponse)}-CommandBusService=OK", result);
+            Assert.Equal($"{nameof(SystemStatusResponse)}-CommandBus=OK", result);
         }
     }
 }

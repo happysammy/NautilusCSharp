@@ -21,7 +21,6 @@ namespace Nautilus.Database.Build
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Enums;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
     using Nautilus.Database.Publishers;
@@ -67,7 +66,7 @@ namespace Nautilus.Database.Build
             Validate.NotNull(symbols, nameof(symbols));
             Validate.NotNull(barSpecs, nameof(barSpecs));
 
-            logger.Information(ServiceContext.Database, $"Starting {nameof(Database)} builder...");
+            logger.Information(NautilusService.Data, $"Starting {nameof(Database)} builder...");
             StartupVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
@@ -119,12 +118,12 @@ namespace Nautilus.Database.Build
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { DatabaseService.Scheduler, schedulerRef },
-                { DatabaseService.TaskManager, databaseTaskActorRef },
-                { DatabaseService.CollectionManager, dataCollectionActorRef },
-                { DatabaseService.BarAggregationController, barAggregationControllerRef},
-                { DatabaseService.TickPublisher, tickPublisherRef},
-                { DatabaseService.BarPublisher, barPublisherRef}
+                { NautilusService.Scheduler, schedulerRef },
+                { NautilusService.DatabaseTaskManager, databaseTaskActorRef },
+                { NautilusService.DataCollectionManager, dataCollectionActorRef },
+                { NautilusService.BarAggregationController, barAggregationControllerRef},
+                { NautilusService.TickPublisher, tickPublisherRef},
+                { NautilusService.BarPublisher, barPublisherRef}
             };
 
             var fixClient = fixClientFactory.Create(
@@ -137,9 +136,7 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 fixClient,
                 instrumentRepository,
-                CurrencyCode.GBP,
-                ServiceContext.FIX,
-                ServiceContext.FIX);
+                CurrencyCode.GBP);
 
             fixClient.InitializeGateway(fixGateway);
             instrumentRepository.CacheAll();

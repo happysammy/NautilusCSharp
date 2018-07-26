@@ -47,7 +47,7 @@ namespace Nautilus.Database.Collectors
             IBarDataReader dataReader,
             DataCollectionSchedule collectionSchedule)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {

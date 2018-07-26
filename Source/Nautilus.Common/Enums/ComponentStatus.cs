@@ -11,20 +11,20 @@ namespace Nautilus.Common.Enums
     /// <summary>
     /// The system status enumeration.
     /// </summary>
-    public enum SystemStatus
+    public enum ComponentStatus
     {
         /// <summary>
-        /// The system is running normally.
+        /// The component is running normally.
         /// </summary>
         OK = 0,
 
         /// <summary>
-        /// The system is suspended (has not failed).
+        /// The component is suspended (has not failed).
         /// </summary>
         Suspended = 1,
 
         /// <summary>
-        /// The system has failed and will not process further work.
+        /// The component has failed and will not process further work.
         /// </summary>
         Failed = 2,
     }

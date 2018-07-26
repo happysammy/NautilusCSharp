@@ -15,15 +15,27 @@ namespace Nautilus.RabbitMQ
     {
         private const string LocalHostString = "localhost";
         private const int DefaultPortInt = 5672;
+        private const string ExecutionCommandsString = "nautilus.execution.commands";
+        private const string ExecutionEventsString = "nautilus.execution.events";
 
         /// <summary>
         /// Gets the <see cref="RabbitMQ"/> local host string.
         /// </summary>
-        public static string LocalIp => LocalHostString;
+        public static string LocalHost => LocalHostString;
 
         /// <summary>
         /// Gets the <see cref="RabbitMQ"/> default port.
         /// </summary>
         public static int DefaultPort => DefaultPortInt;
+
+        /// <summary>
+        /// Gets the <see cref="RabbitMQ"/> execution commands exchange name.
+        /// </summary>
+        public static string ExchangeExecutionCommands => ExecutionCommandsString;
+
+        /// <summary>
+        /// Gets the <see cref="RabbitMQ"/> execution events exchange name.
+        /// </summary>
+        public static string ExchangeExecutionEvents => ExecutionEventsString;
     }
 }

@@ -36,8 +36,6 @@ namespace Nautilus.Common
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
         private readonly CurrencyCode accountCurrency;
-        private readonly Enum riskService;
-        private readonly Enum portfolioService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
@@ -47,18 +45,14 @@ namespace Nautilus.Common
         /// <param name="fixClient">The trade client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="accountCurrency">The FIX account currency.</param>
-        /// <param name="riskService">The risk service address.</param>
-        /// <param name="portfolioService">the portfolio service address.</param>
         public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient,
             IInstrumentRepository instrumentRepository,
-            CurrencyCode accountCurrency,
-            Enum riskService,
-            Enum portfolioService)
+            CurrencyCode accountCurrency)
             : base(
-                ServiceContext.FIX,
+                NautilusService.FIX,
                 new Label(nameof(FixGateway)),
                 container,
                 messagingAdapter)
@@ -71,8 +65,6 @@ namespace Nautilus.Common
             this.fixClient = fixClient;
             this.instrumentRepository = instrumentRepository;
             this.accountCurrency = accountCurrency;
-            this.riskService = riskService;
-            this.portfolioService = portfolioService;
         }
 
         /// <summary>
@@ -347,7 +339,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     timestamp);
 
-                this.Send(this.portfolioService, accountEvent);
+                this.Send(NautilusService.Portfolio, accountEvent);
 
                 this.Log.Debug(
                     $"AccountReport: " +
@@ -387,7 +379,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderRejected);
+                this.Send(NautilusService.Portfolio, orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -433,7 +425,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderCancelReject);
+                this.Send(NautilusService.Portfolio, orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -476,7 +468,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderCancelled);
+                this.Send(NautilusService.Portfolio, orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {orderLabel} " +
@@ -525,7 +517,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderModified);
+                this.Send(NautilusService.Portfolio, orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {orderLabel} " +
@@ -592,7 +584,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderWorking);
+                this.Send(NautilusService.Portfolio, orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -643,7 +635,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderExpired);
+                this.Send(NautilusService.Portfolio, orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {orderLabel} " +
@@ -706,7 +698,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderFilled);
+                this.Send(NautilusService.Portfolio, orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: {orderLabel} " +
@@ -776,7 +768,7 @@ namespace Nautilus.Common
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(this.portfolioService, orderPartiallyFilled);
+                this.Send(NautilusService.Portfolio, orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: {orderLabel} " +

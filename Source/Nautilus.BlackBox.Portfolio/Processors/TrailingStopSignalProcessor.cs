@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -43,7 +44,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             Instrument instrument,
             ITradeBook tradeBook)
             : base(
-            BlackBoxService.Portfolio,
+            NautilusService.Portfolio,
             LabelFactory.Component(nameof(TrailingStopSignalProcessor), instrument.Symbol),
             container,
             messagingAdapter)
@@ -90,7 +91,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                                     this.NewGuid(),
                                     this.TimeNow());
 
-                                this.Send(BlackBoxService.Execution, modifyOrder);
+                                this.Send(NautilusService.Execution, modifyOrder);
                             }
                         }
                     }

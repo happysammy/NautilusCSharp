@@ -8,7 +8,7 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
 
@@ -25,7 +25,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        void Send<T>(Enum receiver, T message, Enum sender)
+        void Send<T>(NautilusService receiver, T message, NautilusService sender)
             where T : Message;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender)
+        void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
             where T : Message;
     }
 }

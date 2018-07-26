@@ -16,6 +16,7 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
@@ -39,7 +40,7 @@ namespace Nautilus.BlackBox.Data.Market
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
-            BlackBoxService.Data,
+            NautilusService.Data,
             new Label(nameof(MarketDataPort)),
             container,
             messagingAdapter)

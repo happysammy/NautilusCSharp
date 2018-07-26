@@ -48,7 +48,7 @@ namespace Nautilus.Brokerage.FXCM
             IComponentryContainer container,
             ITickProcessor tickProcessor)
             : base(
-                ServiceContext.FIX,
+                NautilusService.FIX,
                 LabelFactory.Component(nameof(FxcmFixMessageHandler)),
                 container)
         {

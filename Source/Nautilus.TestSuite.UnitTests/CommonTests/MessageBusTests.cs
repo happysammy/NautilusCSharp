@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
@@ -43,8 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
 
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                ServiceContext.Messaging,
-                new Label(ServiceContext.CommandBus.ToString()),
+                new Label(Messaging.CommandBus.ToString()),
                 setupContainer,
                 new StandardOutLogger())));
 
@@ -56,11 +54,11 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { BlackBoxService.AlphaModel, mockAlphaModelServiceRef },
-                { BlackBoxService.Data, mockDataServiceRef },
-                { BlackBoxService.Execution, mockExecutionServiceRef },
-                { BlackBoxService.Portfolio, mockPortfolioServiceRef },
-                { BlackBoxService.Risk, mockRiskServiceRef }
+                { NautilusService.AlphaModel, mockAlphaModelServiceRef },
+                { NautilusService.Data, mockDataServiceRef },
+                { NautilusService.Execution, mockExecutionServiceRef },
+                { NautilusService.Portfolio, mockPortfolioServiceRef },
+                { NautilusService.Risk, mockRiskServiceRef }
             };
 
             this.messageBusRef.Tell(new InitializeMessageSwitchboard(

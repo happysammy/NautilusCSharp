@@ -32,7 +32,7 @@ namespace Nautilus.Common.Messages
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public SystemStatusResponse(
             Label componentName,
-            SystemStatus status,
+            ComponentStatus status,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
@@ -53,7 +53,7 @@ namespace Nautilus.Common.Messages
         /// <summary>
         /// Gets the messages system status.
         /// </summary>
-        public SystemStatus Status { get; }
+        public ComponentStatus Status { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="SystemStatusResponse"/> message.

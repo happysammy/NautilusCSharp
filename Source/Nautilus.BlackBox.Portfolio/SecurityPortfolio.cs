@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
@@ -58,7 +59,7 @@ namespace Nautilus.BlackBox.Portfolio
             ExitSignalProcessor exitSignalProcessor,
             TrailingStopSignalProcessor trailingStopSignalProcessor)
             : base(
-            BlackBoxService.Portfolio,
+            NautilusService.Portfolio,
             LabelFactory.Component(nameof(SecurityPortfolio), instrument.Symbol),
             container,
             messagingAdapter)
@@ -122,7 +123,7 @@ namespace Nautilus.BlackBox.Portfolio
                 this.orderExpiryController.AddCounters(@event.OrderPacket, @event.BarsValid);
 
                 this.Send(
-                    BlackBoxService.Execution,
+                    NautilusService.Execution,
                     new SubmitTrade(
                         @event.OrderPacket,
                         this.instrument.MinStopDistance,

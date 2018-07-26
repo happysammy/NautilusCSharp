@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Execution
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Factories;
@@ -37,8 +38,8 @@ namespace Nautilus.BlackBox.Execution
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
-            BlackBoxService.Execution,
-            LabelFactory.Service(BlackBoxService.Execution),
+            NautilusService.Execution,
+            LabelFactory.Component(nameof(ExecutionService)),
             container,
             messagingAdapter)
         {

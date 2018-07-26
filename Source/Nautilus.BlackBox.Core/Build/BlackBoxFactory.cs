@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
@@ -89,17 +90,15 @@ namespace Nautilus.BlackBox.Core.Build
                 messagingAdapter,
                 brokerageClient,
                 instrumentRepository,
-                account.Currency,
-                BlackBoxService.Risk,
-                BlackBoxService.Portfolio);
+                account.Currency);
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
-                { BlackBoxService.AlphaModel, alphaModelServiceRef },
-                { BlackBoxService.Data, dataServiceRef },
-                { BlackBoxService.Execution, executionServiceRef },
-                { BlackBoxService.Portfolio , portfolioServiceRef },
-                { BlackBoxService.Risk, riskServiceRef }
+                { NautilusService.AlphaModel, alphaModelServiceRef },
+                { NautilusService.Data, dataServiceRef },
+                { NautilusService.Execution, executionServiceRef },
+                { NautilusService.Portfolio , portfolioServiceRef },
+                { NautilusService.Risk, riskServiceRef }
             };
 
             return new BlackBox(

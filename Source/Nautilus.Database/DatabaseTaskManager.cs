@@ -40,7 +40,7 @@ namespace Nautilus.Database
             IComponentryContainer container,
             IBarRepository barRepository)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component(nameof(DatabaseTaskManager)),
                 container)
         {

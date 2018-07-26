@@ -31,7 +31,7 @@ namespace Nautilus.Database.Publishers
         /// <param name="publisher">The tick publisher.</param>
         public TickPublisher(IComponentryContainer container, IChannelPublisher publisher)
         : base(
-            ServiceContext.Database,
+            NautilusService.Data,
             LabelFactory.Component(nameof(TickPublisher)),
             container)
         {

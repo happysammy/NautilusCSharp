@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
@@ -50,8 +51,8 @@ namespace Nautilus.BlackBox.Data
             IMessagingAdapter messagingAdapter,
             IScheduler scheduler)
             : base(
-            BlackBoxService.Data,
-            LabelFactory.Service(BlackBoxService.Data),
+            NautilusService.Data,
+            LabelFactory.Component(nameof(DataService)),
             container,
             messagingAdapter)
         {

@@ -19,7 +19,6 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Database.Enums;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
@@ -65,7 +64,7 @@ namespace Nautilus.Database.Aggregators
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
-            ServiceContext.Database,
+            NautilusService.Data,
             LabelFactory.Component(nameof(BarAggregationController)),
             container,
             messagingAdapter)
@@ -167,7 +166,7 @@ namespace Nautilus.Database.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.Scheduler, createJob);
+            this.Send(NautilusService.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
         }
 
@@ -191,7 +190,7 @@ namespace Nautilus.Database.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.Scheduler, createJob);
+            this.Send(NautilusService.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
@@ -265,7 +264,7 @@ namespace Nautilus.Database.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(DatabaseService.Scheduler, createJob);
+                this.Send(NautilusService.Scheduler, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -328,7 +327,7 @@ namespace Nautilus.Database.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(DatabaseService.Scheduler, removeJob);
+                this.Send(NautilusService.Scheduler, removeJob);
             }
         }
 
@@ -457,7 +456,7 @@ namespace Nautilus.Database.Aggregators
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(DatabaseService.Scheduler, resume);
+                    this.Send(NautilusService.Scheduler, resume);
                 }
 
                 // Tell all bar aggregators the market is now open.
@@ -482,7 +481,7 @@ namespace Nautilus.Database.Aggregators
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(DatabaseService.Scheduler, pause);
+                    this.Send(NautilusService.Scheduler, pause);
                 }
 
                 // Tell all aggregators the market is now closed.
@@ -506,7 +505,7 @@ namespace Nautilus.Database.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.CollectionManager, barClosed);
+            this.Send(NautilusService.DataCollectionManager, barClosed);
         }
     }
 }

@@ -8,11 +8,11 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using System;
     using Akka.Actor;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -35,24 +35,21 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
         /// </summary>
-        /// <param name="serviceContext">The service context.</param>
         /// <param name="component">The component.</param>
         /// <param name="container">The container.</param>
         /// <param name="messageStoreRef">The message store actor address.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MessageBus(
-            Enum serviceContext,
             Label component,
             IComponentryContainer container,
             IActorRef messageStoreRef)
         {
-            Validate.NotNull(serviceContext, nameof(serviceContext));
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messageStoreRef, nameof(messageStoreRef));
 
             this.clock = container.Clock;
-            this.log = container.LoggerFactory.Create(serviceContext, component);
+            this.log = container.LoggerFactory.Create(NautilusService.Messaging, component);
             this.messageStore = messageStoreRef;
             this.commandHandler = new CommandHandler(this.log);
 

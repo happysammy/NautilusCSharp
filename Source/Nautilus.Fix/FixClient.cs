@@ -51,8 +51,8 @@ namespace Nautilus.Fix
             IReadOnlyList<Symbol> symbols,
             IReadOnlyDictionary<string, int> tickSizeIndex)
         : base(
-            ServiceContext.FIX,
-            LabelFactory.Service(ServiceContext.FIX),
+            NautilusService.FIX,
+            LabelFactory.Component(nameof(FixClient)),
             container,
             tickProcessor,
             fixMessageHandler,

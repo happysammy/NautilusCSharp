@@ -38,7 +38,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="accountNumber">The FIX account number.</param>
         public FxcmFixMessageRouter(IComponentryContainer container, string accountNumber)
         : base(
-            ServiceContext.FIX,
+            NautilusService.FIX,
             LabelFactory.Component(nameof(FxcmFixMessageRouter)),
             container)
         {

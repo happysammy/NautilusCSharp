@@ -17,7 +17,6 @@ namespace Nautilus.Database
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages;
     using Nautilus.Core.Collections;
-    using Nautilus.Database.Enums;
     using Nautilus.Database.Messages.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Messages.Events;
@@ -56,7 +55,7 @@ namespace Nautilus.Database
             IReadOnlyList<Resolution> resolutionsToPersist,
             int barRollingWindow)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component(nameof(DataCollectionManager)),
                 container,
                 messagingAdapter)
@@ -93,7 +92,7 @@ namespace Nautilus.Database
 
             this.CreateTrimBarDataJob();
 
-            this.Send(DatabaseService.BarAggregationController, message);
+            this.Send(NautilusService.BarAggregationController, message);
         }
 
         private void OnMessage(JobCreated message)
@@ -121,7 +120,7 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Send(DatabaseService.BarAggregationController, message);
+            this.Send(NautilusService.BarAggregationController, message);
         }
 
         private void OnMessage(CollectData<BarType> message)
@@ -136,7 +135,7 @@ namespace Nautilus.Database
             Debug.NotNull(message, nameof(message));
 
             this.barPublisher.Tell(message.Data);
-            this.Send(DatabaseService.TaskManager, message);
+            this.Send(NautilusService.DatabaseTaskManager, message);
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message)
@@ -200,7 +199,7 @@ namespace Nautilus.Database
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.TaskManager, trimCommand);
+            this.Send(NautilusService.DatabaseTaskManager, trimCommand);
             this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 
@@ -224,7 +223,7 @@ namespace Nautilus.Database
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DatabaseService.Scheduler, createJob);
+            this.Send(NautilusService.Scheduler, createJob);
             this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
 

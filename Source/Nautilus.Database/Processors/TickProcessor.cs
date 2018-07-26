@@ -38,7 +38,7 @@ namespace Nautilus.Database.Processors
             IComponentryContainer container,
             IActorRef tickPublisher,
             IActorRef barAggregationControllerRef) : base(
-            ServiceContext.Database,
+            NautilusService.Data,
             LabelFactory.Component(nameof(TickProcessor)),
             container)
         {

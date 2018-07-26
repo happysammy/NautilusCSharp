@@ -32,7 +32,7 @@ namespace Nautilus.Database.Publishers
         /// <param name="publisher">The bar publisher.</param>
         public BarPublisher(IComponentryContainer container, IChannelPublisher publisher)
             : base(
-                ServiceContext.Database,
+                NautilusService.Data,
                 LabelFactory.Component(nameof(BarPublisher)),
                 container)
         {

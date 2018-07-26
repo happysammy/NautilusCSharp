@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
@@ -61,7 +62,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             ExitSignalGenerator exitSignalGenerator,
             TrailingStopSignalGenerator trailingStopSignalGenerator)
             : base(
-            BlackBoxService.AlphaModel,
+            NautilusService.AlphaModel,
             LabelFactory.Component(
                 nameof(AlphaStrategyModule),
                 alphaStrategy.Instrument.Symbol,
@@ -219,7 +220,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, signalEvent);
+                this.Send(NautilusService.Portfolio, signalEvent);
             }
 
             if (trailingStopSignalLong.HasNoValue)
@@ -236,7 +237,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, signalEvent);
+                this.Send(NautilusService.Portfolio, signalEvent);
             }
 
             if (trailingStopSignalShort.HasNoValue)
@@ -256,7 +257,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, signalEvent);
+                this.Send(NautilusService.Portfolio, signalEvent);
             }
         }
 
@@ -279,7 +280,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, signalEvent);
+                this.Send(NautilusService.Portfolio, signalEvent);
             }
 
             if (exitSignalShort.HasNoValue)
@@ -294,7 +295,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(BlackBoxService.Portfolio, signalEvent);
+                this.Send(NautilusService.Portfolio, signalEvent);
             }
         }
     }

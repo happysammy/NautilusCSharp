@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
@@ -32,8 +33,8 @@ namespace Nautilus.Common.Messaging
         /// <param name="envelopeId">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
-            ReadOnlyList<Enum> receivers,
-            Enum sender,
+            ReadOnlyList<NautilusService> receivers,
+            NautilusService sender,
             T message,
             Guid envelopeId,
             ZonedDateTime timestamp)
@@ -54,12 +55,12 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelope receiver(s).
         /// </summary>
-        public ReadOnlyList<Enum> Receivers { get; }
+        public ReadOnlyList<NautilusService> Receivers { get; }
 
         /// <summary>
         /// Gets the envelope sender.
         /// </summary>
-        public Enum Sender { get; }
+        public NautilusService Sender { get; }
 
         /// <summary>
         /// Gets the envelope identifier.

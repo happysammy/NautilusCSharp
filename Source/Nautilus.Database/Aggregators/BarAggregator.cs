@@ -58,7 +58,7 @@ namespace Nautilus.Database.Aggregators
             Symbol symbol,
             bool isMarketOpen)
             : base(
-            ServiceContext.Database,
+            NautilusService.Data,
             LabelFactory.Component(
                 nameof(BarAggregator),
                 symbol),

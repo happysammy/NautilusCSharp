@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Entities;
@@ -43,7 +44,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             IMessagingAdapter messagingAdapter,
             Symbol symbol)
             : base(
-            BlackBoxService.Portfolio,
+            NautilusService.Portfolio,
             LabelFactory.Component(nameof(OrderExpiryController), symbol),
             container,
             messagingAdapter)
@@ -83,7 +84,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                             this.NewGuid(),
                             this.TimeNow());
 
-                        this.Send(BlackBoxService.Execution, cancelOrder);
+                        this.Send(NautilusService.Execution, cancelOrder);
                     }
                 }
             }

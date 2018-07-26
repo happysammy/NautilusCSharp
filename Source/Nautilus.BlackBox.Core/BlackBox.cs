@@ -17,14 +17,15 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -66,8 +67,8 @@ namespace Nautilus.BlackBox.Core
             IBrokerageAccount account,
             IRiskModel riskModel)
             : base(
-                BlackBoxService.Core,
-                new Label(nameof(BlackBox)),
+                NautilusService.BlackBox,
+                LabelFactory.Component(nameof(BlackBox)),
                 container,
                 messagingAdapter)
         {
@@ -95,14 +96,14 @@ namespace Nautilus.BlackBox.Core
                 this.TimeNow()));
 
             this.Send(
-                new ReadOnlyList<Enum>(new List<Enum> { BlackBoxService.Data, BlackBoxService.Execution }),
+                new ReadOnlyList<NautilusService>(new List<NautilusService> { NautilusService.Data, NautilusService.Execution }),
                 new InitializeGateway(
                     this.fixGateway,
                     this.NewGuid(),
                     this.TimeNow()));
 
             this.Send(
-                BlackBoxService.Risk,
+                NautilusService.Risk,
                 new InitializeRiskModel(
                     account,
                     riskModel,
@@ -175,7 +176,7 @@ namespace Nautilus.BlackBox.Core
                 this.startedStrategies.Add(strategy);
 
                 this.Send(
-                    BlackBoxService.AlphaModel,
+                    NautilusService.AlphaModel,
                     new CreateAlphaStrategyModule(
                         strategy,
                         this.NewGuid(),
@@ -224,7 +225,7 @@ namespace Nautilus.BlackBox.Core
                 Validate.NotNull(strategy, nameof(strategy));
 
                 this.Send(
-                    BlackBoxService.AlphaModel,
+                    NautilusService.AlphaModel,
                     new RemoveAlphaStrategyModule(
                         strategy.Instrument.Symbol,
                         strategy.TradeProfile.TradeType,

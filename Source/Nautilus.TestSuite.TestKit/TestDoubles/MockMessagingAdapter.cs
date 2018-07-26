@@ -1,7 +1,7 @@
 ﻿namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using System;
     using Akka.Actor;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
@@ -15,12 +15,14 @@
             this.testActorRef = testActorRef;
         }
 
-        public void Send<T>(Enum receiver, T message, Enum sender) where T : Message
+        public void Send<T>(NautilusService receiver, T message, NautilusService sender)
+            where T : Message
         {
             this.testActorRef.Tell(message);
         }
 
-        public void Send<T>(ReadOnlyList<Enum> receivers, T message, Enum sender) where T : Message
+        public void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
+            where T : Message
         {
             this.testActorRef.Tell(message);
         }
