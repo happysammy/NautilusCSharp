@@ -9,7 +9,7 @@
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
     /// The sealed <see cref="OrderExpiryCounter"/> class.
@@ -23,7 +23,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="barsValid">The bars valid.</param>
         /// <exception cref="ValidationException">Throws if the order is null, or if the bars valid
         /// is zero or negative.</exception>
-        public OrderExpiryCounter(Order order, int barsValid)
+        public OrderExpiryCounter(IOrder order, int barsValid)
         {
             Validate.NotNull(order, nameof(order));
             Validate.Int32NotOutOfRange(barsValid, nameof(barsValid), 0, int.MaxValue, RangeEndPoints.Exclusive);
@@ -35,7 +35,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <summary>
         /// Gets the order expiry counters order.
         /// </summary>
-        public Order Order { get; }
+        public IOrder Order { get; }
 
         /// <summary>
         /// Gets the order expiry counters bars valid.

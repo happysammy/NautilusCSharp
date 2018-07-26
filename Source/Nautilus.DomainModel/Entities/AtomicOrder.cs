@@ -22,6 +22,10 @@ namespace Nautilus.DomainModel.Entities
     [Immutable]
     public sealed class AtomicOrder : Entity<AtomicOrder>, IAtomicOrder
     {
+        private readonly Order entry;
+        private readonly Order stopLoss;
+        private readonly Option<Order> profitTarget;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicOrder" /> class.
         /// </summary>
@@ -43,10 +47,13 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotNull(stopLoss, nameof(stopLoss));
             Debug.NotNull(profitTarget, nameof(profitTarget));
 
+            this.entry = entry;
+            this.stopLoss = stopLoss;
+            this.profitTarget = profitTarget;
             this.TradeType = tradeType;
             this.Entry = entry;
             this.StopLoss = stopLoss;
-            this.ProfitTarget = profitTarget;
+            this.ProfitTarget = Option<IOrder>.Some(profitTarget.Value);
         }
 
         /// <summary>
@@ -62,16 +69,34 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders entry order.
         /// </summary>
-        public Order Entry { get; }
+        public IOrder Entry { get; }
 
         /// <summary>
         /// Gets the atomic orders stop-loss order.
         /// </summary>
-        public Order StopLoss { get; }
+        public IOrder StopLoss { get; }
 
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public Option<Order> ProfitTarget { get; }
+        public Option<IOrder> ProfitTarget { get; }
+
+        /// <summary>
+        /// Return the atomic orders concrete entry order.
+        /// </summary>
+        /// <returns>The entry order.</returns>
+        public Order GetEntry() => this.entry;
+
+        /// <summary>
+        /// Return the atomic orders concrete stop-loss order.
+        /// </summary>
+        /// <returns>The entry order.</returns>
+        public Order GetStopLoss() => this.stopLoss;
+
+        /// <summary>
+        /// Return the atomic orders concrete profit-target order.
+        /// </summary>
+        /// <returns>The entry order.</returns>
+        public Option<Order> GetProfitTarget() => this.profitTarget;
     }
 }
