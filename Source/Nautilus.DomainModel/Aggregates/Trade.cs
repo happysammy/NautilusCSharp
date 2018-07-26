@@ -17,6 +17,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -40,10 +41,10 @@ namespace Nautilus.DomainModel.Aggregates
         /// struct argument is the default value.</exception>
         public Trade(
             Symbol symbol,
-            EntityId tradeId,
+            TradeId tradeId,
             TradeType tradeType,
             ReadOnlyList<TradeUnit> tradeUnits,
-            ReadOnlyList<EntityId> orderIdList,
+            ReadOnlyList<OrderId> orderIdList,
             ZonedDateTime timestamp)
             : base(tradeId, timestamp)
         {
@@ -67,11 +68,6 @@ namespace Nautilus.DomainModel.Aggregates
         public Symbol Symbol { get; }
 
         /// <summary>
-        /// Gets the trades identifier.
-        /// </summary>
-        public EntityId TradeId => this.Id;
-
-        /// <summary>
         /// Gets the trades type.
         /// </summary>
         public TradeType TradeType { get; }
@@ -84,7 +80,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the trades order identifier list.
         /// </summary>
-        public ReadOnlyList<EntityId> OrderIdList { get; }
+        public ReadOnlyList<OrderId> OrderIdList { get; }
 
         /// <summary>
         /// Gets the trades total quantity.
@@ -113,7 +109,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="Option{Order}"/>.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the given argument is null.</exception>
-        public Option<Order> GetOrderById(EntityId orderId)
+        public Option<Order> GetOrderById(OrderId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 

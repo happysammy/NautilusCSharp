@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -115,20 +116,20 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
             sellSignals.AddRange(
                 from result in algorithmResults
                 where result.HasValue
-                let stoplossPrice = this.stopLossAlgorithm.CalculateSell(result.Value.EntryPrice)
-                let profitTargets = this.profitTargetAlgorithm.CalculateSell(result.Value.EntryPrice, stoplossPrice)
-                select this.BuildSignal(result.Value, stoplossPrice, profitTargets));
+                let stopLossPrice = this.stopLossAlgorithm.CalculateSell(result.Value.EntryPrice)
+                let profitTargets = this.profitTargetAlgorithm.CalculateSell(result.Value.EntryPrice, stopLossPrice)
+                select this.BuildSignal(result.Value, stopLossPrice, profitTargets));
 
             return sellSignals.ToImmutableList();
         }
 
         private EntrySignal BuildSignal(
             IEntryResponse response,
-            Price stoplossPrice,
+            Price stopLossPrice,
             IReadOnlyDictionary<int, Price> profitTargets)
         {
             Debug.NotNull(response, nameof(response));
-            Debug.NotNull(stoplossPrice, nameof(stoplossPrice));
+            Debug.NotNull(stopLossPrice, nameof(stopLossPrice));
             Debug.NotNull(profitTargets, nameof(profitTargets));
 
             return new EntrySignal(
@@ -138,12 +139,12 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
                 this.tradeProfile,
                 response.OrderSide,
                 response.EntryPrice,
-                stoplossPrice,
+                stopLossPrice,
                 profitTargets,
                 response.Time);
         }
 
-        private EntityId GetSignalId(IEntryResponse response)
+        private SignalId GetSignalId(IEntryResponse response)
         {
             Debug.NotNull(response, nameof(response));
 

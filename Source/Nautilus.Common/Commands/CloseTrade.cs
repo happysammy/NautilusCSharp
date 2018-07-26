@@ -12,7 +12,7 @@ namespace Nautilus.Common.Commands
     using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -32,8 +32,8 @@ namespace Nautilus.Common.Commands
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public CloseTradeUnit(
             Symbol tradeSymbol,
-            EntityId tradeId,
-            EntityId tradeUnitId,
+            TradeId tradeId,
+            TradeUnitId tradeUnitId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -54,6 +54,6 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Gets the commands trade unit identifier to close.
         /// </summary>
-        public EntityId TradeUnitId { get; }
+        public TradeUnitId TradeUnitId { get; }
     }
 }

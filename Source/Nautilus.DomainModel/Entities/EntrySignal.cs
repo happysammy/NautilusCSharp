@@ -14,6 +14,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -39,7 +40,7 @@ namespace Nautilus.DomainModel.Entities
         /// struct argument is the default value.</exception>
         public EntrySignal(
             Symbol symbol,
-            EntityId signalId,
+            SignalId signalId,
             Label signalLabel,
             TradeProfile tradeProfile,
             OrderSide orderSide,

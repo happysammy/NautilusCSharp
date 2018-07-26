@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -31,7 +32,7 @@ namespace Nautilus.DomainModel.Entities
         /// struct argument is the default value.</exception>
         protected Signal(
             Symbol symbol,
-            EntityId signalId,
+            SignalId signalId,
             Label signalLabel,
             TradeType tradeType,
             ZonedDateTime signalTimestamp)
@@ -54,11 +55,6 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the signals symbol.
         /// </summary>
         public Symbol Symbol { get; }
-
-        /// <summary>
-        /// The signals identifier.
-        /// </summary>
-        public EntityId SignalId => this.Id;
 
         /// <summary>
         /// Gets the signals label.

@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -32,7 +33,7 @@ namespace Nautilus.DomainModel.Events
         /// struct argument is the default value.</exception>
         protected OrderEvent(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
@@ -54,6 +55,6 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order identifier.
         /// </summary>
-        public EntityId OrderId { get; }
+        public OrderId OrderId { get; }
     }
 }

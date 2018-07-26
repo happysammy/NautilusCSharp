@@ -12,7 +12,7 @@ namespace Nautilus.Common.Commands.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -31,7 +31,7 @@ namespace Nautilus.Common.Commands.Base
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         protected TradeCommand(
             Symbol tradeSymbol,
-            EntityId tradeId,
+            TradeId tradeId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
@@ -53,7 +53,7 @@ namespace Nautilus.Common.Commands.Base
         /// <summary>
         /// Gets the commands trade identifier.
         /// </summary>
-        public EntityId TradeId { get; }
+        public TradeId TradeId { get; }
 
         /// <summary>
         /// Returns a string representation of the <see cref="CancelOrder"/> command message.

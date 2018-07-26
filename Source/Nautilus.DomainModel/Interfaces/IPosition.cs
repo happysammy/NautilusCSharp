@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Interfaces
 {
     using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -26,7 +27,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the positions entry order identifier.
         /// </summary>
-        EntityId FromEntryOrderId { get; }
+        OrderId FromEntryOrderId { get; }
 
         /// <summary>
         /// Gets the positions quantity.

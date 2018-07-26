@@ -17,9 +17,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -63,7 +63,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// </summary>
         /// <param name="orderIdList">The order identifier list.</param>
         /// <exception cref="ValidationException">Throws if the order identifier list is null.</exception>
-        public void ProcessCounters(ReadOnlyList<EntityId> orderIdList)
+        public void ProcessCounters(ReadOnlyList<OrderId> orderIdList)
         {
             Validate.NotNull(orderIdList, nameof(orderIdList));
 
@@ -121,7 +121,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <exception cref="ValidationException">Throws if the order identifier is null.</exception>
-        public void RemoveCounter(EntityId orderId)
+        public void RemoveCounter(OrderId orderId)
         {
             Validate.NotNull(orderId, nameof(orderId));
 
@@ -143,7 +143,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// pending order associated with it.
         /// </summary>
         /// <param name="orderIdList">The list of current active order identifiers.</param>
-        private void ForceRemoveExpiredCounters(ReadOnlyList<EntityId> orderIdList)
+        private void ForceRemoveExpiredCounters(ReadOnlyList<OrderId> orderIdList)
         {
             Debug.NotNull(orderIdList, nameof(orderIdList));
 
@@ -168,9 +168,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             Debug.NotNull(this.orderExpiryCounters, nameof(this.orderExpiryCounters));
         }
 
-        private IEnumerable<EntityId> GetCounterIdList()
+        private IEnumerable<OrderId> GetCounterIdList()
         {
-            return this.orderExpiryCounters.Select(counter => counter.Order.Id);
+            return this.orderExpiryCounters.Select(counter => counter.Order.Id as OrderId);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Factories
     using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -31,7 +32,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>The market order.</returns>
         public static Order Market(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
@@ -65,7 +66,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>The market if touched order.</returns>
         public static Order MarketIfTouched(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
@@ -102,7 +103,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>The limit order.</returns>
         public static Order Limit(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
@@ -139,7 +140,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>The stop market order.</returns>
         public static Order StopMarket(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
@@ -176,7 +177,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>The stop limit order.</returns>
         public static Order StopLimit(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,

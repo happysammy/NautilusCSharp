@@ -9,7 +9,9 @@
 namespace Nautilus.DomainModel.Interfaces
 {
     using Nautilus.Core;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -26,7 +28,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the orders identifier.
         /// </summary>
-        EntityId Id { get; }
+        EntityId<Order> Id { get; }
 
         /// <summary>
         /// Gets the orders identifier count.
@@ -36,17 +38,17 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        EntityId IdCurrent { get; }
+        OrderId IdCurrent { get; }
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        Option<EntityId> IdBroker { get; }
+        Option<OrderId> IdBroker { get; }
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        Option<EntityId> ExecutionId { get; }
+        Option<ExecutionId> ExecutionId { get; }
 
         /// <summary>
         /// Gets the orders label.

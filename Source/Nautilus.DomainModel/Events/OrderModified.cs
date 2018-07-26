@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -34,8 +35,8 @@ namespace Nautilus.DomainModel.Events
         /// struct argument is the default value.</exception>
         public OrderModified(
             Symbol symbol,
-            EntityId orderId,
-            EntityId brokerOrderId,
+            OrderId orderId,
+            OrderId brokerOrderId,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
@@ -62,7 +63,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events broker order identifier.
         /// </summary>
-        public EntityId BrokerOrderId { get; }
+        public OrderId BrokerOrderId { get; }
 
         /// <summary>
         /// Gets the events order modified price.

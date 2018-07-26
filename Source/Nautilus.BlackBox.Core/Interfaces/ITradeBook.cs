@@ -11,8 +11,8 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using System.Collections.Generic;
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -33,12 +33,12 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="Trade"/>.</returns>
-        QueryResult<Trade> GetTradeForOrder(EntityId orderId);
+        QueryResult<Trade> GetTradeForOrder(OrderId orderId);
 
         /// <summary>
         /// Returns a list of all active order identifiers.
         /// </summary>
         /// <returns>A <see cref="IList{T}"/>.</returns>
-        ReadOnlyList<EntityId> GetAllActiveOrderIds();
+        ReadOnlyList<OrderId> GetAllActiveOrderIds();
     }
 }

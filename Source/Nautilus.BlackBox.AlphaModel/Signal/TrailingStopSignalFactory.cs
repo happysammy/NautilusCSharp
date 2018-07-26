@@ -17,6 +17,7 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -59,45 +60,45 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
 
             var signalString = string.Empty;
 
-            var forUnitStoplossPrices = new Dictionary<int, Price>();
+            var forUnitStopLossPrices = new Dictionary<int, Price>();
 
             foreach (var response in trailingStopSignalResponses)
             {
 
-                if (!forUnitStoplossPrices.ContainsKey(response.ForUnit))
+                if (!forUnitStopLossPrices.ContainsKey(response.ForUnit))
                 {
-                    forUnitStoplossPrices.Add(response.ForUnit, response.StopLossPrice);
+                    forUnitStopLossPrices.Add(response.ForUnit, response.StopLossPrice);
                 }
 
-                // The dictionary already contains a stoploss for this unit
-                // and the response stoploss is greater than the current for unit stoploss.
-                if (response.StopLossPrice.Value > forUnitStoplossPrices[response.ForUnit].Value)
+                // The dictionary already contains a stop-loss for this unit
+                // and the response stop-loss is greater than the current for unit stop-loss.
+                if (response.StopLossPrice.Value > forUnitStopLossPrices[response.ForUnit].Value)
                 {
-                    forUnitStoplossPrices[response.ForUnit] = response.StopLossPrice;
+                    forUnitStopLossPrices[response.ForUnit] = response.StopLossPrice;
                 }
 
                 signalString = LabelFactory.TrailingStop(signalString, response.Label);
             }
 
-            if (forUnitStoplossPrices.ContainsKey(0))
+            if (forUnitStopLossPrices.ContainsKey(0))
             {
-                // Removes any stoploss which is less than the all units (0) trailing stop.
-                foreach (var forUnitTrailingStop in forUnitStoplossPrices.ToList())
+                // Removes any stop-loss which is less than the all units (0) trailing stop.
+                foreach (var forUnitTrailingStop in forUnitStopLossPrices.ToList())
                 {
-                    if (forUnitTrailingStop.Value.Value < forUnitStoplossPrices[0].Value)
+                    if (forUnitTrailingStop.Value.Value < forUnitStopLossPrices[0].Value)
                     {
-                        forUnitStoplossPrices.Remove(forUnitTrailingStop.Key);
+                        forUnitStopLossPrices.Remove(forUnitTrailingStop.Key);
                     }
                 }
             }
 
             return new TrailingStopSignal(
                 this.instrument.Symbol,
-                new EntityId(signalString),
+                new SignalId(signalString),
                 new Label(signalString),
                 this.tradeType,
                 MarketPosition.Long,
-                forUnitStoplossPrices,
+                forUnitStopLossPrices,
                 trailingStopSignalResponses.First().Time);
         }
 
@@ -114,44 +115,44 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
 
             var signalString = string.Empty;
 
-            var forUnitStoplossPrices = new Dictionary<int, Price>();
+            var forUnitStopLossPrices = new Dictionary<int, Price>();
 
             foreach (var response in trailingStopSignalResponses)
             {
-                if (!forUnitStoplossPrices.ContainsKey(response.ForUnit))
+                if (!forUnitStopLossPrices.ContainsKey(response.ForUnit))
                 {
-                    forUnitStoplossPrices.Add(response.ForUnit, response.StopLossPrice);
+                    forUnitStopLossPrices.Add(response.ForUnit, response.StopLossPrice);
                 }
 
-                // The dictionary already contains a stoploss for this unit
-                // and the response stoploss is less than the current for unit stoploss.
-                if (response.StopLossPrice.Value < forUnitStoplossPrices[response.ForUnit].Value)
+                // The dictionary already contains a stop-loss for this unit
+                // and the response stop-loss is less than the current for unit stop-loss.
+                if (response.StopLossPrice.Value < forUnitStopLossPrices[response.ForUnit].Value)
                 {
-                    forUnitStoplossPrices[response.ForUnit] = response.StopLossPrice;
+                    forUnitStopLossPrices[response.ForUnit] = response.StopLossPrice;
                 }
 
                 signalString = LabelFactory.TrailingStop(signalString, response.Label);
             }
 
-            if (forUnitStoplossPrices.ContainsKey(0))
+            if (forUnitStopLossPrices.ContainsKey(0))
             {
-                // Removes any stoploss which is greater than the all units (0) trailing stop.
-                foreach (var forUnitTrailingStop in forUnitStoplossPrices.ToList())
+                // Removes any stop-loss which is greater than the all units (0) trailing stop.
+                foreach (var forUnitTrailingStop in forUnitStopLossPrices.ToList())
                 {
-                    if (forUnitTrailingStop.Value.Value > forUnitStoplossPrices[0].Value)
+                    if (forUnitTrailingStop.Value.Value > forUnitStopLossPrices[0].Value)
                     {
-                        forUnitStoplossPrices.Remove(forUnitTrailingStop.Key);
+                        forUnitStopLossPrices.Remove(forUnitTrailingStop.Key);
                     }
                 }
             }
 
             return new TrailingStopSignal(
                 this.instrument.Symbol,
-                new EntityId(signalString),
+                new SignalId(signalString),
                 new Label(signalString),
                 this.tradeType,
                 MarketPosition.Short,
-                forUnitStoplossPrices,
+                forUnitStopLossPrices,
                 trailingStopSignalResponses.First().Time);
         }
     }

@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]
-    public abstract class Entity<T> where T : class
+    public abstract class Entity<T> where T : Entity<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity{T}"/> class.
@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel
         /// <param name="identifier">The entity identifier.</param>
         /// <param name="timestamp">The entity timestamp.</param>
         protected Entity(
-            EntityId identifier,
+            EntityId<T> identifier,
             ZonedDateTime timestamp)
         {
             Debug.NotNull(identifier, nameof(identifier));
@@ -38,7 +38,7 @@ namespace Nautilus.DomainModel
         /// <summary>
         /// Gets the entity identifier.
         /// </summary>
-        public EntityId Id { get; }
+        public EntityId<T> Id { get; }
 
         /// <summary>
         /// Gets the entity timestamp.
@@ -50,24 +50,20 @@ namespace Nautilus.DomainModel
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as T);
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as Entity<T>);
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.
         /// </summary>
         /// <param name="other">The other entity</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals([CanBeNull] T other)
-        {
-            // ReSharper disable once UsePatternMatching (causes compiler warning).
-            var otherEntity = other as Entity<T>;
-            return otherEntity != null & this.Id.Equals(otherEntity?.Id);
-        }
+        // ReSharper disable once PossibleNullReferenceException (already checked for null?).
+        public bool Equals([CanBeNull] Entity<T> other) => other != null & this.Id.Equals(other.Id);
 
         /// <summary>
-        /// Returns the hash code for this entity.
+        /// Returns the hash code of the wrapped object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => this.Id.ToString().GetHashCode();
+        public override int GetHashCode() => this.Id.GetHashCode();
     }
 }

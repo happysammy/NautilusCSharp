@@ -53,7 +53,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             Validate.True(stopLossPrice < entryPrice, nameof(entryPrice));
 
             var stopLossMinimumSizeThreshold =
-                Math.Ceiling(this.Instrument.TargetDirectSpread * this.TradeProfile.MinStoplossDirectSpreadMultiple) * this.TickSize;
+                Math.Ceiling(this.Instrument.TargetDirectSpread * this.TradeProfile.MinStopLossDirectSpreadMultiple) * this.TickSize;
 
             if (Math.Abs(entryPrice - stopLossPrice) < stopLossMinimumSizeThreshold)
             {
@@ -85,7 +85,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
             Validate.True(stopLossPrice > entryPrice, nameof(stopLossPrice));
 
             var stoplossMinimumSizeThreshold =
-                Math.Ceiling(this.Instrument.TargetDirectSpread * this.TradeProfile.MinStoplossDirectSpreadMultiple) * this.TickSize;
+                Math.Ceiling(this.Instrument.TargetDirectSpread * this.TradeProfile.MinStopLossDirectSpreadMultiple) * this.TickSize;
 
             if (Math.Abs(entryPrice - stopLossPrice) < stoplossMinimumSizeThreshold)
             {

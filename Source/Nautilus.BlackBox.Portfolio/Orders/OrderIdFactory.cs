@@ -11,11 +11,12 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="OrderIdFactory"/> class.
+    /// Provides new order identifiers.
     /// </summary>
     public sealed class OrderIdFactory
     {
@@ -25,7 +26,6 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// Initializes a new instance of the <see cref="OrderIdFactory"/> class.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public OrderIdFactory(Symbol symbol)
         {
             Validate.NotNull(symbol, nameof(symbol));
@@ -39,14 +39,13 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         public int OrderCount { get; private set; }
 
         /// <summary>
-        /// Creates and returns a new order identifier <see cref="EntityId"/>.
+        /// Creates and returns a new <see cref="OrderId"/>.
         /// </summary>
         /// <param name="signalTime">The signal time.</param>
-        /// <returns>A <see cref="EntityId"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the signal time is the default value.</exception>
-        public EntityId Create(ZonedDateTime signalTime)
+        /// <returns>A <see cref="OrderId"/>.</returns>
+        public OrderId Create(ZonedDateTime signalTime)
         {
-            Validate.NotDefault(signalTime, nameof(signalTime));
+            Debug.NotDefault(signalTime, nameof(signalTime));
 
             this.OrderCount++;
 

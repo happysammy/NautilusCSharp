@@ -13,6 +13,7 @@ namespace Nautilus.Common.Commands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -35,7 +36,7 @@ namespace Nautilus.Common.Commands
             ZonedDateTime commandTimestamp)
             : base(
                 orderPacket.Symbol,
-                orderPacket.Id,
+                new TradeId(orderPacket.Id.Value),
                 commandId,
                 commandTimestamp)
         {

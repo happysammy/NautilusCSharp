@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -39,9 +40,9 @@ namespace Nautilus.DomainModel.Events
         /// struct argument is the default value.</exception>
         public OrderFilled(
             Symbol symbol,
-            EntityId orderId,
-            EntityId executionId,
-            EntityId executionTicket,
+            OrderId orderId,
+            ExecutionId executionId,
+            ExecutionId executionTicket,
             OrderSide orderSide,
             Quantity filledQuantity,
             Price averagePrice,
@@ -76,12 +77,12 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order execution identifier.
         /// </summary>
-        public EntityId ExecutionId { get; }
+        public ExecutionId ExecutionId { get; }
 
         /// <summary>
         /// Gets the events order execution ticket.
         /// </summary>
-        public EntityId ExecutionTicket { get; }
+        public ExecutionId ExecutionTicket { get; }
 
         /// <summary>
         /// Gets the events order side.

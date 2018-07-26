@@ -21,6 +21,7 @@ namespace Nautilus.Common
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -382,7 +383,7 @@ namespace Nautilus.Common
 
                 var orderRejected = new OrderRejected(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     rejectReason,
                     this.NewGuid(),
@@ -427,7 +428,7 @@ namespace Nautilus.Common
 
                 var orderCancelReject = new OrderCancelReject(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -472,7 +473,7 @@ namespace Nautilus.Common
 
                 var orderCancelled = new OrderCancelled(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -519,8 +520,8 @@ namespace Nautilus.Common
 
                 var orderModified = new OrderModified(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
-                    new EntityId(brokerOrderId),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(brokerOrderId),
                     Price.Create(price, decimals),
                     timestamp,
                     this.NewGuid(),
@@ -580,8 +581,8 @@ namespace Nautilus.Common
 
                 var orderWorking = new OrderWorking(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
-                    new EntityId(brokerOrderId),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(brokerOrderId),
                     new Label(orderLabel),
                     orderSide,
                     orderType,
@@ -639,7 +640,7 @@ namespace Nautilus.Common
 
                 var orderExpired = new OrderExpired(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -697,9 +698,9 @@ namespace Nautilus.Common
 
                 var orderFilled = new OrderFilled(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
-                    new EntityId(executionId),
-                    new EntityId(executionTicket),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new ExecutionId(executionId),
+                    new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Price.Create(averagePrice, decimals),
@@ -766,9 +767,9 @@ namespace Nautilus.Common
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(
                     new Symbol(symbol, venue),
-                    new EntityId(OrderIdPostfixRemover.Remove(orderId)),
-                    new EntityId(executionId),
-                    new EntityId(executionTicket),
+                    new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new ExecutionId(executionId),
+                    new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),

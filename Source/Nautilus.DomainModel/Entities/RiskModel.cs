@@ -6,21 +6,22 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Risk
+namespace Nautilus.DomainModel.Entities
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="RiskModel"/> class. Represents a <see cref="BlackBox"/> systems model
-    /// for quantifying financial market risk exposure.
+    /// The sealed <see cref="RiskModel"/> class. Represents a systems model for quantifying
+    /// financial market risk exposure.
     /// </summary>
     public sealed class RiskModel : Entity<RiskModel>, IRiskModel
     {
@@ -39,7 +40,7 @@ namespace Nautilus.BlackBox.Risk
         /// <param name="positionSizeHardLimits">The position size hard limits.</param>
         /// <param name="timestamp">The risk model creation timestamp.</param>
         public RiskModel(
-            EntityId riskModelId,
+            RiskModelId riskModelId,
             Percentage globalMaxRiskExposure,
             Percentage globalMaxRiskPerTrade,
             Quantity globalMaxTradesPerType,
@@ -59,11 +60,6 @@ namespace Nautilus.BlackBox.Risk
 
             this.eventLog.Add(Tuple.Create(timestamp, "Risk model created."));
         }
-
-        /// <summary>
-        /// Gets the risk models identifier.
-        /// </summary>
-        public EntityId RiskModelId => this.Id;
 
         /// <summary>
         /// Gets the risk models maximum risk exposure.

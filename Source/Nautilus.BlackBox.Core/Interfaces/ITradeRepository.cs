@@ -11,6 +11,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
     using Nautilus.Core;
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// The <see cref="ITradeRepository"/> interface.
@@ -22,7 +23,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
         /// </summary>
         /// <param name="tradeId">The trade identifier.</param>
         /// <returns>A <see cref="Option{Trade}"/>.</returns>
-        Option<Trade> FindBy(EntityId tradeId);
+        Option<Trade> FindBy(TradeId tradeId);
 
         /// <summary>
         /// Adds the given trade to the repository.

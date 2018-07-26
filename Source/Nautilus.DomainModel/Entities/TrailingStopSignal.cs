@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -29,17 +30,17 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="signalLabel">The trailing stop signal label.</param>
         /// <param name="tradeType">The trailing stop signal trade type.</param>
         /// <param name="forMarketPosition">The trailing stop signal market position type.</param>
-        /// <param name="forUnitStoplossPrices">The trailing stop signal unit stop-loss prices dictionary.</param>
+        /// <param name="forUnitStopLossPrices">The trailing stop signal unit stop-loss prices dictionary.</param>
         /// <param name="signalTimestamp">The trailing stop signal timestamp.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value, or if the forMarketPosition is flat.</exception>
         public TrailingStopSignal(
             Symbol symbol,
-            EntityId signalId,
+            SignalId signalId,
             Label signalLabel,
             TradeType tradeType,
             MarketPosition forMarketPosition,
-            Dictionary<int, Price> forUnitStoplossPrices,
+            Dictionary<int, Price> forUnitStopLossPrices,
             ZonedDateTime signalTimestamp)
             : base(
                   symbol,
@@ -54,11 +55,11 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotNull(tradeType, nameof(tradeType));
             Debug.NotDefault(forMarketPosition, nameof(forMarketPosition));
             Debug.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
-            Debug.CollectionNotNullOrEmpty(forUnitStoplossPrices, nameof(forUnitStoplossPrices));
+            Debug.CollectionNotNullOrEmpty(forUnitStopLossPrices, nameof(forUnitStopLossPrices));
             Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.ForMarketPosition = forMarketPosition;
-            this.ForUnitStopLossPrices = forUnitStoplossPrices;
+            this.ForUnitStopLossPrices = forUnitStopLossPrices;
         }
 
         /// <summary>

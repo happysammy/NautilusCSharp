@@ -8,7 +8,7 @@
 
 namespace Nautilus.DomainModel.Interfaces
 {
-    using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the brokerage accounts identifier.
         /// </summary>
-        EntityId AccountId { get; }
+        EntityId<BrokerageAccount> Id { get; }
 
         /// <summary>
         /// Gets the brokerage accounts number.

@@ -18,6 +18,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -154,7 +155,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 signal.Symbol,
                 signal.TradeType,
                 atomicOrders,
-                signal.SignalId,
+                new OrderPacketId(signal.Id.Value),
                 signal.SignalTimestamp));
         }
 

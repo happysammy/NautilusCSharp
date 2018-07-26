@@ -11,11 +11,12 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// Represents a tradable financial market instrument.
+    /// Represents a trade-able financial market instrument.
     /// </summary>
     [Immutable]
     public sealed class Instrument : Entity<Instrument>
@@ -46,8 +47,8 @@ namespace Nautilus.DomainModel.Entities
         /// <exception cref="ValidationException">Throws if the validation fails (see constructor).</exception>
         public Instrument(
             Symbol symbol,
-            EntityId instrumentId,
-            EntityId brokerSymbol,
+            InstrumentId instrumentId,
+            ValidString brokerSymbol,
             CurrencyCode quoteCurrency,
             SecurityType securityType,
             int tickDecimals,
@@ -111,7 +112,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments broker symbol.
         /// </summary>
-        public EntityId BrokerSymbol { get; }
+        public ValidString BrokerSymbol { get; }
 
         /// <summary>
         /// Gets the instruments quote currency.

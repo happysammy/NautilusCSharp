@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Interfaces
+namespace Nautilus.DomainModel.Interfaces
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Nautilus.BlackBox.Core.Interfaces
 
     /// <summary>
     /// The <see cref="IRiskModel"/> interface implements <see cref="IReadOnlyRiskModel"/>.
-    /// Represents a <see cref="BlackBox"/> systems model for quantifying financial market risk
+    /// Represents a systems model for quantifying financial market risk
     /// exposure.
     /// </summary>
     public interface IRiskModel : IReadOnlyRiskModel

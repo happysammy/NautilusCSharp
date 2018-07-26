@@ -17,6 +17,7 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.DomainModel.Factories;
     using global::MsgPack;
+    using Nautilus.DomainModel.Identifiers;
 
     public class MsgPackOrderSerializer : IOrderSerializer
     {
@@ -49,7 +50,7 @@ namespace Nautilus.MsgPack
 
             var orderType = unpacked[Key.OrderType].ToString().ToEnum<OrderType>();
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
-            var id = new EntityId(unpacked[Key.OrderId].ToString());
+            var id = new OrderId(unpacked[Key.OrderId].ToString());
             var label = new Label(unpacked[Key.Label].ToString());
             var side = unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>();
             var quantity = Quantity.Create(Convert.ToInt32(unpacked[Key.Quantity].ToString()));

@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -34,7 +35,7 @@ namespace Nautilus.DomainModel.Events
         /// struct argument is the default value.</exception>
         public OrderCancelReject(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             ZonedDateTime rejectedTime,
             string rejectedResponseTo,
             string rejectedReason,

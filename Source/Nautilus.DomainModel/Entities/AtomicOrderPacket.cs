@@ -12,6 +12,8 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -36,7 +38,7 @@ namespace Nautilus.DomainModel.Entities
             Symbol symbol,
             TradeType tradeType,
             List<AtomicOrder> orders,
-            EntityId orderPacketId,
+            OrderPacketId orderPacketId,
             ZonedDateTime timestamp)
             : base(orderPacketId, timestamp)
         {
@@ -50,20 +52,20 @@ namespace Nautilus.DomainModel.Entities
             this.TradeType = tradeType;
             this.Orders = new ReadOnlyList<AtomicOrder>(orders);
 
-            var tempList = new List<EntityId>();
+            var tempList = new List<OrderId>();
 
             foreach (var order in this.Orders)
             {
-                tempList.Add(order.Entry.Id);
-                tempList.Add(order.StopLoss.Id);
+                tempList.Add(order.Entry.Id as OrderId);
+                tempList.Add(order.StopLoss.Id as OrderId);
 
                 if (order.ProfitTarget.HasValue)
                 {
-                    tempList.Add(order.ProfitTarget.Value.Id);
+                    tempList.Add(order.ProfitTarget.Value.Id as OrderId);
                 }
             }
 
-            this.OrderIdList = new ReadOnlyList<EntityId>(tempList);
+            this.OrderIdList = new ReadOnlyList<OrderId>(tempList);
         }
 
         /// <summary>
@@ -84,6 +86,6 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic order packets list of order identifiers.
         /// </summary>
-        public ReadOnlyList<EntityId> OrderIdList { get; }
+        public ReadOnlyList<OrderId> OrderIdList { get; }
     }
 }

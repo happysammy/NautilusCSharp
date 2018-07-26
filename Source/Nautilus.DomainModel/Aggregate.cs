@@ -22,7 +22,7 @@ namespace Nautilus.DomainModel
     /// <typeparam name="T">The aggregate type.</typeparam>
     [PerformanceOptimized]
     public abstract class Aggregate<T> : Entity<T>
-        where T : class
+        where T : Entity<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Aggregate{T}"/> class.
@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel
         /// <param name="identifier">The aggregate identifier.</param>
         /// <param name="timestamp">The aggregate timestamp.</param>
         protected Aggregate(
-            EntityId identifier,
+            EntityId<T> identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

@@ -16,6 +16,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -39,8 +40,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// struct argument is the default value.</exception>
         public Position(
             Symbol symbol,
-            EntityId fromEntryOrderId,
-            EntityId positionId,
+            OrderId fromEntryOrderId,
+            PositionId positionId,
             ZonedDateTime timestamp)
             : base(
                   positionId,
@@ -65,7 +66,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the positions entry order identifier.
         /// </summary>
-        public EntityId FromEntryOrderId { get; }
+        public OrderId FromEntryOrderId { get; }
 
         /// <summary>
         /// Gets the positions quantity.

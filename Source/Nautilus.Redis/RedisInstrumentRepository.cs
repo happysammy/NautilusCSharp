@@ -21,6 +21,7 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using ServiceStack.Text;
@@ -217,8 +218,8 @@ namespace Nautilus.Redis
 
                     var instrument = new Instrument(
                         new Symbol(symbolCode, exchange.ToEnum<Venue>()),
-                        new EntityId(deserializedSymbol["Value"]),
-                        new EntityId(brokerSymbol),
+                        new InstrumentId(deserializedSymbol["Value"]),
+                        new ValidString(brokerSymbol),
                         deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
                         deserialized["SecurityType"].ToEnum<SecurityType>(),
                         Convert.ToInt32(deserialized["TickDecimals"]),

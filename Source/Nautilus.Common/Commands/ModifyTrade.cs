@@ -13,6 +13,7 @@ namespace Nautilus.Common.Commands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -33,8 +34,8 @@ namespace Nautilus.Common.Commands
         /// <param name="commandTimestamp">The command timestamp (cannot be default).</param>
         public ModifyTrade(
             Symbol tradeSymbol,
-            EntityId tradeId,
-            EntityId forOrderId,
+            TradeId tradeId,
+            OrderId forOrderId,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -52,9 +53,9 @@ namespace Nautilus.Common.Commands
         }
 
         /// <summary>
-        /// Gets the commands for trade.
+        /// Gets the commands order identifier.
         /// </summary>
-        public EntityId ForOrderId { get; }
+        public OrderId ForOrderId { get; }
 
         /// <summary>
         /// Gets the commands modified order price.

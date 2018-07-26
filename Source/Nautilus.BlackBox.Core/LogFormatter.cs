@@ -20,6 +20,7 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

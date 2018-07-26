@@ -19,6 +19,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -32,9 +33,9 @@ namespace Nautilus.DomainModel.Aggregates
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
 
         // Concrete lists for performance reasons.
-        private readonly List<EntityId> orderIds = new List<EntityId>();
-        private readonly List<EntityId> orderIdsBroker = new List<EntityId>();
-        private readonly List<EntityId> executionIds = new List<EntityId>();
+        private readonly List<OrderId> orderIds = new List<OrderId>();
+        private readonly List<OrderId> orderIdsBroker = new List<OrderId>();
+        private readonly List<ExecutionId> executionIds = new List<ExecutionId>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -51,7 +52,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="timestamp">The order timestamp.</param>
         public Order(
             Symbol symbol,
-            EntityId orderId,
+            OrderId orderId,
             Label orderLabel,
             OrderSide orderSide,
             OrderType orderType,
@@ -76,7 +77,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Price = price;
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
-            this.orderIds.Add(this.Id);
+            this.orderIds.Add(this.Id as OrderId);
 
             ValidateExpireTime(expireTime);
         }
@@ -94,21 +95,21 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public EntityId IdCurrent => this.orderIds.Last();
+        public OrderId IdCurrent => this.orderIds.Last();
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        public Option<EntityId> IdBroker => this.orderIdsBroker.Count > 0
+        public Option<OrderId> IdBroker => this.orderIdsBroker.Count > 0
             ? this.orderIdsBroker.Last()
-            : Option<EntityId>.None();
+            : Option<OrderId>.None();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public Option<EntityId> ExecutionId => this.executionIds.Count > 0
+        public Option<ExecutionId> ExecutionId => this.executionIds.Count > 0
             ? this.executionIds.Last()
-            : Option<EntityId>.None();
+            : Option<ExecutionId>.None();
 
         /// <summary>
         /// Gets the orders label.
@@ -182,7 +183,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="modifiedOrderId">The modified order identifier.</param>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
-        public void AddModifiedOrderId(EntityId modifiedOrderId)
+        public void AddModifiedOrderId(OrderId modifiedOrderId)
         {
             Debug.NotNull(modifiedOrderId, nameof(modifiedOrderId));
 
@@ -193,19 +194,19 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a read-only list of the orders.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetOrderIdList() => new ReadOnlyList<EntityId>(this.orderIds);
+        public ReadOnlyList<OrderId> GetOrderIdList() => new ReadOnlyList<OrderId>(this.orderIds);
 
         /// <summary>
         /// Returns a read-only list of broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetBrokerOrderIdList() => new ReadOnlyList<EntityId>(this.orderIdsBroker);
+        public ReadOnlyList<OrderId> GetBrokerOrderIdList() => new ReadOnlyList<OrderId>(this.orderIdsBroker);
 
         /// <summary>
         /// Returns a read-only list of execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<EntityId> GetExecutionIdList() => new ReadOnlyList<EntityId>(this.executionIds);
+        public ReadOnlyList<ExecutionId> GetExecutionIdList() => new ReadOnlyList<ExecutionId>(this.executionIds);
 
         /// <summary>
         /// Returns an immutable collection of the order events.
@@ -256,11 +257,11 @@ namespace Nautilus.DomainModel.Aggregates
         public override string ToString() => $"{nameof(Order)}-{this.Symbol}-{this.Id}";
 
         /// <summary>
-        /// Updates the broker order identifier list with the given <see cref="EntityId"/>
+        /// Updates the broker order identifier list with the given <see cref="OrderId"/>
         /// (if not already present).
         /// </summary>
         /// <param name="orderId">The broker order identifier.</param>
-        private void UpdateBrokerOrderIds(EntityId orderId)
+        private void UpdateBrokerOrderIds(OrderId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 
@@ -271,11 +272,11 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Updates the execution identifier list with the given <see cref="EntityId"/>
+        /// Updates the execution identifier list with the given <see cref="ExecutionId"/>
         /// (if not already present).
         /// </summary>
         /// <param name="executionId">The execution identifier.</param>
-        private void UpdateExecutionIds(EntityId executionId)
+        private void UpdateExecutionIds(ExecutionId executionId)
         {
             Debug.NotNull(executionId, nameof(executionId));
 

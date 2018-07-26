@@ -18,13 +18,13 @@ namespace Nautilus.DomainModel
     /// A <see cref="ValueObject{T}"/> which encapsulates a validated string.
     /// </summary>
     [Immutable]
-    public abstract class ValidString : ValueObject<ValidString>, IEquatable<ValidString>
+    public class ValidString : ValueObject<ValidString>, IEquatable<ValidString>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidString"/> class.
         /// </summary>
         /// <param name="value">The string value.</param>
-        protected ValidString(string value)
+        public ValidString(string value)
         {
             Debug.NotNull(value, nameof(value));
             Debug.True(value.Length <= 100, nameof(value));

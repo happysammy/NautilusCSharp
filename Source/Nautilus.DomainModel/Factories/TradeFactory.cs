@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Factories
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// A factory which creates valid <see cref="Trade"/>(s) for the system.
@@ -27,20 +28,23 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>A <see cref="Trade"/>.</returns>
         public static Trade Create(AtomicOrdersPacket orderPacket)
         {
-            var tradeUnits = CreateTradeUnits(orderPacket);
+            var tradeId = new TradeId(orderPacket.Id.Value);
+            var tradeUnits = CreateTradeUnits(tradeId, orderPacket);
+
 
             return new Trade(
                 orderPacket.Symbol,
-                orderPacket.Id,
+                tradeId,
                 orderPacket.TradeType,
                 tradeUnits,
                 orderPacket.OrderIdList,
                 orderPacket.Timestamp);
         }
 
-        private static ReadOnlyList<TradeUnit> CreateTradeUnits(AtomicOrdersPacket orderPacket)
+        private static ReadOnlyList<TradeUnit> CreateTradeUnits(
+            TradeId tradeId,
+            AtomicOrdersPacket orderPacket)
         {
-            var tradeId = orderPacket.Id;
             var tradeUnits = new List<TradeUnit>();
 
             foreach (var atomicOrder in orderPacket.Orders)

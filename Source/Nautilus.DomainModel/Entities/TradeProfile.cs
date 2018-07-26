@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -47,7 +48,7 @@ namespace Nautilus.DomainModel.Entities
             int barsValid,
             ZonedDateTime timestamp)
             : base(
-                  new EntityId(tradeType.ToString()),
+                  new TradeProfileId(tradeType.ToString()),
                   timestamp)
         {
             // Validate all trade profiles.
@@ -70,7 +71,7 @@ namespace Nautilus.DomainModel.Entities
             this.StartOffset = Duration.FromMinutes(startOffsetMins);
             this.StopOffset = Duration.FromMinutes(stopOffsetMins);
             this.MinVolatilityAverageSpreadMultiple = minVolatilitySpreadMultiple;
-            this.MinStoplossDirectSpreadMultiple = minStoplossDirectSpreadMultiple;
+            this.MinStopLossDirectSpreadMultiple = minStoplossDirectSpreadMultiple;
             this.BarsValid = barsValid;
         }
 
@@ -117,7 +118,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the trade profiles stop-loss minimum direct spread multiple for entry.
         /// </summary>
-        public decimal MinStoplossDirectSpreadMultiple { get; }
+        public decimal MinStopLossDirectSpreadMultiple { get; }
 
         /// <summary>
         /// Gets trade profiles number of bars valid for entry signals.

@@ -17,10 +17,10 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace Nautilus.BlackBox.Portfolio
                     this.tradeList.Remove(trade);
 
                     this.Log.Information(
-                        $"Trade removed ({trade.TradeId}), "
+                        $"Trade removed ({trade.Id}), "
                       + $"TradeStatus={trade.TradeStatus})");
 
                     Debug.CollectionDoesNotContain(trade, nameof(trade), this.tradeList.ToList().AsReadOnly());
@@ -92,7 +92,7 @@ namespace Nautilus.BlackBox.Portfolio
             this.tradeList.Add(trade);
 
             this.Log.Information(
-                $"Trade added ({trade.TradeId}), "
+                $"Trade added ({trade.Id}), "
               + $"TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition})");
         }
 
@@ -117,7 +117,7 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="Trade"/>.</returns>
         /// <exception cref="ValidationException">Throws if the order identifier is null.</exception>
-        public QueryResult<Trade> GetTradeForOrder(EntityId orderId)
+        public QueryResult<Trade> GetTradeForOrder(OrderId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 
@@ -133,9 +133,9 @@ namespace Nautilus.BlackBox.Portfolio
         /// Returns a list of all active order identifiers.
         /// </summary>
         /// <returns>A <see cref="IList{EntityId}"/>.</returns>
-        public ReadOnlyList<EntityId> GetAllActiveOrderIds()
+        public ReadOnlyList<OrderId> GetAllActiveOrderIds()
         {
-            return new ReadOnlyList<EntityId>(this.tradeList
+            return new ReadOnlyList<OrderId>(this.tradeList
                .SelectMany(trade => trade.OrderIdList)
                .ToList());
         }

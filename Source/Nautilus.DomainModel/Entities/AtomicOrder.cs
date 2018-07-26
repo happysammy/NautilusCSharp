@@ -12,6 +12,8 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -39,7 +41,7 @@ namespace Nautilus.DomainModel.Entities
             Order stopLoss,
             Option<Order> profitTarget)
             : base(
-                  entry.Id,
+                  new AtomicOrderId(entry.Id.Value),
                   entry.Timestamp)
         {
             Debug.NotNull(tradeType, nameof(tradeType));

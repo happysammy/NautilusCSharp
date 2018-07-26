@@ -72,11 +72,6 @@ namespace Nautilus.DomainModel.Aggregates
         public Broker Broker { get; }
 
         /// <summary>
-        /// Gets the accounts identifier.
-        /// </summary>
-        public EntityId AccountId => this.Id;
-
-        /// <summary>
         /// Gets the accounts number.
         /// </summary>
         public string AccountNumber { get; }

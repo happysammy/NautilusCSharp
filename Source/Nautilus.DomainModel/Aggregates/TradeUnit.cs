@@ -18,6 +18,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -39,7 +40,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="profitTarget">The profit target order.</param>
         /// <param name="timestamp">The initialization timestamp.</param>
         public TradeUnit(
-            EntityId tradeUnitId,
+            TradeUnitId tradeUnitId,
             Label label,
             Order entry,
             Order stopLoss,
@@ -71,9 +72,7 @@ namespace Nautilus.DomainModel.Aggregates
             }
             this.orders = new ReadOnlyList<Order>(orderList);
 
-            this.OrderIds = new ReadOnlyList<EntityId>(
-                this.orders.Select(o => o.Id)
-                    .ToList());
+            this.OrderIds = new ReadOnlyList<OrderId>(this.orders.Select(o => o.Id as OrderId).ToList());
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the trade units order identifiers.
         /// </summary>
         /// <returns>A read only collection of orders.</returns>
-        public ReadOnlyList<EntityId> OrderIds { get; }
+        public ReadOnlyList<OrderId> OrderIds { get; }
 
         /// <summary>
         /// Returns the trade units trade status.
@@ -133,7 +132,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsOrderContained(EntityId orderId)
+        public bool IsOrderContained(OrderId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 
@@ -145,7 +144,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="Option{Order}" />.</returns>
-        public Option<Order> GetOrderById(EntityId orderId)
+        public Option<Order> GetOrderById(OrderId orderId)
         {
             Debug.NotNull(orderId, nameof(orderId));
 
@@ -197,8 +196,8 @@ namespace Nautilus.DomainModel.Aggregates
 
             return new Position(
                 this.Symbol,
-                entry.Id,
-                new EntityId($"{this.Id}_{nameof(Position)}"),
+                entry.Id as OrderId,
+                new PositionId($"{this.Id}_{nameof(Position)}"),
                 timestamp);
         }
     }

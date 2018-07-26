@@ -14,6 +14,7 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -59,7 +60,7 @@ namespace Nautilus.Database.Aggregators
 
         private Symbol Symbol { get; set; }
 
-        private EntityId BrokerSymbol { get; set; }
+        private ValidString BrokerSymbol { get; set; }
 
         private CurrencyCode QuoteCurrency { get; set; }
 
@@ -236,7 +237,7 @@ namespace Nautilus.Database.Aggregators
         {
             return new Instrument(
                 this.Symbol,
-                new EntityId(this.Symbol.ToString()),
+                new InstrumentId(this.Symbol.ToString()),
                 this.BrokerSymbol,
                 this.QuoteCurrency,
                 this.SecurityType,

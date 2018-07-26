@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -42,8 +43,8 @@ namespace Nautilus.DomainModel.Events
         /// struct argument is the default value.</exception>
         public OrderWorking(
             Symbol symbol,
-            EntityId orderId,
-            EntityId orderIdBroker,
+            OrderId orderId,
+            OrderId orderIdBroker,
             Label label,
             OrderSide orderSide,
             OrderType orderType,
@@ -88,7 +89,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order identifier from the broker.
         /// </summary>
-        public EntityId OrderIdBroker { get; }
+        public OrderId OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events order label.

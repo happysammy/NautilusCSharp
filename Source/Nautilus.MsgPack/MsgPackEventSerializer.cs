@@ -19,6 +19,7 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using global::MsgPack;
+    using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
     /// Provides a serializer for the Message Pack specification.
@@ -177,7 +178,7 @@ namespace Nautilus.MsgPack
         private static OrderEvent DeserializeOrderEvent(MessagePackObjectDictionary unpacked)
         {
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
-            var orderId = new EntityId(unpacked[Key.OrderId].ToString());
+            var orderId = new OrderId(unpacked[Key.OrderId].ToString());
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
 
@@ -212,7 +213,7 @@ namespace Nautilus.MsgPack
                     return new OrderWorking(
                         symbol,
                         orderId,
-                        new EntityId(unpacked[Key.OrderIdBroker].ToString()),
+                        new OrderId(unpacked[Key.OrderIdBroker].ToString()),
                         new Label(unpacked[Key.Label].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
@@ -246,7 +247,7 @@ namespace Nautilus.MsgPack
                     return new OrderModified(
                         symbol,
                         orderId,
-                        new EntityId(unpacked[Key.OrderIdBroker].ToString()),
+                        new OrderId(unpacked[Key.OrderIdBroker].ToString()),
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
@@ -264,8 +265,8 @@ namespace Nautilus.MsgPack
                     return new OrderPartiallyFilled(
                         symbol,
                         orderId,
-                        new EntityId(unpacked[Key.ExecutionId].ToString()),
-                        new EntityId(unpacked[Key.ExecutionTicket].ToString()),
+                        new ExecutionId(unpacked[Key.ExecutionId].ToString()),
+                        new ExecutionId(unpacked[Key.ExecutionTicket].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
                         Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
@@ -278,8 +279,8 @@ namespace Nautilus.MsgPack
                     return new OrderFilled(
                         symbol,
                         orderId,
-                        new EntityId(unpacked[Key.ExecutionId].ToString()),
-                        new EntityId(unpacked[Key.ExecutionTicket].ToString()),
+                        new ExecutionId(unpacked[Key.ExecutionId].ToString()),
+                        new ExecutionId(unpacked[Key.ExecutionTicket].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()).Value,

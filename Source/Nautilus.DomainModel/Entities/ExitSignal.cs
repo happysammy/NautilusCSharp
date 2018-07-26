@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -36,7 +37,7 @@ namespace Nautilus.DomainModel.Entities
         /// struct argument is the default value, or if the for market position is flat.</exception>
         public ExitSignal(
             Symbol symbol,
-            EntityId signalId,
+            SignalId signalId,
             Label signalLabel,
             TradeType tradeType,
             MarketPosition forMarketPosition,

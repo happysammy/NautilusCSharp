@@ -189,7 +189,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                     this.Log.Warning($"{@event} ({@event.RejectedReason})");
                 }
             });
@@ -210,7 +210,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -232,7 +232,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -254,7 +254,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -276,7 +276,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -298,7 +298,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
@@ -318,7 +318,7 @@ namespace Nautilus.BlackBox.Portfolio
                     trade.Apply(@event);
                     this.tradeBook.Process(result.Value.TradeType);
 
-                    this.Log.Debug($"Applied {@event} to ({trade.TradeId}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
+                    this.Log.Debug($"Applied {@event} to ({trade.Id}), TradeStatus={trade.TradeStatus}, MarketPosition={trade.MarketPosition}");
                 }
             });
         }
