@@ -10,8 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Messages;
     using Nautilus.DomainModel.Factories;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

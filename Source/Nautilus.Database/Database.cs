@@ -13,11 +13,11 @@ namespace Nautilus.Database
     using System.Linq;
     using System.Threading.Tasks;
     using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Enums;

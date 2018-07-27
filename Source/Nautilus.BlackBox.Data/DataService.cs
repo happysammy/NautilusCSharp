@@ -19,7 +19,7 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Factories;

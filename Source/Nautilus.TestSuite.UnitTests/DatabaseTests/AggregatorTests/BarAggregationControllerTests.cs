@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using System.Threading;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Common.Messages;
+    using Nautilus.Common.Commands;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -33,7 +33,6 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
         private readonly IActorRef controllerRef;
-        private readonly StubClock stubClock;
 
         public BarAggregationControllerTests(ITestOutputHelper output)
         {

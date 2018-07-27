@@ -8,10 +8,10 @@
 
 namespace Nautilus.Database.Publishers
 {
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages;
     using Nautilus.Core.Validation;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Messages.Events;

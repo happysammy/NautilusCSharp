@@ -18,7 +18,7 @@ namespace Nautilus.Database.Collectors
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages;
+    using Nautilus.Common.Commands;
     using Nautilus.Database.Messages.Documents;
     using Nautilus.Database.Types;
     using Nautilus.DomainModel.Factories;

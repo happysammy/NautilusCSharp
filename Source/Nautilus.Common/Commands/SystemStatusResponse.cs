@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages
+namespace Nautilus.Common.Commands
 {
     using System;
     using Nautilus.Core.Annotations;

@@ -15,8 +15,8 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.DomainModel.Factories;
-    using global::MsgPack;
     using Nautilus.DomainModel.Identifiers;
+    using global::MsgPack;
 
     public class MsgPackOrderSerializer : IOrderSerializer
     {

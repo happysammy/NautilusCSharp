@@ -1,37 +1,35 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="SystemStatusRequest.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="StartSystem.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages
+namespace Nautilus.Common.Commands
 {
     using System;
+    using NodaTime;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
-    using NodaTime;
 
     /// <summary>
-    /// The system status request message.
+    /// Represents a command message to start the system.
     /// </summary>
     [Immutable]
-    public sealed class SystemStatusRequest : Command
+    public sealed class StartSystem : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.
+        /// Initializes a new instance of the <see cref="StartSystem"/> class.
         /// </summary>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        public SystemStatusRequest(
-            Guid identifier,
-            ZonedDateTime timestamp)
+        public StartSystem(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotNull(identifier, nameof(identifier));
+            Debug.NotNull(timestamp, nameof(timestamp));
         }
     }
 }

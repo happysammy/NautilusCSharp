@@ -17,8 +17,8 @@ namespace Nautilus.MsgPack
     using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using global::MsgPack;
     using Nautilus.DomainModel.Identifiers;
+    using global::MsgPack;
 
     /// <summary>
     /// Provides a serializer for the Message Pack specification.
