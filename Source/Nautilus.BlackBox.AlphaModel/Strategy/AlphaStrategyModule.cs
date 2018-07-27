@@ -14,7 +14,6 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;

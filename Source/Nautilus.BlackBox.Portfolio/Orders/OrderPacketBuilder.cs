@@ -12,7 +12,6 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.DomainModel.Aggregates;

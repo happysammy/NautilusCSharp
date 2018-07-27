@@ -15,7 +15,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The immutable sealed <see cref="MessagingServiceFactory"/>

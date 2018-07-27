@@ -17,7 +17,6 @@ namespace Nautilus.RabbitMQ
     using Nautilus.Core.Validation;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
-    using global::RabbitMQ.Client.Framing;
 
     /// <summary>
     /// Represents a RabbitMQ message broker.

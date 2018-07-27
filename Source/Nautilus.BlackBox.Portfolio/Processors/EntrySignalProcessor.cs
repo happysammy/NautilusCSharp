@@ -14,7 +14,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;

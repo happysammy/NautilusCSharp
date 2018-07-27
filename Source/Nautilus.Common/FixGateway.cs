@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;

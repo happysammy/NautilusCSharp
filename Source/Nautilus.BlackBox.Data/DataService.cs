@@ -16,7 +16,6 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Core;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
