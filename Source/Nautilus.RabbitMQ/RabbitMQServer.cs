@@ -9,16 +9,15 @@
 namespace Nautilus.RabbitMQ
 {
     using Akka.Actor;
-    using Akka.IO;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Core.Validation;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
-    using Nautilus.Core;
-    using Nautilus.DomainModel.Events;
+    using global::RabbitMQ.Client.Framing;
 
     /// <summary>
     /// Represents a RabbitMQ message broker.
@@ -57,50 +56,59 @@ namespace Nautilus.RabbitMQ
             using (this.commandChannel = this.connection.CreateModel())
             {
                 this.commandChannel.ExchangeDeclare(
-                    RabbitConstants.ExchangeExecutionCommands,
-                    "direct",
-                    durable:true,
-                    autoDelete:false);
+                    RabbitConstants.ExecutionCommandsExchange,
+                    RabbitConstants.Direct,
+                    durable: true,
+                    autoDelete: false);
 
-                this.commandChannel.QueueDeclare("inv_trader", true, false, false);
+                this.commandChannel.QueueDeclare(
+                    RabbitConstants.InvarianceTraderQueue,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false);
+
+                var consumer = new EventingBasicConsumer(this.commandChannel);
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body;
+                    var command = this.commandSerializer.Deserialize(body);
+
+                    this.Send(NautilusService.Execution, command);
+                };
             }
-
-            var consumer = new EventingBasicConsumer(this.commandChannel);
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body;
-                var command = this.commandSerializer.Deserialize(body);
-
-                //this.Send();
-            };
 
             using (this.eventChannel = this.connection.CreateModel())
             {
                 this.eventChannel.ExchangeDeclare(
-                    RabbitConstants.ExchangeExecutionEvents,
-                    "fanout",
-                    durable:true,
-                    autoDelete:false);
+                    RabbitConstants.ExecutionEventsExchange,
+                    RabbitConstants.FanOut,
+                    durable: true,
+                    autoDelete: false);
 
-                this.eventChannel.QueueDeclare("inv_trader", true, false, false);
+                this.eventChannel.QueueDeclare(
+                    RabbitConstants.InvarianceTraderQueue,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false);
             }
 
             // Event messages
-            this.Receive<Event>(msg => this.OnMessage(msg, this.Sender));
-
-
+            this.Receive<OrderEvent>(msg => this.OnMessage(msg, this.Sender));
         }
 
-        private void OnMessage(Event @event, IActorRef sender)
+        private void OnMessage(OrderEvent @event, IActorRef sender)
         {
+            Debug.NotNull(@event, nameof(@event));
+            Debug.NotNull(sender, nameof(sender));
+
             using (var channel = this.eventChannel)
             {
                 channel.BasicPublish(
-                    RabbitConstants.ExchangeExecutionCommands,
-                    "inv_trader",
-                    false,
-                    null,
-                    this.eventSerializer.Serialize(@event));
+                    RabbitConstants.ExecutionEventsExchange,
+                    RabbitConstants.InvarianceTraderQueue,
+                    mandatory: false,
+                    basicProperties: null,
+                    body: this.eventSerializer.Serialize(@event));
             }
         }
     }
