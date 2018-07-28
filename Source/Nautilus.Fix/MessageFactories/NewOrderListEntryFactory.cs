@@ -13,7 +13,6 @@ namespace Nautilus.Fix.MessageFactories
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
-    using Account = QuickFix.Fields.Account;
 
     /// <summary>
     /// Provides order list entry stop FIX messages.

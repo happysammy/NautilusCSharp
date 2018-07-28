@@ -8,19 +8,144 @@
 
 namespace Nautilus.MsgPack
 {
+    using System;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
+    using Nautilus.Common.Commands;
+    using Nautilus.Common.Commands.Base;
+    using NodaTime;
+    using global::MsgPack;
 
+    /// <summary>
+    /// Provides a command binary serializer for the Message Pack specification.
+    /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {
-        public byte[] Serialize(Command command)
+        private const string OrderCommand = "order_command";
+        private const string TradeCommand = "trade_command";
+        private const string SubmitOrder = "submit_order";
+        private const string CancelOrder = "cancel_order";
+        private const string ModifyOrder = "modify_order";
+        private const string ClosePosition = "close_position";
+
+        private readonly IOrderSerializer orderSerializer;
+
+        public MsgPackCommandSerializer()
         {
-            throw new System.NotImplementedException();
+            this.orderSerializer = new MsgPackOrderSerializer();
         }
 
+        /// <summary>
+        /// Serialize the given command to Message Pack specification bytes.
+        /// </summary>
+        /// <param name="command">The command to serialize.</param>
+        /// <returns>The serialized command.</returns>
+
+        public byte[] Serialize(Command command)
+        {
+            Debug.NotNull(@command, nameof(@command));
+
+            switch (command)
+            {
+                case OrderCommand orderCommand:
+                    return SerializeOrderCommand(orderCommand);
+
+                default: throw new InvalidOperationException(
+                    "Cannot serialize the command (unrecognized command).");
+            }
+        }
+
+        /// <summary>
+        /// Deserialize the given Message Pack specification bytes to a command.
+        /// </summary>
+        /// <param name="commandBytes">The command bytes to deserialize.</param>
+        /// <returns>The deserialized command.</returns>
         public Command Deserialize(byte[] commandBytes)
         {
-            throw new System.NotImplementedException();
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
+
+            var commandId = new Guid(unpacked[Key.CommandId].ToString());
+            var commandTimestamp = unpacked[Key.CommandTimestamp].ToString().ToZonedDateTimeFromIso();
+
+            switch (unpacked[Key.CommandType].ToString())
+            {
+                case OrderCommand:
+                    return DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
+
+                default: throw new InvalidOperationException(
+                    "Cannot deserialize the command (unrecognized command).");
+            }
+        }
+
+        private byte[] SerializeOrderCommand(OrderCommand orderCommand)
+        {
+            var package = new MessagePackObjectDictionary
+            {
+                {new MessagePackObject(Key.CommandType), OrderCommand},
+                {new MessagePackObject(Key.Order), this.orderSerializer.Serialize(orderCommand.Order)},
+                {new MessagePackObject(Key.CommandId), orderCommand.Id.ToString()},
+                {new MessagePackObject(Key.CommandTimestamp), orderCommand.Timestamp.ToIsoString()}
+            };
+
+            switch (orderCommand)
+            {
+                case SubmitOrder command:
+                    package.Add(new MessagePackObject(Key.OrderEvent), SubmitOrder);
+                    break;
+
+                case CancelOrder command:
+                    package.Add(new MessagePackObject(Key.OrderEvent), CancelOrder);
+                    package.Add(new MessagePackObject(Key.CancelReason), command.Reason);
+                    break;
+
+                case ModifyOrder command:
+                    package.Add(new MessagePackObject(Key.OrderEvent), ModifyOrder);
+                    package.Add(new MessagePackObject(Key.ModifiedPrice),
+                        MsgPackSerializationHelper.GetPriceString(command.ModifiedPrice));
+                    break;
+
+                default: throw new InvalidOperationException(
+                    "Cannot serialize the order command (unrecognized order command).");
+            }
+
+            return MsgPackSerializer.Serialize(package.Freeze());
+        }
+
+        private OrderCommand DeserializeOrderCommand(
+            Guid commandId,
+            ZonedDateTime commandTimestamp,
+            MessagePackObjectDictionary unpacked)
+        {
+            switch (unpacked[Key.OrderCommand].ToString())
+            {
+                case SubmitOrder:
+                    return new SubmitOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        commandId,
+                        commandTimestamp);
+
+                case CancelOrder:
+                    return new CancelOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        unpacked[Key.CancelReason].ToString(),
+                        commandId,
+                        commandTimestamp);
+
+                case ModifyOrder:
+                    return new ModifyOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
+                        commandId,
+                        commandTimestamp);
+
+                case ClosePosition:
+                    return null;
+
+                default: throw new InvalidOperationException(
+                    "Cannot deserialize the order command (unrecognized order command).");
+            }
         }
     }
 }

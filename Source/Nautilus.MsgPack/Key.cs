@@ -41,5 +41,11 @@ namespace Nautilus.MsgPack
         internal static string LeavesQuantity => "leaves_quantity";
         internal static string AveragePrice => "average_price";
         internal static string Timestamp => "timestamp";
+        internal static string CommandType => "command_type";
+        internal static string CommandId => "command_id";
+        internal static string CommandTimestamp => "command_timestamp";
+        internal static string OrderCommand => "order_command";
+        internal static string Order => "order";
+        internal static string CancelReason => "cancel_reason";
     }
 }

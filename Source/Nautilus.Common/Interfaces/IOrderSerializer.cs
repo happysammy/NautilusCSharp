@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
     /// Provides an interface for order serializers.
@@ -20,7 +21,7 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="order">The order to serialize.</param>
         /// <returns>The serialized order.</returns>
-        byte[] Serialize(Order order);
+        byte[] Serialize(IOrder order);
 
         /// <summary>
         /// Deserialize the given command byte[].
