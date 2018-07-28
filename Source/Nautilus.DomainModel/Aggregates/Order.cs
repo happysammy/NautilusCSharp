@@ -74,6 +74,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Side = orderSide;
             this.Type = orderType;
             this.Quantity = quantity;
+            this.FilledQuantity = Quantity.Zero();
             this.Price = price;
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
@@ -139,7 +140,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders filled quantity.
         /// </summary>
-        public Quantity FilledQuantity { get; private set; } = Quantity.Zero();
+        public Quantity FilledQuantity { get; private set; }
 
         /// <summary>
         /// Gets the orders price.

@@ -76,7 +76,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Returns the positions market position.
         /// </summary>
-        public MarketPosition MarketPosition => this.GetMarketPosition();
+        public MarketPosition MarketPosition => this.CalculateMarketPosition();
 
         /// <summary>
         /// Gets the positions entry time (optional).
@@ -111,30 +111,30 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private CommandResult When(OrderFilled positionEvent)
+        private CommandResult When(OrderFilled @event)
         {
-            Debug.NotNull(positionEvent, nameof(positionEvent));
+            Debug.NotNull(@event, nameof(@event));
 
             this.UpdatePosition(
-                positionEvent.OrderSide,
-                positionEvent.FilledQuantity.Value,
-                positionEvent.AveragePrice,
-                positionEvent.ExecutionTime);
-            this.Events.Add(positionEvent);
+                @event.OrderSide,
+                @event.FilledQuantity.Value,
+                @event.AveragePrice,
+                @event.ExecutionTime);
+            this.Events.Add(@event);
 
             return CommandResult.Ok();
         }
 
-        private CommandResult When(OrderPartiallyFilled positionEvent)
+        private CommandResult When(OrderPartiallyFilled @event)
         {
-            Debug.NotNull(positionEvent, nameof(positionEvent));
+            Debug.NotNull(@event, nameof(@event));
 
             this.UpdatePosition(
-                positionEvent.OrderSide,
-                positionEvent.FilledQuantity.Value,
-                positionEvent.AveragePrice,
-                positionEvent.ExecutionTime);
-            this.Events.Add(positionEvent);
+                @event.OrderSide,
+                @event.FilledQuantity.Value,
+                @event.AveragePrice,
+                @event.ExecutionTime);
+            this.Events.Add(@event);
 
             return CommandResult.Ok();
         }
@@ -153,8 +153,7 @@ namespace Nautilus.DomainModel.Aggregates
             {
                 this.relativeQuantity += quantity;
             }
-
-            if (orderSide == OrderSide.SELL)
+            else if (orderSide == OrderSide.SELL)
             {
                 this.relativeQuantity -= quantity;
             }
@@ -167,7 +166,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.AverageEntryPrice = averagePrice;
         }
 
-        private MarketPosition GetMarketPosition()
+        private MarketPosition CalculateMarketPosition()
         {
             if (this.relativeQuantity > 0)
             {
