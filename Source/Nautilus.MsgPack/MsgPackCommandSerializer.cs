@@ -82,7 +82,7 @@ namespace Nautilus.MsgPack
             var package = new MessagePackObjectDictionary
             {
                 {new MessagePackObject(Key.CommandType), OrderCommand},
-                {new MessagePackObject(Key.Order), HexConverter.ByteArrayToHexString(this.orderSerializer.Serialize(orderCommand.Order))},
+                {new MessagePackObject(Key.Order), Hex.ToHexString(this.orderSerializer.Serialize(orderCommand.Order))},
                 {new MessagePackObject(Key.CommandId), orderCommand.Id.ToString()},
                 {new MessagePackObject(Key.CommandTimestamp), orderCommand.Timestamp.ToIsoString()}
             };
@@ -116,7 +116,7 @@ namespace Nautilus.MsgPack
             MessagePackObjectDictionary unpacked)
         {
             var order = this.orderSerializer.Deserialize(
-                HexConverter.HexStringToByteArray(unpacked[Key.Order].ToString()));
+                Hex.FromHexString(unpacked[Key.Order].ToString()));
 
             switch (unpacked[Key.OrderCommand].ToString())
             {

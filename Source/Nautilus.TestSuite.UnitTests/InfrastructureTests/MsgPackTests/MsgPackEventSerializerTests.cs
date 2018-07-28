@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(submitted, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(accepted, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(rejected, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelled, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -205,7 +205,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(modified, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -251,7 +251,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(expired, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -281,7 +281,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(filled, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
     }
 }

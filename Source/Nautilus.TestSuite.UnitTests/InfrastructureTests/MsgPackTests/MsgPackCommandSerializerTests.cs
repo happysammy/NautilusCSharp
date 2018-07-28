@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using Nautilus.Common.Commands;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.MsgPack;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -47,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(command, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -68,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(command, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -89,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(command, unpacked);
-            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
+            this.output.WriteLine(Hex.ToHexString(packed));
         }
 
         [Fact]
@@ -114,7 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "2d30312d30315430303a30303a30302e3030305aad6f726465725f636f6d6d616e64" +
                             "ac7375626d69745f6f72646572";
 
-            var commandBytes = HexConverter.HexStringToByteArray(hexString);
+            var commandBytes = Hex.FromHexString(hexString);
 
             // Act
             var command = serializer.Deserialize(commandBytes) as SubmitOrder;
@@ -147,7 +146,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "5f636f6d6d616e64ac63616e63656c5f6f72646572ad63616e63656c5f726561736f" +
                             "6ea745585049524544";
 
-            var commandBytes = HexConverter.HexStringToByteArray(hexString);
+            var commandBytes = Hex.FromHexString(hexString);
 
             // Act
             var command = serializer.Deserialize(commandBytes) as CancelOrder;
@@ -180,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "5f636f6d6d616e64ac6d6f646966795f6f72646572ae6d6f6469666965645f707269" +
                             "6365a7312e3030303031";
 
-            var commandBytes = HexConverter.HexStringToByteArray(hexString);
+            var commandBytes = Hex.FromHexString(hexString);
 
             // Act
             var command = serializer.Deserialize(commandBytes) as ModifyOrder;
