@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.MsgPack;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -41,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(order, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
+            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(order, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
+            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -73,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(order, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
+            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -89,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(order, unpacked);
-            this.output.WriteLine(ByteHelpers.ByteArrayToHexString(packed));
+            this.output.WriteLine(HexConverter.ByteArrayToHexString(packed));
         }
 
         [Fact]
@@ -104,7 +103,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "305aa57072696365a44e4f4e45ad74696d655f696e5f666f726365a3444159ab6578" +
                             "706972655f74696d65a44e4f4e45";
 
-            var orderBytes = ByteHelpers.HexStringToByteArray(hexString);
+            var orderBytes = HexConverter.HexStringToByteArray(hexString);
 
             // Act
             var order = serializer.Deserialize(orderBytes);
@@ -125,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "5aa57072696365a7312e3030303030ad74696d655f696e5f666f726365a3444159ab" +
                             "6578706972655f74696d65a44e4f4e45";
 
-            var orderBytes = ByteHelpers.HexStringToByteArray(hexString);
+            var orderBytes = HexConverter.HexStringToByteArray(hexString);
 
             // Act
             var order = serializer.Deserialize(orderBytes);
@@ -146,7 +145,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
                             "302e3030305aa57072696365a7312e3030303030ad74696d655f696e5f666f726365" +
                             "a3444159ab6578706972655f74696d65a44e4f4e45";
 
-            var orderBytes = ByteHelpers.HexStringToByteArray(hexString);
+            var orderBytes = HexConverter.HexStringToByteArray(hexString);
 
             // Act
             var order = serializer.Deserialize(orderBytes);

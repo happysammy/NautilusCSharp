@@ -24,11 +24,9 @@ namespace Nautilus.MsgPack
     public class MsgPackCommandSerializer : ICommandSerializer
     {
         private const string OrderCommand = "order_command";
-        private const string TradeCommand = "trade_command";
         private const string SubmitOrder = "submit_order";
         private const string CancelOrder = "cancel_order";
         private const string ModifyOrder = "modify_order";
-        private const string ClosePosition = "close_position";
 
         private readonly IOrderSerializer orderSerializer;
 
@@ -92,18 +90,17 @@ namespace Nautilus.MsgPack
             switch (orderCommand)
             {
                 case SubmitOrder command:
-                    package.Add(new MessagePackObject(Key.OrderEvent), SubmitOrder);
+                    package.Add(new MessagePackObject(Key.OrderCommand), SubmitOrder);
                     break;
 
                 case CancelOrder command:
-                    package.Add(new MessagePackObject(Key.OrderEvent), CancelOrder);
+                    package.Add(new MessagePackObject(Key.OrderCommand), CancelOrder);
                     package.Add(new MessagePackObject(Key.CancelReason), command.Reason);
                     break;
 
                 case ModifyOrder command:
-                    package.Add(new MessagePackObject(Key.OrderEvent), ModifyOrder);
-                    package.Add(new MessagePackObject(Key.ModifiedPrice),
-                        MsgPackSerializationHelper.GetPriceString(command.ModifiedPrice));
+                    package.Add(new MessagePackObject(Key.OrderCommand), ModifyOrder);
+                    package.Add(new MessagePackObject(Key.ModifiedPrice), command.ModifiedPrice.ToString());
                     break;
 
                 default: throw new InvalidOperationException(
@@ -118,30 +115,30 @@ namespace Nautilus.MsgPack
             ZonedDateTime commandTimestamp,
             MessagePackObjectDictionary unpacked)
         {
+            var order = this.orderSerializer.Deserialize(
+                HexConverter.HexStringToByteArray(unpacked[Key.Order].ToString()));
+
             switch (unpacked[Key.OrderCommand].ToString())
             {
                 case SubmitOrder:
                     return new SubmitOrder(
-                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        order,
                         commandId,
                         commandTimestamp);
 
                 case CancelOrder:
                     return new CancelOrder(
-                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        order,
                         unpacked[Key.CancelReason].ToString(),
                         commandId,
                         commandTimestamp);
 
                 case ModifyOrder:
                     return new ModifyOrder(
-                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        order,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         commandId,
                         commandTimestamp);
-
-                case ClosePosition:
-                    return null;
 
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the order command (unrecognized order command).");

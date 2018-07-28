@@ -1,18 +1,18 @@
-//--------------------------------------------------------------------------------------------------
-// <copyright file="ByteHelpers.cs" company="Nautech Systems Pty Ltd">
-//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//  The use of this source code is governed by the license as found in the LICENSE.txt file.
-//  http://www.nautechsystems.net
+// -------------------------------------------------------------------------------------------------
+// <copyright file="HexConverter.cs" company="Nautech Systems Pty Ltd.">
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//   The use of this source code is governed by the license as found in the LICENSE.txt file.
+//   http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit
+namespace Nautilus.MsgPack
 {
     using System;
     using System.Linq;
     using System.Text;
 
-    public static class ByteHelpers
+    public class HexConverter
     {
         public static byte[] HexStringToByteArray(string hex) {
             return Enumerable.Range(0, hex.Length)

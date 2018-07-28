@@ -61,8 +61,8 @@ namespace Nautilus.Core
         public override bool Equals([CanBeNull] object other)
         {
             // ReSharper disable once UsePatternMatching (causes compiler warning).
-            var otherEvent = other as Event;
-            return otherEvent != null & this.Id.Equals(otherEvent?.Id);
+            var otherCommand = other as Command;
+            return otherCommand != null & this.Id.Equals(otherCommand?.Id);
         }
 
         /// <summary>
