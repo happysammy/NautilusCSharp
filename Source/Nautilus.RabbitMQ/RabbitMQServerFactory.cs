@@ -29,8 +29,12 @@ namespace Nautilus.RabbitMQ
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer)
         {
-            var factory = new ConnectionFactory() {HostName = RabbitConstants.LocalHost};
-            var connection = factory.CreateConnection();
+            var factory = new ConnectionFactory
+            {
+                HostName = RabbitConstants.LocalHost,
+                UserName = RabbitConstants.Username,
+                Password = RabbitConstants.Password,
+            };
 
             return actorSystem.ActorOf(Props.Create(
                 () => new RabbitMQServer(
@@ -38,7 +42,8 @@ namespace Nautilus.RabbitMQ
                     messagingAdapter,
                     commandSerializer,
                     eventSerializer,
-                    connection)));
+                    factory.CreateConnection(),
+                    factory.CreateConnection())));
         }
     }
 }

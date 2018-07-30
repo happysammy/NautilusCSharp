@@ -8,6 +8,7 @@
 
 namespace Nautilus.RabbitMQ
 {
+    using System;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -19,23 +20,23 @@ namespace Nautilus.RabbitMQ
     using global::RabbitMQ.Client.Events;
 
     /// <summary>
-    /// Represents a RabbitMQ message broker.
+    /// Provides a RabbitMQ message broker implementation.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public class RabbitMQServer : ActorComponentBusConnectedBase
     {
         private readonly ICommandSerializer commandSerializer;
         private readonly IEventSerializer eventSerializer;
-        private readonly IConnection connection;
-        private readonly IModel commandChannel;
-        private readonly IModel eventChannel;
+        private readonly IConnection commandConnection;
+        private readonly IConnection eventConnection;
 
         public RabbitMQServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
-            IConnection connection)
+            IConnection commandConnection,
+            IConnection eventConnection)
             : base(
                 NautilusService.Messaging,
                 LabelFactory.Component(nameof(RabbitMQServer)),
@@ -46,49 +47,77 @@ namespace Nautilus.RabbitMQ
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(commandSerializer, nameof(commandSerializer));
             Validate.NotNull(eventSerializer, nameof(eventSerializer));
-            Validate.NotNull(connection, nameof(connection));
+            Validate.NotNull(commandConnection, nameof(commandConnection));
+            Validate.NotNull(eventConnection, nameof(eventConnection));
 
             this.commandSerializer = commandSerializer;
             this.eventSerializer = eventSerializer;
-            this.connection = connection;
+            this.commandConnection = commandConnection;
+            this.eventConnection = eventConnection;
 
-            using (this.commandChannel = this.connection.CreateModel())
+            try
             {
-                this.commandChannel.ExchangeDeclare(
-                    RabbitConstants.ExecutionCommandsExchange,
-                    RabbitConstants.Direct,
-                    durable: true,
-                    autoDelete: false);
-
-                this.commandChannel.QueueDeclare(
-                    RabbitConstants.InvarianceTraderQueue,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false);
-
-                var consumer = new EventingBasicConsumer(this.commandChannel);
-                consumer.Received += (model, ea) =>
+                using (var commandChannel = this.commandConnection.CreateModel())
                 {
-                    var body = ea.Body;
-                    var command = this.commandSerializer.Deserialize(body);
+                    commandChannel.ExchangeDeclare(
+                        RabbitConstants.ExecutionCommandsExchange,
+                        ExchangeType.Direct,
+                        durable: true,
+                        autoDelete: false);
+                    this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
 
-                    this.Send(NautilusService.Execution, command);
-                };
+                    commandChannel.QueueDeclare(
+                        RabbitConstants.InvarianceTraderQueue,
+                        durable: true,
+                        exclusive: false,
+                        autoDelete: false);
+                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} declared.");
+
+                    commandChannel.QueueBind(
+                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.ExecutionCommandsExchange,
+                        RabbitConstants.InvarianceTraderQueue);
+                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
+
+                    var consumer = new EventingBasicConsumer(commandChannel);
+                    consumer.Received += (model, ea) =>
+                    {
+                        var body = ea.Body;
+                        var command = this.commandSerializer.Deserialize(body);
+
+                        this.Send(NautilusService.Execution, command);
+                    };
+                    this.Log.Information($"Basic event consumer created.");
+
+                }
+
+                using (var eventChannel = this.eventConnection.CreateModel())
+                {
+                    eventChannel.ExchangeDeclare(
+                        RabbitConstants.ExecutionEventsExchange,
+                        ExchangeType.Fanout,
+                        durable: true,
+                        autoDelete: false);
+                    this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
+
+                    eventChannel.QueueDeclare(
+                        RabbitConstants.InvarianceTraderQueue,
+                        durable: true,
+                        exclusive: false,
+                        autoDelete: false);
+                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} declared.");
+
+                    eventChannel.QueueBind(
+                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.ExecutionEventsExchange,
+                        RabbitConstants.InvarianceTraderQueue);
+                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
+                }
             }
-
-            using (this.eventChannel = this.connection.CreateModel())
+            catch (Exception ex)
             {
-                this.eventChannel.ExchangeDeclare(
-                    RabbitConstants.ExecutionEventsExchange,
-                    RabbitConstants.FanOut,
-                    durable: true,
-                    autoDelete: false);
-
-                this.eventChannel.QueueDeclare(
-                    RabbitConstants.InvarianceTraderQueue,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false);
+                this.Log.Error($"Error {ex.Message}", ex);
+                throw ex;
             }
 
             // Event messages
@@ -100,7 +129,9 @@ namespace Nautilus.RabbitMQ
             Debug.NotNull(@event, nameof(@event));
             Debug.NotNull(sender, nameof(sender));
 
-            using (var channel = this.eventChannel)
+            this.Log.Debug($"Event {@event} received.");
+
+            using (var channel = this.eventConnection.CreateModel())
             {
                 channel.BasicPublish(
                     RabbitConstants.ExecutionEventsExchange,
@@ -108,6 +139,8 @@ namespace Nautilus.RabbitMQ
                     mandatory: false,
                     basicProperties: null,
                     body: this.eventSerializer.Serialize(@event));
+
+                this.Log.Debug($"Published event {@event}.");
             }
         }
     }

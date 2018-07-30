@@ -8,6 +8,8 @@
 
 namespace Nautilus.RabbitMQ
 {
+    using global::RabbitMQ.Client;
+
     /// <summary>
     /// Provides constants for the <see cref="RabbitMQ"/> messaging infrastructure.
     /// </summary>
@@ -15,11 +17,11 @@ namespace Nautilus.RabbitMQ
     {
         private const string LocalHostString = "localhost";
         private const int DefaultPortInt = 5672;
+        private const string UsernameString = "guest";
+        private const string PasswordString = "guest";
         private const string ExecutionCommandsString = "nautilus.execution.commands";
         private const string ExecutionEventsString = "nautilus.execution.events";
         private const string InvarianceTraderQueueString = "inv_trader";
-        private const string FanOutString = "fanout";
-        private const string DirectString = "direct";
 
         /// <summary>
         /// Gets the <see cref="RabbitMQ"/> local host string.
@@ -32,6 +34,16 @@ namespace Nautilus.RabbitMQ
         public static int DefaultPort => DefaultPortInt;
 
         /// <summary>
+        /// Gets the <see cref="RabbitMQ"/> username.
+        /// </summary>
+        public static string Username => UsernameString;
+
+        /// <summary>
+        /// Gets the <see cref="RabbitMQ"/> password.
+        /// </summary>
+        public static string Password => PasswordString;
+
+        /// <summary>
         /// Gets the <see cref="RabbitMQ"/> execution commands exchange name.
         /// </summary>
         public static string ExecutionCommandsExchange => ExecutionCommandsString;
@@ -40,16 +52,6 @@ namespace Nautilus.RabbitMQ
         /// Gets the <see cref="RabbitMQ"/> execution events exchange name.
         /// </summary>
         public static string ExecutionEventsExchange => ExecutionEventsString;
-
-        /// <summary>
-        /// Gets the <see cref="RabbitMQ"/> fanout exchange type string.
-        /// </summary>
-        public static string FanOut => FanOutString;
-
-        /// <summary>
-        /// Gets the <see cref="RabbitMQ"/> direct exchange type string.
-        /// </summary>
-        public static string Direct => DirectString;
 
         /// <summary>
         /// Gets the <see cref="RabbitMQ"/> Invariance Trader client queue name.
