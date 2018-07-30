@@ -121,9 +121,9 @@ namespace Nautilus.Database.Build
                 { NautilusService.Scheduler, schedulerRef },
                 { NautilusService.DatabaseTaskManager, databaseTaskActorRef },
                 { NautilusService.DataCollectionManager, dataCollectionActorRef },
-                { NautilusService.BarAggregationController, barAggregationControllerRef},
-                { NautilusService.TickPublisher, tickPublisherRef},
-                { NautilusService.BarPublisher, barPublisherRef}
+                { NautilusService.BarAggregationController, barAggregationControllerRef },
+                { NautilusService.TickPublisher, tickPublisherRef },
+                { NautilusService.BarPublisher, barPublisherRef }
             };
 
             var fixClient = fixClientFactory.Create(
@@ -131,14 +131,14 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 tickDataProcessor);
 
-            var fixGateway = new FixGateway(
+            var gateway = new ExecutionGateway(
                 setupContainer,
                 messagingAdapter,
                 fixClient,
                 instrumentRepository,
                 CurrencyCode.GBP);
 
-            fixClient.InitializeGateway(fixGateway);
+            fixClient.InitializeGateway(gateway);
             instrumentRepository.CacheAll();
 
             return new Database(

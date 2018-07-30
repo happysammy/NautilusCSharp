@@ -36,7 +36,7 @@ namespace Nautilus.BlackBox.Data
         private readonly IActorRef marketDataPortRef;
         private readonly IDictionary<Symbol, IActorRef> marketDataProcessorIndex = new Dictionary<Symbol, IActorRef>();
 
-        private IFixGateway fixGateway;
+        private IExecutionGateway executionGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -87,7 +87,7 @@ namespace Nautilus.BlackBox.Data
         private void OnMessage(Subscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.NotNull(this.fixGateway, nameof(this.fixGateway));
+            Debug.NotNull(this.executionGateway, nameof(this.executionGateway));
 
             this.Execute(() =>
             {
@@ -132,7 +132,7 @@ namespace Nautilus.BlackBox.Data
 
             this.Execute(() =>
                 {
-                    this.fixGateway = message.FixGateway;
+                    this.executionGateway = message.ExecutionGateway;
                 });
         }
 

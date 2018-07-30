@@ -25,7 +25,7 @@ namespace Nautilus.BlackBox.Execution
     [Immutable]
     public sealed class OrderBus : ActorComponentBusConnectedBase
     {
-        private IFixGateway gateway;
+        private IExecutionGateway gateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderBus"/> class.
@@ -67,7 +67,7 @@ namespace Nautilus.BlackBox.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.gateway = message.FixGateway;
+            this.gateway = message.ExecutionGateway;
             this.Log.Information($"{this.gateway} initialized.");
 
             Debug.NotNull(this.gateway, nameof(this.gateway));

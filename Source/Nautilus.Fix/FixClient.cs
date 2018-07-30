@@ -10,12 +10,11 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.Fix.Interfaces;
+
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
@@ -79,10 +78,10 @@ namespace Nautilus.Fix
         public bool IsConnected => this.IsFixConnected;
 
         /// <summary>
-        /// The initializes the brokerage gateway.
+        /// The initializes the execution gateway.
         /// </summary>
-        /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeGateway(IFixGateway gateway)
+        /// <param name="gateway">The execution gateway.</param>
+        public void InitializeGateway(IExecutionGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 

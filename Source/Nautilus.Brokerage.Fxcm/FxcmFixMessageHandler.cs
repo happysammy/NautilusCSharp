@@ -37,7 +37,7 @@ namespace Nautilus.Brokerage.FXCM
         private readonly IReadOnlyDictionary<string, int> pricePrecisionIndex;
         private readonly ITickProcessor tickProcessor;
 
-        private IFixGateway fixGateway;
+        private IExecutionGateway executionGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
@@ -59,14 +59,14 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Initializes the brokerage gateway.
+        /// Initializes the execution gateway.
         /// </summary>
-        /// <param name="gateway">The brokerage gateway.</param>
-        public void InitializeGateway(IFixGateway gateway)
+        /// <param name="gateway">The execution gateway.</param>
+        public void InitializeGateway(IExecutionGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this.fixGateway = gateway;
+            this.executionGateway = gateway;
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Nautilus.Brokerage.FXCM
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FxcmFixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this.fixGateway.OnInstrumentsUpdate(instruments, responseId, result);
+                this.executionGateway.OnInstrumentsUpdate(instruments, responseId, result);
             });
         }
 
@@ -191,7 +191,7 @@ namespace Nautilus.Brokerage.FXCM
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-                this.fixGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
+                this.executionGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
             });
         }
 
@@ -216,7 +216,7 @@ namespace Nautilus.Brokerage.FXCM
                 var marginCall = message.GetField(9045);
                 var time = this.TimeNow(); // TODO: Replace with message time.
 
-                this.fixGateway.OnAccountReport(
+                this.executionGateway.OnAccountReport(
                     inquiryId,
                     accountNumber,
                     cashBalance,
@@ -242,7 +242,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                this.fixGateway.OnRequestForPositionsAck(
+                this.executionGateway.OnRequestForPositionsAck(
                     message.Account.ToString(),
                     message.PosReqID.ToString());
             });
@@ -316,7 +316,7 @@ namespace Nautilus.Brokerage.FXCM
                 var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmcode})";
                 var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
-                this.fixGateway.OnOrderCancelReject(
+                this.executionGateway.OnOrderCancelReject(
                     symbol,
                     Venue.FXCM,
                     orderId,
@@ -365,7 +365,7 @@ namespace Nautilus.Brokerage.FXCM
                     var rejectReasonText = GetField(message, Tags.CxlRejReason);
                     var rejectReason = $"Code({rejectReasonCode})={FxcmFixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
-                    this.fixGateway.OnOrderRejected(
+                    this.executionGateway.OnOrderRejected(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -375,7 +375,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (message.GetField(Tags.OrdStatus) == OrdStatus.CANCELED.ToString())
                 {
-                    this.fixGateway.OnOrderCancelled(
+                    this.executionGateway.OnOrderCancelled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -386,7 +386,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (message.GetField(Tags.OrdStatus) == OrdStatus.REPLACED.ToString())
                 {
-                    this.fixGateway.OnOrderModified(
+                    this.executionGateway.OnOrderModified(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -403,7 +403,7 @@ namespace Nautilus.Brokerage.FXCM
                                        ? (ZonedDateTime?)FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
                                        : null;
 
-                    this.fixGateway.OnOrderWorking(
+                    this.executionGateway.OnOrderWorking(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -421,7 +421,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (message.GetField(Tags.OrdStatus) == OrdStatus.EXPIRED.ToString())
                 {
-                    this.fixGateway.OnOrderExpired(
+                    this.executionGateway.OnOrderExpired(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -437,7 +437,7 @@ namespace Nautilus.Brokerage.FXCM
                     var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.fixGateway.OnOrderFilled(
+                    this.executionGateway.OnOrderFilled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -460,7 +460,7 @@ namespace Nautilus.Brokerage.FXCM
                     var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this.fixGateway.OnOrderPartiallyFilled(
+                    this.executionGateway.OnOrderPartiallyFilled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -488,7 +488,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                this.fixGateway.OnPositionReport(message.Account.ToString());
+                this.executionGateway.OnPositionReport(message.Account.ToString());
             });
         }
 

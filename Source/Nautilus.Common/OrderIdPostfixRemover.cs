@@ -29,7 +29,6 @@ namespace Nautilus.Common
             Validate.NotNull(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
-
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);
 
             if (index > 0)

@@ -22,8 +22,24 @@ namespace Nautilus.BlackBox.Core.Build
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Interfaces;
 
+    /// <summary>
+    /// Provides a factory for creating <see cref="BlackBox"/> instances.
+    /// </summary>
     public static class BlackBoxFactory
     {
+        /// <summary>
+        /// Creates and returns and new black box.
+        /// </summary>
+        /// <param name="environment">The black box environment.</param>
+        /// <param name="clock">The clock.</param>
+        /// <param name="loggingAdapter">The logging adapter.</param>
+        /// <param name="databaseAdapter">The database adapter.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="quoteProvider">The quote provider.</param>
+        /// <param name="riskModel">The risk model.</param>
+        /// <param name="account">The account.</param>
+        /// <param name="servicesFactory">The services factory.</param>
+        /// <returns></returns>
         public static BlackBox Create(
             BlackBoxEnvironment environment,
             IZonedClock clock,
@@ -85,7 +101,7 @@ namespace Nautilus.BlackBox.Core.Build
             var brokerageClient =
                 servicesFactory.FixClient.Create(container, messagingAdapter, null);
 
-            var tradeGateway = new FixGateway(
+            var tradeGateway = new ExecutionGateway(
                 container,
                 messagingAdapter,
                 brokerageClient,

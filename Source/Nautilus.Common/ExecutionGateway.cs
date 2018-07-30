@@ -31,21 +31,21 @@ namespace Nautilus.Common
     /// <summary>
     /// The system boundary for the trading implementation.
     /// </summary>
-    public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
+    public sealed class ExecutionGateway : ComponentBusConnectedBase, IExecutionGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
         private readonly CurrencyCode accountCurrency;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FixGateway"/> class.
+        /// Initializes a new instance of the <see cref="ExecutionGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The trade client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="accountCurrency">The FIX account currency.</param>
-        public FixGateway(
+        public ExecutionGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient,
@@ -53,7 +53,7 @@ namespace Nautilus.Common
             CurrencyCode accountCurrency)
             : base(
                 NautilusService.FIX,
-                new Label(nameof(FixGateway)),
+                new Label(nameof(ExecutionGateway)),
                 container,
                 messagingAdapter)
         {
@@ -296,7 +296,7 @@ namespace Nautilus.Common
         /// <param name="cashBalance">The cash balance.</param>
         /// <param name="cashStartDay">The cash start day.</param>
         /// <param name="cashDaily">The cash daily.</param>
-        /// <param name="marginUsedMaint">The margin used maintenance.</param>
+        /// <param name="marginUsedMaintenance">The margin used maintenance.</param>
         /// <param name="marginUsedLiq">The margin used liquidity.</param>
         /// <param name="marginRatio">The margin ratio.</param>
         /// <param name="marginCallStatus">The margin call status.</param>
@@ -307,7 +307,7 @@ namespace Nautilus.Common
             decimal cashBalance,
             decimal cashStartDay,
             decimal cashDaily,
-            decimal marginUsedMaint,
+            decimal marginUsedMaintenance,
             decimal marginUsedLiq,
             decimal marginRatio,
             string marginCallStatus,
@@ -320,7 +320,7 @@ namespace Nautilus.Common
                 Validate.DecimalNotOutOfRange(cashBalance, nameof(cashBalance), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(cashStartDay, nameof(cashStartDay), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(cashDaily, nameof(cashDaily), decimal.Zero, decimal.MaxValue);
-                Validate.DecimalNotOutOfRange(marginUsedMaint, nameof(marginUsedMaint), decimal.Zero, decimal.MaxValue);
+                Validate.DecimalNotOutOfRange(marginUsedMaintenance, nameof(marginUsedMaintenance), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(marginUsedLiq, nameof(marginUsedLiq), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(marginRatio, nameof(marginRatio), decimal.Zero, decimal.MaxValue);
                 Validate.NotNull(marginCallStatus, nameof(marginCallStatus));
@@ -329,11 +329,11 @@ namespace Nautilus.Common
                 var accountEvent = new AccountEvent(
                     this.fixClient.Broker,
                     account,
-                    this.GetMoneyType(cashBalance),
-                    this.GetMoneyType(cashStartDay),
-                    this.GetMoneyType(cashDaily),
-                    this.GetMoneyType(marginUsedLiq),
-                    this.GetMoneyType(marginUsedMaint),
+                    this.GetMoney(cashBalance),
+                    this.GetMoney(cashStartDay),
+                    this.GetMoney(cashDaily),
+                    this.GetMoney(marginUsedLiq),
+                    this.GetMoney(marginUsedMaintenance),
                     marginRatio,
                     marginCallStatus,
                     this.NewGuid(),
@@ -781,7 +781,7 @@ namespace Nautilus.Common
             });
         }
 
-        private Money GetMoneyType(decimal amount)
+        private Money GetMoney(decimal amount)
         {
             Debug.DecimalNotOutOfRange(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
 

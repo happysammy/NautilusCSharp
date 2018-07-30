@@ -40,10 +40,10 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
-        /// Initializes the FIX gateway.
+        /// Initializes the execution gateway.
         /// </summary>
-        /// <param name="gateway">The FIX gateway.</param>
-        void InitializeGateway(IFixGateway gateway);
+        /// <param name="gateway">The execution gateway.</param>
+        void InitializeGateway(IExecutionGateway gateway);
 
         /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.

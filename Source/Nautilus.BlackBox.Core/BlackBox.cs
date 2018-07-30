@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Core
     {
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IFixGateway fixGateway;
+        private readonly IExecutionGateway executionGateway;
         private readonly List<IAlphaStrategy> alphaStrategyList;
         private readonly List<IAlphaStrategy> startedStrategies;
 
@@ -52,17 +52,16 @@ namespace Nautilus.BlackBox.Core
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter"></param>
         /// <param name="switchboard">The service factory.</param>
-        /// <param name="fixGateway">The brokerage gateway.</param>
-        /// <param name="fixClient">The brokerage client.</param>
+        /// <param name="executionGateway">The execution gateway.</param>
+        /// <param name="fixClient">The FIX client.</param>
         /// <param name="account">The brokerage account.</param>
         /// <param name="riskModel">The risk model.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BlackBox(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             MessagingAdapter messagingAdapter,
             Switchboard switchboard,
-            IFixGateway fixGateway,
+            IExecutionGateway executionGateway,
             IFixClient fixClient,
             IBrokerageAccount account,
             IRiskModel riskModel)
@@ -76,14 +75,14 @@ namespace Nautilus.BlackBox.Core
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(switchboard, nameof(switchboard));
-            Validate.NotNull(fixGateway, nameof(fixGateway));
+            Validate.NotNull(executionGateway, nameof(executionGateway));
             Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(riskModel, nameof(riskModel));
 
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
-            this.fixGateway = fixGateway;
+            this.executionGateway = executionGateway;
             this.alphaStrategyList = new List<IAlphaStrategy>();
             this.startedStrategies = new List<IAlphaStrategy>();
 
@@ -98,7 +97,7 @@ namespace Nautilus.BlackBox.Core
             this.Send(
                 new ReadOnlyList<NautilusService>(new List<NautilusService> { NautilusService.Data, NautilusService.Execution }),
                 new InitializeGateway(
-                    this.fixGateway,
+                    this.executionGateway,
                     this.NewGuid(),
                     this.TimeNow()));
 
@@ -110,7 +109,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            fixClient.InitializeGateway(this.fixGateway);
+            fixClient.InitializeGateway(this.executionGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -130,7 +129,7 @@ namespace Nautilus.BlackBox.Core
         {
             this.Execute(() =>
             {
-                this.fixGateway.Connect();
+                this.executionGateway.Connect();
             });
         }
 
@@ -279,7 +278,7 @@ namespace Nautilus.BlackBox.Core
             {
                 //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
 
-                this.fixGateway.Disconnect();
+                this.executionGateway.Disconnect();
 
                 this.StopAlphaStrategyModulesAll();
                 this.RemoveAlphaStrategyModulesAll();

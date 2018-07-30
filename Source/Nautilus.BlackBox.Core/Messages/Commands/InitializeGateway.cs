@@ -24,26 +24,26 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="InitializeGateway"/> class.
         /// </summary>
-        /// <param name="fixGateway">The message brokerage gateway.</param>
+        /// <param name="executionGateway">The execution gateway.</param>
         /// <param name="messageId">The message identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public InitializeGateway(
-            IFixGateway fixGateway,
+            IExecutionGateway executionGateway,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
         {
-            Validate.NotNull(fixGateway, nameof(fixGateway));
+            Validate.NotNull(executionGateway, nameof(executionGateway));
             Validate.NotDefault(messageId, nameof(messageId));
             Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
 
-            this.FixGateway = fixGateway;
+            this.ExecutionGateway = executionGateway;
         }
 
         /// <summary>
-        /// Gets the messages brokerage gateway.
+        /// Gets the messages execution gateway.
         /// </summary>
-        public IFixGateway FixGateway { get; }
+        public IExecutionGateway ExecutionGateway { get; }
     }
 }

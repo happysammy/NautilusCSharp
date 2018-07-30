@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
                 messagingAdapter)));
 
             var message = new InitializeGateway(
-                new Mock<IFixGateway>().Object,
+                new Mock<IExecutionGateway>().Object,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

@@ -20,10 +20,10 @@ namespace Nautilus.Common.Interfaces
     /// <summary>
     /// Provides a gateway and anti-corruption layer into the system.
     /// </summary>
-    public interface IFixGateway
+    public interface IExecutionGateway
     {
-                /// <summary>
-        /// Gets the brokerage gateways broker name.
+        /// <summary>
+        /// Gets the execution gateways broker name.
         /// </summary>
         Broker Broker { get; }
 
@@ -139,7 +139,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="cashBalance">The cash balance.</param>
         /// <param name="cashStartDay">The cash start day.</param>
         /// <param name="cashDaily">The cash daily.</param>
-        /// <param name="marginUsedMaint">The margin used maintenance.</param>
+        /// <param name="marginUsedMaintenance">The margin used maintenance.</param>
         /// <param name="marginUsedLiq">The margin used liquidity.</param>
         /// <param name="marginRatio">The margin ratio.</param>
         /// <param name="marginCallStatus">The margin call status.</param>
@@ -150,7 +150,7 @@ namespace Nautilus.Common.Interfaces
             decimal cashBalance,
             decimal cashStartDay,
             decimal cashDaily,
-            decimal marginUsedMaint,
+            decimal marginUsedMaintenance,
             decimal marginUsedLiq,
             decimal marginRatio,
             string marginCallStatus,
