@@ -5,7 +5,7 @@
   </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsAsErrors/>
+        <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Scheduler.xml</DocumentationFile>
     </PropertyGroup>
   <ItemGroup>
@@ -16,7 +16,7 @@
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
     <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
+    </ItemGroup>
 </Project>

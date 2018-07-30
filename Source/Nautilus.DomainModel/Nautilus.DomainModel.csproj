@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
+    </ItemGroup>
 </Project>
