@@ -9,22 +9,23 @@
 namespace Nautilus.Common.Enums
 {
     /// <summary>
-    /// The system status enumeration.
+    /// The status enumeration represents the status of the system or system component.
     /// </summary>
-    public enum ComponentStatus
+    public enum Status
     {
         /// <summary>
-        /// The component is running normally.
+        /// The system or component is running normally.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         OK = 0,
 
         /// <summary>
-        /// The component is suspended (has not failed).
+        /// The system or component is suspended (has not failed).
         /// </summary>
         Suspended = 1,
 
         /// <summary>
-        /// The component has failed and will not process further work.
+        /// The system or component has failed and will not process further work.
         /// </summary>
         Failed = 2,
     }

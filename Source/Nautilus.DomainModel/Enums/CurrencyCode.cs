@@ -8,9 +8,12 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// ISO 4217 currency code.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum CurrencyCode
     {
         /// <summary>

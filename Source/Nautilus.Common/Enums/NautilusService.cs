@@ -51,6 +51,7 @@ namespace Nautilus.Common.Enums
         /// <summary>
         /// The FIX service context.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         FIX,
 
         /// <summary>

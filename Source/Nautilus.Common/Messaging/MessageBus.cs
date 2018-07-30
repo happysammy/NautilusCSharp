@@ -24,7 +24,6 @@ namespace Nautilus.Common.Messaging
     public sealed class MessageBus<T> : ReceiveActor
         where T : Message
     {
-        private readonly IZonedClock clock;
         private readonly ILogger log;
         private readonly IActorRef messageStore;
         private readonly CommandHandler commandHandler;
@@ -48,7 +47,6 @@ namespace Nautilus.Common.Messaging
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messageStoreRef, nameof(messageStoreRef));
 
-            this.clock = container.Clock;
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, component);
             this.messageStore = messageStoreRef;
             this.commandHandler = new CommandHandler(this.log);

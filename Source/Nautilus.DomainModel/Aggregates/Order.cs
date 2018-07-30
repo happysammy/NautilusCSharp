@@ -78,7 +78,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Price = price;
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
-            this.orderIds.Add(this.Id as OrderId);
+            this.orderIds.Add(this.Id);
 
             ValidateExpireTime(expireTime);
         }

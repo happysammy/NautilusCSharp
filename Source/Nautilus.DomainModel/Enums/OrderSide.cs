@@ -8,11 +8,13 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
     /// Represents the execution direction of an <see cref="Order"/>.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum OrderSide
     {
         /// <summary>

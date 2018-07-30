@@ -20,6 +20,17 @@ namespace Nautilus.DomainModel.Entities
     [Immutable]
     public struct EconomicEvent
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EconomicEvent"/> class.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="title"></param>
+        /// <param name="country"></param>
+        /// <param name="currency"></param>
+        /// <param name="impact"></param>
+        /// <param name="actual"></param>
+        /// <param name="consensus"></param>
+        /// <param name="previous"></param>
         public EconomicEvent(
             ZonedDateTime time,
             string title,
@@ -52,42 +63,42 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the economic news events scheduled time.
         /// </summary>
-        public ZonedDateTime Time { get; private set; }
+        public ZonedDateTime Time { get; }
 
         /// <summary>
         /// Gets the economic news events title/name.
         /// </summary>
-        public string Title { get; private set; }
+        public string Title { get; }
 
         /// <summary>
         /// Gets the economic news events country effected.
         /// </summary>
-        public Country Country { get; private set; }
+        public Country Country { get; }
 
         /// <summary>
         /// Gets the economic news events currency effected.
         /// </summary>
-        public CurrencyCode Currency { get; private set; }
+        public CurrencyCode Currency { get; }
 
         /// <summary>
         /// Gets the economic news events expected impact on the market.
         /// </summary>
-        public NewsImpact Impact { get; private set; }
+        public NewsImpact Impact { get; }
 
         /// <summary>
         /// Gets the economic news events actual figure.
         /// </summary>
-        public Option<decimal> Actual { get; private set; }
+        public Option<decimal> Actual { get; }
 
         /// <summary>
         /// Gets the economic news events consensus figure.
         /// </summary>
-        public Option<decimal> Consensus { get; private set; }
+        public Option<decimal> Consensus { get; }
 
         /// <summary>
         /// Gets the economic news events previous figure.
         /// </summary>
-        public Option<decimal> Previous { get; private set; }
+        public Option<decimal> Previous { get; }
 
         /// <summary>
         /// Gets a value indication whether this economic news event is a speech or meeting.

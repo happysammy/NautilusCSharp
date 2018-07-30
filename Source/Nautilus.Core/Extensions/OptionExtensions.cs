@@ -59,12 +59,12 @@ namespace Nautilus.Core.Extensions
         /// <param name="selector">The selector (cannot be null).</param>
         /// <param name="defaultValue">The default value.</param>
         /// <typeparam name="T">The type.</typeparam>
-        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="TK">The key type.</typeparam>
         /// <returns>The unwrapped type.</returns>
-        public static K Unwrap<T, K>(
+        public static TK Unwrap<T, TK>(
             this Option<T> option,
-            Func<T, K> selector,
-            [CanBeNull] K defaultValue = default(K))
+            Func<T, TK> selector,
+            [CanBeNull] TK defaultValue = default)
         {
             Debug.NotNull(option, nameof(option));
             Debug.NotNull(selector, nameof(selector));
@@ -105,15 +105,15 @@ namespace Nautilus.Core.Extensions
         /// <param name="option">The option (cannot be null).</param>
         /// <param name="selector">The selector (cannot be null).</param>
         /// <typeparam name="T">The type.</typeparam>
-        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="TK">The key type.</typeparam>
         /// <returns>The option.</returns>
-        public static Option<K> Select<T, K>(this Option<T> option, Func<T, K> selector)
+        public static Option<TK> Select<T, TK>(this Option<T> option, Func<T, TK> selector)
         {
             Debug.NotNull(option, nameof(option));
             Debug.NotNull(selector, nameof(selector));
 
             return option.HasNoValue
-                ? default(K)
+                ? default(TK)
                 : selector(option.Value);
         }
 
@@ -124,15 +124,15 @@ namespace Nautilus.Core.Extensions
         /// <param name="option">The option (cannot be null).</param>
         /// <param name="selector">The selector (cannot be null).</param>
         /// <typeparam name="T">The type.</typeparam>
-        /// <typeparam name="K">The option type.</typeparam>
+        /// <typeparam name="TK">The option type.</typeparam>
         /// <returns>The option.</returns>
-        public static Option<K> Select<T, K>(this Option<T> option, Func<T, Option<K>> selector)
+        public static Option<TK> Select<T, TK>(this Option<T> option, Func<T, Option<TK>> selector)
         {
             Debug.NotNull(option, nameof(option));
             Debug.NotNull(selector, nameof(selector));
 
             return option.HasNoValue
-                ? default(K)
+                ? default(TK)
                 : selector(option.Value);
         }
 

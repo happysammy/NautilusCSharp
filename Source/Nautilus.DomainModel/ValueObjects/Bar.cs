@@ -80,9 +80,9 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Open = Price.Create(open, open.GetDecimalPlaces());
-            this.High = Price.Create(high, open.GetDecimalPlaces());;
-            this.Low = Price.Create(low, open.GetDecimalPlaces());;
-            this.Close = Price.Create(close, open.GetDecimalPlaces());;
+            this.High = Price.Create(high, open.GetDecimalPlaces());
+            this.Low = Price.Create(low, open.GetDecimalPlaces());
+            this.Close = Price.Create(close, open.GetDecimalPlaces());
             this.Volume = Quantity.Create(volume);
             this.Timestamp = timestamp;
         }

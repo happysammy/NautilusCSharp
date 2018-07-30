@@ -34,7 +34,7 @@ namespace Nautilus.Common.Messaging
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
-            Debug.NotNull(Document, nameof(Document));
+            Debug.NotNull(document, nameof(document));
 
             this.Document = document;
         }

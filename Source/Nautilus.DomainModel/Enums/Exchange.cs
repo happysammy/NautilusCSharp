@@ -8,15 +8,18 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The venue an instrument is traded on.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum Venue
     {
         /// <summary>
         /// The simulated exchange venue (backtesting).
         /// </summary>
-        Simuilation = 0,
+        Simulation = 0,
 
         /// <summary>
         /// The FXCM brokerage venue (OTC products) .

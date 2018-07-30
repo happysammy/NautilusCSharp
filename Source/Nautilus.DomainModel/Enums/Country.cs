@@ -13,20 +13,79 @@ namespace Nautilus.DomainModel.Enums
     /// </summary>
     public enum Country
     {
+        /// <summary>
+        ///
+        /// </summary>
         UnitedStates,
+
+        /// <summary>
+        ///
+        /// </summary>
         UnitedKingdom,
+
+        /// <summary>
+        ///
+        /// </summary>
         EuropeanMonetaryUnion,
+
+        /// <summary>
+        ///
+        /// </summary>
         Australia,
+
+        /// <summary>
+        ///
+        /// </summary>
         Japan,
+
+        /// <summary>
+        ///
+        /// </summary>
         Canada,
+
+        /// <summary>
+        ///
+        /// </summary>
         NewZealand,
+
+        /// <summary>
+        ///
+        /// </summary>
         China,
+
+        /// <summary>
+        ///
+        /// </summary>
         Switzerland,
+
+        /// <summary>
+        ///
+        /// </summary>
         France,
+
+        /// <summary>
+        ///
+        /// </summary>
         Spain,
+
+        /// <summary>
+        ///
+        /// </summary>
         Italy,
+
+        /// <summary>
+        ///
+        /// </summary>
         Portugal,
+
+        /// <summary>
+        ///
+        /// </summary>
         Germany,
+
+        /// <summary>
+        ///
+        /// </summary>
         Greece,
     }
 }

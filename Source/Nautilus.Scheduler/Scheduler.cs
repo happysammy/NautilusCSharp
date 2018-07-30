@@ -48,6 +48,8 @@ namespace Nautilus.Scheduler
 
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
             this.Receive<RemoveJob>(msg => this.OnMessage(msg));
+            this.Receive<PauseJob>(msg => this.OnMessage(msg));
+            this.Receive<ResumeJob>(msg => this.OnMessage(msg));
         }
 
         protected override void PreStart()

@@ -118,7 +118,7 @@ namespace Nautilus.Brokerage.FXCM
                     var brokerSymbol = new ValidString(group.GetField(Tags.Symbol));
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
                     var securityType = FxcmFixMessageHelper.GetSecurityType(group.GetField(9080));
-                    var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
+                    //var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002));
 

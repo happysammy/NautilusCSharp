@@ -22,7 +22,6 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public class ActorComponentBusConnectedBase : ActorComponentBase
     {
-        private readonly NautilusService service;
         private readonly IMessagingAdapter messagingAdapter;
 
         /// <summary>
@@ -46,7 +45,6 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            this.service = serviceContext;
             this.messagingAdapter = messagingAdapter;
         }
 

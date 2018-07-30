@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel.Aggregates
             }
             this.orders = new ReadOnlyList<Order>(orderList);
 
-            this.OrderIds = new ReadOnlyList<OrderId>(this.orders.Select(o => o.Id as OrderId).ToList());
+            this.OrderIds = new ReadOnlyList<OrderId>(this.orders.Select(o => o.Id).ToList());
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Nautilus.DomainModel.Aggregates
 
             return new Position(
                 this.Symbol,
-                entry.Id as OrderId,
+                entry.Id,
                 new PositionId($"{this.Id}_{nameof(Position)}"),
                 timestamp);
         }

@@ -24,35 +24,35 @@ namespace Nautilus.Core.Extensions
         /// result.
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
-        /// <typeparam name="K">The K type.</typeparam>
+        /// <typeparam name="TK">The K type.</typeparam>
         /// <param name="queryResult">The result (cannot be null).</param>
         /// <param name="func">The function (cannot be null).</param>
         /// <returns>The queries result.</returns>
-        public static QueryResult<K> OnSuccess<T, K>(this QueryResult<T> queryResult, Func<T, K> func)
+        public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, TK> func)
         {
             Debug.NotNull(queryResult, nameof(queryResult));
             Debug.NotNull(func, nameof(func));
 
             return queryResult.IsFailure
-                 ? QueryResult<K>.Fail(queryResult.Message)
-                 : QueryResult<K>.Ok(func(queryResult.Value));
+                 ? QueryResult<TK>.Fail(queryResult.Message)
+                 : QueryResult<TK>.Ok(func(queryResult.Value));
         }
 
         /// <summary>
         /// On success returns the function with the result value (otherwise returns a failed result).
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
-        /// <typeparam name="K">The K type.</typeparam>
+        /// <typeparam name="TK">The K type.</typeparam>
         /// <param name="queryResult">The result (cannot be null).</param>
         /// <param name="func">The function (cannot be null).</param>
         /// <returns>The queries result.</returns>
-        public static QueryResult<K> OnSuccess<T, K>(this QueryResult<T> queryResult, Func<T, QueryResult<K>> func)
+        public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, QueryResult<TK>> func)
         {
             Debug.NotNull(queryResult, nameof(queryResult));
             Debug.NotNull(func, nameof(func));
 
             return queryResult.IsFailure
-                 ? QueryResult<K>.Fail(queryResult.Message)
+                 ? QueryResult<TK>.Fail(queryResult.Message)
                  : func(queryResult.Value);
         }
 
@@ -60,17 +60,17 @@ namespace Nautilus.Core.Extensions
         /// On success returns the function, otherwise returns a failure result.
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
-        /// <typeparam name="K">The K type.</typeparam>
+        /// <typeparam name="TK">The K type.</typeparam>
         /// <param name="queryResult">The result (cannot be null).</param>
         /// <param name="func">The function (cannot be null).</param>
         /// <returns>The queries result.</returns>
-        public static QueryResult<K> OnSuccess<T, K>(this QueryResult<T> queryResult, Func<QueryResult<K>> func)
+        public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<QueryResult<TK>> func)
         {
             Debug.NotNull(queryResult, nameof(queryResult));
             Debug.NotNull(func, nameof(func));
 
             return queryResult.IsFailure
-                 ? QueryResult<K>.Fail(queryResult.Message)
+                 ? QueryResult<TK>.Fail(queryResult.Message)
                  : func();
         }
 
@@ -138,11 +138,11 @@ namespace Nautilus.Core.Extensions
         /// On success or failure returns the function.
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
-        /// <typeparam name="K">The K type.</typeparam>
+        /// <typeparam name="TK">The K type.</typeparam>
         /// <param name="result">The result (cannot be null).</param>
         /// <param name="func">The function (cannot be null).</param>
         /// <returns>The queries result.</returns>
-        public static K OnBoth<T, K>(this QueryResult<T> result, Func<QueryResult<T>, K> func)
+        public static TK OnBoth<T, TK>(this QueryResult<T> result, Func<QueryResult<T>, TK> func)
         {
             Debug.NotNull(result, nameof(result));
             Debug.NotNull(func, nameof(func));
@@ -181,18 +181,18 @@ namespace Nautilus.Core.Extensions
         /// Maps the result result to successful result.
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
-        /// <typeparam name="K">The K type.</typeparam>
+        /// <typeparam name="TK">The K type.</typeparam>
         /// <param name="result">The result (cannot be null).</param>
         /// <param name="func">The function (cannot be null).</param>
         /// <returns>The queries result.</returns>
-        public static QueryResult<K> Map<T, K>(this QueryResult<T> result, Func<T, K> func)
+        public static QueryResult<TK> Map<T, TK>(this QueryResult<T> result, Func<T, TK> func)
         {
             Debug.NotNull(result, nameof(result));
             Debug.NotNull(func, nameof(func));
 
             return result.IsFailure
-                 ? QueryResult<K>.Fail(result.Message)
-                 : QueryResult<K>.Ok(func(result.Value));
+                 ? QueryResult<TK>.Fail(result.Message)
+                 : QueryResult<TK>.Ok(func(result.Value));
         }
     }
 }

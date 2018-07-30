@@ -26,8 +26,7 @@ namespace Nautilus.Common.MessageStore
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageStorer"/> class.
         /// </summary>
-        /// <param name="store">The warehouse.</param>
-        /// <exception cref="ValidationException">Throws if the warehouse is null.</exception>
+        /// <param name="store">The message store.</param>
         public MessageStorer(IMessageStore store)
         {
             Validate.NotNull(store, nameof(store));
@@ -122,6 +121,7 @@ namespace Nautilus.Common.MessageStore
             Debug.NotNull(envelope, nameof(envelope));
 
             return envelope.IsOpened
+                // ReSharper disable once PossibleInvalidOperationException
                 ? (envelope.OpenedTime.Value - envelope.Timestamp).Value.SubsecondTicks
                 : 0;
         }

@@ -12,12 +12,14 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
 
+    /// <summary>
+    /// Provides a fake message store implementation.
+    /// </summary>
     public class FakeMessageStore : IMessageStore
     {
-        public IReadOnlyList<Envelope<CommandMessage>> CommandEnvelopes { get; }
-        public IReadOnlyList<Envelope<EventMessage>> EventEnvelopes { get; }
-        public IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes { get; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FakeMessageStore"/> class.
+        /// </summary>
         public FakeMessageStore()
         {
             this.CommandEnvelopes = new List<Envelope<CommandMessage>>();
@@ -25,16 +27,43 @@ namespace Nautilus.Common.MessageStore
             this.DocumentEnvelopes = new List<Envelope<DocumentMessage>>();
         }
 
+        /// <summary>
+        /// Gets the message stores command envelopes.
+        /// </summary>
+        public IReadOnlyList<Envelope<CommandMessage>> CommandEnvelopes { get; }
+
+        /// <summary>
+        /// Gets the message stores event envelopes.
+        /// </summary>
+        public IReadOnlyList<Envelope<EventMessage>> EventEnvelopes { get; }
+
+        /// <summary>
+        /// Gets the message stores document envelopes.
+        /// </summary>
+        public IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes { get; }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="envelope"></param>
         public void Store(Envelope<CommandMessage> envelope)
         {
             // Does nothing.
         }
 
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="envelope"></param>
         public void Store(Envelope<EventMessage> envelope)
         {
             // Does nothing.
         }
 
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="envelope"></param>
         public void Store(Envelope<DocumentMessage> envelope)
         {
             // Does nothing.

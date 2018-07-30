@@ -26,7 +26,6 @@ namespace Nautilus.Fix
     {
         private readonly IReadOnlyList<string> brokerSymbols;
         private readonly IReadOnlyList<Symbol> symbols;
-        private readonly IReadOnlyDictionary<string, int> tickSizeIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -39,7 +38,6 @@ namespace Nautilus.Fix
         /// <param name="credentials">The FIX account credentials.</param>
         /// <param name="brokerSymbols">The list of broker symbols.</param>
         /// <param name="symbols">The list of symbols.</param>
-        /// <param name="tickSizeIndex">The list of tick sizes.</param>
         public FixClient(
             IComponentryContainer container,
             ITickProcessor tickProcessor,
@@ -48,11 +46,8 @@ namespace Nautilus.Fix
             FixCredentials credentials,
             Broker broker,
             IReadOnlyList<string> brokerSymbols,
-            IReadOnlyList<Symbol> symbols,
-            IReadOnlyDictionary<string, int> tickSizeIndex)
+            IReadOnlyList<Symbol> symbols)
         : base(
-            NautilusService.FIX,
-            LabelFactory.Component(nameof(FixClient)),
             container,
             tickProcessor,
             fixMessageHandler,
@@ -66,12 +61,10 @@ namespace Nautilus.Fix
             Validate.NotNull(credentials, nameof(credentials));
             Validate.CollectionNotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
             Validate.CollectionNotNullOrEmpty(symbols, nameof(symbols));
-            Validate.CollectionNotNullOrEmpty(tickSizeIndex, nameof(tickSizeIndex));
 
             this.Broker = broker;
             this.brokerSymbols = brokerSymbols;
             this.symbols = symbols;
-            this.tickSizeIndex = tickSizeIndex;
         }
 
         /// <summary>

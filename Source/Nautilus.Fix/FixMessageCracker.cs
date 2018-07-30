@@ -12,8 +12,9 @@ namespace Nautilus.Fix
     using System.Threading.Tasks;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
     using QuickFix;
@@ -27,8 +28,6 @@ namespace Nautilus.Fix
     /// </summary>
     public class FixMessageCracker : MessageCracker, IApplication
     {
-        private readonly Enum service;
-        private readonly Label component;
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly ILogger logger;
@@ -42,32 +41,27 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
-        /// <param name="service">The service name.</param>
-        /// <param name="component">The component label.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="tickProcessor">The tick data processor.</param>
         /// <param name="fixMessageHandler">The FIX message handler</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials</param>
         protected FixMessageCracker(
-            Enum service,
-            Label component,
             IComponentryContainer container,
             ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials)
         {
-            Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(tickProcessor, nameof(tickProcessor));
             Validate.NotNull(credentials, nameof(credentials));
 
-            this.service = service;
-            this.component = component;
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.Create(service, this.component);
+            this.logger = container.LoggerFactory.Create(
+                NautilusService.FIX,
+                LabelFactory.Component(nameof(FixMessageCracker)));
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
             this.FixMessageHandler = fixMessageHandler;
@@ -134,7 +128,7 @@ namespace Nautilus.Fix
             {
                 var settings = new SessionSettings("fix_fxcm.cfg");
                 var storeFactory = new FileStoreFactory(settings);
-                var logFactory = new ScreenLogFactory(settings);
+                //var logFactory = new ScreenLogFactory(settings);
                 this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
                 this.Log.Information("Starting initiator...");
@@ -259,7 +253,7 @@ namespace Nautilus.Fix
                 {
                     this.Crack(message, sessionId);
                 }
-                catch (UnsupportedMessageType ex)
+                catch (UnsupportedMessageType)
                 {
                     this.Log.Warning($"Received unsupported message type {message.GetType()}");
                 }
