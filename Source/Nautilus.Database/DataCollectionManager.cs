@@ -35,7 +35,7 @@ namespace Nautilus.Database
     public class DataCollectionManager : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly IActorRef barPublisher;
+        private readonly IEndpoint barPublisher;
         private readonly ReadOnlyList<Resolution> resolutionsPersisting;
         private readonly int barRollingWindow;
 
@@ -51,7 +51,7 @@ namespace Nautilus.Database
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IActorRef barPublisher,
+            IEndpoint barPublisher,
             IReadOnlyList<Resolution> resolutionsToPersist,
             int barRollingWindow)
             : base(
@@ -134,7 +134,7 @@ namespace Nautilus.Database
         {
             Debug.NotNull(message, nameof(message));
 
-            this.barPublisher.Tell(message.Data);
+            this.barPublisher.Send(message.Data);
             this.Send(NautilusService.DatabaseTaskManager, message);
         }
 

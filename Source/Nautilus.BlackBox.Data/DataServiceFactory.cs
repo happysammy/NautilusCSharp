@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Data
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
     /// The immutable sealed <see cref="DataServiceFactory"/> class. Creates the
@@ -30,7 +31,7 @@ namespace Nautilus.BlackBox.Data
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>A <see cref="IActorRef"/> address.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public IActorRef Create(
+        public IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
@@ -39,11 +40,12 @@ namespace Nautilus.BlackBox.Data
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            return actorSystem.ActorOf(Props.Create(
+            return new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
                 () => new DataService(
                     container,
                     messagingAdapter,
-                    actorSystem.Scheduler)));
+                    actorSystem.Scheduler))));
         }
     }
 }

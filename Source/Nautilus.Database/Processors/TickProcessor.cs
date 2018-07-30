@@ -8,7 +8,6 @@
 
 namespace Nautilus.Database.Processors
 {
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -20,34 +19,34 @@ namespace Nautilus.Database.Processors
     using NodaTime;
 
     /// <summary>
-    /// Provides an entry point for ticks into the <see cref="Nautilus.Database"/> system. The given
-    /// tick size index must contain all symbols which the processor can expect to receive ticks for.
+    /// Provides an entry point for ticks into the system. The given tick size index must contain
+    /// all symbols which the processor can expect to receive ticks for.
     /// </summary>
     public sealed class TickProcessor : ComponentBase, ITickProcessor
     {
-        private readonly IActorRef tickPublisher;
-        private readonly IActorRef barAggregationControllerRef;
+        private readonly IEndpoint tickPublisher;
+        private readonly IEndpoint barAggregationController;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickProcessor"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="tickPublisher">The tick publisher.</param>
-        /// <param name="barAggregationControllerRef">The bar aggregator controller actor address.</param>
+        /// <param name="barAggregationController">The bar aggregator controller actor address.</param>
         public TickProcessor(
             IComponentryContainer container,
-            IActorRef tickPublisher,
-            IActorRef barAggregationControllerRef) : base(
+            IEndpoint tickPublisher,
+            IEndpoint barAggregationController) : base(
             NautilusService.Data,
             LabelFactory.Component(nameof(TickProcessor)),
             container)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(tickPublisher, nameof(tickPublisher));
-            Validate.NotNull(barAggregationControllerRef, nameof(barAggregationControllerRef));
+            Validate.NotNull(barAggregationController, nameof(barAggregationController));
 
             this.tickPublisher = tickPublisher;
-            this.barAggregationControllerRef = barAggregationControllerRef;
+            this.barAggregationController = barAggregationController;
         }
 
         /// <summary>
@@ -81,8 +80,8 @@ namespace Nautilus.Database.Processors
                     Price.Create(ask, decimals),
                     timestamp);
 
-                this.tickPublisher.Tell(tick);
-                this.barAggregationControllerRef.Tell(tick);
+                this.tickPublisher.Send(tick);
+                this.barAggregationController.Send(tick);
             });
         }
     }

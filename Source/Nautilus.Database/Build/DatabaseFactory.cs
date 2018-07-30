@@ -8,7 +8,6 @@
 
 namespace Nautilus.Database.Build
 {
-    using System;
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
@@ -84,46 +83,52 @@ namespace Nautilus.Database.Build
                 setupContainer,
                 new FakeMessageStore());
 
-            var schedulerRef = actorSystem.ActorOf(Props.Create(
-                () => new Scheduler(setupContainer)));
+            var scheduler = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                () => new Scheduler(setupContainer))));
 
-            var tickPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new TickPublisher(setupContainer, publisherFactory.Create())));
+            var tickPublisher = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                () => new TickPublisher(setupContainer, publisherFactory.Create()))));
 
-            var barPublisherRef = actorSystem.ActorOf(Props.Create(
-                () => new BarPublisher(setupContainer, publisherFactory.Create())));
+            var barPublisher = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                () => new BarPublisher(setupContainer, publisherFactory.Create()))));
 
-            var databaseTaskActorRef = actorSystem.ActorOf(Props.Create(
+            var databaseTaskActor = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
                     setupContainer,
-                    barRepository)));
+                    barRepository))));
 
-            var dataCollectionActorRef = actorSystem.ActorOf(Props.Create(
+            var dataCollectionActor = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
                 () => new DataCollectionManager(
                     setupContainer,
                     messagingAdapter,
-                    barPublisherRef,
+                    barPublisher,
                     resolutions,
-                    barRollingWindow)));
+                    barRollingWindow))));
 
-            var barAggregationControllerRef = actorSystem.ActorOf(Props.Create(
+            var barAggregationController = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(
                     setupContainer,
-                    messagingAdapter)));
+                    messagingAdapter))));
 
             var tickDataProcessor = new TickProcessor(
                 setupContainer,
-                tickPublisherRef,
-                barAggregationControllerRef);
+                tickPublisher,
+                barAggregationController);
 
-            var addresses = new Dictionary<Enum, IActorRef>
+            var addresses = new Dictionary<NautilusService, IEndpoint>
             {
-                { NautilusService.Scheduler, schedulerRef },
-                { NautilusService.DatabaseTaskManager, databaseTaskActorRef },
-                { NautilusService.DataCollectionManager, dataCollectionActorRef },
-                { NautilusService.BarAggregationController, barAggregationControllerRef },
-                { NautilusService.TickPublisher, tickPublisherRef },
-                { NautilusService.BarPublisher, barPublisherRef }
+                { NautilusService.Scheduler, scheduler },
+                { NautilusService.DatabaseTaskManager, databaseTaskActor },
+                { NautilusService.DataCollectionManager, dataCollectionActor },
+                { NautilusService.BarAggregationController, barAggregationController },
+                { NautilusService.TickPublisher, tickPublisher },
+                { NautilusService.BarPublisher, barPublisher }
             };
 
             var fixClient = fixClientFactory.Create(

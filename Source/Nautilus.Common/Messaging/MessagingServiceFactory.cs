@@ -39,24 +39,27 @@ namespace Nautilus.Common.Messaging
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(store, nameof(store));
 
-            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(store)));
+            var messageStoreRef = new ActorEndpoint(actorSystem.ActorOf(Props.Create(() => new MessageStorer(store))));
 
-            var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
+            var commandBus = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 LabelFactory.Component(MessagingComponent.CommandBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStoreRef))));
 
-            var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
+            var eventBusRef = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
                 LabelFactory.Component(MessagingComponent.EventBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStoreRef))));
 
-            var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
+            var serviceBusRef = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
                 LabelFactory.Component(MessagingComponent.DocumentBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStoreRef))));
 
-           return new MessagingAdapter(commandBusRef, eventBusRef, serviceBusRef);
+           return new MessagingAdapter(commandBus, eventBusRef, serviceBusRef);
         }
     }
 }

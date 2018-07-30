@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using Akka.Actor;
     using Akka.Event;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
@@ -46,33 +47,38 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             IComponentryContainer container)
         {
             var messageWarehouse = new InMemoryMessageStore();
-            var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))); // TODO: make disposable so that test don't break
+            var messageStore = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))));
 
-            var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
+            var commandBus = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 new Label(MessagingComponent.CommandBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStore))));
 
-            var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
+            var eventBus = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
                 new Label(MessagingComponent.EventBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStore))));
 
-            var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
+            var serviceBus = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
                 new Label(MessagingComponent.DocumentBus.ToString()),
                 container,
-                messageStoreRef)));
+                messageStore))));
 
-            var messagingAdapter = new MessagingAdapter(commandBusRef, eventBusRef, serviceBusRef);
+            var messagingAdapter = new MessagingAdapter(commandBus, eventBus, serviceBus);
 
-            var addresses = new Dictionary<Enum, IActorRef>
+            var mockEndpoint = new ActorEndpoint(new StandardOutLogger());
+            var addresses = new Dictionary<NautilusService, IEndpoint>
             {
-                { NautilusService.AlphaModel, new StandardOutLogger() },
-                { NautilusService.Brokerage, new StandardOutLogger() },
-                { NautilusService.Data, new StandardOutLogger() },
-                { NautilusService.Portfolio, new StandardOutLogger() },
-                { NautilusService.Risk, new StandardOutLogger() },
-                { NautilusService.Execution, new StandardOutLogger() }
+                { NautilusService.AlphaModel, mockEndpoint },
+                { NautilusService.Brokerage, mockEndpoint },
+                { NautilusService.Data, mockEndpoint },
+                { NautilusService.Portfolio, mockEndpoint },
+                { NautilusService.Risk, mockEndpoint },
+                { NautilusService.Execution, mockEndpoint }
             };
 
             var switchboard = new Switchboard(addresses);

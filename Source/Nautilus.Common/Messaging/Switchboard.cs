@@ -10,7 +10,8 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
@@ -22,18 +23,17 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public sealed class Switchboard
     {
-        private readonly ReadOnlyDictionary<Enum, IActorRef> addresses;
+        private readonly ReadOnlyDictionary<NautilusService, IEndpoint> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <param name="addresses">The system addresses.</param>
-        /// <exception cref="ValidationException">If the addresses are null or empty.</exception>
-        public Switchboard(Dictionary<Enum, IActorRef> addresses)
+        public Switchboard(Dictionary<NautilusService, IEndpoint> addresses)
         {
             Validate.CollectionNotNullOrEmpty(addresses, nameof(addresses));
 
-            this.addresses = new ReadOnlyDictionary<Enum, IActorRef>(addresses);
+            this.addresses = new ReadOnlyDictionary<NautilusService, IEndpoint>(addresses);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Nautilus.Common.Messaging
             }
         }
 
-        private void RouteEnvelope<T>(Enum receiver, Envelope<T> envelope)
+        private void RouteEnvelope<T>(NautilusService receiver, Envelope<T> envelope)
             where T : Message
         {
             Debug.NotNull(receiver, nameof(receiver));
@@ -65,7 +65,7 @@ namespace Nautilus.Common.Messaging
                     "Cannot send message (envelope receiver endpoint address unknown).");
             }
 
-            this.addresses[receiver].Tell(envelope);
+            this.addresses[receiver].Send(envelope);
         }
     }
 }

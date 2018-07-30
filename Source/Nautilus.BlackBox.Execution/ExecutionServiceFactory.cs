@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Execution
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
     /// The immutable sealed <see cref="ExecutionServiceFactory"/> class. Provides the
@@ -31,7 +32,7 @@ namespace Nautilus.BlackBox.Execution
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
         /// <exception cref="ValidationException">Throw if any argument is null.</exception>
-        public IActorRef Create(
+        public IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
@@ -40,8 +41,9 @@ namespace Nautilus.BlackBox.Execution
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            return actorSystem.ActorOf(Props.Create(
-                () => new ExecutionService(container, messagingAdapter)));
+            return new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                () => new ExecutionService(container, messagingAdapter))));
         }
     }
 }

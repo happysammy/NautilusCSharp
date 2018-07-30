@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -25,7 +26,7 @@ namespace Nautilus.Common.Messaging
         where T : Message
     {
         private readonly ILogger log;
-        private readonly IActorRef messageStore;
+        private readonly IEndpoint messageStore;
         private readonly CommandHandler commandHandler;
 
         private Switchboard switchboard;
@@ -36,19 +37,19 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="component">The component.</param>
         /// <param name="container">The container.</param>
-        /// <param name="messageStoreRef">The message store actor address.</param>
+        /// <param name="messageStore">The message store endpoint.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MessageBus(
             Label component,
             IComponentryContainer container,
-            IActorRef messageStoreRef)
+            IEndpoint messageStore)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messageStoreRef, nameof(messageStoreRef));
+            Validate.NotNull(messageStore, nameof(messageStore));
 
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, component);
-            this.messageStore = messageStoreRef;
+            this.messageStore = messageStore;
             this.commandHandler = new CommandHandler(this.log);
 
             this.SetupMessageHandling();
@@ -99,7 +100,7 @@ namespace Nautilus.Common.Messaging
             this.commandHandler.Execute(() =>
             {
                 this.messageCount++;
-                this.messageStore.Tell(envelope);
+                this.messageStore.Send(envelope);
 
                 foreach (var receiver in envelope.Receivers)
                 {

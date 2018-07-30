@@ -14,10 +14,10 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
-    /// The immutable <see cref="PortfolioServiceFactory"/> class. Provides the
-    /// <see cref="PortfolioService"/> for the <see cref="BlackBox"/> system.
+    /// Provides the portfolio service for the system.
     /// </summary>
     [Immutable]
     public class PortfolioServiceFactory : IServiceFactory
@@ -29,9 +29,8 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging Adapter.</param>
-        /// <returns>A <see cref="IActorRef"/>.</returns>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        public IActorRef Create(
+        /// <returns>The portfolio services endpoint.</returns>
+        public IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
@@ -41,10 +40,11 @@ namespace Nautilus.BlackBox.Portfolio
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             var portfolioStore = new SecurityPortfolioStore();
-            return actorSystem.ActorOf(Props.Create(() => new PortfolioService(
+            return new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(() => new PortfolioService(
                 container,
                 messagingAdapter,
-                portfolioStore)));
+                portfolioStore))));
         }
     }
 }

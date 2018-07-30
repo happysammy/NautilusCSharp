@@ -20,7 +20,7 @@ namespace Nautilus.Common.Messaging
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     public sealed class Envelope<T>
-        where T : Message
+        where T : ISendable<Message>
     {
         private readonly T message;
 

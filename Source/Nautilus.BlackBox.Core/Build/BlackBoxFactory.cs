@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.Core.Build
 {
-    using System;
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Enums;
@@ -81,27 +80,27 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 new InMemoryMessageStore());
 
-            var alphaModelServiceRef = servicesFactory.AlphaModelService.Create(
+            var alphaModelService = servicesFactory.AlphaModelService.Create(
                 actorSystem,
                 container,
                 messagingAdapter);
 
-            var dataServiceRef = servicesFactory.DataService.Create(
+            var dataService = servicesFactory.DataService.Create(
                 actorSystem,
                 container,
                 messagingAdapter);
 
-            var executionServiceRef = servicesFactory.ExecutionService.Create(
+            var executionService = servicesFactory.ExecutionService.Create(
                 actorSystem,
                 container,
                 messagingAdapter);
 
-            var portfolioServiceRef = servicesFactory.PortfolioService.Create(
+            var portfolioService = servicesFactory.PortfolioService.Create(
                 actorSystem,
                 container,
                 messagingAdapter);
 
-            var riskServiceRef = servicesFactory.RiskService.Create(
+            var riskService = servicesFactory.RiskService.Create(
                 actorSystem,
                 container,
                 messagingAdapter);
@@ -115,13 +114,13 @@ namespace Nautilus.BlackBox.Core.Build
                 brokerageClient,
                 instrumentRepository);
 
-            var addresses = new Dictionary<Enum, IActorRef>
+            var addresses = new Dictionary<NautilusService, IEndpoint>
             {
-                { NautilusService.AlphaModel, alphaModelServiceRef },
-                { NautilusService.Data, dataServiceRef },
-                { NautilusService.Execution, executionServiceRef },
-                { NautilusService.Portfolio , portfolioServiceRef },
-                { NautilusService.Risk, riskServiceRef }
+                { NautilusService.AlphaModel, alphaModelService },
+                { NautilusService.Data, dataService },
+                { NautilusService.Execution, executionService },
+                { NautilusService.Portfolio , portfolioService },
+                { NautilusService.Risk, riskService }
             };
 
             return new BlackBox(

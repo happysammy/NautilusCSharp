@@ -13,7 +13,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Event;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -44,21 +46,16 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
                 new Label(MessagingComponent.CommandBus.ToString()),
                 setupContainer,
-                new StandardOutLogger())));
+                new ActorEndpoint(new StandardOutLogger()))));
 
-            var mockAlphaModelServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));
-            var mockDataServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));
-            var mockExecutionServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));
-            var mockPortfolioServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));
-            var mockRiskServiceRef = testActorSystem.ActorOf(Props.Create(() => new TestActor()));
-
-            var addresses = new Dictionary<Enum, IActorRef>
+            var mockEndpoint = new ActorEndpoint(new StandardOutLogger());
+            var addresses = new Dictionary<NautilusService, IEndpoint>
             {
-                { NautilusService.AlphaModel, mockAlphaModelServiceRef },
-                { NautilusService.Data, mockDataServiceRef },
-                { NautilusService.Execution, mockExecutionServiceRef },
-                { NautilusService.Portfolio, mockPortfolioServiceRef },
-                { NautilusService.Risk, mockRiskServiceRef }
+                { NautilusService.AlphaModel, mockEndpoint },
+                { NautilusService.Data, mockEndpoint },
+                { NautilusService.Execution, mockEndpoint },
+                { NautilusService.Portfolio, mockEndpoint },
+                { NautilusService.Risk, mockEndpoint }
             };
 
             this.messageBusRef.Tell(new InitializeMessageSwitchboard(

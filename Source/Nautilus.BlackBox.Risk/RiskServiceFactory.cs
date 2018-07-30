@@ -14,10 +14,10 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
-    /// The immutable sealed <see cref="RiskServiceFactory"/> class. Provides the
-    /// <see cref="RiskService"/> for the <see cref="BlackBox"/> system.
+    /// Provides the risk service for the system.
     /// </summary>
     [Immutable]
     public sealed class RiskServiceFactory : IServiceFactory
@@ -29,9 +29,8 @@ namespace Nautilus.BlackBox.Risk
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <returns>A <see cref="IActorRef"/>.</returns>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        public IActorRef Create(
+        /// <returns>The risk service endpoint.</returns>
+        public IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
@@ -40,8 +39,9 @@ namespace Nautilus.BlackBox.Risk
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            return actorSystem.ActorOf(Props.Create(
-                () => new RiskService(container, messagingAdapter)));
+            return new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                () => new RiskService(container, messagingAdapter))));
         }
     }
 }

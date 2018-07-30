@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -17,7 +18,7 @@ namespace Nautilus.Common.Messaging
     /// The base class for all message types.
     /// </summary>
     [Immutable]
-    public abstract class Message : IEquatable<Message>
+    public abstract class Message : ISendable<Message>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.

@@ -23,6 +23,7 @@ namespace Nautilus.Database
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// The main macro object which contains the <see cref="Database"/> and presents its API.
@@ -31,7 +32,7 @@ namespace Nautilus.Database
     public sealed class Database : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
-        private readonly Dictionary<Enum, IActorRef> addresses;
+        private readonly Dictionary<NautilusService, IEndpoint> addresses;
         private readonly IFixClient fixClient;
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Nautilus.Database
             DatabaseSetupContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
-            Dictionary<Enum, IActorRef> addresses,
+            Dictionary<NautilusService, IEndpoint> addresses,
             IFixClient fixClient)
             : base(
                 NautilusService.Data,
@@ -129,7 +130,7 @@ namespace Nautilus.Database
             this.Log.Information($"{actorSystemName} ActorSystem shutting down...");
 
             var shutdownTasks = this.addresses.Select(
-                address => address.Value.GracefulStop(TimeSpan.FromSeconds(10)))
+                address => address.Value.GracefulStop(Duration.FromSeconds(10)))
                 .Cast<Task>()
                 .ToList();
 

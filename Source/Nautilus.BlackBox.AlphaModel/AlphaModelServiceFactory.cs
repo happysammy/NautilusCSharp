@@ -15,23 +15,22 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
-    /// The immutable sealed <see cref="AlphaModelServiceFactory"/> class. Creates the
-    /// <see cref="AlphaModelService"/> from the given inputs.
+    /// Provides the alpha model service for the system.
     /// </summary>
     [Immutable]
     public sealed class AlphaModelServiceFactory : IServiceFactory
     {
         /// <summary>
-        /// Returns the <see cref="IActorRef"/> address of the created <see cref="AlphaModelService"/>.
+        /// Creates an <see cref="AlphaModelService"/> and returns its endpoint.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <returns>A <see cref="IActorRef"/>.</returns>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
-        public IActorRef Create(
+        /// <returns>The alpha model service endpoint.</returns>
+        public IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter)
@@ -40,11 +39,12 @@ namespace Nautilus.BlackBox.AlphaModel
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            return actorSystem.ActorOf(Props.Create(
+            return new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
                 () => new AlphaModelService(
                 container,
                 messagingAdapter,
-                new AlphaStrategyModuleStore())));
+                new AlphaStrategyModuleStore()))));
         }
     }
 }

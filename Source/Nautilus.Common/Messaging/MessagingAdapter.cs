@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
@@ -22,28 +22,28 @@ namespace Nautilus.Common.Messaging
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
-        private readonly IActorRef commandBusRef;
-        private readonly IActorRef eventBusRef;
-        private readonly IActorRef documentBusRef;
+        private readonly IEndpoint commandBus;
+        private readonly IEndpoint eventBus;
+        private readonly IEndpoint documentBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
         /// </summary>
-        /// <param name="commandBusRef">The command bus actor address.</param>
-        /// <param name="eventBusRef">The event bus actor address.</param>
-        /// <param name="documentBusRef">The document bus actor address.</param>
+        /// <param name="commandBus">The command bus actor address.</param>
+        /// <param name="eventBus">The event bus actor address.</param>
+        /// <param name="documentBus">The document bus actor address.</param>
         public MessagingAdapter(
-            IActorRef commandBusRef,
-            IActorRef eventBusRef,
-            IActorRef documentBusRef)
+            IEndpoint commandBus,
+            IEndpoint eventBus,
+            IEndpoint documentBus)
         {
-            Validate.NotNull(commandBusRef, nameof(commandBusRef));
-            Validate.NotNull(eventBusRef, nameof(eventBusRef));
-            Validate.NotNull(documentBusRef, nameof(documentBusRef));
+            Validate.NotNull(commandBus, nameof(commandBus));
+            Validate.NotNull(eventBus, nameof(eventBus));
+            Validate.NotNull(documentBus, nameof(documentBus));
 
-            this.commandBusRef = commandBusRef;
-            this.eventBusRef = eventBusRef;
-            this.documentBusRef = documentBusRef;
+            this.commandBus = commandBus;
+            this.eventBus = eventBus;
+            this.documentBus = documentBus;
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace Nautilus.Common.Messaging
         {
             Validate.NotNull(message, nameof(message));
 
-            this.commandBusRef.Tell(message);
-            this.eventBusRef.Tell(message);
-            this.documentBusRef.Tell(message);
+            this.commandBus.Send(message);
+            this.eventBus.Send(message);
+            this.documentBus.Send(message);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nautilus.Common.Messaging
                             commandMessage,
                             message.Id,
                             message.Timestamp);
-                    this.commandBusRef.Tell(commandEnvelope);
+                    this.commandBus.Send(commandEnvelope);
                     break;
 
                     case EventMessage eventMessage:
@@ -111,7 +111,7 @@ namespace Nautilus.Common.Messaging
                             eventMessage,
                             message.Id,
                             message.Timestamp);
-                    this.eventBusRef.Tell(eventEnvelope);
+                    this.eventBus.Send(eventEnvelope);
                     break;
 
                     case DocumentMessage serviceMessage:
@@ -121,7 +121,7 @@ namespace Nautilus.Common.Messaging
                             serviceMessage,
                             message.Id,
                             message.Timestamp);
-                    this.documentBusRef.Tell(serviceEnvelope);
+                    this.documentBus.Send(serviceEnvelope);
                     break;
 
                 default: throw new InvalidOperationException(

@@ -18,14 +18,13 @@ namespace Nautilus.BlackBox.Core.Interfaces
     public interface IServiceFactory
     {
         /// <summary>
-        /// Creates a system service and returns the <see cref="IActorRef"/> address from the given
-        /// inputs.
+        /// Creates a system service from the given inputs and returns the endpoint.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>A <see cref="IActorRef"/>.</returns>
-        IActorRef Create(
+        IEndpoint Create(
             ActorSystem actorSystem,
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter);
