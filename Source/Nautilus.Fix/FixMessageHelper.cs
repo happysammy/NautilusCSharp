@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FxcmFixMessageHelper.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixMessageHelper.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -18,11 +18,11 @@ namespace Nautilus.Fix
     using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
 
     /// <summary>
-    /// The FXCM quick fix message helper.
+    /// Provides useful methods for assisting with FIX messages.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed. Suppression is OK here.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK here.")]
-    public static class FxcmFixMessageHelper
+    public static class FixMessageHelper
     {
         private static readonly Dictionary<string, string> SecurityRequestResults = new Dictionary<string, string>
         {

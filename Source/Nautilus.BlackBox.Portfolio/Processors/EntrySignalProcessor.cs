@@ -30,8 +30,8 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         private readonly OrderPacketBuilder orderPacketBuilder;
         private readonly IQuoteProvider quoteProvider;
         private readonly ITradeBook tradeBook;
-        private readonly IReadOnlyBrokerageAccount account;
-        private readonly IReadOnlyRiskModel riskModel;
+        private readonly IAccount account;
+        private readonly IRiskModel riskModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntrySignalProcessor"/> class.

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
+namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.BlackBox.Core;

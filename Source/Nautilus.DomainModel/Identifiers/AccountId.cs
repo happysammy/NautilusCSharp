@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for accounts.
     /// </summary>
     [Immutable]
-    public sealed class AccountId : EntityId<BrokerageAccount>
+    public sealed class AccountId : EntityId<Account>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountId"/> class.

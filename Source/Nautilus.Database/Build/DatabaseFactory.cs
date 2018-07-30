@@ -11,33 +11,32 @@ namespace Nautilus.Database.Build
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.Common;
-    using Nautilus.Core.Validation;
-    using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
     using Nautilus.Database.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
+    using NodaTime;
 
     /// <summary>
-    /// The builder for the NautilusDB database infrastructure.
+    /// Provides a factory for building the database.
     /// </summary>
     public static class DatabaseFactory
     {
         /// <summary>
-        /// Builds the NautilusDB database infrastructure and returns an <see cref="IActorRef"/>
-        /// address to the <see cref="DatabaseTaskManager"/>.
+        /// Builds the database and returns an <see cref="IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
         /// </summary>
         /// <param name="logger">The database logger.</param>
         /// <param name="fixClientFactory">The FIX client factory.</param>
+        /// <param name="gatewayFactory">The execution gateway factory.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
@@ -50,6 +49,7 @@ namespace Nautilus.Database.Build
         public static Database Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
+            IExecutionGatewayFactory gatewayFactory,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
@@ -131,12 +131,11 @@ namespace Nautilus.Database.Build
                 messagingAdapter,
                 tickDataProcessor);
 
-            var gateway = new ExecutionGateway(
+            var gateway = gatewayFactory.Create(
                 setupContainer,
                 messagingAdapter,
                 fixClient,
-                instrumentRepository,
-                CurrencyCode.GBP);
+                instrumentRepository);
 
             fixClient.InitializeGateway(gateway);
             instrumentRepository.CacheAll();

@@ -12,15 +12,15 @@ namespace Nautilus.BlackBox.Core.Build
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Enums;
-    using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
 
     /// <summary>
     /// Provides a factory for creating <see cref="BlackBox"/> instances.
@@ -33,24 +33,32 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="environment">The black box environment.</param>
         /// <param name="clock">The clock.</param>
         /// <param name="loggingAdapter">The logging adapter.</param>
-        /// <param name="databaseAdapter">The database adapter.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="quoteProvider">The quote provider.</param>
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
         /// <param name="servicesFactory">The services factory.</param>
+        /// <param name="gatewayFactory">The execution gateway factory.</param>
         /// <returns></returns>
         public static BlackBox Create(
             BlackBoxEnvironment environment,
             IZonedClock clock,
             ILoggingAdapter loggingAdapter,
-            IDatabaseAdapter databaseAdapter,
             IInstrumentRepository instrumentRepository,
             IQuoteProvider quoteProvider,
-            IRiskModel riskModel,
-            IBrokerageAccount account,
-            BlackBoxServicesFactory servicesFactory)
+            RiskModel riskModel,
+            Account account,
+            BlackBoxServicesFactory servicesFactory,
+            IExecutionGatewayFactory gatewayFactory)
         {
+            Validate.NotNull(clock, nameof(clock));
+            Validate.NotNull(loggingAdapter, nameof(loggingAdapter));
+            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
+            Validate.NotNull(quoteProvider, nameof(quoteProvider));
+            Validate.NotNull(riskModel, nameof(riskModel));
+            Validate.NotNull(account, nameof(account));
+            Validate.NotNull(servicesFactory, nameof(servicesFactory));
+
             BuildVersionChecker.Run(loggingAdapter);
 
             var loggerFactory = new LoggerFactory(loggingAdapter);
@@ -101,12 +109,11 @@ namespace Nautilus.BlackBox.Core.Build
             var brokerageClient =
                 servicesFactory.FixClient.Create(container, messagingAdapter, null);
 
-            var tradeGateway = new ExecutionGateway(
+            var gateway = gatewayFactory.Create(
                 container,
                 messagingAdapter,
                 brokerageClient,
-                instrumentRepository,
-                account.Currency);
+                instrumentRepository);
 
             var addresses = new Dictionary<Enum, IActorRef>
             {
@@ -122,7 +129,7 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter,
                 new Switchboard(addresses),
-                tradeGateway,
+                gateway,
                 brokerageClient,
                 account,
                 riskModel);

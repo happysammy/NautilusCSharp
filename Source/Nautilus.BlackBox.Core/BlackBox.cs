@@ -24,6 +24,7 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;
@@ -63,8 +64,8 @@ namespace Nautilus.BlackBox.Core
             Switchboard switchboard,
             IExecutionGateway executionGateway,
             IFixClient fixClient,
-            IBrokerageAccount account,
-            IRiskModel riskModel)
+            Account account,
+            RiskModel riskModel)
             : base(
                 NautilusService.BlackBox,
                 LabelFactory.Component(nameof(BlackBox)),

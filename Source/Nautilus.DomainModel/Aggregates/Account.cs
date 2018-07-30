@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="BrokerageAccount.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Account.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -21,12 +21,12 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="BrokerageAccount"/> class.
+    /// Represents a brokerage account.
     /// </summary>
-    public sealed class BrokerageAccount : Aggregate<BrokerageAccount>, IBrokerageAccount
+    public sealed class Account : Aggregate<Account>, IAccount
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BrokerageAccount"/> class.
+        /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
         /// <param name="broker">The broker name.</param>
         /// <param name="accountNumber">The account number.</param>
@@ -36,7 +36,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="timestamp">The account creation timestamp.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if
         /// any struct argument is the default value.</exception>
-        public BrokerageAccount(
+        public Account(
             Broker broker,
             string username,
             string password,

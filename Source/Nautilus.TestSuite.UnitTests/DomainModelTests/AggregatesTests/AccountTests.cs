@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
+namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
         {
             // Arrange
             // Act
-            var account = new BrokerageAccount(
+            var account = new Account(
                 Broker.FXCM,
                 "some username",
                 "some password",
@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
         internal void Update_MessageCorrect_EqualsUpdatedStatusValues()
         {
             // Arrange
-            var account = new BrokerageAccount(
+            var account = new Account(
                 Broker.FXCM,
                 "123456789",
                 "some username",
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
         internal void FreeEquity_MessageCorrect_ReturnsTrue()
         {
             // Arrange
-            var account = new BrokerageAccount(
+            var account = new Account(
                 Broker.FXCM,
                 "123456789",
                 "some username",

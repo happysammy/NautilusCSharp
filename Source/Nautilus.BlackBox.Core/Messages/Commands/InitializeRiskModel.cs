@@ -12,7 +12,8 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Core;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using NodaTime;
 
     /// <summary>
@@ -31,8 +32,8 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value.</exception>
         public InitializeRiskModel(
-            IBrokerageAccount account,
-            IRiskModel riskModel,
+            Account account,
+            RiskModel riskModel,
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)
@@ -49,11 +50,11 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <summary>
         /// Gets the messages account.
         /// </summary>
-        public IBrokerageAccount Account { get; }
+        public Account Account { get; }
 
         /// <summary>
         /// Gets the messages risk model.
         /// </summary>
-        public IRiskModel RiskModel { get; }
+        public RiskModel RiskModel { get; }
     }
 }

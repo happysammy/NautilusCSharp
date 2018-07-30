@@ -117,7 +117,7 @@ namespace Nautilus.Brokerage.FXCM
                     var symbolId = new InstrumentId(symbol.ToString());
                     var brokerSymbol = new ValidString(group.GetField(Tags.Symbol));
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
-                    var securityType = FxcmFixMessageHelper.GetSecurityType(group.GetField(9080));
+                    var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     //var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002));
@@ -172,7 +172,7 @@ namespace Nautilus.Brokerage.FXCM
                 }
 
                 var responseId = message.GetField(Tags.SecurityResponseID);
-                var result = FxcmFixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
+                var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
                 this.executionGateway.OnInstrumentsUpdate(instruments, responseId, result);
             });
@@ -282,7 +282,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 message.GetGroup(1, group);
                 var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
-                var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
+                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 var bid = group.GetField(Tags.MDEntryPx);
 
                 message.GetGroup(2, group);
@@ -314,7 +314,7 @@ namespace Nautilus.Brokerage.FXCM
                 var fxcmcode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
                 var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmcode})";
-                var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
+                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.executionGateway.OnOrderCancelReject(
                     symbol,
@@ -348,14 +348,14 @@ namespace Nautilus.Brokerage.FXCM
                 var orderId = GetField(message, Tags.ClOrdID);
                 var brokerOrderId = GetField(message, Tags.OrderID);
                 var orderLabel = GetField(message, Tags.SecondaryClOrdID);
-                var orderSide = FxcmFixMessageHelper.GetNautilusOrderSide(GetField(message, Tags.Side));
-                var orderType = FxcmFixMessageHelper.GetNautilusOrderType(GetField(message, Tags.OrdType));
-                var price = FxcmFixMessageHelper.GetOrderPrice(
+                var orderSide = FixMessageHelper.GetNautilusOrderSide(GetField(message, Tags.Side));
+                var orderType = FixMessageHelper.GetNautilusOrderType(GetField(message, Tags.OrdType));
+                var price = FixMessageHelper.GetOrderPrice(
                     orderType,
                     Convert.ToDecimal(GetField(message, Tags.StopPx)),
                     Convert.ToDecimal(GetField(message, Tags.Price)));
-                var timeInForce = FxcmFixMessageHelper.GetNautilusTimeInForce(GetField(message, Tags.TimeInForce));
-                var timestamp = FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
+                var timeInForce = FixMessageHelper.GetNautilusTimeInForce(GetField(message, Tags.TimeInForce));
+                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
                 var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
 
                 if (message.GetField(Tags.OrdStatus) == OrdStatus.REJECTED.ToString())
@@ -363,7 +363,7 @@ namespace Nautilus.Brokerage.FXCM
                     var rejectReasonCode = message.GetField(9025);
                     var fxcmRejectCode = message.GetField(9029);
                     var rejectReasonText = GetField(message, Tags.CxlRejReason);
-                    var rejectReason = $"Code({rejectReasonCode})={FxcmFixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
+                    var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
                     this.executionGateway.OnOrderRejected(
                         symbol,
@@ -400,7 +400,7 @@ namespace Nautilus.Brokerage.FXCM
                 if (message.GetField(Tags.OrdStatus) == OrdStatus.NEW.ToString())
                 {
                     var expireTime = message.IsSetField(Tags.ExpireTime)
-                                       ? (ZonedDateTime?)FxcmFixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
+                                       ? (ZonedDateTime?)FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
                                        : null;
 
                     this.executionGateway.OnOrderWorking(

@@ -21,9 +21,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubAccountFactory
     {
-        public static BrokerageAccount Create()
+        public static Account Create()
         {
-            var account = new BrokerageAccount(
+            var account = new Account(
                 Broker.InteractiveBrokers,
                 "123456789",
                 "my_username",
@@ -49,9 +49,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return account;
         }
 
-        public static BrokerageAccount ZeroCash()
+        public static Account ZeroCash()
         {
-            var account = new BrokerageAccount(
+            var account = new Account(
                 Broker.InteractiveBrokers,
                 "123456789",
                 "my_username",

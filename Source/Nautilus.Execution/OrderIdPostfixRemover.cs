@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common
+namespace Nautilus.Execution
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -26,7 +26,7 @@ namespace Nautilus.Common
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static string Remove(string orderId)
         {
-            Validate.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);

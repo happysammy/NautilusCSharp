@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="IReadOnlyBrokerageAccount.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IAccount.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -14,10 +14,9 @@ namespace Nautilus.DomainModel.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IReadOnlyBrokerageAccount"/> interface. Provides a read-only wrapper to an
-    /// <see cref="IBrokerageAccount"/>.
+    /// Provides a read-only brokerage account abstraction.
     /// </summary>
-    public interface IReadOnlyBrokerageAccount
+    public interface IAccount
     {
         /// <summary>
         /// Gets the broker name.
@@ -27,7 +26,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the brokerage accounts identifier.
         /// </summary>
-        EntityId<BrokerageAccount> Id { get; }
+        EntityId<Account> Id { get; }
 
         /// <summary>
         /// Gets the brokerage accounts number.
@@ -93,5 +92,10 @@ namespace Nautilus.DomainModel.Interfaces
         /// Gets the brokerage accounts last updated time.
         /// </summary>
         ZonedDateTime LastUpdated { get; }
+
+        /// <summary>
+        /// Gets the accounts event count.
+        /// </summary>
+        int EventCount { get; }
     }
 }

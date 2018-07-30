@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.BrokerageTests
+namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common;
+    using Nautilus.Execution;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

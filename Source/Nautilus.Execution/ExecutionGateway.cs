@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common
+namespace Nautilus.Execution
 {
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
@@ -35,7 +35,6 @@ namespace Nautilus.Common
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
-        private readonly CurrencyCode accountCurrency;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionGateway"/> class.
@@ -44,15 +43,13 @@ namespace Nautilus.Common
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The trade client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
-        /// <param name="accountCurrency">The FIX account currency.</param>
         public ExecutionGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient,
-            IInstrumentRepository instrumentRepository,
-            CurrencyCode accountCurrency)
+            IInstrumentRepository instrumentRepository)
             : base(
-                NautilusService.FIX,
+                NautilusService.Execution,
                 new Label(nameof(ExecutionGateway)),
                 container,
                 messagingAdapter)
@@ -64,7 +61,6 @@ namespace Nautilus.Common
 
             this.fixClient = fixClient;
             this.instrumentRepository = instrumentRepository;
-            this.accountCurrency = accountCurrency;
         }
 
         /// <summary>
@@ -786,8 +782,8 @@ namespace Nautilus.Common
             Debug.DecimalNotOutOfRange(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
 
             return amount > 0
-                ? Money.Create(amount, this.accountCurrency)
-                : Money.Zero(this.accountCurrency);
+                ? Money.Create(amount, CurrencyCode.AUD)
+                : Money.Zero(CurrencyCode.AUD);
         }
     }
 }

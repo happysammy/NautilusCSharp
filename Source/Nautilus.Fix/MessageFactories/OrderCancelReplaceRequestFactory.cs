@@ -45,9 +45,9 @@ namespace Nautilus.Fix.MessageFactories
             orderMessage.SetField(new ClOrdID(order.IdCurrent.ToString()));
             orderMessage.SetField(new Symbol(brokerSymbol));
             orderMessage.SetField(new Quantity(order.Quantity.Value));
-            orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderSide(order.Side));
+            orderMessage.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
             orderMessage.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
-            orderMessage.SetField(FxcmFixMessageHelper.GetFixOrderType(order.Type));
+            orderMessage.SetField(FixMessageHelper.GetFixOrderType(order.Type));
             orderMessage.SetField(new StopPx(modifiedPrice.Value));
 
             return orderMessage;

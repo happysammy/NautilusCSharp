@@ -23,6 +23,7 @@ namespace NautilusDB
     using Nautilus.Database.Build;
     using Nautilus.Database.Configuration;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.Execution;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
@@ -141,6 +142,8 @@ namespace NautilusDB
 
             var loggingAdapter = new SerilogLogger(logLevel);
 
+            var gatewayFactory = new ExecutionGatewayFactory();
+
             var fixClientFactory = new FxcmFixClientFactory(
                 username,
                 password,
@@ -157,6 +160,7 @@ namespace NautilusDB
             this.nautilusDB = DatabaseFactory.Create(
                 loggingAdapter,
                 fixClientFactory,
+                gatewayFactory,
                 publisherFactory,
                 barRepository,
                 instrumentRepository,

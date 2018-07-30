@@ -1,5 +1,5 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IFixClientFactory.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="IExecutionGatewayFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,20 +9,22 @@
 namespace Nautilus.Common.Interfaces
 {
     /// <summary>
-    /// Provides various clients for the system from the given inputs.
+    /// Provides an abstract factory for creating execution gateways.
     /// </summary>
-    public interface IFixClientFactory
+    public interface IExecutionGatewayFactory
     {
         /// <summary>
-        /// Creates a new <see cref="IFixClient"/>.
+        /// Creates a new <see cref="IExecutionGateway"/>.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
-        /// <returns>The FIX data client.</returns>
-        IFixClient Create(
+        /// <param name="fixClient">The fix client.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <returns>The execution gateway.</returns>
+        IExecutionGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            ITickProcessor tickProcessor);
+            IFixClient fixClient,
+            IInstrumentRepository instrumentRepository);
     }
 }

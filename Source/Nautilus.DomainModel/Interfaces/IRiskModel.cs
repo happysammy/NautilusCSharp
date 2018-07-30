@@ -8,53 +8,62 @@
 
 namespace Nautilus.DomainModel.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IRiskModel"/> interface implements <see cref="IReadOnlyRiskModel"/>.
-    /// Represents a systems model for quantifying financial market risk
-    /// exposure.
+    /// Provides a read-only risk model abstraction.
     /// </summary>
-    public interface IRiskModel : IReadOnlyRiskModel
+    public interface IRiskModel
     {
         /// <summary>
-        /// Updates the global maximum risk per trade with the given input.
+        /// Gets the risk models global maximum risk exposure percentage.
         /// </summary>
-        /// <param name="maxRiskPerTrade">The maximum risk per trade.</param>
-        /// <param name="timestamp">The update timestamp.</param>
-        void UpdateGlobalMaxRiskPerTrade(Percentage maxRiskPerTrade, ZonedDateTime timestamp);
+        Percentage GlobalMaxRiskExposure { get; }
 
         /// <summary>
-        /// Updates the position size hard limit with the given inputs.
+        /// Gets the risk models global max risk per trade percentage.
+        /// </summary>
+        Percentage GlobalMaxRiskPerTrade { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether there are position size hard limits.
+        /// </summary>
+        bool PositionSizeHardLimits { get; }
+
+        /// <summary>
+        /// Gets the risk models last event time.
+        /// </summary>
+        ZonedDateTime LastEventTime { get; }
+
+        /// <summary>
+        /// Gets the risk models event count.
+        /// </summary>
+        int EventCount { get; }
+
+        /// <summary>
+        /// Returns the quantity hard limit for the given symbol (optional).
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <param name="hardLimit">The quantity hard limit.</param>
-        /// <param name="timestamp">The update timestamp.</param>
-        void UpdatePositionSizeHardLimit(Symbol symbol, Quantity hardLimit, ZonedDateTime timestamp);
+        /// <returns>
+        /// A <see cref="Option{Quantity}"/>.
+        /// </returns>
+        Option<Quantity> GetHardLimitQuantity(Symbol symbol);
 
         /// <summary>
-        /// Updates the maximum risk per trade type with the given inputs.
+        /// Returns the allowed risk per trade for the given trade type (returns global maximum
+        /// risk per trade if not specified by trade type).
         /// </summary>
         /// <param name="tradeType">The trade type.</param>
-        /// <param name="riskPerTrade">The risk per trade.</param>
-        /// <param name="timestamp">The update timestamp.</param>
-        void UpdateMaxRiskPerTradeType(TradeType tradeType, Percentage riskPerTrade, ZonedDateTime timestamp);
+        /// <returns>A <see cref="Percentage"/>.</returns>
+        Percentage GetRiskPerTrade(TradeType tradeType);
 
         /// <summary>
-        /// Updates the maximum trades per type with the given inputs.
+        /// Returns the maximum number of trades allowed for the given trade type.
         /// </summary>
         /// <param name="tradeType">The trade type.</param>
-        /// <param name="maxTrades">The maximum quantity of trades.</param>
-        /// <param name="timestamp">The update timestamp.</param>
-        void UpdateMaxTradesPerSymbolType(TradeType tradeType, Quantity maxTrades, ZonedDateTime timestamp);
-
-        /// <summary>
-        /// Returns a copy of the event log.
-        /// </summary>
-        /// <returns>A <see cref="IReadOnlyDictionary{TKey,TValue}"/>.</returns>
-        IReadOnlyList<Tuple<ZonedDateTime, string>> GetEventLog();
+        /// <returns>A <see cref="Quantity"/>.</returns>
+        Quantity GetMaxTrades(TradeType tradeType);
     }
 }

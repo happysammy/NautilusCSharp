@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
+    <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
     <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
     <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
     <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />

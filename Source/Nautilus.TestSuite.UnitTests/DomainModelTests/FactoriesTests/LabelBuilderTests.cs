@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
     public class LabelBuilderTests
     {
         [Fact]
-        internal void ComponentLabel_WithComponentSymbolExchange_RetusnExpectedLabel()
+        internal void ComponentLabel_WithComponentSymbolExchange_ReturnsExpectedLabel()
         {
             // Arrange
 
@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_RetusnExpectedLabel()
+        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_ReturnsExpectedLabel()
         {
             // Arrange
 
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentSymbolExchange_RetusnExpectedLabel()
+        internal void ComponentLabel_WithModuleComponentSymbolExchange_ReturnsExpectedLabel()
         {
             // Arrange
 
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentSymbolbarType_RetusnExpectedLabel()
+        internal void ComponentLabel_WithModuleComponentAndSymbol_ReturnsExpectedLabel()
         {
             // Arrange
 

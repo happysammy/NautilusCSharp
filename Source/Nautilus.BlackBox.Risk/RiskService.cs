@@ -15,6 +15,7 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;
@@ -24,7 +25,7 @@ namespace Nautilus.BlackBox.Risk
     /// </summary>
     public sealed class RiskService : ActorComponentBusConnectedBase
     {
-        private IBrokerageAccount account;
+        private Account account;
         private IRiskModel riskModel;
 
         /// <summary>

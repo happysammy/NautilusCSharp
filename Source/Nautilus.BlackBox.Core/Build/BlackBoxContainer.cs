@@ -39,8 +39,8 @@ namespace Nautilus.BlackBox.Core.Build
             ILoggerFactory loggerFactory,
             IInstrumentRepository instrumentRepository,
             IQuoteProvider quoteProvider,
-            IReadOnlyRiskModel riskModel,
-            IReadOnlyBrokerageAccount account)
+            IRiskModel riskModel,
+            IAccount account)
         {
             Validate.NotNull(clock, nameof(clock));
             Validate.NotNull(loggerFactory, nameof(loggerFactory));
@@ -83,12 +83,12 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Gets the black box risk model.
         /// </summary>
-        public IReadOnlyRiskModel RiskModel { get; }
+        public IRiskModel RiskModel { get; }
 
         /// <summary>
         /// Gets the black box account.
         /// </summary>
-        public IReadOnlyBrokerageAccount Account { get; }
+        public IAccount Account { get; }
 
         /// <summary>
         /// Gets the black box instrument repository.

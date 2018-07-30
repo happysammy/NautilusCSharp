@@ -27,6 +27,7 @@
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
     <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
     <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
     <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
