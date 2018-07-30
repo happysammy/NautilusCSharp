@@ -9,10 +9,10 @@
 namespace Nautilus.Common.Logging
 {
     using System;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>

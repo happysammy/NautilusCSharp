@@ -11,10 +11,10 @@ namespace Nautilus.Common.Componentry
     using System;
     using Akka.Actor;
     using Nautilus.Common.Enums;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

@@ -13,8 +13,8 @@ namespace Nautilus.Common.MessageStore
     using System.Linq;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Sends received messages to the <see cref="InMemoryMessageStore"/>.
@@ -121,6 +121,7 @@ namespace Nautilus.Common.MessageStore
             Debug.NotNull(envelope, nameof(envelope));
 
             return envelope.IsOpened
+
                 // ReSharper disable once PossibleInvalidOperationException
                 ? (envelope.OpenedTime.Value - envelope.Timestamp).Value.SubsecondTicks
                 : 0;

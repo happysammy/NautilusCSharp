@@ -9,9 +9,9 @@
 namespace Nautilus.Common.Commands
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>

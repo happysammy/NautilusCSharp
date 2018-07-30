@@ -9,11 +9,11 @@
 namespace Nautilus.Common.Messaging
 {
     using Akka.Actor;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -42,17 +42,17 @@ namespace Nautilus.Common.Messaging
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(store)));
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                LabelFactory.Component(Messaging.CommandBus.ToString()),
+                LabelFactory.Component(MessagingComponent.CommandBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                LabelFactory.Component(Messaging.EventBus.ToString()),
+                LabelFactory.Component(MessagingComponent.EventBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                LabelFactory.Component(Messaging.DocumentBus.ToString()),
+                LabelFactory.Component(MessagingComponent.DocumentBus.ToString()),
                 container,
                 messageStoreRef)));
 

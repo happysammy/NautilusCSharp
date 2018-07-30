@@ -9,12 +9,12 @@
 namespace Nautilus.Common
 {
     using System.Collections.Generic;
-    using Nautilus.Core;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -22,6 +22,7 @@ namespace Nautilus.Common
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+
     using Price = Nautilus.DomainModel.ValueObjects.Price;
     using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;

@@ -49,17 +49,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var messageStoreRef = actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))); // TODO: make disposable so that test don't break
 
             var commandBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                new Label(Messaging.CommandBus.ToString()),
+                new Label(MessagingComponent.CommandBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var eventBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                new Label(Messaging.EventBus.ToString()),
+                new Label(MessagingComponent.EventBus.ToString()),
                 container,
                 messageStoreRef)));
 
             var serviceBusRef = actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                new Label(Messaging.DocumentBus.ToString()),
+                new Label(MessagingComponent.DocumentBus.ToString()),
                 container,
                 messageStoreRef)));
 

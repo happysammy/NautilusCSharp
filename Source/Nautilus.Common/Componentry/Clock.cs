@@ -8,8 +8,8 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

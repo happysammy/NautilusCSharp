@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using Nautilus.Core.Annotations;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Provides <see cref="Guid"/>(s) for the system.

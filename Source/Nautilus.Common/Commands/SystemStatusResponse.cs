@@ -9,10 +9,10 @@
 namespace Nautilus.Common.Commands
 {
     using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Enums;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

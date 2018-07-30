@@ -45,7 +45,7 @@ namespace Nautilus.Common.MessageStore
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="envelope"></param>
+        /// <param name="envelope">The envelope.</param>
         public void Store(Envelope<CommandMessage> envelope)
         {
             // Does nothing.
@@ -54,7 +54,7 @@ namespace Nautilus.Common.MessageStore
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="envelope"></param>
+        /// <param name="envelope">The envelope.</param>
         public void Store(Envelope<EventMessage> envelope)
         {
             // Does nothing.
@@ -63,7 +63,7 @@ namespace Nautilus.Common.MessageStore
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="envelope"></param>
+        /// <param name="envelope">The envelope.</param>
         public void Store(Envelope<DocumentMessage> envelope)
         {
             // Does nothing.

@@ -37,6 +37,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Deletes the instrument of the given symbol from the database.
         /// </summary>
+        /// <param name="symbol">The instrument symbol to delete.</param>
         void Delete(Symbol symbol);
 
         /// <summary>
@@ -65,6 +66,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Returns the instrument symbol collection.
         /// </summary>
+        /// <returns>The collection of symbols held by the repository.</returns>
         IReadOnlyCollection<Symbol> GetSymbols();
 
         /// <summary>

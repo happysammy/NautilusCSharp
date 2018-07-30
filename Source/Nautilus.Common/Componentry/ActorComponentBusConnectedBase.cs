@@ -10,11 +10,11 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Enums;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -53,6 +53,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
+        /// <typeparam name="T">The message type.</typeparam>
         protected void Send<T>(NautilusService receiver, ISendable<T> message)
             where T : class
         {
@@ -95,6 +96,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
+        /// <typeparam name="T">The message type.</typeparam>
         protected void Send<T>(ReadOnlyList<NautilusService> receivers, ISendable<T> message)
             where T : class
         {

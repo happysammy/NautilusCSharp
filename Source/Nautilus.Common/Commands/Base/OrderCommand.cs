@@ -22,7 +22,7 @@ namespace Nautilus.Common.Commands.Base
     public abstract class OrderCommand : Command
     {
         /// <summary>
-        /// Initialize a new instance of the <see cref="OrderCommand"/> abstract base class.
+        /// Initializes a new instance of the <see cref="OrderCommand"/> class.
         /// </summary>
         /// <param name="order">The commands order.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>

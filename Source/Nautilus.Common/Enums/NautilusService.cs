@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="BlackBoxService.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NautilusService.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,42 +9,42 @@
 namespace Nautilus.Common.Enums
 {
     /// <summary>
-    /// The <see cref="NautilusService"/> context enumeration.
+    /// Represents the name of the Nautilus service context.
     /// </summary>
     public enum NautilusService
     {
         /// <summary>
-        /// The alpha model Nautilus service context.
+        /// The messaging service context.
         /// </summary>
         Messaging,
 
         /// <summary>
-        /// The alpha model Nautilus service context.
+        /// The alpha model service context.
         /// </summary>
         AlphaModel,
 
         /// <summary>
-        /// The black box core Nautilus service context.
+        /// The black box core service context.
         /// </summary>
         BlackBox,
 
         /// <summary>
-        /// The risk Nautilus service context.
+        /// The risk service context.
         /// </summary>
         Risk,
 
         /// <summary>
-        /// The portfolio Nautilus service context.
+        /// The portfolio service context.
         /// </summary>
         Portfolio,
 
         /// <summary>
-        /// The execution Nautilus service context.
+        /// The execution service context.
         /// </summary>
         Execution,
 
         /// <summary>
-        /// The brokerage Nautilus service context.
+        /// The brokerage service context.
         /// </summary>
         Brokerage,
 
@@ -55,37 +55,37 @@ namespace Nautilus.Common.Enums
         FIX,
 
         /// <summary>
-        /// The data Nautilus service context.
+        /// The data service context.
         /// </summary>
         Data,
 
         /// <summary>
-        /// The core database service context.
+        /// The scheduler service context.
         /// </summary>
         Scheduler,
 
         /// <summary>
-        /// The task manager database service context.
+        /// The database task manager service context.
         /// </summary>
         DatabaseTaskManager,
 
         /// <summary>
-        /// The collection manager database service context.
+        /// The data collection manager service context.
         /// </summary>
         DataCollectionManager,
 
         /// <summary>
-        /// The bar aggregation controller database service context.
+        /// The bar aggregation controller service context.
         /// </summary>
         BarAggregationController,
 
         /// <summary>
-        /// The tick publisher database service context.
+        /// The tick publisher service context.
         /// </summary>
         TickPublisher,
 
         /// <summary>
-        /// The bar publisher database service context.
+        /// The bar publisher service context.
         /// </summary>
         BarPublisher,
 

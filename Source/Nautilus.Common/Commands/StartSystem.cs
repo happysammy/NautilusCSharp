@@ -9,10 +9,10 @@
 namespace Nautilus.Common.Commands
 {
     using System;
-    using NodaTime;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using NodaTime;
 
     /// <summary>
     /// Represents a command message to start the system.

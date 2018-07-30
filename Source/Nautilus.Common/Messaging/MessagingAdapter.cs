@@ -11,10 +11,10 @@ namespace Nautilus.Common.Messaging
     using System;
     using Akka.Actor;
     using Nautilus.Common.Enums;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The immutable sealed <see cref="MessagingAdapter"/> class.

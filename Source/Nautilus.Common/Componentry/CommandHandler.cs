@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// A class which provides encapsulated execution of <see cref="Action"/>(s)

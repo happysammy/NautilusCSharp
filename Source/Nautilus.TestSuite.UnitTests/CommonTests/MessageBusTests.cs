@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
 
             this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                new Label(Messaging.CommandBus.ToString()),
+                new Label(MessagingComponent.CommandBus.ToString()),
                 setupContainer,
                 new StandardOutLogger())));
 

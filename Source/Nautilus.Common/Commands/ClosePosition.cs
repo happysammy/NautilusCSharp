@@ -22,7 +22,7 @@ namespace Nautilus.Common.Commands
     public sealed class ClosePosition : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CloseTradeUnit"/> class.
+        /// Initializes a new instance of the <see cref="ClosePosition"/> class.
         /// </summary>
         /// <param name="position">The commands position to close.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>

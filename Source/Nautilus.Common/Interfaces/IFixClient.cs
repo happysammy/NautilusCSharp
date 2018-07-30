@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IDataFeedClient.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IFixClient.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -24,6 +24,12 @@ namespace Nautilus.Common.Interfaces
         Broker Broker { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the FIX session is connected.
+        /// </summary>
+        /// <returns>A <see cref="bool"/>.</returns>
+        bool IsConnected { get; }
+
+        /// <summary>
         /// Connects to the FIX session.
         /// </summary>
         void Connect();
@@ -32,12 +38,6 @@ namespace Nautilus.Common.Interfaces
         /// Disconnects from the FIX session.
         /// </summary>
         void Disconnect();
-
-        /// <summary>
-        /// Returns a value indicating whether the FIX session is connected.
-        /// </summary>
-        /// <returns>A <see cref="bool"/>.</returns>
-        bool IsConnected { get; }
 
         /// <summary>
         /// Initializes the FIX gateway.
