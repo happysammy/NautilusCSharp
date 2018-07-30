@@ -246,11 +246,11 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderFilled @event:
                     return this.When(@event);
 
-                case OrderExpired orderExpired:
-                    return this.When(orderExpired);
+                case OrderExpired @event:
+                    return this.When(@event);
 
-                case OrderModified orderModified:
-                    return this.When(orderModified);
+                case OrderModified @event:
+                    return this.When(@event);
 
                 default: return CommandResult.Fail($"The event is not recognized by the order {this}");
             }
