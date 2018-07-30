@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="EconomicNewsEvent.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="EconomicEvent.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -11,8 +11,8 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using NodaTime;
     using Nautilus.DomainModel.Enums;
+    using NodaTime;
 
     /// <summary>
     /// Represents an economic news event which affects financial markets.
@@ -21,16 +21,16 @@ namespace Nautilus.DomainModel.Entities
     public struct EconomicEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EconomicEvent"/> class.
+        /// Initializes a new instance of the <see cref="EconomicEvent"/> struct.
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="title"></param>
-        /// <param name="country"></param>
-        /// <param name="currency"></param>
-        /// <param name="impact"></param>
-        /// <param name="actual"></param>
-        /// <param name="consensus"></param>
-        /// <param name="previous"></param>
+        /// <param name="time">The event time.</param>
+        /// <param name="title">The event title.</param>
+        /// <param name="country">The event country.</param>
+        /// <param name="currency">The event currency.</param>
+        /// <param name="impact">The event impact.</param>
+        /// <param name="actual">The event actual figure.</param>
+        /// <param name="consensus">The event consensus figure.</param>
+        /// <param name="previous">The event previous figure.</param>
         public EconomicEvent(
             ZonedDateTime time,
             string title,
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel.Entities
         public Option<decimal> Previous { get; }
 
         /// <summary>
-        /// Gets a value indication whether this economic news event is a speech or meeting.
+        /// Gets a value indicating whether this economic event is a speech or meeting.
         /// </summary>
         public bool IsSpeechOrMeeting => this.Previous.HasNoValue;
     }

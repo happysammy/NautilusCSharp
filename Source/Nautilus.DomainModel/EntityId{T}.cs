@@ -13,13 +13,15 @@ namespace Nautilus.DomainModel
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// A <see cref="ValueObject{T}"/> which represents a unique validated entity identifier.
+    /// Represents a validated and unique entity identifier.
     /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]
-    public class EntityId<T> where T : Entity<T>
+    public class EntityId<T>
+        where T : Entity<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidString"/> class.
+        /// Initializes a new instance of the <see cref="EntityId{T}"/> class.
         /// </summary>
         /// <param name="value">The string value.</param>
         protected EntityId(string value)
@@ -31,7 +33,7 @@ namespace Nautilus.DomainModel
         }
 
         /// <summary>
-        /// Gets the value of the entity id.
+        /// Gets the value of the entity identifier.
         /// </summary>
         public string Value { get; }
 

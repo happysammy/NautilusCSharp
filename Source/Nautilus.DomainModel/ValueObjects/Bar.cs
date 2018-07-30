@@ -12,8 +12,8 @@ namespace Nautilus.DomainModel.ValueObjects
     using System.Collections.Generic;
     using System.Text;
     using Nautilus.Core;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -118,20 +118,37 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
+        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
         /// </summary>
-        /// <returns>A collection of objects.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
+        /// <param name="barString">The bar string.</param>
+        /// <returns>A <see cref="Bar"/>.</returns>
+        public static Bar GetFromString(string barString)
         {
-            return new object[]
-                       {
-                           this.Open,
-                           this.High,
-                           this.Low,
-                           this.Close,
-                           this.Volume,
-                           this.Timestamp
-                       };
+            Debug.NotNull(barString, nameof(barString));
+
+            var values = barString.Split(',');
+            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
+
+            return new Bar(
+                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
+                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
+                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
+                values[5].ToZonedDateTimeFromIso());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Bar"/> from this <see cref="byte"/> array.
+        /// </summary>
+        /// <param name="barBytes">The bar bytes array.</param>
+        /// <returns>A <see cref="Bar"/>.</returns>
+        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        public static Bar GetFromBytes(byte[] barBytes)
+        {
+            Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
+
+            return GetFromString(Encoding.UTF8.GetString(barBytes));
         }
 
         /// <summary>
@@ -193,37 +210,20 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
+        /// Returns a collection of objects to be included in equality checks.
         /// </summary>
-        /// <param name="barString">The bar string.</param>
-        /// <returns>A <see cref="Bar"/>.</returns>
-        public static Bar GetFromString(string barString)
+        /// <returns>A collection of objects.</returns>
+        protected override IEnumerable<object> GetMembersForEqualityCheck()
         {
-            Debug.NotNull(barString, nameof(barString));
-
-            var values = barString.Split(',');
-            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
-
-            return new Bar(
-                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
-                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
-                values[5].ToZonedDateTimeFromIso());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="Bar"/> from this <see cref="byte"/> array.
-        /// </summary>
-        /// <param name="barBytes">The bar bytes array.</param>
-        /// <returns>A <see cref="Bar"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public static Bar GetFromBytes(byte[] barBytes)
-        {
-            Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
-
-            return GetFromString(Encoding.UTF8.GetString(barBytes));
+            return new object[]
+            {
+                this.Open,
+                this.High,
+                this.Low,
+                this.Close,
+                this.Volume,
+                this.Timestamp
+            };
         }
     }
 }

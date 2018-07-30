@@ -17,7 +17,8 @@ namespace Nautilus.DomainModel
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]
-    public abstract class Entity<T> where T : Entity<T>
+    public abstract class Entity<T>
+        where T : Entity<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity{T}"/> class.

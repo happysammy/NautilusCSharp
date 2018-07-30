@@ -17,8 +17,8 @@ namespace Nautilus.DomainModel
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ValueObject{T}"/>.</typeparam>
     [Immutable]
-    public abstract class IntegerNumber<T> : ValueObject<T> where T : IntegerNumber<T>,
-        IEquatable<T>, IComparable<IntegerNumber<T>>
+    public abstract class IntegerNumber<T> : ValueObject<T>
+        where T : IntegerNumber<T>, IEquatable<T>, IComparable<IntegerNumber<T>>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IntegerNumber{T}" /> class.

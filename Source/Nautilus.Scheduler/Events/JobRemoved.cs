@@ -27,7 +27,8 @@ namespace Nautilus.Scheduler.Events
         public JobRemoved(
             JobKey jobKey,
             TriggerKey triggerKey,
-            object job) : base(jobKey, triggerKey)
+            object job)
+            : base(jobKey, triggerKey)
         {
             Debug.NotNull(job, nameof(job));
             Debug.NotNull(triggerKey, nameof(triggerKey));
@@ -44,7 +45,7 @@ namespace Nautilus.Scheduler.Events
         /// <summary>
         /// Returns a string representation of the <see cref="JobRemoved"/>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
             return $"{this.JobKey} with trigger {this.TriggerKey} has been removed.";

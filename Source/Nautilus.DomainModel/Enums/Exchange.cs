@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// The venue an instrument is traded on.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum Venue
     {
         /// <summary>
@@ -39,6 +39,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The LMAX exchange venue.
         /// </summary>
-        LMAX =4
+        LMAX = 4
     }
 }

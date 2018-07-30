@@ -18,7 +18,8 @@ namespace Nautilus.DomainModel
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>
     [Immutable]
-    public abstract class ValueObject<T> where T : ValueObject<T>, IEquatable<T>
+    public abstract class ValueObject<T>
+        where T : ValueObject<T>, IEquatable<T>
     {
         /// <summary>
         /// Returns a value indicating whether the <see cref="ValueObject{T}"/>(s) are equal.

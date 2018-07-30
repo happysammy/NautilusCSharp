@@ -31,7 +31,7 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public TradeApproved(
-            AtomicOrdersPacket orderPacket,
+            AtomicOrderPacket orderPacket,
             int barsValid,
             Guid messageId,
             ZonedDateTime messageTimestamp)
@@ -54,7 +54,7 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <summary>
         /// Gets the messages order packet.
         /// </summary>
-        public AtomicOrdersPacket OrderPacket { get; }
+        public AtomicOrderPacket OrderPacket { get; }
 
         /// <summary>
         /// Gets the messages bars valid for entry.

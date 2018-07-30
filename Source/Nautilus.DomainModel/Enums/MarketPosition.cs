@@ -11,8 +11,8 @@ namespace Nautilus.DomainModel.Enums
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// The <see cref="MarketPosition"/> enumeration. Represents the relative market position of
-    /// a <see cref="Position"/>, <see cref="TradeUnit"/> and or <see cref="Trade"/>.
+    /// Represents the relative market position of a <see cref="Position"/>, <see cref="TradeUnit"/>
+    /// and or <see cref="Trade"/>.
     /// </summary>
     public enum MarketPosition
     {

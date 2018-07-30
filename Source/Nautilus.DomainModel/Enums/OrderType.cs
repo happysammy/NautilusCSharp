@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// Represents the type of order.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum OrderType
     {
         /// <summary>

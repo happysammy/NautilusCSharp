@@ -8,10 +8,8 @@
 
 namespace Nautilus.Scheduler
 {
-    using System;
     using System.Collections.Specialized;
     using Akka.Actor;
-    using Quartz.Impl;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -20,6 +18,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using Nautilus.Scheduler.Exceptions;
+    using Quartz.Impl;
 
     using IScheduler = Quartz.IScheduler;
 
@@ -43,7 +42,10 @@ namespace Nautilus.Scheduler
         {
             Validate.NotNull(container, nameof(container));
 
-            var properties = new NameValueCollection { {"quartz.threadPool.threadCount", "10"} };
+            var properties = new NameValueCollection
+            {
+                { "quartz.threadPool.threadCount", "10" }
+            };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
@@ -52,12 +54,18 @@ namespace Nautilus.Scheduler
             this.Receive<ResumeJob>(msg => this.OnMessage(msg));
         }
 
+        /// <summary>
+        /// Runs pre-start of the actor component start.
+        /// </summary>
         protected override void PreStart()
         {
             base.PreStart();
             this.quartzScheduler.Start();
         }
 
+        /// <summary>
+        /// Runs post-stop of the actor component stopping.
+        /// </summary>
         protected override void PostStop()
         {
             this.quartzScheduler.Shutdown();
@@ -78,14 +86,14 @@ namespace Nautilus.Scheduler
                     .WithIdentity(message.Trigger.JobKey)
                     .Build();
 
-                quartzScheduler.ScheduleJob(job, message.Trigger);
+                this.quartzScheduler.ScheduleJob(job, message.Trigger);
 
                 destination.Tell(new JobCreated(
                     message.Trigger.JobKey,
                     message.Trigger.Key,
                     message.Message));
             }
-            catch (Exception ex) // TODO: Make this exception more specific.
+            catch (JobNotFoundException ex)
             {
                 destination.Tell(new CreateJobFail(
                     message.Trigger.JobKey,
@@ -110,7 +118,7 @@ namespace Nautilus.Scheduler
                     this.Log.Warning($"Job pause failed for {message.JobKey}.");
                 }
             }
-            catch (Exception ex)  // TODO: Make this exception more specific.
+            catch (JobNotFoundException ex)
             {
                 this.Log.Error($"Job pause failed with error for {message.JobKey}.", ex);
             }
@@ -132,7 +140,7 @@ namespace Nautilus.Scheduler
                     this.Log.Warning($"Job resume failed for {message.JobKey}.");
                 }
             }
-            catch (Exception ex)  // TODO: Make this exception more specific.
+            catch (JobNotFoundException ex)
             {
                 this.Log.Error($"Job resume failed with error for {message.JobKey}.", ex);
             }
@@ -146,7 +154,7 @@ namespace Nautilus.Scheduler
 
             try
             {
-                var deleted = quartzScheduler.DeleteJob(message.JobKey);
+                var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
                 if (deleted.IsCompletedSuccessfully)
                 {
                     sender.Tell(new JobRemoved(
@@ -159,7 +167,7 @@ namespace Nautilus.Scheduler
                     sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, new JobNotFoundException()));
                 }
             }
-            catch (Exception ex)  // TODO: Make this exception more specific.
+            catch (JobNotFoundException ex)
             {
                 sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, ex));
             }

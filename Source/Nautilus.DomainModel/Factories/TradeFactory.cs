@@ -22,15 +22,14 @@ namespace Nautilus.DomainModel.Factories
     public static class TradeFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="Trade"/> from the given <see cref="AtomicOrdersPacket"/>.
+        /// Creates and returns a new <see cref="Trade"/> from the given <see cref="AtomicOrderPacket"/>.
         /// </summary>
         /// <param name="orderPacket">The order packet.</param>
         /// <returns>A <see cref="Trade"/>.</returns>
-        public static Trade Create(AtomicOrdersPacket orderPacket)
+        public static Trade Create(AtomicOrderPacket orderPacket)
         {
             var tradeId = new TradeId(orderPacket.Id.Value);
             var tradeUnits = CreateTradeUnits(tradeId, orderPacket);
-
 
             return new Trade(
                 orderPacket.Symbol,
@@ -43,7 +42,7 @@ namespace Nautilus.DomainModel.Factories
 
         private static ReadOnlyList<TradeUnit> CreateTradeUnits(
             TradeId tradeId,
-            AtomicOrdersPacket orderPacket)
+            AtomicOrderPacket orderPacket)
         {
             var tradeUnits = new List<TradeUnit>();
 

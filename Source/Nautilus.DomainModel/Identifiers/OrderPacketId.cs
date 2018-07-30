@@ -16,13 +16,14 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for order packets.
     /// </summary>
     [Immutable]
-    public sealed class OrderPacketId : EntityId<AtomicOrdersPacket>
+    public sealed class OrderPacketId : EntityId<AtomicOrderPacket>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderPacketId"/> class.
         /// </summary>
         /// <param name="value">The entity id value.</param>
-        public OrderPacketId(string value) : base(value)
+        public OrderPacketId(string value)
+            : base(value)
         {
             Debug.NotNull(value, nameof(value));
         }

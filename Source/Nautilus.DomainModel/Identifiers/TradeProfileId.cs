@@ -22,7 +22,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// Initializes a new instance of the <see cref="TradeProfileId"/> class.
         /// </summary>
         /// <param name="value">The entity id value.</param>
-        public TradeProfileId(string value) : base(value)
+        public TradeProfileId(string value)
+            : base(value)
         {
             Debug.NotNull(value, nameof(value));
         }

@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="BarSpecification.cs" company="Nautech Systems Pty Ltd">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
@@ -16,8 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="BarSpecification"/> class. Represents a bar profile being a time frame and
-    /// period.
+    /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>
     [Immutable]
     public sealed class BarSpecification : ValueObject<BarSpecification>, IEquatable<BarSpecification>
@@ -25,16 +24,15 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
-        /// <param name="quoteType"></param>
-        /// <param name="resolution">The bar time frame.</param>
-        /// <param name="period">The bar period.</param>
-        /// <exception cref="ValidationException">Throws if the period is zero or negative.</exception>
+        /// <param name="quoteType">The specification quote type.</param>
+        /// <param name="resolution">The specification resolution.</param>
+        /// <param name="period">The specification period.</param>
         public BarSpecification(
             QuoteType quoteType,
             Resolution resolution,
             int period)
         {
-            Validate.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             this.QuoteType = quoteType;
             this.Resolution = resolution;
@@ -69,7 +67,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public Duration Duration { get; }
 
         /// <summary>
-        /// Returns a value indicating whether this bars time period is one day.
+        /// Gets a value indicating whether this bars time period is one day.
         /// </summary>
         public bool IsOneDayBar => this.Resolution == Resolution.Day && this.Period == 1;
 
@@ -90,18 +88,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <returns>A string.</returns>
         public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
-
-        /// <summary>
-        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
-        /// </summary>
-        /// <param name="barSpec">The bar specification string.</param>
-        /// <returns>A <see cref="Bar"/>.</returns>
-        public static BarSpecification GetFromString(string barSpec)
-        {
-            Debug.NotNull(barSpec, nameof(barSpec));
-
-            return null; //TODO
-        }
 
         /// <summary>
         /// Returns a collection of objects to be included in equality checks.

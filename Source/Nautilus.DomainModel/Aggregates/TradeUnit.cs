@@ -65,11 +65,12 @@ namespace Nautilus.DomainModel.Aggregates
             this.Position = this.CreatePosition(entry, timestamp);
             this.UnitSize = entry.Quantity;
 
-            var orderList = new List<Order> {this.Entry, this.StopLoss};
+            var orderList = new List<Order> { this.Entry, this.StopLoss };
             if (this.ProfitTarget.HasValue)
             {
                 orderList.Add(this.ProfitTarget.Value);
             }
+
             this.orders = new ReadOnlyList<Order>(orderList);
 
             this.OrderIds = new ReadOnlyList<OrderId>(this.orders.Select(o => o.Id).ToList());
@@ -117,7 +118,7 @@ namespace Nautilus.DomainModel.Aggregates
         public ReadOnlyList<OrderId> OrderIds { get; }
 
         /// <summary>
-        /// Returns the trade units trade status.
+        /// Gets the trade units trade status.
         /// </summary>
         public TradeStatus TradeStatus => TradeLogic.CalculateTradeStatus(this);
 
@@ -197,7 +198,7 @@ namespace Nautilus.DomainModel.Aggregates
             return new Position(
                 this.Symbol,
                 entry.Id,
-                new PositionId($"{this.Id}_{nameof(Position)}"),
+                new PositionId($"Position({this.Id})"),
                 timestamp);
         }
     }

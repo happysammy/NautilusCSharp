@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="Trigger.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="Trigger.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         }
 
         /// <summary>
-        /// Gets the <see cref="String"/> value of this trigger.
+        /// Gets the <see cref="string"/> value of this trigger.
         /// </summary>
         public string Value { get; }
 

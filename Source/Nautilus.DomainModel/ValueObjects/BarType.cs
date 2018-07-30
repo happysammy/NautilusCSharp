@@ -20,8 +20,8 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarType"/> class.
         /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="specification"></param>
+        /// <param name="symbol">The bar type symbol.</param>
+        /// <param name="specification">The bar type specification.</param>
         public BarType(
             Symbol symbol,
             BarSpecification specification)
@@ -39,19 +39,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Gets the bar types specification.
         /// </summary>
         public BarSpecification Specification { get; }
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>A collection of objects.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[]
-            {
-                this.Symbol,
-                this.Specification,
-            };
-        }
 
         /// <summary>
         /// Returns a string representation of the <see cref="BarType"/>.
@@ -72,6 +59,19 @@ namespace Nautilus.DomainModel.ValueObjects
                    $"-{this.Specification.Period}" +
                    $"-{this.Specification.Resolution.ToString().ToLower()}" +
                    $"[{this.Specification.QuoteType.ToString().ToLower()}]";
+        }
+
+        /// <summary>
+        /// Returns a collection of objects to be included in equality checks.
+        /// </summary>
+        /// <returns>A collection of objects.</returns>
+        protected override IEnumerable<object> GetMembersForEqualityCheck()
+        {
+            return new object[]
+            {
+                this.Symbol,
+                this.Specification,
+            };
         }
     }
 }

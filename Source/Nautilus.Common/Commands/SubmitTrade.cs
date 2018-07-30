@@ -30,7 +30,7 @@ namespace Nautilus.Common.Commands
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public SubmitTrade(
-            AtomicOrdersPacket orderPacket,
+            AtomicOrderPacket orderPacket,
             decimal minStopDistanceEntry,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Gets the commands atomic order packet.
         /// </summary>
-        public AtomicOrdersPacket OrderPacket { get; }
+        public AtomicOrderPacket OrderPacket { get; }
 
         /// <summary>
         /// Gets the commands minimum stop distance for entry.

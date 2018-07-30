@@ -22,7 +22,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// Initializes a new instance of the <see cref="AccountId"/> class.
         /// </summary>
         /// <param name="value">The entity id value.</param>
-        public AccountId(string value) : base(value)
+        public AccountId(string value)
+            : base(value)
         {
             Debug.NotNull(value, nameof(value));
         }

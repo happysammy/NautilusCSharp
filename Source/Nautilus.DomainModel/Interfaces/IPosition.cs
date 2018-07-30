@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.Interfaces
         Quantity Quantity { get; }
 
         /// <summary>
-        /// Returns the positions market position.
+        /// Gets the positions market position.
         /// </summary>
         MarketPosition MarketPosition { get; }
 

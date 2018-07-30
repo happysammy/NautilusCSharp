@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="Tick.cs" company="Nautech Systems Pty Ltd">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
+//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
@@ -93,6 +93,39 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
+        /// Returns a valid <see cref="Tick"/> from this <see cref="string"/>.
+        /// </summary>
+        /// <param name="tickString">The tick string.</param>
+        /// <returns>A <see cref="Tick"/>.</returns>
+        public static Tick GetFromString(string tickString)
+        {
+            Debug.NotNull(tickString, nameof(tickString));
+
+            var values = tickString.Split(',');
+            var header = values[0].Split('.');
+            var code = header[0];
+            var exchange = header[1];
+
+            return new Tick(
+                new Symbol(code, exchange.ToEnum<Venue>()),
+                SafeConvert.ToDecimalOr(values[1], 0m),
+                SafeConvert.ToDecimalOr(values[2], 0m),
+                values[3].ToZonedDateTimeFromIso());
+        }
+
+        /// <summary>
+        /// Returns a valid <see cref="Tick"/> from this <see cref="byte"/> array.
+        /// </summary>
+        /// <param name="tickBytes">The tick bytes array.</param>
+        /// <returns>A <see cref="Tick"/>.</returns>
+        public static Tick GetFromBytes(byte[] tickBytes)
+        {
+            Debug.CollectionNotNullOrEmpty(tickBytes, nameof(tickBytes));
+
+            return GetFromString(Encoding.UTF8.GetString(tickBytes));
+        }
+
+        /// <summary>
         /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
         /// to or greater than the right <see cref="Tick"/>.
         /// </summary>
@@ -124,39 +157,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public byte[] ToUtf8Bytes()
         {
             return Encoding.UTF8.GetBytes(this.ToString());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="Tick"/> from this <see cref="string"/>.
-        /// </summary>
-        /// <param name="tickString">The tick string.</param>
-        /// <returns>A <see cref="Tick"/>.</returns>
-        public static Tick GetFromString(string tickString)
-        {
-            Debug.NotNull(tickString, nameof(tickString));
-
-            var values = tickString.Split(',');
-            var header = values[0].Split('.');
-            var code = header[0];
-            var exchange = header[1];
-
-            return new Tick(
-                new Symbol(code, exchange.ToEnum<Venue>()),
-                SafeConvert.ToDecimalOr(values[1], 0m),
-                SafeConvert.ToDecimalOr(values[2], 0m),
-                values[3].ToZonedDateTimeFromIso());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="Tick"/> from this <see cref="byte"/> array.
-        /// </summary>
-        /// <param name="tickBytes">The tick bytes array.</param>
-        /// <returns>A <see cref="Tick"/>.</returns>
-        public static Tick GetFromBytes(byte[] tickBytes)
-        {
-            Debug.CollectionNotNullOrEmpty(tickBytes, nameof(tickBytes));
-
-            return GetFromString(Encoding.UTF8.GetString(tickBytes));
         }
 
         /// <summary>

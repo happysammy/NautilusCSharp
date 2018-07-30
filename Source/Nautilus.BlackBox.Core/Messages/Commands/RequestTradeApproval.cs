@@ -31,7 +31,7 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value.</exception>
         public RequestTradeApproval(
-            AtomicOrdersPacket orderPacket,
+            AtomicOrderPacket orderPacket,
             EntrySignal signal,
             Guid messageId,
             ZonedDateTime messageTimestamp)
@@ -49,7 +49,7 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// <summary>
         /// Gets the messages order packet.
         /// </summary>
-        public AtomicOrdersPacket OrderPacket { get; }
+        public AtomicOrderPacket OrderPacket { get; }
 
         /// <summary>
         /// Gets the messages symbol.

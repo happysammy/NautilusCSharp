@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// Represents the execution direction of an <see cref="Order"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum OrderSide
     {
         /// <summary>

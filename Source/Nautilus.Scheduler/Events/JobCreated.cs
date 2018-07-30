@@ -9,8 +9,8 @@
 namespace Nautilus.Scheduler.Events
 {
     using Nautilus.Core.Annotations;
-    using Quartz;
     using Nautilus.Core.Validation;
+    using Quartz;
 
     /// <summary>
     /// Represents an event where a job has been created.

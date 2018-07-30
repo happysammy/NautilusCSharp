@@ -80,7 +80,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.ExpireTime = expireTime;
             this.orderIds.Add(this.Id);
 
-            ValidateExpireTime(expireTime);
+            this.ValidateExpireTime(expireTime);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Nautilus.DomainModel.Aggregates
         public OrderStatus Status => (OrderStatus)this.orderState.CurrentState.Value;
 
         /// <summary>
-        /// Gets a result indicating whether the order status is complete.
+        /// Gets a value indicating whether the order status is complete.
         /// </summary>
         public bool IsComplete => this.IsCompleteResult();
 

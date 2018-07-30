@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     StubAtomicOrderBuilder.Build(),
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder2,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -119,7 +119,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -156,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -194,7 +194,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -232,7 +232,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -270,7 +270,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -308,7 +308,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -355,7 +355,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder2,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -401,7 +401,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder2,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -447,7 +447,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder2,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -488,7 +488,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -527,7 +527,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -575,7 +575,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                     atomicOrder2,
                                 };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,
@@ -639,7 +639,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                                        atomicOrder3,
                                    };
 
-            var orderPacket = new AtomicOrdersPacket(
+            var orderPacket = new AtomicOrderPacket(
                 atomicOrders[0].Symbol,
                 atomicOrders[0].TradeType,
                 atomicOrders,

@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Quantity Quantity => Quantity.Create(Math.Abs(this.relativeQuantity));
 
         /// <summary>
-        /// Returns the positions market position.
+        /// Gets the positions market position.
         /// </summary>
         public MarketPosition MarketPosition => this.CalculateMarketPosition();
 

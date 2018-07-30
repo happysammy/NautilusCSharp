@@ -54,7 +54,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="AtomicOrdersPacket"/> based on the given inputs
+        /// Creates and returns a new <see cref="AtomicOrderPacket"/> based on the given inputs
         /// (optional value).
         /// </summary>
         /// <param name="signal">The entry signal.</param>
@@ -62,10 +62,10 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="riskPerTrade">The risk per trade.</param>
         /// <param name="hardLimit">The hard limit.</param>
         /// <param name="exchangeRate">The exchange rate.</param>
-        /// <returns>A <see cref="AtomicOrdersPacket"/>.</returns>
+        /// <returns>A <see cref="AtomicOrderPacket"/>.</returns>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if the
         /// exchange rate is zero or negative.</exception>
-        public Option<AtomicOrdersPacket> Create(
+        public Option<AtomicOrderPacket> Create(
             EntrySignal signal,
             Money cashBalance,
             Percentage riskPerTrade,
@@ -91,7 +91,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
             {
                 this.Log.Warning("Calculated unit size exceeds risk model limit (unit size = 0)");
 
-                return Option<AtomicOrdersPacket>.None();
+                return Option<AtomicOrderPacket>.None();
             }
 
             var timeInForce = signal.ExpireTime.HasValue ? TimeInForce.GTD : TimeInForce.DAY;
@@ -151,7 +151,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
                 atomicOrders.Add(atomicOrder);
             }
 
-            return Option<AtomicOrdersPacket>.Some(new AtomicOrdersPacket(
+            return Option<AtomicOrderPacket>.Some(new AtomicOrderPacket(
                 signal.Symbol,
                 signal.TradeType,
                 atomicOrders,

@@ -10,9 +10,16 @@ namespace Nautilus.Scheduler.Exceptions
 {
     using System;
 
-    public class JobNotFoundException: Exception
+    /// <summary>
+    /// Represents an exception where a job was not found.
+    /// </summary>
+    public class JobNotFoundException : Exception
     {
-        public JobNotFoundException() : base("Job not found.")
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobNotFoundException"/> class.
+        /// </summary>
+        public JobNotFoundException()
+            : base("Job not found.")
         {
         }
     }

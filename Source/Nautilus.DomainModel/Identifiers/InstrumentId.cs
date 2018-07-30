@@ -22,7 +22,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// Initializes a new instance of the <see cref="InstrumentId"/> class.
         /// </summary>
         /// <param name="value">The entity id value.</param>
-        public InstrumentId(string value) : base(value)
+        public InstrumentId(string value)
+            : base(value)
         {
             Debug.NotNull(value, nameof(value));
         }

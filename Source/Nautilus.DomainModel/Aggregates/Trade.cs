@@ -123,22 +123,22 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="event">The event.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public override CommandResult Apply(Event @event) // TODO: refactor
+        public override CommandResult Apply(Event @event)
         {
             Debug.NotNull(@event, nameof(@event));
             Debug.True(@event is OrderEvent, nameof(@event));
 
-            if (!(@event is OrderEvent orderEvent))
+            if (@event is OrderEvent orderEvent)
             {
-                return CommandResult.Fail($"The event is not of type {nameof(OrderEvent)}");
+                var tradeUnit = this.TradeUnits
+                    .FirstOrDefault(unit => unit.IsOrderContained(orderEvent.OrderId));
+
+                return tradeUnit != null
+                    ? tradeUnit.Apply(@event).OnSuccess(() => this.Events.Add(@event))
+                    : CommandResult.Fail("Cannot find trade unit for order event");
             }
 
-            var tradeUnit = this.TradeUnits
-               .FirstOrDefault(unit => unit.IsOrderContained(orderEvent.OrderId));
-
-            return tradeUnit != null
-                 ? tradeUnit.Apply(@event).OnSuccess(() => this.Events.Add(@event))
-                 : CommandResult.Fail("Cannot find trade unit for order event");
+            return CommandResult.Fail($"The event is not of type {nameof(OrderEvent)}");
         }
     }
 }

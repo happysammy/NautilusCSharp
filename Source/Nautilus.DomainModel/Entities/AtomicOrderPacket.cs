@@ -21,10 +21,10 @@ namespace Nautilus.DomainModel.Entities
     /// </summary>
     [Immutable]
     [PerformanceOptimized]
-    public sealed class AtomicOrdersPacket : Entity<AtomicOrdersPacket>
+    public sealed class AtomicOrderPacket : Entity<AtomicOrderPacket>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AtomicOrdersPacket" /> class.
+        /// Initializes a new instance of the <see cref="AtomicOrderPacket" /> class.
         /// </summary>
         /// <param name="symbol">The order packet symbol.</param>
         /// <param name="tradeType">The order packet trade Type.</param>
@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="timestamp">The order packet timestamp.</param>
         /// <exception cref="ValidationException">Throws if any class argument is null, or if any
         /// struct argument is the default value.</exception>
-        public AtomicOrdersPacket(
+        public AtomicOrderPacket(
             Symbol symbol,
             TradeType tradeType,
             List<AtomicOrder> orders,

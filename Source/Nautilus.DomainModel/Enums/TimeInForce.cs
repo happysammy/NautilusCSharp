@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// Represents the time in force for an order.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum TimeInForce
     {
         /// <summary>

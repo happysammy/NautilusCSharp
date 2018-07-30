@@ -98,7 +98,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         /// <param name="barsValid">The bars valid.</param>
         /// <exception cref="ValidationException">Throws if the order packet is null, or if the
         /// bars valid is zero or negative.</exception>
-        public void AddCounters(AtomicOrdersPacket orderPacket, int barsValid)
+        public void AddCounters(AtomicOrderPacket orderPacket, int barsValid)
         {
             Validate.NotNull(orderPacket, nameof(orderPacket));
             Validate.Int32NotOutOfRange(barsValid, nameof(barsValid), 0, int.MaxValue, RangeEndPoints.Exclusive);

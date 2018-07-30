@@ -28,6 +28,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// Gets the orders symbol.
         /// </summary>
         Symbol Symbol { get; }
+
         /// <summary>
         /// Gets the orders identifier count.
         /// </summary>
@@ -84,7 +85,7 @@ namespace Nautilus.DomainModel.Interfaces
         Option<Price> AveragePrice { get; }
 
         /// <summary>
-        /// The orders slippage.
+        /// Gets the orders slippage.
         /// </summary>
         decimal Slippage { get; }
 
@@ -114,7 +115,7 @@ namespace Nautilus.DomainModel.Interfaces
         OrderStatus Status { get; }
 
         /// <summary>
-        /// Gets a result indicating whether the order status is complete.
+        /// Gets a value indicating whether the order status is complete.
         /// </summary>
         bool IsComplete { get; }
     }

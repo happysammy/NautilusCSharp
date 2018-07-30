@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="EntityId.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="OrderId.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -22,7 +22,8 @@ namespace Nautilus.DomainModel.Identifiers
         /// Initializes a new instance of the <see cref="OrderId"/> class.
         /// </summary>
         /// <param name="value">The entity id value.</param>
-        public OrderId(string value) : base(value)
+        public OrderId(string value)
+            : base(value)
         {
             Debug.NotNull(value, nameof(value));
         }

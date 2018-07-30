@@ -12,8 +12,8 @@ namespace Nautilus.DomainModel.Factories
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
