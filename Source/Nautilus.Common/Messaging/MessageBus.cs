@@ -77,11 +77,11 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         private void SetupMessageHandling()
         {
-            this.Receive<InitializeMessageSwitchboard>(msg => this.OnMessage(msg));
+            this.Receive<InitializeSwitchboard>(msg => this.OnMessage(msg));
             this.Receive<Envelope<T>>(envelope => this.OnReceive(envelope));
         }
 
-        private void OnMessage(InitializeMessageSwitchboard message)
+        private void OnMessage(InitializeSwitchboard message)
         {
             Validate.NotNull(message.Switchboard, nameof(message.Switchboard));
 

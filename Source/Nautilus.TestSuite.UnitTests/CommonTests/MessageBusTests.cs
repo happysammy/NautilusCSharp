@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 { NautilusService.Risk, mockEndpoint }
             };
 
-            this.messageBusRef.Tell(new InitializeMessageSwitchboard(
+            this.messageBusRef.Tell(new InitializeSwitchboard(
                 new Switchboard(addresses),
                 Guid.NewGuid(),
                 setupContainer.Clock.TimeNow()));

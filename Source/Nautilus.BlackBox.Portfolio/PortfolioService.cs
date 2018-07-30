@@ -9,8 +9,8 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using Akka.Actor;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
+    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -33,7 +33,6 @@ namespace Nautilus.BlackBox.Portfolio
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="portfolioStore">The security portfolio store.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public PortfolioService(
             BlackBoxContainer container,
             IMessagingAdapter messagingAdapter,

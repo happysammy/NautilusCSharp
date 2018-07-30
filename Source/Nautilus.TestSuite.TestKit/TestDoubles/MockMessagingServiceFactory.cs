@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             };
 
             var switchboard = new Switchboard(addresses);
-            var initializeSwitchboard = new InitializeMessageSwitchboard(
+            var initializeSwitchboard = new InitializeSwitchboard(
                 switchboard,
                 Guid.NewGuid(),
                 container.Clock.TimeNow());

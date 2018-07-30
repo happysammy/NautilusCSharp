@@ -6,21 +6,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Execution
+namespace Nautilus.Execution
 {
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Commands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable sealed <see cref="OrderBus"/> class.
+    /// Provides an order bus for the execution service.
     /// </summary>
     [Immutable]
     public sealed class OrderBus : ActorComponentBusConnectedBase
@@ -32,9 +30,8 @@ namespace Nautilus.BlackBox.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public OrderBus(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Execution,

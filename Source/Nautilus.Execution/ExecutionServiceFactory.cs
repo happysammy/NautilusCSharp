@@ -6,22 +6,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Execution
+namespace Nautilus.Execution
 {
     using Akka.Actor;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The immutable sealed <see cref="ExecutionServiceFactory"/> class. Provides the
-    /// <see cref="ExecutionService"/> for the <see cref="BlackBox"/> system.
+    /// Provides the <see cref="ExecutionService"/> for the system.
     /// </summary>
     [Immutable]
-    public sealed class ExecutionServiceFactory : IServiceFactory
+    public sealed class ExecutionServiceFactory
     {
         /// <summary>
         /// Creates a new <see cref="ExecutionService"/> and returns its <see cref="IActorRef"/>
@@ -30,11 +27,10 @@ namespace Nautilus.BlackBox.Execution
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <returns>A <see cref="IActorRef"/>.</returns>
-        /// <exception cref="ValidationException">Throw if any argument is null.</exception>
+        /// <returns>The services endpoint.</returns>
         public IEndpoint Create(
             ActorSystem actorSystem,
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));

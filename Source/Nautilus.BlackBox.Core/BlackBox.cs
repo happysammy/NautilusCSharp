@@ -91,13 +91,17 @@ namespace Nautilus.BlackBox.Core
             this.StartTime = this.TimeNow();
             this.stopwatch.Start();
 
-            messagingAdapter.Send(new InitializeMessageSwitchboard(
+            messagingAdapter.Send(new InitializeSwitchboard(
                 switchboard,
                 this.NewGuid(),
                 this.TimeNow()));
 
             this.Send(
-                new ReadOnlyList<NautilusService>(new List<NautilusService> { NautilusService.Data, NautilusService.Execution }),
+                new ReadOnlyList<NautilusService>(new List<NautilusService>
+                {
+                    NautilusService.Data,
+                    NautilusService.Execution
+                }),
                 new InitializeGateway(
                     this.executionGateway,
                     this.NewGuid(),

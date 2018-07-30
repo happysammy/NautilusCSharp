@@ -13,7 +13,6 @@ namespace Nautilus.BlackBox.Data.Market
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.Commands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -36,7 +35,7 @@ namespace Nautilus.BlackBox.Data.Market
         /// </param>
         /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public MarketDataPort(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Data,

@@ -50,7 +50,7 @@ namespace Nautilus.Common.Messaging
         /// Sends the message switchboard to the message bus(s) for initialization.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Send(InitializeMessageSwitchboard message)
+        public void Send(InitializeSwitchboard message)
         {
             Validate.NotNull(message, nameof(message));
 

@@ -1,22 +1,22 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="InitializeBrokerageGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InitializeGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Core.Messages.Commands
+namespace Nautilus.Common.Commands
 {
     using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="InitializeGateway"/> class.
+    /// Represents a command to initialize the given execution gateway.
     /// </summary>
     [Immutable]
     public sealed class InitializeGateway : Command
@@ -25,18 +25,17 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// Initializes a new instance of the <see cref="InitializeGateway"/> class.
         /// </summary>
         /// <param name="executionGateway">The execution gateway.</param>
-        /// <param name="messageId">The message identifier (cannot be default).</param>
-        /// <param name="messageTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="commandId">The command identifier (cannot be default).</param>
+        /// <param name="commandTimestamp">The command timestamp (cannot be default).</param>
         public InitializeGateway(
             IExecutionGateway executionGateway,
-            Guid messageId,
-            ZonedDateTime messageTimestamp)
-            : base(messageId, messageTimestamp)
+            Guid commandId,
+            ZonedDateTime commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
             Validate.NotNull(executionGateway, nameof(executionGateway));
-            Validate.NotDefault(messageId, nameof(messageId));
-            Validate.NotDefault(messageTimestamp, nameof(messageTimestamp));
+            Validate.NotDefault(commandId, nameof(commandId));
+            Validate.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.ExecutionGateway = executionGateway;
         }

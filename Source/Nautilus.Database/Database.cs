@@ -65,7 +65,7 @@ namespace Nautilus.Database
             this.addresses = addresses;
             this.fixClient = fixClient;
 
-            messagingAdapter.Send(new InitializeMessageSwitchboard(
+            messagingAdapter.Send(new InitializeSwitchboard(
                 new Switchboard(addresses),
                 setupContainer.GuidFactory.NewGuid(),
                 this.TimeNow()));

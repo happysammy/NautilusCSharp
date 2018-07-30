@@ -31,7 +31,7 @@ namespace Nautilus.BlackBox.Data
     /// </summary>
     public sealed class DataService : ActorComponentBusConnectedBase
     {
-        private readonly BlackBoxContainer storedContainer;
+        private readonly IComponentryContainer storedContainer;
         private readonly IScheduler scheduler;
         private readonly IActorRef marketDataPortRef;
         private readonly IDictionary<Symbol, IActorRef> marketDataProcessorIndex = new Dictionary<Symbol, IActorRef>();
@@ -46,7 +46,7 @@ namespace Nautilus.BlackBox.Data
         /// <param name="scheduler">The scheduler.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataService(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IScheduler scheduler)
             : base(

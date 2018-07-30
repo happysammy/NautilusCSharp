@@ -11,7 +11,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Commands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -36,7 +35,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// <param name="tradeBook">The trade book.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public ExitSignalProcessor(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             Instrument instrument,
             ITradeBook tradeBook)

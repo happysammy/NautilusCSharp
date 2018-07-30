@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="InitializeMessageSwitchboard.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InitializeSwitchboard.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,19 +16,18 @@ namespace Nautilus.Common.Commands
     using NodaTime;
 
     /// <summary>
-    /// The command to initialize the messaging system switchboard.
+    /// Represents a command to initialize the messaging system switchboard.
     /// </summary>
     [Immutable]
-    public sealed class InitializeMessageSwitchboard : Command
+    public sealed class InitializeSwitchboard : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InitializeMessageSwitchboard"/> class.
+        /// Initializes a new instance of the <see cref="InitializeSwitchboard"/> class.
         /// </summary>
-        /// <param name="switchboard">The message switchboard.</param>
-        /// <param name="commandId">The message identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The message timestamp (cannot be default).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public InitializeMessageSwitchboard(
+        /// <param name="switchboard">The command switchboard.</param>
+        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandTimestamp">The command timestamp.</param>
+        public InitializeSwitchboard(
             Switchboard switchboard,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -42,7 +41,7 @@ namespace Nautilus.Common.Commands
         }
 
         /// <summary>
-        /// Gets the messages account.
+        /// Gets the messages switchboard.
         /// </summary>
         public Switchboard Switchboard { get; }
     }

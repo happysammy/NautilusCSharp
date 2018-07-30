@@ -6,22 +6,19 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.BlackBox.Execution
+namespace Nautilus.Execution
 {
     using Akka.Actor;
-    using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Commands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// The sealed <see cref="ExecutionService"/> class. The <see cref="BlackBox"/> service context
-    /// which handles all execution related operations.
+    /// The service context which handles all execution related operations.
     /// </summary>
     public sealed class ExecutionService : ActorComponentBusConnectedBase
     {
@@ -32,9 +29,8 @@ namespace Nautilus.BlackBox.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
         public ExecutionService(
-            BlackBoxContainer container,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Execution,

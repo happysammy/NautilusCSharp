@@ -69,16 +69,15 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         /// Processes the given entry signal, if valid then sends a trade request to the risk service.
         /// </summary>
         /// <param name="signal">The entry signal.</param>
-        /// <exception cref="ValidationException">Throws if the signal is null.</exception>
         public void Process(EntrySignal signal)
         {
-            Validate.NotNull(signal, nameof(signal));
+            Debug.NotNull(signal, nameof(signal));
 
             var tradeType = signal.TradeProfile.TradeType;
 
             if (this.IsTradeableSignal(signal))
             {
-                Console.WriteLine("is tradable = true");
+                Console.WriteLine("is tradeable = true");
 
                 var exchangeRate = this.quoteProvider.GetExchangeRate(
                     this.instrument.QuoteCurrency,
