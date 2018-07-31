@@ -67,17 +67,17 @@ namespace Nautilus.RabbitMQ
                     this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
 
                     commandChannel.QueueDeclare(
-                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.InvTraderCommandsQueue,
                         durable: true,
                         exclusive: false,
                         autoDelete: false);
-                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} declared.");
+                    this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} declared.");
 
                     commandChannel.QueueBind(
-                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.InvTraderCommandsQueue,
                         RabbitConstants.ExecutionCommandsExchange,
-                        RabbitConstants.InvarianceTraderQueue);
-                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
+                        RabbitConstants.InvTraderCommandsQueue);
+                    this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
 
                     var consumer = new EventingBasicConsumer(commandChannel);
                     consumer.Received += (model, ea) =>
@@ -88,7 +88,6 @@ namespace Nautilus.RabbitMQ
                         this.Send(NautilusService.Execution, command);
                     };
                     this.Log.Information($"Basic event consumer created.");
-
                 }
 
                 using (var eventChannel = this.eventConnection.CreateModel())
@@ -101,17 +100,17 @@ namespace Nautilus.RabbitMQ
                     this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
 
                     eventChannel.QueueDeclare(
-                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.InvTraderEventsQueue,
                         durable: true,
                         exclusive: false,
                         autoDelete: false);
-                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} declared.");
+                    this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} declared.");
 
                     eventChannel.QueueBind(
-                        RabbitConstants.InvarianceTraderQueue,
+                        RabbitConstants.InvTraderEventsQueue,
                         RabbitConstants.ExecutionEventsExchange,
-                        RabbitConstants.InvarianceTraderQueue);
-                    this.Log.Information($"Queue {RabbitConstants.InvarianceTraderQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
+                        RabbitConstants.InvTraderEventsQueue);
+                    this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
                 }
             }
             catch (Exception ex)
@@ -135,7 +134,7 @@ namespace Nautilus.RabbitMQ
             {
                 channel.BasicPublish(
                     RabbitConstants.ExecutionEventsExchange,
-                    RabbitConstants.InvarianceTraderQueue,
+                    RabbitConstants.InvTraderEventsQueue,
                     mandatory: false,
                     basicProperties: null,
                     body: this.eventSerializer.Serialize(@event));

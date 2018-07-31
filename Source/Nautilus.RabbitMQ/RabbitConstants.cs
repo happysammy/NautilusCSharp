@@ -19,7 +19,8 @@ namespace Nautilus.RabbitMQ
         private const string PasswordString = "guest";
         private const string ExecutionCommandsString = "nautilus.execution.commands";
         private const string ExecutionEventsString = "nautilus.execution.events";
-        private const string InvarianceTraderQueueString = "inv_trader";
+        private const string InvTraderCommandsQueueString = "inv_trader_commands";
+        private const string InvTraderEventsQueueString = "inv_trader_events";
 
         /// <summary>
         /// Gets the <see cref="RabbitMQ"/> local host string.
@@ -52,8 +53,13 @@ namespace Nautilus.RabbitMQ
         public static string ExecutionEventsExchange => ExecutionEventsString;
 
         /// <summary>
-        /// Gets the <see cref="RabbitMQ"/> Invariance Trader client queue name.
+        /// Gets the <see cref="RabbitMQ"/> Invariance Trader client commands queue name.
         /// </summary>
-        public static string InvarianceTraderQueue => InvarianceTraderQueueString;
+        public static string InvTraderCommandsQueue => InvTraderCommandsQueueString;
+
+        /// <summary>
+        /// Gets the <see cref="RabbitMQ"/> Invariance Trader client events queue name.
+        /// </summary>
+        public static string InvTraderEventsQueue => InvTraderEventsQueueString;
     }
 }
