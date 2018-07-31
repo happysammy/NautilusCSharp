@@ -47,5 +47,13 @@ namespace Nautilus.MsgPack
         internal static string OrderCommand => "order_command";
         internal static string Order => "order";
         internal static string CancelReason => "cancel_reason";
+        internal static string Currency => "currency";
+        internal static string CashBalance => "cash_balance";
+        internal static string CashStartDay => "cash_start_day";
+        internal static string CashActivityDay => "cash_activity_day";
+        internal static string MarginUsedLiquidation => "margin_used_liquidation";
+        internal static string MarginUsedMaintenance => "margin_used_maintenance";
+        internal static string MarginRatio => "margin_ratio";
+        internal static string MarginCallStatus => "margin_call_status";
     }
 }

@@ -53,6 +53,19 @@ namespace Nautilus.MsgPack
                 case OrderEvent orderEvent:
                     return SerializeOrderEvent(orderEvent);
 
+                case AccountEvent accountEvent:
+                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+                    {
+                        {new MessagePackObject(Key.EventType), AccountEvent},
+                        {new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.ToString()},
+                        {new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.ToString()},
+                        {new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.ToString()},
+                        {new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.ToString()},
+                        {new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.ToString()},
+                        {new MessagePackObject(Key.MarginRatio), accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture)},
+                        {new MessagePackObject(Key.MarginCallStatus), accountEvent.MarginCallStatus.ToString()},
+                    }.Freeze());
+
                 default: throw new InvalidOperationException(
                     "Cannot serialize the event (unrecognized event).");
             }
