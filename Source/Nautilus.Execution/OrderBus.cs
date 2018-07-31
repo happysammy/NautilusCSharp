@@ -66,8 +66,6 @@ namespace Nautilus.Execution
 
             this.gateway = message.ExecutionGateway;
             this.Log.Information($"{this.gateway} initialized.");
-
-            Debug.NotNull(this.gateway, nameof(this.gateway));
         }
 
         private void OnMessage(SubmitOrder message)

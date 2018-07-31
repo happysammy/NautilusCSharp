@@ -338,7 +338,7 @@ namespace Nautilus.Execution
                 this.Send(NautilusService.Portfolio, accountEvent);
 
                 this.Log.Debug(
-                    $"AccountReport: " +
+                    $"AccountEvent: " +
                     $"({this.fixClient.Broker}-{account}, " +
                     $"InquiryId={inquiryId})");
             });
