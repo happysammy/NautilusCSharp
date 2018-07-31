@@ -107,7 +107,13 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Returns a string representation of the <see cref="Envelope{T}"/>.
+        /// Returns the hash code for this <see cref="Envelope{T}"/>.
+        /// </summary>
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.EnvelopeId);
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"[{this.message}]";

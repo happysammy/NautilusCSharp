@@ -85,16 +85,7 @@ namespace Nautilus.Core.Model
         /// Returns the hash code of the wrapped object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hash = 17;
-                hash = (hash * 29) + this.Value.GetHashCode();
-
-                return hash;
-            }
-        }
+        public override int GetHashCode() => Hash.GetCode(this.Value);
 
         /// <summary>
         /// Returns a string representation of the <see cref="ValidString"></see>.

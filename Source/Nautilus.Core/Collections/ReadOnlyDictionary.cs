@@ -109,7 +109,7 @@ namespace Nautilus.Core.Collections
         /// <summary>
         /// Returns a value indicating whether the read-only dictionary contains the given item.
         /// </summary>
-        /// <param name="item">The item to check if the read-only dictionary contins.</param>
+        /// <param name="item">The item to check if the read-only dictionary contains.</param>
         /// <returns>True if the read-only dictionary contains the given item, otherwise
         /// false.</returns>
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -135,7 +135,7 @@ namespace Nautilus.Core.Collections
         /// <summary>
         /// Returns a value indicating whether the read-only dictionary contains the given value.
         /// </summary>
-        /// <param name="value">The value to check if the read-only dictionary contins.</param>
+        /// <param name="value">The value to check if the read-only dictionary contains.</param>
         /// <returns>True if the read-only dictionary contains the given value, otherwise
         /// false.</returns>
         public bool ContainsValue(TValue value)

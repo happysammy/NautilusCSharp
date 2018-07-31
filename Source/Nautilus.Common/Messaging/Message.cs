@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
@@ -103,19 +104,10 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Returns the hash code for this message.
+        /// Returns the hash code for this <see cref="Message"/>.
         /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hash = 17;
-                hash = (hash * 29) + this.Id.GetHashCode();
-
-                return hash;
-            }
-        }
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
         /// Returns a string representation of this <see cref="Message"/>.

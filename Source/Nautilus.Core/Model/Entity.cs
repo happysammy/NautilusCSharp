@@ -68,6 +68,6 @@ namespace Nautilus.Core.Model
         /// Returns the hash code of the wrapped object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => this.Id.GetHashCode();
+        public override int GetHashCode() => Hash.GetCode(this.Id);
     }
 }

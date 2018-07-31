@@ -70,7 +70,7 @@ namespace Nautilus.Core
         /// Returns the hash code for this command.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => this.Id.ToString().GetHashCode();
+        public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
         /// Returns a string representation of this command.

@@ -15,7 +15,7 @@ namespace Nautilus.Core
 
     /// <summary>
     /// Provides an encapsulation for a validated string. A valid string is not null, less than
-    /// or equal to 100 characters and contains no white space.
+    /// or equal to 100 characters, and contains no white space.
     /// </summary>
     [Immutable]
     public class ValidString : IEquatable<ValidString>
@@ -42,7 +42,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <returns>The result of the equality check.</returns>
         public static bool operator ==(
             [CanBeNull] ValidString left,
             [CanBeNull] ValidString right)
@@ -65,7 +65,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <returns>The result of the equality check.</returns>
         public static bool operator !=(
             [CanBeNull] ValidString left,
             [CanBeNull] ValidString right) => !(left == right);
@@ -75,7 +75,7 @@ namespace Nautilus.Core
         /// to the given <see cref="object"/>.
         /// </summary>
         /// <param name="other">The other.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <returns>The result of the equality check.</returns>
         public override bool Equals([CanBeNull] object other) => this.Equals(other as ValidString);
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Nautilus.Core
         /// to the given <see cref="ValidString"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
+        /// <returns>The result of the equality check.</returns>
         public bool Equals([CanBeNull] ValidString other)
         {
             return other != null && this.Value.Equals(other.Value);
@@ -92,11 +92,8 @@ namespace Nautilus.Core
         /// <summary>
         /// Returns the hash code for this <see cref="ValidString"/>.
         /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            return this.Value.GetHashCode();
-        }
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.Value);
 
         /// <summary>
         /// Returns a string representation of the <see cref="ValidString"></see>.

@@ -13,7 +13,8 @@ namespace Nautilus.Core
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Wraps a potentially null value of type T.
+    /// Represents an optional reference type. The <see cref="Option{T}"/> wraps a potentially null
+    /// value of type T.
     /// </summary>
     /// <typeparam name="T">The option object type.</typeparam>
     [Immutable]
@@ -67,7 +68,7 @@ namespace Nautilus.Core
             Debug.NotNull(option, nameof(option));
             Debug.NotNull(value, nameof(value));
 
-            return !option.HasNoValue && option.value.Equals(value);
+            return option.HasValue && option.value.Equals(value);
         }
 
         /// <summary>
@@ -184,18 +185,9 @@ namespace Nautilus.Core
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            if (this.HasNoValue)
-            {
-                return 0;
-            }
-
-            unchecked
-            {
-                var hash = 17;
-                hash = (hash * 29) + this.value.GetHashCode();
-
-                return hash;
-            }
+            return this.HasValue
+                ? Hash.GetCode(this.value)
+                : 0;
         }
 
         /// <summary>
