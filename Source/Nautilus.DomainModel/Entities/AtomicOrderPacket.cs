@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Entities
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

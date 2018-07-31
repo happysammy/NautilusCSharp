@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;

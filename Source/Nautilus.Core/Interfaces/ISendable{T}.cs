@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core
+namespace Nautilus.Core.Interfaces
 {
     using System;
     using NodaTime;

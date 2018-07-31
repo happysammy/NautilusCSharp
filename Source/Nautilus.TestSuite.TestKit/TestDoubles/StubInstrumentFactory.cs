@@ -8,7 +8,6 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -19,6 +18,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubInstrumentFactory
     {
         public static Instrument AUDUSD()
@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var instrument = new Instrument(
                     symbol,
                     new InstrumentId(symbol.ToString()),
-                    new ValidString("AUD/USD"),
+                    new BrokerSymbol("AUD/USD"),
                     CurrencyCode.AUD,
                     SecurityType.Forex,
                     5,
@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var instrument = new Instrument(
                     symbol,
                     new InstrumentId(symbol.ToString()),
-                    new ValidString("EUR/USD"),
+                    new BrokerSymbol("EUR/USD"),
                     CurrencyCode.EUR,
                     SecurityType.Forex,
                     5,
@@ -81,12 +81,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static Instrument USDJPY()
         {
-            var symbol = new Symbol($"USDJPY", Venue.FXCM);
+            var symbol = new Symbol("USDJPY", Venue.FXCM);
 
             var instrument = new Instrument(
                    symbol,
                    new InstrumentId(symbol.ToString()),
-                   new ValidString("USD/JPY"),
+                   new BrokerSymbol("USD/JPY"),
                    CurrencyCode.JPY,
                    SecurityType.Forex,
                    3,

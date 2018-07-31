@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 

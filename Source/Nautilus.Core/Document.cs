@@ -10,6 +10,7 @@ namespace Nautilus.Core
 {
     using System;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 

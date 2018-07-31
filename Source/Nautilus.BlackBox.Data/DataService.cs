@@ -11,15 +11,12 @@ namespace Nautilus.BlackBox.Data
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Data.Market;
     using Nautilus.BlackBox.Core;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Database.Aggregators;
     using Nautilus.DomainModel.Factories;

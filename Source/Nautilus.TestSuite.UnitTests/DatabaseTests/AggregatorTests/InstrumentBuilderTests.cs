@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Database.Aggregators;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -71,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
             var instrument = new Instrument(
                 new Symbol("AUDUSD", Venue.FXCM),
                 new InstrumentId("NONE"),
-                new ValidString("NONE"),
+                new BrokerSymbol("NONE"),
                 CurrencyCode.CAD,
                 SecurityType.Bond,
                 2,

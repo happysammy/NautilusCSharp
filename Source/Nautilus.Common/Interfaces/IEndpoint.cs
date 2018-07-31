@@ -10,7 +10,7 @@ namespace Nautilus.Common.Interfaces
 {
     using System.Threading.Tasks;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
+    using Nautilus.Core.Interfaces;
     using NodaTime;
 
     /// <summary>

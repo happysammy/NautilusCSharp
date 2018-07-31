@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Interfaces
 {
+    using Nautilus.Core.Model;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

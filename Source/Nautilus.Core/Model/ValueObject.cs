@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel
+namespace Nautilus.Core.Model
 {
     using System;
     using System.Collections.Generic;

@@ -1,5 +1,5 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Label.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="BrokerSymbol.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,19 +13,19 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents a validated label.
+    /// Represents a validated broker symbol.
     /// </summary>
     [Immutable]
-    public sealed class Label : ValidString
+    public sealed class BrokerSymbol : ValidString
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Label"/> class.
+        /// Initializes a new instance of the <see cref="BrokerSymbol"/> class.
         /// </summary>
-        /// <param name="value">The label value.</param>
-        public Label(string value)
-            : base(value)
+        /// <param name="symbol">The broker symbol.</param>
+        public BrokerSymbol(string symbol)
+            : base(symbol)
         {
-            Debug.NotNull(value, nameof(value));
+            Debug.NotNull(symbol, nameof(symbol));
         }
     }
 }

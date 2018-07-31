@@ -10,7 +10,6 @@ namespace Nautilus.Database
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Commands;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;

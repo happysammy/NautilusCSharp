@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
 
     /// <summary>

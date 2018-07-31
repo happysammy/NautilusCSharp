@@ -13,6 +13,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 

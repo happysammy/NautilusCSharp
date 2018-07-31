@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;

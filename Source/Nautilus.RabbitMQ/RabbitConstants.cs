@@ -8,8 +8,6 @@
 
 namespace Nautilus.RabbitMQ
 {
-    using global::RabbitMQ.Client;
-
     /// <summary>
     /// Provides constants for the <see cref="RabbitMQ"/> messaging infrastructure.
     /// </summary>

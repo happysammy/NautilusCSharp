@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Model;
     using Nautilus.DomainModel.Identifiers;
     using NodaTime;
 

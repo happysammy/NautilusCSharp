@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -47,7 +48,7 @@ namespace Nautilus.DomainModel.Entities
         public Instrument(
             Symbol symbol,
             InstrumentId instrumentId,
-            ValidString brokerSymbol,
+            BrokerSymbol brokerSymbol,
             CurrencyCode quoteCurrency,
             SecurityType securityType,
             int tickDecimals,
@@ -111,7 +112,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments broker symbol.
         /// </summary>
-        public ValidString BrokerSymbol { get; }
+        public BrokerSymbol BrokerSymbol { get; }
 
         /// <summary>
         /// Gets the instruments quote currency.

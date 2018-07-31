@@ -7,9 +7,9 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.CoreTests
+namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Extensions;
     using Xunit;
 
     public class SafeConvertTests

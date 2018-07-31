@@ -16,11 +16,11 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
@@ -115,7 +115,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
                     var symbolId = new InstrumentId(symbol.ToString());
-                    var brokerSymbol = new ValidString(group.GetField(Tags.Symbol));
+                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     //var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??

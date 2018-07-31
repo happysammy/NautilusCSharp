@@ -1,30 +1,30 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="EntityId{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ValidString.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel
+namespace Nautilus.Core
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents a validated and unique entity identifier.
+    /// Provides an encapsulation for a validated string. A valid string is not null, less than
+    /// or equal to 100 characters and contains no white space.
     /// </summary>
-    /// <typeparam name="T">The entity type.</typeparam>
     [Immutable]
-    public class EntityId<T>
-        where T : Entity<T>
+    public class ValidString : IEquatable<ValidString>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityId{T}"/> class.
+        /// Initializes a new instance of the <see cref="ValidString"/> class.
         /// </summary>
         /// <param name="value">The string value.</param>
-        protected EntityId(string value)
+        public ValidString(string value)
         {
             Debug.NotNull(value, nameof(value));
             Debug.True(value.Length <= 100, nameof(value));
@@ -33,20 +33,25 @@ namespace Nautilus.DomainModel
         }
 
         /// <summary>
-        /// Gets the value of the entity identifier.
+        /// Gets the value of the <see cref="ValidString"/>.
         /// </summary>
         public string Value { get; }
 
-                /// <summary>
-        /// Returns a value indicating whether the <see cref="EntityId{T}"/>(s) are equal.
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="ValidString"/>(s) are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(
-            [CanBeNull] EntityId<T> left,
-            [CanBeNull] EntityId<T> right)
+            [CanBeNull] ValidString left,
+            [CanBeNull] ValidString right)
         {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
             if (left is null || right is null)
             {
                 return false;
@@ -56,44 +61,41 @@ namespace Nautilus.DomainModel
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="EntityId{T}"/>(s) are not equal.
+        /// Returns a value indicating whether the <see cref="ValidString"/>(s) are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator !=(
-            [CanBeNull] EntityId<T> left,
-            [CanBeNull] EntityId<T> right) => !(left == right);
+            [CanBeNull] ValidString left,
+            [CanBeNull] ValidString right) => !(left == right);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="EntityId{T}"/> is equal
+        /// Returns a value indicating whether this <see cref="ValidString"/> is equal
         /// to the given <see cref="object"/>.
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as EntityId<T>);
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as ValidString);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="ValueObject{T}"/> is equal
-        /// to the given <see cref="ValueObject{T}"/>.
+        /// Returns a value indicating whether this <see cref="ValidString"/> is equal
+        /// to the given <see cref="ValidString"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals([CanBeNull] EntityId<T> other) => other != null && this.Value == other.Value;
+        public bool Equals([CanBeNull] ValidString other)
+        {
+            return other != null && this.Value.Equals(other.Value);
+        }
 
         /// <summary>
-        /// Returns the hash code of the wrapped object.
+        /// Returns the hash code for this <see cref="ValidString"/>.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hash = 17;
-                hash = (hash * 29) + this.Value.GetHashCode();
-
-                return hash;
-            }
+            return this.Value.GetHashCode();
         }
 
         /// <summary>

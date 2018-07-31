@@ -11,7 +11,6 @@ namespace Nautilus.Database.Aggregators
     using System.Collections.Generic;
     using System.Globalization;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -60,7 +59,7 @@ namespace Nautilus.Database.Aggregators
 
         private Symbol Symbol { get; set; }
 
-        private ValidString BrokerSymbol { get; set; }
+        private BrokerSymbol BrokerSymbol { get; set; }
 
         private CurrencyCode QuoteCurrency { get; set; }
 

@@ -18,7 +18,6 @@ namespace Nautilus.Redis
     using Nautilus.Core.Validation;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Keys;
-    using Nautilus.DomainModel;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -219,7 +218,7 @@ namespace Nautilus.Redis
                     var instrument = new Instrument(
                         new Symbol(symbolCode, exchange.ToEnum<Venue>()),
                         new InstrumentId(deserializedSymbol["Value"]),
-                        new ValidString(brokerSymbol),
+                        new BrokerSymbol(brokerSymbol),
                         deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
                         deserialized["SecurityType"].ToEnum<SecurityType>(),
                         Convert.ToInt32(deserialized["TickDecimals"]),

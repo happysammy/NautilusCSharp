@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 
