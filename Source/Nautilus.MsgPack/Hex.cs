@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Hex.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="Hex.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -30,7 +30,7 @@ namespace Nautilus.MsgPack
         /// Returns hex representation of the byte array.
         /// </summary>
         /// <param name="data">bytes to encode</param>
-        /// <returns></returns>
+        /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data)
         {
             return ToHexString(data, 0, data.Length);
@@ -42,7 +42,7 @@ namespace Nautilus.MsgPack
         /// <param name="data">bytes to encode</param>
         /// <param name="off">offset</param>
         /// <param name="length">number of bytes to encode</param>
-        /// <returns></returns>
+        /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data, int off, int length)
         {
             return Encoding.ASCII.GetString(Encode(data, off, length));
@@ -52,7 +52,7 @@ namespace Nautilus.MsgPack
         /// Decodes hex representation to a byte array.
         /// </summary>
         /// <param name="hex">hex string to decode</param>
-        /// <returns></returns>
+        /// <returns>The decoded byte array.</returns>
         public static byte[] FromHexString(string hex)
         {
             if (hex != null && hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
@@ -63,10 +63,12 @@ namespace Nautilus.MsgPack
             {
                 hex = hex.Substring(0, hex.Length - 1);
             }
+
             if (string.IsNullOrEmpty(hex))
             {
                 throw new ArgumentException();
             }
+
             using (var stream = new MemoryStream())
             {
                 Encoder.DecodeString(hex, stream);
@@ -79,7 +81,7 @@ namespace Nautilus.MsgPack
         /// (similarly to the binary editors).
         /// </summary>
         /// <param name="bytes">array of bytes to pretty print</param>
-        /// <returns></returns>
+        /// <returns>The pretty printed string.</returns>
         public static string PrettyPrint(byte[] bytes)
         {
             return PrettyPrint(bytes, 0, bytes.Length);
@@ -100,7 +102,7 @@ namespace Nautilus.MsgPack
         /// <param name="bytes">The array of bytes to pretty print.</param>
         /// <param name="offset">The offset in the array.</param>
         /// <param name="length">The number of bytes to print.</param>
-        /// <returns></returns>
+        /// <returns>The pretty printed string.</returns>
         public static string PrettyPrint(byte[] bytes, int offset, int length)
         {
             if (bytes.Length == 0)
@@ -123,12 +125,12 @@ namespace Nautilus.MsgPack
             while (end <= maxLength)
             {
                 // Print offset.
-                buffer.Append($"{(start - offset):x4}:");
+                buffer.Append($"{start - offset:x4}:");
 
                 // Print hex bytes.
                 for (var i = start; i < end; i++)
                 {
-                    buffer.Append($" {bytes[i]:x2}");
+                    buffer.Append($" {bytes[i] :x2}");
                 }
 
                 for (var i = 0; i < 16 - (end - start); i++)
@@ -141,7 +143,7 @@ namespace Nautilus.MsgPack
                 // Print ascii characters.
                 for (var i = start; i < end; i++)
                 {
-                    var c = (char) bytes[i];
+                    var c = (char)bytes[i];
                     if (char.IsLetterOrDigit(c) || char.IsPunctuation(c))
                     {
                         buffer.Append($"{c}");

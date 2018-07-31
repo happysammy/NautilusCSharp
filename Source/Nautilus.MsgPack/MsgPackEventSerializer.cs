@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackEventSerializer.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="MsgPackEventSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,15 +10,15 @@ namespace Nautilus.MsgPack
 {
     using System;
     using System.Globalization;
+    using global::MsgPack;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Events;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
-    using global::MsgPack;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides an events binary serializer for the Message Pack specification.
@@ -56,14 +56,14 @@ namespace Nautilus.MsgPack
                 case AccountEvent accountEvent:
                     return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
                     {
-                        {new MessagePackObject(Key.EventType), AccountEvent},
-                        {new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.ToString()},
-                        {new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.ToString()},
-                        {new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.ToString()},
-                        {new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.ToString()},
-                        {new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.ToString()},
-                        {new MessagePackObject(Key.MarginRatio), accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture)},
-                        {new MessagePackObject(Key.MarginCallStatus), accountEvent.MarginCallStatus.ToString()},
+                        { new MessagePackObject(Key.EventType), AccountEvent },
+                        { new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.ToString() },
+                        { new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.ToString() },
+                        { new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.ToString() },
+                        { new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.ToString() },
+                        { new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.ToString() },
+                        { new MessagePackObject(Key.MarginRatio), accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture) },
+                        { new MessagePackObject(Key.MarginCallStatus), accountEvent.MarginCallStatus.ToString() },
                     }.Freeze());
 
                 default: throw new InvalidOperationException(
@@ -97,11 +97,11 @@ namespace Nautilus.MsgPack
         {
             var package = new MessagePackObjectDictionary
             {
-                {new MessagePackObject(Key.EventType), OrderEvent},
-                {new MessagePackObject(Key.Symbol), orderEvent.Symbol.ToString()},
-                {new MessagePackObject(Key.OrderId), orderEvent.OrderId.Value},
-                {new MessagePackObject(Key.EventId), orderEvent.Id.ToString()},
-                {new MessagePackObject(Key.EventTimestamp), orderEvent.Timestamp.ToIsoString()}
+                { new MessagePackObject(Key.EventType), OrderEvent },
+                { new MessagePackObject(Key.Symbol), orderEvent.Symbol.ToString() },
+                { new MessagePackObject(Key.OrderId), orderEvent.OrderId.Value },
+                { new MessagePackObject(Key.EventId), orderEvent.Id.ToString() },
+                { new MessagePackObject(Key.EventTimestamp), orderEvent.Timestamp.ToIsoString() }
             };
 
             switch (orderEvent)

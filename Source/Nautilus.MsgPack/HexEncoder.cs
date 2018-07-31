@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="HexEncoder.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="HexEncoder.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -30,7 +30,7 @@ namespace Nautilus.MsgPack
         /// </summary>
         public HexEncoder()
         {
-            InitialiseDecodingTable();
+            this.InitialiseDecodingTable();
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Nautilus.MsgPack
             {
                 var v = data[i];
 
-                outStream.WriteByte(encodingTable[v >> 4]);
-                outStream.WriteByte(encodingTable[v & 0xf]);
+                outStream.WriteByte(this.encodingTable[v >> 4]);
+                outStream.WriteByte(this.encodingTable[v & 0xf]);
             }
 
             return length * 2;
@@ -113,8 +113,8 @@ namespace Nautilus.MsgPack
         /// Decode the Hex encoded string data writing it to the given output stream, white space
         /// characters will be ignored.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="outStream"></param>
+        /// <param name="data">The string data to decode.</param>
+        /// <param name="outStream">The output stream.</param>
         /// <returns>The number of bytes produced.</returns>
         /// <exception cref="IOException">If invalid characters encountered in Hex data.</exception>
         public int DecodeString(string data, Stream outStream)
@@ -171,26 +171,26 @@ namespace Nautilus.MsgPack
             }
         }
 
-        private void InitialiseDecodingTable()
-        {
-            FillArray(decodingTable, 0xff);
-
-            for (var i = 0; i < encodingTable.Length; i++)
-            {
-                decodingTable[encodingTable[i]] = (byte)i;
-            }
-
-            decodingTable['A'] = decodingTable['a'];
-            decodingTable['B'] = decodingTable['b'];
-            decodingTable['C'] = decodingTable['c'];
-            decodingTable['D'] = decodingTable['d'];
-            decodingTable['E'] = decodingTable['e'];
-            decodingTable['F'] = decodingTable['f'];
-        }
-
         private static bool Ignore(char c)
         {
             return c == '\n' || c == '\r' || c == '\t' || c == ' ';
+        }
+
+        private void InitialiseDecodingTable()
+        {
+            FillArray(this.decodingTable, 0xff);
+
+            for (var i = 0; i < this.encodingTable.Length; i++)
+            {
+                this.decodingTable[this.encodingTable[i]] = (byte)i;
+            }
+
+            this.decodingTable['A'] = this.decodingTable['a'];
+            this.decodingTable['B'] = this.decodingTable['b'];
+            this.decodingTable['C'] = this.decodingTable['c'];
+            this.decodingTable['D'] = this.decodingTable['d'];
+            this.decodingTable['E'] = this.decodingTable['e'];
+            this.decodingTable['F'] = this.decodingTable['f'];
         }
     }
 }

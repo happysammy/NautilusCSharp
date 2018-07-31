@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackSerializationHelper.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="MsgPackSerializationHelper.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -23,6 +23,11 @@ namespace Nautilus.MsgPack
     {
         private const string None = "NONE";
 
+        /// <summary>
+        /// Parses and returns the symbol from the given string.
+        /// </summary>
+        /// <param name="symbolString">The symbol string.</param>
+        /// <returns>The parsed symbol <see cref="string"/>.</returns>
         internal static Symbol GetSymbol(string symbolString)
         {
             Debug.NotNull(symbolString, nameof(symbolString));
@@ -65,6 +70,11 @@ namespace Nautilus.MsgPack
                 : price.ToString();
         }
 
+        /// <summary>
+        /// Parses and returns the expire time from the given string.
+        /// </summary>
+        /// <param name="expireTimeString">The expire time string.</param>
+        /// <returns>The parsed expire time <see cref="string"/>.</returns>
         internal static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
         {
             Debug.NotNull(expireTimeString, nameof(expireTimeString));
@@ -74,6 +84,11 @@ namespace Nautilus.MsgPack
                 : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
         }
 
+        /// <summary>
+        /// Returns the date time ISO 8601 string from the given expire time.
+        /// </summary>
+        /// <param name="expireTime">The optional expire time.</param>
+        /// <returns>The parsed expire time <see cref="string"/>.</returns>
         internal static string GetExpireTimeString(Option<ZonedDateTime?> expireTime)
         {
             Debug.NotNull(expireTime, nameof(expireTime));

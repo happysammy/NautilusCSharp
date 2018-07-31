@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackOrderSerializer.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="MsgPackOrderSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,19 +9,21 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
-    using global::MsgPack;
     using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.ValueObjects;
 
+    /// <summary>
+    /// Provides serialization of <see cref="Order"/> objects to Message Pack specification.
+    /// </summary>
     public class MsgPackOrderSerializer : IOrderSerializer
     {
-
         /// <summary>
         /// Serialize the given order to Message Pack specification bytes.
         /// </summary>
@@ -31,19 +33,25 @@ namespace Nautilus.MsgPack
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
-                {new MessagePackObject(Key.Symbol), order.Symbol.ToString()},
-                {new MessagePackObject(Key.OrderId), order.Id.Value},
-                {new MessagePackObject(Key.Label), order.Label.ToString()},
-                {new MessagePackObject(Key.OrderSide), order.Side.ToString()},
-                {new MessagePackObject(Key.OrderType), order.Type.ToString()},
-                {new MessagePackObject(Key.Quantity), order.Quantity.Value},
-                {new MessagePackObject(Key.Price), MsgPackSerializationHelper.GetPriceString(order.Price)},
-                {new MessagePackObject(Key.TimeInForce), order.TimeInForce.ToString()},
-                {new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(order.ExpireTime)},
-                {new MessagePackObject(Key.Timestamp), order.Timestamp.ToIsoString()},
+                { new MessagePackObject(Key.Symbol), order.Symbol.ToString() },
+                { new MessagePackObject(Key.OrderId), order.Id.Value },
+                { new MessagePackObject(Key.Label), order.Label.ToString() },
+                { new MessagePackObject(Key.OrderSide), order.Side.ToString() },
+                { new MessagePackObject(Key.OrderType), order.Type.ToString() },
+                { new MessagePackObject(Key.Quantity), order.Quantity.Value },
+                { new MessagePackObject(Key.Price), MsgPackSerializationHelper.GetPriceString(order.Price) },
+                { new MessagePackObject(Key.TimeInForce), order.TimeInForce.ToString() },
+                { new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(order.ExpireTime) },
+                { new MessagePackObject(Key.Timestamp), order.Timestamp.ToIsoString() },
             }.Freeze());
         }
 
+        /// <summary>
+        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="orderBytes">The order bytes.</param>
+        /// <returns>The deserialized order.</returns>
+        /// <exception cref="InvalidOperationException">If the order type is unknown.</exception>
         public Order Deserialize(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);

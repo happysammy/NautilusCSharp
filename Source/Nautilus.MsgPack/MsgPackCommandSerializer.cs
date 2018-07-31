@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackCommandSerializer.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="MsgPackCommandSerializer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,14 +9,14 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using global::MsgPack;
+    using Nautilus.Common.Commands;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Commands;
-    using Nautilus.Common.Commands.Base;
     using NodaTime;
-    using global::MsgPack;
 
     /// <summary>
     /// Provides a command binary serializer for the Message Pack specification.
@@ -30,6 +30,9 @@ namespace Nautilus.MsgPack
 
         private readonly IOrderSerializer orderSerializer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MsgPackCommandSerializer"/> class.
+        /// </summary>
         public MsgPackCommandSerializer()
         {
             this.orderSerializer = new MsgPackOrderSerializer();
@@ -40,7 +43,6 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="command">The command to serialize.</param>
         /// <returns>The serialized command.</returns>
-
         public byte[] Serialize(Command command)
         {
             Debug.NotNull(@command, nameof(@command));
@@ -48,7 +50,7 @@ namespace Nautilus.MsgPack
             switch (command)
             {
                 case OrderCommand orderCommand:
-                    return SerializeOrderCommand(orderCommand);
+                    return this.SerializeOrderCommand(orderCommand);
 
                 default: throw new InvalidOperationException(
                     "Cannot serialize the command (unrecognized command).");
@@ -70,7 +72,7 @@ namespace Nautilus.MsgPack
             switch (unpacked[Key.CommandType].ToString())
             {
                 case OrderCommand:
-                    return DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
+                    return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
 
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the command (unrecognized command).");
@@ -81,10 +83,10 @@ namespace Nautilus.MsgPack
         {
             var package = new MessagePackObjectDictionary
             {
-                {new MessagePackObject(Key.CommandType), OrderCommand},
-                {new MessagePackObject(Key.Order), Hex.ToHexString(this.orderSerializer.Serialize(orderCommand.Order))},
-                {new MessagePackObject(Key.CommandId), orderCommand.Id.ToString()},
-                {new MessagePackObject(Key.CommandTimestamp), orderCommand.Timestamp.ToIsoString()}
+                { new MessagePackObject(Key.CommandType), OrderCommand },
+                { new MessagePackObject(Key.Order), Hex.ToHexString(this.orderSerializer.Serialize(orderCommand.Order)) },
+                { new MessagePackObject(Key.CommandId), orderCommand.Id.ToString() },
+                { new MessagePackObject(Key.CommandTimestamp), orderCommand.Timestamp.ToIsoString() }
             };
 
             switch (orderCommand)
