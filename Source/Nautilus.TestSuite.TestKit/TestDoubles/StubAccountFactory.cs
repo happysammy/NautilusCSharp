@@ -34,6 +34,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var accountEventMessage = new AccountEvent(
                 Broker.InteractiveBrokers,
                 "123456789",
+                CurrencyCode.USD,
                 Money.Create(100000, CurrencyCode.USD),
                 Money.Create(100000, CurrencyCode.USD),
                 Money.Zero(CurrencyCode.USD),
@@ -62,6 +63,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var accountEventMessage = new AccountEvent(
                 Broker.InteractiveBrokers,
                 "123456789",
+                CurrencyCode.USD,
                 Money.Zero(CurrencyCode.USD),
                 Money.Zero(CurrencyCode.USD),
                 Money.Zero(CurrencyCode.USD),

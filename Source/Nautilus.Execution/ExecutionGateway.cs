@@ -69,6 +69,11 @@ namespace Nautilus.Execution
         public Broker Broker => this.fixClient.Broker;
 
         /// <summary>
+        /// Gets the brokerage account currency.
+        /// </summary>
+        public CurrencyCode AccountCurrency => CurrencyCode.AUD;
+
+        /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
         public bool IsConnected => this.fixClient.IsConnected;
@@ -288,7 +293,7 @@ namespace Nautilus.Execution
         /// Messaging system.
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
-        /// <param name="account">The account.</param>
+        /// <param name="accountNumber">The account number.</param>
         /// <param name="cashBalance">The cash balance.</param>
         /// <param name="cashStartDay">The cash start day.</param>
         /// <param name="cashDaily">The cash daily.</param>
@@ -299,7 +304,7 @@ namespace Nautilus.Execution
         /// <param name="timestamp">The report timestamp.</param>
         public void OnAccountReport(
             string inquiryId,
-            string account,
+            string accountNumber,
             decimal cashBalance,
             decimal cashStartDay,
             decimal cashDaily,
@@ -312,7 +317,7 @@ namespace Nautilus.Execution
             this.Execute(() =>
             {
                 Validate.NotNull(inquiryId, nameof(inquiryId));
-                Validate.NotNull(account, nameof(account));
+                Validate.NotNull(accountNumber, nameof(accountNumber));
                 Validate.DecimalNotOutOfRange(cashBalance, nameof(cashBalance), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(cashStartDay, nameof(cashStartDay), decimal.Zero, decimal.MaxValue);
                 Validate.DecimalNotOutOfRange(cashDaily, nameof(cashDaily), decimal.Zero, decimal.MaxValue);
@@ -324,12 +329,13 @@ namespace Nautilus.Execution
 
                 var accountEvent = new AccountEvent(
                     this.fixClient.Broker,
-                    account,
-                    this.GetMoney(cashBalance),
-                    this.GetMoney(cashStartDay),
-                    this.GetMoney(cashDaily),
-                    this.GetMoney(marginUsedLiq),
-                    this.GetMoney(marginUsedMaintenance),
+                    accountNumber,
+                    this.AccountCurrency,
+                    Money.Create(cashBalance, this.AccountCurrency),
+                    Money.Create(cashStartDay, this.AccountCurrency),
+                    Money.Create(cashDaily, this.AccountCurrency),
+                    Money.Create(marginUsedLiq, this.AccountCurrency),
+                    Money.Create(marginUsedMaintenance, this.AccountCurrency),
                     marginRatio,
                     marginCallStatus,
                     this.NewGuid(),
@@ -339,7 +345,7 @@ namespace Nautilus.Execution
 
                 this.Log.Debug(
                     $"AccountEvent: " +
-                    $"({this.fixClient.Broker}-{account}, " +
+                    $"({this.fixClient.Broker}-{accountNumber}, " +
                     $"InquiryId={inquiryId})");
             });
         }
@@ -775,15 +781,6 @@ namespace Nautilus.Execution
                     $"FilledQty={filledQuantity} at {averagePrice}, " +
                     $"LeavesQty={leavesQuantity})");
             });
-        }
-
-        private Money GetMoney(decimal amount)
-        {
-            Debug.DecimalNotOutOfRange(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
-
-            return amount > 0
-                ? Money.Create(amount, CurrencyCode.AUD)
-                : Money.Zero(CurrencyCode.AUD);
         }
     }
 }

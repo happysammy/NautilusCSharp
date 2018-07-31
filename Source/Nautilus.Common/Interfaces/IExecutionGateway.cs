@@ -135,7 +135,7 @@ namespace Nautilus.Common.Interfaces
         /// Messaging system.
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
-        /// <param name="account">The account.</param>
+        /// <param name="accountNumber">The account.</param>
         /// <param name="cashBalance">The cash balance.</param>
         /// <param name="cashStartDay">The cash start day.</param>
         /// <param name="cashDaily">The cash daily.</param>
@@ -146,7 +146,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="timestamp">The report timestamp.</param>
         void OnAccountReport(
             string inquiryId,
-            string account,
+            string accountNumber,
             decimal cashBalance,
             decimal cashStartDay,
             decimal cashDaily,

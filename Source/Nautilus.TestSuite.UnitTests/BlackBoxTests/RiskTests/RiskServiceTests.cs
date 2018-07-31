@@ -201,6 +201,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             var message2 = new AccountEvent(
                 Broker.InteractiveBrokers,
                 "123456789",
+                CurrencyCode.USD,
                 Money.Create(90000, CurrencyCode.USD),
                 Money.Create(100000, CurrencyCode.USD),
                 Money.Zero(CurrencyCode.USD),

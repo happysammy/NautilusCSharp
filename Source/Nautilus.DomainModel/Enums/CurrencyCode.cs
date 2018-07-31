@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Enums
     public enum CurrencyCode
     {
         /// <summary>
-        /// The unknown.
+        /// Unknown currency code.
         /// </summary>
         Unknown = 0,
 

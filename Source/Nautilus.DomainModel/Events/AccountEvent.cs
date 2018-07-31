@@ -27,6 +27,7 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="broker">The account broker.</param>
         /// <param name="accountNumber">The account identifier.</param>
+        /// <param name="currency">The currency of the account.</param>
         /// <param name="cashBalance">The account cash balance.</param>
         /// <param name="cashStartDay">The account cash start day.</param>
         /// <param name="cashActivityDay">The account cash activity day.</param>
@@ -39,6 +40,7 @@ namespace Nautilus.DomainModel.Events
         public AccountEvent(
             Broker broker,
             string accountNumber,
+            CurrencyCode currency,
             Money cashBalance,
             Money cashStartDay,
             Money cashActivityDay,
@@ -56,9 +58,13 @@ namespace Nautilus.DomainModel.Events
             Debug.NotNull(cashActivityDay, nameof(cashActivityDay));
             Debug.NotNull(marginUsedLiquidation, nameof(marginUsedLiquidation));
             Debug.NotNull(marginUsedMaintenance, nameof(marginUsedMaintenance));
+            Debug.NotNull(marginRatio, nameof(marginRatio));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;
+            this.Currency = currency;
             this.CashBalance = cashBalance;
             this.CashStartDay = cashStartDay;
             this.CashActivityDay = cashActivityDay;
@@ -77,6 +83,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events account number.
         /// </summary>
         public string AccountNumber { get; }
+
+        /// <summary>
+        /// Gets the events account currency.
+        /// </summary>
+        public CurrencyCode Currency { get; }
 
         /// <summary>
         /// Gets the events cash balance.
@@ -112,11 +123,5 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events margin call status.
         /// </summary>
         public Option<string> MarginCallStatus { get; }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="AccountEvent"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => nameof(AccountEvent);
     }
 }
