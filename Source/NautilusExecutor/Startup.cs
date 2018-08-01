@@ -103,9 +103,9 @@ namespace NautilusExecutor
             var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
             var logLevel = logLevelString.ToEnum<LogEventLevel>();
 
-            var username = (string)config[ConfigSection.Fix]["username"];;
-            var password = (string)config[ConfigSection.Fix]["password"];;
-            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];;
+            var username = (string)config[ConfigSection.Fix]["username"];
+            var password = (string)config[ConfigSection.Fix]["password"];
+            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();

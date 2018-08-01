@@ -10,9 +10,9 @@ namespace Nautilus.Serilog
 {
     using System;
     using System.Reflection;
-    using Nautilus.Common.Interfaces;
     using global::Serilog;
     using global::Serilog.Events;
+    using Nautilus.Common.Interfaces;
 
     /// <summary>
     /// The <see cref="Serilog"/> adapter.
@@ -22,6 +22,7 @@ namespace Nautilus.Serilog
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogLogger"/> class.
         /// </summary>
+        /// <param name="logLevel">The threshold level for the logger.</param>
         public SerilogLogger(LogEventLevel logLevel)
         {
             SerilogLogFactory.Create(logLevel);
@@ -30,7 +31,7 @@ namespace Nautilus.Serilog
         }
 
         /// <summary>
-        /// Returns the logging adapters assembly library and version.
+        /// Gets the logging adapters assembly library and version.
         /// </summary>
         public string AssemblyVersion { get; }
 

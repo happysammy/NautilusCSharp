@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Serilog.xml</DocumentationFile>
   </PropertyGroup>
@@ -16,5 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 </Project>

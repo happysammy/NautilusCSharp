@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisInstrumentRepository.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisInstrumentRepository.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -23,8 +23,8 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using ServiceStack.Text;
     using ServiceStack.Redis;
+    using ServiceStack.Text;
 
     /// <summary>
     /// Provides a Redis implementation for the system instrument repository.
@@ -57,7 +57,6 @@ namespace Nautilus.Redis
         /// <summary>
         /// Adds all persisted instruments to the in-memory cache.
         /// </summary>
-        /// <returns>The result of the operation.</returns>
         public void CacheAll()
         {
             var keys = this.GetAllKeys();
@@ -78,6 +77,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Deletes the instrument of the given symbol from the Redis database.
         /// </summary>
+        /// <param name="symbol">The symbol to delete.</param>
         public void Delete(Symbol symbol)
         {
             Debug.NotNull(symbol, nameof(symbol));
@@ -151,7 +151,7 @@ namespace Nautilus.Redis
 
             var updatedInstrument = instrumentBuilder.Build(timeNow);
 
-            this.cache[symbol] =updatedInstrument;
+            this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
             return CommandResult.Ok($"Updated instrument {symbol} " + changesString);
@@ -247,6 +247,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns the list of instrument symbols currently held in cache.
         /// </summary>
+        /// <returns>The symbols.</returns>
         public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToList().AsReadOnly();
 
         /// <summary>
@@ -263,7 +264,6 @@ namespace Nautilus.Redis
         /// <summary>
         /// Disposes the instrument repository resources.
         /// </summary>
-        /// <returns></returns>
         public void Dispose()
         {
             this.clientsManager.Dispose();

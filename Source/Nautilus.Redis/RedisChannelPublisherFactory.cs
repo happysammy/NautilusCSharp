@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisChannelPublisherFactory.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisChannelPublisherFactory.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -22,7 +22,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisChannelPublisherFactory"/> class.
         /// </summary>
-        /// <param name="clientsManager"></param>
+        /// <param name="clientsManager">The Redis client manager.</param>
         public RedisChannelPublisherFactory(IRedisClientsManager clientsManager)
         {
             Validate.NotNull(clientsManager, nameof(clientsManager));

@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisBarClient.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisBarClient.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,14 +13,14 @@ namespace Nautilus.Redis
     using System.Text;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Types;
     using Nautilus.Data.Wranglers;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using ServiceStack.Redis;
 
@@ -60,7 +60,7 @@ namespace Nautilus.Redis
             Debug.NotNull(key, nameof(key));
 
             // Redis returns 1 if the key exists or 0 if the key does not exist.
-            return redisClient.Exists(key) == 1;
+            return this.redisClient.Exists(key) == 1;
         }
 
         /// <summary>
