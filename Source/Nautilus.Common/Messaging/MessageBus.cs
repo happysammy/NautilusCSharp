@@ -52,7 +52,9 @@ namespace Nautilus.Common.Messaging
             this.messageStore = messageStore;
             this.commandHandler = new CommandHandler(this.log);
 
-            this.SetupMessageHandling();
+            // Setup message handling.
+            this.Receive<InitializeSwitchboard>(msg => this.OnMessage(msg));
+            this.Receive<Envelope<T>>(envelope => this.OnReceive(envelope));
         }
 
         /// <summary>
@@ -72,18 +74,9 @@ namespace Nautilus.Common.Messaging
             this.log.Warning($"Unhandled message {message}");
         }
 
-        /// <summary>
-        /// Sets up all <see cref="Message"/> handling methods.
-        /// </summary>
-        private void SetupMessageHandling()
-        {
-            this.Receive<InitializeSwitchboard>(msg => this.OnMessage(msg));
-            this.Receive<Envelope<T>>(envelope => this.OnReceive(envelope));
-        }
-
         private void OnMessage(InitializeSwitchboard message)
         {
-            Validate.NotNull(message.Switchboard, nameof(message.Switchboard));
+            Debug.NotNull(message.Switchboard, nameof(message.Switchboard));
 
             this.commandHandler.Execute(() =>
             {

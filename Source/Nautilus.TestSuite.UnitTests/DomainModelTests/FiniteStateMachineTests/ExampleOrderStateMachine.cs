@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         /// Returns a <see cref="FiniteStateMachine"/> which represents a generic order.
         /// </summary>
         /// <returns>A <see cref="FiniteStateMachine"/>.</returns>
-        public static FiniteStateMachine Create()
+        internal static FiniteStateMachine Create()
         {
             var stateTransitionTable = new Dictionary<StateTransition, State>
             {

@@ -33,6 +33,7 @@ namespace Nautilus.Common.Messaging
             : base(id, timestamp)
         {
             Debug.NotNull(@event, nameof(@event));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Event = @event;

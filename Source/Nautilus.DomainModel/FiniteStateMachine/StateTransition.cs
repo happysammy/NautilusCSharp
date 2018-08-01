@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// <see cref="Trigger"/> resulting in a valid resultant <see cref="State"/>.
     /// </summary>
     [Immutable]
-    public struct StateTransition
+    internal struct StateTransition
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StateTransition"/> struct.
@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <param name="currentState">The current state.</param>
         /// <param name="trigger">The trigger.</param>
         /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
-        public StateTransition(State currentState, Trigger trigger)
+        internal StateTransition(State currentState, Trigger trigger)
         {
             Validate.NotNull(currentState, nameof(currentState));
             Validate.NotNull(trigger, nameof(trigger));

@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a simple generic finite state machine comprising of a state transition look-up
     /// table to determine trigger processing validity.
     /// </summary>
-    public class FiniteStateMachine
+    internal class FiniteStateMachine
     {
         private readonly ReadOnlyDictionary<StateTransition, State> stateTransitionTable;
 
@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <param name="startingState">The starting state.</param>
         /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
         /// <exception cref="ArgumentException">Throws if the state transition table is empty.</exception>
-        public FiniteStateMachine(
+        internal FiniteStateMachine(
             Dictionary<StateTransition, State> stateTransitionTable,
             State startingState)
         {
@@ -44,7 +44,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <summary>
         /// Gets the current <see cref="State"/>.
         /// </summary>
-        public State CurrentState { get; private set; }
+        internal State CurrentState { get; private set; }
 
         /// <summary>
         /// Processes the finite state machine with the given <see cref="Trigger"/>.
@@ -52,7 +52,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <param name="trigger">The trigger.</param>
         /// <returns>A command result.</returns>
         /// <exception cref="ArgumentNullException">Throws if the trigger is null.</exception>
-        public CommandResult Process(Trigger trigger)
+        internal CommandResult Process(Trigger trigger)
         {
             Debug.NotNull(trigger, nameof(trigger));
 

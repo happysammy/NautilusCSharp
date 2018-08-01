@@ -14,6 +14,8 @@ namespace Nautilus.Core
     /// <summary>
     /// Provides hash codes for the system.
     /// </summary>
+    [Immutable]
+    [PerformanceOptimized]
     public static class Hash
     {
         private const int Initializer = 17;

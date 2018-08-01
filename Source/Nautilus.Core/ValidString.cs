@@ -18,13 +18,13 @@ namespace Nautilus.Core
     /// or equal to 100 characters, and contains no white space.
     /// </summary>
     [Immutable]
-    public class ValidString : IEquatable<ValidString>
+    public abstract class ValidString : IEquatable<ValidString>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidString"/> class.
         /// </summary>
         /// <param name="value">The string value.</param>
-        public ValidString(string value)
+        protected ValidString(string value)
         {
             Debug.NotNull(value, nameof(value));
             Debug.True(value.Length <= 100, nameof(value));

@@ -41,7 +41,6 @@ namespace Nautilus.Common.Messaging
             ZonedDateTime timestamp)
         {
             Debug.NotNull(receivers, nameof(receivers));
-            Debug.NotNull(sender, nameof(sender));
             Debug.NotNull(message, nameof(message));
             Debug.NotDefault(envelopeId, nameof(envelopeId));
             Debug.NotDefault(timestamp, nameof(timestamp));

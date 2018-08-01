@@ -16,14 +16,14 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a possible state within the <see cref="FiniteStateMachine"/>.
     /// </summary>
     [Immutable]
-    public struct State
+    internal struct State
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="State"/> structure.
         /// </summary>
         /// <param name="state">The state.</param>
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
-        public State(Enum state)
+        internal State(Enum state)
         {
             Debug.NotNull(state, nameof(state));
 

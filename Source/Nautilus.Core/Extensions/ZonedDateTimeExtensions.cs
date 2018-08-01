@@ -19,6 +19,7 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>
+    [Immutable]
     public static class ZonedDateTimeExtensions
     {
         private const string IsoStringParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";

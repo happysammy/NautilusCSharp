@@ -20,14 +20,14 @@ namespace Nautilus.DomainModel
     /// Provides generic trade logic.
     /// </summary>
     [Immutable]
-    public static class TradeLogic
+    internal static class TradeLogic
     {
         /// <summary>
         /// Returns the <see cref="TradeStatus"/> of the given <see cref="TradeUnit"/>.
         /// </summary>
         /// <param name="tradeUnit">The trade unit.</param>
         /// <returns>The current trade status.</returns>
-        public static TradeStatus CalculateTradeStatus(TradeUnit tradeUnit)
+        internal static TradeStatus CalculateTradeStatus(TradeUnit tradeUnit)
         {
             Debug.NotNull(tradeUnit, nameof(tradeUnit));
 
@@ -67,7 +67,7 @@ namespace Nautilus.DomainModel
         /// </summary>
         /// <param name="tradeUnits">The trade units.</param>
         /// <returns>The current trade status.</returns>
-        public static TradeStatus CalculateTradeStatus(ReadOnlyList<TradeUnit> tradeUnits)
+        internal static TradeStatus CalculateTradeStatus(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
 
@@ -95,7 +95,7 @@ namespace Nautilus.DomainModel
         /// </summary>
         /// <param name="tradeUnits">The trade units.</param>
         /// <returns>The current market condition.</returns>
-        public static MarketPosition CalculateMarketPosition(ReadOnlyList<TradeUnit> tradeUnits)
+        internal static MarketPosition CalculateMarketPosition(ReadOnlyList<TradeUnit> tradeUnits)
         {
             Debug.NotNull(tradeUnits, nameof(tradeUnits));
 

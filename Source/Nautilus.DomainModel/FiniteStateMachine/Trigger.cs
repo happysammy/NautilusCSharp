@@ -16,14 +16,14 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.
     /// </summary>
     [Immutable]
-    public struct Trigger
+    internal struct Trigger
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Trigger"/> structure.
         /// </summary>
         /// <param name="trigger">The state.</param>
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
-        public Trigger(string trigger)
+        internal Trigger(string trigger)
         {
             Debug.NotNull(trigger, nameof(trigger));
 
@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="trigger">The state.</param>
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
-        public Trigger(Enum trigger)
+        internal Trigger(Enum trigger)
         {
             Debug.NotNull(trigger, nameof(trigger));
 

@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="addresses">The system addresses.</param>
         public Switchboard(Dictionary<NautilusService, IEndpoint> addresses)
         {
-            Validate.CollectionNotNullOrEmpty(addresses, nameof(addresses));
+            Debug.CollectionNotNullOrEmpty(addresses, nameof(addresses));
 
             this.addresses = new ReadOnlyDictionary<NautilusService, IEndpoint>(addresses);
         }

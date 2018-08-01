@@ -28,7 +28,7 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Initializes a new instance of the <see cref="HexEncoder"/> class.
         /// </summary>
-        public HexEncoder()
+        internal HexEncoder()
         {
             this.InitialiseDecodingTable();
         }
@@ -41,7 +41,7 @@ namespace Nautilus.MsgPack
         /// <param name="length">The length of the array.</param>
         /// <param name="outStream">The output stream.</param>
         /// <returns>The number of bytes produced.</returns>
-        public int Encode(byte[] data, int off, int length, Stream outStream)
+        internal int Encode(byte[] data, int off, int length, Stream outStream)
         {
             for (var i = off; i < (off + length); i++)
             {
@@ -64,7 +64,7 @@ namespace Nautilus.MsgPack
         /// <param name="outStream">The output stream.</param>
         /// <returns>The number of bytes produced.</returns>
         /// <exception cref="IOException">If invalid characters are encountered.</exception>
-        public int Decode(byte[] data, int off, int length, Stream outStream)
+        internal int Decode(byte[] data, int off, int length, Stream outStream)
         {
             var outLen = 0;
             var end = off + length;
@@ -117,7 +117,7 @@ namespace Nautilus.MsgPack
         /// <param name="outStream">The output stream.</param>
         /// <returns>The number of bytes produced.</returns>
         /// <exception cref="IOException">If invalid characters encountered in Hex data.</exception>
-        public int DecodeString(string data, Stream outStream)
+        internal int DecodeString(string data, Stream outStream)
         {
             var length = 0;
             var end = data.Length;

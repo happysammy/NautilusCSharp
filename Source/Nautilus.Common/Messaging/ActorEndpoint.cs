@@ -11,6 +11,7 @@ namespace Nautilus.Common.Messaging
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -18,7 +19,8 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides an Akka.NET actor endpoint.
     /// </summary>
-    public class ActorEndpoint : IEndpoint
+    [Immutable]
+    public sealed class ActorEndpoint : IEndpoint
     {
         private readonly IActorRef actorRef;
 
@@ -39,6 +41,8 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message to send.</param>
         public void Send(object message)
         {
+            Debug.NotNull(message, nameof(message));
+
             this.actorRef.Tell(message);
         }
 
@@ -50,6 +54,8 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Envelope<T> envelope)
             where T : ISendable<Message>
         {
+            Debug.NotNull(envelope, nameof(envelope));
+
             this.actorRef.Tell(envelope);
         }
 
@@ -60,6 +66,8 @@ namespace Nautilus.Common.Messaging
         /// <returns>The result of the operation.</returns>
         public Task<bool> GracefulStop(Duration timeout)
         {
+            Debug.NotNull(timeout, nameof(timeout));
+
             return this.actorRef.GracefulStop(timeout.ToTimeSpan());
         }
     }

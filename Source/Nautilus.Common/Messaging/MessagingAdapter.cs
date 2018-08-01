@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            Validate.NotNull(message, nameof(message));
+            Debug.NotNull(message, nameof(message));
 
             this.commandBus.Send(message);
             this.eventBus.Send(message);
