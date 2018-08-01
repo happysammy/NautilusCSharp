@@ -21,13 +21,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB", "NautilusDB\Na
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB.Service", "NautilusDB.Service\NautilusDB.Service.csproj", "{933D3504-F1B7-42AE-ADE7-AEBABF379DB7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusExecutor", "NautilusExecutor", "{BE9D07AC-25B5-49D0-80A7-023E0198AD2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor", "NautilusExecutor\NautilusExecutor.csproj", "{9EB3742E-68A0-4E4F-AC6C-66CB7A8D7722}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.AlphaModel", "Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj", "{0E216828-52F6-4796-8EFC-7203EDE05347}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Core", "Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj", "{192A91C1-78BB-4A08-AB32-57B8C469E300}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Data", "Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj", "{B327F24B-1599-4621-92D7-E112FDB7803F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Execution", "Nautilus.BlackBox.Execution\Nautilus.BlackBox.Execution.csproj", "{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.BlackBox.Portfolio", "Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj", "{71A305AB-E009-4E9C-9F7F-7282FFE675D0}"
 EndProject
@@ -45,17 +47,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Serilog", "Nautilu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Compression", "Nautilus.Compression\Nautilus.Compression.csproj", "{A42DE733-1C1B-4D1C-B98F-2AC163C980FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Database", "Nautilus.Database\Nautilus.Database.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Data", "Nautilus.Data\Nautilus.Data.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.DomainModel", "Nautilus.DomainModel\Nautilus.DomainModel.csproj", "{2BB6E1DA-9469-44C6-A07E-2D980030E3CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Redis", "Nautilus.Redis\Nautilus.Redis.csproj", "{679E1404-AC41-4842-AA83-0F4091503A79}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.IntegrationTests", "Nautilus.TestSuite.IntegrationTests\Nautilus.TestSuite.IntegrationTests.csproj", "{A8A27E8F-EF22-43C3-9350-91FD626A130F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduler", "Nautilus.Scheduler\Nautilus.Scheduler.csproj", "{8E27658E-64A6-4C8A-8F8B-9F700363EB9A}"
 EndProject
@@ -75,9 +71,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Execution", "Execution", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Execution", "Nautilus.Execution\Nautilus.Execution.csproj", "{D3F2837D-750C-41E2-9129-2F284C3915D1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusExecutor", "NautilusExecutor", "{BE9D07AC-25B5-49D0-80A7-023E0198AD2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor", "NautilusExecutor\NautilusExecutor.csproj", "{9EB3742E-68A0-4E4F-AC6C-66CB7A8D7722}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.IntegrationTests", "Nautilus.TestSuite.IntegrationTests\Nautilus.TestSuite.IntegrationTests.csproj", "{A8A27E8F-EF22-43C3-9350-91FD626A130F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,10 +103,6 @@ Global
 		{B327F24B-1599-4621-92D7-E112FDB7803F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B327F24B-1599-4621-92D7-E112FDB7803F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B327F24B-1599-4621-92D7-E112FDB7803F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71A305AB-E009-4E9C-9F7F-7282FFE675D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71A305AB-E009-4E9C-9F7F-7282FFE675D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71A305AB-E009-4E9C-9F7F-7282FFE675D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -207,7 +201,6 @@ Global
 		{0E216828-52F6-4796-8EFC-7203EDE05347} = {15037648-9583-4277-B3B3-C51775801A29}
 		{192A91C1-78BB-4A08-AB32-57B8C469E300} = {15037648-9583-4277-B3B3-C51775801A29}
 		{B327F24B-1599-4621-92D7-E112FDB7803F} = {15037648-9583-4277-B3B3-C51775801A29}
-		{AA61F2A4-7803-4629-B1F0-6FE08A0C6FDD} = {15037648-9583-4277-B3B3-C51775801A29}
 		{71A305AB-E009-4E9C-9F7F-7282FFE675D0} = {15037648-9583-4277-B3B3-C51775801A29}
 		{A3E6BAAE-641F-40D5-BAEE-7B9F5E35BC73} = {15037648-9583-4277-B3B3-C51775801A29}
 		{3E299DAE-B6DB-4BF6-ABE0-CCC1F9E33CB2} = {EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}

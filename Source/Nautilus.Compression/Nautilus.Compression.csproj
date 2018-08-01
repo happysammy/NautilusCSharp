@@ -14,6 +14,6 @@
     <PackageReference Include="lz4net" Version="1.0.15.93" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
+    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
   </ItemGroup>
 </Project>

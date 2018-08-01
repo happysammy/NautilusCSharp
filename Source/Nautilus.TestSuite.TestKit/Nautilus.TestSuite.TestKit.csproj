@@ -12,13 +12,15 @@
     <PackageReference Include="Moq" Version="4.9.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="Akka.TestKit.Xunit2" Version="1.3.8" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Data\Nautilus.BlackBox.Data.csproj" />
     <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
-    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
+    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
   </ItemGroup>
 </Project>

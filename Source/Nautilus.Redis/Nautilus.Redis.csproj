@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
-    <ProjectReference Include="..\Nautilus.Database\Nautilus.Database.csproj" />
+    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
     <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
   </ItemGroup>
 </Project>
