@@ -16,8 +16,8 @@ namespace Nautilus.Redis
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Keys;
+    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

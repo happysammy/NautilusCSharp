@@ -12,7 +12,7 @@ namespace Nautilus.Redis
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using Nautilus.Core.CQS;
-    using Nautilus.Database.Interfaces;
+    using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
 
     public class RedisEconomicEventRepository : IRepository<EconomicEvent>

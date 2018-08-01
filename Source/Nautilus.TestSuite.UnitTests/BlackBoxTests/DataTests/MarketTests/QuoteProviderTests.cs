@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Aggregators;
+    using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

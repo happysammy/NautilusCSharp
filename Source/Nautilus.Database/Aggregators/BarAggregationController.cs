@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Aggregators
+namespace Nautilus.Data.Aggregators
 {
     using System;
     using System.Collections.Generic;
@@ -19,10 +19,10 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Database.Messages.Commands;
-    using Nautilus.Database.Messages.Documents;
-    using Nautilus.Database.Messages.Events;
-    using Nautilus.Database.Messages.Jobs;
+    using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Documents;
+    using Nautilus.Data.Messages.Events;
+    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler.Commands;

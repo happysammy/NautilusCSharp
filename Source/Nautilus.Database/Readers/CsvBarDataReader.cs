@@ -6,20 +6,20 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Readers
+namespace Nautilus.Data.Readers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using CsvHelper;
-    using Nautilus.Database.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Types;
+    using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

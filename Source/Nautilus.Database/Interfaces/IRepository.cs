@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Nautilus.Core.CQS;
 
-namespace Nautilus.Database.Interfaces
+namespace Nautilus.Data.Interfaces
 {
     public interface IRepository<T>
     {

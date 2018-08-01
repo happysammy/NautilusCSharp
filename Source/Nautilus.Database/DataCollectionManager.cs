@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database
+namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
@@ -16,11 +16,11 @@ namespace Nautilus.Database
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
-    using Nautilus.Database.Messages.Commands;
-    using Nautilus.Database.Messages.Documents;
-    using Nautilus.Database.Messages.Events;
-    using Nautilus.Database.Messages.Jobs;
-    using Nautilus.Database.Types;
+    using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Documents;
+    using Nautilus.Data.Messages.Events;
+    using Nautilus.Data.Messages.Jobs;
+    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

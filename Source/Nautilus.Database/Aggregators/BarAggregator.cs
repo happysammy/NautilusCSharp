@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Aggregators
+namespace Nautilus.Data.Aggregators
 {
     using System;
     using System.Collections.Generic;
@@ -17,8 +17,8 @@ namespace Nautilus.Database.Aggregators
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Commands;
     using Nautilus.Core.Annotations;
-    using Nautilus.Database.Messages.Commands;
-    using Nautilus.Database.Messages.Events;
+    using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

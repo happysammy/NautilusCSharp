@@ -2,13 +2,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>Nautilus.Database</AssemblyName>
-    <RootNamespace>Nautilus.Database</RootNamespace>
+    <AssemblyName>Nautilus.Data</AssemblyName>
+    <RootNamespace>Nautilus.Data</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Database.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Data.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="7.1.1" />

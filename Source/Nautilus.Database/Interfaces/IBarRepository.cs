@@ -6,11 +6,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Interfaces
+namespace Nautilus.Data.Interfaces
 {
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.CQS;
-    using Nautilus.Database.Types;
+    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

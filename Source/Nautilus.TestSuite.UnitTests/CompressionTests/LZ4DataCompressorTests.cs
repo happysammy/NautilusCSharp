@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.CompressionTests
     using Nautilus.Compression;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Database.Interfaces;
+    using Nautilus.Data.Interfaces;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

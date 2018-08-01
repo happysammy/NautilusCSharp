@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Aggregators
+namespace Nautilus.Data.Aggregators
 {
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;

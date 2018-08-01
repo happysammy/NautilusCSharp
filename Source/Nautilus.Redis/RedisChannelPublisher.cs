@@ -10,7 +10,7 @@ namespace Nautilus.Redis
 {
     using System.Collections.Generic;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Interfaces;
+    using Nautilus.Data.Interfaces;
     using ServiceStack.Redis;
 
     /// <summary>

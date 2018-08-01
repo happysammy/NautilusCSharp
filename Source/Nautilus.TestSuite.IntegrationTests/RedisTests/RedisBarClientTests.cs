@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System.Linq;
     using Nautilus.Compression;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Database.Keys;
+    using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;

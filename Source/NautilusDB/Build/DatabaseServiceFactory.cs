@@ -17,11 +17,11 @@ namespace NautilusDB.Build
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
-    using Nautilus.Database;
-    using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Processors;
-    using Nautilus.Database.Publishers;
+    using Nautilus.Data;
+    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Processors;
+    using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
     using NodaTime;
@@ -46,7 +46,7 @@ namespace NautilusDB.Build
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public static DatabaseService Create(
+        public static DataService Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
             IExecutionGatewayFactory gatewayFactory,
@@ -66,7 +66,7 @@ namespace NautilusDB.Build
             Validate.NotNull(symbols, nameof(symbols));
             Validate.NotNull(barSpecs, nameof(barSpecs));
 
-            logger.Information(NautilusService.Data, $"Starting {nameof(DatabaseService)} builder...");
+            logger.Information(NautilusService.Data, $"Starting {nameof(DataService)} builder...");
             BuildVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
@@ -77,7 +77,7 @@ namespace NautilusDB.Build
                 guidFactory,
                 new LoggerFactory(logger));
 
-            var actorSystem = ActorSystem.Create(nameof(Nautilus.Database));
+            var actorSystem = ActorSystem.Create(nameof(Nautilus.Data));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
@@ -146,7 +146,7 @@ namespace NautilusDB.Build
             fixClient.InitializeGateway(gateway);
             instrumentRepository.CacheAll();
 
-            return new DatabaseService(
+            return new DataService(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,

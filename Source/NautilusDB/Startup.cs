@@ -19,7 +19,7 @@ namespace NautilusDB
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Compression;
     using Nautilus.Core.Validation;
-    using Nautilus.Database;
+    using Nautilus.Data;
     using NautilusDB.Configuration;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
@@ -38,7 +38,7 @@ namespace NautilusDB
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private DatabaseService nautilusDB;
+        private DataService nautilusDB;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core

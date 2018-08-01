@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Collectors
+namespace Nautilus.Data.Collectors
 {
     public class EconomicEventCollector
     {

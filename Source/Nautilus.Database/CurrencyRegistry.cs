@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database
+namespace Nautilus.Data
 {
     using Nautilus.DomainModel.Enums;
     using System.Collections.Generic;

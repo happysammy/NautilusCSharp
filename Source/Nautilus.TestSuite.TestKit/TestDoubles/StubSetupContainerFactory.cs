@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
-    using Nautilus.Database.Aggregators;
+    using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

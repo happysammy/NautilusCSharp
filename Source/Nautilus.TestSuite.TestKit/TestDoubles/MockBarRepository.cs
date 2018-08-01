@@ -1,8 +1,8 @@
 ﻿namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using Nautilus.Core.CQS;
-    using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Types;
+    using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

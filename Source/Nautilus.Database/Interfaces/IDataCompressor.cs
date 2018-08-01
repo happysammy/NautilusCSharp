@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Interfaces
+namespace Nautilus.Data.Interfaces
 {
     /// <summary>
     /// Abstract adapter for data compression of <see cref="byte"/> arrays.

@@ -130,7 +130,7 @@ namespace NautilusExecutor
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
-            var actorSystem = ActorSystem.Create(nameof(Nautilus.Database));
+            var actorSystem = ActorSystem.Create(nameof(Nautilus.Data));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,

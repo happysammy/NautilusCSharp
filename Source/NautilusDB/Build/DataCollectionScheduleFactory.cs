@@ -13,7 +13,7 @@ namespace NautilusDB.Build
     using Newtonsoft.Json.Linq;
     using NodaTime;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Database.Orchestration;
+    using Nautilus.Data.Orchestration;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="DataCollectionSchedule"/> from the given time and

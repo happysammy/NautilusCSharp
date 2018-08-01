@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Aggregators
+namespace Nautilus.Data.Aggregators
 {
     using System.Collections.Generic;
     using System.Globalization;

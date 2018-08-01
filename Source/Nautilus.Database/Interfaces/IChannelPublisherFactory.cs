@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Interfaces
+namespace Nautilus.Data.Interfaces
 {
     /// <summary>
     /// An abstract factory interface for creating channel publishers.

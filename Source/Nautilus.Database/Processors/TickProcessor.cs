@@ -6,13 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Processors
+namespace Nautilus.Data.Processors
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Aggregators;
+    using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

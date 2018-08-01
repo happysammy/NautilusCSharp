@@ -13,9 +13,9 @@ namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Commands;
-    using Nautilus.Database.Aggregators;
-    using Nautilus.Database.Messages.Commands;
-    using Nautilus.Database.Messages.Events;
+    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

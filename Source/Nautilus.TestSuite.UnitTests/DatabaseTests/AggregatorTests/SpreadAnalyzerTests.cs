@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DatabaseTests.AggregatorTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Database.Aggregators;
+    using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

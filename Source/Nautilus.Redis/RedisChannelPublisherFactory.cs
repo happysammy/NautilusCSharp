@@ -9,7 +9,7 @@
 namespace Nautilus.Redis
 {
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Interfaces;
+    using Nautilus.Data.Interfaces;
     using ServiceStack.Redis;
 
     /// <summary>

@@ -6,15 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Publishers
+namespace Nautilus.Data.Publishers
 {
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Interfaces;
-    using Nautilus.Database.Messages.Events;
+    using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 

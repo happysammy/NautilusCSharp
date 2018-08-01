@@ -10,7 +10,7 @@ namespace Nautilus.Compression
 {
     using System;
     using Nautilus.Core.Validation;
-    using Nautilus.Database.Interfaces;
+    using Nautilus.Data.Interfaces;
 
     /// <summary>
     /// Provides a factory for the creation of <see cref="IDataCompressor"/>(s).
