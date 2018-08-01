@@ -6,25 +6,25 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database
+namespace NautilusExecutor.Build
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The setup container for the <see cref="Nautilus.Database"/>.
+    /// The setup componentry container for <see cref="Nautilus"/> systems.
     /// </summary>
     [Immutable]
-    public sealed class DatabaseSetupContainer : IComponentryContainer
+    public sealed class ComponentryContainer : IComponentryContainer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatabaseSetupContainer"/> class.
+        /// Initializes a new instance of the <see cref="ComponentryContainer"/> class.
         /// </summary>
         /// <param name="clock">The container clock.</param>
         /// <param name="guidFactory">The container GUID factory.</param>
         /// <param name="loggerFactory">The container logger factory.</param>
-        public DatabaseSetupContainer(
+        public ComponentryContainer(
             IZonedClock clock,
             IGuidFactory guidFactory,
             ILoggerFactory loggerFactory)

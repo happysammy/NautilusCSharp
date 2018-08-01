@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="NautilusDatabase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="DatabaseService.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -26,17 +26,17 @@ namespace Nautilus.Database
     using NodaTime;
 
     /// <summary>
-    /// The main macro object which contains the <see cref="Database"/> and presents its API.
+    /// The main macro object which contains the <see cref="DatabaseService"/> and presents its API.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Database : ComponentBusConnectedBase, IDisposable
+    public sealed class DatabaseService : ComponentBusConnectedBase, IDisposable
     {
         private readonly ActorSystem actorSystem;
         private readonly Dictionary<NautilusService, IEndpoint> addresses;
         private readonly IFixClient fixClient;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Database"/> class.
+        /// Initializes a new instance of the <see cref="DatabaseService"/> class.
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
@@ -44,15 +44,15 @@ namespace Nautilus.Database
         /// <param name="addresses">The system service addresses.</param>
         /// <param name="fixClient">The data client.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public Database(
-            DatabaseSetupContainer setupContainer,
+        public DatabaseService(
+            IComponentryContainer setupContainer,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             Dictionary<NautilusService, IEndpoint> addresses,
             IFixClient fixClient)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(Database)),
+                LabelFactory.Component(nameof(DatabaseService)),
                 setupContainer,
                 messagingAdapter)
         {
@@ -118,7 +118,7 @@ namespace Nautilus.Database
         }
 
         /// <summary>
-        /// Gracefully shuts down the <see cref="Database"/> system.
+        /// Gracefully shuts down the <see cref="DatabaseService"/> system.
         /// </summary>
         public void Shutdown()
         {
@@ -144,7 +144,7 @@ namespace Nautilus.Database
         }
 
         /// <summary>
-        /// Disposes the <see cref="Database"/> object.
+        /// Disposes the <see cref="DatabaseService"/> object.
         /// </summary>
         public void Dispose()
         {

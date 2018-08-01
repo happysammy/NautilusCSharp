@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Build
+namespace NautilusExecutor.Build
 {
     using System;
     using System.Reflection;
@@ -20,7 +20,7 @@ namespace Nautilus.Database.Build
     /// Provides a startup version checker with logging.
     /// </summary>
     [Immutable]
-    public static class StartupVersionChecker
+    public static class BuildVersionChecker
     {
         /// <summary>
         /// Runs the version checker which produces log events.
@@ -32,7 +32,7 @@ namespace Nautilus.Database.Build
 
             log.Information(NautilusService.Data, "Running startup version checker...");
             log.Information(NautilusService.Data, "------------------------------------------------------------------------");
-            log.Information(NautilusService.Data, "NautilusDB - Financial Market Database Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(NautilusService.Data, "NautilusExecutor - Financial Market Execution Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
             log.Information(NautilusService.Data, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information(NautilusService.Data, "------------------------------------------------------------------------");
             log.Information(NautilusService.Data, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Build
+namespace NautilusDB.Build
 {
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;

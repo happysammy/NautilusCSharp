@@ -6,30 +6,35 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-namespace NautilusDB
+namespace NautilusExecutor
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
+    using Akka.Actor;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Brokerage.FXCM;
-    using Nautilus.Compression;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Logging;
+    using Nautilus.Common.MessageStore;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
-    using Nautilus.Database;
-    using NautilusDB.Configuration;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
     using Nautilus.Serilog;
-    using NautilusDB.Build;
+    using NautilusExecutor.Build;
+    using NautilusExecutor.Configuration;
+    using NodaTime;
     using Serilog.Events;
     using ServiceStack.Redis;
+    using BuildVersionChecker = NautilusExecutor.Build.BuildVersionChecker;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -38,7 +43,7 @@ namespace NautilusDB
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private DatabaseService nautilusDB;
+        private IEndpoint executionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
@@ -98,11 +103,6 @@ namespace NautilusDB
             var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
             var logLevel = logLevelString.ToEnum<LogEventLevel>();
 
-            var isCompression = (bool)config[ConfigSection.Database]["compression"];
-            var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
-            var compressor = CompressorFactory.Create(isCompression, compressionCodec);
-            var barRollingWindow = (int) config[ConfigSection.Database]["barDataRollingWindow"];
-
             var username = (string)config[ConfigSection.Fix]["username"];;
             var password = (string)config[ConfigSection.Fix]["password"];;
             var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];;
@@ -118,29 +118,28 @@ namespace NautilusDB
                 .ToList()
                 .AsReadOnly();
 
-            var barSpecsJArray = (JArray)config[ConfigSection.BarSpecifications];
-            var barSpecsList = new List<string>();
-            foreach (var barSpec in barSpecsJArray)
-            {
-                barSpecsList.Add(barSpec.ToString());
-            }
-            var barSpecs = barSpecsList
-                .Distinct()
-                .ToList()
-                .AsReadOnly();
+            var loggingAdapter = new SerilogLogger(logLevel);
+            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
+            BuildVersionChecker.Run(loggingAdapter);
 
-            var resolutionsToPersist = new List<Resolution>
-            {
-                Resolution.Second,
-                Resolution.Minute,
-                Resolution.Hour
-            }.ToList().AsReadOnly();
+            var clock = new Clock(DateTimeZone.Utc);
+            var guidFactory = new GuidFactory();
+
+            var setupContainer = new ComponentryContainer(
+                clock,
+                guidFactory,
+                new LoggerFactory(loggingAdapter));
+
+            var actorSystem = ActorSystem.Create(nameof(Nautilus.Database));
+
+            var messagingAdapter = MessagingServiceFactory.Create(
+                actorSystem,
+                setupContainer,
+                new FakeMessageStore());
 
             var clientManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
-
-            var loggingAdapter = new SerilogLogger(logLevel);
 
             var gatewayFactory = new ExecutionGatewayFactory();
 
@@ -149,27 +148,7 @@ namespace NautilusDB
                 password,
                 accountNumber);
 
-            var publisherFactory = new RedisChannelPublisherFactory(clientManager);
 
-            var barRepository = new RedisBarRepository(
-                clientManager,
-                compressor);
-
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
-
-            this.nautilusDB = DatabaseServiceFactory.Create(
-                loggingAdapter,
-                fixClientFactory,
-                gatewayFactory,
-                publisherFactory,
-                barRepository,
-                instrumentRepository,
-                symbols,
-                barSpecs,
-                resolutionsToPersist,
-                barRollingWindow);
-
-            Task.Run(() => this.nautilusDB.Start());
         }
 
         /// <summary>
@@ -195,15 +174,15 @@ namespace NautilusDB
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseServiceStack(new AppHost
-                                    {
-                                        AppSettings = new NetCoreAppSettings(this.Configuration)
-                                    });
+//            app.UseServiceStack(new AppHost
+//                                    {
+//                                        AppSettings = new NetCoreAppSettings(this.Configuration)
+//                                    });
         }
 
         private void OnShutdown()
         {
-            this.nautilusDB.Shutdown();
+            //this.nautilusDB.Shutdown();
         }
     }
 }

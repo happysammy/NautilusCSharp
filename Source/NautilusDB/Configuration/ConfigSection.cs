@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Configuration
+namespace NautilusDB.Configuration
 {
     /// <summary>
     /// Provides configuration sections.

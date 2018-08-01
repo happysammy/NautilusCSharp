@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Database.Build
+namespace NautilusDB.Build
 {
     using System.Collections.Generic;
     using Akka.Actor;
@@ -17,6 +17,7 @@ namespace Nautilus.Database.Build
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
+    using Nautilus.Database;
     using Nautilus.Database.Aggregators;
     using Nautilus.Database.Interfaces;
     using Nautilus.Database.Processors;
@@ -28,7 +29,7 @@ namespace Nautilus.Database.Build
     /// <summary>
     /// Provides a factory for building the database.
     /// </summary>
-    public static class DatabaseFactory
+    public static class DatabaseServiceFactory
     {
         /// <summary>
         /// Builds the database and returns an <see cref="IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
@@ -45,7 +46,7 @@ namespace Nautilus.Database.Build
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>A built Nautilus database.</returns>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public static Database Create(
+        public static DatabaseService Create(
             ILoggingAdapter logger,
             IFixClientFactory fixClientFactory,
             IExecutionGatewayFactory gatewayFactory,
@@ -65,13 +66,13 @@ namespace Nautilus.Database.Build
             Validate.NotNull(symbols, nameof(symbols));
             Validate.NotNull(barSpecs, nameof(barSpecs));
 
-            logger.Information(NautilusService.Data, $"Starting {nameof(Database)} builder...");
-            StartupVersionChecker.Run(logger);
+            logger.Information(NautilusService.Data, $"Starting {nameof(DatabaseService)} builder...");
+            BuildVersionChecker.Run(logger);
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
 
-            var setupContainer = new DatabaseSetupContainer(
+            var setupContainer = new ComponentryContainer(
                 clock,
                 guidFactory,
                 new LoggerFactory(logger));
@@ -145,7 +146,7 @@ namespace Nautilus.Database.Build
             fixClient.InitializeGateway(gateway);
             instrumentRepository.CacheAll();
 
-            return new Database(
+            return new DatabaseService(
                 setupContainer,
                 actorSystem,
                 messagingAdapter,
