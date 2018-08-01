@@ -35,9 +35,4 @@
     <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
     <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="MsgPack, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\msgpack.cli\1.0.0\lib\netstandard2.0\MsgPack.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
