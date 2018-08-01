@@ -20,7 +20,4 @@
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Build" />
-  </ItemGroup>
 </Project>
