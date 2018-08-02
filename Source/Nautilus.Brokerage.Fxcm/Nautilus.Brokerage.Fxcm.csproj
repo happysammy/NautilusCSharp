@@ -3,6 +3,16 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Brokerage.Fxcm.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Brokerage.Fxcm.xml</DocumentationFile>
+    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />

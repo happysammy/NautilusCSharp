@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="RabbitMQServer.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RabbitMQServer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,20 +9,22 @@
 namespace Nautilus.RabbitMQ
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
+    using global::RabbitMQ.Client;
+    using global::RabbitMQ.Client.Events;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Core.Validation;
-    using global::RabbitMQ.Client;
-    using global::RabbitMQ.Client.Events;
 
     /// <summary>
     /// Provides a RabbitMQ message broker implementation.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression OK.")]
+    [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable", Justification = "Reviewed. Suppression OK.")]
     public class RabbitMQServer : ActorComponentBusConnectedBase
     {
         private readonly ICommandSerializer commandSerializer;
@@ -30,6 +32,15 @@ namespace Nautilus.RabbitMQ
         private readonly IConnection commandConnection;
         private readonly IConnection eventConnection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMQServer"/> class.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="commandSerializer">The command serializer.</param>
+        /// <param name="eventSerializer">The event serializer.</param>
+        /// <param name="commandConnection">The command connection.</param>
+        /// <param name="eventConnection">The event connection.</param>
         public RabbitMQServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,

@@ -8,6 +8,11 @@
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Serilog.xml</DocumentationFile>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Serilog.xml</DocumentationFile>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Serilog" Version="2.7.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />

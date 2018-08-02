@@ -3,6 +3,16 @@
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.MongoDB.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.MongoDB.xml</DocumentationFile>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     </ItemGroup>

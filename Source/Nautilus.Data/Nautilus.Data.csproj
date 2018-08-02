@@ -8,7 +8,12 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Data.Core.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Data.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Data.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="CsvHelper" Version="7.1.1" />

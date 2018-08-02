@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="RabbitMQServerFactory.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RabbitMQServerFactory.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,8 +9,9 @@
 namespace Nautilus.RabbitMQ
 {
     using Akka.Actor;
-    using Nautilus.Common.Interfaces;
     using global::RabbitMQ.Client;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
 
     /// <summary>
     /// Provides RabbitMQServer instances for the system.
@@ -21,8 +22,13 @@ namespace Nautilus.RabbitMQ
         /// <summary>
         /// Create and return a new instance of the RabbitMQServer.
         /// </summary>
-        /// <returns></returns>
-        public static IActorRef Create(
+        /// <param name="actorSystem">The actor system.</param>
+        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="commandSerializer">The command serializer.</param>
+        /// <param name="eventSerializer">The event serializer.</param>
+        /// <returns>The server endpoint.</returns>
+        public static IEndpoint Create(
             ActorSystem actorSystem,
             IComponentryContainer setupContainer,
             IMessagingAdapter messagingAdapter,
@@ -36,14 +42,14 @@ namespace Nautilus.RabbitMQ
                 Password = RabbitConstants.Password,
             };
 
-            return actorSystem.ActorOf(Props.Create(
+            return new ActorEndpoint(actorSystem.ActorOf(Props.Create(
                 () => new RabbitMQServer(
                         setupContainer,
-                    messagingAdapter,
-                    commandSerializer,
-                    eventSerializer,
-                    factory.CreateConnection(),
-                    factory.CreateConnection())));
+                        messagingAdapter,
+                        commandSerializer,
+                        eventSerializer,
+                        factory.CreateConnection(),
+                        factory.CreateConnection()))));
         }
     }
 }

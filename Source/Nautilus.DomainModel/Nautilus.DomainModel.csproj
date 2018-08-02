@@ -8,6 +8,11 @@
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
+    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
     </ItemGroup>

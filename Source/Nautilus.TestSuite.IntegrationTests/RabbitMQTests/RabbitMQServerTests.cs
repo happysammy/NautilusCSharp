@@ -11,8 +11,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RabbitMQTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Akka.Actor;
     using Akka.TestKit.Xunit2;
+    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
@@ -31,7 +31,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RabbitMQTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
-        private readonly IActorRef serverRef;
+        private readonly IEndpoint serverRef;
 
         public RabbitMQServerTests(ITestOutputHelper output)
         {
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RabbitMQTests
 
             // Act
             Task.Delay(300).Wait();
-            this.serverRef.Tell(orderSubmitted);
+            this.serverRef.Send(orderSubmitted);
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
