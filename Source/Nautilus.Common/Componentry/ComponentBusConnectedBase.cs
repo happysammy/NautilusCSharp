@@ -13,6 +13,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -100,32 +101,7 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
-            switch (message)
-            {
-                case Command command:
-                    var commandMessage = new CommandMessage(
-                        command,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receivers, commandMessage, this.Service);
-                    break;
-
-                case Event @event:
-                    var eventMessage = new EventMessage(
-                        @event,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receivers, eventMessage, this.Service);
-                    break;
-
-                case Document document:
-                    var documentMessage = new DocumentMessage(
-                        document,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receivers, documentMessage, this.Service);
-                    break;
-            }
+            receivers.ForEach(r => this.Send(r, message));
         }
 
         /// <summary>

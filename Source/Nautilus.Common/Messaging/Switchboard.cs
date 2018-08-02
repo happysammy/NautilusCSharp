@@ -48,24 +48,14 @@ namespace Nautilus.Common.Messaging
         /// <param name="envelope">The envelope.</param>
         /// <typeparam name="T">The message type.</typeparam>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
-        public void SendToReceivers<T>(Envelope<T> envelope)
+        public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 
-            foreach (var receiver in envelope.Receivers)
-            {
-                this.RouteEnvelope(receiver, envelope);
-            }
-        }
+            var receiver = envelope.Receiver;
 
-        private void RouteEnvelope<T>(NautilusService receiver, Envelope<T> envelope)
-            where T : Message
-        {
-            Debug.NotNull(receiver, nameof(receiver));
-            Debug.NotNull(envelope, nameof(envelope));
-
-            if (!this.addresses.ContainsKey(receiver))
+            if (!this.addresses.ContainsKey(envelope.Receiver))
             {
                 throw new InvalidOperationException(
                     "Cannot send message (envelope receiver endpoint address unknown).");

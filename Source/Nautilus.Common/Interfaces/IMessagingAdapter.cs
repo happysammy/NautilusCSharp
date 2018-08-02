@@ -27,15 +27,5 @@ namespace Nautilus.Common.Interfaces
         /// <param name="sender">The sender.</param>
         void Send<T>(NautilusService receiver, T message, NautilusService sender)
             where T : Message;
-
-        /// <summary>
-        /// Sends the given message to the given receivers marked from the given sender.
-        /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="receivers">The message receivers.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
-        void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
-            where T : Message;
     }
 }

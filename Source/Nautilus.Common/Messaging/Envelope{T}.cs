@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Core;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -28,24 +27,24 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="Envelope{T}"/> class.
         /// </summary>
-        /// <param name="receivers">The envelope receivers.</param>
+        /// <param name="receiver">The envelope receivers.</param>
         /// <param name="sender">The envelope sender.</param>
         /// <param name="message">The envelopes message.</param>
         /// <param name="envelopeId">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
-            ReadOnlyList<NautilusService> receivers,
+            NautilusService receiver,
             NautilusService sender,
             T message,
             Guid envelopeId,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(receivers, nameof(receivers));
+            Debug.NotNull(receiver, nameof(receiver));
             Debug.NotNull(message, nameof(message));
             Debug.NotDefault(envelopeId, nameof(envelopeId));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Receivers = receivers;
+            this.Receiver = receiver;
             this.Sender = sender;
             this.EnvelopeId = envelopeId;
             this.Timestamp = timestamp;
@@ -55,7 +54,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelope receiver(s).
         /// </summary>
-        public ReadOnlyList<NautilusService> Receivers { get; }
+        public NautilusService Receiver { get; }
 
         /// <summary>
         /// Gets the envelope sender.

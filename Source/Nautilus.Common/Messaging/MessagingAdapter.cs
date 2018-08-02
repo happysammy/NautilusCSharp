@@ -60,7 +60,7 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Sends the given message to the given receiver (<see cref="Envelope{T}"/> marked
+        /// Sends the given message to the given receivers (<see cref="Envelope{T}"/> marked
         /// from the given sender).
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
@@ -74,29 +74,11 @@ namespace Nautilus.Common.Messaging
             Debug.NotNull(message, nameof(message));
             Debug.NotNull(sender, nameof(sender));
 
-            this.Send(new ReadOnlyList<NautilusService>(receiver), message, sender);
-        }
-
-        /// <summary>
-        /// Sends the given message to the given receivers (<see cref="Envelope{T}"/> marked
-        /// from the given sender).
-        /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="receivers">The message receivers.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
-        public void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
-            where T : Message
-        {
-            Debug.NotNull(receivers, nameof(receivers));
-            Debug.NotNull(message, nameof(message));
-            Debug.NotNull(sender, nameof(sender));
-
             switch (message as Message)
             {
                     case CommandMessage commandMessage:
                         var commandEnvelope = new Envelope<CommandMessage>(
-                            receivers,
+                            receiver,
                             sender,
                             commandMessage,
                             message.Id,
@@ -106,7 +88,7 @@ namespace Nautilus.Common.Messaging
 
                     case EventMessage eventMessage:
                         var eventEnvelope = new Envelope<EventMessage>(
-                            receivers,
+                            receiver,
                             sender,
                             eventMessage,
                             message.Id,
@@ -116,7 +98,7 @@ namespace Nautilus.Common.Messaging
 
                     case DocumentMessage serviceMessage:
                         var serviceEnvelope = new Envelope<DocumentMessage>(
-                            receivers,
+                            receiver,
                             sender,
                             serviceMessage,
                             message.Id,

@@ -95,10 +95,7 @@ namespace Nautilus.Common.Messaging
                 this.messageCount++;
                 this.messageStore.Send(envelope);
 
-                foreach (var receiver in envelope.Receivers)
-                {
-                    this.log.Debug($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {receiver}");
-                }
+                this.log.Debug($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
             });
         }
 
@@ -108,7 +105,7 @@ namespace Nautilus.Common.Messaging
 
             this.commandHandler.Execute(() =>
             {
-                this.switchboard.SendToReceivers(envelope);
+                this.switchboard.SendToReceiver(envelope);
 
                 this.LogEnvelope(envelope);
             });
