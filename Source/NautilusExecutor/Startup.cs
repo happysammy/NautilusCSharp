@@ -4,7 +4,7 @@
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace NautilusExecutor
 {
@@ -12,6 +12,8 @@ namespace NautilusExecutor
     using System.IO;
     using System.Linq;
     using Akka.Actor;
+    using global::NautilusExecutor.Build;
+    using global::NautilusExecutor.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -30,8 +32,6 @@ namespace NautilusExecutor
     using ServiceStack;
     using Nautilus.Redis;
     using Nautilus.Serilog;
-    using NautilusExecutor.Build;
-    using NautilusExecutor.Configuration;
     using NodaTime;
     using Serilog.Events;
     using ServiceStack.Redis;
@@ -119,7 +119,7 @@ namespace NautilusExecutor
                 .AsReadOnly();
 
             var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
+            loggingAdapter.Information(NautilusService.Execution, $"Starting {nameof(NautilusExecutor)} builder...");
             BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);

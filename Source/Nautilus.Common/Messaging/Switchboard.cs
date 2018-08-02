@@ -34,7 +34,13 @@ namespace Nautilus.Common.Messaging
             Debug.CollectionNotNullOrEmpty(addresses, nameof(addresses));
 
             this.addresses = new ReadOnlyDictionary<NautilusService, IEndpoint>(addresses);
+            this.Services = new ReadOnlyList<NautilusService>(addresses.Keys);
         }
+
+        /// <summary>
+        /// Gets the switchboards registered services.
+        /// </summary>
+        public ReadOnlyList<NautilusService> Services { get; }
 
         /// <summary>
         /// Sends the given envelope to its receiver address(s).

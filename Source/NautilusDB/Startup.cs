@@ -4,19 +4,25 @@
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
-//--------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace NautilusDB
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
+    using Akka.Actor;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Brokerage.FXCM;
+    using Nautilus.Common.Build;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Logging;
+    using Nautilus.Common.MessageStore;
+    using Nautilus.Common.Messaging;
     using Nautilus.Compression;
     using Nautilus.Core.Validation;
     using Nautilus.Data;
@@ -28,6 +34,7 @@ namespace NautilusDB
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NautilusDB.Build;
+    using NodaTime;
     using Serilog.Events;
     using ServiceStack.Redis;
 
@@ -38,7 +45,7 @@ namespace NautilusDB
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private DataService nautilusDB;
+        private NautilusDatabase database;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
@@ -136,11 +143,28 @@ namespace NautilusDB
                 Resolution.Hour
             }.ToList().AsReadOnly();
 
+            var loggingAdapter = new SerilogLogger(logLevel);
+            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
+            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
+
+            var clock = new Clock(DateTimeZone.Utc);
+            var guidFactory = new GuidFactory();
+
+            var setupContainer = new ComponentryContainer(
+                clock,
+                guidFactory,
+                new LoggerFactory(loggingAdapter));
+
+            var actorSystem = ActorSystem.Create(nameof(Nautilus.Data));
+
+            var messagingAdapter = MessagingServiceFactory.Create(
+                actorSystem,
+                setupContainer,
+                new FakeMessageStore());
+
             var clientManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
-
-            var loggingAdapter = new SerilogLogger(logLevel);
 
             var gatewayFactory = new ExecutionGatewayFactory();
 
@@ -157,8 +181,10 @@ namespace NautilusDB
 
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
 
-            this.nautilusDB = DatabaseServiceFactory.Create(
-                loggingAdapter,
+            var dataServiceAddresses = DataServiceFactory.Create(
+                setupContainer,
+                actorSystem,
+                messagingAdapter,
                 fixClientFactory,
                 gatewayFactory,
                 publisherFactory,
@@ -169,7 +195,13 @@ namespace NautilusDB
                 resolutionsToPersist,
                 barRollingWindow);
 
-            Task.Run(() => this.nautilusDB.Start());
+            var switchboard = new Switchboard(dataServiceAddresses);
+
+            this.database = new NautilusDatabase(
+                actorSystem,
+                setupContainer,
+                messagingAdapter,
+                switchboard);
         }
 
         /// <summary>
@@ -203,7 +235,7 @@ namespace NautilusDB
 
         private void OnShutdown()
         {
-            this.nautilusDB.Shutdown();
+            this.database.Shutdown();
         }
     }
 }

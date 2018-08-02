@@ -10,45 +10,34 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Akka.Actor;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// The main macro object which contains the <see cref="DataService"/> and presents its API.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class DataService : ComponentBusConnectedBase, IDisposable
+    public sealed class DataService : ActorComponentBusConnectedBase
     {
-        private readonly ActorSystem actorSystem;
-        private readonly Dictionary<NautilusService, IEndpoint> addresses;
         private readonly IFixClient fixClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
-        /// <param name="actorSystem">The actor system.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="addresses">The system service addresses.</param>
-        /// <param name="fixClient">The data client.</param>
+        /// <param name="fixClient">The FIX client.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataService(
             IComponentryContainer setupContainer,
-            ActorSystem actorSystem,
-            MessagingAdapter messagingAdapter,
-            Dictionary<NautilusService, IEndpoint> addresses,
+            IMessagingAdapter messagingAdapter,
             IFixClient fixClient)
             : base(
                 NautilusService.Data,
@@ -57,24 +46,17 @@ namespace Nautilus.Data
                 messagingAdapter)
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
-            Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(addresses, nameof(addresses));
+            Validate.NotNull(fixClient, nameof(fixClient));
 
-            this.actorSystem = actorSystem;
-            this.addresses = addresses;
             this.fixClient = fixClient;
 
-            messagingAdapter.Send(new InitializeSwitchboard(
-                new Switchboard(addresses),
-                setupContainer.GuidFactory.NewGuid(),
-                this.TimeNow()));
+            // Command message handling.
+            this.Receive<StartSystem>(msg => this.OnMessage(msg));
+            this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
         }
 
-        /// <summary>
-        /// Start the database.
-        /// </summary>
-        public void Start()
+        private void OnMessage(StartSystem message)
         {
             this.fixClient.Connect();
 
@@ -117,39 +99,9 @@ namespace Nautilus.Data
             }
         }
 
-        /// <summary>
-        /// Gracefully shuts down the <see cref="DataService"/> system.
-        /// </summary>
-        public void Shutdown()
+        private void OnMessage(ShutdownSystem message)
         {
             this.fixClient.Disconnect();
-
-            // Placeholder for the log events (do not refactor away).
-            var actorSystemName = this.actorSystem.Name;
-
-            this.Log.Information($"{actorSystemName} ActorSystem shutting down...");
-
-            var shutdownTasks = this.addresses.Select(
-                address => address.Value.GracefulStop(Duration.FromSeconds(10)))
-                .Cast<Task>()
-                .ToList();
-
-            this.Log.Information($"Waiting for actors to shut down...");
-            Task.WhenAll(shutdownTasks);
-
-            this.actorSystem.Terminate();
-            this.Log.Information($"{actorSystemName} terminated.");
-
-            this.Dispose();
-        }
-
-        /// <summary>
-        /// Disposes the <see cref="DataService"/> object.
-        /// </summary>
-        public void Dispose()
-        {
-            this.actorSystem?.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }
