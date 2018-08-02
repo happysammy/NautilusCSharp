@@ -11,7 +11,6 @@ namespace Nautilus.Fix.MessageFactories
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Interfaces;
     using NodaTime;
-    using QuickFix.FIX44;
 
     /// <summary>
     /// Provides new order single FIX messages.
@@ -21,7 +20,11 @@ namespace Nautilus.Fix.MessageFactories
         /// <summary>
         /// Creates and returns a new new order single message.
         /// </summary>
-        /// <returns>A <see cref="NewOrderSingle"/> message.</returns>
+        /// <param name="brokerSymbol">The brokers symbol.</param>
+        /// <param name="accountNumber">The account number.</param>
+        /// <param name="order">The order to submit.</param>
+        /// <param name="timeNow">The time now.</param>
+        /// <returns>The created new order single message.</returns>
         public static QuickFix.FIX44.NewOrderSingle Create(
             string brokerSymbol,
             string accountNumber,
@@ -36,7 +39,6 @@ namespace Nautilus.Fix.MessageFactories
             var message = new QuickFix.FIX44.NewOrderSingle();
 
             // TODO
-
             return message;
         }
     }

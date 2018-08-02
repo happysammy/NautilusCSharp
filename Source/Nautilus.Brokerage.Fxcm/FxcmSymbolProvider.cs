@@ -90,22 +90,22 @@ namespace Nautilus.Brokerage.FXCM
         /// <summary>
         /// Returns the Nautilus symbol <see cref="string"/> from the given FXCM symbol.
         /// </summary>
-        /// <param name="brokerSymbol">The FXCM symbol.</param>
-        /// <returns> A <see cref="string"/>.</returns>
-        public static QueryResult<string> GetNautilusSymbol(string brokerSymbol)
+        /// <param name="fxcmSymbol">The FXCM symbol.</param>
+        /// <returns>The <see cref="Nautilus"/> symbol.</returns>
+        public static QueryResult<string> GetNautilusSymbol(string fxcmSymbol)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotNull(fxcmSymbol, nameof(fxcmSymbol));
 
-            return Symbols.ContainsKey(brokerSymbol)
-                 ? QueryResult<string>.Ok(Symbols[brokerSymbol])
-                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {brokerSymbol}");
+            return Symbols.ContainsKey(fxcmSymbol)
+                 ? QueryResult<string>.Ok(Symbols[fxcmSymbol])
+                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {fxcmSymbol}");
         }
 
         /// <summary>
         /// Returns the FXCM symbol <see cref="string"/> from the given Nautilus symbol.
         /// </summary>
-        /// <param name="nautilusSymbol">The nautilus symbol.</param>
-        /// <returns>A <see cref="string"/>.</returns>
+        /// <param name="nautilusSymbol">The Nautilus symbol.</param>
+        /// <returns>The FXCM symbol.</returns>
         public static QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
         {
             Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));
@@ -116,7 +116,7 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns a read only list of all broker symbols.
+        /// Returns a read only list of all Nautilus symbols.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
         public static IReadOnlyList<Symbol> GetAllSymbols()
@@ -132,7 +132,7 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns a read only list of all broker symbols.
+        /// Returns a read only list of all FXCM symbols.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
         public static IReadOnlyList<string> GetAllBrokerSymbols()

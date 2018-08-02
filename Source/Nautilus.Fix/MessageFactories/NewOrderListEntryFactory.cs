@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="NewOrderListEntryStopFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NewOrderListEntryFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -20,9 +20,9 @@ namespace Nautilus.Fix.MessageFactories
     public static class NewOrderListEntryFactory
     {
         /// <summary>
-        /// Creates and returns a new order list entry message for stop entries.
+        /// Creates and returns a new order list entry FIX message with entry and stop orders.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol</param>
+        /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
@@ -87,9 +87,9 @@ namespace Nautilus.Fix.MessageFactories
         }
 
         /// <summary>
-        /// Creates and returns a new order list entry message for limit entries.
+        /// Creates and returns a new order list entry FIX message with entry, stop and limit orders.
         /// </summary>
-        /// <param name="brokerSymbol">The brokers symbol</param>
+        /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="accountNumber">The FIX account number.</param>
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>

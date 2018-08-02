@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FxcmFixClient.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixClient.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,8 +9,8 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.Fix.Interfaces;
@@ -72,7 +72,7 @@ namespace Nautilus.Fix
         public Broker Broker { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the FIX session is connected.
+        /// Gets a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsConnected => this.IsFixConnected;

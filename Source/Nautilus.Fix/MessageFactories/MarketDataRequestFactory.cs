@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataRequestSubscriptionFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MarketDataRequestFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -19,7 +19,7 @@ namespace Nautilus.Fix.MessageFactories
     public static class MarketDataRequestFactory
     {
         /// <summary>
-        /// Creates and returns a new market data request message.
+        /// Creates and returns a new market data request FIX message.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <param name="timeNow">The time now.</param>

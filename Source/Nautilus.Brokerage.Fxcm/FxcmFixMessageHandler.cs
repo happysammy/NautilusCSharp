@@ -106,30 +106,30 @@ namespace Nautilus.Brokerage.FXCM
                         // Symbol is not set so continue to next item.
                         continue;
                     }
+                    var fxcmSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
-                    var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(group.GetField(Tags.Symbol));
+                    var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
-                        throw new InvalidOperationException($"Cannot find symbol for {group.GetField(Tags.Symbol)}");
+                        throw new InvalidOperationException(symbolQuery.Message);
                     }
-
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
+
                     var symbolId = new InstrumentId(symbol.ToString());
-                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     //var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002));
 
-                    var tickValueQuery = FxcmTickValueProvider.GetTickValue(brokerSymbol.ToString());
+                    var tickValueQuery = FxcmTickValueProvider.GetTickValue(fxcmSymbol.Value);
                     if (tickValueQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
                     }
                     var tickValue = tickValueQuery.Value;
 
-                    var targetDirectSpreadQuery = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(brokerSymbol.ToString());
+                    var targetDirectSpreadQuery = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(fxcmSymbol.Value);
                     if (targetDirectSpreadQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
@@ -149,7 +149,7 @@ namespace Nautilus.Brokerage.FXCM
                     var instrument = new Instrument(
                         symbol,
                         symbolId,
-                        brokerSymbol,
+                        fxcmSymbol,
                         quoteCurrency,
                         securityType,
                         tickDecimals,
@@ -272,11 +272,19 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
+                if (!message.IsSetField(Tags.Symbol))
+                {
+                    // Symbol is not set so return.
+                    return;
+                }
                 var fxcmSymbol = message.GetField(Tags.Symbol);
 
-                var symbol = message.IsSetField(Tags.Symbol)
-                    ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
-                    : "NONE";
+                var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol);
+                if (symbolQuery.IsFailure)
+                {
+                    throw new InvalidOperationException(symbolQuery.Message);
+                }
+                var symbol = symbolQuery.Value;
 
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
@@ -311,9 +319,9 @@ namespace Nautilus.Brokerage.FXCM
                 var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
                 var orderId = message.ClOrdID.ToString();
                 var brokerOrderId = message.OrderID.ToString();
-                var fxcmcode = message.GetField(9025);
+                var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
-                var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmcode})";
+                var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmCode})";
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.executionGateway.OnOrderCancelReject(

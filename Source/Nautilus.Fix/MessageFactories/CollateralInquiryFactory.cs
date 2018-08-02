@@ -20,7 +20,7 @@ namespace Nautilus.Fix.MessageFactories
     public static class CollateralInquiryFactory
     {
         /// <summary>
-        /// Creates and returns a new collecteral inquiry message.
+        /// Creates and returns a new collateral inquiry FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
         /// <param name="tradingSessionId">The brokers name.</param>

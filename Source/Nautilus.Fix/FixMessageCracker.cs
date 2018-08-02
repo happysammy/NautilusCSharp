@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FixComponentBase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixMessageCracker.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,11 +9,12 @@
 namespace Nautilus.Fix
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
@@ -26,6 +27,8 @@ namespace Nautilus.Fix
     /// <summary>
     /// The base class for all FIX protocol components.
     /// </summary>
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Reviewed. Access OK.")]
+    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Reviewed. Access OK.")]
     public class FixMessageCracker : MessageCracker, IApplication
     {
         private readonly IZonedClock clock;
@@ -39,13 +42,13 @@ namespace Nautilus.Fix
         private Session sessionMd;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBase"/> class.
+        /// Initializes a new instance of the <see cref="FixMessageCracker"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="tickProcessor">The tick data processor.</param>
-        /// <param name="fixMessageHandler">The FIX message handler</param>
+        /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
-        /// <param name="credentials">The FIX account credentials</param>
+        /// <param name="credentials">The FIX account credentials.</param>
         protected FixMessageCracker(
             IComponentryContainer container,
             ITickProcessor tickProcessor,
@@ -71,17 +74,24 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the components logger.
         /// </summary>
-        protected ILogger Log => this.logger;
+        public ILogger Log => this.logger;
 
         /// <summary>
         /// Gets the components FIX message handler.
         /// </summary>
-        protected IFixMessageHandler FixMessageHandler { get; }
+        public IFixMessageHandler FixMessageHandler { get; }
 
         /// <summary>
         /// Gets the components FIX message router.
         /// </summary>
-        protected IFixMessageRouter FixMessageRouter { get; }
+        public IFixMessageRouter FixMessageRouter { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the FIX session is connected.
+        /// </summary>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool IsFixConnected => this.session.IsLoggedOn
+                                         && this.sessionMd.IsLoggedOn;
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -89,7 +99,7 @@ namespace Nautilus.Fix
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
         /// </returns>
-        protected ZonedDateTime TimeNow()
+        public ZonedDateTime TimeNow()
         {
             return this.clock.TimeNow();
         }
@@ -98,7 +108,7 @@ namespace Nautilus.Fix
         /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid()
+        public Guid NewGuid()
         {
             return this.guidFactory.NewGuid();
         }
@@ -107,17 +117,10 @@ namespace Nautilus.Fix
         /// Passes the given <see cref="Action"/> to the command handler for execution.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        protected void Execute(Action action)
+        public void Execute(Action action)
         {
             this.commandHandler.Execute(action);
         }
-
-        /// <summary>
-        /// Returns a value indicating whether the FIX session is connected.
-        /// </summary>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsFixConnected => this.session.IsLoggedOn
-                                      && this.sessionMd.IsLoggedOn;
 
         /// <summary>
         /// Connects to the FIX session.
@@ -128,7 +131,8 @@ namespace Nautilus.Fix
             {
                 var settings = new SessionSettings("fix_fxcm.cfg");
                 var storeFactory = new FileStoreFactory(settings);
-                //var logFactory = new ScreenLogFactory(settings);
+
+                // var logFactory = new ScreenLogFactory(settings);
                 this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
                 this.Log.Information("Starting initiator...");

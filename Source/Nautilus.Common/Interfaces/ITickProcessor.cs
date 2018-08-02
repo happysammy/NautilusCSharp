@@ -22,7 +22,7 @@ namespace Nautilus.Common.Interfaces
         /// data aggregation controller for the system.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
-        /// <param name="venue">The tick exchange.</param>
+        /// <param name="venue">The tick venue.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
         /// <param name="decimals">The decimal precision of the tick prices.</param>

@@ -435,7 +435,6 @@ namespace Nautilus.Fix
                 "yyyyMMdd-HH:mm:ss",
                 DateTimeZoneProviders.Tzdb);
 
-
         /// <summary>
         /// The get date time from market data string.
         /// </summary>
