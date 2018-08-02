@@ -12,6 +12,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -24,6 +26,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account Create()
         {
             var account = new Account(
+                EntityIdFactory.Account(Broker.InteractiveBrokers, "123456789"),
                 Broker.InteractiveBrokers,
                 "123456789",
                 "my_username",
@@ -32,6 +35,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
+                EntityIdFactory.Account(Broker.InteractiveBrokers, "123456789"),
                 Broker.InteractiveBrokers,
                 "123456789",
                 CurrencyCode.USD,
@@ -53,6 +57,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static Account ZeroCash()
         {
             var account = new Account(
+                EntityIdFactory.Account(Broker.InteractiveBrokers, "123456789"),
                 Broker.InteractiveBrokers,
                 "123456789",
                 "my_username",
@@ -61,6 +66,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
 
             var accountEventMessage = new AccountEvent(
+                EntityIdFactory.Account(Broker.InteractiveBrokers, "123456789"),
                 Broker.InteractiveBrokers,
                 "123456789",
                 CurrencyCode.USD,

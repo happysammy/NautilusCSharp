@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -199,6 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new AccountEvent(
+                EntityIdFactory.Account(Broker.InteractiveBrokers, "123456789"),
                 Broker.InteractiveBrokers,
                 "123456789",
                 CurrencyCode.USD,

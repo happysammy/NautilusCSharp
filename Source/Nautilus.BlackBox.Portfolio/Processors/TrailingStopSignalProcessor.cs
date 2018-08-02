@@ -79,7 +79,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                             if (IsValidSignalForStopLoss(tradeUnit, forUnitStopLoss, signal))
                             {
                                 var stopLossOrder = tradeUnit.StopLoss;
-                                var modifiedOrderId = EntityIdFactory.ModifiedOrderId(
+                                var modifiedOrderId = EntityIdFactory.ModifiedOrder(
                                     stopLossOrder.Id as OrderId,
                                     stopLossOrder.IdCount);
                                 stopLossOrder.AddModifiedOrderId(modifiedOrderId);

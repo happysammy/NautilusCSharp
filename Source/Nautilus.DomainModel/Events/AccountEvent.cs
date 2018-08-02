@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -25,8 +26,9 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountEvent" /> class.
         /// </summary>
+        /// <param name="accountId">The account identifier.</param>
         /// <param name="broker">The account broker.</param>
-        /// <param name="accountNumber">The account identifier.</param>
+        /// <param name="accountNumber">The account number.</param>
         /// <param name="currency">The currency of the account.</param>
         /// <param name="cashBalance">The account cash balance.</param>
         /// <param name="cashStartDay">The account cash start day.</param>
@@ -38,6 +40,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The account event identifier.</param>
         /// <param name="eventTimestamp">The account event timestamp.</param>
         public AccountEvent(
+            AccountId accountId,
             Broker broker,
             string accountNumber,
             CurrencyCode currency,
@@ -62,6 +65,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
+            this.AccountId = accountId;
             this.Broker = broker;
             this.AccountNumber = accountNumber;
             this.Currency = currency;
@@ -73,6 +77,11 @@ namespace Nautilus.DomainModel.Events
             this.MarginUsedMaintenance = marginUsedMaintenance;
             this.MarginCallStatus = marginCallStatus;
         }
+
+        /// <summary>
+        /// Gets the events account identifier.
+        /// </summary>
+        public AccountId AccountId { get; }
 
         /// <summary>
         /// Gets the events broker name.

@@ -324,7 +324,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var modifiedOrderId = EntityIdFactory.ModifiedOrderId(order.Id, order.IdCount);
+            var modifiedOrderId = EntityIdFactory.ModifiedOrder(order.Id, order.IdCount);
 
             // Act
             order.AddModifiedOrderId(modifiedOrderId);

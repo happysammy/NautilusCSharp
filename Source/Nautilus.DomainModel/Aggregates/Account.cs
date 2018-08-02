@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -28,6 +28,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.
         /// </summary>
+        /// <param name="accountId">The account identifier.</param>
         /// <param name="broker">The broker name.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="username">The account username.</param>
@@ -37,26 +38,27 @@ namespace Nautilus.DomainModel.Aggregates
         /// <exception cref="ValidationException">Throws if any class argument is null, or if
         /// any struct argument is the default value.</exception>
         public Account(
+            AccountId accountId,
             Broker broker,
+            string accountNumber,
             string username,
             string password,
-            string accountNumber,
             CurrencyCode currency,
             ZonedDateTime timestamp)
             : base(
-                EntityIdFactory.Account(broker, accountNumber),
+                accountId,
                 timestamp)
         {
-            Validate.NotNull(accountNumber, nameof(accountNumber));
+            Validate.NotNull(accountId, nameof(accountId));
             Validate.NotNull(username, nameof(username));
             Validate.NotNull(password, nameof(password));
             Validate.NotDefault(currency, nameof(currency));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
+            this.AccountNumber = accountNumber;
             this.Username = username;
             this.Password = password;
-            this.AccountNumber = accountNumber;
             this.Currency = currency;
             this.CashBalance = Money.Zero(this.Currency);
             this.CashStartDay = Money.Zero(this.Currency);
@@ -65,6 +67,11 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedLiquidation = Money.Zero(this.Currency);
             this.LastUpdated = timestamp;
         }
+
+        /// <summary>
+        /// Gets the account identifier.
+        /// </summary>
+        public new AccountId Id => base.Id as AccountId;
 
         /// <summary>
         /// Gets the accounts broker name.
@@ -151,7 +158,12 @@ namespace Nautilus.DomainModel.Aggregates
 
             if (accountEvent is null)
             {
-                return CommandResult.Fail($"Command Failure (Event not recognized by {this}).");
+                return CommandResult.Fail($"Event not recognized by {this}).");
+            }
+
+            if (accountEvent.AccountId != this.Id)
+            {
+                return CommandResult.Fail($"Event account identifier does not match {this}).");
             }
 
             this.CashBalance = accountEvent.CashBalance;
@@ -167,6 +179,12 @@ namespace Nautilus.DomainModel.Aggregates
 
             return CommandResult.Ok();
         }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Account"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(Account)}({this.Id})";
 
         private Money GetFreeEquity()
         {

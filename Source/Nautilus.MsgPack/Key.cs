@@ -201,6 +201,21 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Gets the key string.
         /// </summary>
+        internal static string Broker => "broker";
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string AccountId => "account_id";
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string AccountNumber => "account_number";
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
         internal static string Currency => "currency";
 
         /// <summary>

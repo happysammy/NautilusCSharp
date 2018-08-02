@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.MsgPack;
@@ -310,6 +311,35 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(filled, unpacked);
+            this.output.WriteLine(Hex.ToHexString(packed));
+        }
+
+        [Fact]
+        internal void Test_can_serialize_and_deserialize_account_event()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var accountEvent = new AccountEvent(
+                EntityIdFactory.Account(Broker.FXCM, "123456"),
+                Broker.FXCM,
+                "123456",
+                CurrencyCode.USD,
+                Money.Create(100000, CurrencyCode.USD),
+                Money.Create(100000, CurrencyCode.USD),
+                Money.Zero(CurrencyCode.USD),
+                Money.Zero(CurrencyCode.USD),
+                Money.Zero(CurrencyCode.USD),
+                0m,
+                "",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(accountEvent);
+            var unpacked = serializer.Deserialize(packed) as AccountEvent;
+
+            // Assert
+            Assert.Equal(accountEvent, unpacked);
             this.output.WriteLine(Hex.ToHexString(packed));
         }
     }

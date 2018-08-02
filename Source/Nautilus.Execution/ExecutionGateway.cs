@@ -18,6 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -328,6 +329,7 @@ namespace Nautilus.Execution
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
+                    EntityIdFactory.Account(this.fixClient.Broker, accountNumber),
                     this.fixClient.Broker,
                     accountNumber,
                     this.AccountCurrency,

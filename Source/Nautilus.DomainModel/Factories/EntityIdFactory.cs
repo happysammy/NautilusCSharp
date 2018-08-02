@@ -44,7 +44,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="orderId">The modified order identifier.</param>
         /// <param name="orderIdCount">The order identifier count.</param>
         /// <returns>A <see cref="OrderId"/>.</returns>
-        public static OrderId ModifiedOrderId(OrderId orderId, int orderIdCount)
+        public static OrderId ModifiedOrder(OrderId orderId, int orderIdCount)
         {
             Debug.NotNull(orderId, nameof(orderId));
             Debug.Int32NotOutOfRange(orderIdCount, nameof(orderIdCount), 0, int.MaxValue);

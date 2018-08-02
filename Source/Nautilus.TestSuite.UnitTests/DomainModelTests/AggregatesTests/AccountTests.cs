@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -37,10 +38,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var account = new Account(
+                EntityIdFactory.Account(Broker.FXCM, "123456789"),
                 Broker.FXCM,
+                "123456789",
                 "some username",
                 "some password",
-                "123456789",
                 this.currency,
                 this.clock.TimeNow());
 
@@ -56,6 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
+                EntityIdFactory.Account(Broker.FXCM, "123456789"),
                 Broker.FXCM,
                 "123456789",
                 "some username",
@@ -64,9 +67,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
+                EntityIdFactory.Account(Broker.FXCM, "123456789"),
                 Broker.FXCM,
                 "123456789",
-                CurrencyCode.USD,
+                this.currency,
                 Money.Create(150000m, this.currency),
                 Money.Create(150000m, this.currency),
                 Money.Zero(this.currency),
@@ -95,6 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
+                EntityIdFactory.Account(Broker.FXCM, "123456789"),
                 Broker.FXCM,
                 "123456789",
                 "some username",
@@ -103,6 +108,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
+                EntityIdFactory.Account(Broker.FXCM, "123456789"),
                 Broker.FXCM,
                 "123456789",
                 CurrencyCode.USD,

@@ -19,6 +19,7 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
     /// Provides an events binary serializer for the Message Pack specification.
@@ -57,13 +58,19 @@ namespace Nautilus.MsgPack
                     return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
                     {
                         { new MessagePackObject(Key.EventType), AccountEvent },
-                        { new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.ToString() },
-                        { new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.ToString() },
-                        { new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.ToString() },
-                        { new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.ToString() },
-                        { new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.ToString() },
+                        { new MessagePackObject(Key.AccountId), accountEvent.AccountId.ToString() },
+                        { new MessagePackObject(Key.Broker), accountEvent.Broker.ToString() },
+                        { new MessagePackObject(Key.AccountNumber), accountEvent.AccountNumber },
+                        { new MessagePackObject(Key.Currency), accountEvent.Currency.ToString() },
+                        { new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.Value.ToString(CultureInfo.InvariantCulture) },
+                        { new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.Value.ToString(CultureInfo.InvariantCulture) },
+                        { new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.Value.ToString(CultureInfo.InvariantCulture) },
+                        { new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture) },
+                        { new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture) },
                         { new MessagePackObject(Key.MarginRatio), accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture) },
                         { new MessagePackObject(Key.MarginCallStatus), accountEvent.MarginCallStatus.ToString() },
+                        { new MessagePackObject(Key.EventId), accountEvent.Id.ToString() },
+                        { new MessagePackObject(Key.EventTimestamp), accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
 
                 default: throw new InvalidOperationException(
@@ -83,10 +90,33 @@ namespace Nautilus.MsgPack
 
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
 
+            var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
+            var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
+
             switch (unpacked[Key.EventType].ToString())
             {
                 case OrderEvent:
-                    return DeserializeOrderEvent(unpacked);
+                    return DeserializeOrderEvent(
+                        eventId,
+                        eventTimestamp,
+                        unpacked);
+
+                case AccountEvent:
+                    var currency = unpacked[Key.Currency].ToString().ToEnum<CurrencyCode>();
+                    return new AccountEvent(
+                        new AccountId(unpacked[Key.AccountId].ToString()),
+                        unpacked[Key.Broker].ToString().ToEnum<Broker>(),
+                        unpacked[Key.AccountNumber].ToString(),
+                        currency,
+                        Money.Create(Convert.ToDecimal(unpacked[Key.CashBalance].ToString()), currency),
+                        Money.Create(Convert.ToDecimal(unpacked[Key.CashStartDay].ToString()), currency),
+                        Money.Create(Convert.ToDecimal(unpacked[Key.CashActivityDay].ToString()), currency),
+                        Money.Create(Convert.ToDecimal(unpacked[Key.MarginUsedLiquidation].ToString()), currency),
+                        Money.Create(Convert.ToDecimal(unpacked[Key.MarginUsedMaintenance].ToString()), currency),
+                        Convert.ToDecimal(unpacked[Key.MarginRatio].ToString()),
+                        unpacked[Key.MarginCallStatus].ToString(),
+                        eventId,
+                        eventTimestamp);
 
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the event (unrecognized byte[] pattern).");
@@ -187,12 +217,13 @@ namespace Nautilus.MsgPack
             return MsgPackSerializer.Serialize(package.Freeze());
         }
 
-        private static OrderEvent DeserializeOrderEvent(MessagePackObjectDictionary unpacked)
+        private static OrderEvent DeserializeOrderEvent(
+            Guid eventId,
+            ZonedDateTime eventTimestamp,
+            MessagePackObjectDictionary unpacked)
         {
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
             var orderId = new OrderId(unpacked[Key.OrderId].ToString());
-            var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
-            var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
 
             switch (unpacked[Key.OrderEvent].ToString())
             {
