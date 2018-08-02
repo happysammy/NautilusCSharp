@@ -43,7 +43,7 @@ namespace NautilusExecutor
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private IEndpoint executionService;
+        private NautilusExecutor executionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core

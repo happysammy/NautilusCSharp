@@ -77,6 +77,14 @@ namespace Nautilus.Common.Componentry
                         this.TimeNow());
                     this.messagingAdapter.Send(receiver, eventMessage, this.Service);
                     break;
+
+                case Document document:
+                    var documentMessage = new DocumentMessage(
+                        document,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receiver, documentMessage, this.Service);
+                    break;
             }
         }
 
@@ -108,6 +116,14 @@ namespace Nautilus.Common.Componentry
                         this.NewGuid(),
                         this.TimeNow());
                     this.messagingAdapter.Send(receivers, eventMessage, this.Service);
+                    break;
+
+                case Document document:
+                    var documentMessage = new DocumentMessage(
+                        document,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.messagingAdapter.Send(receivers, documentMessage, this.Service);
                     break;
             }
         }

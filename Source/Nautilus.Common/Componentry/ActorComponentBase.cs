@@ -141,7 +141,23 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(envelope, nameof(envelope));
 
             var message = envelope.Open(this.clock.TimeNow());
-            this.Self.Tell(message);
+
+            switch (message)
+            {
+                case CommandMessage commandMessage:
+                    this.Self.Tell(commandMessage.Command);
+                    break;
+
+                case EventMessage eventMessage:
+                    this.Self.Tell(eventMessage.Event);
+                    break;
+
+                case DocumentMessage documentMessage:
+                    this.Self.Tell(documentMessage.Document);
+                    break;
+
+                default: throw new InvalidOperationException($"Received invalid message {message}.");
+            }
 
             this.Log.Debug($"Received {message}");
         }

@@ -11,6 +11,8 @@ namespace NautilusDB
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Akka.Actor;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -45,7 +47,7 @@ namespace NautilusDB
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private NautilusDatabase database;
+        private NautilusDatabase dataService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
@@ -147,6 +149,8 @@ namespace NautilusDB
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
             BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
+            var actorSystem = ActorSystem.Create(nameof(NautilusDB));
+
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
 
@@ -154,8 +158,6 @@ namespace NautilusDB
                 clock,
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
-
-            var actorSystem = ActorSystem.Create(nameof(Nautilus.Data));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
@@ -197,11 +199,16 @@ namespace NautilusDB
 
             var switchboard = new Switchboard(dataServiceAddresses);
 
-            this.database = new NautilusDatabase(
+            this.dataService = new NautilusDatabase(
                 actorSystem,
                 setupContainer,
                 messagingAdapter,
                 switchboard);
+
+            // Allow system to build.
+            Task.Delay(1000).Wait();
+
+            this.dataService.Start();
         }
 
         /// <summary>
@@ -235,7 +242,7 @@ namespace NautilusDB
 
         private void OnShutdown()
         {
-            this.database.Shutdown();
+            this.dataService.Shutdown();
         }
     }
 }

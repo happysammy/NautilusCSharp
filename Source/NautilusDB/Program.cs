@@ -8,6 +8,7 @@
 
 namespace NautilusDB
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Serilog;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore;
@@ -18,7 +19,7 @@ namespace NautilusDB
     /// <summary>
     /// The main entry point for the program.
     /// </summary>
-    // ReSharper disable once ClassNeverInstantiated.Global
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class Program
     {
         /// <summary>

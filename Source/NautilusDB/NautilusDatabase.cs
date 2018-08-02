@@ -58,6 +58,11 @@ namespace NautilusDB
             messagingAdapter.Send(initializeSwitchboard);
         }
 
+        public void Start()
+        {
+            this.Send(NautilusService.Data, new StartSystem(this.NewGuid(), this.TimeNow()));
+        }
+
         /// <summary>
         /// Shuts down the <see cref="NautilusDatabase"/> system.
         /// </summary>
