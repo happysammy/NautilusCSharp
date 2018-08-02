@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-    <Title>QuickFIX/n</Title>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTitle>QuickFIX/n</PackageTitle>
-    <Description>Open-source C# implementation of QuickFIX</Description>
-    <Copyright>QuickFIXn.org 2011-now</Copyright>
-    <Authors>Connamara Systems, LLC and QuickFIX/n contributors</Authors>
-    <Version>1.8.0</Version>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <RootNamespace>QuickFix</RootNamespace>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="FIX44.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+        <Title>QuickFIX/n</Title>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageTitle>QuickFIX/n</PackageTitle>
+        <Description>Open-source C# implementation of QuickFIX</Description>
+        <Copyright>QuickFIXn.org 2011-now</Copyright>
+        <Authors>Connamara Systems, LLC and QuickFIX/n contributors</Authors>
+        <Version>1.8.0</Version>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <RootNamespace>QuickFix</RootNamespace>
+        <Platforms>AnyCPU;x64</Platforms>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Include="FIX44.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

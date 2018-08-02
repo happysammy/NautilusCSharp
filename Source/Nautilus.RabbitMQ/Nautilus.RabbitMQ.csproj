@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
-
     <ItemGroup>
-      <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
+        <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-      <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-      <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     </ItemGroup>
-
 </Project>

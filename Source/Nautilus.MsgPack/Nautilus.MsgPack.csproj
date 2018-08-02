@@ -9,11 +9,11 @@
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.MsgPack.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="MsgPack.Cli" Version="1.0.0" />
+        <PackageReference Include="MsgPack.Cli" Version="1.0.0" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-      <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />

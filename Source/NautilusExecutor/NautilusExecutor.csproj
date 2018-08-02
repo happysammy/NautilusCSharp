@@ -15,21 +15,21 @@
         <PackageReference Include="ServiceStack" Version="5.1.0" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
-      <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-      <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
-      <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
-      <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
+        <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
+        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+        <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
+        <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
+        <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="config.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="FIXFXCM10.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="fix_fxcm.cfg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <Content Include="config.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="FIXFXCM10.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="fix_fxcm.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>

@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Redis.xml</DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="ServiceStack.Redis" Version="5.1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
-    <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
-    <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Redis.xml</DocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+        <PackageReference Include="ServiceStack.Redis" Version="5.1.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
+        <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
+        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
+    </ItemGroup>
 </Project>

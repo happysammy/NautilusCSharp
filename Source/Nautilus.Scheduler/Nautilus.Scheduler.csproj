@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Scheduler.xml</DocumentationFile>
     </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Akka" Version="1.3.8" />
-    <PackageReference Include="Quartz" Version="3.0.6" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Akka" Version="1.3.8" />
+        <PackageReference Include="Quartz" Version="3.0.6" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>

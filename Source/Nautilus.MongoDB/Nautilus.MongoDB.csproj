@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    </ItemGroup>
 </Project>
