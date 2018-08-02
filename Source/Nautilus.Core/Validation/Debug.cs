@@ -166,7 +166,7 @@ namespace Nautilus.Core.Validation
         /// <param name="paramName">The parameter name.</param>
         /// <param name="dictionary">The dictionary.</param>
         /// <typeparam name="T1">The type of the keys.</typeparam>
-        /// <typeparam name="T2">The type of the values</typeparam>
+        /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ValidationException">Throws if the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]

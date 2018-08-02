@@ -14,8 +14,8 @@ namespace Nautilus.Data.Integrity.Checkers
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using NodaTime;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
     using ServiceStack;
 
     /// <summary>
@@ -115,10 +115,7 @@ namespace Nautilus.Data.Integrity.Checkers
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
-                anomalyList,
-                $"Data integrity check for {barType} from " +
-                $"{fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} " +
-                $"passed with no data anomalies");
+                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} passed with no data anomalies");
         }
 
         private static QueryResult<List<string>> FailResult(
@@ -128,10 +125,7 @@ namespace Nautilus.Data.Integrity.Checkers
             ZonedDateTime toDateTime)
         {
             return QueryResult<List<string>>.Ok(
-                anomalyList,
-                $"Data integrity check for {barType} from " +
-                $"{fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} " +
-                $"failed with {anomalyList.Count} anomalies");
+                anomalyList, $"Data integrity check for {barType} from {fromDateTime.ToIsoString()} to {toDateTime.ToIsoString()} failed with {anomalyList.Count} anomalies");
         }
     }
 }

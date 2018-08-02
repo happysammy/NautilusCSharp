@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataKey.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="TickDataKey.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -20,7 +20,7 @@ namespace Nautilus.Data.Keys
     public struct TickDataKey : IEquatable<TickDataKey>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarDataKey"/> struct. The bar period
+        /// Initializes a new instance of the <see cref="TickDataKey"/> struct. The bar period
         /// must be 1 for a valid key.
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
@@ -64,7 +64,6 @@ namespace Nautilus.Data.Keys
         public bool Equals(TickDataKey other)
         {
             // Do not add null check (causes error).
-
             return this.Symbol.Equals(other.Symbol) &&
                    this.DateKey.Equals(other.DateKey);
         }

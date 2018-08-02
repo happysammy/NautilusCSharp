@@ -11,7 +11,7 @@ namespace Nautilus.Core.Model
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.Annotations;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// The base class for all trading domain value objects.

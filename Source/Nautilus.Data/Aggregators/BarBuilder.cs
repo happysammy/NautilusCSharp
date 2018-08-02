@@ -114,7 +114,7 @@ namespace Nautilus.Data.Aggregators
         {
             Debug.NotDefault(closeTime, nameof(closeTime));
 
-           return new Bar(
+            return new Bar(
                 this.Open,
                 this.High,
                 this.Low,

@@ -44,6 +44,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The order is in force until the specified date and time.
         /// </summary>
-        GTD = 5
+        GTD = 5,
     }
 }

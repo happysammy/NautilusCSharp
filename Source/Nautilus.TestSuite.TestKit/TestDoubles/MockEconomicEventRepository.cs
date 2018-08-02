@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Entities;
 
     public class MockEconomicEventRepository : IRepository<EconomicEvent>

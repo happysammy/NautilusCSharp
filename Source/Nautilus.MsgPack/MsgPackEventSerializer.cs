@@ -101,7 +101,7 @@ namespace Nautilus.MsgPack
                 { new MessagePackObject(Key.Symbol), orderEvent.Symbol.ToString() },
                 { new MessagePackObject(Key.OrderId), orderEvent.OrderId.Value },
                 { new MessagePackObject(Key.EventId), orderEvent.Id.ToString() },
-                { new MessagePackObject(Key.EventTimestamp), orderEvent.Timestamp.ToIsoString() }
+                { new MessagePackObject(Key.EventTimestamp), orderEvent.Timestamp.ToIsoString() },
             };
 
             switch (orderEvent)

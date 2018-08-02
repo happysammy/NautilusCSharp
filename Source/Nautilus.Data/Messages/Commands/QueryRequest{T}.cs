@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataQueryRequest.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="QueryRequest{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,7 +17,7 @@ namespace Nautilus.Data.Messages.Commands
     /// <summary>
     /// A query request for type T from and to the given datetime(s).
     /// </summary>
-    /// <typeparam name="T">The query type.</typeparam>
+    /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
     public sealed class QueryRequest<T> : Command
     {
@@ -47,6 +47,7 @@ namespace Nautilus.Data.Messages.Commands
             this.FromDateTime = fromDateTime;
             this.ToDateTime = toDateTime;
         }
+
         /// <summary>
         /// Gets the query messages data type.
         /// </summary>

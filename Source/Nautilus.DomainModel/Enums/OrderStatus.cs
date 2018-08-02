@@ -66,6 +66,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Expired order status.
         /// </summary>
-        Expired = 10
+        Expired = 10,
     }
 }

@@ -30,6 +30,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// A sell order side.
         /// </summary>
-        SELL = 2
+        SELL = 2,
     }
 }

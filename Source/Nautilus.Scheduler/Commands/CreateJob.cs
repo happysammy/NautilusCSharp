@@ -26,7 +26,7 @@ namespace Nautilus.Scheduler.Commands
         /// Initializes a new instance of the <see cref="CreateJob"/> class.
         /// </summary>
         /// <param name="destination">The actor to send the message to.</param>
-        /// <param name="message">The job to message to send./</param>
+        /// <param name="message">The job to message to send.</param>
         /// <param name="trigger">The job trigger.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>

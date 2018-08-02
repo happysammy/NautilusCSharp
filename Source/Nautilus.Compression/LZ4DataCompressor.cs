@@ -26,7 +26,7 @@ namespace Nautilus.Compression
         /// <summary>
         /// Initializes a new instance of the <see cref="LZ4DataCompressor"/> class.
         /// </summary>
-        /// <param name="isCompressionOn"></param>
+        /// <param name="isCompressionOn">The is compression on boolean flag.</param>
         public LZ4DataCompressor(bool isCompressionOn)
         {
             this.isCompressionOn = isCompressionOn;

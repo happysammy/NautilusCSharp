@@ -11,32 +11,25 @@ namespace Nautilus.Data.Aggregators
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.Core.Validation;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
-
-    using Resolution = Nautilus.DomainModel.Enums.Resolution;
-    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
-    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
-    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
-
 
     /// <summary>
     /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
@@ -274,7 +267,7 @@ namespace Nautilus.Data.Aggregators
 
             this.triggerCounts[duration]++;
 
-            Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+            this.Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
                       $"duration (count={this.triggerCounts[duration]}).");
         }
 
@@ -343,27 +336,26 @@ namespace Nautilus.Data.Aggregators
 
                 if (!this.barJobs.ContainsKey(barSpec))
                 {
-                    this.barJobs.Add(barSpec, new KeyValuePair<JobKey, TriggerKey>(
-                        message.JobKey,
-                        message.TriggerKey));
+                    this.barJobs.Add(
+                        barSpec, new KeyValuePair<JobKey, TriggerKey>(message.JobKey, message.TriggerKey));
                 }
             }
 
-            Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            this.Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(JobRemoved message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(RemoveJobFail message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
+            this.Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
         }
 
         /// <summary>
@@ -425,7 +417,7 @@ namespace Nautilus.Data.Aggregators
                 // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
             }
 
-            //Log.Warning($"Does not contain aggregator to close bar for {job}.");
+            // Log.Warning($"Does not contain aggregator to close bar for {job}.");
         }
 
         /// <summary>

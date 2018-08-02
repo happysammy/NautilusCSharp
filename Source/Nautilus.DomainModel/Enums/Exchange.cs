@@ -39,6 +39,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The LMAX exchange venue.
         /// </summary>
-        LMAX = 4
+        LMAX = 4,
     }
 }

@@ -44,7 +44,7 @@ namespace Nautilus.Scheduler
 
             var properties = new NameValueCollection
             {
-                { "quartz.threadPool.threadCount", "10" }
+                { "quartz.threadPool.threadCount", "10" },
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 

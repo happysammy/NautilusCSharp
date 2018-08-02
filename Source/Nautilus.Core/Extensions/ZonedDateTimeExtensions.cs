@@ -102,7 +102,7 @@ namespace Nautilus.Core.Extensions
         /// Returns a <see cref="byte"/> array from this <see cref="ZonedDateTime"/>.
         /// </summary>
         /// <param name="time">The time.</param>
-        /// <returns>A <see cref="byte"/> array</returns>
+        /// <returns>A <see cref="byte"/> array.</returns>
         public static byte[] ToBytes(this ZonedDateTime time)
         {
             Debug.NotDefault(time, nameof(time));

@@ -11,11 +11,11 @@ namespace Nautilus.Data.Interfaces
     using System.IO;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Types;
-    using NodaTime;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
-    /// The bar data reader interface.
+    /// Provides methods for reading bar data from files.
     /// </summary>
     public interface IBarDataReader
     {
@@ -28,7 +28,7 @@ namespace Nautilus.Data.Interfaces
         /// Returns a <see cref="BarDataFrame"/> of all bars data.
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
-        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        /// <returns>The result of the query.</returns>
         QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile);
 
         /// <summary>
@@ -37,17 +37,20 @@ namespace Nautilus.Data.Interfaces
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
         /// <param name="fromDateTime">The from date time.</param>
-        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        /// <returns>The result of the query.</returns>
         QueryResult<BarDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime);
 
         /// <summary>
         /// Returns a <see cref="BarDataFrame"/> of data.
         /// </summary>
         /// <param name="csvFile">The csv file.</param>
-        /// <returns>A query result of <see cref="BarDataFrame"/>.</returns>
+        /// <returns>The result of the query.</returns>
         QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile);
 
-        // TODO: Temporary Property
+        /// <summary>
+        /// Returns the ordered collection of CSV files.
+        /// </summary>
+        /// <returns>The result of the query.</returns>
         QueryResult<FileInfo[]> GetAllCsvFilesOrdered();
     }
 }

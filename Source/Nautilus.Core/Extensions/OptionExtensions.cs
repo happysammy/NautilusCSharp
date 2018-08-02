@@ -14,7 +14,7 @@ namespace Nautilus.Core.Extensions
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Provides useful <see cref="Option{T}"/> extension methods
+    /// Provides useful <see cref="Option{T}"/> extension methods.
     /// </summary>
     [Immutable]
     public static class OptionExtensions

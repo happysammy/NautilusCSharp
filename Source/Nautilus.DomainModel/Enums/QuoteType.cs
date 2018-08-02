@@ -31,6 +31,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The mid price quote type.
         /// </summary>
-        Mid = 3
+        Mid = 3,
     }
 }

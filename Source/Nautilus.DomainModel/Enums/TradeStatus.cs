@@ -36,6 +36,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The trade has been completed.
         /// </summary>
-        Completed
+        Completed,
     }
 }

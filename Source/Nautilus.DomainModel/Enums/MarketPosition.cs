@@ -34,6 +34,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// A short market position.
         /// </summary>
-        Short
+        Short,
     }
 }

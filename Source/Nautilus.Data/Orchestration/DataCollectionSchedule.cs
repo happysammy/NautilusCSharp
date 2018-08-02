@@ -77,7 +77,7 @@ namespace Nautilus.Data.Orchestration
         public Option<ZonedDateTime?> LastCollectedTime { get; private set; }
 
         /// <summary>
-        /// Gets the schedules next major collection date time;
+        /// Gets the schedules next major collection date time.
         /// </summary>
         public ZonedDateTime NextCollectionTime { get; private set; }
 

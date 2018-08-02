@@ -100,7 +100,7 @@ namespace Nautilus.DomainModel.ValueObjects
                        {
                            this.QuoteType,
                            this.Resolution,
-                           this.Period
+                           this.Period,
                        };
         }
 

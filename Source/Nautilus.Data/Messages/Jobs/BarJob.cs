@@ -38,6 +38,15 @@ namespace Nautilus.Data.Messages.Jobs
         public BarSpecification BarSpec { get; }
 
         /// <summary>
+        /// Returns a string representation of this <see cref="BarJob"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString()
+        {
+            return $"{nameof(BarJob)}-{this.BarSpec}";
+        }
+
+        /// <summary>
         /// Returns a collection of objects to be included in equality checks.
         /// </summary>
         /// <returns>A collection of objects.</returns>
@@ -45,17 +54,8 @@ namespace Nautilus.Data.Messages.Jobs
         {
             return new object[]
             {
-                this.BarSpec
+                this.BarSpec,
             };
-        }
-
-        /// <summary>
-        /// Returns a string representation of this <see cref="BarJob"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString()
-        {
-            return $"{nameof(BarJob)}-{this.BarSpec}";
         }
     }
 }

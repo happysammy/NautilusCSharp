@@ -56,7 +56,7 @@ namespace Nautilus.Core.Model
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.
         /// </summary>
-        /// <param name="other">The other entity</param>
+        /// <param name="other">The other entity.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         // ReSharper disable once PossibleNullReferenceException (already checked for null?).
         public bool Equals([CanBeNull] T other)

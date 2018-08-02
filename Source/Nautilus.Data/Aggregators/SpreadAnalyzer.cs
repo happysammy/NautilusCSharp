@@ -23,9 +23,9 @@ namespace Nautilus.Data.Aggregators
     [PerformanceOptimized]
     public sealed class SpreadAnalyzer
     {
-        private readonly List<decimal> thisBarsSpreads = new List<decimal>();
-        private readonly List<(ZonedDateTime, decimal)> negativeSpreads = new List<(ZonedDateTime, decimal)>();
-        private readonly List<(ZonedDateTime, decimal)> totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
+        private readonly List<decimal> thisBarsSpreads;
+        private readonly List<(ZonedDateTime, decimal)> negativeSpreads;
+        private readonly List<(ZonedDateTime, decimal)> totalAverageSpreads;
 
         // Initialized on first tick.
         private decimal tickPrecision;
@@ -36,8 +36,11 @@ namespace Nautilus.Data.Aggregators
         /// <exception cref="ValidationException">Throws if the tick size is zero or negative.</exception>
         public SpreadAnalyzer()
         {
-            this.MaxSpread = (default, decimal.MinValue);
-            this.MinSpread = (default, decimal.MaxValue);
+            this.thisBarsSpreads = new List<decimal>();
+            this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
+            this.totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
+            this.MaxSpread = ValueTuple.Create<ZonedDateTime, decimal>(default, decimal.MinValue);
+            this.MinSpread = ValueTuple.Create<ZonedDateTime, decimal>(default, decimal.MaxValue);
         }
 
         /// <summary>
@@ -140,7 +143,8 @@ namespace Nautilus.Data.Aggregators
                 return 0;
             }
 
-            return Math.Round(this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1),
+            return Math.Round(
+                this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1),
                 this.CurrentBid.Decimals);
         }
     }

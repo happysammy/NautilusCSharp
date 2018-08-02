@@ -22,7 +22,7 @@ namespace Nautilus.Data.Interfaces
         /// <summary>
         /// Gets a list of all bar specifications provided by the data provider.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The read-only collection of bar types.</returns>
         IReadOnlyCollection<BarType> SymbolBarDatas { get; }
 
         /// <summary>
@@ -38,13 +38,13 @@ namespace Nautilus.Data.Interfaces
         /// <summary>
         /// Gets the market data providers volume multiple for the bars data.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The volume multiple.</returns>
         int VolumeMultiple { get; }
 
         /// <summary>
         /// Gets a value indicating whether the bar data integrity checker is active.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if bar data checks are on, otherwise false.</returns>
         bool IsBarDataCheckOn { get; }
 
         /// <summary>

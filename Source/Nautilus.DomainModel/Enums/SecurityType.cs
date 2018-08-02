@@ -42,6 +42,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// Option security type.
         /// </summary>
-        Option = 5
+        Option = 5,
     }
 }

@@ -26,7 +26,7 @@ namespace Nautilus.Data.Messages.Jobs
         }
 
         /// <summary>
-        /// Gets the is market open boolean value.
+        /// Gets a value indicating whether the is market open.
         /// </summary>
         public bool IsMarketOpen { get; }
     }

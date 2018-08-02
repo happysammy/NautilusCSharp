@@ -26,11 +26,11 @@ namespace Nautilus.Common.Interfaces
         void OnTick(Tick tick);
 
         /// <summary>
-        /// Returns the last quote corresponding to the given symbol if it is contained by the
+        /// Returns the last tick corresponding to the given symbol if it is contained by the
         /// quote provider (optional).
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <returns>\A <see cref="Option{Tick}"/>.\</returns>
+        /// <returns>The last tick.</returns>
         Option<Tick> GetLastTick(Symbol symbol);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency">The quote currency.</param>
-        /// <returns>A <see cref="Option{Decimal}"/>.\</returns>
+        /// <returns>A <see cref="Option{Decimal}"/>.</returns>
         Option<decimal?> GetExchangeRate(CurrencyCode accountCurrency, CurrencyCode quoteCurrency);
     }
 }

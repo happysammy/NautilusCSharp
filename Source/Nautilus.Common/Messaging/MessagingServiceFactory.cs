@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// The immutable sealed <see cref="MessagingServiceFactory"/>
+    /// Provides a factory to create the systems messaging service.
     /// </summary>
     [Immutable]
     public static class MessagingServiceFactory
@@ -29,7 +29,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="container">The container.</param>
         /// <param name="store">The message store.</param>
         /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
-        /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public static MessagingAdapter Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
@@ -59,7 +58,7 @@ namespace Nautilus.Common.Messaging
                 container,
                 messageStoreRef))));
 
-           return new MessagingAdapter(commandBus, eventBusRef, serviceBusRef);
+            return new MessagingAdapter(commandBus, eventBusRef, serviceBusRef);
         }
     }
 }

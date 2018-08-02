@@ -29,7 +29,7 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Returns hex representation of the byte array.
         /// </summary>
-        /// <param name="data">bytes to encode</param>
+        /// <param name="data">bytes to encode.</param>
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data)
         {
@@ -39,9 +39,9 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Returns hex representation of the byte array.
         /// </summary>
-        /// <param name="data">bytes to encode</param>
-        /// <param name="off">offset</param>
-        /// <param name="length">number of bytes to encode</param>
+        /// <param name="data">bytes to encode.</param>
+        /// <param name="off">offset.</param>
+        /// <param name="length">number of bytes to encode.</param>
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data, int off, int length)
         {
@@ -51,7 +51,7 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Decodes hex representation to a byte array.
         /// </summary>
-        /// <param name="hex">hex string to decode</param>
+        /// <param name="hex">hex string to decode.</param>
         /// <returns>The decoded byte array.</returns>
         public static byte[] FromHexString(string hex)
         {
@@ -80,7 +80,7 @@ namespace Nautilus.MsgPack
         /// Returns a string containing a nice representation of the byte array
         /// (similarly to the binary editors).
         /// </summary>
-        /// <param name="bytes">array of bytes to pretty print</param>
+        /// <param name="bytes">array of bytes to pretty print.</param>
         /// <returns>The pretty printed string.</returns>
         public static string PrettyPrint(byte[] bytes)
         {
@@ -130,7 +130,7 @@ namespace Nautilus.MsgPack
                 // Print hex bytes.
                 for (var i = start; i < end; i++)
                 {
-                    buffer.Append($" {bytes[i] :x2}");
+                    buffer.Append($" {bytes[i]:x2}");
                 }
 
                 for (var i = 0; i < 16 - (end - start); i++)

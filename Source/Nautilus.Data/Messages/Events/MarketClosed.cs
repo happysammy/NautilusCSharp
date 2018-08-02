@@ -25,7 +25,8 @@ namespace Nautilus.Data.Messages.Events
         /// </summary>
         /// <param name="id">The event identifier.</param>
         /// <param name="timestamp">The event timestamp.</param>
-        public MarketClosed(Guid id, ZonedDateTime timestamp) : base(id, timestamp)
+        public MarketClosed(Guid id, ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

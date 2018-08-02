@@ -11,8 +11,8 @@ namespace Nautilus.Data.Interfaces
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Types;
-    using NodaTime;
     using Nautilus.DomainModel.Entities;
+    using NodaTime;
 
     /// <summary>
     /// The economic event collector interface.

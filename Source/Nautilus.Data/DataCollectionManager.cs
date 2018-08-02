@@ -11,11 +11,11 @@ namespace Nautilus.Data
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Commands;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Events;
@@ -98,21 +98,21 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            this.Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(JobRemoved message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+            this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         private void OnMessage(RemoveJobFail message)
         {
             Debug.NotNull(message, nameof(message));
 
-            Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
+            this.Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -141,44 +141,14 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-//            if (this.barDataProvider.IsBarDataCheckOn)
-//            {
-//                var result = BarDataChecker.CheckBars(
-//                    message.Data.BarType,
-//                    message.Data.Bars);
-//
-//                if (result.IsSuccess)
-//                {
-//                    if (result.Value.Count == 0)
-//                    {
-//                        this.Log.Information(result.Message);
-//                    }
-//
-//                    if (result.Value.Count > 0)
-//                    {
-//                        this.Log.Warning(result.Message);
-//
-//                        foreach (var anomaly in result.Value)
-//                        {
-//                            this.Log.Warning(anomaly);
-//                        }
-//                    }
-//                }
-//
-//                if (result.IsFailure)
-//                {
-//                    this.Log.Warning(result.FullMessage);
-//                }
-//            }
-//
-//            this.Send(DatabaseService.TaskManager, message);
+            // Not implemented.
         }
 
         private void OnMessage(DataPersisted<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            // Do nothing.
+            // Not implemented.
         }
 
         private void OnMessage(DataCollected<BarType> message)

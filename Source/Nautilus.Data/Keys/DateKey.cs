@@ -10,9 +10,9 @@ namespace Nautilus.Data.Keys
 {
     using System;
     using Nautilus.Core.Annotations;
-    using NodaTime;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using NodaTime;
 
     /// <summary>
     /// Represents a strongly typed trading session date based on the given inputs.
@@ -43,7 +43,7 @@ namespace Nautilus.Data.Keys
         /// <summary>
         /// Initializes a new instance of the <see cref="DateKey"/> struct.
         /// </summary>
-        /// <param name="timestamp"></param>
+        /// <param name="timestamp">The timestamp for the key.</param>
         public DateKey(ZonedDateTime timestamp)
             : this(timestamp.Year, timestamp.Month, timestamp.Day)
         {
@@ -99,8 +99,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(DateKey other)
         {
-            // Do not add null check (causes error).
-
+            // Do not add null check (causes error??).
             return this.Year.Equals(other.Year) &&
                    this.Month.Equals(other.Month) &&
                    this.Day.Equals(other.Day);

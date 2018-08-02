@@ -16,7 +16,7 @@ namespace Nautilus.Data.Interfaces
         /// <summary>
         /// Creates and returns a new channel publisher.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The channel publisher.</returns>
         IChannelPublisher Create();
     }
 }

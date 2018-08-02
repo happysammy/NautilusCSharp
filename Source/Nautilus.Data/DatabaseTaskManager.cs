@@ -10,11 +10,10 @@ namespace Nautilus.Data
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Core.Validation;
-    using NodaTime;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -22,9 +21,10 @@ namespace Nautilus.Data
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NodaTime;
 
     /// <summary>
-    /// The component which manages the queue of job messages being sent to the database.
+    /// The component manages the queue of job messages being sent to the database.
     /// </summary>
     public class DatabaseTaskManager : ActorComponentBase
     {
@@ -113,7 +113,8 @@ namespace Nautilus.Data
                 message.FromDateTime,
                 message.ToDateTime);
 
-                sender.Tell(new QueryResponse<BarDataFrame>(
+            sender.Tell(
+                new QueryResponse<BarDataFrame>(
                     barDataQuery,
                     this.NewGuid(),
                     this.TimeNow()));

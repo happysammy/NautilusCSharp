@@ -23,7 +23,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="DocumentMessage"/> class.
         /// </summary>
-        /// <param name="document">The document</param>
+        /// <param name="document">The document.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public DocumentMessage(

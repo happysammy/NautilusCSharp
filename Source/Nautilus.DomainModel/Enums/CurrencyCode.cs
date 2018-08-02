@@ -124,6 +124,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// South African rand.
         /// </summary>
-        ZAR = 710
+        ZAR = 710,
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="DataCompressorFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CompressorFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -22,8 +22,7 @@ namespace Nautilus.Compression
         /// </summary>
         /// <param name="isCompression">The is compression on boolean flag.</param>
         /// <param name="compressionCodec">The compression codec.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        /// <exception cref="ArgumentException">Throws if the compression codec is not recognized.</exception>
+        /// <returns>The created data compressor.</returns>
         public static IDataCompressor Create(bool isCompression, string compressionCodec)
         {
             Validate.NotNull(compressionCodec, nameof(compressionCodec));

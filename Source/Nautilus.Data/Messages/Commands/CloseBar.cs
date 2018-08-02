@@ -32,7 +32,8 @@ namespace Nautilus.Data.Messages.Commands
             BarSpecification barSpec,
             ZonedDateTime closeTime,
             Guid id,
-            ZonedDateTime timestamp) : base(id, timestamp)
+            ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
             Debug.NotNull(barSpec, nameof(barSpec));
             Debug.NotDefault(closeTime, nameof(closeTime));

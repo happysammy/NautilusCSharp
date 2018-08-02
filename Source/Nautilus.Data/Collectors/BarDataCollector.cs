@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataCollector.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarDataCollector.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,13 +9,13 @@
 namespace Nautilus.Data.Collectors
 {
     using System;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Commands;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -89,10 +89,6 @@ namespace Nautilus.Data.Collectors
 
                 if (csvQuery.IsSuccess)
                 {
-//                    // TODO: Temporary work around of bottleneck
-//                    this.Logger.Information($"{this.ComponentName} delaying 30s to allow repository to persist...");
-//                    Thread.Sleep(TimeSpan.FromSeconds(30));
-
                     Context.Parent.Tell(
                         new DataDelivery<BarDataFrame>(
                             csvQuery.Value,
@@ -102,7 +98,6 @@ namespace Nautilus.Data.Collectors
 
                     this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
 
-                    //this.Log(LogLevel.Debug, $"{this.Component} collected {csvQuery.Value.Bars.Length} {csvQuery.Value.barTypeification} bars");
                     this.Log.Debug($"Updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
                 }
 

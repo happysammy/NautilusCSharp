@@ -20,7 +20,7 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Serializes the given object to the Message Pack specification.
         /// </summary>
-        /// <param name="obj">The object to serialize</param>
+        /// <param name="obj">The object to serialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
         /// <returns>The serialized object as a byte array.</returns>
         public static byte[] Serialize<T>(T obj)

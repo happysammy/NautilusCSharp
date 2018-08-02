@@ -28,6 +28,7 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Initializes a new instance of the <see cref="QuoteProvider"/> class.
         /// </summary>
+        /// <param name="venue">The quote providers venue.</param>
         public QuoteProvider(Venue venue)
         {
             Debug.NotDefault(venue, nameof(venue));
@@ -45,7 +46,7 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Updates the quote provider with the given quote.
         /// </summary>
-        /// <param name="tick">]The quote.]</param>
+        /// <param name="tick">The tick.</param>
         /// <exception cref="ValidationException">Throws if the quote is null.</exception>
         public void OnTick(Tick tick)
         {

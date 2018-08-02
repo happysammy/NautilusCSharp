@@ -6,7 +6,7 @@
     <RootNamespace>Nautilus.Compression</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Database.Compression.xml</DocumentationFile>
   </PropertyGroup>
@@ -15,5 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 </Project>

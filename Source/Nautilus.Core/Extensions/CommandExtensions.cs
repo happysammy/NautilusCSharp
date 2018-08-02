@@ -129,8 +129,7 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// On success returns the given function, otherwise returns a failure
-        /// <see cref="QueryResult{T}"/>
+        /// On success returns the given function, otherwise returns a failed <see cref="QueryResult{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
         /// <param name="result">The result to evaluate (cannot be null).</param>
@@ -147,7 +146,7 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// On success returns a success <see cref="QueryResult{T}"/> with the given function
+        /// On success returns a success <see cref="QueryResult{T}"/> with the given function.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
         /// <param name="result">The result to evaluate (cannot be null).</param>

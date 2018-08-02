@@ -11,23 +11,18 @@ namespace Nautilus.Data.Aggregators
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.Core.Validation;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Commands;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-
-    using Resolution = Nautilus.DomainModel.Enums.Resolution;
-    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
-    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
-    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
 
     /// <summary>
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
@@ -171,7 +166,7 @@ namespace Nautilus.Data.Aggregators
                 return;
             }
 
-            Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
+            this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
         }
 
         /// <summary>
@@ -195,7 +190,7 @@ namespace Nautilus.Data.Aggregators
             {
                 this.barBuilders.Add(barSpec, new BarBuilder());
 
-                Log.Debug($"Added {barSpec} bars.");
+                this.Log.Debug($"Added {barSpec} bars.");
             }
         }
 
@@ -213,7 +208,7 @@ namespace Nautilus.Data.Aggregators
             {
                 this.barBuilders.Remove(barType);
 
-                Log.Debug($"Removed {barType} bars.");
+                this.Log.Debug($"Removed {barType} bars.");
             }
         }
 

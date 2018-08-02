@@ -67,7 +67,7 @@ namespace Nautilus.Core.CQS
 
         /// <summary>
         /// Returns first failure in the list of <paramref name="results"/> (if there is no failure
-        /// then returns success.)
+        /// then returns success).
         /// </summary>
         /// <param name="results">The command results array.</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>

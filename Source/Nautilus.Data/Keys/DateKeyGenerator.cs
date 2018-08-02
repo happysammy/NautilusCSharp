@@ -23,7 +23,7 @@ namespace Nautilus.Data.Keys
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to <see cref="ZonedDateTime"/> range.
         /// </summary>
         /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The two date time</param>
+        /// <param name="toDateTime">The to date time.</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
         public static List<DateKey> GetDateKeys(ZonedDateTime fromDateTime, ZonedDateTime toDateTime)

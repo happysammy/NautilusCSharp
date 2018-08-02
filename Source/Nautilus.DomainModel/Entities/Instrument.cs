@@ -25,26 +25,26 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
         /// </summary>
-        /// <param name="symbol">The instrument symbol.</param>
-        /// <param name="instrumentId">The instrument identifier.</param>
-        /// <param name="brokerSymbol">The instrument broker symbol.</param>
-        /// <param name="quoteCurrency">The instrument quote currency.</param>
-        /// <param name="securityType">The instrument security type.</param>
-        /// <param name="tickDecimals">The instrument tick size.</param>
-        /// <param name="tickSize">The instrument tick size</param>
-        /// <param name="tickValue">The instrument tick value.</param>
-        /// <param name="targetDirectSpread">The instrument target direct spread.</param>
-        /// <param name="contractSize">The instrument contract size.</param>
-        /// <param name="minStopDistanceEntry">The instrument minimum stop distance for entry.</param>
-        /// <param name="minLimitDistanceEntry">The instrument minimum limit distance for entry.</param>
-        /// <param name="minStopDistance">The instrument minimum stop distance.</param>
-        /// <param name="minLimitDistance">The instrument minimum limit distance.</param>
-        /// <param name="minTradeSize">The instrument minimum trade size.</param>
-        /// <param name="maxTradeSize">The instrument maximum trade size.</param>
-        /// <param name="marginRequirement">The instrument margin requirement.</param>
-        /// <param name="rolloverInterestBuy">The instrument rollover interest for long positions.</param>
-        /// <param name="rolloverInterestSell">The instrument rollover interest for short positions.</param>
-        /// <param name="timestamp"> The instrument initialization timestamp.</param>
+        /// <param name="symbol">The instruments symbol.</param>
+        /// <param name="instrumentId">The instruments identifier.</param>
+        /// <param name="brokerSymbol">The instruments broker symbol.</param>
+        /// <param name="quoteCurrency">The instruments quote currency.</param>
+        /// <param name="securityType">The instruments security type.</param>
+        /// <param name="tickDecimals">The instruments decimal precision.</param>
+        /// <param name="tickSize">The instruments tick size.</param>
+        /// <param name="tickValue">The instruments tick value.</param>
+        /// <param name="targetDirectSpread">The instruments target direct spread.</param>
+        /// <param name="contractSize">The instruments contract size.</param>
+        /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
+        /// <param name="minLimitDistanceEntry">The instruments minimum limit distance for entry.</param>
+        /// <param name="minStopDistance">The instruments minimum stop distance.</param>
+        /// <param name="minLimitDistance">The instruments minimum limit distance.</param>
+        /// <param name="minTradeSize">The instruments minimum trade size.</param>
+        /// <param name="maxTradeSize">The instruments maximum trade size.</param>
+        /// <param name="marginRequirement">The instruments margin requirement.</param>
+        /// <param name="rolloverInterestBuy">The instruments rollover interest for long positions.</param>
+        /// <param name="rolloverInterestSell">The instruments rollover interest for short positions.</param>
+        /// <param name="timestamp"> The instruments initialization timestamp.</param>
         public Instrument(
             Symbol symbol,
             InstrumentId instrumentId,

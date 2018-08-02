@@ -374,7 +374,7 @@ namespace Nautilus.Core.Validation
                         throw new ValidationException(
                             new ArgumentOutOfRangeException(
                             paramName,
-                                $"{ExMessage} (The {paramName} is not within the specified range [{lowerBound}, {upperBound}]. Value = {value})."));
+                            $"{ExMessage} (The {paramName} is not within the specified range [{lowerBound}, {upperBound}]. Value = {value})."));
                     }
 
                     break;
@@ -385,7 +385,7 @@ namespace Nautilus.Core.Validation
                         throw new ValidationException(
                             new ArgumentOutOfRangeException(
                             paramName,
-                                $"{ExMessage} (The {paramName} is not within the specified range ({lowerBound}, {upperBound}]. Value = {value})."));
+                            $"{ExMessage} (The {paramName} is not within the specified range ({lowerBound}, {upperBound}]. Value = {value})."));
                     }
 
                     break;
@@ -396,7 +396,7 @@ namespace Nautilus.Core.Validation
                         throw new ValidationException(
                             new ArgumentOutOfRangeException(
                             paramName,
-                                $"{ExMessage} (The {paramName} is not within the specified range [{lowerBound}, {upperBound}). Value = {value})."));
+                            $"{ExMessage} (The {paramName} is not within the specified range [{lowerBound}, {upperBound}). Value = {value})."));
                     }
 
                     break;

@@ -101,8 +101,8 @@ namespace Nautilus.Common.Messaging
                             commandMessage,
                             message.Id,
                             message.Timestamp);
-                    this.commandBus.Send(commandEnvelope);
-                    break;
+                        this.commandBus.Send(commandEnvelope);
+                        break;
 
                     case EventMessage eventMessage:
                         var eventEnvelope = new Envelope<EventMessage>(
@@ -111,8 +111,8 @@ namespace Nautilus.Common.Messaging
                             eventMessage,
                             message.Id,
                             message.Timestamp);
-                    this.eventBus.Send(eventEnvelope);
-                    break;
+                        this.eventBus.Send(eventEnvelope);
+                        break;
 
                     case DocumentMessage serviceMessage:
                         var serviceEnvelope = new Envelope<DocumentMessage>(
@@ -121,11 +121,11 @@ namespace Nautilus.Common.Messaging
                             serviceMessage,
                             message.Id,
                             message.Timestamp);
-                    this.documentBus.Send(serviceEnvelope);
-                    break;
+                        this.documentBus.Send(serviceEnvelope);
+                        break;
 
-                default: throw new InvalidOperationException(
-                    $"Cannot send message ({message.GetType()} message type is not supported).");
+                    default: throw new InvalidOperationException(
+                        $"Cannot send message ({message.GetType()} message type is not supported).");
             }
         }
     }

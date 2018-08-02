@@ -222,7 +222,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 this.Low,
                 this.Close,
                 this.Volume,
-                this.Timestamp
+                this.Timestamp,
             };
         }
     }

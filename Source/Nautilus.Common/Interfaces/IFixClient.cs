@@ -80,7 +80,7 @@ namespace Nautilus.Common.Interfaces
         void SubmitOrder(IOrder order);
 
         /// <summary>
-        /// Submits an atomic order
+        /// Submits an atomic order.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
         void SubmitOrder(IAtomicOrder atomicOrder);

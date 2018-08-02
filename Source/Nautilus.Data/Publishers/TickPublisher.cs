@@ -47,12 +47,12 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(Subscribe<Symbol> message)
         {
-
+            // Not implemented.
         }
 
         private void OnMessage(Unsubscribe<Symbol> message)
         {
-
+            // Not implemented.
         }
 
         private void OnMessage(Tick message)

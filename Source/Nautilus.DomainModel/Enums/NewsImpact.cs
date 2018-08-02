@@ -26,6 +26,6 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The high news impact.
         /// </summary>
-        High = 2
+        High = 2,
     }
 }

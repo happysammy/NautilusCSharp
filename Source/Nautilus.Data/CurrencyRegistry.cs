@@ -8,8 +8,8 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.DomainModel.Enums;
     using System.Collections.Generic;
+    using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Provides a registry of country strings mapped to currency codes.
@@ -33,9 +33,14 @@ namespace Nautilus.Data
                     { "United Kingdom", CurrencyCode.GBP },
                     { "European Monetary Union", CurrencyCode.EUR },
                     { "Canada", CurrencyCode.CAD },
-                    { "United States", CurrencyCode.USD }
+                    { "United States", CurrencyCode.USD },
                 };
 
+        /// <summary>
+        /// Returns the currency code for the given country string.
+        /// </summary>
+        /// <param name="country">The country string.</param>
+        /// <returns>The currency code.</returns>
         internal static CurrencyCode ForCountry(string country)
         {
             return CountryToCurrency[country];

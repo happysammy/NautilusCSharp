@@ -93,7 +93,7 @@ namespace Nautilus.Common.Logging
         /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log</param>
+        /// <param name="ex">The exception to log.</param>
         public void Error(string message, Exception ex)
         {
             Validate.NotNull(message, nameof(message));
@@ -106,7 +106,7 @@ namespace Nautilus.Common.Logging
         /// Sends the given fatal message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log</param>
+        /// <param name="ex">The exception to log.</param>
         public void Fatal(string message, Exception ex)
         {
             Validate.NotNull(message, nameof(message));

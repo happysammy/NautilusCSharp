@@ -14,12 +14,12 @@ namespace Nautilus.Data
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Commands;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -99,7 +99,7 @@ namespace Nautilus.Data
                 new BarSpecification(QuoteType.Mid, Resolution.Minute, 1),
                 new BarSpecification(QuoteType.Bid, Resolution.Hour, 1),
                 new BarSpecification(QuoteType.Ask, Resolution.Hour, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Hour, 1)
+                new BarSpecification(QuoteType.Mid, Resolution.Hour, 1),
             };
 
             foreach (var symbol in this.fixClient.GetAllSymbols())

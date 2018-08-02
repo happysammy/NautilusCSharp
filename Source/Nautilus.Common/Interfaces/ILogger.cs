@@ -44,14 +44,14 @@ namespace Nautilus.Common.Interfaces
         /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log</param>
+        /// <param name="ex">The exception to log.</param>
         void Error(string message, Exception ex);
 
         /// <summary>
         /// Sends the given fatal message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log</param>
+        /// <param name="ex">The exception to log.</param>
         void Fatal(string message, Exception ex);
 
         /// <summary>

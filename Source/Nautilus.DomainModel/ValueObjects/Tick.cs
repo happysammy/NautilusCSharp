@@ -170,7 +170,7 @@ namespace Nautilus.DomainModel.ValueObjects
                            this.Symbol,
                            this.Bid,
                            this.Ask,
-                           this.Timestamp
+                           this.Timestamp,
                        };
         }
     }

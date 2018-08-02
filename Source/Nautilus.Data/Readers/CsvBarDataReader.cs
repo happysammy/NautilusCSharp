@@ -13,7 +13,6 @@ namespace Nautilus.Data.Readers
     using System.IO;
     using System.Linq;
     using CsvHelper;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -21,6 +20,7 @@ namespace Nautilus.Data.Readers
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -30,11 +30,13 @@ namespace Nautilus.Data.Readers
     public sealed class CsvBarDataReader : IBarDataReader
     {
         private readonly int decimals;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvBarDataReader"/> class.
         /// </summary>
         /// <param name="barType">The symbol bar data.</param>
         /// <param name="dataProvider">The market data provider.</param>
+        /// <param name="decimals">The decimal precision for bars.</param>
         /// <exception cref="Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
             BarType barType,
@@ -89,6 +91,7 @@ namespace Nautilus.Data.Readers
         /// <summary>
         /// Returns the bars based on all data contained within the CSV directory.
         /// </summary>
+        /// <param name="csvFile">The CSV file to read.</param>
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile)
         {
@@ -105,7 +108,7 @@ namespace Nautilus.Data.Readers
         /// Returns the bars based on all data contained within the CSV directory where the bars
         /// timestamp is greater than the given from date time.
         /// </summary>
-        /// <param name="csvFile"></param>
+        /// <param name="csvFile">The CSV file to read.</param>
         /// <param name="fromDateTime">The from date time.</param>
         /// <returns>A query result containing a <see cref="BarDataFrame"/> if successful.</returns>
         [PerformanceOptimized]
@@ -154,6 +157,7 @@ namespace Nautilus.Data.Readers
         /// <summary>
         /// Returns the latest bar based on all data contained within the CSV directory.
         /// </summary>
+        /// <param name="csvFile">The CSV file to read.</param>
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile)
         {
@@ -168,9 +172,7 @@ namespace Nautilus.Data.Readers
                     .Bars
                     .Last();
 
-                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
-                    this.BarType,
-                    new [] { lastBar }));
+                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(this.BarType, new[] { lastBar }));
             }
 
             return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
@@ -179,6 +181,7 @@ namespace Nautilus.Data.Readers
         /// <summary>
         /// Returns the timestamp of the last bar from the data.
         /// </summary>
+        /// <param name="csvFile">The CSV file to read.</param>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public QueryResult<ZonedDateTime> GetLastBarTimestamp(FileInfo csvFile)
         {

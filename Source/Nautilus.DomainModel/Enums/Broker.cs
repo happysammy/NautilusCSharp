@@ -33,6 +33,6 @@ namespace Nautilus.DomainModel.Enums
         /// The FXCM brokerage.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        FXCM
+        FXCM,
     }
 }
