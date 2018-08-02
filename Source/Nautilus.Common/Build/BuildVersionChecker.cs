@@ -6,18 +6,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusExecutor.Build
+namespace Nautilus.Common.Build
 {
     using System;
     using System.Reflection;
-    using Akka.Actor;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// Provides a startup version checker with logging.
+    /// Provides a means of checking dependency versions and outputting to the log at system initialization.
     /// </summary>
     [Immutable]
     public static class BuildVersionChecker
@@ -26,21 +25,20 @@ namespace NautilusExecutor.Build
         /// Runs the version checker which produces log events.
         /// </summary>
         /// <param name="log">The logger.</param>
-        public static void Run(ILoggingAdapter log)
+        /// <param name="serviceTitle">The service title string.</param>
+        public static void Run(ILoggingAdapter log, string serviceTitle)
         {
             Validate.NotNull(log, nameof(log));
+            Validate.NotNull(serviceTitle, nameof(serviceTitle));
 
-            log.Information(NautilusService.Data, "Running startup version checker...");
-            log.Information(NautilusService.Data, "------------------------------------------------------------------------");
-            log.Information(NautilusService.Data, "NautilusExecutor - Financial Market Execution Service (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(NautilusService.Data, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(NautilusService.Data, "------------------------------------------------------------------------");
+            log.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
+            log.Information(NautilusService.BlackBox, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(NautilusService.BlackBox, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
             log.Information(NautilusService.Data, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(NautilusService.Data, $"Is64BitProcess={Environment.Is64BitProcess}");
             log.Information(NautilusService.Data, $"OS {Environment.OSVersion}");
             log.Information(NautilusService.Data, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(NautilusService.Data, $"Akka.NET v{Assembly.GetAssembly(typeof(ReceiveActor)).GetName().Version}");
-            log.Information(NautilusService.Data, $"ServiceStack v{Assembly.GetAssembly(typeof(ServiceStack.Service)).GetName().Version}");
             log.Information(NautilusService.Data, log.AssemblyVersion);
         }
 

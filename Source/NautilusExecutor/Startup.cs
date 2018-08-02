@@ -17,6 +17,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Brokerage.FXCM;
+    using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -34,7 +35,6 @@ namespace NautilusExecutor
     using NodaTime;
     using Serilog.Events;
     using ServiceStack.Redis;
-    using BuildVersionChecker = NautilusExecutor.Build.BuildVersionChecker;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -120,7 +120,7 @@ namespace NautilusExecutor
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
-            BuildVersionChecker.Run(loggingAdapter);
+            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();

@@ -23,7 +23,6 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBoxServicesFactory"/> class.
         /// </summary>
-        /// <param name="gatewayFactory">The brokerage service factory.</param>
         /// <param name="fixClientFactory">The brokerage client factory.</param>
         /// <param name="alphaModelServiceFactory">The alpha model service factory.</param>
         /// <param name="dataServiceFactory">The data service factory.</param>

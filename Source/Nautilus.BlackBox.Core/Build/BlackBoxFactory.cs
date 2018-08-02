@@ -11,6 +11,7 @@ namespace Nautilus.BlackBox.Core.Build
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Enums;
+    using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -58,7 +59,7 @@ namespace Nautilus.BlackBox.Core.Build
             Validate.NotNull(account, nameof(account));
             Validate.NotNull(servicesFactory, nameof(servicesFactory));
 
-            BuildVersionChecker.Run(loggingAdapter);
+            BuildVersionChecker.Run(loggingAdapter, "NautilusBlackBox - Automated Algorithmic Trading Platform");
 
             var loggerFactory = new LoggerFactory(loggingAdapter);
             var guidFactory = new GuidFactory();

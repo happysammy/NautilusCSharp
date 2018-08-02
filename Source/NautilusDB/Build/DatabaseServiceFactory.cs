@@ -10,6 +10,7 @@ namespace NautilusDB.Build
 {
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -67,7 +68,7 @@ namespace NautilusDB.Build
             Validate.NotNull(barSpecs, nameof(barSpecs));
 
             logger.Information(NautilusService.Data, $"Starting {nameof(DataService)} builder...");
-            BuildVersionChecker.Run(logger);
+            BuildVersionChecker.Run(logger, "NautilusDB - Financial Market Database Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
