@@ -68,13 +68,8 @@ namespace NautilusDB
         /// </summary>
         public void Shutdown()
         {
-//            var shutdownTasks = this.addresses.Select(
-//                    address => address.Value.GracefulStop(Duration.FromSeconds(10)))
-//                .Cast<Task>()
-//                .ToList();
-//
-//            this.Log.Information($"Waiting for actors to shut down...");
-//            Task.WhenAll(shutdownTasks);
+
+            // TODO: Services status wait for all to be stopped.
 
             this.Log.Information($"{this.actorSystemName} ActorSystem shutting down...");
             this.actorSystem.Terminate();

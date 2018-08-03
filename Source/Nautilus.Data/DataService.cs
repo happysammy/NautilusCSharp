@@ -102,6 +102,7 @@ namespace Nautilus.Data
         private void OnMessage(ShutdownSystem message)
         {
             this.fixClient.Disconnect();
+            Context.Stop(Context.Self);
         }
     }
 }
