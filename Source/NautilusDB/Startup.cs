@@ -26,6 +26,7 @@ namespace NautilusDB
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Compression;
+    using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
     using Nautilus.Data;
     using NautilusDB.Configuration;
@@ -109,7 +110,6 @@ namespace NautilusDB
 
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
-            var compressor = CompressorFactory.Create(isCompression, compressionCodec);
             var barRollingWindow = (int) config[ConfigSection.Database]["barDataRollingWindow"];
 
             var username = (string)config[ConfigSection.Fix]["username"];;
@@ -138,78 +138,24 @@ namespace NautilusDB
                 .ToList()
                 .AsReadOnly();
 
-            var resolutionsToPersist = new List<Resolution>
+            var resolutions = new List<Resolution>
             {
                 Resolution.Second,
                 Resolution.Minute,
                 Resolution.Hour
             }.ToList().AsReadOnly();
 
-            var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
-            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
-
-            var actorSystem = ActorSystem.Create(nameof(NautilusDB));
-
-            var clock = new Clock(DateTimeZone.Utc);
-            var guidFactory = new GuidFactory();
-
-            var setupContainer = new ComponentryContainer(
-                clock,
-                guidFactory,
-                new LoggerFactory(loggingAdapter));
-
-            var messagingAdapter = MessagingServiceFactory.Create(
-                actorSystem,
-                setupContainer,
-                new FakeMessageStore());
-
-            var clientManager = new BasicRedisClientManager(
-                new[] { RedisConstants.LocalHost },
-                new[] { RedisConstants.LocalHost });
-
-            var gatewayFactory = new ExecutionGatewayFactory();
-
-            var fixClientFactory = new FxcmFixClientFactory(
+            this.dataSystem = NautilusDatabaseFactory.Create(
+                logLevel,
+                isCompression,
+                compressionCodec,
                 username,
                 password,
-                accountNumber);
-
-            var publisherFactory = new RedisChannelPublisherFactory(clientManager);
-
-            var barRepository = new RedisBarRepository(
-                clientManager,
-                compressor);
-
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
-
-            var dataServiceAddresses = DataServiceFactory.Create(
-                setupContainer,
-                actorSystem,
-                messagingAdapter,
-                fixClientFactory,
-                gatewayFactory,
-                publisherFactory,
-                barRepository,
-                instrumentRepository,
+                accountNumber,
                 symbols,
                 barSpecs,
-                resolutionsToPersist,
+                resolutions,
                 barRollingWindow);
-
-            var switchboard = new Switchboard(dataServiceAddresses);
-
-            var systemController = new SystemController(
-                NautilusService.Core,
-                setupContainer,
-                actorSystem,
-                messagingAdapter,
-                switchboard);
-
-            this.dataSystem = new NautilusDatabase(
-                setupContainer,
-                messagingAdapter,
-                systemController);
 
             this.dataSystem.Start();
         }

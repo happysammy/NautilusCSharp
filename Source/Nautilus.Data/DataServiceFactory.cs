@@ -38,7 +38,6 @@ namespace Nautilus.Data
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
-        /// <param name="barSpecs">The bar specifications to initially create.</param>
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
@@ -52,7 +51,6 @@ namespace Nautilus.Data
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
-            IReadOnlyList<string> barSpecs,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
@@ -62,7 +60,6 @@ namespace Nautilus.Data
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
             Validate.NotNull(symbols, nameof(symbols));
-            Validate.NotNull(barSpecs, nameof(barSpecs));
 
             var scheduler = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(

@@ -10,6 +10,7 @@ namespace Nautilus.Scheduler
 {
     using System.Collections.Specialized;
     using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -48,10 +49,13 @@ namespace Nautilus.Scheduler
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
+            // Command message handling.
             this.Receive<CreateJob>(msg => this.OnMessage(msg));
             this.Receive<RemoveJob>(msg => this.OnMessage(msg));
             this.Receive<PauseJob>(msg => this.OnMessage(msg));
             this.Receive<ResumeJob>(msg => this.OnMessage(msg));
+
+            // this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
         /// <summary>

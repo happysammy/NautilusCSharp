@@ -8,11 +8,57 @@
 
 namespace NautilusExecutor
 {
+    using Nautilus.Common;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Factories;
+
     /// <summary>
     /// Contains the Nautilus Executor system.
     /// </summary>
-    public sealed class NautilusExecutor
+    public sealed class NautilusExecutor : ComponentBusConnectedBase
     {
+        private readonly SystemController systemController;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NautilusExecutor"/> class.
+        /// </summary>
+        /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="systemController">The system controller.</param>
+        public NautilusExecutor(
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
+            SystemController systemController)
+            : base(
+                NautilusService.Core,
+                LabelFactory.Component(nameof(NautilusExecutor)),
+                container,
+                messagingAdapter)
+        {
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(systemController, nameof(systemController));
+
+            this.systemController = systemController;
+        }
+
+        /// <summary>
+        /// Starts the system.
+        /// </summary>
+        public void Start()
+        {
+            this.systemController.Start();
+        }
+
+        /// <summary>
+        /// Shuts down the system.
+        /// </summary>
+        public void Shutdown()
+        {
+            this.systemController.Shutdown();
+        }
     }
 }

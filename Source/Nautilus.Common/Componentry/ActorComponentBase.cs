@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -103,7 +104,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         protected override void PreStart()
         {
-            this.Log.Information("Initializing...");
+            this.Log.Debug("Initializing...");
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         protected override void PostStop()
         {
-            this.Log.Debug($"Stopping...");
+            this.Log.Debug($"Stopped.");
         }
 
         /// <summary>
@@ -135,6 +136,13 @@ namespace Nautilus.Common.Componentry
             this.Receive<Envelope<CommandMessage>>(envelope => this.Open(envelope));
             this.Receive<Envelope<EventMessage>>(envelope => this.Open(envelope));
             this.Receive<Envelope<DocumentMessage>>(envelope => this.Open(envelope));
+            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(SystemShutdown message)
+        {
+            this.Log.Information($"Shutting down from {message}-{message.Id}...");
+            this.PostStop();
         }
 
         /// <summary>

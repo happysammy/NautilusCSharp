@@ -16,6 +16,7 @@ namespace Nautilus.Common
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
@@ -26,26 +27,25 @@ namespace Nautilus.Common
     public class SystemController : ComponentBusConnectedBase
     {
         private readonly ActorSystem actorSystem;
+        private readonly string actorSystemName;
         private readonly MessagingAdapter messagingAdapter;
         private readonly Switchboard switchboard;
-        private readonly string actorSystemName;
+        private readonly ReadOnlyList<NautilusService> services;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemController"/> class.
         /// </summary>
-        /// <param name="serviceContext">The system controller service context.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="actorSystem">The systems actor system.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="switchboard">The switchboard.</param>
         public SystemController(
-            NautilusService serviceContext,
             IComponentryContainer container,
             ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             Switchboard switchboard)
             : base(
-                serviceContext,
+                NautilusService.Core,
                 LabelFactory.Component(nameof(SystemController)),
                 container,
                 messagingAdapter)
@@ -57,6 +57,7 @@ namespace Nautilus.Common
             this.actorSystemName = actorSystem.Name;
             this.messagingAdapter = messagingAdapter;
             this.switchboard = switchboard;
+            this.services = switchboard.Services;
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace Nautilus.Common
             Task.Delay(300).Wait();
 
             var start = new SystemStart(this.NewGuid(), this.TimeNow());
-            this.switchboard.Services.ForEach(s => this.Send(s, start));
+            this.services.ForEach(s => this.Send(s, start));
         }
 
         /// <summary>
@@ -88,8 +89,10 @@ namespace Nautilus.Common
         public void Shutdown()
         {
             var shutdown = new SystemShutdown(this.NewGuid(), this.TimeNow());
-            this.switchboard.Services.ForEach(s => this.Send(s, shutdown));
+            this.services.ForEach(s => this.Send(s, shutdown));
 
+            // Allow actor components to shutdown.
+            Task.Delay(1000).Wait();
             this.ShutdownActorSystem();
         }
 

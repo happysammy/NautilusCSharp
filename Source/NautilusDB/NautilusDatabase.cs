@@ -33,7 +33,7 @@ namespace NautilusDB
             IMessagingAdapter messagingAdapter,
             SystemController systemController)
             : base(
-                NautilusService.Data,
+                NautilusService.Core,
                 LabelFactory.Component(nameof(NautilusDatabase)),
                 container,
                 messagingAdapter)
