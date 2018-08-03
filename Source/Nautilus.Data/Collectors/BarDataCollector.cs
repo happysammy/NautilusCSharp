@@ -58,13 +58,13 @@ namespace Nautilus.Data.Collectors
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;
 
-            this.Receive<StartSystem>(msg => this.OnMessage(msg));
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
             this.Receive<DataStatusResponse<ZonedDateTime>>(msg => this.OnMessage(msg));
             this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(StartSystem message)
+        private void OnMessage(SystemStart message)
         {
             Debug.NotNull(message, nameof(message));
         }

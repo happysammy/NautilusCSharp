@@ -9,22 +9,22 @@
 namespace Nautilus.Common.Commands
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
-    /// The system status request message.
+    /// Represents a command requesting .
     /// </summary>
     [Immutable]
-    public sealed class SystemStatusRequest : Command
+    public sealed class SystemStatusRequest : SystemCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.
         /// </summary>
-        /// <param name="identifier">The message identifier.</param>
-        /// <param name="timestamp">The message timestamp.</param>
+        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="timestamp">The commands timestamp.</param>
         public SystemStatusRequest(
             Guid identifier,
             ZonedDateTime timestamp)

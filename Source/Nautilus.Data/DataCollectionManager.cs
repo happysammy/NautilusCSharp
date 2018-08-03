@@ -70,7 +70,7 @@ namespace Nautilus.Data
             this.barRollingWindow = barRollingWindow;
 
             // Command messages
-            this.Receive<StartSystem>(msg => this.OnMessage(msg));
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
             this.Receive<TrimBarDataJob>(msg => this.OnMessage(msg));
@@ -85,7 +85,7 @@ namespace Nautilus.Data
             this.Receive<DataCollected<BarType>>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(StartSystem message)
+        private void OnMessage(SystemStart message)
         {
             Debug.NotNull(message, nameof(message));
 

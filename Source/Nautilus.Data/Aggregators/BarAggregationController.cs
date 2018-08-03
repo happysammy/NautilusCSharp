@@ -75,7 +75,7 @@ namespace Nautilus.Data.Aggregators
             this.isMarketOpen = this.IsFxMarketOpen();
 
             // Command messages
-            this.Receive<StartSystem>(msg => this.OnMessage(msg));
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
             this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
             this.Receive<JobCreated>(msg => this.OnMessage(msg));
@@ -197,7 +197,7 @@ namespace Nautilus.Data.Aggregators
                 (IsoDayOfWeek.Sunday, 21, 00));
         }
 
-        private void OnMessage(StartSystem message)
+        private void OnMessage(SystemStart message)
         {
             Debug.NotNull(message, nameof(message));
 

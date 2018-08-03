@@ -9,17 +9,17 @@
 namespace Nautilus.Common.Commands
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
-    /// The command message to subscribe to data of type T.
+    /// A system command to subscribe to data of type T.
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class Subscribe<T> : Command
+    public sealed class Subscribe<T> : SystemCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.

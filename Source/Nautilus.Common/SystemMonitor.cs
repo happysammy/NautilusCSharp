@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ServiceMonitor.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SystemMonitor.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -11,7 +11,7 @@ namespace Nautilus.Common
     /// <summary>
     /// Provides a means of monitoring services within the system.
     /// </summary>
-    public class ServiceMonitor
+    public class SystemMonitor
     {
         // Implement.
     }

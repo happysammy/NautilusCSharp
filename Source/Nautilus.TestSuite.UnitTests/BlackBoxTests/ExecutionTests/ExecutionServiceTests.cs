@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.ExecutionTests
         internal void GivenShutdownSystemMessage_()
         {
             // Arrange
-            var message = new ShutdownSystem(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+            var message = new SystemShutdown(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             // Act
             this.executionServiceRef.Tell(message);

@@ -17,7 +17,7 @@ namespace Nautilus.Common.Commands
     using NodaTime;
 
     /// <summary>
-    /// The system status request message.
+    /// A document containing the status response of a system service.
     /// </summary>
     [Immutable]
     public sealed class SystemStatusResponse : Document
@@ -27,9 +27,8 @@ namespace Nautilus.Common.Commands
         /// </summary>
         /// <param name="componentName">The component name.</param>
         /// <param name="status">The status.</param>
-        /// <param name="identifier">The identifier.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="identifier">The documents identifier.</param>
+        /// <param name="timestamp">The documents timestamp.</param>
         public SystemStatusResponse(
             Label componentName,
             Status status,
@@ -46,12 +45,12 @@ namespace Nautilus.Common.Commands
         }
 
         /// <summary>
-        /// Gets the messages component name.
+        /// Gets the documents component name.
         /// </summary>
         public Label ComponentName { get; }
 
         /// <summary>
-        /// Gets the messages system status.
+        /// Gets the documents system status.
         /// </summary>
         public Status Status { get; }
 

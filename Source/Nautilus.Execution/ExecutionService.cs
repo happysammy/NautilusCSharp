@@ -53,7 +53,7 @@ namespace Nautilus.Execution
         {
             // Setup system commands.
             this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
-            this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
+            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
 
             // Setup trade commands.
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
@@ -123,7 +123,7 @@ namespace Nautilus.Execution
             });
         }
 
-        private void OnMessage(ShutdownSystem message)
+        private void OnMessage(SystemShutdown message)
         {
             Debug.NotNull(message, nameof(message));
 

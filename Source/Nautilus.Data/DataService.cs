@@ -52,11 +52,11 @@ namespace Nautilus.Data
             this.fixClient = fixClient;
 
             // Command message handling.
-            this.Receive<StartSystem>(msg => this.OnMessage(msg));
-            this.Receive<ShutdownSystem>(msg => this.OnMessage(msg));
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
+            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(StartSystem message)
+        private void OnMessage(SystemStart message)
         {
             this.fixClient.Connect();
 
@@ -68,7 +68,7 @@ namespace Nautilus.Data
             this.fixClient.UpdateInstrumentsSubscribeAll();
             this.fixClient.RequestMarketDataSubscribeAll();
 
-            var startSystem = new StartSystem(Guid.NewGuid(), this.TimeNow());
+            var startSystem = new SystemStart(Guid.NewGuid(), this.TimeNow());
             this.Send(NautilusService.DataCollectionManager, startSystem);
 
             var barSpecs = new List<BarSpecification>
@@ -99,7 +99,7 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(ShutdownSystem message)
+        private void OnMessage(SystemShutdown message)
         {
             this.fixClient.Disconnect();
             Context.Stop(Context.Self);

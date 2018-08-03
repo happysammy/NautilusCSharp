@@ -60,7 +60,7 @@ namespace NautilusDB
 
         public void Start()
         {
-            this.Send(NautilusService.Data, new StartSystem(this.NewGuid(), this.TimeNow()));
+            this.Send(NautilusService.Data, new SystemStart(this.NewGuid(), this.TimeNow()));
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Nautilus.Common.Commands
     using NodaTime;
 
     /// <summary>
-    /// The command message to unsubscribe from data of type T.
+    /// A system command to unsubscribe from data of type T.
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
@@ -24,9 +24,9 @@ namespace Nautilus.Common.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
-        /// <param name="dataType">The message symbol.</param>
-        /// <param name="identifier">The message identifier (cannot be default).</param>
-        /// <param name="timestamp">The message timestamp (cannot be default).</param>
+        /// <param name="dataType">The commands symbol.</param>
+        /// <param name="identifier">The commands identifier (cannot be default).</param>
+        /// <param name="timestamp">The commands timestamp (cannot be default).</param>
         public Unsubscribe(
             T dataType,
             Guid identifier,
