@@ -8,14 +8,11 @@
 
 namespace NautilusDB
 {
-    using System;
-    using Akka.Actor;
-    using Nautilus.Common.Commands;
+    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Data;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -23,68 +20,45 @@ namespace NautilusDB
     /// </summary>
     public sealed class NautilusDatabase : ComponentBusConnectedBase
     {
-        private readonly ActorSystem actorSystem;
-        private readonly string actorSystemName;
-        private readonly Switchboard switchboard;
+        private readonly SystemController systemController;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
         /// </summary>
-        /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="switchboard">The switchboard.</param>
+        /// <param name="systemController">The system controller.</param>
         public NautilusDatabase(
-            ActorSystem actorSystem,
             IComponentryContainer container,
-            MessagingAdapter messagingAdapter,
-            Switchboard switchboard)
+            IMessagingAdapter messagingAdapter,
+            SystemController systemController)
             : base(
                 NautilusService.Data,
                 LabelFactory.Component(nameof(NautilusDatabase)),
                 container,
                 messagingAdapter)
         {
-            this.actorSystem = actorSystem;
-            this.actorSystemName = this.actorSystem.Name;
-            this.switchboard = switchboard;
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(systemController, nameof(systemController));
 
-            var initializeSwitchboard =
-                new InitializeSwitchboard(
-                    switchboard,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-            messagingAdapter.Send(initializeSwitchboard);
-        }
-
-        public void Start()
-        {
-            this.Send(NautilusService.Data, new SystemStart(this.NewGuid(), this.TimeNow()));
+            this.systemController = systemController;
         }
 
         /// <summary>
-        /// Shuts down the <see cref="NautilusDatabase"/> system.
+        /// Starts the system.
+        /// </summary>
+        public void Start()
+        {
+            this.systemController.Start();
+        }
+
+        /// <summary>
+        /// Shuts down the system.
         /// </summary>
         public void Shutdown()
         {
-
-            // TODO: Services status wait for all to be stopped.
-
-            this.Log.Information($"{this.actorSystemName} ActorSystem shutting down...");
-            this.actorSystem.Terminate();
-            this.Log.Information($"{this.actorSystemName} terminated.");
-
-            this.Dispose();
-        }
-
-        /// <summary>
-        /// Disposes the <see cref="DataService"/> object.
-        /// </summary>
-        private void Dispose()
-        {
-            this.actorSystem?.Dispose();
-            GC.SuppressFinalize(this);
+            this.systemController.Shutdown();
         }
     }
 }

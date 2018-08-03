@@ -11,7 +11,6 @@ namespace NautilusDB
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
     using Microsoft.AspNetCore.Builder;
@@ -19,6 +18,7 @@ namespace NautilusDB
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Brokerage.FXCM;
+    using Nautilus.Common;
     using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -47,7 +47,7 @@ namespace NautilusDB
     public class Startup
     {
         // ReSharper disable once InconsistentNaming
-        private NautilusDatabase dataService;
+        private NautilusDatabase dataSystem;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
@@ -199,16 +199,19 @@ namespace NautilusDB
 
             var switchboard = new Switchboard(dataServiceAddresses);
 
-            this.dataService = new NautilusDatabase(
-                actorSystem,
+            var systemController = new SystemController(
+                NautilusService.Core,
                 setupContainer,
+                actorSystem,
                 messagingAdapter,
                 switchboard);
 
-            // Allow system to build.
-            Task.Delay(1000).Wait();
+            this.dataSystem = new NautilusDatabase(
+                setupContainer,
+                messagingAdapter,
+                systemController);
 
-            this.dataService.Start();
+            this.dataSystem.Start();
         }
 
         /// <summary>
@@ -242,7 +245,7 @@ namespace NautilusDB
 
         private void OnShutdown()
         {
-            this.dataService.Shutdown();
+            this.dataSystem.Shutdown();
         }
     }
 }

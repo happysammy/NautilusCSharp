@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FixMessageCracker.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixComponent.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -29,7 +29,7 @@ namespace Nautilus.Fix
     /// </summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Reviewed. Access OK.")]
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Reviewed. Access OK.")]
-    public class FixMessageCracker : MessageCracker, IApplication
+    public class FixComponent : MessageCracker, IApplication
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
@@ -42,14 +42,14 @@ namespace Nautilus.Fix
         private Session sessionMd;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FixMessageCracker"/> class.
+        /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="tickProcessor">The tick data processor.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
-        protected FixMessageCracker(
+        protected FixComponent(
             IComponentryContainer container,
             ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
@@ -64,7 +64,7 @@ namespace Nautilus.Fix
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(
                 NautilusService.FIX,
-                LabelFactory.Component(nameof(FixMessageCracker)));
+                LabelFactory.Component(nameof(FixComponent)));
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
             this.FixMessageHandler = fixMessageHandler;

@@ -21,7 +21,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic QuickFix client.
     /// </summary>
-    public class FixClient : FixMessageCracker, IFixClient
+    public class FixClient : FixComponent, IFixClient
     {
         private readonly IReadOnlyList<string> brokerSymbols;
         private readonly IReadOnlyList<Symbol> symbols;
@@ -93,6 +93,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void Connect()
         {
+            this.Log.Information("Connecting to FIX session...");
             this.ConnectFix();
         }
 
@@ -101,6 +102,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void Disconnect()
         {
+            this.Log.Information("Disconnecting from FIX session...");
             this.DisconnectFix();
         }
 

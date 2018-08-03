@@ -71,7 +71,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         protected override void Unhandled(object message)
         {
-            this.log.Warning($"Unhandled message {message}");
+            this.log.Warning($"Unhandled message {message}.");
         }
 
         private void OnMessage(InitializeSwitchboard message)
@@ -82,7 +82,7 @@ namespace Nautilus.Common.Messaging
             {
                 this.switchboard = message.Switchboard;
 
-                this.log.Information($"{this.switchboard.GetType().Name} initialized");
+                this.log.Information($"{this.switchboard.GetType().Name} initialized.");
             });
         }
 

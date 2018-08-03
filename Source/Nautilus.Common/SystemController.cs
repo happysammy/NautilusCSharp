@@ -8,11 +8,98 @@
 
 namespace Nautilus.Common
 {
+    using System;
+    using System.Threading.Tasks;
+    using Akka.Actor;
+    using Nautilus.Common.Commands;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Factories;
+
     /// <summary>
     /// Provides a means of controlling services within the system.
     /// </summary>
-    public class SystemController
+    public class SystemController : ComponentBusConnectedBase
     {
-        // Implement.
+        private readonly ActorSystem actorSystem;
+        private readonly MessagingAdapter messagingAdapter;
+        private readonly Switchboard switchboard;
+        private readonly string actorSystemName;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SystemController"/> class.
+        /// </summary>
+        /// <param name="serviceContext">The system controller service context.</param>
+        /// <param name="container">The setup container.</param>
+        /// <param name="actorSystem">The systems actor system.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="switchboard">The switchboard.</param>
+        public SystemController(
+            NautilusService serviceContext,
+            IComponentryContainer container,
+            ActorSystem actorSystem,
+            MessagingAdapter messagingAdapter,
+            Switchboard switchboard)
+            : base(
+                serviceContext,
+                LabelFactory.Component(nameof(SystemController)),
+                container,
+                messagingAdapter)
+        {
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(actorSystem, nameof(actorSystem));
+
+            this.actorSystem = actorSystem;
+            this.actorSystemName = actorSystem.Name;
+            this.messagingAdapter = messagingAdapter;
+            this.switchboard = switchboard;
+        }
+
+        /// <summary>
+        /// Starts the <see cref="Nautilus"/> system.
+        /// </summary>
+        public void Start()
+        {
+            // Allow system to initialize.
+            Task.Delay(1000).Wait();
+
+            var initializeSwitchboard =
+                new InitializeSwitchboard(
+                    this.switchboard,
+                    this.NewGuid(),
+                    this.TimeNow());
+
+            this.messagingAdapter.Send(initializeSwitchboard);
+
+            // Allow messaging system to initialize.
+            Task.Delay(300).Wait();
+
+            var start = new SystemStart(this.NewGuid(), this.TimeNow());
+            this.switchboard.Services.ForEach(s => this.Send(s, start));
+        }
+
+        /// <summary>
+        /// Shuts down the <see cref="Nautilus"/> system.
+        /// </summary>
+        public void Shutdown()
+        {
+            var shutdown = new SystemShutdown(this.NewGuid(), this.TimeNow());
+            this.switchboard.Services.ForEach(s => this.Send(s, shutdown));
+
+            this.ShutdownActorSystem();
+        }
+
+        private void ShutdownActorSystem()
+        {
+            this.Log.Information($"{this.actorSystemName} actor system shutting down...");
+            this.actorSystem.Terminate();
+            this.Log.Information($"{this.actorSystemName} actor system terminated.");
+            this.actorSystem?.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

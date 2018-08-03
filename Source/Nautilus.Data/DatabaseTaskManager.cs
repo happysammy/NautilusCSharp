@@ -10,6 +10,7 @@ namespace Nautilus.Data
 {
     using System;
     using Akka.Actor;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -53,10 +54,24 @@ namespace Nautilus.Data
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<TrimBarData>(msg => this.OnMessage(msg));
+            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
 
             // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
+        }
+
+        /// <summary>
+        /// Actions to be performed prior to stopping the <see cref="DatabaseTaskManager"/>.
+        /// </summary>
+        protected override void PostStop()
+        {
+            base.PostStop();
+        }
+
+        private void OnMessage(SystemShutdown message)
+        {
+            this.PostStop();
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)

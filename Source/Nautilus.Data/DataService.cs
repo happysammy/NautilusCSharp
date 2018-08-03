@@ -56,6 +56,15 @@ namespace Nautilus.Data
             this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
+        /// <summary>
+        /// Actions to be performed after stopping the data service.
+        /// </summary>
+        protected override void PostStop()
+        {
+            this.fixClient.Disconnect();
+            base.PostStop();
+        }
+
         private void OnMessage(SystemStart message)
         {
             this.fixClient.Connect();
@@ -101,8 +110,7 @@ namespace Nautilus.Data
 
         private void OnMessage(SystemShutdown message)
         {
-            this.fixClient.Disconnect();
-            Context.Stop(Context.Self);
+            this.PostStop();
         }
     }
 }

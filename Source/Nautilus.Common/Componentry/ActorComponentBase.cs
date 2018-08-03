@@ -103,7 +103,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         protected override void PreStart()
         {
-            this.Log.Debug($"Initializing...");
+            this.Log.Information("Initializing...");
         }
 
         /// <summary>
@@ -116,8 +116,15 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(ex, nameof(ex));
 
             this.Log.Error($"Restarting {ex.Message}", ex);
-
             this.PreStart();
+        }
+
+        /// <summary>
+        /// Post stop method when the actor base class is stopped.
+        /// </summary>
+        protected override void PostStop()
+        {
+            this.Log.Debug($"Stopping...");
         }
 
         /// <summary>
