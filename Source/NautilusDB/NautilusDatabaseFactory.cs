@@ -34,6 +34,19 @@ namespace NautilusDB
     /// </summary>
     public static class NautilusDatabaseFactory
     {
+        /// <summary>
+        /// Creates and returns a new <see cref="NautilusDatabase"/> system.
+        /// </summary>
+        /// <param name="logLevel">The log level threshold.</param>
+        /// <param name="isCompression">The is data compression on boolean flag.</param>
+        /// <param name="compressionCodec">The data compression codec.</param>
+        /// <param name="username">The FIX username.</param>
+        /// <param name="password">The FIX password.</param>
+        /// <param name="accountNumber">The FIX account number.</param>
+        /// <param name="symbols">The symbols to collect.</param>
+        /// <param name="resolutions">The resolutions to persist.</param>
+        /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
+        /// <returns></returns>
         public static NautilusDatabase Create(
             LogEventLevel logLevel,
             bool isCompression,
@@ -42,7 +55,6 @@ namespace NautilusDB
             string password,
             string accountNumber,
             IReadOnlyList<string> symbols,
-            IReadOnlyList<string> barSpecs,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {

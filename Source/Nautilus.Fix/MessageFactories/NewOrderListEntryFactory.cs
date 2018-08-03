@@ -44,6 +44,7 @@ namespace Nautilus.Fix.MessageFactories
             orderList.SetField(new ContingencyType(101));
             orderList.SetField(new NoOrders(2));
             orderList.SetField(new BidType(3));
+            orderList.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
 
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();

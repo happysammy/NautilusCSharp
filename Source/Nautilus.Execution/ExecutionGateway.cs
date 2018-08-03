@@ -24,11 +24,6 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
-    using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using Quantity = Nautilus.DomainModel.ValueObjects.Quantity;
-    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
-    using TimeInForce = Nautilus.DomainModel.Enums.TimeInForce;
-
     /// <summary>
     /// The system boundary for the trading implementation.
     /// </summary>

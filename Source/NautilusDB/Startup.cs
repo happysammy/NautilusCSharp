@@ -135,7 +135,6 @@ namespace NautilusDB
                 password,
                 accountNumber,
                 symbols,
-                barSpecs,
                 resolutions,
                 barRollingWindow);
 

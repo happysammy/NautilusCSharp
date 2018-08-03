@@ -9,8 +9,11 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
     using NodaTime;
+    using QuickFix.Fields;
+    using QuickFix.FIX44;
 
     /// <summary>
     /// Provides new order single FIX messages.
@@ -36,10 +39,37 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(order, nameof(order));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var message = new QuickFix.FIX44.NewOrderSingle();
+            var orderSingle = new NewOrderSingle();
 
-            // TODO
-            return message;
+            orderSingle.SetField(new ClOrdID(order.Id.ToString()));
+            orderSingle.SetField(new SecondaryClOrdID(order.Label.ToString()));
+            orderSingle.SetField(new Account(accountNumber));
+            orderSingle.SetField(new Symbol(brokerSymbol));
+            orderSingle.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            orderSingle.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
+            orderSingle.SetField(FixMessageHelper.GetFixOrderType(order.Type));
+            orderSingle.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
+
+            if (order.ExpireTime.HasValue)
+            {
+                // ReSharper disable once PossibleInvalidOperationException (checked above)
+                var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
+                orderSingle.SetField(new ExpireTime(expireTime));
+            }
+
+            orderSingle.SetField(new OrderQty(order.Quantity.Value));
+
+            // Set the order price depending on order type.
+            if (order.Type == OrderType.LIMIT || order.Type == OrderType.STOP_LIMIT)
+            {
+                orderSingle.SetField(new Price(order.Price.Value.Value));
+            }
+            else
+            {
+                orderSingle.SetField(new StopPx(order.Price.Value.Value));
+            }
+
+            return orderSingle;
         }
     }
 }
