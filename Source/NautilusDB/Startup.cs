@@ -11,35 +11,17 @@ namespace NautilusDB
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Akka.Actor;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Brokerage.FXCM;
-    using Nautilus.Common;
-    using Nautilus.Common.Build;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.MessageStore;
-    using Nautilus.Common.Messaging;
-    using Nautilus.Compression;
-    using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
-    using Nautilus.Data;
     using NautilusDB.Configuration;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Execution;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
-    using Nautilus.Serilog;
-    using NautilusDB.Build;
-    using NodaTime;
     using Serilog.Events;
-    using ServiceStack.Redis;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.

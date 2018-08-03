@@ -22,7 +22,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;

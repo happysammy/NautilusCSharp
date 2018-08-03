@@ -21,7 +21,6 @@ namespace NautilusDB
     using Nautilus.Compression;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution;
     using Nautilus.Redis;
     using Nautilus.Serilog;

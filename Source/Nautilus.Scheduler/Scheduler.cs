@@ -10,7 +10,6 @@ namespace Nautilus.Scheduler
 {
     using System.Collections.Specialized;
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
