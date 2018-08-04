@@ -42,12 +42,8 @@ namespace Nautilus.Execution
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            this.SetupCommandMessageHandling();
-            this.SetupServiceMessageHandling();
-        }
-
-        private void SetupCommandMessageHandling()
-        {
+            // Command message handling.
+            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
@@ -55,9 +51,13 @@ namespace Nautilus.Execution
             this.Receive<ClosePosition>(msg => this.OnMessage(msg));
         }
 
-        private void SetupServiceMessageHandling()
+        /// <summary>
+        /// Actions to be performed after the actor base is stopped.
+        /// </summary>
+        protected override void PostStop()
         {
-            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
+            this.gateway.Disconnect();
+            base.PostStop();
         }
 
         private void OnMessage(InitializeGateway message)

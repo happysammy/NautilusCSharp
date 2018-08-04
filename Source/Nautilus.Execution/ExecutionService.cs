@@ -22,7 +22,7 @@ namespace Nautilus.Execution
     /// </summary>
     public sealed class ExecutionService : ActorComponentBusConnectedBase
     {
-        private readonly IActorRef orderBusRef;
+        private readonly IEndpoint orderBusRef;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
@@ -41,21 +41,13 @@ namespace Nautilus.Execution
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            this.orderBusRef = Context.ActorOf(Props.Create(() => new OrderBus(container, messagingAdapter)));
+            this.orderBusRef = new ActorEndpoint(
+                Context.ActorOf(
+                Props.Create(() => new OrderBus(container, messagingAdapter))));
 
-            this.SetupCommandMessageHandling();
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
-            // Setup system commands.
+            // Command message handling.
             this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
-
-            // Setup trade commands.
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
@@ -63,53 +55,15 @@ namespace Nautilus.Execution
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
         }
 
-        private void OnMessage(SubmitOrder message)
+        /// <summary>
+        /// Actions to be performed after the actor base is stopped.
+        /// </summary>
+        protected override void PostStop()
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
-                this.orderBusRef.Tell(message, this.Self);
-            });
-        }
-
-        private void OnMessage(SubmitTrade message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.orderBusRef.Tell(message, this.Self);
-            });
-        }
-
-        private void OnMessage(ModifyOrder message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.orderBusRef.Tell(message, this.Self);
-            });
-        }
-
-        private void OnMessage(CloseTradeUnit message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.orderBusRef.Tell(message, this.Self);
-            });
-        }
-
-        private void OnMessage(CancelOrder message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.orderBusRef.Tell(message, this.Self);
+                this.orderBusRef.Send(PoisonPill.Instance);
+                base.PostStop();
             });
         }
 
@@ -119,7 +73,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Tell(message, this.Self);
+                this.orderBusRef.Send(message);
             });
         }
 
@@ -127,9 +81,56 @@ namespace Nautilus.Execution
         {
             Debug.NotNull(message, nameof(message));
 
+            this.Execute(this.PostStop);
+        }
+
+        private void OnMessage(SubmitOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+
             this.Execute(() =>
             {
-                // TODO
+                this.orderBusRef.Send(message);
+            });
+        }
+
+        private void OnMessage(SubmitTrade message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Execute(() =>
+            {
+                this.orderBusRef.Send(message);
+            });
+        }
+
+        private void OnMessage(ModifyOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Execute(() =>
+            {
+                this.orderBusRef.Send(message);
+            });
+        }
+
+        private void OnMessage(CloseTradeUnit message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Execute(() =>
+            {
+                this.orderBusRef.Send(message);
+            });
+        }
+
+        private void OnMessage(CancelOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Execute(() =>
+            {
+                this.orderBusRef.Send(message);
             });
         }
     }

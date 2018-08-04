@@ -25,7 +25,7 @@ namespace Nautilus.Execution
     using NodaTime;
 
     /// <summary>
-    /// The system boundary for the trading implementation.
+    /// The system boundary for the execution implementation.
     /// </summary>
     public sealed class ExecutionGateway : ComponentBusConnectedBase, IExecutionGateway
     {
