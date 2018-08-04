@@ -29,7 +29,6 @@ namespace NautilusDB
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
-        // ReSharper disable once InconsistentNaming
         private NautilusDatabase dataSystem;
 
         /// <summary>

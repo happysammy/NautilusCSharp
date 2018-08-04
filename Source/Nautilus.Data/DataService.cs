@@ -8,7 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
@@ -53,7 +52,6 @@ namespace Nautilus.Data
 
             // Command message handling.
             this.Receive<SystemStart>(msg => this.OnMessage(msg));
-            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -76,9 +74,6 @@ namespace Nautilus.Data
 
             this.fixClient.UpdateInstrumentsSubscribeAll();
             this.fixClient.RequestMarketDataSubscribeAll();
-
-            var startSystem = new SystemStart(Guid.NewGuid(), this.TimeNow());
-            this.Send(NautilusService.DataCollectionManager, startSystem);
 
             var barSpecs = new List<BarSpecification>
             {
@@ -106,11 +101,6 @@ namespace Nautilus.Data
                     this.Send(NautilusService.DataCollectionManager, subscribe);
                 }
             }
-        }
-
-        private void OnMessage(SystemShutdown message)
-        {
-            this.PostStop();
         }
     }
 }

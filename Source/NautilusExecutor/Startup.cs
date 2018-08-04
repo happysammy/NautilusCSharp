@@ -41,7 +41,6 @@ namespace NautilusExecutor
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
-        // ReSharper disable once InconsistentNaming
         private NautilusExecutor executionSystem;
 
         /// <summary>
