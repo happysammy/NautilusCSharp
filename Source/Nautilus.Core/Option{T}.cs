@@ -196,9 +196,9 @@ namespace Nautilus.Core
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return this.HasNoValue
-                 ? "NONE"
-                 : this.value.ToString();
+            return this.HasValue
+                ? this.value.ToString()
+                : "NONE";
         }
 
         private T GetValue()
