@@ -87,7 +87,7 @@ namespace Nautilus.Brokerage.FXCM
             { "XAU/USD",  40 },
             { "XPD/USD",  5 },
             { "XPT/USD",  5 },
-            { "ZAR/JPY",  5 }
+            { "ZAR/JPY",  5 },
         };
 
         /// <summary>

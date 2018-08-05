@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------------------------------------------------------
-// <copyright file="FxcmSymbolMapper.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FxcmSymbolProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -83,7 +83,7 @@ namespace Nautilus.Brokerage.FXCM
             { "USOil",    "WTIUSD" },
             { "XAG/USD",  "XAGUSD" },
             { "XAU/USD",  "XAUUSD" },
-            { "ZAR/JPY",  "ZARJPY" }
+            { "ZAR/JPY",  "ZARJPY" },
         };
 
         /// <summary>

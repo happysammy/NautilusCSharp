@@ -8,7 +8,6 @@
 
 namespace Nautilus.Brokerage.FXCM
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
@@ -93,12 +92,11 @@ namespace Nautilus.Brokerage.FXCM
         };
 
         /// <summary>
-        /// Returns the <see cref="Decimal"/> tick value of the given symbol if its contained in the
+        /// Returns the <see cref="decimal"/> tick value of the given symbol if its contained in the
         /// index.
         /// </summary>
         /// <param name="fxcmSymbol">The FXCM symbol.</param>
         /// <returns> A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<decimal> GetTickValue(string fxcmSymbol)
         {
             Validate.NotNull(fxcmSymbol, nameof(fxcmSymbol));
@@ -113,7 +111,6 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="fxcmSymbol">The FXCM symbol.</param>
         /// <returns>A <see cref="CurrencyCode"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static QueryResult<CurrencyCode> GetQuoteCurrency(string fxcmSymbol)
         {
             Validate.NotNull(fxcmSymbol, nameof(fxcmSymbol));

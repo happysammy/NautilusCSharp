@@ -8,16 +8,13 @@
 
 namespace Nautilus.Data
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The main macro object which contains the <see cref="DataService"/> and presents its API.

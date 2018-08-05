@@ -10,12 +10,11 @@ namespace Nautilus.Brokerage.FXCM
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -27,7 +26,7 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
-    using Symbol = DomainModel.ValueObjects.Symbol;
+    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
     /// The FXCM quick fix message handler.
@@ -99,6 +98,7 @@ namespace Nautilus.Brokerage.FXCM
                         // Symbol is not set so continue to next item.
                         continue;
                     }
+
                     var fxcmSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
                     var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol.Value);
@@ -106,12 +106,13 @@ namespace Nautilus.Brokerage.FXCM
                     {
                         throw new InvalidOperationException(symbolQuery.Message);
                     }
+
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
 
                     var symbolId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
-                    //var roundLot = Convert.ToInt32(group.GetField(561)); // TODO what is this??
+                    var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
                     var tickSize = Convert.ToDecimal(group.GetField(9002));
 
@@ -120,6 +121,7 @@ namespace Nautilus.Brokerage.FXCM
                     {
                         throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
                     }
+
                     var tickValue = tickValueQuery.Value;
 
                     var targetDirectSpreadQuery = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(fxcmSymbol.Value);
@@ -127,6 +129,7 @@ namespace Nautilus.Brokerage.FXCM
                     {
                         throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
                     }
+
                     var targetDirectSpread = targetDirectSpreadQuery.Value;
 
                     var contractSize = 1; // always 1 for FXCM
@@ -156,7 +159,7 @@ namespace Nautilus.Brokerage.FXCM
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        decimal.Zero, // TODO margin requirement
+                        decimal.Zero, // TODO margin requirement, also add round lot.
                         interestBuy,
                         interestSell,
                         this.TimeNow());
@@ -270,6 +273,7 @@ namespace Nautilus.Brokerage.FXCM
                     // Symbol is not set so return.
                     return;
                 }
+
                 var fxcmSymbol = message.GetField(Tags.Symbol);
 
                 var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol);
@@ -277,6 +281,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     throw new InvalidOperationException(symbolQuery.Message);
                 }
+
                 var symbol = symbolQuery.Value;
 
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
@@ -332,8 +337,6 @@ namespace Nautilus.Brokerage.FXCM
         /// Handles execution report messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation",
-            Justification = "Reviewed. Suppression is OK here because the actual variable name used for FIX is 'clOrderId'.")]
         public void OnMessage(ExecutionReport message)
         {
             this.Execute(() =>

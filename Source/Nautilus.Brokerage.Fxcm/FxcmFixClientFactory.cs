@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FixClientFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FxcmFixClientFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,8 +8,8 @@
 
 namespace Nautilus.Brokerage.FXCM
 {
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
 
@@ -26,7 +26,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="username">The FIX account username.</param>
         /// <param name="password">The FIX account password.</param>
         /// <param name="accountNumber">The FIX account number.</param>
-
+        /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,

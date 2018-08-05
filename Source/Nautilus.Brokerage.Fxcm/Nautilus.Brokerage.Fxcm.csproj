@@ -4,12 +4,12 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Brokerage.Fxcm.xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Brokerage.Fxcm.xml</DocumentationFile>
     </PropertyGroup>
@@ -20,5 +20,8 @@
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
         <ProjectReference Include="..\QuickFix.FIX44\QuickFix.FIX44.csproj" />
         <ProjectReference Include="..\QuickFix\QuickFix.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 </Project>
