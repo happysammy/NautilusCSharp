@@ -31,15 +31,15 @@ namespace Nautilus.Common.Build
             Validate.NotNull(log, nameof(log));
             Validate.NotNull(serviceTitle, nameof(serviceTitle));
 
-            log.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
-            log.Information(NautilusService.BlackBox, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(NautilusService.BlackBox, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(NautilusService.BlackBox, "---------------------------------------------------------------------------");
-            log.Information(NautilusService.Data, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            log.Information(NautilusService.Data, $"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information(NautilusService.Data, $"OS {Environment.OSVersion}");
-            log.Information(NautilusService.Data, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(NautilusService.Data, log.AssemblyVersion);
+            log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
+            log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information(NautilusService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
+            log.Information(NautilusService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            log.Information(NautilusService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information(NautilusService.Core, $"OS {Environment.OSVersion}");
+            log.Information(NautilusService.Core, $".NET Core v{GetNetCoreVersion()}");
+            log.Information(NautilusService.Core, log.AssemblyVersion);
         }
 
         private static string GetNetCoreVersion()
