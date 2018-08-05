@@ -15,10 +15,10 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Core.Validation;
-    using Newtonsoft.Json.Linq;
-    using ServiceStack;
     using Nautilus.Redis;
+    using Newtonsoft.Json.Linq;
     using Serilog.Events;
+    using ServiceStack;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -75,12 +75,10 @@ namespace NautilusExecutor
 
             if (this.Environment.IsDevelopment())
             {
-
             }
 
             if (this.Environment.IsProduction())
             {
-
             }
 
             var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
@@ -122,10 +120,10 @@ namespace NautilusExecutor
                 app.UseDeveloperExceptionPage();
             }
 
-//            app.UseServiceStack(new AppHost
-//                                    {
-//                                        AppSettings = new NetCoreAppSettings(this.Configuration)
-//                                    });
+            app.UseServiceStack(new AppHost
+                                    {
+                                        AppSettings = new NetCoreAppSettings(this.Configuration),
+                                    });
         }
 
         private void OnShutdown()

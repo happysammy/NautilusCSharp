@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusDB
+namespace NautilusExecutor
 {
     using Funq;
-    using NautilusDB.Service;
+    using global::NautilusExecutor.Service;
     using ServiceStack;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace NautilusDB
         /// Initializes a new instance of the <see cref="AppHost"/> class.
         /// </summary>
         public AppHost()
-            : base("NautilusDB", typeof(NautilusDataService).Assembly)
+            : base("NautilusExecutor", typeof(NautilusExecutorService).Assembly)
         {
         }
 

@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataService.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NautilusDataService.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,6 +8,7 @@
 
 namespace NautilusDB.Service
 {
+    using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Nautilus.Core.Validation;
     using NautilusDB.Service.Requests;
@@ -17,16 +18,21 @@ namespace NautilusDB.Service
     /// <summary>
     /// The service which processes incoming <see cref="BarDataRequest"/>(s).
     /// </summary>
-    public class BarDataService : Service
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public class NautilusDataService : Service
     {
         private readonly IZonedClock clock;
         private readonly ILoggingAdapter logger;
         private readonly IActorRef databaseTaskManagerRef;
 
-        public BarDataService(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NautilusDataService"/> class.
+        /// </summary>
+        /// <param name="clock">The clock.</param>
+        /// <param name="logger">The logger.</param>
+        public NautilusDataService(
             IZonedClock clock,
-            ILoggingAdapter logger,
-            IActorRef databaseTaskManagerRef)
+            ILoggingAdapter logger)
         {
             Validate.NotNull(clock, nameof(clock));
             Validate.NotNull(logger, nameof(logger));

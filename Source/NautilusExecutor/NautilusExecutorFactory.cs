@@ -69,7 +69,7 @@ namespace NautilusExecutor
 
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
 
-            var fixClient= FxcmFixClientFactory.Create(
+            var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
                 username,

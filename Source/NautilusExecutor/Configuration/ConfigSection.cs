@@ -14,22 +14,22 @@ namespace NautilusExecutor.Configuration
     public static class ConfigSection
     {
         /// <summary>
-        /// The logging configuration section.
+        /// Gets the logging configuration section string.
         /// </summary>
         public static string Logging => "logging";
 
         /// <summary>
-        /// The service stack configuration section.
+        /// Gets the Service Stack configuration section string.
         /// </summary>
         public static string ServiceStack => "serviceStack";
 
         /// <summary>
-        /// The FIX configuration section.
+        /// Gets the FIX configuration section string.
         /// </summary>
         public static string Fix => "fix_config";
 
         /// <summary>
-        /// The symbols to subscribe to configuration section.
+        /// Gets the symbols to subscribe to configuration section string.
         /// </summary>
         public static string Symbols => "symbols";
     }

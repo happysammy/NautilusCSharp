@@ -77,6 +77,13 @@ namespace Nautilus.Execution
             });
         }
 
+        private void OnMessage(SystemStart message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            // Not implemented.
+        }
+
         private void OnMessage(SystemShutdown message)
         {
             Debug.NotNull(message, nameof(message));

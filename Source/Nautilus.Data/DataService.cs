@@ -47,14 +47,6 @@ namespace Nautilus.Data
             this.Receive<SystemStart>(msg => this.OnMessage(msg));
         }
 
-        /// <summary>
-        /// Actions to be performed after stopping the data service.
-        /// </summary>
-        protected override void PostStop()
-        {
-            base.PostStop();
-        }
-
         private void OnMessage(SystemStart message)
         {
         }

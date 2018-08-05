@@ -8,6 +8,7 @@
 
 namespace NautilusExecutor
 {
+    using System.Threading.Tasks;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -55,6 +56,17 @@ namespace NautilusExecutor
         /// </summary>
         public void Start()
         {
+            this.fixClient.Connect();
+
+            while (!this.fixClient.IsConnected)
+            {
+                // Wait for connection.
+            }
+
+            // Allow system to prepare for incoming data.
+            Task.Delay(500).Wait();
+            this.fixClient.UpdateInstrumentsSubscribeAll();
+
             this.systemController.Start();
         }
 

@@ -78,12 +78,10 @@ namespace NautilusDB
 
             if (this.Environment.IsDevelopment())
             {
-
             }
 
             if (this.Environment.IsProduction())
             {
-
             }
 
             var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
