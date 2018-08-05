@@ -35,18 +35,18 @@ namespace NautilusDB
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="env">The hosting environment.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        /// <param name="environment">The hosting environment.</param>
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Validate.NotNull(configuration, nameof(configuration));
+            Validate.NotNull(environment, nameof(environment));
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("config.json");
 
             this.Configuration = builder.Build();
-            this.Environment = env;
+            this.Environment = environment;
         }
 
         /// <summary>
@@ -65,7 +65,6 @@ namespace NautilusDB
         /// Configures the ASP.NET Core web hosting services.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public void ConfigureServices(IServiceCollection services)
         {
             Validate.NotNull(services, nameof(services));
@@ -83,7 +82,7 @@ namespace NautilusDB
             {
             }
 
-            var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
+            var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
             var logLevel = logLevelString.ToEnum<LogEventLevel>();
 
             var isCompression = (bool)config[ConfigSection.Database]["compression"];

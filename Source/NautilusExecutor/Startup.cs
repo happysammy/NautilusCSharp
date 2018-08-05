@@ -33,7 +33,6 @@ namespace NautilusExecutor
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="environment">The hosting environment.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Validate.NotNull(configuration, nameof(configuration));
@@ -63,7 +62,6 @@ namespace NautilusExecutor
         /// Configures the ASP.NET Core web hosting services.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public void ConfigureServices(IServiceCollection services)
         {
             Validate.NotNull(services, nameof(services));
