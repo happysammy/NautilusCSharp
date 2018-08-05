@@ -22,6 +22,7 @@ namespace NautilusDB
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
+    using Nautilus.Fix;
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NautilusDB.Build;
@@ -40,9 +41,7 @@ namespace NautilusDB
         /// <param name="logLevel">The log level threshold.</param>
         /// <param name="isCompression">The is data compression on boolean flag.</param>
         /// <param name="compressionCodec">The data compression codec.</param>
-        /// <param name="username">The FIX username.</param>
-        /// <param name="password">The FIX password.</param>
-        /// <param name="accountNumber">The FIX account number.</param>
+        /// <param name="fixCredentials">The FIX credentials.</param>
         /// <param name="symbols">The symbols to collect.</param>
         /// <param name="resolutions">The resolutions to persist.</param>
         /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
@@ -51,9 +50,7 @@ namespace NautilusDB
             LogEventLevel logLevel,
             bool isCompression,
             string compressionCodec,
-            string username,
-            string password,
-            string accountNumber,
+            FixCredentials fixCredentials,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
@@ -84,9 +81,7 @@ namespace NautilusDB
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
-                username,
-                password,
-                accountNumber);
+                fixCredentials);
 
             var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,

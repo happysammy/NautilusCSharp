@@ -15,6 +15,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Core.Validation;
+    using Nautilus.Fix;
     using Nautilus.Redis;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
@@ -83,15 +84,14 @@ namespace NautilusExecutor
             var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
             var logLevel = logLevelString.ToEnum<LogEventLevel>();
 
-            var username = (string)config[ConfigSection.Fix]["username"];
-            var password = (string)config[ConfigSection.Fix]["password"];
-            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];
+            var credentials = new FixCredentials(
+                (string)config[ConfigSection.Fix]["username"],
+                (string)config[ConfigSection.Fix]["password"],
+                (string)config[ConfigSection.Fix]["accountNumber"]);
 
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,
-                username,
-                password,
-                accountNumber);
+                credentials);
 
             this.executionSystem.Start();
         }

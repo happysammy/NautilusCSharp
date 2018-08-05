@@ -17,6 +17,7 @@ namespace NautilusDB
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.Fix;
     using Nautilus.Redis;
     using NautilusDB.Configuration;
     using Newtonsoft.Json.Linq;
@@ -89,9 +90,10 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
-            var username = (string)config[ConfigSection.Fix]["username"];
-            var password = (string)config[ConfigSection.Fix]["password"];
-            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];
+            var credentials = new FixCredentials(
+                (string)config[ConfigSection.Fix]["username"],
+                (string)config[ConfigSection.Fix]["password"],
+                (string)config[ConfigSection.Fix]["accountNumber"]);
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();
@@ -128,9 +130,7 @@ namespace NautilusDB
                 logLevel,
                 isCompression,
                 compressionCodec,
-                username,
-                password,
-                accountNumber,
+                credentials,
                 symbols,
                 resolutions,
                 barRollingWindow);

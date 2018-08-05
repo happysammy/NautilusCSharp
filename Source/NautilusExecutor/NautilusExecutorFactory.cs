@@ -20,6 +20,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.Execution;
+    using Nautilus.Fix;
     using Nautilus.MsgPack;
     using Nautilus.RabbitMQ;
     using Nautilus.Redis;
@@ -37,19 +38,13 @@ namespace NautilusExecutor
         /// Creates and returns a new <see cref="NautilusExecutor"/> class.
         /// </summary>
         /// <param name="logLevel">The logger log level threshold.</param>
-        /// <param name="username">The FIX username.</param>
-        /// <param name="password">The FIX password.</param>
-        /// <param name="accountNumber">The FIX account number.</param>
+        /// <param name="fixCredentials">The FIX credentials.</param>
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
-            string username,
-            string password,
-            string accountNumber)
+            FixCredentials fixCredentials)
         {
-            Validate.NotNull(username, nameof(username));
-            Validate.NotNull(password, nameof(password));
-            Validate.NotNull(accountNumber, nameof(accountNumber));
+            Validate.NotNull(fixCredentials, nameof(fixCredentials));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
@@ -77,9 +72,7 @@ namespace NautilusExecutor
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
-                username,
-                password,
-                accountNumber);
+                fixCredentials);
 
             var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,
@@ -89,6 +82,7 @@ namespace NautilusExecutor
 
             fixClient.InitializeGateway(gateway);
 
+            // TODO: Wire up message broker to gateway.
             var messageBroker = RabbitMQServerFactory.Create(
                 actorSystem,
                 setupContainer,

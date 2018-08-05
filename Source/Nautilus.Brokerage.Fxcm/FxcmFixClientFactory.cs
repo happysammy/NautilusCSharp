@@ -23,25 +23,16 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="username">The FIX account username.</param>
-        /// <param name="password">The FIX account password.</param>
-        /// <param name="accountNumber">The FIX account number.</param>
+        /// <param name="credentials">The FIX credentials.</param>
         /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            string username,
-            string password,
-            string accountNumber)
+            FixCredentials credentials)
         {
-            Validate.NotNull(username, nameof(username));
-            Validate.NotNull(password, nameof(password));
-            Validate.NotNull(accountNumber, nameof(accountNumber));
-
-            var credentials = new FixCredentials(
-                username,
-                password,
-                accountNumber);
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(credentials, nameof(credentials));
 
             return new FixClient(
                 container,
