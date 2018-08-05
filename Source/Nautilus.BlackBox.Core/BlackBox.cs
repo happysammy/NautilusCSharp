@@ -40,7 +40,7 @@ namespace Nautilus.BlackBox.Core
     {
         private readonly ActorSystem actorSystem;
         private readonly IInstrumentRepository instrumentRepository;
-        private readonly IExecutionGateway executionGateway;
+        private readonly IFixClient fixClient;
         private readonly List<IAlphaStrategy> alphaStrategyList;
         private readonly List<IAlphaStrategy> startedStrategies;
 
@@ -83,7 +83,7 @@ namespace Nautilus.BlackBox.Core
 
             this.actorSystem = actorSystem;
             this.instrumentRepository = container.InstrumentRepository;
-            this.executionGateway = executionGateway;
+            this.fixClient = fixClient;
             this.alphaStrategyList = new List<IAlphaStrategy>();
             this.startedStrategies = new List<IAlphaStrategy>();
 
@@ -102,7 +102,7 @@ namespace Nautilus.BlackBox.Core
                     NautilusService.Execution
                 }),
                 new InitializeGateway(
-                    this.executionGateway,
+                    executionGateway,
                     this.NewGuid(),
                     this.TimeNow()));
 
@@ -114,7 +114,7 @@ namespace Nautilus.BlackBox.Core
                     this.NewGuid(),
                     this.TimeNow()));
 
-            fixClient.InitializeGateway(this.executionGateway);
+            fixClient.InitializeGateway(executionGateway);
 
             this.stopwatch.Stop();
             this.Log.Information($"BlackBox instance created in {Math.Round(this.stopwatch.ElapsedDuration().TotalMilliseconds)}ms");
@@ -134,7 +134,7 @@ namespace Nautilus.BlackBox.Core
         {
             this.Execute(() =>
             {
-                this.executionGateway.Connect();
+                this.fixClient.Connect();
             });
         }
 
@@ -283,7 +283,7 @@ namespace Nautilus.BlackBox.Core
             {
                 //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
 
-                this.executionGateway.Disconnect();
+                this.fixClient.Disconnect();
 
                 this.StopAlphaStrategyModulesAll();
                 this.RemoveAlphaStrategyModulesAll();
@@ -313,27 +313,6 @@ namespace Nautilus.BlackBox.Core
                  this.actorSystem.Dispose();
                  GC.SuppressFinalize(this);
             });
-        }
-
-        private static void WaitUntilTrueOrTimeout(bool condition, int timeoutMilliseconds, int pollIntervalMilliseconds)
-        {
-            if (timeoutMilliseconds <= 0)
-            {
-                throw new ArgumentException("timeoutMilliseconds must be > 0 milliseconds");
-            }
-
-            if (pollIntervalMilliseconds < 0)
-            {
-                throw new ArgumentException("pollIntervalMilliseconds must be >= 0 milliseconds");
-            }
-
-            var stopwatch = Stopwatch.StartNew();
-
-            do
-            {
-                Task.Delay(pollIntervalMilliseconds).Wait();
-            }
-            while (!condition && stopwatch.Elapsed < TimeSpan.FromMilliseconds(timeoutMilliseconds));
         }
     }
 }

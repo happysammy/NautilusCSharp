@@ -1,4 +1,8 @@
 ﻿{
+  "logging": {
+    "logLevel": "Information"
+  },
+
   "serviceStack": {
     "licenseKey": "5928-e1JlZjo1OTI4LE5hbWU6Q2hyaXN0b3BoZXIgU2VsbGVycyxUeXBlOkluZGllLEhhc2g6aWJrMTRjWFllU1UvVWY5dUo2OUJUWkVZOERCUkxKRkovUWxBbDRZRkpiV1hoTEN6WGIxbktUemY0Y3NLaGU4am9WL1dkbjlBVjd0V3hEN2lXM2x2UzdVYWNxVG9aeVoxdXVUcHFaaHZJMzN2UTZ1cG1WYkZoVEcwN1VVS2JGWDR1WnRqTUY5YmVYa1NlNzZ1N1RPakpnMDhZeVFkczBHdXMvN3hQUDR2R3ZvPSxFeHBpcnk6MjAxOS0wMy0xNX0="
   },

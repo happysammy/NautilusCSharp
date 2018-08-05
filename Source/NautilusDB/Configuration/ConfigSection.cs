@@ -14,6 +14,11 @@ namespace NautilusDB.Configuration
     public static class ConfigSection
     {
         /// <summary>
+        /// The logging configuration section.
+        /// </summary>
+        public static string Logging => "logging";
+
+        /// <summary>
         /// The database configuration section.
         /// </summary>
         public static string Database => "database";

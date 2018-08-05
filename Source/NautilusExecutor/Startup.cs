@@ -8,32 +8,17 @@
 
 namespace NautilusExecutor
 {
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using Akka.Actor;
-    using global::NautilusExecutor.Build;
     using global::NautilusExecutor.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Brokerage.FXCM;
-    using Nautilus.Common.Build;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
-    using Nautilus.Common.Logging;
-    using Nautilus.Common.MessageStore;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
-    using Nautilus.Execution;
     using Newtonsoft.Json.Linq;
     using ServiceStack;
     using Nautilus.Redis;
-    using Nautilus.Serilog;
-    using NodaTime;
     using Serilog.Events;
-    using ServiceStack.Redis;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -98,7 +83,7 @@ namespace NautilusExecutor
 
             }
 
-            var logLevelString = (string)config[ConfigSection.Database]["logLevel"];
+            var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
             var logLevel = logLevelString.ToEnum<LogEventLevel>();
 
             var username = (string)config[ConfigSection.Fix]["username"];

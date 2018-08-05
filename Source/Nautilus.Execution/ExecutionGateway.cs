@@ -87,22 +87,6 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Connects the brokerage client.
-        /// </summary>
-        public void Connect()
-        {
-            this.fixClient.Connect();
-        }
-
-        /// <summary>
-        /// Disconnects the brokerage client.
-        /// </summary>
-        public void Disconnect()
-        {
-            this.fixClient.Disconnect();
-        }
-
-        /// <summary>
         /// Registers the tick publisher with the tick processor.
         /// </summary>
         /// <param name="publisher">The tick publisher.</param>

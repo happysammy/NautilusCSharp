@@ -51,15 +51,6 @@ namespace Nautilus.Execution
             this.Receive<ClosePosition>(msg => this.OnMessage(msg));
         }
 
-        /// <summary>
-        /// Actions to be performed after the actor base is stopped.
-        /// </summary>
-        protected override void PostStop()
-        {
-            this.gateway.Disconnect();
-            base.PostStop();
-        }
-
         private void OnMessage(InitializeGateway message)
         {
             Debug.NotNull(message, nameof(message));

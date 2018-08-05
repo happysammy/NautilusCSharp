@@ -14,9 +14,9 @@ namespace NautilusExecutor.Configuration
     public static class ConfigSection
     {
         /// <summary>
-        /// The database configuration section.
+        /// The logging configuration section.
         /// </summary>
-        public static string Database => "database";
+        public static string Logging => "logging";
 
         /// <summary>
         /// The service stack configuration section.

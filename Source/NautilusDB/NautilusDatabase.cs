@@ -9,6 +9,7 @@
 namespace NautilusDB
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Nautilus.Common;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
@@ -65,9 +66,6 @@ namespace NautilusDB
                 // Wait for connection.
             }
 
-            this.fixClient.UpdateInstrumentsSubscribeAll();
-            this.fixClient.RequestMarketDataSubscribeAll();
-
             this.systemController.Start();
 
             var barSpecs = new List<BarSpecification>
@@ -96,6 +94,11 @@ namespace NautilusDB
                     this.Send(NautilusService.DataCollectionManager, subscribe);
                 }
             }
+
+            // Allow system to prepare for incoming data.
+            Task.Delay(500).Wait();
+            this.fixClient.UpdateInstrumentsSubscribeAll();
+            this.fixClient.RequestMarketDataSubscribeAll();
         }
 
         /// <summary>

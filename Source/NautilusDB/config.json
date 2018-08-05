@@ -1,6 +1,9 @@
 ﻿{
+  "logging": {
+    "logLevel": "Information"
+  },
+
   "database": {
-    "logLevel": "Information",
     "compression":  false,
     "compressionCodec": "lz4",
     "barDataRollingWindow": 5

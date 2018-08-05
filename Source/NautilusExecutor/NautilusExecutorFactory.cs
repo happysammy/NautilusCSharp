@@ -67,6 +67,8 @@ namespace NautilusExecutor
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
+            var instrumentRepository = new RedisInstrumentRepository(clientManager);
+
             var fixClient= FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
@@ -74,13 +76,13 @@ namespace NautilusExecutor
                 password,
                 accountNumber);
 
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
-
-            var gatewayFactory = ExecutionGatewayFactory.Create(
+            var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,
                 messagingAdapter,
                 fixClient,
                 instrumentRepository);
+
+            fixClient.InitializeGateway(gateway);
 
             var messageBroker = RabbitMQServerFactory.Create(
                 actorSystem,

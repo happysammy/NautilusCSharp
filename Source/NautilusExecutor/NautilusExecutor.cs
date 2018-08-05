@@ -63,6 +63,7 @@ namespace NautilusExecutor
         /// </summary>
         public void Shutdown()
         {
+            this.fixClient.Disconnect();
             this.systemController.Shutdown();
         }
     }

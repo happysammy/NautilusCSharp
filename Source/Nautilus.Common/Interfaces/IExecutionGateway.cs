@@ -33,16 +33,6 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Connects the brokerage client.
-        /// </summary>
-        void Connect();
-
-        /// <summary>
-        /// Disconnects the brokerage client.
-        /// </summary>
-        void Disconnect();
-
-        /// <summary>
         /// Registers the tick publisher with the execution gateway.
         /// </summary>
         /// <param name="publisher">The tick publisher.</param>
