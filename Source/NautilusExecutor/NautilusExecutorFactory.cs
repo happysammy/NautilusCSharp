@@ -18,6 +18,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.Execution;
     using Nautilus.MsgPack;
     using Nautilus.RabbitMQ;
@@ -46,6 +47,10 @@ namespace NautilusExecutor
             string password,
             string accountNumber)
         {
+            Validate.NotNull(username, nameof(username));
+            Validate.NotNull(password, nameof(password));
+            Validate.NotNull(accountNumber, nameof(accountNumber));
+
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
             BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");

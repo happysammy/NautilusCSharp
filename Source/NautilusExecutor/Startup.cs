@@ -23,28 +23,27 @@ namespace NautilusExecutor
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
-    // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
         private NautilusExecutor executionSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
-        /// application.
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="env">The hosting environment.</param>
+        /// <param name="environment">The hosting environment.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Validate.NotNull(configuration, nameof(configuration));
+            Validate.NotNull(environment, nameof(environment));
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("config.json");
 
             this.Configuration = builder.Build();
-            this.Environment = env;
+            this.Environment = environment;
         }
 
         /// <summary>

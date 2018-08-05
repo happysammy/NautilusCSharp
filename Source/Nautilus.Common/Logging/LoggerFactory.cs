@@ -9,14 +9,14 @@
 namespace Nautilus.Common.Logging
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable sealed <see cref="LoggerFactory"/> class. A factory for creating
-    /// <see cref="ILogger"/>(s).
+    /// Provides a factory for creating <see cref="Logger"/>s.
     /// </summary>
     [Immutable]
     public sealed class LoggerFactory : ILoggerFactory
@@ -35,15 +35,12 @@ namespace Nautilus.Common.Logging
         }
 
         /// <summary>
-        /// Creates and returns a new <see cref="ILogger"/> from the given service context and
-        /// component label.
+        /// Creates and returns a new <see cref="ILogger"/> from the given inputs.
         /// </summary>
-        /// <param name="service">The black box service context.</param>
-        /// <param name="component">
-        /// The component label.</param>
-        /// <returns>A <see cref="ILogger"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the component label is null.</exception>
-        public ILogger Create(Enum service, Label component)
+        /// <param name="service">The service context.</param>
+        /// <param name="component">The component label.</param>
+        /// <returns>The logger.</returns>
+        public ILogger Create(NautilusService service, Label component)
         {
             Validate.NotNull(component, nameof(component));
 

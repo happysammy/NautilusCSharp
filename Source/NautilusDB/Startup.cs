@@ -16,24 +16,22 @@ namespace NautilusDB
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Core.Validation;
-    using NautilusDB.Configuration;
     using Nautilus.DomainModel.Enums;
-    using Newtonsoft.Json.Linq;
-    using ServiceStack;
     using Nautilus.Redis;
+    using NautilusDB.Configuration;
+    using Newtonsoft.Json.Linq;
     using Serilog.Events;
+    using ServiceStack;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
-    // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup
     {
         private NautilusDatabase dataSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class. Starts the ASP.NET Core
-        /// application.
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="env">The hosting environment.</param>
@@ -89,11 +87,11 @@ namespace NautilusDB
 
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
-            var barRollingWindow = (int) config[ConfigSection.Database]["barDataRollingWindow"];
+            var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
-            var username = (string)config[ConfigSection.Fix]["username"];;
-            var password = (string)config[ConfigSection.Fix]["password"];;
-            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];;
+            var username = (string)config[ConfigSection.Fix]["username"];
+            var password = (string)config[ConfigSection.Fix]["password"];
+            var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();
@@ -101,6 +99,7 @@ namespace NautilusDB
             {
                 symbolsList.Add(ccy.ToString());
             }
+
             var symbols = symbolsList
                 .Distinct()
                 .ToList()
@@ -112,6 +111,7 @@ namespace NautilusDB
             {
                 barSpecsList.Add(barSpec.ToString());
             }
+
             var barSpecs = barSpecsList
                 .Distinct()
                 .ToList()
@@ -121,7 +121,7 @@ namespace NautilusDB
             {
                 Resolution.Second,
                 Resolution.Minute,
-                Resolution.Hour
+                Resolution.Hour,
             }.ToList().AsReadOnly();
 
             this.dataSystem = NautilusDatabaseFactory.Create(
@@ -163,7 +163,7 @@ namespace NautilusDB
 
             app.UseServiceStack(new AppHost
                                     {
-                                        AppSettings = new NetCoreAppSettings(this.Configuration)
+                                        AppSettings = new NetCoreAppSettings(this.Configuration),
                                     });
         }
 

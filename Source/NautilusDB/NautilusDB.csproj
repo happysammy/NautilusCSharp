@@ -5,12 +5,12 @@
         <OutputType>Exe</OutputType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusDB.xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusDB.xml</DocumentationFile>
     </PropertyGroup>
@@ -39,5 +39,8 @@
         <Content Include="fix_fxcm.cfg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 </Project>

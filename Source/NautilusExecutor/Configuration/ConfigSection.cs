@@ -9,7 +9,7 @@
 namespace NautilusExecutor.Configuration
 {
     /// <summary>
-    /// Provides configuration sections.
+    /// Provides JSON configuration section strings.
     /// </summary>
     public static class ConfigSection
     {

@@ -9,23 +9,23 @@
 namespace NautilusDB
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Serilog;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore;
-    using Nautilus.Common.Enums;
-    using Serilog.Events;
     using global::Serilog;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Nautilus.Common.Enums;
+    using Nautilus.Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// The main entry point for the program.
     /// </summary>
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Reviewed. Program is never instantiated.")]
     public class Program
     {
         /// <summary>
         /// The main entry point for the program.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">The program arguments.</param>
         public static void Main(string[] args)
         {
             var logger = new SerilogLogger(LogEventLevel.Information);

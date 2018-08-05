@@ -8,12 +8,12 @@
 
 namespace NautilusDB.Build
 {
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.Data.Orchestration;
     using Newtonsoft.Json.Linq;
     using NodaTime;
-    using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Orchestration;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="DataCollectionSchedule"/> from the given time and

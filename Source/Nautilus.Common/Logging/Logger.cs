@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Logging
 {
     using System;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
@@ -16,13 +17,13 @@ namespace Nautilus.Common.Logging
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Sends log events to the <see cref="ILoggingAdapter"/>.
+    /// Provides a logger with sends log events to the <see cref="ILoggingAdapter"/>.
     /// </summary>
     [Immutable]
     public sealed class Logger : ILogger
     {
         private readonly ILoggingAdapter loggingAdapter;
-        private readonly Enum service;
+        private readonly NautilusService service;
         private readonly Label component;
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Nautilus.Common.Logging
         /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public Logger(
             ILoggingAdapter loggingAdapter,
-            Enum service,
+            NautilusService service,
             Label component)
         {
             Validate.NotNull(loggingAdapter, nameof(loggingAdapter));
