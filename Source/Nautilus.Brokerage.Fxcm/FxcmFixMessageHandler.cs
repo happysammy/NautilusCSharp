@@ -35,7 +35,6 @@ namespace Nautilus.Brokerage.FXCM
     public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
         private readonly IReadOnlyDictionary<string, int> pricePrecisionIndex;
-        private readonly ITickProcessor tickProcessor;
 
         private IExecutionGateway executionGateway;
 
@@ -43,19 +42,13 @@ namespace Nautilus.Brokerage.FXCM
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
-        public FxcmFixMessageHandler(
-            IComponentryContainer container,
-            ITickProcessor tickProcessor)
+        public FxcmFixMessageHandler(IComponentryContainer container)
             : base(
                 NautilusService.FIX,
                 LabelFactory.Component(nameof(FxcmFixMessageHandler)),
                 container)
         {
-            Validate.NotNull(tickProcessor, nameof(tickProcessor));
-
             this.pricePrecisionIndex = FxcmPricePrecisionProvider.GetIndex();
-            this.tickProcessor = tickProcessor;
         }
 
         /// <summary>
@@ -296,7 +289,7 @@ namespace Nautilus.Brokerage.FXCM
                 message.GetGroup(2, group);
                 var ask = group.GetField(Tags.MDEntryPx);
 
-                this.tickProcessor.OnTick(
+                this.executionGateway.OnTick(
                     symbol,
                     Venue.FXCM,
                     Convert.ToDecimal(bid),

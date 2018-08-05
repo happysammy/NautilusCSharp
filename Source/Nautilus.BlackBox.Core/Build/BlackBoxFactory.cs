@@ -33,6 +33,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="environment">The black box environment.</param>
         /// <param name="clock">The clock.</param>
         /// <param name="loggingAdapter">The logging adapter.</param>
+        /// <param name="fixClient">The fix client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="quoteProvider">The quote provider.</param>
         /// <param name="riskModel">The risk model.</param>
@@ -44,6 +45,7 @@ namespace Nautilus.BlackBox.Core.Build
             BlackBoxEnvironment environment,
             IZonedClock clock,
             ILoggingAdapter loggingAdapter,
+            IFixClient fixClient,
             IInstrumentRepository instrumentRepository,
             IQuoteProvider quoteProvider,
             RiskModel riskModel,
@@ -106,13 +108,10 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter);
 
-            var brokerageClient =
-                servicesFactory.FixClient.Create(container, messagingAdapter, null);
-
             var gateway = gatewayFactory.Create(
                 container,
                 messagingAdapter,
-                brokerageClient,
+                fixClient,
                 instrumentRepository);
 
             var addresses = new Dictionary<NautilusService, IEndpoint>
@@ -130,7 +129,7 @@ namespace Nautilus.BlackBox.Core.Build
                 messagingAdapter,
                 new Switchboard(addresses),
                 gateway,
-                brokerageClient,
+                fixClient,
                 account,
                 riskModel);
         }

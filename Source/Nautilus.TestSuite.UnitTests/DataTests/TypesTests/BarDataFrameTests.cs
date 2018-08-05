@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.TypesTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
 {
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using System.Diagnostics.CodeAnalysis;

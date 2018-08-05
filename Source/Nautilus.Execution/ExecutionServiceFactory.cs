@@ -8,17 +8,17 @@
 
 namespace Nautilus.Execution
 {
+    using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Provides the <see cref="ExecutionService"/> for the system.
+    /// Provides a factory for creating the <see cref="ExecutionService"/>.
     /// </summary>
-    [Immutable]
-    public sealed class ExecutionServiceFactory
+    public static class ExecutionServiceFactory
     {
         /// <summary>
         /// Creates a new <see cref="ExecutionService"/> and returns its <see cref="IActorRef"/>
@@ -28,7 +28,7 @@ namespace Nautilus.Execution
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <returns>The services endpoint.</returns>
-        public IEndpoint Create(
+        public static Dictionary<NautilusService, IEndpoint> Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
@@ -37,9 +37,14 @@ namespace Nautilus.Execution
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            return new ActorEndpoint(
+            var executionService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                 () => new ExecutionService(container, messagingAdapter))));
+
+            return new Dictionary<NautilusService, IEndpoint>
+            {
+                { NautilusService.Execution, executionService },
+            };
         }
     }
 }

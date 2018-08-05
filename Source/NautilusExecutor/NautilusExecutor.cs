@@ -21,6 +21,7 @@ namespace NautilusExecutor
     public sealed class NautilusExecutor : ComponentBusConnectedBase
     {
         private readonly SystemController systemController;
+        private readonly IFixClient fixClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusExecutor"/> class.
@@ -28,10 +29,12 @@ namespace NautilusExecutor
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="systemController">The system controller.</param>
+        /// <param name="fixClient">The FIX client.</param>
         public NautilusExecutor(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            SystemController systemController)
+            SystemController systemController,
+            IFixClient fixClient)
             : base(
                 NautilusService.Core,
                 LabelFactory.Component(nameof(NautilusExecutor)),
@@ -41,8 +44,10 @@ namespace NautilusExecutor
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(systemController, nameof(systemController));
+            Validate.NotNull(fixClient, nameof(fixClient));
 
             this.systemController = systemController;
+            this.fixClient = fixClient;
         }
 
         /// <summary>

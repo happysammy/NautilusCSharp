@@ -8,12 +8,16 @@
 
 namespace NautilusDB
 {
+    using System.Collections.Generic;
     using Nautilus.Common;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Contains the Nautilus Database system.
@@ -21,6 +25,7 @@ namespace NautilusDB
     public sealed class NautilusDatabase : ComponentBusConnectedBase
     {
         private readonly SystemController systemController;
+        private readonly IFixClient fixClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
@@ -28,10 +33,12 @@ namespace NautilusDB
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="systemController">The system controller.</param>
+        /// <param name="fixClient">The FIX client.</param>
         public NautilusDatabase(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            SystemController systemController)
+            SystemController systemController,
+            IFixClient fixClient)
             : base(
                 NautilusService.Core,
                 LabelFactory.Component(nameof(NautilusDatabase)),
@@ -43,6 +50,7 @@ namespace NautilusDB
             Validate.NotNull(systemController, nameof(systemController));
 
             this.systemController = systemController;
+            this.fixClient = fixClient;
         }
 
         /// <summary>
@@ -50,7 +58,44 @@ namespace NautilusDB
         /// </summary>
         public void Start()
         {
+            this.fixClient.Connect();
+
+            while (!this.fixClient.IsConnected)
+            {
+                // Wait for connection.
+            }
+
+            this.fixClient.UpdateInstrumentsSubscribeAll();
+            this.fixClient.RequestMarketDataSubscribeAll();
+
             this.systemController.Start();
+
+            var barSpecs = new List<BarSpecification>
+            {
+                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
+                new BarSpecification(QuoteType.Ask, Resolution.Second, 1),
+                new BarSpecification(QuoteType.Mid, Resolution.Second, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Minute, 1),
+                new BarSpecification(QuoteType.Ask, Resolution.Minute, 1),
+                new BarSpecification(QuoteType.Mid, Resolution.Minute, 1),
+                new BarSpecification(QuoteType.Bid, Resolution.Hour, 1),
+                new BarSpecification(QuoteType.Ask, Resolution.Hour, 1),
+                new BarSpecification(QuoteType.Mid, Resolution.Hour, 1),
+            };
+
+            foreach (var symbol in this.fixClient.GetAllSymbols())
+            {
+                foreach (var barSpec in barSpecs)
+                {
+                    var barType = new BarType(symbol, barSpec);
+                    var subscribe = new Subscribe<BarType>(
+                        barType,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    this.Send(NautilusService.DataCollectionManager, subscribe);
+                }
+            }
         }
 
         /// <summary>
@@ -58,6 +103,7 @@ namespace NautilusDB
         /// </summary>
         public void Shutdown()
         {
+            this.fixClient.Disconnect();
             this.systemController.Shutdown();
         }
     }

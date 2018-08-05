@@ -45,19 +45,16 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         protected FixComponent(
             IComponentryContainer container,
-            ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(tickProcessor, nameof(tickProcessor));
             Validate.NotNull(credentials, nameof(credentials));
 
             this.clock = container.Clock;
@@ -92,6 +89,17 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsFixConnected => this.session.IsLoggedOn
                                          && this.sessionMd.IsLoggedOn;
+
+        /// <summary>
+        /// The initializes the execution gateway.
+        /// </summary>
+        /// <param name="gateway">The execution gateway.</param>
+        public void InitializeGateway(IExecutionGateway gateway)
+        {
+            Validate.NotNull(gateway, nameof(gateway));
+
+            this.FixMessageHandler.InitializeGateway(gateway);
+        }
 
         /// <summary>
         /// Returns the current time of the black box system clock.

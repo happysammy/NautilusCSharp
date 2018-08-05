@@ -46,7 +46,7 @@ namespace NautilusDB
         /// <param name="symbols">The symbols to collect.</param>
         /// <param name="resolutions">The resolutions to persist.</param>
         /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="Nautilus"/> system.</returns>
         public static NautilusDatabase Create(
             LogEventLevel logLevel,
             bool isCompression,
@@ -60,7 +60,7 @@ namespace NautilusDB
         {
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
-            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
+            BuildVersionChecker.Run(loggingAdapter, "NautilusDB - Financial Market Data Service");
 
             var actorSystem = ActorSystem.Create(nameof(NautilusDB));
             var clock = new Clock(DateTimeZone.Utc);
@@ -79,12 +79,22 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
-            var gatewayFactory = new ExecutionGatewayFactory();
+            var instrumentRepository = new RedisInstrumentRepository(clientManager);
 
-            var fixClientFactory = new FxcmFixClientFactory(
+            var fixClient = FxcmFixClientFactory.Create(
+                setupContainer,
+                messagingAdapter,
                 username,
                 password,
                 accountNumber);
+
+            var gateway = ExecutionGatewayFactory.Create(
+                setupContainer,
+                messagingAdapter,
+                fixClient,
+                instrumentRepository);
+
+            fixClient.InitializeGateway(gateway);
 
             var publisherFactory = new RedisChannelPublisherFactory(clientManager);
 
@@ -92,14 +102,11 @@ namespace NautilusDB
                 clientManager,
                 CompressorFactory.Create(isCompression, compressionCodec));
 
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
-
             var dataServiceAddresses = DataServiceFactory.Create(
-                setupContainer,
                 actorSystem,
+                setupContainer,
                 messagingAdapter,
-                fixClientFactory,
-                gatewayFactory,
+                gateway,
                 publisherFactory,
                 barRepository,
                 instrumentRepository,
@@ -118,7 +125,8 @@ namespace NautilusDB
             return new NautilusDatabase(
                 setupContainer,
                 messagingAdapter,
-                systemController);
+                systemController,
+                fixClient);
         }
     }
 }

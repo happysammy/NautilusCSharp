@@ -105,48 +105,13 @@ namespace NautilusExecutor
             var password = (string)config[ConfigSection.Fix]["password"];
             var accountNumber = (string)config[ConfigSection.Fix]["accountNumber"];
 
-            var symbolsJArray = (JArray)config[ConfigSection.Symbols];
-            var symbolsList = new List<string>();
-            foreach (var ccy in symbolsJArray)
-            {
-                symbolsList.Add(ccy.ToString());
-            }
-            var symbols = symbolsList
-                .Distinct()
-                .ToList()
-                .AsReadOnly();
-
-            var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Execution, $"Starting {nameof(NautilusExecutor)} builder...");
-            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
-
-            var clock = new Clock(DateTimeZone.Utc);
-            var guidFactory = new GuidFactory();
-
-            var setupContainer = new ComponentryContainer(
-                clock,
-                guidFactory,
-                new LoggerFactory(loggingAdapter));
-
-            var actorSystem = ActorSystem.Create(nameof(Nautilus.Data));
-
-            var messagingAdapter = MessagingServiceFactory.Create(
-                actorSystem,
-                setupContainer,
-                new FakeMessageStore());
-
-            var clientManager = new BasicRedisClientManager(
-                new[] { RedisConstants.LocalHost },
-                new[] { RedisConstants.LocalHost });
-
-            var gatewayFactory = new ExecutionGatewayFactory();
-
-            var fixClientFactory = new FxcmFixClientFactory(
+            this.executionSystem = NautilusExecutorFactory.Create(
+                logLevel,
                 username,
                 password,
                 accountNumber);
 
-
+            this.executionSystem.Start();
         }
 
         /// <summary>

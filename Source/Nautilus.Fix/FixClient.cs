@@ -13,13 +13,11 @@ namespace Nautilus.Fix
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
 
-    using Price = Nautilus.DomainModel.ValueObjects.Price;
-    using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
-
     /// <summary>
-    /// Provides a generic QuickFix client.
+    /// Provides a generic FIX client.
     /// </summary>
     public class FixClient : FixComponent, IFixClient
     {
@@ -31,7 +29,6 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="broker">The account brokerage.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
@@ -39,7 +36,6 @@ namespace Nautilus.Fix
         /// <param name="symbols">The list of symbols.</param>
         public FixClient(
             IComponentryContainer container,
-            ITickProcessor tickProcessor,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
@@ -48,13 +44,11 @@ namespace Nautilus.Fix
             IReadOnlyList<Symbol> symbols)
         : base(
             container,
-            tickProcessor,
             fixMessageHandler,
             fixMessageRouter,
             credentials)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(tickProcessor, nameof(tickProcessor));
             Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
             Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
             Validate.NotNull(credentials, nameof(credentials));
@@ -76,17 +70,6 @@ namespace Nautilus.Fix
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsConnected => this.IsFixConnected;
-
-        /// <summary>
-        /// The initializes the execution gateway.
-        /// </summary>
-        /// <param name="gateway">The execution gateway.</param>
-        public void InitializeGateway(IExecutionGateway gateway)
-        {
-            Validate.NotNull(gateway, nameof(gateway));
-
-            this.FixMessageHandler.InitializeGateway(gateway);
-        }
 
         /// <summary>
         /// Connects to the FIX session.

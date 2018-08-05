@@ -43,6 +43,18 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
+        /// Registers the tick publisher with the execution gateway.
+        /// </summary>
+        /// <param name="publisher">The tick publisher.</param>
+        void RegisterTickPublisher(IEndpoint publisher);
+
+        /// <summary>
+        /// Registers the bar aggregation controller with execution gateway.
+        /// </summary>
+        /// <param name="controller">The bar aggregation controller.</param>
+        void RegisterBarAggregationController(IEndpoint controller);
+
+        /// <summary>
         /// Requests market data for the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
@@ -64,12 +76,6 @@ namespace Nautilus.Common.Interfaces
         /// Requests an update on all instruments from the brokerage.
         /// </summary>
         void UpdateInstrumentsSubscribeAll();
-
-        /// <summary>
-        /// Event handler for receiving FIX Position Reports.
-        /// </summary>
-        /// <param name="account">The account.</param>
-        void OnPositionReport(string account);
 
         /// <summary>
         /// Submits an entry order with a stop-loss and profit target to the brokerage.
@@ -101,6 +107,30 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="position">The position to close.</param>
         void ClosePosition(IPosition position);
+
+        /// <summary>
+        /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
+        /// controller.
+        /// </summary>
+        /// <param name="symbol">The tick symbol.</param>
+        /// <param name="venue">The tick exchange.</param>
+        /// <param name="bid">The tick bid price.</param>
+        /// <param name="ask">The tick ask price.</param>
+        /// <param name="decimals">The expected decimal precision of the tick prices.</param>
+        /// <param name="timestamp">The tick timestamp.</param>
+        void OnTick(
+            string symbol,
+            Venue venue,
+            decimal bid,
+            decimal ask,
+            int decimals,
+            ZonedDateTime timestamp);
+
+        /// <summary>
+        /// Event handler for receiving FIX Position Reports.
+        /// </summary>
+        /// <param name="account">The account.</param>
+        void OnPositionReport(string account);
 
         /// <summary>
         /// Updates the given instruments in the instrument repository.

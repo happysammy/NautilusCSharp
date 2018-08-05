@@ -23,39 +23,30 @@ namespace Nautilus.BlackBox.Core.Build
         /// <summary>
         /// Initializes a new instance of the <see cref="BlackBoxServicesFactory"/> class.
         /// </summary>
-        /// <param name="fixClientFactory">The brokerage client factory.</param>
         /// <param name="alphaModelServiceFactory">The alpha model service factory.</param>
         /// <param name="dataServiceFactory">The data service factory.</param>
         /// <param name="executionServiceFactory">The execution service factory.</param>
         /// <param name="portfolioServiceFactory">The portfolio service factory.</param>
         /// <param name="riskServiceFactory">The risk service factory.</param>
         public BlackBoxServicesFactory(
-            IFixClientFactory fixClientFactory,
             IServiceFactory alphaModelServiceFactory,
             IServiceFactory dataServiceFactory,
             IServiceFactory executionServiceFactory,
             IServiceFactory portfolioServiceFactory,
             IServiceFactory riskServiceFactory)
         {
-            Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
             Validate.NotNull(alphaModelServiceFactory, nameof(alphaModelServiceFactory));
             Validate.NotNull(dataServiceFactory, nameof(dataServiceFactory));
             Validate.NotNull(executionServiceFactory, nameof(executionServiceFactory));
             Validate.NotNull(portfolioServiceFactory, nameof(portfolioServiceFactory));
             Validate.NotNull(riskServiceFactory, nameof(riskServiceFactory));
 
-            this.FixClient = fixClientFactory;
             this.AlphaModelService = alphaModelServiceFactory;
             this.DataService = dataServiceFactory;
             this.ExecutionService = executionServiceFactory;
             this.PortfolioService = portfolioServiceFactory;
             this.RiskService = riskServiceFactory;
         }
-
-        /// <summary>
-        /// Gets the black box brokerage service factory.
-        /// </summary>
-        public IFixClientFactory FixClient { get; }
 
         /// <summary>
         /// Gets the black box alpha model service factory.

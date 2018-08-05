@@ -16,17 +16,20 @@ namespace Nautilus.Brokerage.FXCM
     /// <summary>
     /// Provides a factory for creating FIX clients.
     /// </summary>
-    public class FxcmFixClientFactory : IFixClientFactory
+    public static class FxcmFixClientFactory
     {
-        private readonly FixCredentials credentials;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixClientFactory"/> class.
         /// </summary>
+        /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="username">The FIX account username.</param>
         /// <param name="password">The FIX account password.</param>
         /// <param name="accountNumber">The FIX account number.</param>
-        public FxcmFixClientFactory(
+
+        public static IFixClient Create(
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             string username,
             string password,
             string accountNumber)
@@ -35,34 +38,16 @@ namespace Nautilus.Brokerage.FXCM
             Validate.NotNull(password, nameof(password));
             Validate.NotNull(accountNumber, nameof(accountNumber));
 
-            this.credentials = new FixCredentials(
+            var credentials = new FixCredentials(
                 username,
                 password,
                 accountNumber);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="IFixClient"/>.
-        /// </summary>
-        /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="tickProcessor">The tick data processor.</param>
-        /// <returns></returns>
-        public IFixClient Create(
-            IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
-            ITickProcessor tickProcessor)
-        {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(tickProcessor, nameof(tickProcessor));
 
             return new FixClient(
                 container,
-                tickProcessor,
-                new FxcmFixMessageHandler(container, tickProcessor),
-                new FxcmFixMessageRouter(container, this.credentials.AccountNumber),
-                this.credentials,
+                new FxcmFixMessageHandler(container),
+                new FxcmFixMessageRouter(container, credentials.AccountNumber),
+                credentials,
                 Broker.FXCM,
                 FxcmSymbolProvider.GetAllBrokerSymbols(),
                 FxcmSymbolProvider.GetAllSymbols());

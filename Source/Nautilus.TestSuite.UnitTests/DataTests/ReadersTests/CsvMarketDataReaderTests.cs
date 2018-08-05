@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.ReadersTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.ReadersTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;

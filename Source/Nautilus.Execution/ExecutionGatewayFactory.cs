@@ -14,7 +14,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a factory for execution gateways.
     /// </summary>
-    public class ExecutionGatewayFactory : IExecutionGatewayFactory
+    public static class ExecutionGatewayFactory
     {
         /// <summary>
         /// Creates and returns a new execution gateway.
@@ -24,7 +24,7 @@ namespace Nautilus.Execution
         /// <param name="fixClient">The FIX client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <returns>The execution gateway.</returns>
-        public IExecutionGateway Create(
+        public static IExecutionGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient,

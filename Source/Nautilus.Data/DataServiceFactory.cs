@@ -16,24 +16,22 @@ namespace Nautilus.Data
     using Nautilus.Core.Validation;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Interfaces;
-    using Nautilus.Data.Processors;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
 
     /// <summary>
-    /// Provides a factory for building the database.
+    /// Provides a factory for creating the <see cref="DataService"/>.
     /// </summary>
     public static class DataServiceFactory
     {
         /// <summary>
         /// Builds the database and returns an <see cref="IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
         /// <param name="actorSystem">The actor system.</param>
+        /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="fixClientFactory">The FIX client factory.</param>
-        /// <param name="gatewayFactory">The execution gateway factory.</param>
+        /// <param name="gateway">The execution gateway.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
@@ -42,11 +40,10 @@ namespace Nautilus.Data
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
         public static Dictionary<NautilusService, IEndpoint> Create(
-            IComponentryContainer setupContainer,
             ActorSystem actorSystem,
-            MessagingAdapter messagingAdapter,
-            IFixClientFactory fixClientFactory,
-            IExecutionGatewayFactory gatewayFactory,
+            IComponentryContainer setupContainer,
+            IMessagingAdapter messagingAdapter,
+            IExecutionGateway gateway,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
@@ -55,7 +52,6 @@ namespace Nautilus.Data
             int barRollingWindow)
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
-            Validate.NotNull(fixClientFactory, nameof(fixClientFactory));
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
@@ -94,31 +90,15 @@ namespace Nautilus.Data
                     setupContainer,
                     messagingAdapter))));
 
-            var tickDataProcessor = new TickProcessor(
-                setupContainer,
-                tickPublisher,
-                barAggregationController);
-
-            var fixClient = fixClientFactory.Create(
-                setupContainer,
-                messagingAdapter,
-                tickDataProcessor);
-
-            var gateway = gatewayFactory.Create(
-                setupContainer,
-                messagingAdapter,
-                fixClient,
-                instrumentRepository);
-
-            fixClient.InitializeGateway(gateway);
+            gateway.RegisterTickPublisher(tickPublisher);
+            gateway.RegisterBarAggregationController(barAggregationController);
             instrumentRepository.CacheAll();
 
             var dataService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                     () => new DataService(
                         setupContainer,
-                        messagingAdapter,
-                        fixClient))));
+                        messagingAdapter))));
 
             return new Dictionary<NautilusService, IEndpoint>
             {

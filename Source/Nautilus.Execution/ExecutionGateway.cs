@@ -32,6 +32,9 @@ namespace Nautilus.Execution
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
 
+        private IEndpoint tickPublisher;
+        private IEndpoint barAggregationController;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionGateway"/> class.
         /// </summary>
@@ -97,6 +100,28 @@ namespace Nautilus.Execution
         public void Disconnect()
         {
             this.fixClient.Disconnect();
+        }
+
+        /// <summary>
+        /// Registers the tick publisher with the tick processor.
+        /// </summary>
+        /// <param name="publisher">The tick publisher.</param>
+        public void RegisterTickPublisher(IEndpoint publisher)
+        {
+            Validate.NotNull(publisher, nameof(publisher));
+
+            this.tickPublisher = publisher;
+        }
+
+        /// <summary>
+        /// Registers the bar aggregation controller with the tick processor.
+        /// </summary>
+        /// <param name="controller">The bar aggregation controller.</param>
+        public void RegisterBarAggregationController(IEndpoint controller)
+        {
+            Validate.NotNull(controller, nameof(controller));
+
+            this.barAggregationController = controller;
         }
 
         /// <summary>
@@ -192,6 +217,42 @@ namespace Nautilus.Execution
             Debug.NotNull(position, nameof(position));
 
             this.fixClient.ClosePosition(position);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
+        /// controller.
+        /// </summary>
+        /// <param name="symbol">The tick symbol.</param>
+        /// <param name="venue">The tick exchange.</param>
+        /// <param name="bid">The tick bid price.</param>
+        /// <param name="ask">The tick ask price.</param>
+        /// <param name="decimals">The expected decimal precision of the tick prices.</param>
+        /// <param name="timestamp">The tick timestamp.</param>
+        public void OnTick(
+            string symbol,
+            Venue venue,
+            decimal bid,
+            decimal ask,
+            int decimals,
+            ZonedDateTime timestamp)
+        {
+            this.Execute(() =>
+            {
+                Validate.NotNull(symbol, nameof(symbol));
+                Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+                Validate.DecimalNotOutOfRange(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+                Debug.Int32NotOutOfRange(decimals, nameof(decimals), 0, int.MaxValue);
+
+                var tick = new Tick(
+                    new Symbol(symbol, venue),
+                    Price.Create(bid, decimals),
+                    Price.Create(ask, decimals),
+                    timestamp);
+
+                this.tickPublisher?.Send(tick);
+                this.barAggregationController?.Send(tick);
+            });
         }
 
         /// <summary>

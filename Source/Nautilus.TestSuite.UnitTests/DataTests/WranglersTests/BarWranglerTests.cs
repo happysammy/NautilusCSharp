@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DatabaseTests.WranglersTests
+namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

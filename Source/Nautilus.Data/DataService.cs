@@ -25,19 +25,15 @@ namespace Nautilus.Data
     [PerformanceOptimized]
     public sealed class DataService : ActorComponentBusConnectedBase
     {
-        private readonly IFixClient fixClient;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="fixClient">The FIX client.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataService(
             IComponentryContainer setupContainer,
-            IMessagingAdapter messagingAdapter,
-            IFixClient fixClient)
+            IMessagingAdapter messagingAdapter)
             : base(
                 NautilusService.Data,
                 LabelFactory.Component(nameof(DataService)),
@@ -46,9 +42,6 @@ namespace Nautilus.Data
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(fixClient, nameof(fixClient));
-
-            this.fixClient = fixClient;
 
             // Command message handling.
             this.Receive<SystemStart>(msg => this.OnMessage(msg));
@@ -59,48 +52,11 @@ namespace Nautilus.Data
         /// </summary>
         protected override void PostStop()
         {
-            this.fixClient.Disconnect();
             base.PostStop();
         }
 
         private void OnMessage(SystemStart message)
         {
-            this.fixClient.Connect();
-
-            while (!this.fixClient.IsConnected)
-            {
-                // Wait for connection.
-            }
-
-            this.fixClient.UpdateInstrumentsSubscribeAll();
-            this.fixClient.RequestMarketDataSubscribeAll();
-
-            var barSpecs = new List<BarSpecification>
-            {
-                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Bid, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Bid, Resolution.Hour, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Hour, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Hour, 1),
-            };
-
-            foreach (var symbol in this.fixClient.GetAllSymbols())
-            {
-                foreach (var barSpec in barSpecs)
-                {
-                    var barType = new BarType(symbol, barSpec);
-                    var subscribe = new Subscribe<BarType>(
-                        barType,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.Send(NautilusService.DataCollectionManager, subscribe);
-                }
-            }
         }
     }
 }
