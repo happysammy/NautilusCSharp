@@ -26,7 +26,6 @@
         <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
-        <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
         <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
     </ItemGroup>
     <ItemGroup>
