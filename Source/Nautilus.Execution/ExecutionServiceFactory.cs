@@ -13,11 +13,13 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
     /// </summary>
+    [Stateless]
     public static class ExecutionServiceFactory
     {
         /// <summary>

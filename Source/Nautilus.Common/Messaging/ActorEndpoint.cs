@@ -19,7 +19,7 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides an Akka.NET actor endpoint.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class ActorEndpoint : IEndpoint
     {
         private readonly IActorRef actorRef;

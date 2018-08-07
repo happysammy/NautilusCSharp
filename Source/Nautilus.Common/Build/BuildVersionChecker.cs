@@ -18,7 +18,7 @@ namespace Nautilus.Common.Build
     /// <summary>
     /// Provides a means of checking dependency versions and outputting to the log at system initialization.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class BuildVersionChecker
     {
         /// <summary>

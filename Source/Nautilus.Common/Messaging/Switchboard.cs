@@ -19,7 +19,7 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.
     /// </summary>
-    [Immutable]
+    [Stateless]
     [PerformanceOptimized]
     public sealed class Switchboard
     {

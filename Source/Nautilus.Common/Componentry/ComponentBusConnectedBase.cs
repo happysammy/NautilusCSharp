@@ -12,6 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Interfaces;
@@ -21,6 +22,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all components which are connected to the messaging service.
     /// </summary>
+    [Stateless]
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
         /// <summary>

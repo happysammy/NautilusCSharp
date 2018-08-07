@@ -21,7 +21,7 @@ namespace Nautilus.Common.Messaging
     /// Represents a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
-    [Immutable]
+    [Stateless]
     public sealed class MessageBus<T> : ReceiveActor
         where T : Message
     {

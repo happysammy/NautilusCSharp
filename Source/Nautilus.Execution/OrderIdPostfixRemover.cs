@@ -15,7 +15,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Removes the '_R#' from any modified order identifier.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class OrderIdPostfixRemover
     {
         /// <summary>

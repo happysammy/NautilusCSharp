@@ -17,7 +17,7 @@ namespace Nautilus.Common.Logging
     /// <summary>
     /// Provides a factory for creating <see cref="Logger"/>s.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class LoggerFactory : ILoggerFactory
     {
         private readonly ILoggingAdapter loggingAdapter;

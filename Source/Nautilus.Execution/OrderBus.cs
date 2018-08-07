@@ -20,7 +20,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides an order bus for the execution service.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class OrderBus : ActorComponentBusConnectedBase
     {
         private IExecutionGateway gateway;

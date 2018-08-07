@@ -19,7 +19,7 @@ namespace Nautilus.Common.Logging
     /// <summary>
     /// Provides a logger with sends log events to the <see cref="ILoggingAdapter"/>.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class Logger : ILogger
     {
         private readonly ILoggingAdapter loggingAdapter;

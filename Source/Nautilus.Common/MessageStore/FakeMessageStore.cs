@@ -11,10 +11,12 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Provides a fake message store implementation.
     /// </summary>
+    [Stateless]
     public class FakeMessageStore : IMessageStore
     {
         /// <summary>

@@ -13,6 +13,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
@@ -27,6 +28,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// The system boundary for the execution implementation.
     /// </summary>
+    [Stateless]
     public sealed class ExecutionGateway : ComponentBusConnectedBase, IExecutionGateway
     {
         private readonly IInstrumentRepository instrumentRepository;

@@ -19,7 +19,7 @@ namespace Nautilus.Common.Messaging
     /// <summary>
     /// Provides a factory to create the systems messaging service.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class MessagingServiceFactory
     {
         /// <summary>

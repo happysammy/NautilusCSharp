@@ -15,7 +15,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// Provides <see cref="Guid"/>(s) for the system.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class GuidFactory : IGuidFactory
     {
         /// <summary>

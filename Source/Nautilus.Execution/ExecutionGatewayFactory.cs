@@ -10,11 +10,13 @@ namespace Nautilus.Execution
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a factory for execution gateways.
     /// </summary>
+    [Stateless]
     public static class ExecutionGatewayFactory
     {
         /// <summary>

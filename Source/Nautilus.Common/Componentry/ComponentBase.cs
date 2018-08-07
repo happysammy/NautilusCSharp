@@ -11,6 +11,7 @@ namespace Nautilus.Common.Componentry
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -18,6 +19,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all system components.
     /// </summary>
+    [Stateless]
     public abstract class ComponentBase
     {
         private readonly IZonedClock clock;

@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -17,6 +18,7 @@ namespace Nautilus.Common.Componentry
     /// and handles and logs all errors and exceptions. Validation exceptions are logged and swallowed,
     /// all other exceptions other than a specified exception type are logged and rethrown.
     /// </summary>
+    [Stateless]
     public class CommandHandler
     {
         private readonly ILogger log;
