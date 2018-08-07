@@ -12,8 +12,8 @@ namespace Nautilus.Core.Annotations
 
     /// <summary>
     /// This decorative attribute indicates that the annotated class or structure should be completely
-    /// immutable (to fulfill its design specification). Once instantiated the public properties of
-    /// the object should not change.
+    /// immutable to fulfill its design specification. The internal state of the object is set at
+    /// construction and no subsequent modifications are allowed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class ImmutableAttribute : Attribute
