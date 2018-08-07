@@ -9,13 +9,13 @@
 namespace Nautilus.BlackBox.AlphaModel
 {
     using Akka.Actor;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides the alpha model service for the system.

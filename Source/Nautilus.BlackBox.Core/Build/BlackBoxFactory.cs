@@ -28,7 +28,7 @@ namespace Nautilus.BlackBox.Core.Build
     public static class BlackBoxFactory
     {
         /// <summary>
-        /// Creates and returns and new black box.
+        /// Creates and returns and new black box instance.
         /// </summary>
         /// <param name="environment">The black box environment.</param>
         /// <param name="clock">The clock.</param>
@@ -39,7 +39,7 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
         /// <param name="servicesFactory">The services factory.</param>
-        /// <returns></returns>
+        /// <returns>The black box instance.</returns>
         public static BlackBox Create(
             BlackBoxEnvironment environment,
             IZonedClock clock,
@@ -111,8 +111,8 @@ namespace Nautilus.BlackBox.Core.Build
                 { NautilusService.AlphaModel, alphaModelService },
                 { NautilusService.Data, dataService },
                 { NautilusService.Execution, executionService },
-                { NautilusService.Portfolio , portfolioService },
-                { NautilusService.Risk, riskService }
+                { NautilusService.Portfolio, portfolioService },
+                { NautilusService.Risk, riskService },
             };
 
             return new BlackBox(

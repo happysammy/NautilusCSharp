@@ -4,17 +4,20 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.BlackBox.Risk.xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.BlackBox.Risk.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 </Project>

@@ -9,17 +9,16 @@
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using System.Collections.Generic;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// The immutable sealed <see cref="SignalLogic"/> class. Determines whether entry signals are
-    /// valid based on the given inputs.
+    /// Represents signal logic which determines whether entry signals are valid.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public sealed class SignalLogic : ISignalLogic
     {
         /// <summary>
@@ -57,9 +56,9 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             IReadOnlyCollection<EntrySignal> entrySignalsSell,
             Option<ExitSignal> exitSignalLong)
         {
-            Validate.NotNull(entrySignalsBuy, nameof(entrySignalsBuy));
-            Validate.NotNull(entrySignalsSell, nameof(entrySignalsSell));
-            Validate.NotNull(exitSignalLong, nameof(exitSignalLong));
+            Debug.NotNull(entrySignalsBuy, nameof(entrySignalsBuy));
+            Debug.NotNull(entrySignalsSell, nameof(entrySignalsSell));
+            Debug.NotNull(exitSignalLong, nameof(exitSignalLong));
 
             if (entrySignalsBuy.Count == 0)
             {
@@ -91,9 +90,9 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
             IReadOnlyCollection<EntrySignal> entrySignalsSell,
             Option<ExitSignal> exitSignalShort)
         {
-            Validate.NotNull(entrySignalsBuy, nameof(entrySignalsBuy));
-            Validate.NotNull(entrySignalsSell, nameof(entrySignalsSell));
-            Validate.NotNull(exitSignalShort, nameof(exitSignalShort));
+            Debug.NotNull(entrySignalsBuy, nameof(entrySignalsBuy));
+            Debug.NotNull(entrySignalsSell, nameof(entrySignalsSell));
+            Debug.NotNull(exitSignalShort, nameof(exitSignalShort));
 
             if (entrySignalsSell.Count == 0)
             {

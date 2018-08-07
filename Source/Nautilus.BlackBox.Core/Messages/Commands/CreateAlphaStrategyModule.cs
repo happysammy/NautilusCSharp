@@ -9,10 +9,10 @@
 namespace Nautilus.BlackBox.Core.Messages.Commands
 {
     using System;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

@@ -8,9 +8,9 @@
 
 namespace Nautilus.BlackBox.AlphaModel.Signal
 {
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         private readonly Dictionary<BarType, List<IActorRef>> alphaStrategyBarIndex;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlphaStrategyModule"/> store.
+        /// Initializes a new instance of the <see cref="AlphaStrategyModuleStore"/> class.
         /// </summary>
         public AlphaStrategyModuleStore()
         {

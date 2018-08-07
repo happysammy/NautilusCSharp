@@ -10,10 +10,10 @@ namespace Nautilus.BlackBox.AlphaModel.Signal
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 

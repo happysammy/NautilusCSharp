@@ -9,14 +9,13 @@
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using System.Collections.Generic;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// The immutable sealed <see cref="AlphaStrategy"/> class. Represents the modular components
-    /// of a complete financial market trading strategy.
+    /// Represents the modular components of a complete trading strategy.
     /// </summary>
     [Immutable]
     public sealed class AlphaStrategy : IAlphaStrategy

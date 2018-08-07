@@ -12,10 +12,10 @@ namespace Nautilus.BlackBox.Core
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
@@ -79,31 +79,6 @@ namespace Nautilus.BlackBox.Core
                  + $"ExpireTime={expireTime}";
         }
 
-        private static string GetPrint(IReadOnlyDictionary<int, Price> profitTargets)
-        {
-            Debug.NotNull(profitTargets, nameof(profitTargets));
-
-            if (profitTargets.Count == 0)
-            {
-                return "0";
-            }
-
-            return profitTargets.Values.Aggregate(string.Empty, (current, profitTarget) => ProfitTargetsPrintMaker(profitTarget, current));
-        }
-
-        private static string ProfitTargetsPrintMaker(Price profitTarget, string profitTargetsPrint)
-        {
-            Debug.NotNull(profitTarget, nameof(profitTarget));
-            Debug.NotNull(profitTargetsPrint, nameof(profitTargetsPrint));
-
-            if (profitTargetsPrint == string.Empty)
-            {
-                return profitTarget.ToString();
-            }
-
-            return profitTargetsPrint + ", " + profitTarget;
-        }
-
         /// <summary>
         /// Returns a formatted output string from the given input.
         /// </summary>
@@ -118,30 +93,6 @@ namespace Nautilus.BlackBox.Core
                  + $"Unit(s)={GetForUnitPrint(signal.ForUnit)}";
         }
 
-        private static string GetForUnitPrint(IReadOnlyList<int> forUnit)
-        {
-            Debug.NotNull(forUnit, nameof(forUnit));
-
-            return forUnit.Aggregate(string.Empty, (current, unit) => ForUnitPrintMaker(unit, current));
-        }
-
-        private static string ForUnitPrintMaker(int unit, string forUnitPrint)
-        {
-            Debug.NotNull(forUnitPrint, nameof(forUnitPrint));
-
-            if (forUnitPrint == string.Empty)
-            {
-                if (unit == 0)
-                {
-                    return "(ALL)";
-                }
-
-                return unit.ToString();
-            }
-
-            return forUnitPrint + ", " + unit;
-        }
-
         /// <summary>
         /// Returns a formatted output string from the given input.
         /// </summary>
@@ -154,38 +105,6 @@ namespace Nautilus.BlackBox.Core
             return $"{signal.Symbol} "
                  + $"{signal}: TrailingStopSignal for {signal.ForMarketPosition}-{signal.TradeType} trades, "
                  + $"NewStopLoss={GetForUnitStopLossPrint(signal)}";
-        }
-
-        private static string GetForUnitStopLossPrint(TrailingStopSignal signal)
-        {
-            Debug.NotNull(signal, nameof(signal));
-
-            if (signal.ForUnitStopLossPrices.Count == 1)
-            {
-                if (signal.ForUnitStopLossPrices.ContainsKey(0))
-                {
-                    return $"(ALL){signal.ForUnitStopLossPrices[0]}";
-                }
-
-                foreach (var kvp in signal.ForUnitStopLossPrices)
-                {
-                    return $"(U{kvp.Key}){kvp.Value}";
-                }
-            }
-
-            return signal.ForUnitStopLossPrices.Aggregate(string.Empty, (current, unitStopLoss) => ForUnitStopLossPrintMaker(unitStopLoss, current));
-        }
-
-        private static string ForUnitStopLossPrintMaker(KeyValuePair<int, Price> unitStopLoss, string forUnitStopLossPrint)
-        {
-            Debug.NotNull(forUnitStopLossPrint, nameof(forUnitStopLossPrint));
-
-            if (forUnitStopLossPrint == string.Empty)
-            {
-                return $"(U{unitStopLoss.Key}){unitStopLoss.Value}";
-            }
-
-            return $"{forUnitStopLossPrint}, (U{unitStopLoss.Key}){unitStopLoss.Value}";
         }
 
         /// <summary>
@@ -442,6 +361,89 @@ namespace Nautilus.BlackBox.Core
 
             return $"{@event.Symbol} OrderWorking: {@event.OrderId}, "
                  + $"AcceptedTime={@event.WorkingTime}{expireTimePrint}";
+        }
+
+        private static string ProfitTargetsPrintMaker(Price profitTarget, string profitTargetsPrint)
+        {
+            Debug.NotNull(profitTarget, nameof(profitTarget));
+            Debug.NotNull(profitTargetsPrint, nameof(profitTargetsPrint));
+
+            if (profitTargetsPrint == string.Empty)
+            {
+                return profitTarget.ToString();
+            }
+
+            return profitTargetsPrint + ", " + profitTarget;
+        }
+
+        private static string GetPrint(IReadOnlyDictionary<int, Price> profitTargets)
+        {
+            Debug.NotNull(profitTargets, nameof(profitTargets));
+
+            if (profitTargets.Count == 0)
+            {
+                return "0";
+            }
+
+            return profitTargets.Values.Aggregate(
+                string.Empty, (current, profitTarget) => ProfitTargetsPrintMaker(profitTarget, current));
+        }
+
+        private static string GetForUnitPrint(IReadOnlyList<int> forUnit)
+        {
+            Debug.NotNull(forUnit, nameof(forUnit));
+
+            return forUnit.Aggregate(string.Empty, (current, unit) => ForUnitPrintMaker(unit, current));
+        }
+
+        private static string ForUnitPrintMaker(int unit, string forUnitPrint)
+        {
+            Debug.NotNull(forUnitPrint, nameof(forUnitPrint));
+
+            if (forUnitPrint == string.Empty)
+            {
+                if (unit == 0)
+                {
+                    return "(ALL)";
+                }
+
+                return unit.ToString();
+            }
+
+            return forUnitPrint + ", " + unit;
+        }
+
+        private static string GetForUnitStopLossPrint(TrailingStopSignal signal)
+        {
+            Debug.NotNull(signal, nameof(signal));
+
+            if (signal.ForUnitStopLossPrices.Count == 1)
+            {
+                if (signal.ForUnitStopLossPrices.ContainsKey(0))
+                {
+                    return $"(ALL){signal.ForUnitStopLossPrices[0]}";
+                }
+
+                foreach (var kvp in signal.ForUnitStopLossPrices)
+                {
+                    return $"(U{kvp.Key}){kvp.Value}";
+                }
+            }
+
+            return signal.ForUnitStopLossPrices.Aggregate(
+                string.Empty, (current, unitStopLoss) => ForUnitStopLossPrintMaker(unitStopLoss, current));
+        }
+
+        private static string ForUnitStopLossPrintMaker(KeyValuePair<int, Price> unitStopLoss, string forUnitStopLossPrint)
+        {
+            Debug.NotNull(forUnitStopLossPrint, nameof(forUnitStopLossPrint));
+
+            if (forUnitStopLossPrint == string.Empty)
+            {
+                return $"(U{unitStopLoss.Key}){unitStopLoss.Value}";
+            }
+
+            return $"{forUnitStopLossPrint}, (U{unitStopLoss.Key}){unitStopLoss.Value}";
         }
     }
 }

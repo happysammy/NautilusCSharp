@@ -8,17 +8,16 @@
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
-    using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Core;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The abstract <see cref="ExitAlgorithmBase"/> class. The base class for all exit algorithms,
-    /// inherits from <see cref="AlgorithmBase"/>.
+    /// The base class for all exit algorithms.
     /// </summary>
     public abstract class ExitAlgorithmBase : AlgorithmBase
     {

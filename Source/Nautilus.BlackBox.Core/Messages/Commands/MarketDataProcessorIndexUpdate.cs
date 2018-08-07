@@ -11,9 +11,9 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -47,6 +47,5 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         /// Gets the market data processors index.
         /// </summary>
         public IDictionary<Symbol, IActorRef> MarketDataProcessorsIndex { get; }
-
     }
 }

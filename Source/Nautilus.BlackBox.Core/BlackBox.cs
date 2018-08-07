@@ -14,8 +14,6 @@ namespace Nautilus.BlackBox.Core
     using System.Linq;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.Commands;
@@ -25,6 +23,8 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -33,8 +33,7 @@ namespace Nautilus.BlackBox.Core
     using NodaTime.Extensions;
 
     /// <summary>
-    /// The <see cref="BlackBox"/> class. The object with contains all other <see cref="BlackBox"/>
-    /// components.
+    /// The object with contains all <see cref="BlackBox"/> components.
     /// </summary>
     public class BlackBox : ComponentBusConnectedBase, IDisposable
     {
@@ -51,7 +50,7 @@ namespace Nautilus.BlackBox.Core
         /// </summary>
         /// <param name="actorSystem">The actor system label.</param>
         /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter"></param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="switchboard">The service factory.</param>
         /// <param name="executionGateway">The execution gateway.</param>
         /// <param name="fixClient">The FIX client.</param>
@@ -99,7 +98,7 @@ namespace Nautilus.BlackBox.Core
                 new ReadOnlyList<NautilusService>(new List<NautilusService>
                 {
                     NautilusService.Data,
-                    NautilusService.Execution
+                    NautilusService.Execution,
                 }),
                 new InitializeGateway(
                     executionGateway,
@@ -281,8 +280,6 @@ namespace Nautilus.BlackBox.Core
         {
             this.Execute(() =>
             {
-                //this.MessagingAdapter.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()), this.Component.Context);
-
                 this.fixClient.Disconnect();
 
                 this.StopAlphaStrategyModulesAll();

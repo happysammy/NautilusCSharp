@@ -11,10 +11,10 @@ namespace Nautilus.BlackBox.Risk
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides the risk service for the system.

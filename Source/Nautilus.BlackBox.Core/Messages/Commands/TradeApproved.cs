@@ -9,15 +9,15 @@
 namespace Nautilus.BlackBox.Core.Messages.Commands
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// The immutable sealed <see cref="TradeApproved"/> class.
+    /// Represents a command which approves the contained trade base on the risk model.
     /// </summary>
     [Immutable]
     public sealed class TradeApproved : Command
@@ -47,17 +47,17 @@ namespace Nautilus.BlackBox.Core.Messages.Commands
         }
 
         /// <summary>
-        /// The messages symbol.
+        /// Gets the commands symbol.
         /// </summary>
         public Symbol Symbol => this.OrderPacket.Symbol;
 
         /// <summary>
-        /// Gets the messages order packet.
+        /// Gets the commands order packet.
         /// </summary>
         public AtomicOrderPacket OrderPacket { get; }
 
         /// <summary>
-        /// Gets the messages bars valid for entry.
+        /// Gets the commands bars valid for entry.
         /// </summary>
         public int BarsValid { get; }
     }

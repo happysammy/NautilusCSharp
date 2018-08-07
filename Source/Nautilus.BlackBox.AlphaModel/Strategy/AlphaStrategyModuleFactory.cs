@@ -9,20 +9,19 @@
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
     using Akka.Actor;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The immutable static <see cref="AlphaStrategyModuleFactory"/> class. Creates modules for the
-    /// <see cref="BlackBox"/> system based on the given inputs.
+    /// Creates modules for the <see cref="BlackBox"/> system based on the given inputs.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class AlphaStrategyModuleFactory
     {
         /// <summary>

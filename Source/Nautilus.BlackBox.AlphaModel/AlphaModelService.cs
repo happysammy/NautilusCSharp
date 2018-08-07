@@ -9,15 +9,15 @@
 namespace Nautilus.BlackBox.AlphaModel
 {
     using Akka.Actor;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.Commands;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;

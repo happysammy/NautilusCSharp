@@ -8,8 +8,8 @@
 
 namespace Nautilus.BlackBox.AlphaModel.Algorithm
 {
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -72,7 +72,7 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         protected IMarketDataProvider MarketDataProvider { get; private set; }
 
         /// <summary>
-        /// Returns the algorithms trade period.
+        /// Gets the algorithms trade period.
         /// </summary>
         protected int TradePeriod => this.TradeProfile.TradePeriod;
 
@@ -87,47 +87,47 @@ namespace Nautilus.BlackBox.AlphaModel.Algorithm
         protected int DecimalPlaces { get; }
 
         /// <summary>
-        /// Returns the last open price.
+        /// Gets the last open price.
         /// </summary>
         protected Price Open => this.BarStore.Open;
 
         /// <summary>
-        /// Returns the last high price.
+        /// Gets the last high price.
         /// </summary>
         protected Price High => this.BarStore.High;
 
         /// <summary>
-        /// Returns the last low price.
+        /// Gets the last low price.
         /// </summary>
         protected Price Low => this.BarStore.Low;
 
         /// <summary>
-        /// Returns the last close price.
+        /// Gets the last close price.
         /// </summary>
         protected Price Close => this.BarStore.Close;
 
         /// <summary>
-        /// Returns the average spread.
+        /// Gets the average spread.
         /// </summary>
         protected decimal AverageSpread => this.MarketDataProvider.AverageSpread;
 
         /// <summary>
-        /// Returns the best entry stop for buy orders.
+        /// Gets the best entry stop for buy orders.
         /// </summary>
         protected Price BestEntryStopBuy => this.CalculateBestEntryStopBuy();
 
         /// <summary>
-        /// Returns the best entry stop sell sell orders.
+        /// Gets the best entry stop sell sell orders.
         /// </summary>
         protected Price BestEntryStopSell => this.CalculateBestEntryStopSell();
 
         /// <summary>
-        /// Returns the best stop price for long positions.
+        /// Gets the best stop price for long positions.
         /// </summary>
         protected Price BestStopLong => this.CalculateBestEntryStopSell();
 
         /// <summary>
-        /// Returns the best stop price for short positions.
+        /// Gets the best stop price for short positions.
         /// </summary>
         protected Price BestStopShort => this.CalculateBestEntryStopBuy();
 

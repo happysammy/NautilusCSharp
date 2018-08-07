@@ -9,12 +9,12 @@
 namespace Nautilus.BlackBox.Risk
 {
     using Akka.Actor;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -122,7 +122,8 @@ namespace Nautilus.BlackBox.Risk
             this.Execute(() =>
             {
                 Debug.NotNull(message, nameof(message));
-                // TODO
+
+                // Not implemented.
             });
         }
     }

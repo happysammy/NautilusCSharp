@@ -8,8 +8,8 @@
 
 namespace Nautilus.BlackBox.AlphaModel.Strategy
 {
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
