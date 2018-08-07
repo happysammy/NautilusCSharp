@@ -100,14 +100,14 @@ namespace Nautilus.Serilog
         // TODO: Refactor.
         private static string ToOutput(Enum service)
         {
-            const int LogStringLength = 10;
+            const int logStringLength = 10;
 
-            if (service.ToString().Length >= LogStringLength)
+            if (service.ToString().Length >= logStringLength)
             {
                 return service.ToString();
             }
 
-            var lengthDifference = LogStringLength - service.ToString().Length;
+            var lengthDifference = logStringLength - service.ToString().Length;
 
             var underscoreAppend = string.Empty;
             var builder = new System.Text.StringBuilder();

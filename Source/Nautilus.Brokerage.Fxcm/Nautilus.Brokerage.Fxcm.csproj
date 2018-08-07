@@ -23,6 +23,7 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="QuickFix.Net.NetStandard" Version="1.7.9" />
+      <PackageReference Include="QuickFix.Core" Version="2.1.0" />
+      <PackageReference Include="QuickFix.Core.FIX44" Version="2.1.0" />
     </ItemGroup>
 </Project>

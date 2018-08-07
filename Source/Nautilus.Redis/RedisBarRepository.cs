@@ -175,5 +175,15 @@ namespace Nautilus.Redis
 
             return CommandResult.Ok();
         }
+
+        /// <summary>
+        /// Sends a command to Redis to snapshot the database to disk.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
+        public CommandResult SnapshotDatabase()
+        {
+            // Not implemented.
+            return CommandResult.Ok();
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace Nautilus.Data
 
         private void OnMessage(SystemStart message)
         {
+            this.Log.Debug($"Starting database with {message}");
         }
     }
 }

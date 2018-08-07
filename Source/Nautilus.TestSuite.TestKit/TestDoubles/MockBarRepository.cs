@@ -43,5 +43,10 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public CommandResult SnapshotDatabase()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

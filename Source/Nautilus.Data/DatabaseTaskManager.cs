@@ -54,7 +54,7 @@ namespace Nautilus.Data
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<TrimBarData>(msg => this.OnMessage(msg));
-            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
+            this.Receive<SystemShutdown>(msg => this.Shutdown());
 
             // Document messages
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
@@ -69,7 +69,7 @@ namespace Nautilus.Data
             base.PostStop();
         }
 
-        private void OnMessage(SystemShutdown message)
+        private void Shutdown()
         {
             this.PostStop();
         }

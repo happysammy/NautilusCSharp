@@ -34,11 +34,6 @@ namespace NautilusDB.Configuration
         public static string Fix => "fix_config";
 
         /// <summary>
-        /// Gets the bar specifications configuration section string.
-        /// </summary>
-        public static string BarSpecifications => "barSpecifications";
-
-        /// <summary>
         /// Gets the symbols to subscribe to configuration section string.
         /// </summary>
         public static string Symbols => "symbols";

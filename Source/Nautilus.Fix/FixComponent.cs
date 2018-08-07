@@ -166,9 +166,9 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on create.
+        /// Called when a new FIX session is created.
         /// </summary>
-        /// <param name="sessionId">The session id.</param>
+        /// <param name="sessionId">The session identifier.</param>
         public void OnCreate(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -189,9 +189,9 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on logon.
+        /// Called on logon to the FIX session.
         /// </summary>
-        /// <param name="sessionId">The session id.</param>
+        /// <param name="sessionId">The session identifier.</param>
         public void OnLogon(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -203,9 +203,9 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on logout.
+        /// Called on logout from the FIX session.
         /// </summary>
-        /// <param name="sessionId">The session id.</param>
+        /// <param name="sessionId">The session identifier.</param>
         public void OnLogout(SessionID sessionId)
         {
             this.commandHandler.Execute(() =>
@@ -217,7 +217,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The from admin.
+        /// Called when messages are received from the application.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="sessionId">The session id.</param>
@@ -226,7 +226,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The to admin.
+        /// Called when admin messages are sent from the application.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="sessionId">The session id.</param>
@@ -250,7 +250,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The from app.
+        /// Called when messages are received by the application.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="sessionId">The session id.</param>
@@ -273,11 +273,11 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The to app.
+        /// Called before messages are sent from the application.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <param name="sessionId">The session id.</param>
-        /// <exception cref="DoNotSend">Will not send.</exception>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <exception cref="DoNotSend">If possible duplication flag is true.</exception>
         public void ToApp(Message message, SessionID sessionId)
         {
             this.commandHandler.Execute<FieldNotFoundException>(() =>
@@ -301,7 +301,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the business message reject message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -311,7 +311,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the trading session status message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -321,7 +321,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the security list message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -331,7 +331,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the collateral inquiry acknowledgement message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -341,7 +341,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the collateral report message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -351,7 +351,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the request for positions acknowledgement message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -361,7 +361,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the market data request reject message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -371,7 +371,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the market data snapshot full refresh message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -381,7 +381,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the order cancel reject message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -391,7 +391,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// The on message.
+        /// Handles the execution report message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
@@ -401,7 +401,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles position report messages.
+        /// Handles the position report message.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>

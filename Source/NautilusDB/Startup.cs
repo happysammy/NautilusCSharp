@@ -106,18 +106,6 @@ namespace NautilusDB
                 .ToList()
                 .AsReadOnly();
 
-            var barSpecsJArray = (JArray)config[ConfigSection.BarSpecifications];
-            var barSpecsList = new List<string>();
-            foreach (var barSpec in barSpecsJArray)
-            {
-                barSpecsList.Add(barSpec.ToString());
-            }
-
-            var barSpecs = barSpecsList
-                .Distinct()
-                .ToList()
-                .AsReadOnly();
-
             var resolutions = new List<Resolution>
             {
                 Resolution.Second,

@@ -37,5 +37,15 @@ namespace NautilusDB.Service
                 NautilusService.Data,
                 LabelFactory.Component(nameof(NautilusDataService)));
         }
+
+        /// <summary>
+        /// Test method.
+        /// </summary>
+        public void Test()
+        {
+            var x1 = this.clock.TimeNow();
+            var x2 = this.guidFactory.NewGuid();
+            this.logger.Debug($"Test logger {x1} {x2}");
+        }
     }
 }
