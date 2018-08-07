@@ -10,13 +10,13 @@ namespace Nautilus.BlackBox.Portfolio
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.CQS;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -24,7 +24,7 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="TradeBook"/> class (implements <see cref="ITradeBook"/>).
+    /// Provides a means of organizing managed trades.
     /// </summary>
     public sealed class TradeBook : ComponentBase, ITradeBook
     {

@@ -9,13 +9,14 @@
 namespace Nautilus.BlackBox.Portfolio.Processors
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Validation;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Commands;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -23,8 +24,9 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="TrailingStopSignalProcessor"/> class.
+    /// Provides a means of processing trailing stop signals based on their properties.
     /// </summary>
+    [Stateless]
     public sealed class TrailingStopSignalProcessor : ComponentBusConnectedBase
     {
         private readonly ITradeBook tradeBook;
@@ -83,7 +85,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                                     stopLossOrder.IdCount);
                                 stopLossOrder.AddModifiedOrderId(modifiedOrderId);
 
-                                var modifyOrder= new ModifyOrder(
+                                var modifyOrder = new ModifyOrder(
                                     stopLossOrder,
                                     forUnitStopLoss.Value,
                                     this.NewGuid(),
@@ -95,6 +97,41 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                     }
                 }
             }
+        }
+
+        private static bool IsValidSignalForStopLoss(
+            TradeUnit tradeUnit,
+            KeyValuePair<int, Price> forUnitStopLoss,
+            TrailingStopSignal signal)
+        {
+            Debug.NotNull(tradeUnit, nameof(tradeUnit));
+            Debug.NotDefault(forUnitStopLoss, nameof(forUnitStopLoss));
+            Debug.NotNull(signal, nameof(signal));
+
+            if (tradeUnit.TradeStatus != TradeStatus.Active)
+            {
+                return false;
+            }
+
+            if (forUnitStopLoss.Key != 0
+                && tradeUnit.Label.ToString() != "U" + forUnitStopLoss.Key)
+            {
+                return false;
+            }
+
+            if (signal.ForMarketPosition == MarketPosition.Long
+                && tradeUnit.StopLoss.Price.Value > forUnitStopLoss.Value)
+            {
+                return false;
+            }
+
+            if (signal.ForMarketPosition == MarketPosition.Short
+                && tradeUnit.StopLoss.Price.Value < forUnitStopLoss.Value)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool IsValidSignalForTrade(Trade trade, TrailingStopSignal signal)
@@ -126,41 +163,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                     $"TrailingStop Signal {signal.ForMarketPosition}-{trade.TradeType} ignored... "
                   + $"(signal time {signal.SignalTimestamp} coincides with trade timestamp {trade.TradeTimestamp}");
 
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool IsValidSignalForStopLoss(
-            TradeUnit tradeUnit,
-            KeyValuePair<int, Price> forUnitStopLoss,
-            TrailingStopSignal signal)
-        {
-            Debug.NotNull(tradeUnit, nameof(tradeUnit));
-            Debug.NotDefault(forUnitStopLoss, nameof(forUnitStopLoss));
-            Debug.NotNull(signal, nameof(signal));
-
-            if (tradeUnit.TradeStatus != TradeStatus.Active)
-            {
-                return false;
-            }
-
-            if (forUnitStopLoss.Key != 0
-             && tradeUnit.Label.ToString() != "U" + forUnitStopLoss.Key)
-            {
-                return false;
-            }
-
-            if (signal.ForMarketPosition == MarketPosition.Long
-             && tradeUnit.StopLoss.Price.Value > forUnitStopLoss.Value)
-            {
-                return false;
-            }
-
-            if (signal.ForMarketPosition == MarketPosition.Short
-             && tradeUnit.StopLoss.Price.Value < forUnitStopLoss.Value)
-            {
                 return false;
             }
 

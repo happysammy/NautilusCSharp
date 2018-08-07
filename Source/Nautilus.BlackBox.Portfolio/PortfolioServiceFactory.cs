@@ -9,12 +9,12 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using Akka.Actor;
-    using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides the portfolio service for the system.

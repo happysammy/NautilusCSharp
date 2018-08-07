@@ -8,21 +8,23 @@
 
 namespace Nautilus.BlackBox.Portfolio.Processors
 {
-    using Nautilus.Core.Validation;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
-    using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Interfaces;
 
     /// <summary>
-    /// The sealed <see cref="EntrySignalProcessor"/> class.
+    /// Provides a means of processing entry signals based on their properties.
     /// </summary>
+    [Stateless]
     public sealed class EntrySignalProcessor : ComponentBusConnectedBase
     {
         private readonly Instrument instrument;
@@ -72,7 +74,10 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         {
             Debug.NotNull(signal, nameof(signal));
 
-            if (!this.IsTradeableSignal(signal)) return;
+            if (!this.IsTradeableSignal(signal))
+            {
+                return;
+            }
 
             var exchangeRateQuery = this.quoteProvider.GetExchangeRate(
                 this.instrument.QuoteCurrency,

@@ -10,22 +10,22 @@ namespace Nautilus.BlackBox.Portfolio
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Core.Validation;
+    using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.Commands;
-    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
-    using Nautilus.BlackBox.Core.Build;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// The sealed <see cref="SecurityPortfolio"/> class.
+    /// Provides a means of organizing the trade portfolio.
     /// </summary>
     public sealed class SecurityPortfolio : ActorComponentBusConnectedBase
     {

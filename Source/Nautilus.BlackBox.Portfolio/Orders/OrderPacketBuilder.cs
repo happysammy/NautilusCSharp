@@ -9,12 +9,12 @@
 namespace Nautilus.BlackBox.Portfolio.Orders
 {
     using System.Collections.Generic;
-    using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;

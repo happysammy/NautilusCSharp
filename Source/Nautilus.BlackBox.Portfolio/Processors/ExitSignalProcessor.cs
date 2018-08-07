@@ -8,12 +8,12 @@
 
 namespace Nautilus.BlackBox.Portfolio.Processors
 {
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -65,7 +65,8 @@ namespace Nautilus.BlackBox.Portfolio.Processors
             var tradeType = signal.TradeType;
             var trades = this.tradeBook.GetTradesByTradeType(tradeType);
 
-            foreach (var trade in trades) // TODO: refactor this nesting.
+            // TODO: refactor this nesting.
+            foreach (var trade in trades)
             {
                 if (this.IsValidSignalForTrade(trade, signal))
                 {

@@ -16,20 +16,19 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="SecurityPortfolioStore"/> class. Container for the collection of
-    /// <see cref="SecurityPortfolio"/>(s).
+    /// Provides a container for the collection of<see cref="SecurityPortfolio"/>s.
     /// </summary>
     public sealed class SecurityPortfolioStore
     {
         private readonly IDictionary<Symbol, IActorRef> portfolioIndex = new Dictionary<Symbol, IActorRef>();
 
         /// <summary>
-        /// The <see cref="SecurityPortfolio"/> count held by the store.
+        /// Gets the <see cref="SecurityPortfolio"/> count held by the store.
         /// </summary>
         public int Count => this.portfolioIndex.Count;
 
         /// <summary>
-        /// Returns a list of all <see cref="Symbol"/>(s) held by the store.
+        /// Gets a list of all <see cref="Symbol"/>(s) held by the store.
         /// </summary>
         public IReadOnlyList<Symbol> SymbolList => this.portfolioIndex.Keys.ToList();
 

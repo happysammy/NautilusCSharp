@@ -10,13 +10,13 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Extensions;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;

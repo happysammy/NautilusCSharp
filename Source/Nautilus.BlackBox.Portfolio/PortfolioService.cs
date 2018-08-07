@@ -10,18 +10,20 @@ namespace Nautilus.BlackBox.Portfolio
 {
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
-    using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// The sealed <see cref="PortfolioService"/> class.
     /// </summary>
+    [Stateless]
     public sealed class PortfolioService : ActorComponentBusConnectedBase
     {
         private readonly BlackBoxContainer storedContainer;
