@@ -77,12 +77,12 @@ namespace NautilusExecutor
             var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,
                 messagingAdapter,
+                instrumentRepository,
                 fixClient,
-                instrumentRepository);
+                NautilusService.Execution);
 
             fixClient.InitializeGateway(gateway);
 
-            // TODO: Wire up message broker to gateway.
             var messageBroker = RabbitMQServerFactory.Create(
                 actorSystem,
                 setupContainer,
@@ -107,7 +107,8 @@ namespace NautilusExecutor
                 setupContainer,
                 messagingAdapter,
                 systemController,
-                fixClient);
+                fixClient,
+                messageBroker);
         }
     }
 }

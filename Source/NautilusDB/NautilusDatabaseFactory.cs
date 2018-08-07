@@ -86,8 +86,9 @@ namespace NautilusDB
             var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,
                 messagingAdapter,
+                instrumentRepository,
                 fixClient,
-                instrumentRepository);
+                NautilusService.Core);
 
             fixClient.InitializeGateway(gateway);
 

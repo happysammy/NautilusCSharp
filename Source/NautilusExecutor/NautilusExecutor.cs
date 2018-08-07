@@ -23,6 +23,7 @@ namespace NautilusExecutor
     {
         private readonly SystemController systemController;
         private readonly IFixClient fixClient;
+        private readonly IEndpoint messageBroker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NautilusExecutor"/> class.
@@ -31,11 +32,13 @@ namespace NautilusExecutor
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="systemController">The system controller.</param>
         /// <param name="fixClient">The FIX client.</param>
+        /// <param name="messageBroker">The message broker endpoint.</param>
         public NautilusExecutor(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             SystemController systemController,
-            IFixClient fixClient)
+            IFixClient fixClient,
+            IEndpoint messageBroker)
             : base(
                 NautilusService.Core,
                 LabelFactory.Component(nameof(NautilusExecutor)),
@@ -46,9 +49,11 @@ namespace NautilusExecutor
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(systemController, nameof(systemController));
             Validate.NotNull(fixClient, nameof(fixClient));
+            Validate.NotNull(messageBroker, nameof(messageBroker));
 
             this.systemController = systemController;
             this.fixClient = fixClient;
+            this.messageBroker = messageBroker;
         }
 
         /// <summary>

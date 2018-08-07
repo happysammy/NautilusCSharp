@@ -8,6 +8,7 @@
 
 namespace Nautilus.Execution
 {
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
 
@@ -21,14 +22,16 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="fixClient">The FIX client.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="fixClient">The FIX client.</param>
+        /// <param name="receivingService">The service to receive incoming messages.</param>
         /// <returns>The execution gateway.</returns>
         public static IExecutionGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IInstrumentRepository instrumentRepository,
             IFixClient fixClient,
-            IInstrumentRepository instrumentRepository)
+            NautilusService receivingService)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
@@ -38,8 +41,9 @@ namespace Nautilus.Execution
             return new ExecutionGateway(
                 container,
                 messagingAdapter,
+                instrumentRepository,
                 fixClient,
-                instrumentRepository);
+                receivingService);
         }
     }
 }

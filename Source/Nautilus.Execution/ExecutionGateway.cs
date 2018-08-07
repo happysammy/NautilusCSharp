@@ -31,6 +31,7 @@ namespace Nautilus.Execution
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
+        private readonly NautilusService receivingService;
 
         private IEndpoint tickPublisher;
         private IEndpoint barAggregationController;
@@ -40,13 +41,15 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The trade client.</param>
-        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="receivingService">The service to receive incoming messages.</param>
         public ExecutionGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IInstrumentRepository instrumentRepository,
             IFixClient fixClient,
-            IInstrumentRepository instrumentRepository)
+            NautilusService receivingService)
             : base(
                 NautilusService.Execution,
                 new Label(nameof(ExecutionGateway)),
@@ -58,8 +61,9 @@ namespace Nautilus.Execution
             Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
-            this.fixClient = fixClient;
             this.instrumentRepository = instrumentRepository;
+            this.fixClient = fixClient;
+            this.receivingService = receivingService;
         }
 
         /// <summary>

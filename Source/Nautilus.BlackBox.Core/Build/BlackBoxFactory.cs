@@ -39,7 +39,6 @@ namespace Nautilus.BlackBox.Core.Build
         /// <param name="riskModel">The risk model.</param>
         /// <param name="account">The account.</param>
         /// <param name="servicesFactory">The services factory.</param>
-        /// <param name="gatewayFactory">The execution gateway factory.</param>
         /// <returns></returns>
         public static BlackBox Create(
             BlackBoxEnvironment environment,
@@ -50,8 +49,7 @@ namespace Nautilus.BlackBox.Core.Build
             IQuoteProvider quoteProvider,
             RiskModel riskModel,
             Account account,
-            BlackBoxServicesFactory servicesFactory,
-            IExecutionGatewayFactory gatewayFactory)
+            BlackBoxServicesFactory servicesFactory)
         {
             Validate.NotNull(clock, nameof(clock));
             Validate.NotNull(loggingAdapter, nameof(loggingAdapter));
@@ -108,12 +106,6 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter);
 
-            var gateway = gatewayFactory.Create(
-                container,
-                messagingAdapter,
-                fixClient,
-                instrumentRepository);
-
             var addresses = new Dictionary<NautilusService, IEndpoint>
             {
                 { NautilusService.AlphaModel, alphaModelService },
@@ -128,7 +120,7 @@ namespace Nautilus.BlackBox.Core.Build
                 container,
                 messagingAdapter,
                 new Switchboard(addresses),
-                gateway,
+                null,
                 fixClient,
                 account,
                 riskModel);
