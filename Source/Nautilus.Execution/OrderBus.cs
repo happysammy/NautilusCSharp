@@ -15,7 +15,7 @@ namespace Nautilus.Execution
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// Provides an order bus for the execution service.
@@ -35,7 +35,7 @@ namespace Nautilus.Execution
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Execution,
-            new Label(nameof(OrderBus)),
+            LabelFactory.Component(nameof(OrderBus)),
             container,
             messagingAdapter)
         {
@@ -62,16 +62,16 @@ namespace Nautilus.Execution
         private void OnMessage(SubmitOrder message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
+            this.IsConnectedToBroker();
             this.gateway.SubmitOrder(message.Order);
         }
 
         private void OnMessage(SubmitTrade message)
         {
             Debug.NotNull(message, nameof(message));
-            Debug.True(this.IsConnectedToBroker(), nameof(this.gateway));
 
+            this.IsConnectedToBroker();
             foreach (var atomicOrder in message.OrderPacket.Orders)
             {
                 this.RouteOrder(atomicOrder);
@@ -82,15 +82,17 @@ namespace Nautilus.Execution
 
         private void OnMessage(CancelOrder message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
+            Debug.NotNull(message, nameof(message));
 
+            this.IsConnectedToBroker();
             this.gateway.CancelOrder(message.Order);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
+            Debug.NotNull(message, nameof(message));
 
+            this.IsConnectedToBroker();
             this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
 
             this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
@@ -98,8 +100,9 @@ namespace Nautilus.Execution
 
         private void OnMessage(ClosePosition message)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
+            Debug.NotNull(message, nameof(message));
 
+            this.IsConnectedToBroker();
             this.gateway.ClosePosition(message.Position);
 
             this.Log.Debug($"Routing ClosePosition ({message.Position} => {this.gateway.Broker}");
@@ -107,24 +110,20 @@ namespace Nautilus.Execution
 
         private void RouteOrder(AtomicOrder atomicOrder)
         {
-            Validate.True(this.IsConnectedToBroker(), nameof(this.gateway));
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
+            this.IsConnectedToBroker();
             this.gateway.SubmitOrder(atomicOrder);
         }
 
-        private bool IsConnectedToBroker()
+        private void IsConnectedToBroker()
         {
             Debug.NotNull(this.gateway, nameof(this.gateway));
 
             if (!this.gateway.IsConnected)
             {
                 this.Log.Warning("Cannot process orders (not connected to broker).");
-
-                return false;
             }
-
-            return true;
         }
     }
 }
