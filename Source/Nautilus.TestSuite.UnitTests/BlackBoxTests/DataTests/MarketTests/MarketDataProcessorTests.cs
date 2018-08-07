@@ -6,6 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+#pragma warning disable 169
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.DataTests.MarketTests
 {
     using System.Diagnostics.CodeAnalysis;

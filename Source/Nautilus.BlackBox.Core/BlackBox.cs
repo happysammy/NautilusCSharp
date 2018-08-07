@@ -186,7 +186,7 @@ namespace Nautilus.BlackBox.Core
                         this.NewGuid(),
                         this.TimeNow()));
 
-                this.Log.Information($"AlphaStrategyModule starting... ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule starting... ({strategy})");
             });
         }
 
@@ -238,7 +238,7 @@ namespace Nautilus.BlackBox.Core
 
                 this.startedStrategies.Remove(strategy);
 
-                this.Log.Information($"AlphaStrategyModule stopped ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule stopped ({strategy})");
             });
         }
 
@@ -256,7 +256,7 @@ namespace Nautilus.BlackBox.Core
 
                 this.alphaStrategyList.Remove(strategy);
 
-                this.Log.Information($"AlphaStrategyModule removed ({strategy.ToString()})");
+                this.Log.Information($"AlphaStrategyModule removed ({strategy})");
             });
         }
 

@@ -11,9 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Validation;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
     public class ValidateTests
     {
         [Fact]

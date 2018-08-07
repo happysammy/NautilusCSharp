@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             var environment = BlackBoxEnvironment.Live;
 
-            this.Clock = new StubClock();;
+            this.Clock = new StubClock();
             this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
             this.LoggingAdapter = new MockLoggingAdapter();

@@ -82,6 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             const string obj = "some_random_object";
 
             // Act (ignore the warning, this is why the result is false!).
+            // ReSharper disable once SuspiciousTypeConversion.Global
             var result = label1.Equals(obj);
 
             // Assert

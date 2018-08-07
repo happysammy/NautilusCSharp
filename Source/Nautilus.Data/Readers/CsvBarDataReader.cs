@@ -252,7 +252,7 @@ namespace Nautilus.Data.Readers
         {
             Debug.NotNull(barDataProvider, nameof(barDataProvider));
 
-            // TODO: Temporary if to handle Dukas 'Hourly'.
+            // TODO: Temporary if to handle Dukascopy 'Hourly'.
             if (this.BarType.Specification.Resolution == Resolution.Hour)
             {
                 return $"{this.BarType.Symbol.Code}_"
@@ -271,7 +271,7 @@ namespace Nautilus.Data.Readers
         private QueryResult<BarDataFrame> NoDataFoundQueryResultFailure()
         {
             return QueryResult<BarDataFrame>.Fail(
-                $"No data found for {this.BarType.Specification.ToString()} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
+                $"No data found for {this.BarType.Specification} in {this.DataProvider.DataPath}{this.FilePathWildcard}");
         }
     }
 }

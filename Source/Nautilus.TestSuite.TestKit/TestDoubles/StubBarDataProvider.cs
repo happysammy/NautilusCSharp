@@ -19,7 +19,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using NodaTime;
 
     /// <summary>
-    /// Provides the <see cref="Dukascopy"/> meta-data.
+    /// Provides the stub bar data provider meta-data.
     /// </summary>
     public class StubBarDataProvider : IBarDataProvider
     {

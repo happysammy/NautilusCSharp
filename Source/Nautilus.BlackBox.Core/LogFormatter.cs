@@ -10,7 +10,6 @@ namespace Nautilus.BlackBox.Core
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using Nautilus.Core.Annotations;
@@ -22,14 +21,11 @@ namespace Nautilus.BlackBox.Core
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
-    /// The immutable static <see cref="LogFormatter"/> class. Provides strings formatted for
-    /// logging based on the given inputs.
+    /// Provides strings formatted for logging based on the given inputs.
     /// </summary>
-    [Immutable]
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Reviewed. Suppression is OK here.")]
+    [Stateless]
     public static class LogFormatter
     {
         /// <summary>
@@ -39,20 +35,20 @@ namespace Nautilus.BlackBox.Core
         /// <returns>A <see cref="string"/>.</returns>
         public static string ToOutput(Enum service)
         {
-            const int LogStringLength = 10;
+            const int logStringLength = 10;
 
-            if (service.ToString().Length >= LogStringLength)
+            if (service.ToString().Length >= logStringLength)
             {
                 return service.ToString();
             }
 
-            var lengthDifference = LogStringLength - service.ToString().Length;
+            var lengthDifference = logStringLength - service.ToString().Length;
 
             var underscoreAppend = string.Empty;
             var builder = new System.Text.StringBuilder();
             builder.Append(underscoreAppend);
 
-            for (int i = 0; i < lengthDifference; i++)
+            for (var i = 0; i < lengthDifference; i++)
             {
                 builder.Append("_");
             }
@@ -71,36 +67,21 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(signal, nameof(signal));
 
-            if (signal is null)
-            {
-                return string.Empty;
-            }
-
-            var expireTimePrint = string.Empty;
-
-            if (signal.ExpireTime.HasValue)
-            {
-                var expireTime = (ZonedDateTime)signal.ExpireTime.Value;
-
-                expireTimePrint = $"{expireTime.ToString("HH:mm:ss", CultureInfo.InvariantCulture)} UTC";
-            }
+            var expireTime = signal.ExpireTime.HasValue
+                ? signal.ExpireTime.Value.ToIsoString()
+                : string.Empty;
 
             return $"{signal.Symbol} {signal}: EntrySignal {signal.OrderSide}, "
                  + $"EntryPrice={signal.EntryPrice}, "
                  + $"StopLossPrice={signal.StopLossPrice}, "
                  + $"ProfitTargets({signal.ProfitTargets.Count})={GetPrint(signal.ProfitTargets)}, "
                  + $"SignalTimestamp={signal.SignalTimestamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture)} UTC, "
-                 + $"ExpireTime={expireTimePrint}";
+                 + $"ExpireTime={expireTime}";
         }
 
         private static string GetPrint(IReadOnlyDictionary<int, Price> profitTargets)
         {
             Debug.NotNull(profitTargets, nameof(profitTargets));
-
-            if (profitTargets is null)
-            {
-                return string.Empty;
-            }
 
             if (profitTargets.Count == 0)
             {
@@ -114,11 +95,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(profitTarget, nameof(profitTarget));
             Debug.NotNull(profitTargetsPrint, nameof(profitTargetsPrint));
-
-            if (profitTarget is null || profitTargetsPrint is null)
-            {
-                return string.Empty;
-            }
 
             if (profitTargetsPrint == string.Empty)
             {
@@ -137,11 +113,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(signal, nameof(signal));
 
-            if (signal is null)
-            {
-                return string.Empty;
-            }
-
             return $"{signal.Symbol} "
                  + $"{signal}: ExitSignal for {signal.ForMarketPosition} {signal.TradeType} trades, "
                  + $"Unit(s)={GetForUnitPrint(signal.ForUnit)}";
@@ -151,22 +122,12 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(forUnit, nameof(forUnit));
 
-            if (forUnit is null)
-            {
-                return string.Empty;
-            }
-
             return forUnit.Aggregate(string.Empty, (current, unit) => ForUnitPrintMaker(unit, current));
         }
 
         private static string ForUnitPrintMaker(int unit, string forUnitPrint)
         {
             Debug.NotNull(forUnitPrint, nameof(forUnitPrint));
-
-            if (forUnitPrint is null)
-            {
-                return string.Empty;
-            }
 
             if (forUnitPrint == string.Empty)
             {
@@ -190,24 +151,14 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(signal, nameof(signal));
 
-            if (signal is null)
-            {
-                return string.Empty;
-            }
-
             return $"{signal.Symbol} "
                  + $"{signal}: TrailingStopSignal for {signal.ForMarketPosition}-{signal.TradeType} trades, "
-                 + $"NewStoploss={GetForUnitStoplossPrint(signal)}";
+                 + $"NewStopLoss={GetForUnitStopLossPrint(signal)}";
         }
 
-        private static string GetForUnitStoplossPrint(TrailingStopSignal signal)
+        private static string GetForUnitStopLossPrint(TrailingStopSignal signal)
         {
             Debug.NotNull(signal, nameof(signal));
-
-            if (signal is null)
-            {
-                return string.Empty;
-            }
 
             if (signal.ForUnitStopLossPrices.Count == 1)
             {
@@ -222,24 +173,19 @@ namespace Nautilus.BlackBox.Core
                 }
             }
 
-            return signal.ForUnitStopLossPrices.Aggregate(string.Empty, (current, unitStoploss) => ForUnitStoplossPrintMaker(unitStoploss, current));
+            return signal.ForUnitStopLossPrices.Aggregate(string.Empty, (current, unitStopLoss) => ForUnitStopLossPrintMaker(unitStopLoss, current));
         }
 
-        private static string ForUnitStoplossPrintMaker(KeyValuePair<int, Price> unitStoploss, string forUnitStoplossPrint)
+        private static string ForUnitStopLossPrintMaker(KeyValuePair<int, Price> unitStopLoss, string forUnitStopLossPrint)
         {
-            Debug.NotNull(forUnitStoplossPrint, nameof(forUnitStoplossPrint));
+            Debug.NotNull(forUnitStopLossPrint, nameof(forUnitStopLossPrint));
 
-            if (forUnitStoplossPrint is null)
+            if (forUnitStopLossPrint == string.Empty)
             {
-                return string.Empty;
+                return $"(U{unitStopLoss.Key}){unitStopLoss.Value}";
             }
 
-            if (forUnitStoplossPrint == string.Empty)
-            {
-                return $"(U{unitStoploss.Key}){unitStoploss.Value}";
-            }
-
-            return $"{forUnitStoplossPrint}, (U{unitStoploss.Key}){unitStoploss.Value}";
+            return $"{forUnitStopLossPrint}, (U{unitStopLoss.Key}){unitStopLoss.Value}";
         }
 
         /// <summary>
@@ -251,17 +197,12 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(bar, nameof(bar));
 
-            if (bar is null)
-            {
-                return string.Empty;
-            }
-
             return $"Open={bar.Open}, "
                  + $"High={bar.High}, "
                  + $"Low={bar.Low}, "
                  + $"Close={bar.Close}, "
                  + $"Volume={bar.Volume}, "
-                 + $"SignalTimestamp={bar.Timestamp}";
+                 + $"Timestamp={bar.Timestamp}";
         }
 
         /// <summary>
@@ -273,15 +214,10 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(tick, nameof(tick));
 
-            if (tick is null)
-            {
-                return string.Empty;
-            }
-
             return $"{tick}: "
                  + $"Bid={tick.Bid}, "
                  + $"Ask={tick.Ask}, "
-                 + $"SignalTimestamp={tick.Timestamp.ToIsoString()}";
+                 + $"Timestamp={tick.Timestamp.ToIsoString()}";
         }
 
         /// <summary>
@@ -292,11 +228,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(Instrument instrument)
         {
             Debug.NotNull(instrument, nameof(instrument));
-
-            if (instrument is null)
-            {
-                return string.Empty;
-            }
 
             return $"Instrument: {instrument.Symbol}, " +
                    $"BrokerSymbol={instrument.BrokerSymbol}, " +
@@ -324,12 +255,7 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(order, nameof(order));
 
-            if (order is null)
-            {
-                return string.Empty;
-            }
-
-            return $"{order}: {order.Side}-{order.Type} {order.Quantity:N0} at {order.Price}, {order.Label}";
+            return $"{order}: {order.Side}-{order.Type} {order.Quantity.Value:N0} at {order.Price}, {order.Label}";
         }
 
         /// <summary>
@@ -341,13 +267,8 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(trade, nameof(trade));
 
-            if (trade is null)
-            {
-                return string.Empty;
-            }
-
             return $"{trade}: Units={trade.TradeUnits.Count}, "
-                 + $"TotalQuantity={trade.TotalQuantity:N0}, "
+                 + $"TotalQuantity={trade.TotalQuantity.Value:N0}, "
                  + $"(TradeStatus={trade.TradeStatus}, "
                  + $"MarketPosition={trade.MarketPosition})";
         }
@@ -360,11 +281,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(IRiskModel model)
         {
             Debug.NotNull(model, nameof(model));
-
-            if (model is null)
-            {
-                return string.Empty;
-            }
 
             return $"RiskModel: GlobalMaxRiskExposure={model.GlobalMaxRiskExposure}, "
                  + $"GlobalMaxRiskPerTrade={model.GlobalMaxRiskPerTrade}, "
@@ -382,17 +298,12 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(strategy, nameof(strategy));
 
-            if (strategy is null)
-            {
-                return string.Empty;
-            }
-
             return $"Symbol={strategy.Instrument.Symbol}, "
                  + $"TradeProfile={strategy.TradeProfile}, "
-                 + $"barTypeification={strategy.TradeProfile.BarSpecification}, "
+                 + $"barType={strategy.TradeProfile.BarSpecification}, "
                  + $"TradePeriod={strategy.TradeProfile.TradePeriod}, "
                  + $"EntryAlgorithms={strategy.EntryAlgorithms.Count}, "
-                 + $"TrailingStoplossAlgorithms={strategy.TrailingStopAlgorithms.Count}, "
+                 + $"TrailingStopLossAlgorithms={strategy.TrailingStopAlgorithms.Count}, "
                  + $"ExitAlgorithms={strategy.ExitAlgorithms.Count}";
         }
 
@@ -404,11 +315,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(AccountEvent @event)
         {
             Debug.NotNull(@event, nameof(@event));
-
-            if (@event is null)
-            {
-                return string.Empty;
-            }
 
             return $"{@event}: ({@event.Broker}-{@event.AccountNumber}) "
                  + $"CashBalance={@event.CashBalance}, "
@@ -426,11 +332,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(@event, nameof(@event));
 
-            if (@event is null)
-            {
-                return string.Empty;
-            }
-
             return $"{@event.BarType.Symbol} MarketData: {@event.Bar}, "
                  + $"AverageSpread={@event.AverageSpread}, "
                  + $"IsHistoricalData={@event.IsHistorical}";
@@ -445,11 +346,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(@event, nameof(@event));
 
-            if (@event is null)
-            {
-                return string.Empty;
-            }
-
             return $"{@event.Symbol} OrderCancelled: {@event.OrderId}, "
                  + $"CancelledTime={@event.CancelledTime}";
         }
@@ -463,11 +359,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(@event, nameof(@event));
 
-            if (@event is null)
-            {
-                return string.Empty;
-            }
-
             return $"{@event.Symbol} OrderExpired: {@event.OrderId}, "
                  + $"ExpiredTime={@event.ExpiredTime}";
         }
@@ -480,11 +371,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(OrderFilled @event)
         {
             Debug.NotNull(@event, nameof(@event));
-
-            if (@event is null)
-            {
-                return string.Empty;
-            }
 
             return $"{@event.Symbol} OrderFilled: {@event.OrderId}, "
                  + $"ExecutionId={@event.ExecutionId}, "
@@ -502,11 +388,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(@event, nameof(@event));
 
-            if (@event is null)
-            {
-                return string.Empty;
-            }
-
             return $"{@event.Symbol} OrderModified: {@event.OrderId}, "
                  + $"AcceptedTime={@event.ModifiedTime}";
         }
@@ -519,11 +400,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(OrderPartiallyFilled @event)
         {
             Debug.NotNull(@event, nameof(@event));
-
-            if (@event is null)
-            {
-                return string.Empty;
-            }
 
             return $"{@event.Symbol} OrderPartiallyFilled: {@event.OrderId}, "
                  + $"ExecutionId={@event.ExecutionId}, "
@@ -542,11 +418,6 @@ namespace Nautilus.BlackBox.Core
         {
             Debug.NotNull(@event, nameof(@event));
 
-            if (@event is null)
-            {
-                return string.Empty;
-            }
-
             return $"{@event.Symbol} OrderRejected: {@event.OrderId}, "
                  + $"RejectedTime={@event.RejectedTime}, "
                  + $"RejectedReason='{@event.RejectedReason}'";
@@ -560,11 +431,6 @@ namespace Nautilus.BlackBox.Core
         public static string ToOutput(OrderWorking @event)
         {
             Debug.NotNull(@event, nameof(@event));
-
-            if (@event is null)
-            {
-                return string.Empty;
-            }
 
             var expireTimePrint = string.Empty;
 

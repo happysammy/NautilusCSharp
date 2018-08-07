@@ -20,6 +20,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class SignalLogicTests
     {
         [Fact]
@@ -148,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         internal void IsValidSellSignal_WithSellEntryAndExitSignalsAndExitsBlockEntries_ReturnsFalse()
         {
             // Arrange
-            // SameDirectionExitSignalBlocksEntires = true.
+            // SameDirectionExitSignalBlocksEntries = true.
             var signalLogic = new SignalLogic(false, true);
 
             var entrySignalsBuy = new List<EntrySignal>();
@@ -169,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTes
         internal void IsValidSellSignal_WithBuyAndSellEntrySignalsAndOppositeDirectionSignalsBlockEntries_ReturnsFalse()
         {
             // Arrange
-            // OppositeDirectionSignalBlocksEntires = true.
+            // OppositeDirectionSignalBlocksEntries = true.
             var signalLogic = new SignalLogic(true, false);
 
             var entrySignalsBuy = new List<EntrySignal> { StubSignalBuilder.BuyEntrySignal() };

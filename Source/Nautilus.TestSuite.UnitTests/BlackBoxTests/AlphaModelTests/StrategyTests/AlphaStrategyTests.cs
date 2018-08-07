@@ -6,6 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+#pragma warning disable 169
 namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.StrategyTests
 {
     using System.Collections.Generic;

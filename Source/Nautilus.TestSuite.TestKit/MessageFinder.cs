@@ -24,36 +24,25 @@ namespace Nautilus.TestSuite.TestKit
         /// <summary>
         /// The find event.
         /// </summary>
-        /// <typeparam name="T">
-        /// The event type.
-        /// </typeparam>
-        /// <param name="envelopeList">
-        /// The envelope list.
-        /// </param>
-        /// <returns>
-        /// The <see cref="SignalEvent"/>.
-        /// </returns>
+        /// <typeparam name="T">The event type.</typeparam>
+        /// <param name="envelopeList">The envelope list.</param>
+        /// <returns>The <see cref="SignalEvent"/>.</returns>
         public static T FindSignalEvent<T>(
             IEnumerable<Envelope<EventMessage>> envelopeList) where T : Signal
         {
             return envelopeList.Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
                .Where(e => e is SignalEvent)
-               .Cast<T>()
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                .Cast<T>()
                .FirstOrDefault();
         }
 
         /// <summary>
         /// The find order event.
         /// </summary>
-        /// <param name="envelopeList">
-        /// The envelope list.
-        /// </param>
-        /// <param name="eventToFind">
-        /// The event to find.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderEvent"/>.
-        /// </returns>
+        /// <param name="envelopeList">The envelope list.</param>
+        /// <param name="eventToFind">The event to find.</param>
+        /// <returns>The <see cref="OrderEvent"/>.</returns>
         public static OrderEvent FindOrderEvent(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToFind)
         {
             return envelopeList

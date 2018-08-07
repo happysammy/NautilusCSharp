@@ -22,13 +22,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
     public class BarDataFrameTests
     {
         private readonly ITestOutputHelper output;
-        private readonly BarType _stubBarType;
+        private readonly BarType stubBarType;
 
         public BarDataFrameTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
-            this._stubBarType = StubBarType.AUDUSD();
+            this.stubBarType = StubBarType.AUDUSD();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this._stubBarType,
+                this.stubBarType,
                 bars);
 
             // Act
@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this._stubBarType,
+                this.stubBarType,
                 bars);
 
             // Act
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
             var bars = new[] { bar1, bar2 };
 
             var barDataFrame = new BarDataFrame(
-                this._stubBarType,
+                this.stubBarType,
                 bars);
 
             // Act
@@ -96,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
             var bars = new[] { bar };
 
             var barDataFrame = new BarDataFrame(
-                this._stubBarType,
+                this.stubBarType,
                 bars);
 
             // Act
@@ -110,15 +110,15 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
         internal void Serialize_WithMultipleStubBars_ReturnsExpectedString()
         {
             // Arrange
-            var bar1 = StubBarData.Create();;
-            var bar2 = StubBarData.Create(1);;
-            var bar3 = StubBarData.Create(2);;
-            var bar4 = StubBarData.Create(3);;
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(1);
+            var bar3 = StubBarData.Create(2);
+            var bar4 = StubBarData.Create(3);
 
             var bars = new[] { bar1, bar2, bar3, bar4 };
 
             var barDataFrame = new BarDataFrame(
-                this._stubBarType,
+                this.stubBarType,
                 bars);
 
             // Act

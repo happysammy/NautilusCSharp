@@ -66,6 +66,7 @@ namespace Nautilus.Data
         /// </summary>
         protected override void PostStop()
         {
+            this.barRepository.SnapshotDatabase();
             base.PostStop();
         }
 

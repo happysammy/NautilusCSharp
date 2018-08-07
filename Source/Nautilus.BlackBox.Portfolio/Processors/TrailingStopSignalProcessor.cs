@@ -20,7 +20,6 @@ namespace Nautilus.BlackBox.Portfolio.Processors
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -80,7 +79,7 @@ namespace Nautilus.BlackBox.Portfolio.Processors
                             {
                                 var stopLossOrder = tradeUnit.StopLoss;
                                 var modifiedOrderId = EntityIdFactory.ModifiedOrder(
-                                    stopLossOrder.Id as OrderId,
+                                    stopLossOrder.Id,
                                     stopLossOrder.IdCount);
                                 stopLossOrder.AddModifiedOrderId(modifiedOrderId);
 

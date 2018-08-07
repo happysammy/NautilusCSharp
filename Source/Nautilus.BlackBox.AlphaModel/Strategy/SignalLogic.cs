@@ -26,13 +26,13 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// Initializes a new instance of the <see cref="SignalLogic"/> class.
         /// </summary>
         /// <param name="oppositeDirectionSignalBlocksEntries">The opposite direction signal blocks entries boolean.</param>
-        /// <param name="sameDirectionExitSignalBlocksEntires">The exits block entries boolean.</param>
+        /// <param name="sameDirectionExitSignalBlocksEntries">The exits block entries boolean.</param>
         public SignalLogic(
             bool oppositeDirectionSignalBlocksEntries,
-            bool sameDirectionExitSignalBlocksEntires)
+            bool sameDirectionExitSignalBlocksEntries)
         {
             this.OppositeDirectionSignalBlocksEntries = oppositeDirectionSignalBlocksEntries;
-            this.SameDirectionExitSignalBlocksEntires = sameDirectionExitSignalBlocksEntires;
+            this.SameDirectionExitSignalBlocksEntries = sameDirectionExitSignalBlocksEntries;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
         /// <summary>
         /// Gets a value indicating whether exits block entries.
         /// </summary>
-        public bool SameDirectionExitSignalBlocksEntires { get; }
+        public bool SameDirectionExitSignalBlocksEntries { get; }
 
         /// <summary>
         /// Returns a value indicating whether a buy signal is valid with the given inputs.
@@ -71,7 +71,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                 return false;
             }
 
-            if (this.SameDirectionExitSignalBlocksEntires && exitSignalLong.HasValue)
+            if (this.SameDirectionExitSignalBlocksEntries && exitSignalLong.HasValue)
             {
                 return false;
             }
@@ -105,7 +105,7 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
                 return false;
             }
 
-            if (this.SameDirectionExitSignalBlocksEntires && exitSignalShort.HasValue)
+            if (this.SameDirectionExitSignalBlocksEntries && exitSignalShort.HasValue)
             {
                 return false;
             }

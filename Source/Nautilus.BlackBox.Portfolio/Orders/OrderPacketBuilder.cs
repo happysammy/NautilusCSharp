@@ -14,6 +14,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -23,8 +24,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
     using NodaTime;
 
     /// <summary>
-    /// The sealed <see cref="OrderPacketBuilder"/> class.
+    /// Provides <see cref="AtomicOrderPacket"/>s for the system.
     /// </summary>
+    [Stateless]
     public sealed class OrderPacketBuilder : ComponentBase
     {
         private readonly Instrument instrument;
@@ -100,7 +102,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 
             var atomicOrders = new List<AtomicOrder>();
 
-            for (int i = 0; i < signal.TradeProfile.Units; i++)
+            for (var i = 0; i < signal.TradeProfile.Units; i++)
             {
                 unit++;
 
@@ -162,7 +164,9 @@ namespace Nautilus.BlackBox.Portfolio.Orders
         // OrderSide cannot be undefined (as it was already checked by the signal).
         private static OrderSide GetOppositeSide(OrderSide orderSide)
         {
-            return orderSide == OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
+            return orderSide == OrderSide.BUY
+                ? OrderSide.SELL
+                : OrderSide.BUY;
         }
     }
 }

@@ -37,9 +37,11 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
+            // ReSharper disable once PossibleUnintendedReferenceComparison
             var result1 = message1 == message2;
             var result2 = message1.Equals(message2);
             // ReSharper disable once EqualExpressionComparison
+            // ReSharper disable once PossibleUnintendedReferenceComparison
             var result3 = message1 == message1;
             var result4 = message1.Equals(message1);
 

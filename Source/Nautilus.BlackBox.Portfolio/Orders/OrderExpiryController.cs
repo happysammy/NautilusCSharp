@@ -170,7 +170,7 @@ namespace Nautilus.BlackBox.Portfolio.Orders
 
         private IEnumerable<OrderId> GetCounterIdList()
         {
-            return this.orderExpiryCounters.Select(counter => counter.Order.Id as OrderId);
+            return this.orderExpiryCounters.Select(counter => counter.Order.Id);
         }
     }
 }

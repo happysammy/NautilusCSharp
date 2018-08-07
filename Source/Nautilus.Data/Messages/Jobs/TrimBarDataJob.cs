@@ -17,11 +17,5 @@ namespace Nautilus.Data.Messages.Jobs
     [Immutable]
     public class TrimBarDataJob
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrimBarDataJob"/> class.
-        /// </summary>
-        public TrimBarDataJob()
-        {
-        }
     }
 }

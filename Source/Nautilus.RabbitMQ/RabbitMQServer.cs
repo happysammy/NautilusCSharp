@@ -73,8 +73,7 @@ namespace Nautilus.RabbitMQ
                     commandChannel.ExchangeDeclare(
                         RabbitConstants.ExecutionCommandsExchange,
                         ExchangeType.Direct,
-                        durable: true,
-                        autoDelete: false);
+                        durable: true);
                     this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
 
                     commandChannel.QueueDeclare(
@@ -106,8 +105,7 @@ namespace Nautilus.RabbitMQ
                     eventChannel.ExchangeDeclare(
                         RabbitConstants.ExecutionEventsExchange,
                         ExchangeType.Fanout,
-                        durable: true,
-                        autoDelete: false);
+                        durable: true);
                     this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
 
                     eventChannel.QueueDeclare(
@@ -127,7 +125,7 @@ namespace Nautilus.RabbitMQ
             catch (Exception ex)
             {
                 this.Log.Error($"Error {ex.Message}", ex);
-                throw ex;
+                throw;
             }
 
             // Event messages

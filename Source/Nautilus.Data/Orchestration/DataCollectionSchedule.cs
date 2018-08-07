@@ -170,11 +170,17 @@ namespace Nautilus.Data.Orchestration
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var nextIntervalTime = this.previousScheduledTime + (Duration)this.IntervalDuration.Value;
+            var intervalDuration = this.IntervalDuration.HasValue
 
-            while (nextIntervalTime.Compare(timeNow) <= 0)
+                // ReSharper disable once PossibleInvalidOperationException
+                ? this.IntervalDuration.Value.Value
+                : Duration.Zero;
+
+            var nextIntervalTime = this.previousScheduledTime + intervalDuration;
+
+            while (nextIntervalTime.IsLessThanOrEqualTo(timeNow))
             {
-                nextIntervalTime = nextIntervalTime + (Duration)this.IntervalDuration.Value;
+                nextIntervalTime = nextIntervalTime + intervalDuration;
             }
 
             return nextIntervalTime;

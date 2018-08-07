@@ -8,9 +8,11 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class StubBarType
     {
         public static BarType AUDUSD()

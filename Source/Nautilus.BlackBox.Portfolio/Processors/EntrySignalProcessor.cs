@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.Portfolio.Processors
 {
-    using System;
     using Nautilus.Core.Validation;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.BlackBox.Core.Messages.Commands;
@@ -73,41 +72,39 @@ namespace Nautilus.BlackBox.Portfolio.Processors
         {
             Debug.NotNull(signal, nameof(signal));
 
-            var tradeType = signal.TradeProfile.TradeType;
+            if (!this.IsTradeableSignal(signal)) return;
 
-            if (this.IsTradeableSignal(signal))
+            var exchangeRateQuery = this.quoteProvider.GetExchangeRate(
+                this.instrument.QuoteCurrency,
+                this.account.Currency);
+
+            var exchangeRate = exchangeRateQuery.Value ?? decimal.Zero;
+
+            if (exchangeRate == decimal.Zero)
             {
-                Console.WriteLine("is tradeable = true");
-
-                var exchangeRate = this.quoteProvider.GetExchangeRate(
-                    this.instrument.QuoteCurrency,
-                    this.account.Currency);
-
-                if (exchangeRate.HasNoValue)
-                {
-                    return;
-                }
-
-                var orderPacket = this.orderPacketBuilder.Create(
-                    signal,
-                    this.account.CashBalance,
-                    this.riskModel.GetRiskPerTrade(tradeType),
-                    this.riskModel.GetHardLimitQuantity(this.instrument.Symbol),
-                    exchangeRate.Value.Value);
-
-                if (orderPacket.HasNoValue)
-                {
-                    return;
-                }
-
-                var tradeApproved = new RequestTradeApproval(
-                    orderPacket.Value,
-                    signal,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                this.Send(NautilusService.Risk, tradeApproved);
+                this.Log.Warning("Could not find exchange rate.");
+                return;
             }
+
+            var orderPacket = this.orderPacketBuilder.Create(
+                signal,
+                this.account.CashBalance,
+                this.riskModel.GetRiskPerTrade(signal.TradeProfile.TradeType),
+                this.riskModel.GetHardLimitQuantity(this.instrument.Symbol),
+                exchangeRate);
+
+            if (orderPacket.HasNoValue)
+            {
+                return;
+            }
+
+            var tradeApproved = new RequestTradeApproval(
+                orderPacket.Value,
+                signal,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(NautilusService.Risk, tradeApproved);
         }
 
         private bool IsTradeableSignal(EntrySignal signal)

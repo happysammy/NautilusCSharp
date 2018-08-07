@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// <summary>
         /// Initializes a new instance of the <see cref="TestActor"/> class.
         /// </summary>
+        // ReSharper disable once EmptyConstructor
         public TestActor()
         {
             // Do not delete.

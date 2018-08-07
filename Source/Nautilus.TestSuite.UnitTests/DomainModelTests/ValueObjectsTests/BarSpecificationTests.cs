@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="barTypeificationTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="BarSpecificationTests.cs" company="Nautech Systems Pty Ltd.">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -16,11 +16,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class barTypeificationTests
+    public class BarSpecificationTests
     {
         private readonly ITestOutputHelper output;
 
-        public barTypeificationTests(ITestOutputHelper output)
+        public BarSpecificationTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -37,6 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var result1 = barType.Equals(null);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             var result2 = barType == null;
 
             // Assert

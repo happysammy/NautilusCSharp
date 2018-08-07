@@ -16,14 +16,16 @@ namespace Nautilus.BlackBox.AlphaModel.Strategy
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// The sealed <see cref="AlphaStrategyModuleStore"/> class. Stores alpha strategy modules within
-    /// the AlphaModel service.
+    /// Stores alpha strategy modules within the alpha model service.
     /// </summary>
     public sealed class AlphaStrategyModuleStore
     {
         private readonly Dictionary<Label, IActorRef> alphaStrategyIndex;
         private readonly Dictionary<BarType, List<IActorRef>> alphaStrategyBarIndex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlphaStrategyModule"/> store.
+        /// </summary>
         public AlphaStrategyModuleStore()
         {
             this.alphaStrategyIndex = new Dictionary<Label, IActorRef>();
