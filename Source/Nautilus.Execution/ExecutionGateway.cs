@@ -9,11 +9,13 @@
 namespace Nautilus.Execution
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
@@ -29,43 +31,37 @@ namespace Nautilus.Execution
     /// The system boundary for the execution implementation.
     /// </summary>
     [Stateless]
-    public sealed class ExecutionGateway : ComponentBusConnectedBase, IExecutionGateway
+    [PerformanceOptimized]
+    public sealed class ExecutionGateway : ComponentBase, IExecutionGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
-        private readonly NautilusService receivingService;
-
-        private IEndpoint tickPublisher;
-        private IEndpoint barAggregationController;
+        private ReadOnlyList<IEndpoint> tickReceivers;
+        private ReadOnlyList<IEndpoint> eventReceivers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The trade client.</param>
-        /// <param name="receivingService">The service to receive incoming messages.</param>
         public ExecutionGateway(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
             IInstrumentRepository instrumentRepository,
-            IFixClient fixClient,
-            NautilusService receivingService)
+            IFixClient fixClient)
             : base(
                 NautilusService.Execution,
                 new Label(nameof(ExecutionGateway)),
-                container,
-                messagingAdapter)
+                container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             this.instrumentRepository = instrumentRepository;
             this.fixClient = fixClient;
-            this.receivingService = receivingService;
+            this.tickReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
+            this.eventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
         }
 
         /// <summary>
@@ -93,25 +89,33 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Registers the tick publisher with the tick processor.
+        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
-        /// <param name="publisher">The tick publisher.</param>
-        public void RegisterTickPublisher(IEndpoint publisher)
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterTickReceiver(IEndpoint receiver)
         {
-            Validate.NotNull(publisher, nameof(publisher));
+            Validate.NotNull(receiver, nameof(receiver));
+            Debug.CollectionDoesNotContain(receiver, nameof(receiver), this.tickReceivers);
 
-            this.tickPublisher = publisher;
+            var receivers = this.tickReceivers.ToList();
+            receivers.Add(receiver);
+
+            this.tickReceivers = new ReadOnlyList<IEndpoint>(receivers);
         }
 
         /// <summary>
-        /// Registers the bar aggregation controller with the tick processor.
+        /// Registers the receiver to receive <see cref="Event"/>s from the gateway.
         /// </summary>
-        /// <param name="controller">The bar aggregation controller.</param>
-        public void RegisterBarAggregationController(IEndpoint controller)
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterEventReceiver(IEndpoint receiver)
         {
-            Validate.NotNull(controller, nameof(controller));
+            Validate.NotNull(receiver, nameof(receiver));
+            Debug.CollectionDoesNotContain(receiver, nameof(receiver), this.eventReceivers);
 
-            this.barAggregationController = controller;
+            var receivers = this.eventReceivers.ToList();
+            receivers.Add(receiver);
+
+            this.eventReceivers = new ReadOnlyList<IEndpoint>(receivers);
         }
 
         /// <summary>
@@ -240,8 +244,10 @@ namespace Nautilus.Execution
                     Price.Create(ask, decimals),
                     timestamp);
 
-                this.tickPublisher?.Send(tick);
-                this.barAggregationController?.Send(tick);
+                foreach (var receiver in this.tickReceivers)
+                {
+                    receiver.Send(tick);
+                }
             });
         }
 
@@ -389,7 +395,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     timestamp);
 
-                this.Send(NautilusService.Portfolio, accountEvent);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(accountEvent);
+                }
 
                 this.Log.Debug(
                     $"AccountEvent: " +
@@ -429,7 +438,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderRejected);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderRejected);
+                }
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -475,7 +487,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderCancelReject);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderCancelReject);
+                }
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -518,7 +533,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderCancelled);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderCancelled);
+                }
 
                 this.Log.Information(
                     $"OrderCancelled: {orderLabel} " +
@@ -567,7 +585,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderModified);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderModified);
+                }
 
                 this.Log.Information(
                     $"OrderModified: {orderLabel} " +
@@ -634,7 +655,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderWorking);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderWorking);
+                }
 
                 var expireTimeString = string.Empty;
 
@@ -685,7 +709,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderExpired);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderExpired);
+                }
 
                 this.Log.Information(
                     $"OrderExpired: {orderLabel} " +
@@ -748,7 +775,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderFilled);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderFilled);
+                }
 
                 this.Log.Information(
                     $"OrderFilled: {orderLabel} " +
@@ -818,7 +848,10 @@ namespace Nautilus.Execution
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Portfolio, orderPartiallyFilled);
+                foreach (var receiver in this.eventReceivers)
+                {
+                    receiver.Send(orderPartiallyFilled);
+                }
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: {orderLabel} " +

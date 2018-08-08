@@ -76,10 +76,8 @@ namespace NautilusExecutor
 
             var gateway = ExecutionGatewayFactory.Create(
                 setupContainer,
-                messagingAdapter,
                 instrumentRepository,
-                fixClient,
-                NautilusService.Execution);
+                fixClient);
 
             fixClient.InitializeGateway(gateway);
 

@@ -33,16 +33,16 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Registers the tick publisher with the execution gateway.
+        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
-        /// <param name="publisher">The tick publisher.</param>
-        void RegisterTickPublisher(IEndpoint publisher);
+        /// <param name="receiver">The receiver.</param>
+        void RegisterTickReceiver(IEndpoint receiver);
 
         /// <summary>
-        /// Registers the bar aggregation controller with execution gateway.
+        /// Registers the receiver to receive <see cref="Event"/>s from the gateway.
         /// </summary>
-        /// <param name="controller">The bar aggregation controller.</param>
-        void RegisterBarAggregationController(IEndpoint controller);
+        /// <param name="receiver">The receiver.</param>
+        void RegisterEventReceiver(IEndpoint receiver);
 
         /// <summary>
         /// Requests market data for the given symbol from the brokerage.

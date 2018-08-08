@@ -90,8 +90,8 @@ namespace Nautilus.Data
                     setupContainer,
                     messagingAdapter))));
 
-            gateway.RegisterTickPublisher(tickPublisher);
-            gateway.RegisterBarAggregationController(barAggregationController);
+            gateway.RegisterTickReceiver(tickPublisher);
+            gateway.RegisterTickReceiver(barAggregationController);
             instrumentRepository.CacheAll();
 
             var dataService = new ActorEndpoint(
