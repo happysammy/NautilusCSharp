@@ -9,9 +9,11 @@
 namespace NautilusExecutor
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using global::Serilog;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Nautilus.Common.Enums;
     using Nautilus.Serilog;
     using Serilog.Events;
@@ -31,16 +33,24 @@ namespace NautilusExecutor
             var logger = new SerilogLogger(LogEventLevel.Information);
             logger.Information(NautilusService.AspCoreHost, "Building ASP.NET Core Web Host...");
 
-            BuildWebHost(args).Run();
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("hosting.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            BuildWebHost(config, args).Run();
 
             logger.Information(NautilusService.AspCoreHost, "Closing and flushing Serilog...");
             Log.CloseAndFlush();
         }
 
-        private static IWebHost BuildWebHost(string[] args) =>
+        private static IWebHost BuildWebHost(IConfiguration config, string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+                .UseConfiguration(config)
+                .UseKestrel()
                 .UseSerilog()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
                 .Build();
     }
 }
