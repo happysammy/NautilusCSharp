@@ -104,7 +104,10 @@ namespace Nautilus.Brokerage.FXCM
                     var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
-                        throw new InvalidOperationException(symbolQuery.Message);
+                        this.Log.Warning(symbolQuery.FullMessage);
+                        continue;
+
+                        // throw new InvalidOperationException(symbolQuery.Message);
                     }
 
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
