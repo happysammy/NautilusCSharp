@@ -68,6 +68,7 @@ namespace NautilusExecutor
                 new[] { RedisConstants.LocalHost });
 
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
+            instrumentRepository.CacheAll();
 
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
@@ -94,6 +95,8 @@ namespace NautilusExecutor
                 messagingAdapter);
 
             var switchboard = new Switchboard(executionServiceAddresses);
+
+            gateway.RegisterEventReceiver(messageBroker);
 
             var systemController = new SystemController(
                 setupContainer,

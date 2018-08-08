@@ -34,7 +34,6 @@ namespace Nautilus.Data
         /// <param name="gateway">The execution gateway.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
-        /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
@@ -46,7 +45,6 @@ namespace Nautilus.Data
             IExecutionGateway gateway,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
-            IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
@@ -54,7 +52,6 @@ namespace Nautilus.Data
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
             Validate.NotNull(symbols, nameof(symbols));
 
             var scheduler = new ActorEndpoint(
@@ -92,7 +89,6 @@ namespace Nautilus.Data
 
             gateway.RegisterTickReceiver(tickPublisher);
             gateway.RegisterTickReceiver(barAggregationController);
-            instrumentRepository.CacheAll();
 
             var dataService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(

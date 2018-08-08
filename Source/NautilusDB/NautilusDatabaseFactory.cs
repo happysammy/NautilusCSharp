@@ -77,6 +77,7 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost });
 
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
+            instrumentRepository.CacheAll();
 
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
@@ -90,8 +91,6 @@ namespace NautilusDB
 
             fixClient.InitializeGateway(gateway);
 
-            var publisherFactory = new RedisChannelPublisherFactory(clientManager);
-
             var barRepository = new RedisBarRepository(
                 clientManager,
                 CompressorFactory.Create(isCompression, compressionCodec));
@@ -101,9 +100,8 @@ namespace NautilusDB
                 setupContainer,
                 messagingAdapter,
                 gateway,
-                publisherFactory,
+                new RedisChannelPublisherFactory(clientManager),
                 barRepository,
-                instrumentRepository,
                 symbols,
                 resolutions,
                 barRollingWindow);
