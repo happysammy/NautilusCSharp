@@ -59,14 +59,17 @@ namespace Nautilus.Fix.MessageFactories
 
             orderSingle.SetField(new OrderQty(order.Quantity.Value));
 
-            // Set the order price depending on order type.
-            if (order.Type == OrderType.LIMIT || order.Type == OrderType.STOP_LIMIT)
+            switch (order.Type)
             {
-                orderSingle.SetField(new Price(order.Price.Value.Value));
-            }
-            else
-            {
-                orderSingle.SetField(new StopPx(order.Price.Value.Value));
+                // Set the order price depending on order type.
+                case OrderType.LIMIT:
+                case OrderType.STOP_LIMIT:
+                    orderSingle.SetField(new Price(order.Price.Value.Value));
+                    break;
+                case OrderType.STOP_MARKET:
+                case OrderType.MIT:
+                    orderSingle.SetField(new StopPx(order.Price.Value.Value));
+                    break;
             }
 
             return orderSingle;
