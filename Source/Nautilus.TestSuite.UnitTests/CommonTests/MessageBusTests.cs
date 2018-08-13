@@ -24,8 +24,9 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MessageBusTests
     {
         private readonly ITestOutputHelper output;
@@ -55,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 { NautilusService.Data, mockEndpoint },
                 { NautilusService.Execution, mockEndpoint },
                 { NautilusService.Portfolio, mockEndpoint },
-                { NautilusService.Risk, mockEndpoint }
+                { NautilusService.Risk, mockEndpoint },
             };
 
             this.messageBusRef.Tell(new InitializeSwitchboard(

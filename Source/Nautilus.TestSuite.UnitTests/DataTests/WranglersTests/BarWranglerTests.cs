@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="BarWranglerTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="BarWranglerTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -12,12 +12,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Wranglers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarWranglerTests
     {
         [Fact]
@@ -31,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
             {
                 bar.ToUtf8Bytes(),
                 bar.ToUtf8Bytes(),
-                bar.ToUtf8Bytes()
+                bar.ToUtf8Bytes(),
             }.ToArray();
 
             // Act
@@ -56,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
             var bar3 = StubBarData.Create(Duration.FromDays(offset1));
             var bar4 = StubBarData.Create(Duration.FromDays(offset2));
 
-            var barList = new [] { bar1, bar2, bar3, bar4 };
+            var barList = new[] { bar1, bar2, bar3, bar4 };
 
             // Act
             var result = BarWrangler.OrganizeBarsByDay(barList);

@@ -15,8 +15,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class SpreadAnalyzerTests
     {
         private readonly SpreadAnalyzer spreadAnalyzer;
@@ -27,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         }
 
         [Fact]
-        internal void Ontick_WhenNoPrevioustick_UpdatesValuesAccordingly()
+        internal void Update_WhenNoPreviousTick_UpdatesValuesAccordingly()
         {
             // Arrange
             var tick = new Tick(
@@ -49,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         }
 
         [Fact]
-        internal void AverageSpread_WhenNoPreviousBarUpdates_CalculatesWithEachtick()
+        internal void AverageSpread_WhenNoPreviousBarUpdates_CalculatesWithEachTick()
         {
             // Arrange
             var tick1 = new Tick(

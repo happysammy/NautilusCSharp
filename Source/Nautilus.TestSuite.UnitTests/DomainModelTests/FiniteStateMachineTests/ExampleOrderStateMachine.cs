@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ExampleOrderStateMachine.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="ExampleOrderStateMachine.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,18 +9,16 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;
 
-    [Immutable]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class ExampleOrderStateMachine
     {
-        /// <summary>
-        /// Returns a <see cref="FiniteStateMachine"/> which represents a generic order.
-        /// </summary>
-        /// <returns>A <see cref="FiniteStateMachine"/>.</returns>
         internal static FiniteStateMachine Create()
         {
             var stateTransitionTable = new Dictionary<StateTransition, State>
@@ -33,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
                 { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
                 { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
                 { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) }
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
             };
 
             return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));

@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="BarDataTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="BarTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,19 +10,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using DomainModel.ValueObjects;
+    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarDataTests
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class BarTests
     {
         private readonly ITestOutputHelper output;
 
-        public BarDataTests(ITestOutputHelper output)
+        public BarTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -42,6 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var result1 = bar.Equals(null);
+
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse (point of test)
             var result2 = bar == null;
 

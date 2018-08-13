@@ -10,10 +10,14 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 {
     using System;
     using System.Collections;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Core.Collections;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RollingListTests
     {
         [Theory]
@@ -73,7 +77,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             rollingList.Clear();
 
             var result2 = rollingList.Count;
-
 
             // Assert
             Assert.Equal(1, result1);
@@ -136,11 +139,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
         internal void Indexer_AttemptToInsertElementAtIndex_Throws()
         {
             // Arrange
-            var rollingList = new RollingList<int>(10);
+            var rollingList = new RollingList<int>(10) { 42 };
 
             // Act
             // Assert
-            Assert.Equal(0, rollingList.Count);
+            Assert.Single(rollingList);
             Assert.Throws<NotSupportedException>(() => rollingList[1] = 42);
         }
 

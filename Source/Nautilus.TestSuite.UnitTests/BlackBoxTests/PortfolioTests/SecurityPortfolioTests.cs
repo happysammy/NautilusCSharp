@@ -14,10 +14,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.BlackBox.Core.Messages.Commands;
-    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Orders;
     using Nautilus.BlackBox.Portfolio.Processors;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Enums;
@@ -30,8 +30,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class SecurityPortfolioTests
     {
         private readonly ITestOutputHelper output;
@@ -99,7 +100,6 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
                 exitSignalProcessor,
                 trailingStopSignalProcessor)));
         }
-
 
         [Fact]
         internal void GivenMarketDataEvent_WhenEventValid_SendsEventToCorrectPortfolio()
@@ -387,13 +387,14 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests
         private static BarDataEvent ValidMarketDataEventBullBar()
         {
             return new BarDataEvent(
-                new BarType(new Symbol("AUDUSD", Venue.FXCM),
+                new BarType(
+                    new Symbol("AUDUSD", Venue.FXCM),
                     new BarSpecification(QuoteType.Bid, Resolution.Minute, 5)),
                 new Bar(
-                    Price.Create(0.80100m, 0.00001m),
-                    Price.Create(0.80200m, 0.00001m),
-                    Price.Create(0.80110m, 0.00001m),
-                    Price.Create(0.80150m, 0.00001m),
+                    Price.Create(0.80100m, 5),
+                    Price.Create(0.80200m, 5),
+                    Price.Create(0.80110m, 5),
+                    Price.Create(0.80150m, 5),
                     Quantity.Create(1000),
                     StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration()),
                 StubTickFactory.Create(new Symbol("SYMBOL", Venue.LMAX)),

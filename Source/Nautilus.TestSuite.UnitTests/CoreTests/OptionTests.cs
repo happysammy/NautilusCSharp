@@ -1,19 +1,23 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="OptionTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//  https://github.com/nautechsystems/Nautilus.Core
-//  the use of this source code is governed by the Apache 2.0 license
-//  as found in the LICENSE.txt file.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class OptionTests
     {
         [Fact]
@@ -128,10 +132,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var option1 = Option<DateTime>.Some(dateTime1);
             var option2 = Option<DateTime>.Some(dateTime2);
 
-            // Act - Ignore suspicious comparison warning (this is to call the equals override).
+            // Act
             var result1 = option1.Equals((object)option2);
             var result2 = option1.Equals(option2);
-            // ReSharper disable once SuspiciousTypeConversion.Global
             var result3 = option1.Equals((object)dateTime2);
             var result4 = option1.Equals(dateTime2);
             var result5 = option1 == option2;
@@ -156,10 +159,9 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var option1 = Option<DateTime>.Some(dateTime1);
             var option2 = Option<DateTime>.Some(dateTime2);
 
-            // Act - Ignore suspicious comparison warning (this is to call the equals override).
+            // Act
             var result1 = option1.Equals((object)option2);
             var result2 = option1.Equals(option2);
-            // ReSharper disable once SuspiciousTypeConversion.Global
             var result3 = option1.Equals((object)dateTime2);
             var result4 = option1.Equals(dateTime2);
             var result5 = option1 != option2;
@@ -180,8 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             // Arrange
             var option = Option<TestClass>.Some(new TestClass());
 
-            // Act - Ignore suspicious comparison warning (this is part of the test).
-            // ReSharper disable once SuspiciousTypeConversion.Global
+            // Act
             var result = option.Equals("string");
 
             // Assert

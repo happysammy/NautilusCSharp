@@ -12,8 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PriceTests
     {
         [Fact]
@@ -69,7 +70,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             Assert.Equal(expected, result.Value);
             Assert.Equal(decimals, result.Decimals);
         }
-
 
         [Theory]
         [InlineData(1, 1, 1)]

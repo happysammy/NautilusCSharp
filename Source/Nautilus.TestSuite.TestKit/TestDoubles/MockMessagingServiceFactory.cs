@@ -20,10 +20,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
 
-    [SuppressMessage(
-        "StyleCop.CSharp.DocumentationRules",
-        "SA1600:ElementsMustBeDocumented",
-        Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessagingServiceFactory
     {
         public IMessagingAdapter MessagingAdapter { get; private set; }

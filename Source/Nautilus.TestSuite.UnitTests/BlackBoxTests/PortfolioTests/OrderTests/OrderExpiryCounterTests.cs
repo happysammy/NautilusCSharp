@@ -13,8 +13,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class OrderExpiryCounterTests
     {
         [Fact]
@@ -34,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
         }
 
         [Fact]
-        internal void IncrementCount_ThenIncremenetsCount()
+        internal void IncrementCount_ThenIncrementsCount()
         {
             // Arrange
             var tradeProfile = StubTradeProfileFactory.Create(10);

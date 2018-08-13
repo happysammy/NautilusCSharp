@@ -12,8 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class NumberObjectOperatorTests
     {
         [Fact]
@@ -95,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var result1 = valueObject1 > valueObject2;
-            var result2 = 200 > valueObject1;
+            var result2 = valueObject1 < 200;
             var result3 = valueObject1 > 50;
 
             // Assert
@@ -113,7 +114,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var result1 = valueObject1 < valueObject2;
-            var result2 = 50 < valueObject1;
+            var result2 = valueObject1 > 50;
             var result3 = valueObject1 < 200;
 
             // Assert

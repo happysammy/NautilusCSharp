@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -19,6 +20,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
     using ServiceStack.Text;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class InstrumentTests
     {
         public InstrumentTests()

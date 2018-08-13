@@ -16,8 +16,11 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "PossibleUnintendedReferenceComparison", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "EqualExpressionComparison", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MessageTests
     {
         [Fact]
@@ -37,19 +40,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            // ReSharper disable once PossibleUnintendedReferenceComparison
             var result1 = message1 == message2;
             var result2 = message1.Equals(message2);
-            // ReSharper disable once EqualExpressionComparison
-            // ReSharper disable once PossibleUnintendedReferenceComparison
-            var result3 = message1 == message1;
-            var result4 = message1.Equals(message1);
+            var result3 = message1.Equals(message1);
 
             // Assert
             Assert.False(result1);
             Assert.False(result2);
             Assert.True(result3);
-            Assert.True(result4);
         }
 
         [Fact]

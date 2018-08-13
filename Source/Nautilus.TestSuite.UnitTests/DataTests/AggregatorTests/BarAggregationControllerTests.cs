@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="TimeBarAggregatorTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarAggregationControllerTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -21,13 +21,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Xunit;
     using Xunit.Abstractions;
 
-    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
-    using Resolution = Nautilus.DomainModel.Enums.Resolution;
-    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
-
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarAggregationControllerTests : TestKit
     {
         private readonly ITestOutputHelper output;
@@ -43,13 +39,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.logger = setupFactory.LoggingAdapter;
             var container = setupFactory.Create();
 
-            var messagingAdapter = new MockMessagingAdapter(TestActor);
+            var messagingAdapter = new MockMessagingAdapter(this.TestActor);
 
             var props = Props.Create(() => new BarAggregationController(
                 container,
                 messagingAdapter));
 
-            this.controllerRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
+            this.controllerRef = this.ActorOfAsTestActorRef<BarAggregator>(props, this.TestActor);
         }
 
         [Fact]

@@ -10,9 +10,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Collections;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ReadOnlyDictionaryTests
     {
         [Fact]
@@ -22,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalDictionary = new Dictionary<int, string>
             {
                 { 1, "one" },
-                { 2, "two" }
+                { 2, "two" },
             };
 
             var readOnlyDictionary = new ReadOnlyDictionary<int, string>(originalDictionary);
@@ -35,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             Assert.Equal("one", result1);
             Assert.Equal("two", result2);
             Assert.Equal(2, readOnlyDictionary.Count);
-            Assert.Equal(true, readOnlyDictionary.IsReadOnly);
+            Assert.True(readOnlyDictionary.IsReadOnly);
         }
 
         [Fact]
@@ -45,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalDictionary = new Dictionary<int, string>
             {
                 { 1, "one" },
-                { 2, "two" }
+                { 2, "two" },
             };
 
             var readOnlyDictionary = new ReadOnlyDictionary<int, string>(originalDictionary);
@@ -63,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalDictionary = new Dictionary<int, string>
             {
                 { 1, "one" },
-                { 2, "two" }
+                { 2, "two" },
             };
 
             var readOnlyDictionary = new ReadOnlyDictionary<int, string>(originalDictionary);
@@ -73,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             readOnlyDictionary.TryGetValue(1, out var result2);
 
             // Assert
-            Assert.Equal(null, result1);
+            Assert.Null(result1);
             Assert.Equal("one", result2);
         }
 
@@ -84,20 +88,20 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalDictionary = new Dictionary<int, string>
             {
                 { 1, "one" },
-                { 2, "two" }
+                { 2, "two" },
             };
 
             var readOnlyDictionary = new ReadOnlyDictionary<int, string>(originalDictionary);
 
             // Act
             // Assert
-            Assert.Equal(true, readOnlyDictionary.Contains(new KeyValuePair<int, string>(1, "one")));
-            Assert.Equal(true, readOnlyDictionary.Contains(new KeyValuePair<int, string>(2, "two")));
-            Assert.Equal(false, readOnlyDictionary.Contains(new KeyValuePair<int, string>(3, "three")));
-            Assert.Equal(true, readOnlyDictionary.ContainsKey(1));
-            Assert.Equal(false, readOnlyDictionary.ContainsKey(0));
-            Assert.Equal(true, readOnlyDictionary.ContainsValue("two"));
-            Assert.Equal(false, readOnlyDictionary.ContainsValue("three"));
+            Assert.Contains(new KeyValuePair<int, string>(1, "one"), readOnlyDictionary);
+            Assert.Contains(new KeyValuePair<int, string>(2, "two"), readOnlyDictionary);
+            Assert.DoesNotContain(new KeyValuePair<int, string>(3, "three"), readOnlyDictionary);
+            Assert.Contains(1, readOnlyDictionary.Keys);
+            Assert.False(readOnlyDictionary.ContainsKey(0));
+            Assert.True(readOnlyDictionary.ContainsValue("two"));
+            Assert.False(readOnlyDictionary.ContainsValue("three"));
         }
 
         [Fact]
@@ -115,8 +119,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 
             // Act
             // Assert
-            Assert.Equal(new List<int>{1, 2, 3}, readOnlyDictionary.Keys);
-            Assert.Equal(new List<string>{"one", "two", "three"}, readOnlyDictionary.Values);
+            Assert.Equal(new List<int> { 1, 2, 3 }, readOnlyDictionary.Keys);
+            Assert.Equal(new List<string> { "one", "two", "three" }, readOnlyDictionary.Values);
         }
 
         [Fact]

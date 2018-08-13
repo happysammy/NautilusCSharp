@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="MarketDataFrameTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="BarDataFrameTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -8,17 +8,18 @@
 
 namespace Nautilus.TestSuite.UnitTests.DataTests.TypesTests
 {
-    using Nautilus.TestSuite.TestKit.TestDoubles;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using Newtonsoft.Json;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarDataFrameTests
     {
         private readonly ITestOutputHelper output;

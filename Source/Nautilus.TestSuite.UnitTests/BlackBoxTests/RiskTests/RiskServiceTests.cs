@@ -26,8 +26,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RiskServiceTests
     {
         private readonly ITestOutputHelper output;
@@ -244,7 +245,8 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.RiskTests
             var message1 = new InitializeRiskModel(account, riskModel, Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
 
             var message2 = new BarDataEvent(
-                new BarType(new Symbol("AUDUSD", Venue.FXCM),
+                new BarType(
+                    new Symbol("AUDUSD", Venue.FXCM),
                     new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)),
                 StubBarBuilder.Build(),
                 StubTickFactory.Create(new Symbol("AUDUSD", Venue.FXCM)),

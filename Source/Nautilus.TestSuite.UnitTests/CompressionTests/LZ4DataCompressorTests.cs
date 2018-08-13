@@ -10,13 +10,13 @@ namespace Nautilus.TestSuite.UnitTests.CompressionTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Compression;
+    using Nautilus.Data.Interfaces;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Data.Interfaces;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    // ReSharper disable once InconsistentNaming
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class LZ4DataCompressorTests
     {
         private readonly ITestOutputHelper output;

@@ -18,8 +18,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
     using NodaTime;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class AtomicOrderPacketTests
     {
         [Fact]
@@ -37,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                 StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(1, orderPacket.Orders.Count);
+            Assert.Single(orderPacket.Orders);
             Assert.Equal(3, orderPacket.OrderIdList.Count);
             Assert.Equal(atomicOrders[0].Entry, orderPacket.Orders[0].Entry);
             Assert.Equal(atomicOrders[0].StopLoss, orderPacket.Orders[0].StopLoss);
@@ -73,11 +74,10 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
                                        new OrderId("StoplossOrderId2"),
                                        new OrderId("ProfitTargetOrderId2"),
                                        new OrderId("EntryOrderId3"),
-                                       new OrderId("StoplossOrderId3")
+                                       new OrderId("StoplossOrderId3"),
                                    };
 
             var result = orderPacket.OrderIdList;
-
 
             // Assert
             Assert.Equal(expectedList, result);
@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.OrderTests
             var orderPacket = new AtomicOrderPacket(
                 new Symbol("AUDUSD", Venue.FXCM),
                 new TradeType("TestTrade"),
-                new List<AtomicOrder>{StubAtomicOrderBuilder.Build()},
+                new List<AtomicOrder> { StubAtomicOrderBuilder.Build() },
                 new OrderPacketId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 

@@ -10,9 +10,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Collections;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ReadOnlyListTests
     {
         [Fact]
@@ -22,7 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalList = new List<string>
             {
                 "one",
-                "two"
+                "two",
             };
 
             var readOnlyList = new ReadOnlyList<string>(originalList);
@@ -35,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             Assert.Equal("one", result1);
             Assert.Equal("two", result2);
             Assert.Equal(2, readOnlyList.Count);
-            Assert.Equal(true, readOnlyList.IsReadOnly);
+            Assert.True(readOnlyList.IsReadOnly);
         }
 
         [Fact]
@@ -49,8 +53,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
 
             // Assert
             Assert.Equal("one", result);
-            Assert.Equal(1, readOnlyList.Count);
-            Assert.Equal(true, readOnlyList.IsReadOnly);
+            Assert.Single(readOnlyList);
+            Assert.True(readOnlyList.IsReadOnly);
         }
 
         [Fact]
@@ -60,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalList = new List<string>
             {
                 "one",
-                "two"
+                "two",
             };
 
             var readOnlyList = new ReadOnlyList<string>(originalList);
@@ -78,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalList = new List<string>
             {
                 "one",
-                "two"
+                "two",
             };
 
             var readOnlyList = new ReadOnlyList<string>(originalList);
@@ -96,16 +100,16 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CollectionsTests
             var originalList = new List<string>
             {
                 "one",
-                "two"
+                "two",
             };
 
             var readOnlyList = new ReadOnlyList<string>(originalList);
 
             // Act
             // Assert
-            Assert.Equal(true, readOnlyList.Contains("one"));
-            Assert.Equal(true, readOnlyList.Contains("two"));
-            Assert.Equal(false, readOnlyList.Contains("three"));
+            Assert.Contains("one", readOnlyList);
+            Assert.Contains("two", readOnlyList);
+            Assert.DoesNotContain("three", readOnlyList);
         }
 
         [Fact]

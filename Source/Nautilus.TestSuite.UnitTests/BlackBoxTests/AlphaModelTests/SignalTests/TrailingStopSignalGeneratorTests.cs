@@ -11,9 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Moq;
-    using Nautilus.Core;
     using Nautilus.BlackBox.AlphaModel.Signal;
     using Nautilus.BlackBox.Core.Interfaces;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -21,8 +21,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class TrailingStopSignalGeneratorTests
     {
         private readonly ITestOutputHelper output;
@@ -276,7 +277,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var expectedForUnitStopPrices = new Dictionary<int, Price>
                                                 {
                                                     { 0, Price.Create(100m, 0.1m) },
-                                                    { 1, Price.Create(110m, 0.1m) }
+                                                    { 1, Price.Create(110m, 0.1m) },
                                                 };
 
             // Assert
@@ -322,7 +323,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var expectedForUnitStopPrices = new Dictionary<int, Price>
                                                 {
                                                     { 0, Price.Create(0.80700m, 0.00001m) },
-                                                    { 1, Price.Create(0.80600m, 0.00001m) }
+                                                    { 1, Price.Create(0.80600m, 0.00001m) },
                                                 };
 
             // Assert
@@ -370,7 +371,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var expectedForUnitStopPrices = new Dictionary<int, Price>
                                                 {
                                                     { 1, Price.Create(110m, 0.1m) },
-                                                    { 2, Price.Create(100m, 0.1m) }
+                                                    { 2, Price.Create(100m, 0.1m) },
                                                 };
 
             // Assert
@@ -418,7 +419,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var expectedForUnitStopPrices = new Dictionary<int, Price>
                                                 {
                                                     { 1, Price.Create(0.80700m, 0.00001m) },
-                                                    { 2, Price.Create(0.80600m, 0.00001m) }
+                                                    { 2, Price.Create(0.80600m, 0.00001m) },
                                                 };
 
             // Assert
@@ -565,7 +566,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
             var expectedForUnitStopPrices = new Dictionary<int, Price>
                                                 {
                                                     { 0, Price.Create(100m, 0.1m) },
-                                                    { 1, Price.Create(130m, 0.1m) }
+                                                    { 1, Price.Create(130m, 0.1m) },
                                                 };
 
             // Assert
@@ -638,7 +639,7 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.AlphaModelTests.SignalTests
                                                 {
                                                     { 0, Price.Create(1.30000m, 0.00001m) },
                                                     { 1, Price.Create(1.28000m, 0.00001m) },
-                                                    { 2, Price.Create(1.29500m, 0.00001m) }
+                                                    { 2, Price.Create(1.29500m, 0.00001m) },
                                                 };
 
             // Assert

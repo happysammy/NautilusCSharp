@@ -1,20 +1,23 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ZonedDateTimeExtensionsTests.cs" company="Nautech Systems Pty Ltd.">
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="ZonedDateTimeExtensionsTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//  The use of this source code is governed by the Apache 2.0 license
-//  as found in the LICENSE.txt file.
-//  https://github.com/nautechsystems/Nautilus.Core
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Core.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ZonedDateTimeExtensionsTests
     {
         [Fact]
@@ -314,7 +317,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
         [InlineData(2008, 1, 26, 19, 59, true)]
         [InlineData(2008, 1, 26, 20, 00, false)]
         [InlineData(2008, 1, 26, 20, 59, false)]
-        [InlineData(2008, 1, 27, 21, 0, true)]
         [InlineData(2008, 1, 27, 21, 0, true)]
         [InlineData(2008, 1, 28, 00, 0, true)]
         [InlineData(2008, 1, 29, 00, 0, true)]

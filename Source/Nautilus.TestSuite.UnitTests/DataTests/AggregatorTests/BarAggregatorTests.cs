@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="TimeBarAggregatorTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="BarAggregatorTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -23,14 +23,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Xunit;
     using Xunit.Abstractions;
 
-    using QuoteType = Nautilus.DomainModel.Enums.QuoteType;
-    using Resolution = Nautilus.DomainModel.Enums.Resolution;
-    using Tick = Nautilus.DomainModel.ValueObjects.Tick;
-    using Bar = Nautilus.DomainModel.ValueObjects.BarSpecification;
-    using BarSpecification = Nautilus.DomainModel.ValueObjects.BarSpecification;
-
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarAggregatorTests : TestKit
     {
         private readonly ITestOutputHelper output;
@@ -53,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 this.symbol,
                 true));
 
-            this.barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, TestActor);
+            this.barAggregatorRef = this.ActorOfAsTestActorRef<BarAggregator>(props, this.TestActor);
         }
 
         [Fact]
@@ -67,10 +62,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            barAggregatorRef.Tell(closeBarMessage);
+            this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg(100);
+            this.ExpectNoMsg(100);
         }
 
         [Fact]
@@ -79,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -96,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg(100);
+            this.ExpectNoMsg(100);
         }
 
         [Fact]
@@ -105,7 +100,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -129,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            ExpectNoMsg(100);
+            this.ExpectNoMsg(100);
         }
 
         [Fact]
@@ -138,7 +133,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -162,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             Assert.Equal(0.80000m, result.Bar.Open.Value);
             Assert.Equal(0.80000m, result.Bar.Close.Value);
             Assert.Equal(tick, result.LastTick);
@@ -175,7 +170,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -207,33 +202,33 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(subscribeMessage);
             this.barAggregatorRef.Tell(tick1);
             this.barAggregatorRef.Tell(closeBarMessage1);
-            ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             this.barAggregatorRef.Tell(tick2);
 
             // Act
             this.barAggregatorRef.Tell(closeBarMessage2);
 
             // Assert
-            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             Assert.Equal(0.80000m, result.Bar.Open.Value);
             Assert.Equal(0.80100m, result.Bar.Close.Value);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
         }
 
-                [Fact]
+        [Fact]
         internal void GivenCloseBarMessage_WhenMultipleSubscriptions1_ThenReturnsExpectedBar()
         {
             // Arrange
             var subscribeMessage1 = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var subscribeMessage2 = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Bid, Resolution.Second, 10)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -273,14 +268,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(tick1);
             this.barAggregatorRef.Tell(tick2);
             this.barAggregatorRef.Tell(closeBarMessage1);
-            ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             this.barAggregatorRef.Tell(tick3);
 
             // Act
             this.barAggregatorRef.Tell(closeBarMessage2);
 
             // Assert
-            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             Assert.Equal(0.80000m, result.Bar.Open.Value);
             Assert.Equal(0.80200m, result.Bar.High.Value);
             Assert.Equal(0.80200m, result.Bar.Close.Value);
@@ -294,7 +289,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var subscribeMessage = new Subscribe<BarType>(
                 new BarType(
-                    symbol,
+                    this.symbol,
                     new BarSpecification(QuoteType.Mid, Resolution.Second, 1)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -325,7 +320,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregatorRef.Tell(closeBarMessage);
 
             // Assert
-            var result = ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             Assert.Equal(0.80005m, result.Bar.Open.Value);
             Assert.Equal(0.80035m, result.Bar.High.Value);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);

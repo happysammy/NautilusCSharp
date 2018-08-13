@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.BlackBox.Portfolio;
     using Nautilus.BlackBox.Portfolio.Processors;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.MessageStore;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -27,8 +27,9 @@ namespace Nautilus.TestSuite.UnitTests.BlackBoxTests.PortfolioTests.ProcessorsTe
     using Xunit;
     using Xunit.Abstractions;
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ExitSignalProcessorTests
     {
         private readonly ITestOutputHelper output;
