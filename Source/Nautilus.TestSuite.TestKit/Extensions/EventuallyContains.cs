@@ -9,17 +9,17 @@
 namespace Nautilus.TestSuite.TestKit.Extensions
 {
     /// <summary>
-    /// The eventually contains.
+    /// Provides eventually contains assert constants.
     /// </summary>
     public static class EventuallyContains
     {
         /// <summary>
-        /// The timeout milliseconds.
+        /// Gets the timeout milliseconds.
         /// </summary>
         public static int TimeoutMilliseconds => 500;
 
         /// <summary>
-        /// The poll interval milliseconds.
+        /// Gets the poll interval milliseconds.
         /// </summary>
         public static int PollIntervalMilliseconds => 20;
     }

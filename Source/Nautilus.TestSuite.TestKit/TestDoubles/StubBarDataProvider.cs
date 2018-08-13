@@ -1,26 +1,26 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="StubBarDataProvider.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//   The use of this source code is governed by the license as found in the LICENSE.txt file.
-//   http://www.nautechsystems.net
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="StubBarDataProvider.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-    using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
-    using NodaTime;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
 
-    /// <summary>
-    /// Provides the stub bar data provider meta-data.
-    /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class StubBarDataProvider : IBarDataProvider
     {
         public string DateTimeParsePattern => "yyyy.MM.dd HH:mm:ss";
@@ -34,9 +34,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public int VolumeMultiple => 1000000;
 
         public bool IsBarDataCheckOn => false;
-
-        // TODO: Temporary property. Remove once Dukascopy provider removed.
-        public bool InitialFromDateSpecified => false;
 
         public string GetResolutionLabel(Resolution resolution)
         {
@@ -122,7 +119,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                                   "USDTHB",
                                   "USDTRY",
                                   "USDZAR",
-                                  "ZARJPY"
+                                  "ZARJPY",
                               }.Distinct();
 
             var barTypes = new List<BarType>();
@@ -138,18 +135,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             }
 
             return barTypes.AsReadOnly();
-        }
-
-        // TODO: Temporary method. Remove once Dukascopy provider removed.
-        public CommandResult InitialFromDateConfigCsv(IReadOnlyList<string> currencyPairs, ZonedDateTime toDateTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: Temporary method. Remove once Dukascopy provider removed.
-        public CommandResult UpdateConfigCsv(IReadOnlyList<string> currencyPairs, ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
-        {
-            throw new NotImplementedException();
         }
     }
 }

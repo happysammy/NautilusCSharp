@@ -1,16 +1,17 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="StubSetupContainerFactory.cs" company="Nautech Systems Pty Ltd.">
-//   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
-//   The use of this source code is governed by the license as found in the LICENSE.txt file.
-//   http://www.nautechsystems.net
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="StubSetupContainerFactory.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
-// -------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
-    using BlackBox.Core.Enums;
+    using System.Diagnostics.CodeAnalysis;
     using Moq;
     using Nautilus.BlackBox.Core.Build;
+    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -20,30 +21,18 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
 
-    /// <summary>
-    /// The stub nautilus setup container.
-    /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class StubSetupContainerFactory
     {
-        /// <summary>
-        /// Gets the containers logger.
-        /// </summary>
         public MockLoggingAdapter LoggingAdapter { get; private set; }
 
-        /// <summary>
-        /// Gets the containers quote provider.
-        /// </summary>
         public IQuoteProvider QuoteProvider { get; private set; }
 
-        /// <summary>
-        /// Gets the containers quote provider.
-        /// </summary>
         public StubClock Clock { get; set; }
 
-        /// <summary>
-        /// Creates a new <see cref="BlackBoxContainer"/>.
-        /// </summary>
-        /// <returns>The <see cref="BlackBoxContainer"/>.</returns>
         public BlackBoxContainer Create()
         {
             var environment = BlackBoxEnvironment.Live;

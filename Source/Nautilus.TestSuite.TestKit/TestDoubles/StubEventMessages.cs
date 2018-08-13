@@ -1,33 +1,27 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="StubEventMessages.cs" company="Nautech Systems Pty Ltd">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
-//   http://www.nautechsystems.net
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
-    /// <summary>
-    /// The stub event messages.
-    /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubEventMessages
     {
-        /// <summary>
-        /// The order filled event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderFilled"/>.
-        /// </returns>
         public static OrderFilled OrderFilledEvent(Order order)
         {
             return new OrderFilled(
@@ -43,21 +37,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order partially filled event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <param name="filledQuantity">
-        /// The filled quantity.
-        /// </param>
-        /// <param name="leavesQuantity">
-        /// The leaves quantity.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderPartiallyFilled"/>.
-        /// </returns>
         public static OrderPartiallyFilled OrderPartiallyFilledEvent(
             Order order,
             int filledQuantity,
@@ -77,15 +56,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order rejected event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderRejected"/>.
-        /// </returns>
         public static OrderRejected OrderRejectedEvent(Order order)
         {
             return new OrderRejected(
@@ -97,15 +67,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order working event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderWorking"/>.
-        /// </returns>
         public static OrderWorking OrderWorkingEvent(Order order)
         {
             return new OrderWorking(
@@ -124,18 +85,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order modified event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <param name="newPrice">
-        /// The new price.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderModified"/>.
-        /// </returns>
         public static OrderModified OrderModifiedEvent(Order order, Price newPrice)
         {
             return new OrderModified(
@@ -148,15 +97,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order cancelled event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderCancelled"/>.
-        /// </returns>
         public static OrderCancelled OrderCancelledEvent(Order order)
         {
             return new OrderCancelled(
@@ -167,15 +107,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        /// <summary>
-        /// The order expired event.
-        /// </summary>
-        /// <param name="order">
-        /// The order.
-        /// </param>
-        /// <returns>
-        /// The <see cref="OrderExpired"/>.
-        /// </returns>
         public static OrderExpired OrderExpiredEvent(Order order)
         {
             return new OrderExpired(

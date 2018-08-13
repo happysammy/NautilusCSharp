@@ -11,36 +11,29 @@ namespace Nautilus.TestSuite.TestKit.Extensions
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
-    using DomainModel.Events;
-    using Nautilus.Core;
     using Nautilus.BlackBox.Core.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
+    using Nautilus.DomainModel.Events;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
 
     /// <summary>
-    /// The assert extensions.
+    /// Provides custom asserts for testing purposes.
     /// </summary>
     public static class CustomAssert
     {
         /// <summary>
         /// The eventually has count.
         /// </summary>
-        /// <param name="count">
-        /// The count.
-        /// </param>
-        /// <param name="barStore">
-        /// The bar store.
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        /// The timeout milliseconds.
-        /// </param>
-        /// <param name="pollIntervalMilliseconds">
-        /// The poll interval milliseconds.
-        /// </param>
+        /// <param name="count">The count.</param>
+        /// <param name="barStore">The bar store.</param>
+        /// <param name="timeoutMilliseconds">The timeout milliseconds.</param>
+        /// <param name="pollIntervalMilliseconds">The poll interval milliseconds.</param>
         public static void EventuallyHasCount(
             int count,
             IBarStore barStore,
@@ -60,22 +53,13 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             Assert.True(barStore.Count == count);
         }
 
-
         /// <summary>
         /// The eventually contains.
         /// </summary>
-        /// <param name="stringToContain">
-        /// The string to contain.
-        /// </param>
-        /// <param name="loggingAdapter">
-        /// The logger.
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        /// The timeout milliseconds.
-        /// </param>
-        /// <param name="pollIntervalMilliseconds">
-        /// The poll interval milliseconds.
-        /// </param>
+        /// <param name="stringToContain">The string to contain.</param>
+        /// <param name="loggingAdapter">The logger.</param>
+        /// <param name="timeoutMilliseconds">The timeout milliseconds.</param>
+        /// <param name="pollIntervalMilliseconds">The poll interval milliseconds.</param>
         public static void EventuallyContains(
             string stringToContain,
             MockLoggingAdapter loggingAdapter,
@@ -98,21 +82,11 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// <summary>
         /// The eventually contains.
         /// </summary>
-        /// <param name="typeToContain">
-        /// The type To Contain.
-        /// </param>
-        /// <param name="envelopeList">
-        /// The envelope list.
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        /// The timeout milliseconds.
-        /// </param>
-        /// <param name="pollIntervalMilliseconds">
-        /// The poll interval milliseconds.
-        /// </param>
-        /// <typeparam name="T">
-        /// The type to contain.
-        /// </typeparam>
+        /// <param name="typeToContain">The type to contain.</param>
+        /// <param name="envelopeList">The envelope list.</param>
+        /// <param name="timeoutMilliseconds">The timeout milliseconds.</param>
+        /// <param name="pollIntervalMilliseconds">The poll interval milliseconds.</param>
+        /// <typeparam name="T">The message type to contain.</typeparam>
         public static void EventuallyContains<T>(
             Type typeToContain,
             IReadOnlyList<Envelope<T>> envelopeList,
@@ -136,26 +110,17 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// <summary>
         /// The eventually contains event.
         /// </summary>
-        /// <typeparam name="T">
-        /// The message type.
-        /// </typeparam>
-        /// <param name="eventToContain">
-        /// The type to contain.
-        /// </param>
-        /// <param name="envelopeList">
-        /// The envelope list.
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        /// The timeout milliseconds.
-        /// </param>
-        /// <param name="pollIntervalMilliseconds">
-        /// The poll interval milliseconds.
-        /// </param>
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="eventToContain">The type to contain.</param>
+        /// <param name="envelopeList">The envelope list.</param>
+        /// <param name="timeoutMilliseconds">The timeout milliseconds.</param>
+        /// <param name="pollIntervalMilliseconds">The poll interval milliseconds.</param>
         public static void EventuallyContains<T>(
             Type eventToContain,
             IReadOnlyList<Envelope<EventMessage>> envelopeList,
             int timeoutMilliseconds,
-            int pollIntervalMilliseconds) where T : Event
+            int pollIntervalMilliseconds)
+            where T : Event
         {
             ValidateParameters(timeoutMilliseconds, pollIntervalMilliseconds);
 
@@ -177,6 +142,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
             return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).Type == typeToContain);
         }
 
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. OK.")]
         private static bool ListContains<T>(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToContain)
             where T : Event
         {
@@ -185,28 +151,24 @@ namespace Nautilus.TestSuite.TestKit.Extensions
                 case nameof(SignalEvent):
                     return envelopeList
                         .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
-                        // ReSharper disable once SuspiciousTypeConversion.Global
                         .Cast<SignalEvent>()
                         .Any(signal => signal.Signal.GetType() == eventToContain);
 
                 case nameof(OrderEvent):
                     return envelopeList
                         .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
-                        // ReSharper disable once SuspiciousTypeConversion.Global
                         .Cast<OrderEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
                 case nameof(BarDataEvent):
                     return envelopeList
                         .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
-                        // ReSharper disable once SuspiciousTypeConversion.Global
                         .Cast<BarDataEvent>()
                         .Any(e => e.GetType() == eventToContain);
 
                 case nameof(AccountEvent):
                     return envelopeList
                         .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
-                        // ReSharper disable once SuspiciousTypeConversion.Global
                         .Cast<AccountEvent>()
                         .Any(e => e.GetType() == eventToContain);
 

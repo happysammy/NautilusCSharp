@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.TestKit
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Entities;
@@ -27,12 +28,13 @@ namespace Nautilus.TestSuite.TestKit
         /// <typeparam name="T">The event type.</typeparam>
         /// <param name="envelopeList">The envelope list.</param>
         /// <returns>The <see cref="SignalEvent"/>.</returns>
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. OK.")]
         public static T FindSignalEvent<T>(
-            IEnumerable<Envelope<EventMessage>> envelopeList) where T : Signal
+            IEnumerable<Envelope<EventMessage>> envelopeList)
+            where T : Signal
         {
             return envelopeList.Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
                .Where(e => e is SignalEvent)
-                // ReSharper disable once SuspiciousTypeConversion.Global
                 .Cast<T>()
                .FirstOrDefault();
         }

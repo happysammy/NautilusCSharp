@@ -1,34 +1,28 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="TestActor.cs" company="Nautech Systems Pty Ltd">
-//   Copyright (C) 2015-2017 Nautech Systems Pty Ltd. All rights reserved.
-//   http://www.nautechsystems.net
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
 
-    /// <summary>
-    /// The test actor.
-    /// </summary>
+    [SuppressMessage(
+        "StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
+        Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class TestActor : UntypedActor
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestActor"/> class.
-        /// </summary>
         // ReSharper disable once EmptyConstructor
         public TestActor()
         {
             // Do not delete.
         }
 
-        /// <summary>
-        /// The on receive.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
         protected override void OnReceive(object message)
         {
         }

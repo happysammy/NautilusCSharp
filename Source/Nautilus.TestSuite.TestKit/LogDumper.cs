@@ -26,7 +26,7 @@ namespace Nautilus.TestSuite.TestKit
         public static void Dump(
             MockLoggingAdapter mockLoggingAdapter,
             ITestOutputHelper output,
-            int delayMilliseconds=300)
+            int delayMilliseconds = 300)
         {
             Task.Delay(delayMilliseconds).Wait();
             mockLoggingAdapter.WriteStashToOutput(output);
