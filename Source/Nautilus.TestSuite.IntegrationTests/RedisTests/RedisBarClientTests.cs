@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisBarClientTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisBarClientTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -12,9 +12,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Compression;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -22,8 +22,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RedisBarClientTests : IDisposable
     {
         private readonly ITestOutputHelper output;
@@ -485,7 +484,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             }
 
             // Assert
-            Assert.Equal(1, result.Keys.Count);
+            Assert.Single(result.Keys);
             Assert.Equal(6, result["dukascopy:audusd"].Count);
         }
     }

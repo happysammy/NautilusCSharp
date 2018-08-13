@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisInstrumentRepositoryTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisInstrumentRepositoryTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,14 +13,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.BlackBox.Core;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.Redis;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using ServiceStack.Redis;
     using Xunit;
     using Xunit.Abstractions;
-    using Nautilus.Redis;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
 
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RedisInstrumentRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
@@ -36,7 +35,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
-            this.repository = new RedisInstrumentRepository(clientsManager);
+            this.repository = new RedisInstrumentRepository(this.clientsManager);
 
             this.clientsManager.GetClient().FlushAll();
         }
@@ -71,7 +70,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Act
             this.repository.Delete(instrument.Symbol);
-            var result = repository.GetAllKeys();
+            var result = this.repository.GetAllKeys();
 
             // Assert
             Assert.Equal(0, result.Count);
@@ -85,7 +84,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             {
                 StubInstrumentFactory.AUDUSD(),
                 StubInstrumentFactory.EURUSD(),
-                StubInstrumentFactory.USDJPY()
+                StubInstrumentFactory.USDJPY(),
             };
 
             // Act
@@ -106,14 +105,14 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             {
                 StubInstrumentFactory.AUDUSD(),
                 StubInstrumentFactory.EURUSD(),
-                StubInstrumentFactory.USDJPY()
+                StubInstrumentFactory.USDJPY(),
             };
 
             this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
 
             // Act
             this.repository.DeleteAll();
-            var result = repository.GetAllKeys();
+            var result = this.repository.GetAllKeys();
 
             // Assert
             Assert.Equal(0, result.Count);
@@ -147,7 +146,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             {
                 instrument1,
                 instrument2,
-                instrument3
+                instrument3,
             };
 
             this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());

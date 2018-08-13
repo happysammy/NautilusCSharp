@@ -5,14 +5,18 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.IntegrationTests.xml</DocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.IntegrationTests.xml</DocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
@@ -26,5 +30,8 @@
         <ProjectReference Include="..\Nautilus.RabbitMQ\Nautilus.RabbitMQ.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 </Project>

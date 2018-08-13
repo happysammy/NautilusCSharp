@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="RedisBarRepositoryTests.cs" company="Nautech Systems Pty Ltd.">
+// <copyright file="RedisBarRepositoryTests.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,19 +10,18 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using NodaTime;
-    using ServiceStack.Redis;
-    using Xunit;
-    using Xunit.Abstractions;
     using Nautilus.Compression;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
+    using ServiceStack.Redis;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsShouldBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class RedisBarRepositoryTests : IDisposable
     {
         private readonly ITestOutputHelper output;
@@ -335,8 +334,8 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
                 this.output.WriteLine(bar.ToString());
             }
 
-            //var barsCheck = BarDataChecker.CheckBars(barType, this.repository.FindAll(barType).Value.Bars);
-            //barsCheck.Value.ForEach(a => this.output.WriteLine(a));
+            // var barsCheck = BarDataChecker.CheckBars(barType, this.repository.FindAll(barType).Value.Bars);
+            // barsCheck.Value.ForEach(a => this.output.WriteLine(a));
         }
     }
 }
