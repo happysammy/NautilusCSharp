@@ -12,7 +12,7 @@ namespace Nautilus.Serilog
     using global::Serilog.Events;
 
     /// <summary>
-    /// Provides <see cref="Serilog"/> loggers.
+    /// Provides a factory for the <see cref="Serilog"/> logger.
     /// </summary>
     public static class SerilogLogFactory
     {
@@ -29,7 +29,7 @@ namespace Nautilus.Serilog
                    .MinimumLevel.Debug()
                    .Enrich.With(new ThreadIdEnricher())
                    .WriteTo.Console(logLevel, logTemplateDefault)
-                   .WriteTo.RollingFile("Logs/NautilusBlackBox-Log-{Date}.txt", outputTemplate: logTemplateDefault)
+                   .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplateDefault)
                    .CreateLogger();
             }
         }
