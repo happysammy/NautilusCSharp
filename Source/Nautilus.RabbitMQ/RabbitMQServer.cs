@@ -10,6 +10,7 @@ namespace Nautilus.RabbitMQ
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Akka.Actor;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
@@ -31,6 +32,8 @@ namespace Nautilus.RabbitMQ
         private readonly IEventSerializer eventSerializer;
         private readonly IConnection commandConnection;
         private readonly IConnection eventConnection;
+        private readonly IModel commandChannel;
+        private readonly IModel eventChannel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RabbitMQServer"/> class.
@@ -68,59 +71,61 @@ namespace Nautilus.RabbitMQ
 
             try
             {
-                using (var commandChannel = this.commandConnection.CreateModel())
+                this.commandChannel = this.commandConnection.CreateModel();
+                this.commandChannel.ExchangeDeclare(
+                    RabbitConstants.ExecutionCommandsExchange,
+                    ExchangeType.Direct,
+                    durable: true);
+                this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
+
+                this.commandChannel.QueueDeclare(
+                    RabbitConstants.InvTraderCommandsQueue,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false);
+                this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} declared.");
+
+                this.commandChannel.QueueBind(
+                    RabbitConstants.InvTraderCommandsQueue,
+                    RabbitConstants.ExecutionCommandsExchange,
+                    RabbitConstants.InvTraderCommandsQueue);
+                this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
+
+                var consumer = new EventingBasicConsumer(this.commandChannel);
+                consumer.Received += (model, ea) =>
                 {
-                    commandChannel.ExchangeDeclare(
-                        RabbitConstants.ExecutionCommandsExchange,
-                        ExchangeType.Direct,
-                        durable: true);
-                    this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
+                    this.Log.Debug($"Received message.");
+                    var body = ea.Body;
+                    var command = this.commandSerializer.Deserialize(body);
 
-                    commandChannel.QueueDeclare(
-                        RabbitConstants.InvTraderCommandsQueue,
-                        durable: true,
-                        exclusive: false,
-                        autoDelete: false);
-                    this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} declared.");
+                    this.Send(NautilusService.Execution, command);
+                };
+                this.Log.Information($"Basic event consumer created.");
 
-                    commandChannel.QueueBind(
-                        RabbitConstants.InvTraderCommandsQueue,
-                        RabbitConstants.ExecutionCommandsExchange,
-                        RabbitConstants.InvTraderCommandsQueue);
-                    this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
+                this.commandChannel.BasicConsume(
+                    queue: RabbitConstants.InvTraderCommandsQueue,
+                    autoAck: true,
+                    consumer: consumer);
 
-                    var consumer = new EventingBasicConsumer(commandChannel);
-                    consumer.Received += (model, ea) =>
-                    {
-                        var body = ea.Body;
-                        var command = this.commandSerializer.Deserialize(body);
+                this.eventChannel = this.eventConnection.CreateModel();
+                this.eventChannel.ExchangeDeclare(
+                    RabbitConstants.ExecutionEventsExchange,
+                    ExchangeType.Fanout,
+                    durable: true);
+                this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
 
-                        this.Send(NautilusService.Execution, command);
-                    };
-                    this.Log.Information($"Basic event consumer created.");
-                }
+                this.eventChannel.QueueDeclare(
+                    RabbitConstants.InvTraderEventsQueue,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false);
+                this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} declared.");
 
-                using (var eventChannel = this.eventConnection.CreateModel())
-                {
-                    eventChannel.ExchangeDeclare(
-                        RabbitConstants.ExecutionEventsExchange,
-                        ExchangeType.Fanout,
-                        durable: true);
-                    this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
-
-                    eventChannel.QueueDeclare(
-                        RabbitConstants.InvTraderEventsQueue,
-                        durable: true,
-                        exclusive: false,
-                        autoDelete: false);
-                    this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} declared.");
-
-                    eventChannel.QueueBind(
-                        RabbitConstants.InvTraderEventsQueue,
-                        RabbitConstants.ExecutionEventsExchange,
-                        RabbitConstants.InvTraderEventsQueue);
-                    this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
-                }
+                this.eventChannel.QueueBind(
+                    RabbitConstants.InvTraderEventsQueue,
+                    RabbitConstants.ExecutionEventsExchange,
+                    RabbitConstants.InvTraderEventsQueue);
+                this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
             }
             catch (Exception ex)
             {

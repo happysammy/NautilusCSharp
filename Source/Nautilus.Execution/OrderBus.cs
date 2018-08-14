@@ -54,7 +54,6 @@ namespace Nautilus.Execution
         private void OnMessage(InitializeGateway message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway = message.ExecutionGateway;
             this.Log.Information($"{this.gateway} initialized.");

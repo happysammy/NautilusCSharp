@@ -212,7 +212,7 @@ namespace Nautilus.Brokerage.FXCM
             this.Execute(() =>
             {
                 var message = NewOrderSingleFactory.Create(
-                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.ToString()).Value,
+                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     this.accountNumber,
                     order,
                     this.TimeNow());

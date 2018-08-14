@@ -13,6 +13,7 @@ namespace NautilusExecutor
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
     using Nautilus.Common.Build;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Logging;
@@ -97,6 +98,11 @@ namespace NautilusExecutor
             var switchboard = new Switchboard(executionServiceAddresses);
 
             gateway.RegisterEventReceiver(messageBroker);
+
+            var initializeGateway =
+                new InitializeGateway(gateway, guidFactory.NewGuid(), clock.TimeNow());
+
+            executionServiceAddresses[NautilusService.Execution].Send(initializeGateway);
 
             var systemController = new SystemController(
                 setupContainer,
