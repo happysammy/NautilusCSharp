@@ -10,7 +10,6 @@ namespace Nautilus.RabbitMQ
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
     using Nautilus.Common.Componentry;
@@ -18,7 +17,6 @@ namespace Nautilus.RabbitMQ
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>

@@ -11,7 +11,6 @@ namespace Nautilus.Common.MessageStore
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -47,9 +46,9 @@ namespace Nautilus.Common.MessageStore
             // Allow the system to shutdown first.
             // Task.Delay(1000).Wait();
 
-            // var commandReport = GetDiagnosticReport(this.store.CommandEnvelopes);
-            // var eventReport = GetDiagnosticReport(this.store.EventEnvelopes);
-            // var serviceReport = GetDiagnosticReport(this.store.DocumentEnvelopes);
+            var commandReport = GetDiagnosticReport(this.store.CommandEnvelopes);
+            var eventReport = GetDiagnosticReport(this.store.EventEnvelopes);
+            var serviceReport = GetDiagnosticReport(this.store.DocumentEnvelopes);
 
             // Console.WriteLine();
             // Console.WriteLine("-----------------------------------------------------------------------------");
