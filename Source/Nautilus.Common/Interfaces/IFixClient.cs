@@ -63,6 +63,21 @@ namespace Nautilus.Common.Interfaces
         void RequestMarketDataSubscribeAll();
 
         /// <summary>
+        /// Requests a collateral report.
+        /// </summary>
+        void CollateralInquiry();
+
+        /// <summary>
+        /// Requests the trading session status.
+        /// </summary>
+        void TradingSessionStatus();
+
+        /// <summary>
+        /// Requests all positions.
+        /// </summary>
+        void RequestAllPositions();
+
+        /// <summary>
         /// Request an update on the instrument corresponding to the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

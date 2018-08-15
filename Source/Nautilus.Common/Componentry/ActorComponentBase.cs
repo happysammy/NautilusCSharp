@@ -20,7 +20,7 @@ namespace Nautilus.Common.Componentry
     using NodaTime;
 
     /// <summary>
-    /// The base class for all system components which are also Akka.NET actors.
+    /// The base class for all system components which inherit from the Akka.NET <see cref="ReceiveActor"/>.
     /// </summary>
     [Stateless]
     public abstract class ActorComponentBase : ReceiveActor
@@ -101,7 +101,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message object.</param>
         protected override void Unhandled([CanBeNull] object message)
         {
-            this.Log.Warning($"Unhandled message {message}");
+            this.Log.Warning($"Unhandled message {message}.");
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nautilus.Common.Componentry
         {
             Validate.NotNull(ex, nameof(ex));
 
-            this.Log.Error($"Restarting {ex.Message}", ex);
+            this.Log.Error($"Restarting {ex.Message}...", ex);
             this.PreStart();
         }
 
@@ -168,7 +168,7 @@ namespace Nautilus.Common.Componentry
                 default: throw new InvalidOperationException($"Received invalid message {message}.");
             }
 
-            this.Log.Debug($"Received {message}");
+            this.Log.Debug($"Received {message}.");
         }
     }
 }

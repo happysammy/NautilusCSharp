@@ -16,6 +16,7 @@ namespace Nautilus.RabbitMQ
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -133,27 +134,23 @@ namespace Nautilus.RabbitMQ
             }
 
             // Event messages
-            this.Receive<OrderEvent>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<Event>(this.OnMessage);
         }
 
-        private void OnMessage(OrderEvent @event, IActorRef sender)
+        private void OnMessage(Event @event)
         {
             Debug.NotNull(@event, nameof(@event));
-            Debug.NotNull(sender, nameof(sender));
 
             this.Log.Debug($"Event {@event} received.");
 
-            using (var channel = this.eventConnection.CreateModel())
-            {
-                channel.BasicPublish(
-                    RabbitConstants.ExecutionEventsExchange,
-                    RabbitConstants.InvTraderEventsQueue,
-                    mandatory: false,
-                    basicProperties: null,
-                    body: this.eventSerializer.Serialize(@event));
+            this.eventChannel.BasicPublish(
+                RabbitConstants.ExecutionEventsExchange,
+                RabbitConstants.InvTraderEventsQueue,
+                mandatory: false,
+                basicProperties: null,
+                body: this.eventSerializer.Serialize(@event));
 
-                this.Log.Debug($"Published event {@event}.");
-            }
+            this.Log.Debug($"Published event {@event}.");
         }
     }
 }

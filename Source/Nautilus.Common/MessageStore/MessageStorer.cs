@@ -45,20 +45,20 @@ namespace Nautilus.Common.MessageStore
         protected override void PostStop()
         {
             // Allow the system to shutdown first.
-            Task.Delay(1000).Wait();
+            // Task.Delay(1000).Wait();
 
-            var commandReport = GetDiagnosticReport(this.store.CommandEnvelopes);
-            var eventReport = GetDiagnosticReport(this.store.EventEnvelopes);
-            var serviceReport = GetDiagnosticReport(this.store.DocumentEnvelopes);
+            // var commandReport = GetDiagnosticReport(this.store.CommandEnvelopes);
+            // var eventReport = GetDiagnosticReport(this.store.EventEnvelopes);
+            // var serviceReport = GetDiagnosticReport(this.store.DocumentEnvelopes);
 
-            Console.WriteLine();
-            Console.WriteLine("-----------------------------------------------------------------------------");
-            Console.WriteLine("        Messaging Service - Diagnostics Report " + DateTime.UtcNow);
-            Console.WriteLine("-----------------------------------------------------------------------------");
+            // Console.WriteLine();
+            // Console.WriteLine("-----------------------------------------------------------------------------");
+            // Console.WriteLine("        Messaging Service - Diagnostics Report " + DateTime.UtcNow);
+            // Console.WriteLine("-----------------------------------------------------------------------------");
 
-            PrintReportToConsole(commandReport);
-            PrintReportToConsole(eventReport);
-            PrintReportToConsole(serviceReport);
+            // PrintReportToConsole(commandReport);
+            // PrintReportToConsole(eventReport);
+            // PrintReportToConsole(serviceReport);
         }
 
         private static MessagingDiagnosticsReport GetDiagnosticReport<T>(IReadOnlyCollection<Envelope<T>> envelopeList)
