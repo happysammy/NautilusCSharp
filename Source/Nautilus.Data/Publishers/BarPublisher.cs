@@ -41,9 +41,10 @@ namespace Nautilus.Data.Publishers
 
             this.publisher = publisher;
 
-            this.Receive<BarClosed>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<Symbol>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<Symbol>>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<BarClosed>(this.OnMessage);
+            this.Receive<Subscribe<Symbol>>(this.OnMessage);
+            this.Receive<Unsubscribe<Symbol>>(this.OnMessage);
         }
 
         private void OnMessage(Subscribe<Symbol> message)

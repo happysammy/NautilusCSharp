@@ -49,7 +49,11 @@ namespace Nautilus.Common.Componentry
             this.Log = setupContainer.LoggerFactory.Create(service, component);
             this.commandHandler = new CommandHandler(this.Log);
 
-            this.SetupMessageHandling();
+            // Setup message handling.
+            this.Receive<Envelope<CommandMessage>>(this.Open);
+            this.Receive<Envelope<EventMessage>>(this.Open);
+            this.Receive<Envelope<DocumentMessage>>(this.Open);
+            this.Receive<SystemShutdown>(this.OnMessage);
         }
 
         /// <summary>
@@ -127,17 +131,6 @@ namespace Nautilus.Common.Componentry
         protected override void PostStop()
         {
             this.Log.Debug($"Stopped.");
-        }
-
-        /// <summary>
-        /// Sets up the message handling for this actor component.
-        /// </summary>
-        private void SetupMessageHandling()
-        {
-            this.Receive<Envelope<CommandMessage>>(envelope => this.Open(envelope));
-            this.Receive<Envelope<EventMessage>>(envelope => this.Open(envelope));
-            this.Receive<Envelope<DocumentMessage>>(envelope => this.Open(envelope));
-            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(SystemShutdown message)

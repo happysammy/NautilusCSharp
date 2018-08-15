@@ -9,7 +9,6 @@
 namespace Nautilus.BlackBox.Portfolio
 {
     using System;
-    using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.BlackBox.Portfolio.Orders;
@@ -18,7 +17,6 @@ namespace Nautilus.BlackBox.Portfolio
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
@@ -79,34 +77,17 @@ namespace Nautilus.BlackBox.Portfolio
             this.exitSignalProcessor = exitSignalProcessor;
             this.trailingStopSignalProcessor = trailingStopSignalProcessor;
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
-
-        /// <summary>
-        /// Set up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
-            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Set up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
-            this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
-            this.Receive<SignalEvent>(msg => this.OnMessage(msg));
-
-            this.Receive<OrderRejected>(msg => this.OnMessage(msg));
-            this.Receive<OrderWorking>(msg => this.OnMessage(msg));
-            this.Receive<OrderCancelled>(msg => this.OnMessage(msg));
-            this.Receive<OrderFilled>(msg => this.OnMessage(msg));
-            this.Receive<OrderPartiallyFilled>(msg => this.OnMessage(msg));
-            this.Receive<OrderExpired>(msg => this.OnMessage(msg));
-            this.Receive<OrderModified>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<TradeApproved>(this.OnMessage);
+            this.Receive<BarDataEvent>(this.OnMessage);
+            this.Receive<SignalEvent>(this.OnMessage);
+            this.Receive<OrderRejected>(this.OnMessage);
+            this.Receive<OrderWorking>(this.OnMessage);
+            this.Receive<OrderCancelled>(this.OnMessage);
+            this.Receive<OrderFilled>(this.OnMessage);
+            this.Receive<OrderPartiallyFilled>(this.OnMessage);
+            this.Receive<OrderExpired>(this.OnMessage);
+            this.Receive<OrderModified>(this.OnMessage);
         }
 
         private void OnMessage(TradeApproved @event)

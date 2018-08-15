@@ -40,8 +40,8 @@ namespace Nautilus.Data
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            // Command message handling.
-            this.Receive<SystemStart>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<SystemStart>(this.OnMessage);
         }
 
         private void OnMessage(SystemStart message)

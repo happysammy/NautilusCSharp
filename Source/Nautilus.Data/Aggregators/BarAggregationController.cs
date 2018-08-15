@@ -39,7 +39,7 @@ namespace Nautilus.Data.Aggregators
     public sealed class BarAggregationController : ActorComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
-        private readonly Dictionary<Symbol, IActorRef> barAggregators;
+        private readonly Dictionary<Symbol, IEndpoint> barAggregators;
         private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
         private readonly Dictionary<Duration, List<BarSpecification>> barTriggers;
         private readonly Dictionary<Duration, ITrigger> triggers;
@@ -66,7 +66,7 @@ namespace Nautilus.Data.Aggregators
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.storedContainer = container;
-            this.barAggregators = new Dictionary<Symbol, IActorRef>();
+            this.barAggregators = new Dictionary<Symbol, IEndpoint>();
             this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
             this.barTriggers = new Dictionary<Duration, List<BarSpecification>>();
             this.triggers = new Dictionary<Duration, ITrigger>();
@@ -74,19 +74,17 @@ namespace Nautilus.Data.Aggregators
 
             this.isMarketOpen = this.IsFxMarketOpen();
 
-            // Command messages
-            this.Receive<SystemStart>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<JobCreated>(msg => this.OnMessage(msg));
-            this.Receive<JobRemoved>(msg => this.OnMessage(msg));
-            this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
-            this.Receive<BarJob>(msg => this.OnMessage(msg));
-            this.Receive<MarketStatusJob>(msg => this.OnMessage(msg));
-
-            // Event messages
-            this.Receive<Tick>(msg => this.OnMessage(msg));
-            this.Receive<BarClosed>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<SystemStart>(this.OnMessage);
+            this.Receive<Subscribe<BarType>>(this.OnMessage);
+            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+            this.Receive<JobCreated>(this.OnMessage);
+            this.Receive<JobRemoved>(this.OnMessage);
+            this.Receive<RemoveJobFail>(this.OnMessage);
+            this.Receive<BarJob>(this.OnMessage);
+            this.Receive<MarketStatusJob>(this.OnMessage);
+            this.Receive<Tick>(this.OnMessage);
+            this.Receive<BarClosed>(this.OnMessage);
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
@@ -221,15 +219,16 @@ namespace Nautilus.Data.Aggregators
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
-                var barAggregatorRef = Context.ActorOf(Props.Create(() => new BarAggregator(
-                    this.storedContainer,
-                    symbol,
-                    this.isMarketOpen)));
+                var barAggregator = new ActorEndpoint(
+                    Context.ActorOf(Props.Create(() => new BarAggregator(
+                        this.storedContainer,
+                        symbol,
+                        this.isMarketOpen))));
 
-                this.barAggregators.Add(message.DataType.Symbol, barAggregatorRef);
+                this.barAggregators.Add(message.DataType.Symbol, barAggregator);
             }
 
-            this.barAggregators[symbol].Tell(message);
+            this.barAggregators[symbol].Send(message);
 
             var duration = barSpec.Duration;
 
@@ -289,7 +288,7 @@ namespace Nautilus.Data.Aggregators
                 return;
             }
 
-            this.barAggregators[symbol].Tell(message);
+            this.barAggregators[symbol].Send(message);
 
             if (this.barTriggers.ContainsKey(duration))
             {
@@ -369,7 +368,7 @@ namespace Nautilus.Data.Aggregators
 
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
-                this.barAggregators[tick.Symbol].Tell(tick);
+                this.barAggregators[tick.Symbol].Send(tick);
 
                 return;
             }
@@ -409,9 +408,9 @@ namespace Nautilus.Data.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                aggregator.Value.Tell(closeBar1);
-                aggregator.Value.Tell(closeBar2);
-                aggregator.Value.Tell(closeBar3);
+                aggregator.Value.Send(closeBar1);
+                aggregator.Value.Send(closeBar2);
+                aggregator.Value.Send(closeBar3);
 
                 // Log for unit testing only.
                 // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
@@ -455,7 +454,7 @@ namespace Nautilus.Data.Aggregators
                 var marketOpened = new MarketOpened(this.NewGuid(), this.TimeNow());
                 foreach (var aggregator in this.barAggregators.Values)
                 {
-                    aggregator.Tell(marketOpened);
+                    aggregator.Send(marketOpened);
                 }
             }
 
@@ -480,7 +479,7 @@ namespace Nautilus.Data.Aggregators
                 var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
                 foreach (var aggregator in this.barAggregators.Values)
                 {
-                    aggregator.Tell(marketClosed);
+                    aggregator.Send(marketClosed);
                 }
             }
         }

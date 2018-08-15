@@ -8,7 +8,6 @@
 
 namespace Nautilus.BlackBox.AlphaModel
 {
-    using Akka.Actor;
     using Nautilus.BlackBox.AlphaModel.Strategy;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.Commands;
@@ -16,7 +15,6 @@ namespace Nautilus.BlackBox.AlphaModel
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -54,26 +52,10 @@ namespace Nautilus.BlackBox.AlphaModel
             this.storedContainer = container;
             this.alphaStrategyModuleStore = alphaStrategyModuleStore;
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
-
-        /// <summary>
-        /// Set up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
-            this.Receive<CreateAlphaStrategyModule>(msg => this.OnMessage(msg));
-            this.Receive<RemoveAlphaStrategyModule>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Set up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
-            this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
+            // Setup message handling
+            this.Receive<CreateAlphaStrategyModule>(this.OnMessage);
+            this.Receive<RemoveAlphaStrategyModule>(this.OnMessage);
+            this.Receive<BarDataEvent>(this.OnMessage);
         }
 
         private void OnMessage(BarDataEvent message)

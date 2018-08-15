@@ -48,13 +48,11 @@ namespace Nautilus.Scheduler
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
-            // Command message handling.
-            this.Receive<CreateJob>(msg => this.OnMessage(msg));
-            this.Receive<RemoveJob>(msg => this.OnMessage(msg));
-            this.Receive<PauseJob>(msg => this.OnMessage(msg));
-            this.Receive<ResumeJob>(msg => this.OnMessage(msg));
-
-            // this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<CreateJob>(this.OnMessage);
+            this.Receive<RemoveJob>(this.OnMessage);
+            this.Receive<PauseJob>(this.OnMessage);
+            this.Receive<ResumeJob>(this.OnMessage);
         }
 
         /// <summary>

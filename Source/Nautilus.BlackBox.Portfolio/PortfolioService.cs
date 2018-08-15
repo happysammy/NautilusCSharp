@@ -8,13 +8,11 @@
 
 namespace Nautilus.BlackBox.Portfolio
 {
-    using Akka.Actor;
     using Nautilus.BlackBox.Core.Build;
     using Nautilus.BlackBox.Core.Messages.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Events;
@@ -52,28 +50,12 @@ namespace Nautilus.BlackBox.Portfolio
             this.storedContainer = container;
             this.portfolioStore = portfolioStore;
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
-            this.Receive<CreatePortfolio>(msg => this.OnMessage(msg));
-            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Sets up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
-            this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
-            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
-            this.Receive<SignalEvent>(msg => this.OnMessage(msg));
-            this.Receive<OrderEvent>(msg => this.OnMessage(msg));
+            // Setup message handling.
+            this.Receive<CreatePortfolio>(this.OnMessage);
+            this.Receive<TradeApproved>(this.OnMessage);
+            this.Receive<BarDataEvent>(this.OnMessage);
+            this.Receive<SignalEvent>(this.OnMessage);
+            this.Receive<OrderEvent>(this.OnMessage);
         }
 
         private void OnMessage(CreatePortfolio message)
