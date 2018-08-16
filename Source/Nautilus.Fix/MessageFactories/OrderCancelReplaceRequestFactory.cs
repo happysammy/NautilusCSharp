@@ -31,7 +31,7 @@ namespace Nautilus.Fix.MessageFactories
         public static OrderCancelReplaceRequest Create(
             string brokerSymbol,
             IOrder order,
-            Nautilus.DomainModel.ValueObjects.Price modifiedPrice,
+            decimal modifiedPrice,
             ZonedDateTime transactionTime)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -55,11 +55,11 @@ namespace Nautilus.Fix.MessageFactories
                 // Set the order price depending on order type.
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
-                    message.SetField(new Price(order.Price.Value.Value));
+                    message.SetField(new Price(modifiedPrice));
                     break;
                 case OrderType.STOP_MARKET:
                 case OrderType.MIT:
-                    message.SetField(new StopPx(order.Price.Value.Value));
+                    message.SetField(new StopPx(modifiedPrice));
                     break;
             }
 

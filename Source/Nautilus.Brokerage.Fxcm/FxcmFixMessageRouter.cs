@@ -273,7 +273,7 @@ namespace Nautilus.Brokerage.FXCM
                 var message = OrderCancelReplaceRequestFactory.Create(
                     FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     order,
-                    modifiedPrice,
+                    modifiedPrice.Value,
                     this.TimeNow());
 
                 this.fixSession.Send(message);

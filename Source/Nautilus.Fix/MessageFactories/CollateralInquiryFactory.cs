@@ -8,8 +8,8 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using System;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -23,16 +23,16 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new collateral inquiry FIX message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
-        /// <param name="tradingSessionId">The brokers name.</param>
+        /// <param name="broker">The brokers name.</param>
         /// <returns>A <see cref="CollateralInquiry"/>.</returns>
-        public static CollateralInquiry Create(ZonedDateTime timeNow, Enum tradingSessionId)
+        public static CollateralInquiry Create(ZonedDateTime timeNow, Broker broker)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new CollateralInquiry();
 
             message.SetField(new CollInquiryID($"CI_{timeNow.TickOfDay}"));
-            message.SetField(new TradingSessionID(tradingSessionId.ToString()));
+            message.SetField(new TradingSessionID(broker.ToString()));
             message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
 
             return message;
