@@ -10,7 +10,6 @@ namespace Nautilus.RabbitMQ
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using global::RabbitMQ.Client;
@@ -179,7 +178,6 @@ namespace Nautilus.RabbitMQ
             this.Receive<Event>(this.OnMessage);
         }
 
-        [PerformanceOptimized]
         private void OnMessage(Event @event)
         {
             Debug.NotNull(@event, nameof(@event));
