@@ -38,13 +38,13 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var orderList = new NewOrderList();
-            orderList.SetField(new ListID(timeNow.TickOfDay.ToString()));
-            orderList.SetField(new TotNoOrders(2));
-            orderList.SetField(new ContingencyType(101));
-            orderList.SetField(new NoOrders(2));
-            orderList.SetField(new BidType(3));
-            orderList.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
+            var message = new NewOrderList();
+            message.SetField(new ListID(timeNow.TickOfDay.ToString()));
+            message.SetField(new TotNoOrders(2));
+            message.SetField(new ContingencyType(101));
+            message.SetField(new NoOrders(2));
+            message.SetField(new BidType(3));
+            message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
 
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
@@ -67,7 +67,7 @@ namespace Nautilus.Fix.MessageFactories
 
             order1.SetField(new OrderQty(entry.Quantity.Value));
             order1.SetField(new StopPx(entry.Price.Value.Value));
-            orderList.AddGroup(order1);
+            message.AddGroup(order1);
 
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
@@ -82,9 +82,9 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
             order2.SetField(new StopPx(stopLoss.Price.Value.Value));
-            orderList.AddGroup(order2);
+            message.AddGroup(order2);
 
-            return orderList;
+            return message;
         }
 
         /// <summary>
@@ -106,12 +106,12 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var orderList = new NewOrderList();
-            orderList.SetField(new ListID(timeNow.TickOfDay.ToString()));
-            orderList.SetField(new TotNoOrders(3));
-            orderList.SetField(new ContingencyType(101));
-            orderList.SetField(new NoOrders(3));
-            orderList.SetField(new BidType(3));
+            var message = new NewOrderList();
+            message.SetField(new ListID(timeNow.TickOfDay.ToString()));
+            message.SetField(new TotNoOrders(3));
+            message.SetField(new ContingencyType(101));
+            message.SetField(new NoOrders(3));
+            message.SetField(new BidType(3));
 
             var entry = atomicOrder.Entry;
             var order1 = new NewOrderList.NoOrdersGroup();
@@ -134,7 +134,7 @@ namespace Nautilus.Fix.MessageFactories
 
             order1.SetField(new OrderQty(entry.Quantity.Value));
             order1.SetField(new StopPx(entry.Price.Value.Value));
-            orderList.AddGroup(order1);
+            message.AddGroup(order1);
 
             var stopLoss = atomicOrder.StopLoss;
             var order2 = new NewOrderList.NoOrdersGroup();
@@ -149,7 +149,7 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
             order2.SetField(new StopPx(stopLoss.Price.Value.Value));
-            orderList.AddGroup(order2);
+            message.AddGroup(order2);
 
             var profitTarget = atomicOrder.ProfitTarget;
             var order3 = new NewOrderList.NoOrdersGroup();
@@ -164,9 +164,9 @@ namespace Nautilus.Fix.MessageFactories
             order3.SetField(FixMessageHelper.GetFixTimeInForce(profitTarget.Value.TimeInForce));
             order3.SetField(new OrderQty(profitTarget.Value.Quantity.Value));
             order3.SetField(new Price(profitTarget.Value.Price.Value.Value));
-            orderList.AddGroup(order3);
+            message.AddGroup(order3);
 
-            return orderList;
+            return message;
         }
     }
 }

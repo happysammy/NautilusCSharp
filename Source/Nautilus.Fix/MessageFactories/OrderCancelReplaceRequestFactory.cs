@@ -9,6 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
     using NodaTime;
     using QuickFix.Fields;
@@ -38,19 +39,31 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
             Debug.NotDefault(transactionTime, nameof(transactionTime));
 
-            var orderMessage = new OrderCancelReplaceRequest();
+            var message = new OrderCancelReplaceRequest();
 
-            orderMessage.SetField(new OrigClOrdID(order.Id.ToString()));
-            orderMessage.SetField(new OrderID(order.IdBroker.ToString()));
-            orderMessage.SetField(new ClOrdID(order.IdCurrent.ToString()));
-            orderMessage.SetField(new Symbol(brokerSymbol));
-            orderMessage.SetField(new Quantity(order.Quantity.Value));
-            orderMessage.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
-            orderMessage.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
-            orderMessage.SetField(FixMessageHelper.GetFixOrderType(order.Type));
-            orderMessage.SetField(new StopPx(modifiedPrice.Value));
+            message.SetField(new OrigClOrdID(order.Id.ToString()));
+            message.SetField(new OrderID(order.IdBroker.ToString()));
+            message.SetField(new ClOrdID(order.IdCurrent.ToString()));
+            message.SetField(new Symbol(brokerSymbol));
+            message.SetField(new Quantity(order.Quantity.Value));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
+            message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
 
-            return orderMessage;
+            switch (order.Type)
+            {
+                // Set the order price depending on order type.
+                case OrderType.LIMIT:
+                case OrderType.STOP_LIMIT:
+                    message.SetField(new Price(order.Price.Value.Value));
+                    break;
+                case OrderType.STOP_MARKET:
+                case OrderType.MIT:
+                    message.SetField(new StopPx(order.Price.Value.Value));
+                    break;
+            }
+
+            return message;
         }
     }
 }

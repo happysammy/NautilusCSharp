@@ -39,40 +39,40 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(order, nameof(order));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var orderSingle = new NewOrderSingle();
+            var message = new NewOrderSingle();
 
-            orderSingle.SetField(new ClOrdID(order.Id.ToString()));
-            orderSingle.SetField(new SecondaryClOrdID(order.Label.ToString()));
-            orderSingle.SetField(new Account(accountNumber));
-            orderSingle.SetField(new Symbol(brokerSymbol));
-            orderSingle.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
-            orderSingle.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
-            orderSingle.SetField(FixMessageHelper.GetFixOrderType(order.Type));
-            orderSingle.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
+            message.SetField(new ClOrdID(order.Id.ToString()));
+            message.SetField(new SecondaryClOrdID(order.Label.ToString()));
+            message.SetField(new Account(accountNumber));
+            message.SetField(new Symbol(brokerSymbol));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(new TransactTime(timeNow.ToDateTimeUtc()));
+            message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
+            message.SetField(FixMessageHelper.GetFixTimeInForce(order.TimeInForce));
 
             if (order.ExpireTime.HasValue)
             {
                 // ReSharper disable once PossibleInvalidOperationException (checked above)
                 var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
-                orderSingle.SetField(new ExpireTime(expireTime));
+                message.SetField(new ExpireTime(expireTime));
             }
 
-            orderSingle.SetField(new OrderQty(order.Quantity.Value));
+            message.SetField(new OrderQty(order.Quantity.Value));
 
             switch (order.Type)
             {
                 // Set the order price depending on order type.
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
-                    orderSingle.SetField(new Price(order.Price.Value.Value));
+                    message.SetField(new Price(order.Price.Value.Value));
                     break;
                 case OrderType.STOP_MARKET:
                 case OrderType.MIT:
-                    orderSingle.SetField(new StopPx(order.Price.Value.Value));
+                    message.SetField(new StopPx(order.Price.Value.Value));
                     break;
             }
 
-            return orderSingle;
+            return message;
         }
     }
 }

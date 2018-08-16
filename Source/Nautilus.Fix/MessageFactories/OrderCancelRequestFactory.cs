@@ -35,17 +35,17 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNull(order, nameof(order));
             Debug.NotDefault(transactionTime, nameof(transactionTime));
 
-            var orderMessage = new OrderCancelRequest();
+            var message = new OrderCancelRequest();
 
-            orderMessage.SetField(new OrigClOrdID(order.Id.ToString()));
-            orderMessage.SetField(new OrderID(order.IdBroker.ToString()));
-            orderMessage.SetField(new ClOrdID(order.IdCurrent.ToString()));
-            orderMessage.SetField(new Symbol(brokerSymbol));
-            orderMessage.SetField(new Quantity(order.Quantity.Value));
-            orderMessage.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
-            orderMessage.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
+            message.SetField(new OrigClOrdID(order.Id.ToString()));
+            message.SetField(new OrderID(order.IdBroker.ToString()));
+            message.SetField(new ClOrdID(order.IdCurrent.ToString()));
+            message.SetField(new Symbol(brokerSymbol));
+            message.SetField(new Quantity(order.Quantity.Value));
+            message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
+            message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
 
-            return orderMessage;
+            return message;
         }
     }
 }
