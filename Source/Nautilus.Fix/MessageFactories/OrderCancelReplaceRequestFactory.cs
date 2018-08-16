@@ -8,6 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using System;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
@@ -61,6 +62,8 @@ namespace Nautilus.Fix.MessageFactories
                 case OrderType.MIT:
                     message.SetField(new StopPx(modifiedPrice));
                     break;
+
+                default: throw new InvalidOperationException("OrderType not recognized.");
             }
 
             return message;
