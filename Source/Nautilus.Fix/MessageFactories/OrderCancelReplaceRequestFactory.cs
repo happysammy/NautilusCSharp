@@ -58,11 +58,14 @@ namespace Nautilus.Fix.MessageFactories
                 case OrderType.STOP_LIMIT:
                     message.SetField(new Price(modifiedPrice));
                     break;
+
                 case OrderType.STOP_MARKET:
                 case OrderType.MIT:
                     message.SetField(new StopPx(modifiedPrice));
                     break;
 
+                case OrderType.UNKNOWN:
+                case OrderType.MARKET:
                 default: throw new InvalidOperationException("OrderType not recognized.");
             }
 
