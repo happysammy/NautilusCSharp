@@ -92,10 +92,10 @@ namespace Nautilus.RabbitMQ
                 var consumer = new EventingBasicConsumer(this.commandChannel);
                 consumer.Received += (model, ea) =>
                 {
-                    this.Log.Debug($"Received message.");
                     var body = ea.Body;
                     var command = this.commandSerializer.Deserialize(body);
 
+                    this.Log.Debug($"Received {command}.");
                     this.Send(NautilusService.Execution, command);
                 };
                 this.Log.Information($"Basic event consumer created.");

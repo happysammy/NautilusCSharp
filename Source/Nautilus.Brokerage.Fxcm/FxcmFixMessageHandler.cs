@@ -317,7 +317,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
+                // var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
                 var orderId = message.ClOrdID.ToString();
                 var brokerOrderId = message.OrderID.ToString();
                 var fxcmCode = message.GetField(9025);
@@ -326,7 +326,7 @@ namespace Nautilus.Brokerage.FXCM
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.executionGateway.OnOrderCancelReject(
-                    symbol,
+                    "NULL",
                     Venue.FXCM,
                     orderId,
                     brokerOrderId,
@@ -365,7 +365,8 @@ namespace Nautilus.Brokerage.FXCM
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
                 var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.REJECTED.ToString())
+                var orderStatus = message.GetField(Tags.OrdStatus);
+                if (orderStatus == OrdStatus.REJECTED.ToString())
                 {
                     var rejectReasonCode = message.GetField(9025);
                     var fxcmRejectCode = message.GetField(9029);
@@ -380,7 +381,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.CANCELED.ToString())
+                if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
                     this.executionGateway.OnOrderCancelled(
                         symbol,
@@ -391,7 +392,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.REPLACED.ToString())
+                if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
                     this.executionGateway.OnOrderModified(
                         symbol,
@@ -404,7 +405,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.NEW.ToString())
+                if (orderStatus == OrdStatus.NEW.ToString())
                 {
                     var expireTime = message.IsSetField(Tags.ExpireTime)
                                        ? (ZonedDateTime?)FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
@@ -426,7 +427,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.EXPIRED.ToString())
+                if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
                     this.executionGateway.OnOrderExpired(
                         symbol,
@@ -437,7 +438,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.FILLED.ToString())
+                if (orderStatus == OrdStatus.FILLED.ToString())
                 {
                     var executionId = GetField(message, Tags.ExecID);
                     var executionTicket = GetField(message, 9041);
@@ -459,7 +460,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                if (message.GetField(Tags.OrdStatus) == OrdStatus.PARTIALLY_FILLED.ToString())
+                if (orderStatus == OrdStatus.PARTIALLY_FILLED.ToString())
                 {
                     var executionId = GetField(message, Tags.ExecID);
                     var executionTicket = GetField(message, 9041);
@@ -482,6 +483,8 @@ namespace Nautilus.Brokerage.FXCM
                         this.pricePrecisionIndex[fxcmSymbol],
                         timestamp);
                 }
+
+                this.Log.Debug($"ExecutionReport: order_id={orderId}, status={message.GetField(Tags.OrdStatus)} ");
             });
         }
 
