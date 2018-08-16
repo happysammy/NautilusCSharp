@@ -9,14 +9,21 @@
 namespace Nautilus.RabbitMQ
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -24,6 +31,7 @@ namespace Nautilus.RabbitMQ
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression OK.")]
     [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable", Justification = "Reviewed. Suppression OK.")]
+    [PerformanceOptimized]
     public class RabbitMQServer : ActorComponentBusConnectedBase
     {
         private readonly ICommandSerializer commandSerializer;
@@ -32,6 +40,7 @@ namespace Nautilus.RabbitMQ
         private readonly IConnection eventConnection;
         private readonly IModel commandChannel;
         private readonly IModel eventChannel;
+        private readonly List<Order> orders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RabbitMQServer"/> class.
@@ -66,6 +75,7 @@ namespace Nautilus.RabbitMQ
             this.eventSerializer = eventSerializer;
             this.commandConnection = commandConnection;
             this.eventConnection = eventConnection;
+            this.orders = new List<Order>();
 
             try
             {
@@ -94,6 +104,40 @@ namespace Nautilus.RabbitMQ
                 {
                     var body = ea.Body;
                     var command = this.commandSerializer.Deserialize(body);
+
+                    if (command is SubmitOrder submitOrder)
+                    {
+                        var orderToSubmit = submitOrder.Order;
+                        var order = new Order(
+                            orderToSubmit.Symbol,
+                            orderToSubmit.Id,
+                            orderToSubmit.Label,
+                            orderToSubmit.Side,
+                            orderToSubmit.Type,
+                            orderToSubmit.Quantity,
+                            orderToSubmit.Price,
+                            orderToSubmit.TimeInForce,
+                            orderToSubmit.ExpireTime,
+                            orderToSubmit.Timestamp);
+
+                        this.orders.Add(order);
+                    }
+                    else if (command is ModifyOrder modifyOrder)
+                    {
+                        var order = this.orders.FirstOrDefault(o => o.Id == modifyOrder.Order.Id);
+
+                        if (order is null)
+                        {
+                            this.Log.Warning("Order not found for ModifyOrder command.");
+                            return;
+                        }
+
+                        command = new ModifyOrder(
+                            order,
+                            modifyOrder.ModifiedPrice,
+                            modifyOrder.Id,
+                            modifyOrder.Timestamp);
+                    }
 
                     this.Log.Debug($"Received {command}.");
                     this.Send(NautilusService.Execution, command);
@@ -135,11 +179,25 @@ namespace Nautilus.RabbitMQ
             this.Receive<Event>(this.OnMessage);
         }
 
+        [PerformanceOptimized]
         private void OnMessage(Event @event)
         {
             Debug.NotNull(@event, nameof(@event));
 
             this.Log.Debug($"Event {@event} received.");
+
+            if (@event is OrderEvent orderEvent)
+            {
+                var order = this.orders.FirstOrDefault(o => o.Id == orderEvent.OrderId);
+
+                if (order is null)
+                {
+                    this.Log.Warning("Order not found for ModifyOrder command.");
+                    return;
+                }
+
+                order.Apply(orderEvent);
+            }
 
             this.eventChannel.BasicPublish(
                 RabbitConstants.ExecutionEventsExchange,

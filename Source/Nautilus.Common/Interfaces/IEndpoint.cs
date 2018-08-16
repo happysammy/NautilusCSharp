@@ -8,13 +8,11 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using System.Threading.Tasks;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Interfaces;
-    using NodaTime;
 
     /// <summary>
-    /// Provides a generic endpoint abstraction.
+    /// Provides a generic messaging endpoint abstraction.
     /// </summary>
     public interface IEndpoint
     {
@@ -31,12 +29,5 @@ namespace Nautilus.Common.Interfaces
         /// <typeparam name="T">The envelope message type.</typeparam>
         void Send<T>(Envelope<T> envelope)
             where T : ISendable<Message>;
-
-        /// <summary>
-        /// Sends the endpoint a command to stop gracefully.
-        /// </summary>
-        /// <param name="timeout">The timeout duration for task completion.</param>
-        /// <returns>The result of the operation.</returns>
-        Task<bool> GracefulStop(Duration timeout);
     }
 }

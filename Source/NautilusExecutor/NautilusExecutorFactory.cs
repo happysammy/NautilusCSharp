@@ -98,6 +98,7 @@ namespace NautilusExecutor
             var switchboard = new Switchboard(executionServiceAddresses);
 
             gateway.RegisterEventReceiver(messageBroker);
+            gateway.RegisterEventReceiver(executionServiceAddresses[NautilusService.Execution]);
 
             var initializeGateway =
                 new InitializeGateway(gateway, guidFactory.NewGuid(), clock.TimeNow());
