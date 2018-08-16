@@ -75,7 +75,7 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new ListSeqNo(1));
             order2.SetField(new SecondaryClOrdID(stopLoss.Label.ToString()));
             order2.SetField(new ClOrdLinkID("2"));
-            order2.SetField(new Account("02402856"));
+            order2.SetField(new Account(accountNumber));
             order2.SetField(new Symbol(brokerSymbol));
             order2.SetField(FixMessageHelper.GetFixOrderSide(stopLoss.Side));
             order2.SetField(new OrdType(OrdType.STOP));
@@ -127,7 +127,7 @@ namespace Nautilus.Fix.MessageFactories
 
             if (entry.ExpireTime.HasValue)
             {
-                // ReSharper disable once PossibleInvalidOperationException (checked above)
+                // ReSharper disable once PossibleInvalidOperationException (already checked above).
                 var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }

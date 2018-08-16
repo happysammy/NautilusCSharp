@@ -51,9 +51,10 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
             message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
 
+            // Set the order price depending on order type.
+            // ReSharper disable once SwitchStatementMissingSomeCases (becomes redundant case labels).
             switch (order.Type)
             {
-                // Set the order price depending on order type.
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
                     message.SetField(new Price(modifiedPrice));
@@ -64,8 +65,6 @@ namespace Nautilus.Fix.MessageFactories
                     message.SetField(new StopPx(modifiedPrice));
                     break;
 
-                case OrderType.UNKNOWN:
-                case OrderType.MARKET:
                 default: throw new InvalidOperationException("OrderType not recognized.");
             }
 

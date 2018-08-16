@@ -8,6 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
+    using System;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
@@ -52,24 +53,28 @@ namespace Nautilus.Fix.MessageFactories
 
             if (order.ExpireTime.HasValue)
             {
-                // ReSharper disable once PossibleInvalidOperationException (checked above)
+                // ReSharper disable once PossibleInvalidOperationException (already checked above).
                 var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
                 message.SetField(new ExpireTime(expireTime));
             }
 
             message.SetField(new OrderQty(order.Quantity.Value));
 
+            // Set the order price depending on order type.
+            // ReSharper disable once SwitchStatementMissingSomeCases (becomes redundant case labels).
             switch (order.Type)
             {
-                // Set the order price depending on order type.
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
                     message.SetField(new Price(order.Price.Value.Value));
                     break;
+
                 case OrderType.STOP_MARKET:
                 case OrderType.MIT:
                     message.SetField(new StopPx(order.Price.Value.Value));
                     break;
+
+                default: throw new InvalidOperationException("OrderType not recognized.");
             }
 
             return message;
