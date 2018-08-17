@@ -14,6 +14,7 @@ namespace Nautilus.RabbitMQ
     using System.Linq;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
+    using global::RabbitMQ.Client.Impl;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -39,6 +40,7 @@ namespace Nautilus.RabbitMQ
         private readonly IConnection eventConnection;
         private readonly IModel commandChannel;
         private readonly IModel eventChannel;
+        private readonly IBasicProperties eventProps;
         private readonly List<Order> orders;
 
         /// <summary>
@@ -122,7 +124,7 @@ namespace Nautilus.RabbitMQ
                                 orderToSubmit.Timestamp);
 
                             this.orders.Add(orderToAdd);
-                            this.Log.Warning($"Order {orderToAdd.Id} added to order list.");
+                            this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
                             break;
                         }
 
@@ -172,6 +174,7 @@ namespace Nautilus.RabbitMQ
                     consumer: consumer);
 
                 this.eventChannel = this.eventConnection.CreateModel();
+
                 this.eventChannel.ExchangeDeclare(
                     RabbitConstants.ExecutionEventsExchange,
                     ExchangeType.Fanout,
@@ -190,6 +193,9 @@ namespace Nautilus.RabbitMQ
                     RabbitConstants.ExecutionEventsExchange,
                     RabbitConstants.InvTraderEventsQueue);
                 this.Log.Information($"Queue {RabbitConstants.InvTraderEventsQueue} bound to {RabbitConstants.ExecutionEventsExchange}.");
+
+                this.eventProps = this.eventChannel.CreateBasicProperties();
+                this.eventProps.AppId = "NautilusExecutor";
             }
             catch (Exception ex)
             {
@@ -224,7 +230,7 @@ namespace Nautilus.RabbitMQ
                 RabbitConstants.ExecutionEventsExchange,
                 RabbitConstants.InvTraderEventsQueue,
                 mandatory: false,
-                basicProperties: null,
+                basicProperties: this.eventProps,
                 body: this.eventSerializer.Serialize(@event));
 
             this.Log.Debug($"Published event {@event}.");
