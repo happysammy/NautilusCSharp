@@ -55,6 +55,9 @@ namespace Nautilus.Fix.MessageFactories
             // ReSharper disable once SwitchStatementMissingSomeCases (becomes redundant case labels).
             switch (order.Type)
             {
+                case OrderType.MARKET:
+                    break;
+
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
                     message.SetField(new Price(modifiedPrice));

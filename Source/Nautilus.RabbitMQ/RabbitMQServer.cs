@@ -104,38 +104,61 @@ namespace Nautilus.RabbitMQ
                     var body = ea.Body;
                     var command = this.commandSerializer.Deserialize(body);
 
-                    if (command is SubmitOrder submitOrder)
+                    switch (command)
                     {
-                        var orderToSubmit = submitOrder.Order;
-                        var order = new Order(
-                            orderToSubmit.Symbol,
-                            orderToSubmit.Id,
-                            orderToSubmit.Label,
-                            orderToSubmit.Side,
-                            orderToSubmit.Type,
-                            orderToSubmit.Quantity,
-                            orderToSubmit.Price,
-                            orderToSubmit.TimeInForce,
-                            orderToSubmit.ExpireTime,
-                            orderToSubmit.Timestamp);
-
-                        this.orders.Add(order);
-                    }
-                    else if (command is ModifyOrder modifyOrder)
-                    {
-                        var order = this.orders.FirstOrDefault(o => o.Id == modifyOrder.Order.Id);
-
-                        if (order is null)
+                        case SubmitOrder submitOrder:
                         {
-                            this.Log.Warning("Order not found for ModifyOrder command.");
-                            return;
+                            var orderToSubmit = submitOrder.Order;
+                            var orderToAdd = new Order(
+                                orderToSubmit.Symbol,
+                                orderToSubmit.Id,
+                                orderToSubmit.Label,
+                                orderToSubmit.Side,
+                                orderToSubmit.Type,
+                                orderToSubmit.Quantity,
+                                orderToSubmit.Price,
+                                orderToSubmit.TimeInForce,
+                                orderToSubmit.ExpireTime,
+                                orderToSubmit.Timestamp);
+
+                            this.orders.Add(orderToAdd);
+                            this.Log.Warning($"Order {orderToAdd.Id} added to order list.");
+                            break;
                         }
 
-                        command = new ModifyOrder(
-                            order,
-                            modifyOrder.ModifiedPrice,
-                            modifyOrder.Id,
-                            modifyOrder.Timestamp);
+                        case CancelOrder cancelOrder:
+                            var order = this.orders.FirstOrDefault(o => o.Id.Equals(cancelOrder.Order.Id));
+
+                            if (order is null)
+                            {
+                                this.Log.Warning("Order not found for CancelOrder command.");
+                                return;
+                            }
+
+                            command = new CancelOrder(
+                                order,
+                                cancelOrder.Reason,
+                                cancelOrder.Id,
+                                cancelOrder.Timestamp);
+                            break;
+
+                        case ModifyOrder modifyOrder:
+                        {
+                            var orderToModify = this.orders.FirstOrDefault(o => o.Id.Equals(modifyOrder.Order.Id));
+
+                            if (orderToModify is null)
+                            {
+                                this.Log.Warning($"Order not found for ModifyOrder command (command order_id={modifyOrder.Order.Id}).");
+                                return;
+                            }
+
+                            command = new ModifyOrder(
+                                orderToModify,
+                                modifyOrder.ModifiedPrice,
+                                modifyOrder.Id,
+                                modifyOrder.Timestamp);
+                            break;
+                        }
                     }
 
                     this.Log.Debug($"Received {command}.");

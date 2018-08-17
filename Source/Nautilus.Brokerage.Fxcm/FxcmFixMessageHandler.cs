@@ -484,7 +484,7 @@ namespace Nautilus.Brokerage.FXCM
                         timestamp);
                 }
 
-                this.Log.Debug($"ExecutionReport: order_id={orderId}, status={message.GetField(Tags.OrdStatus)} ");
+                this.Log.Debug($"ExecutionReport(order_id={orderId}, status={message.GetField(Tags.OrdStatus)}).");
             });
         }
 
