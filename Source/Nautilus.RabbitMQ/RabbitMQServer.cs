@@ -14,7 +14,6 @@ namespace Nautilus.RabbitMQ
     using System.Linq;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
-    using global::RabbitMQ.Client.Impl;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -134,7 +133,7 @@ namespace Nautilus.RabbitMQ
 
                             if (order is null)
                             {
-                                this.Log.Warning("Order not found for CancelOrder command.");
+                                this.Log.Warning($"Order not found for CancelOrder (command order_id={cancelOrder.Order.Id}).");
                                 return;
                             }
 
@@ -151,7 +150,7 @@ namespace Nautilus.RabbitMQ
 
                             if (orderToModify is null)
                             {
-                                this.Log.Warning($"Order not found for ModifyOrder command (command order_id={modifyOrder.Order.Id}).");
+                                this.Log.Warning($"Order not found for ModifyOrder (command order_id={modifyOrder.Order.Id}).");
                                 return;
                             }
 
@@ -163,6 +162,8 @@ namespace Nautilus.RabbitMQ
                             break;
                         }
                     }
+
+                    this.commandChannel.BasicAck(0, false);
 
                     this.Log.Debug($"Received {command}.");
                     this.Send(NautilusService.Execution, command);

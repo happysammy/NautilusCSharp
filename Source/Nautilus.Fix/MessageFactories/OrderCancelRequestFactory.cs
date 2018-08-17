@@ -45,13 +45,6 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(FixMessageHelper.GetFixOrderSide(order.Side));
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
 
-            if (order.ExpireTime.HasValue)
-            {
-                // ReSharper disable once PossibleInvalidOperationException (already checked above).
-                var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
-                message.SetField(new ExpireTime(expireTime));
-            }
-
             return message;
         }
     }

@@ -322,7 +322,7 @@ namespace Nautilus.Brokerage.FXCM
                 var brokerOrderId = message.OrderID.ToString();
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
-                var cancelRejectReason = $"ReasonCode={message.CxlRejReason}, {message.Text}, FXCMCode={fxcmCode})";
+                var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode})";
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.executionGateway.OnOrderCancelReject(
