@@ -8,6 +8,7 @@
 
 namespace Nautilus.RabbitMQ
 {
+    using System;
     using Akka.Actor;
     using global::RabbitMQ.Client;
     using Nautilus.Common.Interfaces;
@@ -16,7 +17,7 @@ namespace Nautilus.RabbitMQ
     /// <summary>
     /// Provides RabbitMQServer instances for the system.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
+    // ReSharper disable once InconsistentNaming (RabbitMQ is the correct name).
     public static class RabbitMQServerFactory
     {
         /// <summary>
@@ -40,6 +41,7 @@ namespace Nautilus.RabbitMQ
                 HostName = RabbitConstants.LocalHost,
                 UserName = RabbitConstants.Username,
                 Password = RabbitConstants.Password,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
             };
 
             return new ActorEndpoint(actorSystem.ActorOf(Props.Create(

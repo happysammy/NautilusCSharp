@@ -99,6 +99,8 @@ namespace Nautilus.RabbitMQ
                     RabbitConstants.InvTraderCommandsQueue);
                 this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
 
+                this.commandChannel.ConfirmSelect();
+
                 var consumer = new EventingBasicConsumer(this.commandChannel);
 
                 consumer.Received += (model, ea) =>
@@ -163,8 +165,7 @@ namespace Nautilus.RabbitMQ
                         }
                     }
 
-                    this.commandChannel.BasicAck(0, false);
-
+                    this.commandChannel.BasicAck(ea.DeliveryTag, false);
                     this.Log.Debug($"Received {command}.");
                     this.Send(NautilusService.Execution, command);
                 };
@@ -172,7 +173,7 @@ namespace Nautilus.RabbitMQ
 
                 this.commandChannel.BasicConsume(
                     queue: RabbitConstants.InvTraderCommandsQueue,
-                    autoAck: true,
+                    autoAck: false,
                     consumerTag: "NautilusExecutor",
                     consumer: consumer);
 
@@ -227,6 +228,7 @@ namespace Nautilus.RabbitMQ
                 }
 
                 order.Apply(orderEvent);
+                this.Log.Debug($"Applied {@event} to {order.Id}.");
             }
 
             this.eventChannel.BasicPublish(
