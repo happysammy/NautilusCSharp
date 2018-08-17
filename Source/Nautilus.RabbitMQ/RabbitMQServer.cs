@@ -83,7 +83,7 @@ namespace Nautilus.RabbitMQ
                 this.commandChannel = this.commandConnection.CreateModel();
                 this.commandChannel.ExchangeDeclare(
                     RabbitConstants.ExecutionCommandsExchange,
-                    ExchangeType.Direct,
+                    ExchangeType.Fanout,
                     durable: true);
                 this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
 
@@ -101,6 +101,7 @@ namespace Nautilus.RabbitMQ
                 this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} bound to {RabbitConstants.ExecutionCommandsExchange}.");
 
                 var consumer = new EventingBasicConsumer(this.commandChannel);
+
                 consumer.Received += (model, ea) =>
                 {
                     var body = ea.Body;
@@ -171,6 +172,7 @@ namespace Nautilus.RabbitMQ
                 this.commandChannel.BasicConsume(
                     queue: RabbitConstants.InvTraderCommandsQueue,
                     autoAck: true,
+                    consumerTag: "NautilusExecutor",
                     consumer: consumer);
 
                 this.eventChannel = this.eventConnection.CreateModel();
@@ -219,7 +221,7 @@ namespace Nautilus.RabbitMQ
 
                 if (order is null)
                 {
-                    this.Log.Warning("Order not found for ModifyOrder command.");
+                    this.Log.Warning($"Order not found for OrderEvent (event order_id={orderEvent.Id}).");
                     return;
                 }
 

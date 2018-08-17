@@ -51,6 +51,13 @@ namespace Nautilus.Fix.MessageFactories
             message.SetField(new TransactTime(transactionTime.ToDateTimeUtc()));
             message.SetField(FixMessageHelper.GetFixOrderType(order.Type));
 
+            if (order.ExpireTime.HasValue)
+            {
+                // ReSharper disable once PossibleInvalidOperationException (already checked above).
+                var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
+                message.SetField(new ExpireTime(expireTime));
+            }
+
             // Set the order price depending on order type.
             // ReSharper disable once SwitchStatementMissingSomeCases (becomes redundant case labels).
             switch (order.Type)
