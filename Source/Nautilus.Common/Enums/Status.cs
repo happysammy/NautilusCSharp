@@ -16,7 +16,6 @@ namespace Nautilus.Common.Enums
         /// <summary>
         /// The system or component is running normally.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         Running = 0,
 
         /// <summary>
