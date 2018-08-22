@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Core;
-    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -20,7 +19,7 @@ namespace Nautilus.Common.Messaging
     /// </summary>
     /// <typeparam name="T">The message type.</typeparam>
     public sealed class Envelope<T>
-        where T : ISendable<Message>
+        where T : Message
     {
         private readonly T message;
 
@@ -65,11 +64,6 @@ namespace Nautilus.Common.Messaging
         /// Gets the envelope identifier.
         /// </summary>
         public Guid EnvelopeId { get; }
-
-        /// <summary>
-        /// Gets the envelopes message type.
-        /// </summary>
-        public Type Type => this.message.GetType();
 
         /// <summary>
         /// Gets the envelope creation timestamp.

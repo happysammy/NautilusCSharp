@@ -53,7 +53,7 @@ namespace Nautilus.Data
             // Setup message handling.
             this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<TrimBarData>(this.OnMessage);
+            this.Receive<TrimBarData>(msg => this.OnMessage(msg));
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
         }
@@ -106,7 +106,7 @@ namespace Nautilus.Data
 
             if (result.IsSuccess
              && lastBarTimeQuery.IsSuccess
-             && lastBarTimeQuery.Value != default)
+             && lastBarTimeQuery.Value != default(ZonedDateTime))
             {
                 this.Sender.Tell(new DataPersisted<BarType>(
                     barType,

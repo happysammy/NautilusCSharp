@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Core;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -38,20 +38,17 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))));
 
             var commandBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                new Label(MessagingComponent.CommandBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
                 container,
                 messageStore))));
 
             var eventBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                new Label(MessagingComponent.EventBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Event>(
                 container,
                 messageStore))));
 
             var serviceBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                new Label(MessagingComponent.DocumentBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Document>(
                 container,
                 messageStore))));
 

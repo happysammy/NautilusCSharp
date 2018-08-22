@@ -51,11 +51,11 @@ namespace Nautilus.BlackBox.Portfolio
             this.portfolioStore = portfolioStore;
 
             // Setup message handling.
-            this.Receive<CreatePortfolio>(this.OnMessage);
-            this.Receive<TradeApproved>(this.OnMessage);
-            this.Receive<BarDataEvent>(this.OnMessage);
-            this.Receive<SignalEvent>(this.OnMessage);
-            this.Receive<OrderEvent>(this.OnMessage);
+            this.Receive<CreatePortfolio>(msg => this.OnMessage(msg));
+            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<SignalEvent>(msg => this.OnMessage(msg));
+            this.Receive<OrderEvent>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(CreatePortfolio message)

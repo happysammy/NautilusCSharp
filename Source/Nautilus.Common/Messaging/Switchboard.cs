@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;

@@ -11,6 +11,7 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -24,31 +25,31 @@ namespace Nautilus.Common.MessageStore
         /// </summary>
         public FakeMessageStore()
         {
-            this.CommandEnvelopes = new List<Envelope<CommandMessage>>();
-            this.EventEnvelopes = new List<Envelope<EventMessage>>();
-            this.DocumentEnvelopes = new List<Envelope<DocumentMessage>>();
+            this.CommandEnvelopes = new List<Envelope<Command>>();
+            this.EventEnvelopes = new List<Envelope<Event>>();
+            this.DocumentEnvelopes = new List<Envelope<Document>>();
         }
 
         /// <summary>
         /// Gets the message stores command envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<CommandMessage>> CommandEnvelopes { get; }
+        public IReadOnlyList<Envelope<Command>> CommandEnvelopes { get; }
 
         /// <summary>
         /// Gets the message stores event envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<EventMessage>> EventEnvelopes { get; }
+        public IReadOnlyList<Envelope<Event>> EventEnvelopes { get; }
 
         /// <summary>
         /// Gets the message stores document envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes { get; }
+        public IReadOnlyList<Envelope<Document>> DocumentEnvelopes { get; }
 
         /// <summary>
         /// Not implemented.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        public void Store(Envelope<CommandMessage> envelope)
+        public void Store(Envelope<Command> envelope)
         {
             // Does nothing.
         }
@@ -57,7 +58,7 @@ namespace Nautilus.Common.MessageStore
         /// Not implemented.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        public void Store(Envelope<EventMessage> envelope)
+        public void Store(Envelope<Event> envelope)
         {
             // Does nothing.
         }
@@ -66,7 +67,7 @@ namespace Nautilus.Common.MessageStore
         /// Not implemented.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        public void Store(Envelope<DocumentMessage> envelope)
+        public void Store(Envelope<Document> envelope)
         {
             // Does nothing.
         }

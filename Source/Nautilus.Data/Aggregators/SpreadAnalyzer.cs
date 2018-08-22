@@ -39,8 +39,8 @@ namespace Nautilus.Data.Aggregators
             this.thisBarsSpreads = new List<decimal>();
             this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
             this.totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
-            this.MaxSpread = ValueTuple.Create<ZonedDateTime, decimal>(default, decimal.MinValue);
-            this.MinSpread = ValueTuple.Create<ZonedDateTime, decimal>(default, decimal.MaxValue);
+            this.MaxSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MinValue);
+            this.MinSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MaxValue);
         }
 
         /// <summary>

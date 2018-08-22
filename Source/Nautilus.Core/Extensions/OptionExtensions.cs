@@ -64,7 +64,7 @@ namespace Nautilus.Core.Extensions
         public static TK Unwrap<T, TK>(
             this Option<T> option,
             Func<T, TK> selector,
-            [CanBeNull] TK defaultValue = default)
+            [CanBeNull] TK defaultValue = default(TK))
         {
             Debug.NotNull(option, nameof(option));
             Debug.NotNull(selector, nameof(selector));

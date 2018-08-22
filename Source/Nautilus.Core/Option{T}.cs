@@ -120,7 +120,7 @@ namespace Nautilus.Core
         /// Gets a <see cref="Option{T}"/> with no value.
         /// </summary>
         /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static Option<T> None() => default;
+        public static Option<T> None() => default(Option<T>);
 
         /// <summary>
         /// Gets the given object wrapped in an <see cref="Option{T}"/>.

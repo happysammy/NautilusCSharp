@@ -78,16 +78,16 @@ namespace Nautilus.BlackBox.Portfolio
             this.trailingStopSignalProcessor = trailingStopSignalProcessor;
 
             // Setup message handling.
-            this.Receive<TradeApproved>(this.OnMessage);
-            this.Receive<BarDataEvent>(this.OnMessage);
-            this.Receive<SignalEvent>(this.OnMessage);
-            this.Receive<OrderRejected>(this.OnMessage);
-            this.Receive<OrderWorking>(this.OnMessage);
-            this.Receive<OrderCancelled>(this.OnMessage);
-            this.Receive<OrderFilled>(this.OnMessage);
-            this.Receive<OrderPartiallyFilled>(this.OnMessage);
-            this.Receive<OrderExpired>(this.OnMessage);
-            this.Receive<OrderModified>(this.OnMessage);
+            this.Receive<TradeApproved>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
+            this.Receive<SignalEvent>(msg => this.OnMessage(msg));
+            this.Receive<OrderRejected>(msg => this.OnMessage(msg));
+            this.Receive<OrderWorking>(msg => this.OnMessage(msg));
+            this.Receive<OrderCancelled>(msg => this.OnMessage(msg));
+            this.Receive<OrderFilled>(msg => this.OnMessage(msg));
+            this.Receive<OrderPartiallyFilled>(msg => this.OnMessage(msg));
+            this.Receive<OrderExpired>(msg => this.OnMessage(msg));
+            this.Receive<OrderModified>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(TradeApproved @event)

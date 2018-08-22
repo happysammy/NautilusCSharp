@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Core;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -44,8 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
 
-            this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                new Label(MessagingComponent.CommandBus.ToString()),
+            this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
                 setupContainer,
                 new ActorEndpoint(new StandardOutLogger()))));
 
@@ -77,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             CustomAssert.EventuallyContains(
-                "CommandBus: Unhandled message",
+                "CommandBus: Unhandled message EMPTY_STRING.",
                 this.mockLoggingAdapter,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

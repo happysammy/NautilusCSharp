@@ -11,8 +11,8 @@ namespace Nautilus.Common.Messaging
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="envelope">The envelope to send.</param>
         /// <typeparam name="T">The envelope message type.</typeparam>
         public void Send<T>(Envelope<T> envelope)
-            where T : ISendable<Message>
+            where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 

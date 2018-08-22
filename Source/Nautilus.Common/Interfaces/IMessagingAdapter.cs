@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
 
     /// <summary>
     /// An adapter to facilitate service components sending messages to other service components via

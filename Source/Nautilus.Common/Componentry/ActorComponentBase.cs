@@ -14,6 +14,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -50,10 +51,10 @@ namespace Nautilus.Common.Componentry
             this.commandHandler = new CommandHandler(this.Log);
 
             // Setup message handling.
-            this.Receive<Envelope<CommandMessage>>(this.Open);
-            this.Receive<Envelope<EventMessage>>(this.Open);
-            this.Receive<Envelope<DocumentMessage>>(this.Open);
-            this.Receive<SystemShutdown>(this.OnMessage);
+            this.Receive<Envelope<Command>>(envelope => this.Open(envelope));
+            this.Receive<Envelope<Event>>(envelope => this.Open(envelope));
+            this.Receive<Envelope<Document>>(envelope => this.Open(envelope));
+            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -101,6 +102,16 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message object.</param>
         protected override void Unhandled([CanBeNull] object message)
         {
+            // ReSharper disable once ConvertIfStatementToSwitchStatement (if else is clearer).
+            if (message is null)
+            {
+                message = "NULL";
+            }
+            else if (message.Equals(string.Empty))
+            {
+                message = "EMPTY_STRING";
+            }
+
             this.Log.Warning($"Unhandled message {message}.");
         }
 
@@ -142,7 +153,6 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Opens the envelope and then sends the message back to the actor component.
         /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
         /// <param name="envelope">The message envelope.</param>
         private void Open<T>(Envelope<T> envelope)
             where T : Message
@@ -151,22 +161,7 @@ namespace Nautilus.Common.Componentry
 
             var message = envelope.Open(this.clock.TimeNow());
 
-            switch (message)
-            {
-                case CommandMessage commandMessage:
-                    this.Self.Tell(commandMessage.Command);
-                    break;
-
-                case EventMessage eventMessage:
-                    this.Self.Tell(eventMessage.Event);
-                    break;
-
-                case DocumentMessage documentMessage:
-                    this.Self.Tell(documentMessage.Document);
-                    break;
-
-                default: throw new InvalidOperationException($"Received invalid message {message}.");
-            }
+            this.Self.Tell(message);
 
             this.Log.Debug($"Received {message}.");
         }

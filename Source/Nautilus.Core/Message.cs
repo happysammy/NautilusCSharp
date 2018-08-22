@@ -6,12 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messaging
+namespace Nautilus.Core
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -19,7 +17,7 @@ namespace Nautilus.Common.Messaging
     /// The base class for all message types.
     /// </summary>
     [Immutable]
-    public abstract class Message : ISendable<Message>
+    public abstract class Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
@@ -35,11 +33,6 @@ namespace Nautilus.Common.Messaging
             this.Id = id;
             this.Timestamp = timestamp;
         }
-
-        /// <summary>
-        /// Gets the message type.
-        /// </summary>
-        public abstract Type Type { get; }
 
         /// <summary>
         /// Gets the message identifier.
@@ -113,6 +106,6 @@ namespace Nautilus.Common.Messaging
         /// Returns a string representation of this <see cref="Message"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.GetType().Name}";
+        public override string ToString() => this.GetType().Name;
     }
 }

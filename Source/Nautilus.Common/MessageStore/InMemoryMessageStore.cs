@@ -11,6 +11,7 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -18,34 +19,34 @@ namespace Nautilus.Common.MessageStore
     /// </summary>
     public sealed class InMemoryMessageStore : IMessageStore
     {
-        private readonly IList<Envelope<CommandMessage>> commandEnvelopeList = new List<Envelope<CommandMessage>>();
-        private readonly IList<Envelope<EventMessage>> eventEnvelopeList = new List<Envelope<EventMessage>>();
-        private readonly IList<Envelope<DocumentMessage>> documentEnvelopeList = new List<Envelope<DocumentMessage>>();
+        private readonly IList<Envelope<Command>> commandEnvelopeList = new List<Envelope<Command>>();
+        private readonly IList<Envelope<Event>> eventEnvelopeList = new List<Envelope<Event>>();
+        private readonly IList<Envelope<Document>> documentEnvelopeList = new List<Envelope<Document>>();
 
         /// <summary>
         /// Gets a list of all stored command envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<CommandMessage>> CommandEnvelopes =>
-              (IReadOnlyList<Envelope<CommandMessage>>)this.commandEnvelopeList;
+        public IReadOnlyList<Envelope<Command>> CommandEnvelopes =>
+              (IReadOnlyList<Envelope<Command>>)this.commandEnvelopeList;
 
         /// <summary>
         /// Gets a list of all stored event envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<EventMessage>> EventEnvelopes =>
-              (IReadOnlyList<Envelope<EventMessage>>)this.eventEnvelopeList;
+        public IReadOnlyList<Envelope<Event>> EventEnvelopes =>
+              (IReadOnlyList<Envelope<Event>>)this.eventEnvelopeList;
 
         /// <summary>
         /// Gets a list of all stored service envelopes.
         /// </summary>
-        public IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes =>
-              (IReadOnlyList<Envelope<DocumentMessage>>)this.documentEnvelopeList;
+        public IReadOnlyList<Envelope<Document>> DocumentEnvelopes =>
+              (IReadOnlyList<Envelope<Document>>)this.documentEnvelopeList;
 
         /// <summary>
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
-        public void Store(Envelope<CommandMessage> envelope)
+        public void Store(Envelope<Command> envelope)
         {
             Validate.NotNull(envelope, nameof(envelope));
 
@@ -57,7 +58,7 @@ namespace Nautilus.Common.MessageStore
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
-        public void Store(Envelope<EventMessage> envelope)
+        public void Store(Envelope<Event> envelope)
         {
             Validate.NotNull(envelope, nameof(envelope));
 
@@ -69,7 +70,7 @@ namespace Nautilus.Common.MessageStore
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
-        public void Store(Envelope<DocumentMessage> envelope)
+        public void Store(Envelope<Document> envelope)
         {
             Validate.NotNull(envelope, nameof(envelope));
 

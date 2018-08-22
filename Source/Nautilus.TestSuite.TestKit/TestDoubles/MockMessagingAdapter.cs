@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Akka.Actor;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Collections;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

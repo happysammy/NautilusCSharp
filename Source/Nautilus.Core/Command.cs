@@ -10,7 +10,6 @@ namespace Nautilus.Core
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using NodaTime;
 
@@ -18,7 +17,7 @@ namespace Nautilus.Core
     /// The base class for all commands.
     /// </summary>
     [Immutable]
-    public abstract class Command : ISendable<Command>
+    public abstract class Command : Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
@@ -26,56 +25,10 @@ namespace Nautilus.Core
         /// <param name="id">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         protected Command(Guid id, ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
-
-            this.Id = id;
-            this.Timestamp = timestamp;
         }
-
-        /// <summary>
-        /// Gets the commands identifier.
-        /// </summary>
-        public Guid Id { get; }
-
-        /// <summary>
-        /// Gets the commands timestamp.
-        /// </summary>
-        public ZonedDateTime Timestamp { get; }
-
-        /// <summary>
-        /// Returns a value indicating whether this command is equal to the given <see cref="Command"/>.
-        /// </summary>
-        /// <param name="other">The other command.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Command other)
-        {
-            return other != null & this.Id.Equals(other?.Id);
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether this command is equal to the given <see cref="object"/>.
-        /// </summary>
-        /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            // ReSharper disable once UsePatternMatching (causes compiler warning).
-            var otherCommand = other as Command;
-            return otherCommand != null & this.Id.Equals(otherCommand?.Id);
-        }
-
-        /// <summary>
-        /// Returns the hash code for this command.
-        /// </summary>
-        /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Id);
-
-        /// <summary>
-        /// Returns a string representation of this command.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.GetType().Name;
     }
 }

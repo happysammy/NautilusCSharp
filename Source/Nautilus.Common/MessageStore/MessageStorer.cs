@@ -15,6 +15,7 @@ namespace Nautilus.Common.MessageStore
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -34,9 +35,9 @@ namespace Nautilus.Common.MessageStore
 
             this.store = store;
 
-            this.Receive<Envelope<CommandMessage>>(envelope => this.store.Store(envelope));
-            this.Receive<Envelope<EventMessage>>(envelope => this.store.Store(envelope));
-            this.Receive<Envelope<DocumentMessage>>(envelope => this.store.Store(envelope));
+            this.Receive<Envelope<Command>>(envelope => this.store.Store(envelope));
+            this.Receive<Envelope<Event>>(envelope => this.store.Store(envelope));
+            this.Receive<Envelope<Document>>(envelope => this.store.Store(envelope));
         }
 
         /// <summary>

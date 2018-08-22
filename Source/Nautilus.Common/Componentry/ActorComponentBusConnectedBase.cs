@@ -8,15 +8,12 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -58,41 +55,12 @@ namespace Nautilus.Common.Componentry
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(NautilusService receiver, ISendable<T> message)
-            where T : class
+        protected void Send<T>(NautilusService receiver, T message)
+            where T : Message
         {
             Debug.NotNull(message, nameof(message));
 
-            switch (message)
-            {
-                case Command command:
-                    var commandMessage = new CommandMessage(
-                        command,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receiver, commandMessage, this.Service);
-                    break;
-
-                case Event @event:
-                    var eventMessage = new EventMessage(
-                        @event,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receiver, eventMessage, this.Service);
-                    break;
-
-                case Document document:
-                    var documentMessage = new DocumentMessage(
-                        document,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.messagingAdapter.Send(receiver, documentMessage, this.Service);
-                    break;
-
-                default:
-                    throw new InvalidOperationException(
-                        "Cannot send message (message type not recognized.)");
-            }
+            this.messagingAdapter.Send(receiver, message, this.Service);
         }
 
         /// <summary>
@@ -101,8 +69,8 @@ namespace Nautilus.Common.Componentry
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(ReadOnlyList<NautilusService> receivers, ISendable<T> message)
-            where T : class
+        protected void Send<T>(ReadOnlyList<NautilusService> receivers, T message)
+            where T : Message
         {
             Debug.CollectionNotNullOrEmpty(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));

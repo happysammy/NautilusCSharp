@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.TestKit
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Events;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -30,10 +31,10 @@ namespace Nautilus.TestSuite.TestKit
         /// <returns>The <see cref="SignalEvent"/>.</returns>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. OK.")]
         public static T FindSignalEvent<T>(
-            IEnumerable<Envelope<EventMessage>> envelopeList)
+            IEnumerable<Envelope<Event>> envelopeList)
             where T : Signal
         {
-            return envelopeList.Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
+            return envelopeList.Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                .Where(e => e is SignalEvent)
                 .Cast<T>()
                .FirstOrDefault();
@@ -45,10 +46,10 @@ namespace Nautilus.TestSuite.TestKit
         /// <param name="envelopeList">The envelope list.</param>
         /// <param name="eventToFind">The event to find.</param>
         /// <returns>The <see cref="OrderEvent"/>.</returns>
-        public static OrderEvent FindOrderEvent(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToFind)
+        public static OrderEvent FindOrderEvent(IEnumerable<Envelope<Event>> envelopeList, Type eventToFind)
         {
             return envelopeList
-               .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()).Event)
+               .Select(envelope => envelope.Open(StubZonedDateTime.UnixEpoch()))
                .Where(@event => @event is OrderEvent)
                .Cast<OrderEvent>()
                .FirstOrDefault(orderEvent => orderEvent.GetType() == eventToFind);

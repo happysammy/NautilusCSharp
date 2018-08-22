@@ -13,6 +13,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -35,26 +36,23 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
         /// </summary>
-        /// <param name="component">The component.</param>
         /// <param name="container">The container.</param>
         /// <param name="messageStore">The message store endpoint.</param>
         /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public MessageBus(
-            Label component,
             IComponentryContainer container,
             IEndpoint messageStore)
         {
-            Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messageStore, nameof(messageStore));
 
-            this.log = container.LoggerFactory.Create(NautilusService.Messaging, component);
+            this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStore = messageStore;
             this.commandHandler = new CommandHandler(this.log);
 
             // Setup message handling.
-            this.Receive<InitializeSwitchboard>(this.OnMessage);
-            this.Receive<Envelope<T>>(this.OnReceive);
+            this.Receive<InitializeSwitchboard>(msg => this.OnMessage(msg));
+            this.Receive<Envelope<T>>(envelope => this.OnReceive(envelope));
         }
 
         /// <summary>
@@ -71,6 +69,16 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         protected override void Unhandled(object message)
         {
+            // ReSharper disable once ConvertIfStatementToSwitchStatement (if else is clearer).
+            if (message is null)
+            {
+                message = "NULL";
+            }
+            else if (message.Equals(string.Empty))
+            {
+                message = "EMPTY_STRING";
+            }
+
             this.log.Warning($"Unhandled message {message}.");
         }
 

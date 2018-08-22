@@ -13,7 +13,7 @@ namespace Nautilus.BlackBox.Risk
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
@@ -46,26 +46,11 @@ namespace Nautilus.BlackBox.Risk
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
-            this.SetupCommandMessageHandling();
-            this.SetupEventMessageHandling();
-        }
-
-        /// <summary>
-        /// Set up all <see cref="CommandMessage"/> handling methods.
-        /// </summary>
-        private void SetupCommandMessageHandling()
-        {
+            // Setup message handling.
             this.Receive<InitializeRiskModel>(msg => this.OnMessage(msg));
             this.Receive<RequestTradeApproval>(msg => this.OnMessage(msg));
             this.Receive<AccountEvent>(msg => this.OnMessage(msg));
-        }
-
-        /// <summary>
-        /// Set up all <see cref="EventMessage"/> handling methods.
-        /// </summary>
-        private void SetupEventMessageHandling()
-        {
-            this.Receive<EventMessage>(msg => this.Self.Tell(msg.Event));
+            this.Receive<Event>(msg => this.Self.Tell(msg));
             this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 

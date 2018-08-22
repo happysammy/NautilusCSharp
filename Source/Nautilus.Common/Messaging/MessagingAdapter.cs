@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
@@ -75,8 +76,8 @@ namespace Nautilus.Common.Messaging
 
             switch (message as Message)
             {
-                    case CommandMessage commandMessage:
-                        var commandEnvelope = new Envelope<CommandMessage>(
+                    case Command commandMessage:
+                        var commandEnvelope = new Envelope<Command>(
                             receiver,
                             sender,
                             commandMessage,
@@ -85,8 +86,8 @@ namespace Nautilus.Common.Messaging
                         this.commandBus.Send(commandEnvelope);
                         break;
 
-                    case EventMessage eventMessage:
-                        var eventEnvelope = new Envelope<EventMessage>(
+                    case Event eventMessage:
+                        var eventEnvelope = new Envelope<Event>(
                             receiver,
                             sender,
                             eventMessage,
@@ -95,8 +96,8 @@ namespace Nautilus.Common.Messaging
                         this.eventBus.Send(eventEnvelope);
                         break;
 
-                    case DocumentMessage serviceMessage:
-                        var serviceEnvelope = new Envelope<DocumentMessage>(
+                    case Document serviceMessage:
+                        var serviceEnvelope = new Envelope<Document>(
                             receiver,
                             sender,
                             serviceMessage,

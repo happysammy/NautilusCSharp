@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Interfaces;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides a generic messaging endpoint abstraction.
@@ -28,6 +28,6 @@ namespace Nautilus.Common.Interfaces
         /// <param name="envelope">The envelope to send.</param>
         /// <typeparam name="T">The envelope message type.</typeparam>
         void Send<T>(Envelope<T> envelope)
-            where T : ISendable<Message>;
+            where T : Message;
     }
 }

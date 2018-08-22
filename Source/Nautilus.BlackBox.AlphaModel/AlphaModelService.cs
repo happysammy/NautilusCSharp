@@ -53,9 +53,9 @@ namespace Nautilus.BlackBox.AlphaModel
             this.alphaStrategyModuleStore = alphaStrategyModuleStore;
 
             // Setup message handling
-            this.Receive<CreateAlphaStrategyModule>(this.OnMessage);
-            this.Receive<RemoveAlphaStrategyModule>(this.OnMessage);
-            this.Receive<BarDataEvent>(this.OnMessage);
+            this.Receive<CreateAlphaStrategyModule>(msg => this.OnMessage(msg));
+            this.Receive<RemoveAlphaStrategyModule>(msg => this.OnMessage(msg));
+            this.Receive<BarDataEvent>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(BarDataEvent message)

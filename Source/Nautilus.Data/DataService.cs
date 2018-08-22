@@ -41,7 +41,7 @@ namespace Nautilus.Data
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             // Setup message handling.
-            this.Receive<SystemStart>(this.OnMessage);
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(SystemStart message)

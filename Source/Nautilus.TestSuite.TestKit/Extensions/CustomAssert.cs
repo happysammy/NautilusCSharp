@@ -117,7 +117,7 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         /// <param name="pollIntervalMilliseconds">The poll interval milliseconds.</param>
         public static void EventuallyContains<T>(
             Type eventToContain,
-            IReadOnlyList<Envelope<EventMessage>> envelopeList,
+            IReadOnlyList<Envelope<Event>> envelopeList,
             int timeoutMilliseconds,
             int pollIntervalMilliseconds)
             where T : Event
@@ -139,11 +139,11 @@ namespace Nautilus.TestSuite.TestKit.Extensions
         private static bool ListContains<T>(IEnumerable<Envelope<T>> envelopeList, Type typeToContain)
             where T : Message
         {
-            return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).Type == typeToContain);
+            return envelopeList.Any(e => e.Open(StubZonedDateTime.UnixEpoch()).GetType() == typeToContain);
         }
 
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. OK.")]
-        private static bool ListContains<T>(IEnumerable<Envelope<EventMessage>> envelopeList, Type eventToContain)
+        private static bool ListContains<T>(IEnumerable<Envelope<Event>> envelopeList, Type eventToContain)
             where T : Event
         {
             switch (typeof(T).Name)

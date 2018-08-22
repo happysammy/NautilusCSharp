@@ -208,7 +208,7 @@ namespace Nautilus.RabbitMQ
             }
 
             // Event messages
-            this.Receive<Event>(this.OnMessage);
+            this.Receive<Event>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(Event @event)

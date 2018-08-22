@@ -10,6 +10,7 @@ namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides an interface for message stores.
@@ -19,34 +20,34 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets a list of all stored command envelopes.
         /// </summary>
-        IReadOnlyList<Envelope<CommandMessage>> CommandEnvelopes { get; }
+        IReadOnlyList<Envelope<Command>> CommandEnvelopes { get; }
 
         /// <summary>
         /// Gets a list of all stored event envelopes.
         /// </summary>
-        IReadOnlyList<Envelope<EventMessage>> EventEnvelopes { get; }
+        IReadOnlyList<Envelope<Event>> EventEnvelopes { get; }
 
         /// <summary>
         /// Gets a list of all stored service envelopes.
         /// </summary>
-        IReadOnlyList<Envelope<DocumentMessage>> DocumentEnvelopes { get; }
+        IReadOnlyList<Envelope<Document>> DocumentEnvelopes { get; }
 
         /// <summary>
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        void Store(Envelope<CommandMessage> envelope);
+        void Store(Envelope<Command> envelope);
 
         /// <summary>
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        void Store(Envelope<EventMessage> envelope);
+        void Store(Envelope<Event> envelope);
 
         /// <summary>
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        void Store(Envelope<DocumentMessage> envelope);
+        void Store(Envelope<Document> envelope);
     }
 }

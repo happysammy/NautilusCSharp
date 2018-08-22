@@ -9,12 +9,11 @@
 namespace Nautilus.Common.Messaging
 {
     using Akka.Actor;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// Provides a factory to create the systems messaging service.
@@ -41,20 +40,17 @@ namespace Nautilus.Common.Messaging
             var messageStoreRef = new ActorEndpoint(actorSystem.ActorOf(Props.Create(() => new MessageStorer(store))));
 
             var commandBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<CommandMessage>(
-                LabelFactory.Component(MessagingComponent.CommandBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
                 container,
                 messageStoreRef))));
 
             var eventBusRef = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<EventMessage>(
-                LabelFactory.Component(MessagingComponent.EventBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Event>(
                 container,
                 messageStoreRef))));
 
             var serviceBusRef = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<DocumentMessage>(
-                LabelFactory.Component(MessagingComponent.DocumentBus.ToString()),
+                actorSystem.ActorOf(Props.Create(() => new MessageBus<Document>(
                 container,
                 messageStoreRef))));
 
