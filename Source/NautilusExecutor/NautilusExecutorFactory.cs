@@ -94,6 +94,7 @@ namespace NautilusExecutor
                 actorSystem,
                 setupContainer,
                 messagingAdapter);
+            executionServiceAddresses.Add(NautilusService.Messaging, messageBroker);
 
             var switchboard = new Switchboard(executionServiceAddresses);
 

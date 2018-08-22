@@ -12,6 +12,7 @@ namespace Nautilus.RabbitMQ
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Akka.Actor;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
     using Nautilus.Common.Commands;
@@ -82,15 +83,18 @@ namespace Nautilus.RabbitMQ
                 this.commandChannel = this.commandConnection.CreateModel();
                 this.commandChannel.ExchangeDeclare(
                     RabbitConstants.ExecutionCommandsExchange,
-                    ExchangeType.Fanout,
-                    durable: true);
+                    ExchangeType.Direct,
+                    durable: true,
+                    autoDelete: false,
+                    arguments: null);
                 this.Log.Information($"Exchange {RabbitConstants.ExecutionCommandsExchange} declared.");
 
                 this.commandChannel.QueueDeclare(
                     RabbitConstants.InvTraderCommandsQueue,
                     durable: true,
                     exclusive: false,
-                    autoDelete: false);
+                    autoDelete: false,
+                    arguments: null);
                 this.Log.Information($"Queue {RabbitConstants.InvTraderCommandsQueue} declared.");
 
                 this.commandChannel.QueueBind(
@@ -182,7 +186,9 @@ namespace Nautilus.RabbitMQ
                 this.eventChannel.ExchangeDeclare(
                     RabbitConstants.ExecutionEventsExchange,
                     ExchangeType.Fanout,
-                    durable: true);
+                    durable: true,
+                    autoDelete: false,
+                    arguments: null);
                 this.Log.Information($"Exchange {RabbitConstants.ExecutionEventsExchange} declared.");
 
                 this.eventChannel.QueueDeclare(
@@ -209,6 +215,24 @@ namespace Nautilus.RabbitMQ
 
             // Event messages
             this.Receive<Event>(msg => this.OnMessage(msg));
+        }
+
+        /// <summary>
+        /// Actions to be performed prior to stopping the <see cref="RabbitMQServer"/>.
+        /// </summary>
+        protected override void PostStop()
+        {
+            this.commandChannel.Dispose();
+            this.Log.Information("Disposed of command channel.");
+            this.eventChannel.Dispose();
+            this.Log.Information("Disposed of event channel.");
+
+            this.commandConnection.Dispose();
+            this.Log.Information("Disposed of command connection.");
+            this.eventConnection.Dispose();
+            this.Log.Information("Disposed of event connection.");
+
+            this.Log.Information("Disposed of command channel.");
         }
 
         private void OnMessage(Event @event)
