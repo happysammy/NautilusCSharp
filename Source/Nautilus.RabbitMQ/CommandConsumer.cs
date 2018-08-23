@@ -9,7 +9,6 @@
 namespace Nautilus.RabbitMQ
 {
     using System;
-    using System.Threading.Tasks;
     using global::RabbitMQ.Client;
     using global::RabbitMQ.Client.Events;
     using Nautilus.Common.Componentry;
@@ -45,13 +44,6 @@ namespace Nautilus.RabbitMQ
             this.serializer = serializer;
             this.Model = model;
             this.receiver = receiver;
-        }
-
-        /// <summary>
-        /// Starts the consumer.
-        /// </summary>
-        public void Start()
-        {
         }
 
         /// <summary>

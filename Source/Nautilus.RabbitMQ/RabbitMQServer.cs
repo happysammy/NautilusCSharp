@@ -13,7 +13,6 @@ namespace Nautilus.RabbitMQ
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
-    using Akka.Actor;
     using global::RabbitMQ.Client;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
