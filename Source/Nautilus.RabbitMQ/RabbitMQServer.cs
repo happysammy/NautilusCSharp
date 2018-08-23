@@ -12,12 +12,14 @@ namespace Nautilus.RabbitMQ
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading.Tasks;
+    using Akka.Actor;
     using global::RabbitMQ.Client;
-    using global::RabbitMQ.Client.Events;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -40,6 +42,7 @@ namespace Nautilus.RabbitMQ
         private readonly IModel commandChannel;
         private readonly IModel eventChannel;
         private readonly IBasicProperties eventProps;
+        private readonly CommandConsumer commandConsumer;
         private readonly List<Order> orders;
 
         /// <summary>
@@ -77,6 +80,12 @@ namespace Nautilus.RabbitMQ
             this.eventConnection = eventConnection;
             this.orders = new List<Order>();
 
+            // Setup message handling.
+            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
+            this.Receive<CancelOrder>(msg => this.OnMessage(msg));
+            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
+            this.Receive<Event>(msg => this.OnMessage(msg));
+
             try
             {
                 this.commandChannel = this.commandConnection.CreateModel();
@@ -104,84 +113,21 @@ namespace Nautilus.RabbitMQ
 
                 this.commandChannel.ConfirmSelect();
 
-                var consumer = new EventingBasicConsumer(this.commandChannel);
+                this.commandConsumer = new CommandConsumer(
+                        container,
+                        commandSerializer,
+                        this.commandChannel,
+                        new ActorEndpoint(Context.Self));
 
-                consumer.Received += (model, ea) =>
-                {
-                    var body = ea.Body;
-                    var command = this.commandSerializer.Deserialize(body);
-
-                    switch (command)
-                    {
-                        case SubmitOrder submitOrder:
-                        {
-                            var orderToSubmit = submitOrder.Order;
-                            var orderToAdd = new Order(
-                                orderToSubmit.Symbol,
-                                orderToSubmit.Id,
-                                orderToSubmit.Label,
-                                orderToSubmit.Side,
-                                orderToSubmit.Type,
-                                orderToSubmit.Quantity,
-                                orderToSubmit.Price,
-                                orderToSubmit.TimeInForce,
-                                orderToSubmit.ExpireTime,
-                                orderToSubmit.Timestamp);
-
-                            this.orders.Add(orderToAdd);
-                            this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
-                            break;
-                        }
-
-                        case CancelOrder cancelOrder:
-                            var order = this.orders.FirstOrDefault(o => o.Id.Equals(cancelOrder.Order.Id));
-
-                            if (order is null)
-                            {
-                                this.Log.Warning($"Order not found for CancelOrder (command order_id={cancelOrder.Order.Id}).");
-                                return;
-                            }
-
-                            command = new CancelOrder(
-                                order,
-                                cancelOrder.Reason,
-                                cancelOrder.Id,
-                                cancelOrder.Timestamp);
-                            break;
-
-                        case ModifyOrder modifyOrder:
-                        {
-                            var orderToModify = this.orders.FirstOrDefault(o => o.Id.Equals(modifyOrder.Order.Id));
-
-                            if (orderToModify is null)
-                            {
-                                this.Log.Warning($"Order not found for ModifyOrder (command order_id={modifyOrder.Order.Id}).");
-                                return;
-                            }
-
-                            command = new ModifyOrder(
-                                orderToModify,
-                                modifyOrder.ModifiedPrice,
-                                modifyOrder.Id,
-                                modifyOrder.Timestamp);
-                            break;
-                        }
-                    }
-
-                    this.commandChannel.BasicAck(ea.DeliveryTag, false);
-                    this.Log.Debug($"Received {command}.");
-                    this.Send(NautilusService.Execution, command);
-                };
-                this.Log.Information($"Basic event consumer created.");
-
-                this.commandChannel.BasicConsume(
+                Task.Run(() => this.commandChannel.BasicConsume(
                     queue: RabbitConstants.InvTraderCommandsQueue,
                     autoAck: false,
                     consumerTag: "NautilusExecutor",
-                    consumer: consumer);
+                    consumer: this.commandConsumer));
+
+                this.Log.Information($"Command consumer created.");
 
                 this.eventChannel = this.eventConnection.CreateModel();
-
                 this.eventChannel.ExchangeDeclare(
                     RabbitConstants.ExecutionEventsExchange,
                     ExchangeType.Fanout,
@@ -211,9 +157,6 @@ namespace Nautilus.RabbitMQ
                 this.Log.Error($"Error {ex.Message}", ex);
                 throw;
             }
-
-            // Event messages
-            this.Receive<Event>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -232,6 +175,69 @@ namespace Nautilus.RabbitMQ
             this.Log.Information("Disposed of event connection.");
 
             this.Log.Information("Disposed of command channel.");
+        }
+
+        private void OnMessage(SubmitOrder message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            var orderToSubmit = message.Order;
+            var orderToAdd = new Order(
+                orderToSubmit.Symbol,
+                orderToSubmit.Id,
+                orderToSubmit.Label,
+                orderToSubmit.Side,
+                orderToSubmit.Type,
+                orderToSubmit.Quantity,
+                orderToSubmit.Price,
+                orderToSubmit.TimeInForce,
+                orderToSubmit.ExpireTime,
+                orderToSubmit.Timestamp);
+
+            this.orders.Add(orderToAdd);
+            this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
+
+            this.Send(NautilusService.Execution, message);
+        }
+
+        private void OnMessage(CancelOrder message)
+        {
+            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
+
+            if (order is null)
+            {
+                this.Log.Warning(
+                    $"Order not found for CancelOrder (command order_id={message.Order.Id}).");
+                return;
+            }
+
+            var cancelOrder = new CancelOrder(
+                order,
+                message.Reason,
+                message.Id,
+                message.Timestamp);
+
+            this.Send(NautilusService.Execution, cancelOrder);
+        }
+
+        private void OnMessage(ModifyOrder message)
+        {
+            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
+
+            if (order is null)
+            {
+                this.Log.Warning(
+                    $"Order not found for ModifyOrder (command order_id={message.Order.Id}).");
+                return;
+            }
+
+            var modifyOrder = new ModifyOrder(
+                order,
+                message.ModifiedPrice,
+                message.Id,
+                message.Timestamp);
+
+            this.Send(NautilusService.Execution, modifyOrder);
         }
 
         private void OnMessage(Event @event)
