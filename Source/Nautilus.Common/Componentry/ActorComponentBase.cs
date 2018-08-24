@@ -144,6 +144,20 @@ namespace Nautilus.Common.Componentry
             this.Log.Debug($"Stopped.");
         }
 
+        /// <summary>
+        /// Handles system start messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void OnMessage(SystemStart message)
+        {
+            this.Log.Information($"Starting from {message}-{message.Id}...");
+            this.PreStart();
+        }
+
+        /// <summary>
+        /// Handles system shutdown messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
         private void OnMessage(SystemShutdown message)
         {
             this.Log.Information($"Shutting down from {message}-{message.Id}...");
