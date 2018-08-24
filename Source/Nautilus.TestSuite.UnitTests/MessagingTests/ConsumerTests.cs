@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
@@ -75,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         internal void Test_consumer_can_receive_multiple_messages()
         {
             // Arrange
-            this.Sys.ActorOf(Props.Create(() => new Consumer(
+            var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 new Label("CommandConsumer"),
                 this.setupContainer,
                 TestAddress,
@@ -113,6 +114,29 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             testDealer2.SendFrame("MSG");
             this.testDealer1.SendFrame("MSG");
             testDealer2.SendFrame("MSG");
+
+            // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            this.ExpectMsg<byte[]>();
+        }
+
+        [Fact]
+        internal void Test_consumer_can_be_stopped_by_receiving_poison_pill()
+        {
+            // Arrange
+            var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
+                new Label("CommandConsumer"),
+                this.setupContainer,
+                TestAddress,
+                Guid.NewGuid(),
+                this.testEndpoint)));
+
+            // Act
+            this.testDealer1.SendFrame("MSG");
+            this.testDealer1.SendFrame("MSG");
+            consumer.Tell(PoisonPill.Instance);
+            Task.Delay(100).Wait();
+            this.testDealer1.SendFrame("MSG");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
