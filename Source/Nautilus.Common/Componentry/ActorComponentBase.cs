@@ -93,6 +93,8 @@ namespace Nautilus.Common.Componentry
         /// <param name="action">The action to execute.</param>
         protected void Execute(Action action)
         {
+            Debug.NotNull(action, nameof(action));
+
             this.commandHandler.Execute(action);
         }
 
@@ -130,10 +132,9 @@ namespace Nautilus.Common.Componentry
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         protected override void PostRestart(Exception ex)
         {
-            Validate.NotNull(ex, nameof(ex));
+            Debug.NotNull(ex, nameof(ex));
 
-            this.Log.Error($"Restarting {ex.Message}...", ex);
-            this.PreStart();
+            this.Log.Error($"Restarted from {ex.Message}.", ex);
         }
 
         /// <summary>

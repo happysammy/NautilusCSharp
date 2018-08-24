@@ -57,12 +57,14 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         internal void Test_consumer_can_receive_one_message()
         {
             // Arrange
-            this.Sys.ActorOf(Props.Create(() => new Consumer(
+            var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 new Label("CommandConsumer"),
                 this.setupContainer,
                 TestAddress,
                 Guid.NewGuid(),
                 this.testEndpoint)));
+
+            Task.Delay(100).Wait();
 
             // Act
             this.testDealer1.SendFrame("MSG");
@@ -70,6 +72,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
+            this.testDealer1.Disconnect(TestAddress);
+            this.testDealer1.Dispose();
         }
 
         [Fact]
@@ -83,6 +88,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid(),
                 this.testEndpoint)));
 
+            Task.Delay(100).Wait();
+
             // Act
             this.testDealer1.SendFrame("MSG");
             this.testDealer1.SendFrame("MSG");
@@ -91,33 +98,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
-        }
-
-        [Fact]
-        internal void Test_consumer_can_receive_multiple_messages_from_multiple_dealers()
-        {
-            // Arrange
-            var testDealer2 = new DealerSocket(TestAddress);
-            testDealer2.Connect(TestAddress);
-
-            this.Sys.ActorOf(Props.Create(() => new Consumer(
-                new Label("CommandConsumer"),
-                this.setupContainer,
-                TestAddress,
-                Guid.NewGuid(),
-                this.testEndpoint)));
-
-            // Act
-            this.testDealer1.SendFrame("MSG");
-            testDealer2.SendFrame("MSG");
-            this.testDealer1.SendFrame("MSG");
-            testDealer2.SendFrame("MSG");
-            this.testDealer1.SendFrame("MSG");
-            testDealer2.SendFrame("MSG");
-
-            // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            this.ExpectMsg<byte[]>();
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
+            this.testDealer1.Disconnect(TestAddress);
+            this.testDealer1.Dispose();
         }
 
         [Fact]
@@ -131,16 +114,18 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid(),
                 this.testEndpoint)));
 
+            Task.Delay(100).Wait();
+
             // Act
             this.testDealer1.SendFrame("MSG");
-            this.testDealer1.SendFrame("MSG");
             consumer.Tell(PoisonPill.Instance);
-            Task.Delay(100).Wait();
-            this.testDealer1.SendFrame("MSG");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            this.ExpectMsg<byte[]>();
+            this.ExpectNoMsg();
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
+            this.testDealer1.Disconnect(TestAddress);
+            this.testDealer1.Dispose();
         }
     }
 }

@@ -28,7 +28,6 @@ namespace Nautilus.Messaging
     {
         private readonly string serverAddress;
         private readonly RouterSocket socket;
-        private readonly NetMQPoller poller;
         private readonly IEndpoint receiver;
         private readonly ThreadLocal<DealerSocket> clients;
 
@@ -60,8 +59,7 @@ namespace Nautilus.Messaging
             Validate.NotNull(receiver, nameof(receiver));
 
             this.serverAddress = serverAddress;
-            this.poller = new NetMQPoller();
-            this.socket = new RouterSocket
+            this.socket = new RouterSocket()
             {
                 Options =
                 {
@@ -74,6 +72,19 @@ namespace Nautilus.Messaging
 
             this.receiver = receiver;
             this.clients = new ThreadLocal<DealerSocket>();
+
+            // Setup message handling.
+            this.Receive<byte[]>(msg => this.OnMessage(msg));
+        }
+
+        private void OnMessage(byte[] message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Log.Debug("Received a byte[] sending to receiver");
+            this.receiver.Send(message);
+
+            this.StartConsuming().PipeTo(this.Self);
         }
 
         /// <summary>
@@ -84,12 +95,11 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 base.PreStart();
-                this.socket.Connect(this.serverAddress);
                 this.socket.Bind(this.serverAddress);
                 this.socket.ReceiveReady += this.ServerReceiveReady;
-                this.poller.Add(this.socket);
-                this.Log.Debug($"Connected socket to {this.serverAddress}");
+                this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
+                this.Log.Debug("Started consuming...");
                 this.StartConsuming().PipeTo(this.Self);
             });
         }
@@ -101,10 +111,7 @@ namespace Nautilus.Messaging
         {
             this.Execute(() =>
             {
-                this.poller.Stop();
-                this.poller.Dispose();
-                this.socket.Disconnect(this.serverAddress);
-                this.socket.Close();
+                this.socket.Unbind(this.serverAddress);
                 this.socket.Dispose();
             });
         }
@@ -113,25 +120,18 @@ namespace Nautilus.Messaging
         {
         }
 
-        private Task StartConsuming()
+        private Task<byte[]> StartConsuming()
         {
-            this.Log.Debug("Started consuming...");
-
-            while (true)
+            var message = this.socket.ReceiveFrameBytes(out var hasMore);
+            while (hasMore)
             {
-                var message = this.socket.ReceiveFrameBytes(out var hasMore);
-
-                if (hasMore)
-                {
-                    // There are more byte frames to the message so continue the loop.
-                    continue;
-                }
-
-                this.cycles++;
-                this.Log.Debug($"Received message {Encoding.UTF8.GetString(message)} {this.cycles}");
-
-                this.receiver.Send(message);
+                message = this.socket.ReceiveFrameBytes(out hasMore);
             }
+
+            this.cycles++;
+            this.Log.Debug($"Received message {Encoding.UTF8.GetString(message)} {this.cycles}");
+
+            return Task.FromResult(message);
         }
     }
 }

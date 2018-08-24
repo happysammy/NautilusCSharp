@@ -8,7 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -39,14 +38,6 @@ namespace Nautilus.Data
         {
             Validate.NotNull(setupContainer, nameof(setupContainer));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-
-            // Setup message handling.
-            this.Receive<SystemStart>(msg => this.OnMessage(msg));
-        }
-
-        private void OnMessage(SystemStart message)
-        {
-            this.Log.Debug($"Starting database with {message}");
         }
     }
 }
