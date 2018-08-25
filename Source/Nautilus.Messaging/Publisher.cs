@@ -76,9 +76,9 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 base.PreStart();
-                this.socket.Connect(this.serverAddress);
+                this.socket.Bind(this.serverAddress);
                 this.socket.ReceiveReady += this.ServerReceiveReady;
-                this.Log.Debug($"Connected publisher socket to {this.serverAddress}");
+                this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to publish...");
             });
@@ -91,7 +91,7 @@ namespace Nautilus.Messaging
         {
             this.Execute(() =>
             {
-                this.socket.Disconnect(this.serverAddress);
+                this.socket.Unbind(this.serverAddress);
                 this.socket.Dispose();
             });
         }
