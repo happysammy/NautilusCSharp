@@ -29,103 +29,111 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ConsumerTests : TestKit
     {
-        private const string TestAddress = "tcp://127.0.0.1:5555";
+        private const string LocalHost = "127.0.0.1";
         private readonly ITestOutputHelper output;
-        private readonly ActorSystem testActorSystem;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly DealerSocket testDealer1;
         private readonly IEndpoint testEndpoint;
 
         public ConsumerTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
-            this.testActorSystem = ActorSystem.Create(nameof(ConsumerTests));
 
             var setupFactory = new StubSetupContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
             this.testEndpoint = new ActorEndpoint(this.TestActor);
-
-            this.testDealer1 = new DealerSocket(TestAddress);
-            this.testDealer1.Connect(TestAddress);
         }
 
         [Fact]
         internal void Test_consumer_can_receive_one_message()
         {
             // Arrange
+            const string TestAddress = "tcp://127.0.0.1:5555";
+            var dealer = new DealerSocket(TestAddress);
+            dealer.Connect(TestAddress);
+
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
-                new Label("CommandConsumer"),
                 this.setupContainer,
-                TestAddress,
-                Guid.NewGuid(),
-                this.testEndpoint)));
+                this.testEndpoint,
+                new Label("CommandConsumer"),
+                LocalHost,
+                5555,
+                Guid.NewGuid())));
 
             Task.Delay(100).Wait();
 
             // Act
-            this.testDealer1.SendFrame("MSG");
+            dealer.SendFrame("MSG");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
             consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            this.testDealer1.Disconnect(TestAddress);
-            this.testDealer1.Dispose();
+            dealer.Disconnect(TestAddress);
+            dealer.Dispose();
         }
 
         [Fact]
         internal void Test_consumer_can_receive_multiple_messages()
         {
             // Arrange
+            const string TestAddress = "tcp://127.0.0.1:5556";
+            var dealer = new DealerSocket(TestAddress);
+            dealer.Connect(TestAddress);
+
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
-                new Label("CommandConsumer"),
                 this.setupContainer,
-                TestAddress,
-                Guid.NewGuid(),
-                this.testEndpoint)));
+                this.testEndpoint,
+                new Label("CommandConsumer"),
+                LocalHost,
+                5556,
+                Guid.NewGuid())));
 
             Task.Delay(100).Wait();
 
             // Act
-            this.testDealer1.SendFrame("MSG");
-            this.testDealer1.SendFrame("MSG");
-            this.testDealer1.SendFrame("MSG");
+            dealer.SendFrame("MSG");
+            dealer.SendFrame("MSG");
+            dealer.SendFrame("MSG");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
             consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            this.testDealer1.Disconnect(TestAddress);
-            this.testDealer1.Dispose();
+            dealer.Disconnect(TestAddress);
+            dealer.Dispose();
         }
 
         [Fact]
-        internal void Test_consumer_can_be_stopped_by_receiving_poison_pill()
+        internal void Test_consumer_can_be_stopped()
         {
             // Arrange
+            const string TestAddress = "tcp://127.0.0.1:5557";
+            var dealer = new DealerSocket(TestAddress);
+            dealer.Connect(TestAddress);
+
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
-                new Label("CommandConsumer"),
                 this.setupContainer,
-                TestAddress,
-                Guid.NewGuid(),
-                this.testEndpoint)));
+                this.testEndpoint,
+                new Label("CommandConsumer"),
+                LocalHost,
+                5557,
+                Guid.NewGuid())));
 
             Task.Delay(100).Wait();
 
             // Act
-            this.testDealer1.SendFrame("MSG");
-            consumer.Tell(PoisonPill.Instance);
+            dealer.SendFrame("MSG");
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(300));
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectNoMsg();
-            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            this.testDealer1.Disconnect(TestAddress);
-            this.testDealer1.Dispose();
+            dealer.Disconnect(TestAddress);
+            dealer.Dispose();
         }
     }
 }

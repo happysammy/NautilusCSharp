@@ -26,39 +26,41 @@ namespace Nautilus.Messaging
     /// </summary>
     public class Consumer : ActorComponentBase
     {
+        private readonly IEndpoint receiver;
         private readonly string serverAddress;
         private readonly RouterSocket socket;
-        private readonly IEndpoint receiver;
-        private readonly ThreadLocal<DealerSocket> clients;
-
         private int cycles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Consumer"/> class.
         /// </summary>
-        /// <param name="consumerLabel">The consumer label.</param>
         /// <param name="container">The setup container.</param>
-        /// <param name="serverAddress">The consumer server address.</param>
+        /// <param name="label">The consumer label.</param>
+        /// <param name="host">The consumer host address.</param>
+        /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        /// <param name="receiver">The message receiver.</param>
         public Consumer(
-            Label consumerLabel,
             IComponentryContainer container,
-            string serverAddress,
-            Guid id,
-            IEndpoint receiver)
+            IEndpoint receiver,
+            Label label,
+            string host,
+            int port,
+            Guid id)
             : base(
                 NautilusService.Messaging,
-                consumerLabel,
+                label,
                 container)
         {
-            Validate.NotNull(consumerLabel, nameof(consumerLabel));
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(serverAddress, nameof(serverAddress));
-            Validate.NotDefault(id, nameof(id));
             Validate.NotNull(receiver, nameof(receiver));
+            Validate.NotNull(label, nameof(label));
+            Validate.NotNull(host, nameof(host));
+            Validate.NotEqualTo(port, nameof(host), 0);
+            Validate.NotDefault(id, nameof(id));
 
-            this.serverAddress = serverAddress;
+            this.receiver = receiver;
+            this.serverAddress = $"tcp://{host}:{port.ToString()}";
+
             this.socket = new RouterSocket()
             {
                 Options =
@@ -69,22 +71,6 @@ namespace Nautilus.Messaging
             };
 
             socket.ReceiveReady += ServerReceiveReady;
-
-            this.receiver = receiver;
-            this.clients = new ThreadLocal<DealerSocket>();
-
-            // Setup message handling.
-            this.Receive<byte[]>(msg => this.OnMessage(msg));
-        }
-
-        private void OnMessage(byte[] message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Debug("Received a byte[] sending to receiver");
-            this.receiver.Send(message);
-
-            this.StartConsuming().PipeTo(this.Self);
         }
 
         /// <summary>
@@ -95,12 +81,13 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 base.PreStart();
+
                 this.socket.Bind(this.serverAddress);
                 this.socket.ReceiveReady += this.ServerReceiveReady;
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
-                this.Log.Debug("Started consuming...");
-                this.StartConsuming().PipeTo(this.Self);
+                this.Log.Debug("Ready to consume...");
+                Task.Run(this.StartConsuming);
             });
         }
 
@@ -120,18 +107,21 @@ namespace Nautilus.Messaging
         {
         }
 
-        private Task<byte[]> StartConsuming()
+        private Task StartConsuming()
         {
-            var message = this.socket.ReceiveFrameBytes(out var hasMore);
-            while (hasMore)
+            while (true)
             {
-                message = this.socket.ReceiveFrameBytes(out hasMore);
+                var message = this.socket.ReceiveFrameBytes(out var hasMore);
+                while (hasMore)
+                {
+                    message = this.socket.ReceiveFrameBytes(out hasMore);
+                }
+
+                this.cycles++;
+                this.Log.Debug($"Received message {Encoding.UTF8.GetString(message)} {this.cycles}");
+
+                this.receiver.Send(message);
             }
-
-            this.cycles++;
-            this.Log.Debug($"Received message {Encoding.UTF8.GetString(message)} {this.cycles}");
-
-            return Task.FromResult(message);
         }
     }
 }
