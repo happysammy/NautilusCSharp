@@ -46,8 +46,8 @@ namespace Nautilus.Messaging
                 label,
                 container)
         {
-            Validate.NotNull(label, nameof(label));
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(label, nameof(label));
             Validate.NotNull(serverAddress, nameof(serverAddress));
             Validate.NotDefault(id, nameof(id));
 

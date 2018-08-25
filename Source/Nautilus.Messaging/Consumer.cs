@@ -35,6 +35,7 @@ namespace Nautilus.Messaging
         /// Initializes a new instance of the <see cref="Consumer"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
+        /// <param name="receiver">The receiver endpoint.</param>
         /// <param name="label">The consumer label.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
