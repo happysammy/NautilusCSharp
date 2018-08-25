@@ -92,6 +92,8 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 this.socket.Unbind(this.serverAddress);
+                this.Log.Debug($"Unbound publisher socket from {this.serverAddress}");
+
                 this.socket.Dispose();
             });
         }
