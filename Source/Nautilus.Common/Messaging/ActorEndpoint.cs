@@ -8,13 +8,11 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using NodaTime;
 
     /// <summary>
     /// Provides an Akka.NET actor endpoint.

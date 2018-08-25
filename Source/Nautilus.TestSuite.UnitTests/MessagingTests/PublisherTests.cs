@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.MessagingTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Akka.Actor;
@@ -20,8 +19,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Messaging;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NetMQ;
-    using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
 
