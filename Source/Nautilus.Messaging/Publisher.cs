@@ -78,7 +78,7 @@ namespace Nautilus.Messaging
                 base.PreStart();
                 this.socket.Connect(this.serverAddress);
                 this.socket.ReceiveReady += this.ServerReceiveReady;
-                this.Log.Debug($"Bound router socket to {this.serverAddress}");
+                this.Log.Debug($"Connected publisher socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to publish...");
             });

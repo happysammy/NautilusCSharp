@@ -52,7 +52,7 @@ namespace Nautilus.Messaging
                     () => new Consumer(
                         container,
                         new ActorEndpoint(Context.Self),
-                        LabelFactory.Component("CommandConsumer"),
+                        LabelFactory.Component("RouterSocket"),
                         host,
                         port,
                         Guid.NewGuid()))));

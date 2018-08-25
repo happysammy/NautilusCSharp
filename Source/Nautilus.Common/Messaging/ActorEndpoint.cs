@@ -58,17 +58,5 @@ namespace Nautilus.Common.Messaging
 
             this.actorRef.Tell(envelope);
         }
-
-        /// <summary>
-        /// Sends the actor a command to stop gracefully.
-        /// </summary>
-        /// <param name="timeout">The timeout duration for task completion.</param>
-        /// <returns>The result of the operation.</returns>
-        public Task<bool> GracefulStop(Duration timeout)
-        {
-            Debug.NotNull(timeout, nameof(timeout));
-
-            return this.actorRef.GracefulStop(timeout.ToTimeSpan());
-        }
     }
 }

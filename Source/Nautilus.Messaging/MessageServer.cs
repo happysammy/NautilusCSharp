@@ -79,6 +79,22 @@ namespace Nautilus.Messaging
                         eventsPort))));
 
             this.orders = new List<Order>();
+
+            // Setup message handling.
+            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
+            this.Receive<CancelOrder>(msg => this.OnMessage(msg));
+            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
+            this.Receive<Event>(msg => this.OnMessage(msg));
+        }
+
+        /// <summary>
+        /// Actions to be performed when the component is stopping.
+        /// </summary>
+        protected override void PostStop()
+        {
+            this.commandConsumer.Send(new SystemShutdown(this.NewGuid(), this.TimeNow()));
+            this.eventPublisher.Send(new SystemShutdown(this.NewGuid(), this.TimeNow()));
+            base.PostStop();
         }
 
         private void OnMessage(SubmitOrder message)
