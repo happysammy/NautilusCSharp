@@ -1,4 +1,9 @@
 ﻿{
+  "service": {
+    "name": "NautilusExecutor",
+    "address": "127.0.0.1"
+  },
+
   "logging": {
     "logLevel": "Debug"
   },

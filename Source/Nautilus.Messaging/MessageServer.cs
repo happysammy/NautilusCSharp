@@ -70,6 +70,14 @@ namespace Nautilus.Messaging
                         serverAddress,
                         commandsPort))));
 
+            this.eventPublisher = new ActorEndpoint(
+                Context.ActorOf(Props.Create(
+                    () => new EventPublisher(
+                        container,
+                        eventSerializer,
+                        serverAddress,
+                        eventsPort))));
+
             this.orders = new List<Order>();
         }
 
@@ -156,8 +164,7 @@ namespace Nautilus.Messaging
                 this.Log.Debug($"Applied {@event} to {order.Id}.");
             }
 
-            // TODO: Publish event.
-
+            this.eventPublisher.Send(@event);
             this.Log.Debug($"Published event {@event}.");
         }
     }

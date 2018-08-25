@@ -27,7 +27,7 @@ namespace Nautilus.Messaging
         private readonly IEndpoint publisher;
 
         /// <summary>
-        /// Initializes a new instance
+        /// Initializes a new instance of the <see cref="EventPublisher"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
         /// <param name="serializer">The event serializer.</param>

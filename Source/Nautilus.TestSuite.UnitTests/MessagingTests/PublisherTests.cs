@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly List<byte[]> receivedBytes;
+        private readonly IEndpoint testEndpoint;
 
         public PublisherTests(ITestOutputHelper output)
         {
@@ -45,15 +45,13 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 
-            this.receivedBytes = new List<byte[]>();
+            this.testEndpoint = new ActorEndpoint(this.TestActor);
         }
 
         [Fact]
         internal void Test_consumer_can_receive_one_message()
         {
             // Arrange
-            var listen = Task.Run(this.ListenForBytes);
-
             var eventBytes = new byte[100];
 
             var publisher = this.Sys.ActorOf(Props.Create(() => new Publisher(
@@ -63,29 +61,16 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 5555,
                 Guid.NewGuid())));
 
+            Task.Delay(300).Wait();
+
             // Act
             publisher.Tell(eventBytes);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Single(this.receivedBytes);
+
+            // Tear Down
             publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-        }
-
-        private Task ListenForBytes()
-        {
-            var socket = new ResponseSocket();
-            socket.Connect("tcp://127.0.0.1:5555");
-
-            while (true)
-            {
-                var message = socket.ReceiveFrameBytes();
-
-                this.receivedBytes.Add(message);
-
-                socket.Disconnect("tcp://127.0.0.1:5555");
-                socket.Dispose();
-            }
         }
     }
 }

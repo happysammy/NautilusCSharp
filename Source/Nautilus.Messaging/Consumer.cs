@@ -66,11 +66,11 @@ namespace Nautilus.Messaging
                 Options =
                 {
                     Linger = TimeSpan.FromMilliseconds(1000),
-                    Identity = Encoding.Unicode.GetBytes(id.ToString())
-                }
+                    Identity = Encoding.Unicode.GetBytes(id.ToString()),
+                },
             };
 
-            socket.ReceiveReady += ServerReceiveReady;
+            this.socket.ReceiveReady += this.ServerReceiveReady;
 
             // Setup message handling.
             this.Receive<byte[]>(msg => this.OnMessage(msg));
@@ -114,7 +114,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Debug("Received a byte[] sending to receiver");
+            this.Log.Debug("Received byte[], sending to receiver.");
             this.receiver.Send(message);
 
             this.StartConsuming().PipeTo(this.Self);
@@ -129,7 +129,7 @@ namespace Nautilus.Messaging
             }
 
             this.cycles++;
-            this.Log.Debug($"Message[{cycles}] received, sending to receiver.");
+            this.Log.Debug($"Message[{this.cycles}] received.");
 
             return Task.FromResult(message);
         }

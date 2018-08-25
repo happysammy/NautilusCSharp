@@ -26,7 +26,7 @@ namespace Nautilus.Messaging
         private readonly IEndpoint consumer;
 
         /// <summary>
-        /// Initializes a new instance
+        /// Initializes a new instance of the <see cref="CommandConsumer"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
         /// <param name="serializer">The command serializer.</param>

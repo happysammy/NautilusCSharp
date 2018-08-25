@@ -48,7 +48,8 @@ namespace Nautilus.Messaging
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(label, nameof(label));
-            Validate.NotNull(serverAddress, nameof(serverAddress));
+            Validate.NotNull(host, nameof(host));
+            Validate.NotEqualTo(port, nameof(host), 0);
             Validate.NotDefault(id, nameof(id));
 
             this.serverAddress = $"tcp://{host}:{port}";
@@ -57,16 +58,14 @@ namespace Nautilus.Messaging
                 Options =
                 {
                     Linger = TimeSpan.FromMilliseconds(1000),
-                    Identity = Encoding.Unicode.GetBytes(id.ToString())
-                }
+                    Identity = Encoding.Unicode.GetBytes(id.ToString()),
+                },
             };
 
-            socket.ReceiveReady += ServerReceiveReady;
+            this.socket.ReceiveReady += this.ServerReceiveReady;
 
             // Setup message handling.
             this.Receive<byte[]>(msg => this.OnMessage(msg));
-
-            cycles++;
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 base.PreStart();
-                this.socket.Bind(this.serverAddress);
+                this.socket.Connect(this.serverAddress);
                 this.socket.ReceiveReady += this.ServerReceiveReady;
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
@@ -92,7 +91,7 @@ namespace Nautilus.Messaging
         {
             this.Execute(() =>
             {
-                this.socket.Unbind(this.serverAddress);
+                this.socket.Disconnect(this.serverAddress);
                 this.socket.Dispose();
             });
         }
@@ -105,10 +104,10 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Debug($"Message[{cycles}] received, publishing...");
+            this.cycles++;
+            this.Log.Debug($"Message[{this.cycles}] received, publishing...");
 
             this.socket.SendFrame(message);
-            this.cycles++;
         }
     }
 }

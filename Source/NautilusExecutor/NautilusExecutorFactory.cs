@@ -22,8 +22,8 @@ namespace NautilusExecutor
     using Nautilus.Core.Validation;
     using Nautilus.Execution;
     using Nautilus.Fix;
+    using Nautilus.Messaging;
     using Nautilus.MsgPack;
-    using Nautilus.RabbitMQ;
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
@@ -40,10 +40,12 @@ namespace NautilusExecutor
         /// </summary>
         /// <param name="logLevel">The logger log level threshold.</param>
         /// <param name="fixCredentials">The FIX credentials.</param>
+        /// <param name="serviceAddress">The services address.</param>
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
-            FixCredentials fixCredentials)
+            FixCredentials fixCredentials,
+            string serviceAddress)
         {
             Validate.NotNull(fixCredentials, nameof(fixCredentials));
 
@@ -83,22 +85,25 @@ namespace NautilusExecutor
 
             fixClient.InitializeGateway(gateway);
 
-            var messageBroker = RabbitMQServerFactory.Create(
+            var messageServer = MessageServerFactory.Create(
                 actorSystem,
                 setupContainer,
                 messagingAdapter,
                 new MsgPackCommandSerializer(),
-                new MsgPackEventSerializer());
+                new MsgPackEventSerializer(),
+                serviceAddress,
+                5555,
+                5556);
 
             var executionServiceAddresses = ExecutionServiceFactory.Create(
                 actorSystem,
                 setupContainer,
                 messagingAdapter);
-            executionServiceAddresses.Add(NautilusService.Messaging, messageBroker);
+            executionServiceAddresses.Add(NautilusService.Messaging, messageServer);
 
             var switchboard = new Switchboard(executionServiceAddresses);
 
-            gateway.RegisterEventReceiver(messageBroker);
+            gateway.RegisterEventReceiver(messageServer);
 
             var initializeGateway =
                 new InitializeGateway(gateway, guidFactory.NewGuid(), clock.TimeNow());
@@ -116,7 +121,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 systemController,
                 fixClient,
-                messageBroker);
+                messageServer);
         }
     }
 }

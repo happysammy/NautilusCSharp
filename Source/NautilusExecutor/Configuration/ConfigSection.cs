@@ -16,6 +16,11 @@ namespace NautilusExecutor.Configuration
         /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
+        public static string Service => "service";
+
+        /// <summary>
+        /// Gets the logging configuration section string.
+        /// </summary>
         public static string Logging => "logging";
 
         /// <summary>
