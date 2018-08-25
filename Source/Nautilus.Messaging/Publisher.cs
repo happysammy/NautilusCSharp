@@ -65,6 +65,8 @@ namespace Nautilus.Messaging
 
             // Setup message handling.
             this.Receive<byte[]>(msg => this.OnMessage(msg));
+
+            cycles++;
         }
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Debug("Received a byte[] publishing...");
+            this.Log.Debug($"Message[{cycles}] received, publishing...");
 
             this.socket.SendFrame(message);
             this.cycles++;

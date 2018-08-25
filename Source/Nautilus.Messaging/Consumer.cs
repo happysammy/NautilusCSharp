@@ -71,6 +71,8 @@ namespace Nautilus.Messaging
             };
 
             socket.ReceiveReady += ServerReceiveReady;
+
+            cycles++;
         }
 
         /// <summary>
@@ -118,7 +120,7 @@ namespace Nautilus.Messaging
                 }
 
                 this.cycles++;
-                this.Log.Debug($"Received message {Encoding.UTF8.GetString(message)} {this.cycles}");
+                this.Log.Debug($"Message[{cycles}] received, sending to receiver.");
 
                 this.receiver.Send(message);
             }
