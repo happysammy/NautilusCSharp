@@ -63,8 +63,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 5555,
                 Guid.NewGuid())));
 
-            Task.Delay(100).Wait();
-
             // Act
             dealer.SendFrame("MSG");
 
@@ -91,8 +89,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 LocalHost,
                 5556,
                 Guid.NewGuid())));
-
-            Task.Delay(100).Wait();
 
             // Act
             dealer.SendFrame("MSG");
@@ -123,15 +119,44 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 5557,
                 Guid.NewGuid())));
 
-            Task.Delay(100).Wait();
-
             // Act
             dealer.SendFrame("MSG");
-            consumer.GracefulStop(TimeSpan.FromMilliseconds(300));
+            consumer.Tell(PoisonPill.Instance);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectNoMsg();
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(300));
+            dealer.Disconnect(TestAddress);
+            dealer.Dispose();
+        }
+
+        [Fact]
+        internal void Test_consumer_can_receive_one_hundred_thousand_messages_in_order()
+        {
+            // Arrange
+            const string TestAddress = "tcp://127.0.0.1:5558";
+            var dealer = new DealerSocket(TestAddress);
+            dealer.Connect(TestAddress);
+
+            var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
+                this.setupContainer,
+                this.testEndpoint,
+                new Label("CommandConsumer"),
+                LocalHost,
+                5558,
+                Guid.NewGuid())));
+
+            // Act
+            for (var i = 0; i < 100000; i++)
+            {
+                dealer.SendFrame($"MSG-{i}");
+            }
+
+            // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            this.ExpectMsg<byte[]>();
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
             dealer.Disconnect(TestAddress);
             dealer.Dispose();
         }

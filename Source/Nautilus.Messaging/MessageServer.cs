@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessagingServer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessageServer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -8,7 +8,6 @@
 
 namespace Nautilus.Messaging
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Akka.Actor;
@@ -28,14 +27,14 @@ namespace Nautilus.Messaging
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class MessagingServer : ActorComponentBusConnectedBase
+    public class MessageServer : ActorComponentBusConnectedBase
     {
         private readonly IEndpoint commandConsumer;
         private readonly IEndpoint eventPublisher;
         private readonly List<Order> orders;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessagingServer"/> class.
+        /// Initializes a new instance of the <see cref="MessageServer"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
@@ -44,7 +43,7 @@ namespace Nautilus.Messaging
         /// <param name="serverAddress">The server address.</param>
         /// <param name="commandsPort">The commands port.</param>
         /// <param name="eventsPort">The events port.</param>
-        public MessagingServer(
+        public MessageServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ICommandSerializer commandSerializer,
@@ -54,7 +53,7 @@ namespace Nautilus.Messaging
             int eventsPort)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(MessagingServer)),
+                LabelFactory.Component(nameof(MessageServer)),
                 container,
                 messagingAdapter)
         {

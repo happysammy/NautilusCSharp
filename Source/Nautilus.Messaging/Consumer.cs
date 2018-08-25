@@ -10,7 +10,6 @@ namespace Nautilus.Messaging
 {
     using System;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
@@ -73,7 +72,8 @@ namespace Nautilus.Messaging
 
             socket.ReceiveReady += ServerReceiveReady;
 
-            cycles++;
+            // Setup message handling.
+            this.Receive<byte[]>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Nautilus.Messaging
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
-                Task.Run(this.StartConsuming);
+                this.StartConsuming().PipeTo(this.Self);
             });
         }
 
@@ -110,21 +110,28 @@ namespace Nautilus.Messaging
         {
         }
 
-        private Task StartConsuming()
+        private void OnMessage(byte[] message)
         {
-            while (true)
+            Debug.NotNull(message, nameof(message));
+
+            this.Log.Debug("Received a byte[] sending to receiver");
+            this.receiver.Send(message);
+
+            this.StartConsuming().PipeTo(this.Self);
+        }
+
+        private Task<byte[]> StartConsuming()
+        {
+            var message = this.socket.ReceiveFrameBytes(out var hasMore);
+            while (hasMore)
             {
-                var message = this.socket.ReceiveFrameBytes(out var hasMore);
-                while (hasMore)
-                {
-                    message = this.socket.ReceiveFrameBytes(out hasMore);
-                }
-
-                this.cycles++;
-                this.Log.Debug($"Message[{cycles}] received, sending to receiver.");
-
-                this.receiver.Send(message);
+                message = this.socket.ReceiveFrameBytes(out hasMore);
             }
+
+            this.cycles++;
+            this.Log.Debug($"Message[{cycles}] received, sending to receiver.");
+
+            return Task.FromResult(message);
         }
     }
 }
