@@ -62,8 +62,6 @@ namespace Nautilus.Messaging
                 },
             };
 
-            this.socket.ReceiveReady += this.ServerReceiveReady;
-
             // Setup message handling.
             this.Receive<byte[]>(msg => this.OnMessage(msg));
         }
@@ -77,7 +75,6 @@ namespace Nautilus.Messaging
             {
                 base.PreStart();
                 this.socket.Bind(this.serverAddress);
-                this.socket.ReceiveReady += this.ServerReceiveReady;
                 this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to publish...");
@@ -98,18 +95,14 @@ namespace Nautilus.Messaging
             });
         }
 
-        private void ServerReceiveReady(object sender, NetMQSocketEventArgs e)
-        {
-        }
-
         private void OnMessage(byte[] message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.cycles++;
-            this.Log.Debug($"Message[{this.cycles}] received, publishing...");
-
             this.socket.SendFrame(message);
+
+            this.cycles++;
+            this.Log.Debug($"Published message[{this.cycles}].");
         }
     }
 }

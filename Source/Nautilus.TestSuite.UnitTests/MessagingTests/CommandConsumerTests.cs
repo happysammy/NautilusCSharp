@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         internal void Test_can_deserialize_received_command_bytes()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5555";
+            const string TestAddress = "tcp://127.0.0.1:5553";
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 new MsgPackCommandSerializer(),
                 this.testEndpoint,
                 LocalHost,
-                5555)));
+                5553)));
 
             var hexString = "85ac636f6d6d616e645f74797065ad6f726465725f636f6d6d616e64a56f72646572" +
                             "da016e38616136373337393664363236663663616234313535343435353533343432" +

@@ -72,8 +72,6 @@ namespace Nautilus.Messaging
                 },
             };
 
-            this.socket.ReceiveReady += this.ServerReceiveReady;
-
             // Setup message handling.
             this.Receive<byte[]>(msg => this.OnMessage(msg));
         }
@@ -88,7 +86,6 @@ namespace Nautilus.Messaging
                 base.PreStart();
 
                 this.socket.Bind(this.serverAddress);
-                this.socket.ReceiveReady += this.ServerReceiveReady;
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
@@ -108,10 +105,6 @@ namespace Nautilus.Messaging
 
                 this.socket.Dispose();
             });
-        }
-
-        private void ServerReceiveReady(object sender, NetMQSocketEventArgs e)
-        {
         }
 
         private void OnMessage(byte[] message)
