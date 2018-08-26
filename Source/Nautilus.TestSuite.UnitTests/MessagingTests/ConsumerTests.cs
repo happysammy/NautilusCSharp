@@ -91,9 +91,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid())));
 
             // Act
-            requester.SendFrame("MSG");
+            requester.SendFrame("MSG-1");
             var response1 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
-            requester.SendFrame("MSG");
+            requester.SendFrame("MSG-2");
             var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
 
             // Assert
@@ -113,8 +113,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5557";
-            var dealer = new DealerSocket(TestAddress);
-            dealer.Connect(TestAddress);
+            var requester = new RequestSocket(TestAddress);
+            requester.Connect(TestAddress);
 
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 this.setupContainer,
@@ -125,24 +125,24 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid())));
 
             // Act
-            dealer.SendFrame("MSG");
+            requester.SendFrame("MSG");
             consumer.Tell(PoisonPill.Instance);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectNoMsg();
             consumer.GracefulStop(TimeSpan.FromMilliseconds(300));
-            dealer.Disconnect(TestAddress);
-            dealer.Dispose();
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
-        internal void Test_can_receive_one_hundred_thousand_messages_in_order()
+        internal void Test_can_receive_one_thousand_messages_in_order()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5558";
-            var dealer = new DealerSocket(TestAddress);
-            dealer.Connect(TestAddress);
+            var requester = new RequestSocket(TestAddress);
+            requester.Connect(TestAddress);
 
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 this.setupContainer,
@@ -153,17 +153,57 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid())));
 
             // Act
-            for (var i = 0; i < 100000; i++)
+            for (var i = 0; i < 1000; i++)
             {
-                dealer.SendFrame($"MSG-{i}");
+                requester.SendFrame($"MSG-{i}");
+                requester.ReceiveFrameBytes();
             }
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
             consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            dealer.Disconnect(TestAddress);
-            dealer.Dispose();
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
+        }
+
+        [Fact]
+        internal void Test_can_receive_one_thousand_messages_from_multiple_request_sockets()
+        {
+            // Arrange
+            const string TestAddress = "tcp://127.0.0.1:5559";
+            var requester1 = new RequestSocket(TestAddress);
+            var requester2 = new RequestSocket(TestAddress);
+            requester1.Connect(TestAddress);
+            requester2.Connect(TestAddress);
+
+            var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
+                this.setupContainer,
+                this.testEndpoint,
+                new Label("CommandConsumer"),
+                LocalHost,
+                5559,
+                Guid.NewGuid())));
+
+            // Act
+            for (var i = 0; i < 1000; i++)
+            {
+                requester1.SendFrame($"MSG-{i} from 1");
+                requester2.SendFrame($"MSG-{i} from 2");
+                requester1.ReceiveFrameBytes();
+                requester2.ReceiveFrameBytes();
+            }
+
+            // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            this.ExpectMsg<byte[]>();
+
+            // Tear Down
+            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
+            requester1.Disconnect(TestAddress);
+            requester2.Disconnect(TestAddress);
+            requester1.Dispose();
+            requester2.Dispose();
         }
     }
 }

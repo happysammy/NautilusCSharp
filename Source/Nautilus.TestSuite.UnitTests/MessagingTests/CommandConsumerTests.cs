@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void Test_can_receive_one_message()
+        internal void Test_can_deserialize_received_command_bytes()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5555";
