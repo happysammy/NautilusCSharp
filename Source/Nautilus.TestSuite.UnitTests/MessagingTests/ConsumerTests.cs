@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
@@ -47,12 +48,12 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void Test_consumer_can_receive_one_message()
+        internal void Test_can_receive_one_message()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5555";
-            var dealer = new DealerSocket(TestAddress);
-            dealer.Connect(TestAddress);
+            var requester = new RequestSocket(TestAddress);
+            requester.Connect(TestAddress);
 
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 this.setupContainer,
@@ -63,23 +64,23 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid())));
 
             // Act
-            dealer.SendFrame("MSG");
+            requester.SendFrame("MSG");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
             consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            dealer.Disconnect(TestAddress);
-            dealer.Dispose();
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
-        internal void Test_consumer_can_receive_multiple_messages()
+        internal void Test_can_receive_multiple_messages()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5556";
-            var dealer = new DealerSocket(TestAddress);
-            dealer.Connect(TestAddress);
+            var requester = new RequestSocket(TestAddress);
+            requester.Connect(TestAddress);
 
             var consumer = this.Sys.ActorOf(Props.Create(() => new Consumer(
                 this.setupContainer,
@@ -90,20 +91,25 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 Guid.NewGuid())));
 
             // Act
-            dealer.SendFrame("MSG");
-            dealer.SendFrame("MSG");
-            dealer.SendFrame("MSG");
+            requester.SendFrame("MSG");
+            var response1 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
+            requester.SendFrame("MSG");
+            var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             this.ExpectMsg<byte[]>();
+            Assert.Equal("OK", response1);
+            Assert.Equal("OK", response2);
+
+            // Tear Down
             consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            dealer.Disconnect(TestAddress);
-            dealer.Dispose();
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
-        internal void Test_consumer_can_be_stopped()
+        internal void Test_can_be_stopped()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5557";
@@ -131,7 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void Test_consumer_can_receive_one_hundred_thousand_messages_in_order()
+        internal void Test_can_receive_one_hundred_thousand_messages_in_order()
         {
             // Arrange
             const string TestAddress = "tcp://127.0.0.1:5558";

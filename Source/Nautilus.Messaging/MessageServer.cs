@@ -67,6 +67,7 @@ namespace Nautilus.Messaging
                     () => new CommandConsumer(
                         container,
                         commandSerializer,
+                        new ActorEndpoint(Context.Self),
                         serverAddress,
                         commandsPort))));
 

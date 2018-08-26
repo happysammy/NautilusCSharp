@@ -9,6 +9,7 @@
 namespace Nautilus.Messaging
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using Akka.Actor;
@@ -25,6 +26,7 @@ namespace Nautilus.Messaging
     /// </summary>
     public class Consumer : ActorComponentBase
     {
+        private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
         private readonly IEndpoint receiver;
         private readonly string serverAddress;
         private readonly RouterSocket socket;
@@ -116,24 +118,24 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Debug("Received byte[], sending to receiver.");
             this.receiver.Send(message);
+            this.Log.Debug($"Consumed message[{this.cycles}].");
 
             this.StartConsuming().PipeTo(this.Self);
         }
 
         private Task<byte[]> StartConsuming()
         {
-            var message = this.socket.ReceiveFrameBytes(out var hasMore);
-            while (hasMore)
-            {
-                message = this.socket.ReceiveFrameBytes(out hasMore);
-            }
+            var identity = this.socket.ReceiveFrameBytes();
+            var delimiter = this.socket.ReceiveFrameBytes();
+            var data = this.socket.ReceiveFrameBytes();
 
             this.cycles++;
-            this.Log.Debug($"Message[{this.cycles}] received.");
+            var response = new List<byte[]> { identity, delimiter, this.ok };
+            this.socket.SendMultipartBytes(response);
+            this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
 
-            return Task.FromResult(message);
+            return Task.FromResult(data);
         }
     }
 }
