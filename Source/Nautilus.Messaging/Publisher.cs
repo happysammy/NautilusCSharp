@@ -23,6 +23,7 @@ namespace Nautilus.Messaging
     /// </summary>
     public class Publisher : ActorComponentBase
     {
+        private readonly string topic;
         private readonly string serverAddress;
         private readonly PublisherSocket socket;
         private int cycles;
@@ -32,12 +33,14 @@ namespace Nautilus.Messaging
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="label">The publisher label.</param>
+        /// <param name="topic">The publishers topic.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         public Publisher(
             IComponentryContainer container,
             Label label,
+            string topic,
             string host,
             int port,
             Guid id)
@@ -52,6 +55,7 @@ namespace Nautilus.Messaging
             Validate.NotEqualTo(port, nameof(host), 0);
             Validate.NotDefault(id, nameof(id));
 
+            this.topic = topic;
             this.serverAddress = $"tcp://{host}:{port}";
             this.socket = new PublisherSocket()
             {
@@ -99,7 +103,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.socket.SendFrame(message);
+            this.socket.SendMoreFrame(this.topic).SendFrame(message);
 
             this.cycles++;
             this.Log.Debug($"Published message[{this.cycles}].");

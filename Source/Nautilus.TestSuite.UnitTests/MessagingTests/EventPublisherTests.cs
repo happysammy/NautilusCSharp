@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="PublisherTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="EventPublisherTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,8 +15,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.DomainModel.Events;
     using Nautilus.Messaging;
+    using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -27,16 +28,16 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class PublisherTests : TestKit
+    public class EventPublisherTests : TestKit
     {
         private const string LocalHost = "127.0.0.1";
-        private const string TestTopic = "test_topic";
+        private const string ExecutionEvents = "nautilus_execution_events";
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly IEndpoint testEndpoint;
 
-        public PublisherTests(ITestOutputHelper output)
+        public EventPublisherTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -49,38 +50,45 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void Test_publish_bytes()
+        internal void Test_can_publish_events()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:55504";
+            const string TestAddress = "tcp://127.0.0.1:56601";
             var subscriber = new SubscriberSocket(TestAddress);
             subscriber.Connect(TestAddress);
-            subscriber.Subscribe(TestTopic);
+            subscriber.Subscribe(ExecutionEvents);
 
-            var bytes = Encoding.UTF8.GetBytes("1234");
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var rejected = new OrderRejected(
+                order.Symbol,
+                order.Id,
+                StubZonedDateTime.UnixEpoch(),
+                "INVALID_ORDER",
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
 
-            var publisher = this.Sys.ActorOf(Props.Create(() => new Publisher(
+            var publisher = this.Sys.ActorOf(Props.Create(() => new EventPublisher(
                 this.setupContainer,
-                new Label("EventPublisher"),
-                TestTopic,
+                new MsgPackEventSerializer(),
                 LocalHost,
-                55504,
-                Guid.NewGuid())));
+                56601)));
 
             // Act
-            publisher.Tell(bytes);
-            this.output.WriteLine("Waiting for published messages...");
+            publisher.Tell(rejected);
+            this.output.WriteLine("Waiting for published events...");
             var topic = subscriber.ReceiveFrameBytes();
-            var message = subscriber.ReceiveFrameBytes();
+            var eventBytes = subscriber.ReceiveFrameBytes();
+            var @event = serializer.Deserialize(eventBytes);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
-            Assert.Equal(topic, Encoding.UTF8.GetBytes(TestTopic));
-            Assert.Equal(bytes, message);
+            Assert.Equal(ExecutionEvents, Encoding.UTF8.GetString(topic));
+            Assert.Equal(rejected, @event);
 
             // Tear Down
             publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            subscriber.Unsubscribe(TestTopic);
+            subscriber.Unsubscribe(ExecutionEvents);
             subscriber.Disconnect(TestAddress);
             subscriber.Dispose();
         }

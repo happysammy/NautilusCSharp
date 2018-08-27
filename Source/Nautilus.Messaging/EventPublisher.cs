@@ -53,6 +53,7 @@ namespace Nautilus.Messaging
                     () => new Publisher(
                         container,
                         LabelFactory.Component("EventPublisher"),
+                        "nautilus_execution_events",
                         host,
                         port,
                         Guid.NewGuid()))));
