@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
@@ -20,6 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -77,15 +79,16 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             publisher.Tell(rejected);
             this.output.WriteLine("Waiting for published events...");
 
-            // var topic = subscriber.ReceiveFrameBytes();
-            // var eventBytes = subscriber.ReceiveFrameBytes();
-            // var @event = serializer.Deserialize(eventBytes);
+            var topic = subscriber.ReceiveFrameBytes();
+            var delimiter = subscriber.ReceiveFrameBytes();
+            var eventBytes = subscriber.ReceiveFrameBytes();
+            var @event = serializer.Deserialize(eventBytes);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
-            // Assert.Equal(ExecutionEvents, Encoding.UTF8.GetString(topic));
-            // Assert.Equal(rejected, @event);
+            Assert.Equal(ExecutionEvents, Encoding.UTF8.GetString(topic));
+            Assert.Equal(rejected, @event);
 
             // Tear Down
             publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));

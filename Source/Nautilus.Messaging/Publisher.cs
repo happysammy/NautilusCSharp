@@ -103,7 +103,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotNull(message, nameof(message));
 
-            this.socket.SendMoreFrame(this.topic).SendFrame(message);
+            this.socket.SendMoreFrame(this.topic).SendMoreFrame(Encoding.UTF8.GetBytes(" ")).SendFrame(message);
 
             this.cycles++;
             this.Log.Debug($"Published message[{this.cycles}].");
