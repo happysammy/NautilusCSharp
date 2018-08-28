@@ -1,7 +1,7 @@
 ﻿{
   "service": {
     "name": "NautilusExecutor",
-    "address": "127.0.0.1"
+    "address": "10.135.55.111"
   },
 
   "logging": {

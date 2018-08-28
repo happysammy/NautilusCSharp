@@ -80,7 +80,7 @@ namespace NautilusExecutor
 
             if (this.Environment.IsProduction())
             {
-                serviceAddress = (string)config[ConfigSection.Service]["username"];
+                serviceAddress = (string)config[ConfigSection.Service]["address"];
             }
 
             var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
