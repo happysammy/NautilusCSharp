@@ -9,6 +9,7 @@
 namespace Nautilus.Messaging
 {
     using System;
+    using System.Linq;
     using System.Text;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -23,7 +24,8 @@ namespace Nautilus.Messaging
     /// </summary>
     public class Publisher : ActorComponentBase
     {
-        private readonly string topic;
+        private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
+        private readonly byte[] topic;
         private readonly string serverAddress;
         private readonly PublisherSocket socket;
         private int cycles;
@@ -55,7 +57,7 @@ namespace Nautilus.Messaging
             Validate.NotEqualTo(port, nameof(host), 0);
             Validate.NotDefault(id, nameof(id));
 
-            this.topic = topic;
+            this.topic = Encoding.UTF8.GetBytes(topic);
             this.serverAddress = $"tcp://{host}:{port}";
             this.socket = new PublisherSocket()
             {
@@ -99,11 +101,24 @@ namespace Nautilus.Messaging
             });
         }
 
+        private static byte[] Combine(params byte[][] arrays)
+        {
+            var rv = new byte[arrays.Sum(a => a.Length)];
+            var offset = 0;
+            foreach (var array in arrays)
+            {
+                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                offset += array.Length;
+            }
+
+            return rv;
+        }
+
         private void OnMessage(byte[] message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.socket.SendMoreFrame(this.topic).SendMoreFrame(Encoding.UTF8.GetBytes(" ")).SendFrame(message);
+            this.socket.SendFrame(Combine(this.topic, this.delimiter, message));
 
             this.cycles++;
             this.Log.Debug($"Published message[{this.cycles}].");

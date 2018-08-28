@@ -22,7 +22,6 @@ namespace NautilusExecutor
     using Nautilus.Core.Validation;
     using Nautilus.Execution;
     using Nautilus.Fix;
-    using Nautilus.Messaging;
     using Nautilus.MsgPack;
     using Nautilus.Redis;
     using Nautilus.Serilog;

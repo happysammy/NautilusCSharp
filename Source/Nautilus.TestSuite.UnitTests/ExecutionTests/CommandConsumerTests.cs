@@ -17,7 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Execution;
-    using Nautilus.Messaging;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
