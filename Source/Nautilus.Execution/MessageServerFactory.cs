@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Execution
 {
     using Akka.Actor;
     using Nautilus.Common.Interfaces;

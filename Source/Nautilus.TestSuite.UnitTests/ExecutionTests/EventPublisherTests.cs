@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.MessagingTests
+namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
+    using Nautilus.Execution;
     using Nautilus.Messaging;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;

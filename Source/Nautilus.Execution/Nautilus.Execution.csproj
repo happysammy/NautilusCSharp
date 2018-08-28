@@ -16,6 +16,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />

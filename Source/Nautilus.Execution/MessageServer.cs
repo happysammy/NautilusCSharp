@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Execution
 {
     using System.Collections.Generic;
     using System.Linq;

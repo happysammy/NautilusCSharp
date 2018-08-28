@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Execution
 {
     using System;
     using Akka.Actor;
@@ -17,6 +17,7 @@ namespace Nautilus.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.

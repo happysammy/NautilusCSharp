@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Execution
 {
     using System;
     using Akka.Actor;
@@ -16,6 +16,7 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a command consumer for the messaging server.
