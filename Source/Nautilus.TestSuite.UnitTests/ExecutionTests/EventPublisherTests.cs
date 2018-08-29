@@ -78,10 +78,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             publisher.Tell(rejected);
             this.output.WriteLine("Waiting for published events...");
 
-            var message = subscriber.ReceiveFrameBytes();
-            var delimiter = Encoding.UTF8.GetString(message);
-            var eventBytes = subscriber.ReceiveFrameBytes();
-            var @event = serializer.Deserialize(eventBytes);
+            // var message = subscriber.ReceiveFrameBytes();
+            // var @event = serializer.Deserialize(message);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);

@@ -41,7 +41,7 @@ namespace Nautilus.Execution
             int port)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(CommandConsumer)),
+                LabelFactory.Component(nameof(EventPublisher)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
