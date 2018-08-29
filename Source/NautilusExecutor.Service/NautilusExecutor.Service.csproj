@@ -18,7 +18,7 @@
       <Folder Include="Responses" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="ServiceStack" Version="5.1.0" />
+        <PackageReference Include="ServiceStack" Version="5.2.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
