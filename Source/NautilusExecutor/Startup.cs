@@ -71,9 +71,13 @@ namespace NautilusExecutor
             Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
             RedisServiceStack.ConfigureServiceStack();
 
-            var serviceAddress = (string)config[ConfigSection.Service]["address"];
-            var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
-            var logLevel = logLevelString.ToEnum<LogEventLevel>();
+            var serviceAddress = this.Environment.IsDevelopment()
+                ? "127.0.0.1"
+                : (string)config[ConfigSection.Service]["address"];
+
+            var logLevel = this.Environment.IsDevelopment()
+                ? LogEventLevel.Debug
+                : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
             var credentials = new FixCredentials(
                 (string)config[ConfigSection.Fix]["username"],

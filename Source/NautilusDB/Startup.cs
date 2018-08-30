@@ -74,16 +74,9 @@ namespace NautilusDB
             Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
             RedisServiceStack.ConfigureServiceStack();
 
-            if (this.Environment.IsDevelopment())
-            {
-            }
-
-            if (this.Environment.IsProduction())
-            {
-            }
-
-            var logLevelString = (string)config[ConfigSection.Logging]["logLevel"];
-            var logLevel = logLevelString.ToEnum<LogEventLevel>();
+            var logLevel = this.Environment.IsDevelopment()
+                ? LogEventLevel.Debug
+                : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
             var isCompression = (bool)config[ConfigSection.Database]["compression"];
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];

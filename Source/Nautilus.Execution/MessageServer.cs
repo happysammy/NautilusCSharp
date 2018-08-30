@@ -123,6 +123,12 @@ namespace Nautilus.Execution
             this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
 
             this.Send(NautilusService.Execution, message);
+
+            if (orderToSubmit.Price.HasValue && !this.modifyCache.ContainsKey(orderToSubmit.Id))
+            {
+                // Buffer modification cache preemptively.
+                this.modifyCache.Add(orderToSubmit.Id, new List<ModifyOrder>());
+            }
         }
 
         private void OnMessage(CancelOrder message)
@@ -164,10 +170,20 @@ namespace Nautilus.Execution
 
             if (!this.modifyCache.ContainsKey(order.Id))
             {
-                this.Send(NautilusService.Execution, modifyOrder);
+                // No cache for order id (this should never happen).
+                this.Log.Warning($"No modification cache found for {order.Id}.");
+                return;
             }
 
-            this.AddToCache(modifyOrder);
+            if (this.modifyCache[order.Id].Count == 0)
+            {
+                this.Send(NautilusService.Execution, modifyOrder);
+                this.AddToCache(modifyOrder);
+            }
+            else
+            {
+                this.AddToCache(modifyOrder);
+            }
         }
 
         private void OnMessage(Event @event)
@@ -189,9 +205,19 @@ namespace Nautilus.Execution
                 order.Apply(orderEvent);
                 this.Log.Debug($"Applied {@event} to {order.Id}.");
 
-                if (order.Price.HasValue)
+                if (order.IsComplete)
                 {
-                    this.ProcessCache(order.Id, order.Price.Value);
+                    if (this.modifyCache.ContainsKey(order.Id))
+                    {
+                        // Flush cache.
+                        this.modifyCache.Remove(order.Id);
+                        this.Log.Debug($"Order {order.Id} complete, cache flushed.");
+                    }
+                }
+
+                if (@event is OrderModified orderModified)
+                {
+                    this.ProcessCache(order);
                 }
             }
 
@@ -206,34 +232,58 @@ namespace Nautilus.Execution
             var orderId = modifyOrder.Order.Id;
             if (!this.modifyCache.ContainsKey(orderId))
             {
-                this.modifyCache.Add(orderId, new List<ModifyOrder>());
-            }
-
-            this.modifyCache[orderId].Add(modifyOrder);
-        }
-
-        private void ProcessCache(OrderId orderId, Price price)
-        {
-            Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotNull(price, nameof(price));
-
-            if (!this.modifyCache.ContainsKey(orderId))
-            {
-                // No modify order commands are cached.
+                // No cache for order id (this should never happen).
+                this.Log.Warning($"Cannot process modification cache, no cache for {orderId}.");
                 return;
             }
 
-            foreach (var command in this.modifyCache[orderId].ToList())
+            // Any cached modify order command price equals the new modify order command price?
+            if (this.modifyCache[orderId].Any(command => command.ModifiedPrice.Equals(modifyOrder.ModifiedPrice)))
             {
-                if (price.Equals(command.ModifiedPrice))
+                // No need to cache.
+                this.Log.Debug($"Duplicate price for {modifyOrder}, not cached.");
+                return;
+            }
+
+            this.modifyCache[orderId].Add(modifyOrder);
+            this.Log.Debug($"Added {modifyOrder} to cache.");
+        }
+
+        private void ProcessCache(Order order)
+        {
+            Debug.NotNull(order, nameof(order));
+
+            if (!this.modifyCache.ContainsKey(order.Id))
+            {
+                // Cannot process - no cache for order id (this should never happen).
+                this.Log.Warning($"Cannot process modification cache, no cache for {order.Id}.");
+                return;
+            }
+
+            if (order.Price.HasNoValue)
+            {
+                // Cannot process - no price for order (this should never happen).
+                this.Log.Warning($"Cannot process modification cache, no price {order.Id}.");
+                return;
+            }
+
+            this.Log.Debug($"Processing modify order cache...");
+
+            foreach (var command in this.modifyCache[order.Id].ToList())
+            {
+                if (order.Price.Equals(command.ModifiedPrice))
                 {
-                    this.modifyCache[orderId].Remove(command);
+                    this.modifyCache[order.Id].Remove(command);
+                    this.Log.Debug($"Removed {command} from cache.");
                 }
             }
 
-            if (this.modifyCache[orderId].Count > 0)
+            if (this.modifyCache[order.Id].Count > 0)
             {
-                this.Send(NautilusService.Execution, this.modifyCache[orderId][0]);
+                var command = this.modifyCache[order.Id][0];
+
+                this.Send(NautilusService.Execution, command);
+                this.Log.Debug($"Sent cached {command}.");
             }
         }
     }
