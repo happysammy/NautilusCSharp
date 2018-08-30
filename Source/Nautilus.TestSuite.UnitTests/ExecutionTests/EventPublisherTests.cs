@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
@@ -20,7 +19,6 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;

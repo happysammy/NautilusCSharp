@@ -22,6 +22,8 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
@@ -32,6 +34,7 @@ namespace Nautilus.Execution
         private readonly IEndpoint commandConsumer;
         private readonly IEndpoint eventPublisher;
         private readonly List<Order> orders;
+        private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer"/> class.
@@ -80,6 +83,7 @@ namespace Nautilus.Execution
                         eventsPort))));
 
             this.orders = new List<Order>();
+            this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
             // Setup message handling.
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
@@ -158,7 +162,12 @@ namespace Nautilus.Execution
                 message.Id,
                 message.Timestamp);
 
-            this.Send(NautilusService.Execution, modifyOrder);
+            if (!this.modifyCache.ContainsKey(order.Id))
+            {
+                this.Send(NautilusService.Execution, modifyOrder);
+            }
+
+            this.AddToCache(modifyOrder);
         }
 
         private void OnMessage(Event @event)
@@ -179,10 +188,53 @@ namespace Nautilus.Execution
 
                 order.Apply(orderEvent);
                 this.Log.Debug($"Applied {@event} to {order.Id}.");
+
+                if (order.Price.HasValue)
+                {
+                    this.ProcessCache(order.Id, order.Price.Value);
+                }
             }
 
             this.eventPublisher.Send(@event);
             this.Log.Debug($"Published event {@event}.");
+        }
+
+        private void AddToCache(ModifyOrder modifyOrder)
+        {
+            Debug.NotNull(modifyOrder, nameof(modifyOrder));
+
+            var orderId = modifyOrder.Order.Id;
+            if (!this.modifyCache.ContainsKey(orderId))
+            {
+                this.modifyCache.Add(orderId, new List<ModifyOrder>());
+            }
+
+            this.modifyCache[orderId].Add(modifyOrder);
+        }
+
+        private void ProcessCache(OrderId orderId, Price price)
+        {
+            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotNull(price, nameof(price));
+
+            if (!this.modifyCache.ContainsKey(orderId))
+            {
+                // No modify order commands are cached.
+                return;
+            }
+
+            foreach (var command in this.modifyCache[orderId].ToList())
+            {
+                if (price.Equals(command.ModifiedPrice))
+                {
+                    this.modifyCache[orderId].Remove(command);
+                }
+            }
+
+            if (this.modifyCache[orderId].Count > 0)
+            {
+                this.Send(NautilusService.Execution, this.modifyCache[orderId][0]);
+            }
         }
     }
 }
