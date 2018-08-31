@@ -23,7 +23,6 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
@@ -267,14 +266,14 @@ namespace Nautilus.Execution
                 return;
             }
 
-            this.Log.Debug($"Processing modify order cache...");
+            this.Log.Verbose($"Processing modify order cache...");
 
             foreach (var command in this.modifyCache[order.Id].ToList())
             {
                 if (order.Price.Equals(command.ModifiedPrice))
                 {
                     this.modifyCache[order.Id].Remove(command);
-                    this.Log.Debug($"Removed {command} from cache.");
+                    this.Log.Verbose($"Removed {command} from cache.");
                 }
             }
 

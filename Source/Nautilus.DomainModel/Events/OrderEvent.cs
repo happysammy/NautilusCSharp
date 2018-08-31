@@ -56,5 +56,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order identifier.
         /// </summary>
         public OrderId OrderId { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="OrderEvent"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.GetType().Name}({this.OrderId}";
     }
 }
