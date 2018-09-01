@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Core
 {
     using System.IO;
     using Nautilus.Core.Annotations;
@@ -15,7 +15,7 @@ namespace Nautilus.MsgPack
     /// Provides a performant hex encoder.
     /// </summary>
     [PerformanceOptimized]
-    public class HexEncoder
+    internal class HexEncoder
     {
         private readonly byte[] encodingTable =
         {

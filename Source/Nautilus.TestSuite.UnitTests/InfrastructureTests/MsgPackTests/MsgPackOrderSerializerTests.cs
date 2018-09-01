@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit.TestDoubles;
