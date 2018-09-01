@@ -38,7 +38,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>The converted decimal.</returns>
         public static decimal ToDecimalOr([CanBeNull] string input, decimal alternativeValue)
         {
-            Debug.DecimalNotOutOfRange(
+            Debug.NotOutOfRangeDecimal(
                 alternativeValue,
                 nameof(alternativeValue),
                 decimal.MinValue,

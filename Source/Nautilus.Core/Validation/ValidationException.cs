@@ -12,7 +12,7 @@ namespace Nautilus.Core.Validation
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Wraps all validation <see cref="ArgumentException"/>(s).
+    /// Wraps all validation <see cref="ArgumentException"/>s.
     /// </summary>
     [Immutable]
     public sealed class ValidationException : ArgumentException

@@ -46,7 +46,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotNull(barType, nameof(barType));
             Debug.NotNull(bar, nameof(bar));
             Debug.NotNull(lastTick, nameof(lastTick));
-            Debug.DecimalNotOutOfRange(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeDecimal(averageSpread, nameof(averageSpread), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
 
             this.BarType = barType;
             this.Bar = bar;

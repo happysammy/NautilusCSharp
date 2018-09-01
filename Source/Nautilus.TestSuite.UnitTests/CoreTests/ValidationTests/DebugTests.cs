@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.CollectionEmpty(collection, nameof(collection));
+            Debug.Empty(collection, nameof(collection));
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.CollectionEmpty(collection, nameof(collection)));
+            Assert.Throws<ValidationException>(() => Debug.Empty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.CollectionEmpty(collection, nameof(collection)));
+            Assert.Throws<ValidationException>(() => Debug.Empty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.CollectionNotNullOrEmpty(collection, nameof(collection));
+            Debug.NotNullOrEmpty(collection, nameof(collection));
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.CollectionNotNullOrEmpty(collection, nameof(collection)));
+            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -191,7 +191,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.CollectionNotNullOrEmpty(collection, nameof(collection)));
+            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.CollectionNotNullOrEmpty(dictionary, nameof(dictionary)));
+            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(dictionary, nameof(dictionary)));
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.CollectionNotNullOrEmpty(dictionary, nameof(dictionary)));
+            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(dictionary, nameof(dictionary)));
         }
 
         [Fact]
@@ -226,7 +226,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.CollectionContains(element, nameof(element), collection));
+            Assert.Throws<ValidationException>(() => Debug.Contains(element, nameof(element), collection));
         }
 
         [Fact]
@@ -238,7 +238,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.CollectionContains(element, nameof(element), collection);
+            Debug.Contains(element, nameof(element), collection);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.CollectionDoesNotContain(element, nameof(element), collection);
+            Debug.DoesNotContain(element, nameof(element), collection);
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.CollectionDoesNotContain(element, nameof(element), collection));
+            Assert.Throws<ValidationException>(() => Debug.DoesNotContain(element, nameof(element), collection));
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.DictionaryContainsKey(key, nameof(key), collection);
+            Debug.ContainsKey(key, nameof(key), collection);
         }
 
         [Fact]
@@ -286,7 +286,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.DictionaryContainsKey(key, nameof(key), collection);
+            Debug.ContainsKey(key, nameof(key), collection);
         }
 
         [Fact]
@@ -298,7 +298,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DictionaryContainsKey(key, nameof(key), collection));
+            Assert.Throws<ValidationException>(() => Debug.ContainsKey(key, nameof(key), collection));
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.DictionaryDoesNotContainKey(key, nameof(key), collection);
+            Debug.DoesNotContainKey(key, nameof(key), collection);
         }
 
         [Fact]
@@ -322,7 +322,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DictionaryDoesNotContainKey(key, nameof(key), collection));
+            Assert.Throws<ValidationException>(() => Debug.DoesNotContainKey(key, nameof(key), collection));
         }
 
         [Fact]
@@ -431,7 +431,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int32NotOutOfRange(value, nameof(value), 0, 3);
+            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3);
         }
 
         [Theory]
@@ -444,7 +444,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int32NotOutOfRange(value, nameof(value), 0, 1));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1));
         }
 
         [Theory]
@@ -456,7 +456,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int32NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -469,7 +469,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int32NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
@@ -481,7 +481,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int32NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
+            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
@@ -494,7 +494,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int32NotOutOfRange(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
         }
 
         [Theory]
@@ -505,7 +505,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int32NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
         }
 
         [Theory]
@@ -520,7 +520,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int32NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
         }
 
         [Theory]
@@ -533,7 +533,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Validate.LongNotOutOfRange(value, nameof(value), 0, 3);
+            Validate.NotOutOfRangeInt64(value, nameof(value), 0, 3);
         }
 
         [Theory]
@@ -546,7 +546,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt64(value, nameof(value), 0, 1));
         }
 
         [Theory]
@@ -558,7 +558,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeInt64(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -571,7 +571,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt64(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
@@ -583,7 +583,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
+            Debug.NotOutOfRangeInt64(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
@@ -596,7 +596,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt64(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
         }
 
         [Theory]
@@ -607,7 +607,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.Int64NotOutOfRange(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeInt64(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
         }
 
         [Theory]
@@ -622,7 +622,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.Int64NotOutOfRange(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt64(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
         }
 
         [Theory]
@@ -635,7 +635,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2);
+            Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2);
         }
 
         [Theory]
@@ -652,7 +652,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2));
         }
 
         [Theory]
@@ -664,7 +664,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -681,7 +681,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
@@ -692,7 +692,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive);
+            Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
@@ -709,7 +709,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive));
         }
 
         [Theory]
@@ -720,7 +720,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.Exclusive);
         }
 
         [Theory]
@@ -739,7 +739,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DoubleNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.Exclusive));
         }
 
         [Theory]
@@ -750,7 +750,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DoubleNotInvalidNumber(value, nameof(value));
+            Debug.NotInvalidNumber(value, nameof(value));
         }
 
         [Theory]
@@ -762,7 +762,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DoubleNotInvalidNumber(value, nameof(value)));
+            Assert.Throws<ValidationException>(() => Debug.NotInvalidNumber(value, nameof(value)));
         }
 
         [Theory]
@@ -775,7 +775,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2);
         }
 
         [Theory]
@@ -786,7 +786,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2));
         }
 
         [Theory]
@@ -798,7 +798,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -809,7 +809,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
@@ -820,7 +820,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
@@ -831,7 +831,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.UpperExclusive));
         }
 
         [Theory]
@@ -842,7 +842,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.Exclusive);
         }
 
         [Theory]
@@ -855,7 +855,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.DecimalNotOutOfRange(value, nameof(value), 1, 2, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 1, 2, RangeEndPoints.Exclusive));
         }
     }
 }

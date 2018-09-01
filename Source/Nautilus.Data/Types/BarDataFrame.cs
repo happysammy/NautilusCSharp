@@ -29,8 +29,8 @@ namespace Nautilus.Data.Types
         /// value, or if the bars collection is null or empty.</exception>
         public BarDataFrame(BarType barType, Bar[] bars)
         {
-            Validate.NotNull(barType, nameof(barType));
-            Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
+            Debug.NotNull(barType, nameof(barType));
+            Debug.NotNullOrEmpty(bars, nameof(bars));
 
             this.BarType = barType;
             this.Bars = bars;

@@ -146,7 +146,7 @@ namespace Nautilus.DomainModel.Aggregates
             Price averagePrice,
             ZonedDateTime eventTime)
         {
-            Debug.Int32NotOutOfRange(quantity, nameof(quantity), 0, int.MaxValue);
+            Debug.NotOutOfRangeInt32(quantity, nameof(quantity), 0, int.MaxValue);
             Debug.NotNull(averagePrice, nameof(averagePrice));
             Debug.NotDefault(eventTime, nameof(eventTime));
 

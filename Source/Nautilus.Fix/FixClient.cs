@@ -52,8 +52,8 @@ namespace Nautilus.Fix
             Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
             Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
             Validate.NotNull(credentials, nameof(credentials));
-            Validate.CollectionNotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
-            Validate.CollectionNotNullOrEmpty(symbols, nameof(symbols));
+            Validate.NotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
+            Validate.NotNullOrEmpty(symbols, nameof(symbols));
 
             this.Broker = broker;
             this.brokerSymbols = brokerSymbols;

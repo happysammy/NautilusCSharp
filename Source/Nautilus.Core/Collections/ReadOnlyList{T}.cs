@@ -147,7 +147,7 @@ namespace Nautilus.Core.Collections
         public void CopyTo(T[] array, int arrayIndex)
         {
             Debug.NotNull(array, nameof(array));
-            Debug.Int32NotOutOfRange(arrayIndex, nameof(arrayIndex), 0, int.MaxValue);
+            Debug.NotOutOfRangeInt32(arrayIndex, nameof(arrayIndex), 0, int.MaxValue);
 
             this.internalList.CopyTo(array, arrayIndex);
         }

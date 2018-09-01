@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Quantity(int amount)
             : base(amount)
         {
-            Debug.Int32NotOutOfRange(amount, nameof(amount), 0, int.MaxValue);
+            Debug.NotOutOfRangeInt32(amount, nameof(amount), 0, int.MaxValue);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity MultiplyBy(int multiplier)
         {
-            Debug.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
 
             return new Quantity(this.Value * multiplier);
         }

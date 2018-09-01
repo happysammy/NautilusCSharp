@@ -55,14 +55,14 @@ namespace Nautilus.DomainModel.Entities
             // Validate all trade profiles.
             Validate.NotNull(tradeType, nameof(tradeType));
             Validate.NotNull(barSpecification, nameof(barSpecification));
-            Validate.Int32NotOutOfRange(tradePeriod, nameof(tradePeriod), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
-            Validate.Int32NotOutOfRange(units, nameof(units), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
-            Validate.Int32NotOutOfRange(unitBatches, nameof(unitBatches), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
-            Validate.Int32NotOutOfRange(startOffsetMins, nameof(startOffsetMins), 0, int.MaxValue);
-            Validate.Int32NotOutOfRange(stopOffsetMins, nameof(stopOffsetMins), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(tradePeriod, nameof(tradePeriod), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Validate.NotOutOfRangeInt32(units, nameof(units), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Validate.NotOutOfRangeInt32(unitBatches, nameof(unitBatches), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Validate.NotOutOfRangeInt32(startOffsetMins, nameof(startOffsetMins), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(stopOffsetMins, nameof(stopOffsetMins), 0, int.MaxValue);
             Validate.DecimalNotOutOfRange(minStoplossDirectSpreadMultiple, nameof(minStoplossDirectSpreadMultiple), 0, int.MaxValue);
             Validate.DecimalNotOutOfRange(minVolatilitySpreadMultiple, nameof(minVolatilitySpreadMultiple), 0, int.MaxValue);
-            Validate.Int32NotOutOfRange(barsValid, nameof(barsValid), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(barsValid, nameof(barsValid), 0, int.MaxValue);
 
             this.TradeType = tradeType;
             this.BarSpecification = barSpecification;

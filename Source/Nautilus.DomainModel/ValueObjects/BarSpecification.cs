@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Resolution resolution,
             int period)
         {
-            Debug.Int32NotOutOfRange(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeInt32(period, nameof(period), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             this.QuoteType = quoteType;
             this.Resolution = resolution;
@@ -106,7 +106,7 @@ namespace Nautilus.DomainModel.ValueObjects
 
         private Period GetTimePeriod(int barPeriod)
         {
-            Debug.Int32NotOutOfRange(barPeriod, nameof(barPeriod), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeInt32(barPeriod, nameof(barPeriod), 0, int.MaxValue, RangeEndPoints.Exclusive);
 
             switch (this.Resolution)
             {

@@ -285,10 +285,10 @@ namespace Nautilus.Core.Extensions
             Debug.NotDefault(timeNowUtc, nameof(timeNowUtc));
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
-            Debug.Int32NotOutOfRange(start.Hour, nameof(start.Hour), 0, 23);
-            Debug.Int32NotOutOfRange(end.Hour, nameof(end.Hour), 0, 23);
-            Debug.Int32NotOutOfRange(start.Minute, nameof(start.Minute), 0, 59);
-            Debug.Int32NotOutOfRange(end.Minute, nameof(end.Minute), 0, 59);
+            Debug.NotOutOfRangeInt32(start.Hour, nameof(start.Hour), 0, 23);
+            Debug.NotOutOfRangeInt32(end.Hour, nameof(end.Hour), 0, 23);
+            Debug.NotOutOfRangeInt32(start.Minute, nameof(start.Minute), 0, 59);
+            Debug.NotOutOfRangeInt32(end.Minute, nameof(end.Minute), 0, 59);
             Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
 
             var localUtcNow = new LocalDateTime(

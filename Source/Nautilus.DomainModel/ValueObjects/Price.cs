@@ -31,8 +31,8 @@ namespace Nautilus.DomainModel.ValueObjects
         private Price(decimal value, decimal tickSize)
             : base(value)
         {
-            Debug.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
-            Debug.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue);
             Debug.True(value.GetDecimalPlaces() <= tickSize.GetDecimalPlaces(), nameof(tickSize));
 
             this.TickSize = tickSize;

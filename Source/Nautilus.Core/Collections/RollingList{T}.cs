@@ -34,7 +34,7 @@ namespace Nautilus.Core.Collections
         /// <exception cref="ValidationException">The capacity is less than or equal to zero.</exception>
         public RollingList(int capacity)
         {
-            Validate.Int32NotOutOfRange(capacity, nameof(capacity), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Validate.NotOutOfRangeInt32(capacity, nameof(capacity), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
             this.internalList = new List<T>(capacity);
             this.capacity = capacity;

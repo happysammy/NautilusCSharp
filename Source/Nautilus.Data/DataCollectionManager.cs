@@ -62,7 +62,7 @@ namespace Nautilus.Data
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(barPublisher, nameof(barPublisher));
-            Validate.Int32NotOutOfRange(barRollingWindow, nameof(barRollingWindow), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Validate.NotOutOfRangeInt32(barRollingWindow, nameof(barRollingWindow), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
             this.storedContainer = container;
             this.barPublisher = barPublisher;

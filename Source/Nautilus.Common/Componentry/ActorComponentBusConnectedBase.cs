@@ -72,7 +72,7 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(ReadOnlyList<NautilusService> receivers, T message)
             where T : Message
         {
-            Debug.CollectionNotNullOrEmpty(receivers, nameof(receivers));
+            Debug.NotNullOrEmpty(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
             receivers.ForEach(r => this.Send(r, message));

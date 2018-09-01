@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Percentage(decimal percent)
             : base(percent)
         {
-            Debug.DecimalNotOutOfRange(percent, nameof(percent), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(percent, nameof(percent), decimal.Zero, decimal.MaxValue);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Percentage"/>.</returns>
         public Percentage MultiplyBy(decimal multiplier)
         {
-            Debug.DecimalNotOutOfRange(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
 
             return new Percentage(this.Value * multiplier);
         }
@@ -97,7 +97,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="decimal"/>.</returns>
         public decimal PercentOf(decimal value)
         {
-            Debug.DecimalNotOutOfRange(value, nameof(value), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), decimal.Zero, decimal.MaxValue);
 
             return (value * this.Value) / 100;
         }
@@ -110,7 +110,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Percentage"/>.</returns>
         public Percentage DivideBy(decimal divisor)
         {
-            Debug.DecimalNotOutOfRange(divisor, nameof(divisor), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(divisor, nameof(divisor), decimal.Zero, decimal.MaxValue);
 
             return new Percentage(this.Value / divisor);
         }

@@ -95,7 +95,7 @@ namespace Nautilus.Execution
         public void RegisterTickReceiver(IEndpoint receiver)
         {
             Validate.NotNull(receiver, nameof(receiver));
-            Debug.CollectionDoesNotContain(receiver, nameof(receiver), this.tickReceivers);
+            Debug.DoesNotContain(receiver, nameof(receiver), this.tickReceivers);
 
             var receivers = this.tickReceivers.ToList();
             receivers.Add(receiver);
@@ -110,7 +110,7 @@ namespace Nautilus.Execution
         public void RegisterEventReceiver(IEndpoint receiver)
         {
             Validate.NotNull(receiver, nameof(receiver));
-            Debug.CollectionDoesNotContain(receiver, nameof(receiver), this.eventReceivers);
+            Debug.DoesNotContain(receiver, nameof(receiver), this.eventReceivers);
 
             var receivers = this.eventReceivers.ToList();
             receivers.Add(receiver);
@@ -236,7 +236,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.DecimalNotOutOfRange(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.DecimalNotOutOfRange(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-                Debug.Int32NotOutOfRange(decimals, nameof(decimals), 0, int.MaxValue);
+                Debug.NotOutOfRangeInt32(decimals, nameof(decimals), 0, int.MaxValue);
 
                 var tick = new Tick(
                     new Symbol(symbol, venue),
@@ -759,7 +759,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(executionId, nameof(executionId));
                 Validate.NotNull(executionTicket, nameof(executionTicket));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.Int32NotOutOfRange(filledQuantity, nameof(filledQuantity), 0, int.MaxValue);
+                Validate.NotOutOfRangeInt32(filledQuantity, nameof(filledQuantity), 0, int.MaxValue);
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
@@ -830,8 +830,8 @@ namespace Nautilus.Execution
                 Validate.NotNull(executionId, nameof(executionId));
                 Validate.NotNull(executionTicket, nameof(executionTicket));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.Int32NotOutOfRange(filledQuantity, nameof(filledQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
-                Validate.Int32NotOutOfRange(leavesQuantity, nameof(leavesQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
+                Validate.NotOutOfRangeInt32(filledQuantity, nameof(filledQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
+                Validate.NotOutOfRangeInt32(leavesQuantity, nameof(leavesQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
                 Validate.DecimalNotOutOfRange(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.NotDefault(timestamp, nameof(timestamp));
 

@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
             : base(amount)
         {
             Debug.NotDefault(currency, nameof(currency));
-            Debug.DecimalNotOutOfRange(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
             Debug.True(amount % 0.01m == 0, nameof(amount));
 
             this.Currency = currency;
@@ -94,7 +94,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money MultiplyBy(int multiplier)
         {
-            Debug.Int32NotOutOfRange(multiplier, nameof(multiplier), 0, int.MaxValue);
+            Debug.NotOutOfRangeInt32(multiplier, nameof(multiplier), 0, int.MaxValue);
 
             return new Money(this.Value * multiplier, this.Currency);
         }
@@ -106,7 +106,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money DivideBy(int divisor)
         {
-            Debug.Int32NotOutOfRange(divisor, nameof(divisor), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeInt32(divisor, nameof(divisor), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
 
             return new Money(this.Value / divisor, this.Currency);
         }

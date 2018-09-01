@@ -50,7 +50,7 @@ namespace Nautilus.Data.Wranglers
         [PerformanceOptimized]
         public static Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
         {
-            Validate.CollectionNotNullOrEmpty(bars, nameof(bars));
+            Validate.NotNullOrEmpty(bars, nameof(bars));
 
             var barsDictionary = new Dictionary<DateKey, List<Bar>>();
 

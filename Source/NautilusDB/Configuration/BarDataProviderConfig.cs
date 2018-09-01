@@ -37,10 +37,10 @@ namespace NautilusDB.Configuration
             bool isBarDataCheckOn)
         {
             Validate.NotNull(csvDataDirectory, nameof(csvDataDirectory));
-            Validate.CollectionNotNullOrEmpty(symbols, nameof(symbols));
-            Validate.CollectionNotNullOrEmpty(barResolutions, nameof(barResolutions));
+            Validate.NotNullOrEmpty(symbols, nameof(symbols));
+            Validate.NotNullOrEmpty(barResolutions, nameof(barResolutions));
             Validate.NotNull(timestampParsePattern, nameof(timestampParsePattern));
-            Validate.Int32NotOutOfRange(volumeMultiple, nameof(volumeMultiple), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(volumeMultiple, nameof(volumeMultiple), 0, int.MaxValue);
 
             this.Run = run;
             this.CsvDataDirectory = csvDataDirectory;

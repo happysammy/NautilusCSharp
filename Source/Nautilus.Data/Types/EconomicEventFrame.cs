@@ -30,7 +30,7 @@ namespace Nautilus.Data.Types
         /// <param name="events">The list of economic events.</param>
         public EconomicEventFrame(List<EconomicEvent> events)
         {
-            Debug.CollectionNotNullOrEmpty(events, nameof(events));
+            Debug.NotNullOrEmpty(events, nameof(events));
 
             this.Events = new ReadOnlyList<EconomicEvent>(events);
         }

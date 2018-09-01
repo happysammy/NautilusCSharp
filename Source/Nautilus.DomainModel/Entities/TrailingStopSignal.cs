@@ -55,7 +55,7 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotNull(tradeType, nameof(tradeType));
             Debug.NotDefault(forMarketPosition, nameof(forMarketPosition));
             Debug.NotEqualTo(forMarketPosition, nameof(forMarketPosition), MarketPosition.Flat);
-            Debug.CollectionNotNullOrEmpty(forUnitStopLossPrices, nameof(forUnitStopLossPrices));
+            Debug.NotNullOrEmpty(forUnitStopLossPrices, nameof(forUnitStopLossPrices));
             Debug.NotDefault(signalTimestamp, nameof(signalTimestamp));
 
             this.ForMarketPosition = forMarketPosition;

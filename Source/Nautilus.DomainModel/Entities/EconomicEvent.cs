@@ -46,9 +46,9 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotDefault(country, nameof(country));
             Debug.NotDefault(currency, nameof(currency));
             Debug.NotDefault(impact, nameof(impact));
-            Debug.DecimalNotOutOfRange(actual, nameof(impact), decimal.Zero, decimal.MaxValue);
-            Debug.DecimalNotOutOfRange(consensus, nameof(consensus), decimal.Zero, decimal.MaxValue);
-            Debug.DecimalNotOutOfRange(previous, nameof(previous), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(actual, nameof(impact), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(consensus, nameof(consensus), decimal.Zero, decimal.MaxValue);
+            Debug.NotOutOfRangeDecimal(previous, nameof(previous), decimal.Zero, decimal.MaxValue);
 
             this.Time = time;
             this.Title = title;

@@ -236,7 +236,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(barType, nameof(barType));
             Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
-            Debug.CollectionNotNullOrEmpty(bars, nameof(bars));
+            Debug.NotNullOrEmpty(bars, nameof(bars));
 
             var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
             var barsAddedCounter = 0;

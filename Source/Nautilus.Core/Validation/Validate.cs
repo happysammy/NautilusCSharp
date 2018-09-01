@@ -47,7 +47,7 @@ namespace Nautilus.Core.Validation
         /// <param name="condition">The condition.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ValidationException">Throws if the condition does not pass the predicate.</exception>
+        /// <exception cref="ValidationException">Throws if the condition is true and the predicate is false.</exception>
         public static void TrueIf(bool condition, bool predicate, string paramName)
         {
             if (condition && !predicate)
@@ -116,7 +116,7 @@ namespace Nautilus.Core.Validation
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
-        public static void CollectionNotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void NotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection == null)
             {
@@ -141,7 +141,7 @@ namespace Nautilus.Core.Validation
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection is not empty.</exception>
-        public static void CollectionEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection == null)
             {
@@ -166,7 +166,7 @@ namespace Nautilus.Core.Validation
         /// <param name="collection">The collection.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection does not contain the element.</exception>
-        public static void CollectionContains<T>(
+        public static void Contains<T>(
             T element,
             string paramName,
             IReadOnlyCollection<T> collection)
@@ -188,7 +188,7 @@ namespace Nautilus.Core.Validation
         /// <param name="collection">The collection.</param>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <exception cref="ValidationException">Throws if the collection contains the element.</exception>
-        public static void CollectionDoesNotContain<T>(
+        public static void DoesNotContain<T>(
             T element,
             string paramName,
             IReadOnlyCollection<T> collection)
@@ -211,7 +211,7 @@ namespace Nautilus.Core.Validation
         /// <typeparam name="T1">The type of the keys.</typeparam>
         /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ValidationException">Throws if the dictionary does not contain the key.</exception>
-        public static void DictionaryContainsKey<T1, T2>(
+        public static void ContainsKey<T1, T2>(
             T1 key,
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
@@ -234,7 +234,7 @@ namespace Nautilus.Core.Validation
         /// <typeparam name="T1">The type of the keys.</typeparam>
         /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ValidationException">Throws if the dictionary contains the key.</exception>
-        public static void DictionaryDoesNotContainKey<T1, T2>(
+        public static void DoesNotContainKey<T1, T2>(
             T1 key,
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
@@ -291,7 +291,7 @@ namespace Nautilus.Core.Validation
         /// <param name="endPoints">The range end points literal.</param>
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Throws if the range end points is not recognized.</exception>
-        public static void Int32NotOutOfRange(
+        public static void NotOutOfRangeInt32(
             int value,
             string paramName,
             int lowerBound,
@@ -359,7 +359,7 @@ namespace Nautilus.Core.Validation
         /// <param name="endPoints">The range end points literal.</param>
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Throws if the range end points is not recognized.</exception>
-        public static void LongNotOutOfRange(
+        public static void NotOutOfRangeInt64(
             long value,
             string paramName,
             long lowerBound,
@@ -427,7 +427,7 @@ namespace Nautilus.Core.Validation
         /// <param name="endPoints">The range end points literal.</param>
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Throws if the range end points is not recognized.</exception>
-        public static void DoubleNotOutOfRange(
+        public static void NotOutOfRangeDouble(
             double value,
             string paramName,
             double lowerBound,
@@ -567,7 +567,7 @@ namespace Nautilus.Core.Validation
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ValidationException">Throws if the value is not a valid number.</exception>
-        public static void DoubleNotInvalidNumber(double value, string paramName)
+        public static void NotInvalidNumber(double value, string paramName)
         {
             if (value.IsInvalidDouble())
             {

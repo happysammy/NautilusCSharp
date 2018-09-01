@@ -19,7 +19,7 @@ namespace Nautilus.Core.Validation
     /// <see cref="ValidationException"/> is throw which will contain the inner
     /// <see cref="ArgumentException"/> with details including a message and parameter name.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class Debug
     {
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nautilus.Core.Validation
         /// <param name="condition">The condition.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ValidationException">Throws if the condition does not pass the predicate.</exception>
+        /// <exception cref="ValidationException">Throws if the condition is true and the predicate is false.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
         public static void TrueIf(bool condition, bool predicate, string paramName)
@@ -101,9 +101,9 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the collection is null or empty.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void CollectionNotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void NotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Validate.CollectionNotNullOrEmpty(collection, paramName);
+            Validate.NotNullOrEmpty(collection, paramName);
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the collection is not empty.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void CollectionEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Validate.CollectionEmpty(collection, paramName);
+            Validate.Empty(collection, paramName);
         }
 
         /// <summary>
@@ -131,12 +131,12 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void CollectionContains<T>(
+        public static void Contains<T>(
             T element,
             string paramName,
             IReadOnlyCollection<T> collection)
         {
-            Validate.CollectionContains(element, paramName, collection);
+            Validate.Contains(element, paramName, collection);
         }
 
         /// <summary>
@@ -150,12 +150,12 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the collection contains the element.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void CollectionDoesNotContain<T>(
+        public static void DoesNotContain<T>(
             T element,
             string paramName,
             IReadOnlyCollection<T> collection)
         {
-            Validate.CollectionDoesNotContain(element, paramName, collection);
+            Validate.DoesNotContain(element, paramName, collection);
         }
 
         /// <summary>
@@ -170,12 +170,12 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void DictionaryContainsKey<T1, T2>(
+        public static void ContainsKey<T1, T2>(
             T1 key,
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
         {
-            Validate.DictionaryContainsKey(key, paramName, dictionary);
+            Validate.ContainsKey(key, paramName, dictionary);
         }
 
         /// <summary>
@@ -190,12 +190,12 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the dictionary contains the key.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void DictionaryDoesNotContainKey<T1, T2>(
+        public static void DoesNotContainKey<T1, T2>(
             T1 key,
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
         {
-            Validate.DictionaryDoesNotContainKey(key, paramName, dictionary);
+            Validate.DoesNotContainKey(key, paramName, dictionary);
         }
 
         /// <summary>
@@ -237,14 +237,14 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void Int32NotOutOfRange(
+        public static void NotOutOfRangeInt32(
             int value,
             string paramName,
             int lowerBound,
             int upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Validate.Int32NotOutOfRange(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeInt32(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -258,14 +258,14 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void Int64NotOutOfRange(
+        public static void NotOutOfRangeInt64(
             long value,
             string paramName,
             long lowerBound,
             long upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Validate.LongNotOutOfRange(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeInt64(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -279,14 +279,14 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void DoubleNotOutOfRange(
+        public static void NotOutOfRangeDouble(
             double value,
             string paramName,
             double lowerBound,
             double upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Validate.DoubleNotOutOfRange(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeDouble(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void DecimalNotOutOfRange(
+        public static void NotOutOfRangeDecimal(
             decimal value,
             string paramName,
             decimal lowerBound,
@@ -318,9 +318,9 @@ namespace Nautilus.Core.Validation
         /// <exception cref="ValidationException">Throws if the value is not a valid number.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void DoubleNotInvalidNumber(double value, string paramName)
+        public static void NotInvalidNumber(double value, string paramName)
         {
-            Validate.DoubleNotInvalidNumber(value, paramName);
+            Validate.NotInvalidNumber(value, paramName);
         }
     }
 }

@@ -125,7 +125,7 @@ namespace Nautilus.Data.Aggregators
         private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
         {
             Debug.NotNull(barSpec, nameof(barSpec));
-            Debug.DictionaryDoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
+            Debug.DoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
 
             var duration = barSpec.Duration;
 

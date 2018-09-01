@@ -120,7 +120,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Tick"/>.</returns>
         public static Tick GetFromBytes(byte[] tickBytes)
         {
-            Debug.CollectionNotNullOrEmpty(tickBytes, nameof(tickBytes));
+            Debug.NotNullOrEmpty(tickBytes, nameof(tickBytes));
 
             return GetFromString(Encoding.UTF8.GetString(tickBytes));
         }

@@ -76,11 +76,11 @@ namespace Nautilus.DomainModel.Entities
             Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
             Validate.DecimalNotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
-            Validate.Int32NotOutOfRange(contractSize, nameof(contractSize), 0, int.MaxValue, RangeEndPoints.Exclusive);
-            Validate.Int32NotOutOfRange(minStopDistanceEntry, nameof(minStopDistanceEntry), 0, int.MaxValue);
-            Validate.Int32NotOutOfRange(minLimitDistanceEntry, nameof(minLimitDistanceEntry), 0, int.MaxValue);
-            Validate.Int32NotOutOfRange(minStopDistance, nameof(minStopDistance), 0, int.MaxValue);
-            Validate.Int32NotOutOfRange(minLimitDistance, nameof(minLimitDistance), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(contractSize, nameof(contractSize), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Validate.NotOutOfRangeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(minStopDistance, nameof(minStopDistance), 0, int.MaxValue);
+            Validate.NotOutOfRangeInt32(minLimitDistance, nameof(minLimitDistance), 0, int.MaxValue);
             Validate.DecimalNotOutOfRange(minStopDistanceEntry, nameof(this.MinStopDistanceEntry), decimal.Zero, decimal.MaxValue);
             Validate.NotDefault(timestamp, nameof(timestamp));
 

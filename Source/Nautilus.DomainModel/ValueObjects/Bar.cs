@@ -146,7 +146,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Bar GetFromBytes(byte[] barBytes)
         {
-            Debug.CollectionNotNullOrEmpty(barBytes, nameof(barBytes));
+            Debug.NotNullOrEmpty(barBytes, nameof(barBytes));
 
             return GetFromString(Encoding.UTF8.GetString(barBytes));
         }

@@ -73,7 +73,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult FirstFailureOrSuccess(params CommandResult[] results)
         {
-            Debug.CollectionNotNullOrEmpty(results, nameof(results));
+            Debug.NotNullOrEmpty(results, nameof(results));
 
             return results.FirstOrDefault(c => c.IsFailure) ?? Ok();
         }
@@ -86,7 +86,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Combine(params CommandResult[] results)
         {
-            Debug.CollectionNotNullOrEmpty(results, nameof(results));
+            Debug.NotNullOrEmpty(results, nameof(results));
 
             var failedResults = results
                 .Where(x => x.IsFailure)
@@ -108,7 +108,7 @@ namespace Nautilus.Core.CQS
 
         private static string CombineErrorMessages(CommandResult[] failedResults)
         {
-            Debug.CollectionNotNullOrEmpty(failedResults, nameof(failedResults));
+            Debug.NotNullOrEmpty(failedResults, nameof(failedResults));
 
             return string.Join("; ", failedResults.Select(x => x.Message));
         }
