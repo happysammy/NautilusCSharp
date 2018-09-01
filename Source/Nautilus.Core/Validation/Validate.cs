@@ -282,6 +282,25 @@ namespace Nautilus.Core.Validation
         }
 
         /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        public static void PositiveInt32(
+            int value,
+            string paramName)
+        {
+            if (value <= 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is not a positive int32. Value = {value})."));
+            }
+        }
+
+        /// <summary>
         /// The validation passes if the value is not out of the specified range.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
@@ -503,7 +522,7 @@ namespace Nautilus.Core.Validation
         /// <param name="endPoints">The range end points literal.</param>
         /// <exception cref="ValidationException">Throws if the value is out of the specified range.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Throws if the range end points is not recognized.</exception>
-        public static void DecimalNotOutOfRange(
+        public static void NotOutOfRangeDecimal(
             decimal value,
             string paramName,
             decimal lowerBound,

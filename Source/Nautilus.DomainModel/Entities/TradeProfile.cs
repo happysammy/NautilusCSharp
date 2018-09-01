@@ -60,8 +60,8 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotOutOfRangeInt32(unitBatches, nameof(unitBatches), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
             Validate.NotOutOfRangeInt32(startOffsetMins, nameof(startOffsetMins), 0, int.MaxValue);
             Validate.NotOutOfRangeInt32(stopOffsetMins, nameof(stopOffsetMins), 0, int.MaxValue);
-            Validate.DecimalNotOutOfRange(minStoplossDirectSpreadMultiple, nameof(minStoplossDirectSpreadMultiple), 0, int.MaxValue);
-            Validate.DecimalNotOutOfRange(minVolatilitySpreadMultiple, nameof(minVolatilitySpreadMultiple), 0, int.MaxValue);
+            Validate.NotOutOfRangeDecimal(minStoplossDirectSpreadMultiple, nameof(minStoplossDirectSpreadMultiple), 0, int.MaxValue);
+            Validate.NotOutOfRangeDecimal(minVolatilitySpreadMultiple, nameof(minVolatilitySpreadMultiple), 0, int.MaxValue);
             Validate.NotOutOfRangeInt32(barsValid, nameof(barsValid), 0, int.MaxValue);
 
             this.TradeType = tradeType;

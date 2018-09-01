@@ -72,16 +72,16 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(instrumentId, nameof(instrumentId));
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Validate.DecimalNotOutOfRange(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue);
-            Validate.DecimalNotOutOfRange(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-            Validate.DecimalNotOutOfRange(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-            Validate.DecimalNotOutOfRange(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Validate.NotOutOfRangeDecimal(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue);
+            Validate.NotOutOfRangeDecimal(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Validate.NotOutOfRangeDecimal(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Validate.NotOutOfRangeDecimal(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
             Validate.NotOutOfRangeInt32(contractSize, nameof(contractSize), 0, int.MaxValue, RangeEndPoints.Exclusive);
             Validate.NotOutOfRangeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry), 0, int.MaxValue);
             Validate.NotOutOfRangeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry), 0, int.MaxValue);
             Validate.NotOutOfRangeInt32(minStopDistance, nameof(minStopDistance), 0, int.MaxValue);
             Validate.NotOutOfRangeInt32(minLimitDistance, nameof(minLimitDistance), 0, int.MaxValue);
-            Validate.DecimalNotOutOfRange(minStopDistanceEntry, nameof(this.MinStopDistanceEntry), decimal.Zero, decimal.MaxValue);
+            Validate.NotOutOfRangeDecimal(minStopDistanceEntry, nameof(this.MinStopDistanceEntry), decimal.Zero, decimal.MaxValue);
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;

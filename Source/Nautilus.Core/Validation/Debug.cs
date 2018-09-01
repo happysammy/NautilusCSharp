@@ -307,7 +307,7 @@ namespace Nautilus.Core.Validation
             decimal upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Validate.DecimalNotOutOfRange(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeDecimal(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>

@@ -127,7 +127,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionEmpty_WhenCollectionEmpty_DoesNothing()
+        internal void Empty_WhenCollectionEmpty_DoesNothing()
         {
             // Arrange
             var collection = new List<string>();
@@ -138,7 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionEmpty_WhenCollectionNotEmpty_Throws()
+        internal void Empty_WhenCollectionNotEmpty_Throws()
         {
             // Arrange
             List<string> collection = new List<string> { "anElement" };
@@ -149,7 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionEmpty_WhenCollectionNull_Throws()
+        internal void Empty_WhenCollectionNull_Throws()
         {
             // Arrange
             List<string> collection = null;
@@ -161,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionNotNullOrEmpty_WhenCollectionNotEmpty_DoesNothing()
+        internal void NotNullOrEmpty_WhenCollectionNotEmpty_DoesNothing()
         {
             // Arrange
             var collection = new List<string> { "foo" };
@@ -172,7 +172,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionNotNullOrEmpty_WhenCollectionNull_Throws()
+        internal void NotNullOrEmpty_WhenCollectionNull_Throws()
         {
             // Arrange
             List<string> collection = null;
@@ -184,7 +184,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionNotNullOrEmpty_WhenCollectionEmpty_Throws()
+        internal void NotNullOrEmpty_WhenCollectionEmpty_Throws()
         {
             // Arrange
             var collection = new List<string>();
@@ -195,7 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionNotNullOrEmpty_WhenDictionaryNull_Throws()
+        internal void NotNullOrEmpty_WhenDictionaryNull_Throws()
         {
             // Arrange
             Dictionary<string, int> dictionary = null;
@@ -207,7 +207,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionNotNullOrEmpty_WhenDictionaryEmpty_Throws()
+        internal void NotNullOrEmpty_WhenDictionaryEmpty_Throws()
         {
             // Arrange
             var dictionary = new Dictionary<string, int>();
@@ -218,7 +218,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionContains_WhenCollectionDoesNotContainElement_Throws()
+        internal void Contains_WhenCollectionDoesNotContainElement_Throws()
         {
             // Arrange
             var element = "the_fifth_element";
@@ -230,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionContains_WhenCollectionContainsElement_DoesNothing()
+        internal void Contains_WhenCollectionContainsElement_DoesNothing()
         {
             // Arrange
             var element = "the_fifth_element";
@@ -242,7 +242,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionDoesNotContain_WhenCollectionDoesNotContainElement_DoesNothing()
+        internal void DoesNotContain_WhenCollectionDoesNotContainElement_DoesNothing()
         {
             // Arrange
             var element = "the_fifth_element";
@@ -254,7 +254,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void CollectionDoesNotContain_WhenCollectionContainsElement_Throws()
+        internal void DoesNotContain_WhenCollectionContainsElement_Throws()
         {
             // Arrange
             var element = "the_fifth_element";
@@ -266,7 +266,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void DictionaryContainsKey_WhenDictionaryDoesContainKey_DoesNothing()
+        internal void ContainsKey_WhenDictionaryDoesContainKey_DoesNothing()
         {
             // Arrange
             var key = "the_key";
@@ -278,7 +278,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void DictionaryContainsKey_WhenDictionaryContainsKey_DoesNothing()
+        internal void ContainsKey_WhenDictionaryContainsKey_DoesNothing()
         {
             // Arrange
             var key = "the_key";
@@ -290,7 +290,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void DictionaryContainsKey_WhenDictionaryDoesNotContainKey_Throws()
+        internal void ContainsKey_WhenDictionaryDoesNotContainKey_Throws()
         {
             // Arrange
             var key = "the_key";
@@ -302,7 +302,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void DictionaryDoesNotContainKey_WhenDictionaryDoesNotContainsKey_DoesNothing()
+        internal void DoesNotContainKey_WhenDictionaryDoesNotContainsKey_DoesNothing()
         {
             // Arrange
             var key = "the_key";
@@ -314,7 +314,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void DictionaryDoesNotContainKey_WhenDictionaryContainsKey_Throws()
+        internal void DoesNotContainKey_WhenDictionaryContainsKey_Throws()
         {
             // Arrange
             var key = "the_key";
@@ -426,12 +426,12 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        internal void Int32NotOutOfRange_VariousInInclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt32_VariousInInclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
             // Assert
-            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 3);
         }
 
         [Theory]
@@ -439,24 +439,24 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(int.MaxValue)]
         [InlineData(-1)]
         [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousOutOfInclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt32_VariousOutOfInclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 1));
         }
 
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        internal void Int32NotOutOfRange_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt32_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
             // Assert
-            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 3, RangeEndPoints.LowerExclusive);
         }
 
         [Theory]
@@ -464,63 +464,63 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(int.MaxValue)]
         [InlineData(0)]
         [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt32_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 1, RangeEndPoints.LowerExclusive));
         }
 
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt32_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
             // Assert
-            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(-1)]
-        [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousInExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Debug.NotOutOfRangeInt32(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 3, RangeEndPoints.UpperExclusive);
         }
 
         [Theory]
         [InlineData(int.MinValue)]
         [InlineData(int.MaxValue)]
         [InlineData(-1)]
-        [InlineData(0)]
-        [InlineData(1)]
         [InlineData(2)]
-        internal void Int32NotOutOfRange_VariousOutOfExclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt32_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeInt32(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 2, RangeEndPoints.UpperExclusive));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        internal void NotOutOfRangeInt32_VariousInExclusiveRangeValues_DoesNothing(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 3, RangeEndPoints.Exclusive);
+        }
+
+        [Theory]
+        [InlineData(int.MinValue)]
+        [InlineData(int.MaxValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        internal void NotOutOfRangeInt32_VariousOutOfExclusiveRangeValues_Throws(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDecimal(value, nameof(value), 0, 1, RangeEndPoints.Exclusive));
         }
 
         [Theory]
@@ -528,7 +528,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        internal void LongNotOutOfRange_VariousInInclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt64_VariousInInclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
@@ -541,7 +541,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(int.MaxValue)]
         [InlineData(-1)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousOutOfInclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt64_VariousOutOfInclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
@@ -553,7 +553,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        internal void LongNotOutOfRange_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt64_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
@@ -566,7 +566,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(int.MaxValue)]
         [InlineData(0)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt64_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
@@ -578,7 +578,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt64_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
@@ -591,7 +591,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(int.MaxValue)]
         [InlineData(-1)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt64_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
@@ -602,7 +602,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousInExclusiveRangeValues_DoesNothing(int value)
+        internal void NotOutOfRangeInt64_VariousInExclusiveRangeValues_DoesNothing(int value)
         {
             // Arrange
             // Act
@@ -617,7 +617,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
-        internal void LongNotOutOfRange_VariousOutOfExclusiveRangeValues_Throws(int value)
+        internal void NotOutOfRangeInt64_VariousOutOfExclusiveRangeValues_Throws(int value)
         {
             // Arrange
             // Act
@@ -630,7 +630,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1.1)]
         [InlineData(1.9)]
         [InlineData(2)]
-        internal void DoubleNotOutOfRange_VariousInInclusiveRangeValues_DoesNothing(double value)
+        internal void NotOutOfRangeDouble_VariousInInclusiveRangeValues_DoesNothing(double value)
         {
             // Arrange
             // Act
@@ -647,7 +647,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(double.MaxValue)]
         [InlineData(0.99999999999)]
         [InlineData(2.00000000001)]
-        internal void DoubleNotOutOfRange_VariousOutOfInclusiveRangeValues_Throws(double value)
+        internal void NotOutOfRangeDouble_VariousOutOfInclusiveRangeValues_Throws(double value)
         {
             // Arrange
             // Act
@@ -659,7 +659,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1.1)]
         [InlineData(1.9)]
         [InlineData(2)]
-        internal void DoubleNotOutOfRange_VariousInLowerExclusiveRangeValues_DoesNothing(double value)
+        internal void NotOutOfRangeDouble_VariousInLowerExclusiveRangeValues_DoesNothing(double value)
         {
             // Arrange
             // Act
@@ -676,7 +676,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(double.MaxValue)]
         [InlineData(1)]
         [InlineData(2.00000000001)]
-        internal void DoubleNotOutOfRange_VariousOutOfLowerExclusiveRangeValues_Throws(double value)
+        internal void NotOutOfRangeDouble_VariousOutOfLowerExclusiveRangeValues_Throws(double value)
         {
             // Arrange
             // Act
@@ -687,7 +687,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1)]
         [InlineData(1.9)]
-        internal void DoubleNotOutOfRange_VariousInUpperExclusiveRangeValues_DoesNothing(double value)
+        internal void NotOutOfRangeDouble_VariousInUpperExclusiveRangeValues_DoesNothing(double value)
         {
             // Arrange
             // Act
@@ -704,7 +704,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(double.MaxValue)]
         [InlineData(0)]
         [InlineData(2)]
-        internal void DoubleNotOutOfRange_VariousOutOfUpperExclusiveRangeValues_Throws(double value)
+        internal void NotOutOfRangeDouble_VariousOutOfUpperExclusiveRangeValues_Throws(double value)
         {
             // Arrange
             // Act
@@ -715,7 +715,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1.0000000001)]
         [InlineData(1.9999999999)]
-        internal void DoubleNotOutOfRange_VariousInExclusiveRangeValues_DoesNothing(double value)
+        internal void NotOutOfRangeDouble_VariousInExclusiveRangeValues_DoesNothing(double value)
         {
             // Arrange
             // Act
@@ -734,7 +734,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(2.1)]
-        internal void DoubleNotOutOfRange_VariousOutOfExclusiveRangeValues_Throws(double value)
+        internal void NotOutOfRangeDouble_VariousOutOfExclusiveRangeValues_Throws(double value)
         {
             // Arrange
             // Act
@@ -745,7 +745,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
-        internal void DoubleNotOutOfBounds_ValueInBounds_DoesNothing(double value)
+        internal void NotInvalidNumber_ValueInBounds_DoesNothing(double value)
         {
             // Arrange
             // Act
@@ -757,7 +757,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(double.NaN)]
         [InlineData(double.PositiveInfinity)]
         [InlineData(double.NegativeInfinity)]
-        internal void DoubleNotInvalidNumber_VariousOutOfBoundsValuesAndValueAtBounds_Throws(double value)
+        internal void NotInvalidNumber_VariousOutOfBoundsValuesAndValueAtBounds_Throws(double value)
         {
             // Arrange
             // Act
@@ -770,7 +770,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1.000000000000000000000000000000000001)]
         [InlineData(1.999999999999999999999999999999999999)]
         [InlineData(2)]
-        internal void DecimalNotOutOfRange_VariousInInclusiveRangeValues_DoesNothing(decimal value)
+        internal void NotOutOfRangeDecimal_VariousInInclusiveRangeValues_DoesNothing(decimal value)
         {
             // Arrange
             // Act
@@ -781,7 +781,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(0)]
         [InlineData(2.1)]
-        internal void DecimalNotOutOfRange_VariousOutOfInclusiveRangeValues_Throws(decimal value)
+        internal void NotOutOfRangeDecimal_VariousOutOfInclusiveRangeValues_Throws(decimal value)
         {
             // Arrange
             // Act
@@ -793,7 +793,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(1.1)]
         [InlineData(1.999999999999999999999999999999999999)]
         [InlineData(2)]
-        internal void DecimalNotOutOfRange_VariousInLowerExclusiveRangeValues_DoesNothing(decimal value)
+        internal void NotOutOfRangeDecimal_VariousInLowerExclusiveRangeValues_DoesNothing(decimal value)
         {
             // Arrange
             // Act
@@ -804,7 +804,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1)]
         [InlineData(2.1)]
-        internal void DecimalNotOutOfRange_VariousOutOfLowerExclusiveRangeValues_Throws(decimal value)
+        internal void NotOutOfRangeDecimal_VariousOutOfLowerExclusiveRangeValues_Throws(decimal value)
         {
             // Arrange
             // Act
@@ -815,7 +815,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1)]
         [InlineData(1.9)]
-        internal void DecimalNotOutOfRange_VariousInUpperExclusiveRangeValues_DoesNothing(decimal value)
+        internal void NotOutOfRangeDecimal_VariousInUpperExclusiveRangeValues_DoesNothing(decimal value)
         {
             // Arrange
             // Act
@@ -826,7 +826,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(0.9)]
         [InlineData(2)]
-        internal void DecimalNotOutOfRange_VariousOutOfUpperExclusiveRangeValues_Throws(decimal value)
+        internal void NotOutOfRangeDecimal_VariousOutOfUpperExclusiveRangeValues_Throws(decimal value)
         {
             // Arrange
             // Act
@@ -837,7 +837,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [Theory]
         [InlineData(1.000000001)]
         [InlineData(1.999999999)]
-        internal void DecimalNotOutOfRange_VariousInExclusiveRangeValues_DoesNothing(decimal value)
+        internal void NotOutOfRangeDecimal_VariousInExclusiveRangeValues_DoesNothing(decimal value)
         {
             // Arrange
             // Act
@@ -850,7 +850,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         [InlineData(0.9)]
         [InlineData(2)]
         [InlineData(2.1)]
-        internal void DecimalNotOutOfRange_VariousOutOfExclusiveRangeValues_Throws(decimal value)
+        internal void NotOutOfRangeDecimal_VariousOutOfExclusiveRangeValues_Throws(decimal value)
         {
             // Arrange
             // Act
