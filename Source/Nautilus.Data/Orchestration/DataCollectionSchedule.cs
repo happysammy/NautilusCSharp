@@ -45,7 +45,7 @@ namespace Nautilus.Data.Orchestration
             Validate.NotDefault(collectionDay, nameof(collectionDay));
             Validate.NotOutOfRangeInt32(collectionHour, nameof(collectionHour), 0, 23);
             Validate.NotOutOfRangeInt32(collectionMinute, nameof(collectionMinute), 0, 59);
-            Validate.NotOutOfRangeInt32(intervalMinutes, nameof(intervalMinutes), 0, int.MaxValue);
+            Validate.NotNegativeInt32(intervalMinutes, nameof(intervalMinutes));
 
             this.collectionDay = collectionDay;
             this.collectionHour = collectionHour;

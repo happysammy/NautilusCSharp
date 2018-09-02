@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.ValueObjects
             : base(amount)
         {
             Debug.NotDefault(currency, nameof(currency));
-            Debug.NotOutOfRangeDecimal(amount, nameof(amount), decimal.Zero, decimal.MaxValue);
+            Debug.NotNegativeDecimal(amount, nameof(amount));
             Debug.True(amount % 0.01m == 0, nameof(amount));
 
             this.Currency = currency;

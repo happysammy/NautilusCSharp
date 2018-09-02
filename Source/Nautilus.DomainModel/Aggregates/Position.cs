@@ -56,7 +56,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Symbol = symbol;
             this.FromEntryOrderId = fromEntryOrderId;
             this.EntryTime = Option<ZonedDateTime?>.None();
-            this.AverageEntryPrice = Price.Zero();
+            this.AverageEntryPrice = Option<Price>.None();
         }
 
         /// <summary>

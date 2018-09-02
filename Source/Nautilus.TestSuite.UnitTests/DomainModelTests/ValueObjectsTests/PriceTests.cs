@@ -17,19 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PriceTests
     {
-        [Fact]
-        internal void Zero_ReturnsPriceWithAValueOfZero()
-        {
-            // Arrange
-            // Act
-            var result = Price.Zero();
-
-            // Assert
-            Assert.Equal(decimal.Zero, result.Value);
-            Assert.Equal(decimal.Zero, result.TickSize);
-            Assert.Equal(0, result.Decimals);
-        }
-
         [Theory]
         [InlineData(0.1, 0.1, 0.1)]
         [InlineData(0.001, 0.001, 0.001)]
@@ -126,7 +113,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Theory]
-        [InlineData(1, 1, 0)]
         [InlineData(2.2, 2, 0.2)]
         [InlineData(100.50, 0.50, 100)]
         [InlineData(25, 15, 10)]
@@ -150,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [InlineData(1, 1, 0)]
         [InlineData(2, 1, 1)]
         [InlineData(1, 2, -1)]
-        internal void ComapreTo_VariousPrices_ReturnsExpectedResult(int value1, int value2, int expected)
+        internal void CompareTo_VariousPrices_ReturnsExpectedResult(int value1, int value2, int expected)
         {
             // Arrange
             var price1 = Price.Create(value1, 0.00001m);
@@ -181,22 +167,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Assert
             Assert.Equal(expected, price.ToString());
-        }
-
-        [Fact]
-        internal void Equals_PriceZeros_ReturnsTrue()
-        {
-            // Arrange
-            // Act
-            var price1 = Price.Zero();
-            var price2 = Price.Zero();
-
-            var result1 = price1.Equals(price2);
-            var result2 = price1 == price2;
-
-            // Assert
-            Assert.True(result1);
-            Assert.True(result2);
         }
 
         [Theory]

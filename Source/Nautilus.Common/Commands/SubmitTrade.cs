@@ -41,7 +41,7 @@ namespace Nautilus.Common.Commands
                 commandTimestamp)
         {
             Debug.NotNull(orderPacket, nameof(orderPacket));
-            Debug.NotOutOfRangeDecimal(minStopDistanceEntry, nameof(minStopDistanceEntry), decimal.Zero, decimal.MaxValue);
+            Debug.NotNegativeDecimal(minStopDistanceEntry, nameof(minStopDistanceEntry));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 

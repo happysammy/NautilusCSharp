@@ -86,7 +86,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity MultiplyBy(int multiplier)
         {
-            Debug.NotOutOfRangeDecimal(multiplier, nameof(multiplier), decimal.Zero, decimal.MaxValue);
+            Debug.PositiveInt32(multiplier, nameof(multiplier));
 
             return new Quantity(this.Value * multiplier);
         }

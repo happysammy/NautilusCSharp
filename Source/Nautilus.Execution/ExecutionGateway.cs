@@ -234,8 +234,8 @@ namespace Nautilus.Execution
             this.Execute(() =>
             {
                 Validate.NotNull(symbol, nameof(symbol));
-                Validate.NotOutOfRangeDecimal(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-                Validate.NotOutOfRangeDecimal(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+                Validate.PositiveDecimal(bid, nameof(bid));
+                Validate.PositiveDecimal(ask, nameof(ask));
                 Debug.PositiveInt32(decimals, nameof(decimals));
 
                 var tick = new Tick(
@@ -371,12 +371,12 @@ namespace Nautilus.Execution
             {
                 Validate.NotNull(inquiryId, nameof(inquiryId));
                 Validate.NotNull(accountNumber, nameof(accountNumber));
-                Validate.NotOutOfRangeDecimal(cashBalance, nameof(cashBalance), decimal.Zero, decimal.MaxValue);
-                Validate.NotOutOfRangeDecimal(cashStartDay, nameof(cashStartDay), decimal.Zero, decimal.MaxValue);
-                Validate.NotOutOfRangeDecimal(cashDaily, nameof(cashDaily), decimal.Zero, decimal.MaxValue);
-                Validate.NotOutOfRangeDecimal(marginUsedMaintenance, nameof(marginUsedMaintenance), decimal.Zero, decimal.MaxValue);
-                Validate.NotOutOfRangeDecimal(marginUsedLiq, nameof(marginUsedLiq), decimal.Zero, decimal.MaxValue);
-                Validate.NotOutOfRangeDecimal(marginRatio, nameof(marginRatio), decimal.Zero, decimal.MaxValue);
+                Validate.NotNegativeDecimal(cashBalance, nameof(cashBalance));
+                Validate.NotNegativeDecimal(cashStartDay, nameof(cashStartDay));
+                Validate.NotNegativeDecimal(cashDaily, nameof(cashDaily));
+                Validate.NotNegativeDecimal(marginUsedMaintenance, nameof(marginUsedMaintenance));
+                Validate.NotNegativeDecimal(marginUsedLiq, nameof(marginUsedLiq));
+                Validate.NotNegativeDecimal(marginRatio, nameof(marginRatio));
                 Validate.NotNull(marginCallStatus, nameof(marginCallStatus));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
@@ -573,7 +573,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.NotOutOfRangeDecimal(price, nameof(price), decimal.Zero, decimal.MaxValue);
+                Validate.PositiveDecimal(price, nameof(price));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderModified = new OrderModified(
@@ -636,7 +636,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.NotOutOfRangeDecimal(price, nameof(price), decimal.Zero, decimal.MaxValue);
+                Validate.PositiveDecimal(price, nameof(price));
                 Validate.NotNull(expireTime, nameof(expireTime));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
@@ -759,8 +759,8 @@ namespace Nautilus.Execution
                 Validate.NotNull(executionId, nameof(executionId));
                 Validate.NotNull(executionTicket, nameof(executionTicket));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.NotOutOfRangeInt32(filledQuantity, nameof(filledQuantity), 0, int.MaxValue);
-                Validate.NotOutOfRangeDecimal(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue);
+                Validate.PositiveInt32(filledQuantity, nameof(filledQuantity));
+                Validate.PositiveDecimal(averagePrice, nameof(averagePrice));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderFilled = new OrderFilled(
@@ -830,9 +830,9 @@ namespace Nautilus.Execution
                 Validate.NotNull(executionId, nameof(executionId));
                 Validate.NotNull(executionTicket, nameof(executionTicket));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
-                Validate.NotOutOfRangeInt32(filledQuantity, nameof(filledQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
-                Validate.NotOutOfRangeInt32(leavesQuantity, nameof(leavesQuantity), 0, int.MaxValue, RangeEndPoints.Exclusive);
-                Validate.NotOutOfRangeDecimal(averagePrice, nameof(averagePrice), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
+                Validate.PositiveInt32(filledQuantity, nameof(filledQuantity));
+                Validate.PositiveInt32(leavesQuantity, nameof(leavesQuantity));
+                Validate.PositiveDecimal(averagePrice, nameof(averagePrice));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(

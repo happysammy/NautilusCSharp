@@ -175,7 +175,7 @@ namespace Nautilus.Core.Model
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
-            Debug.NotOutOfRangeDecimal(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveDecimal(right.Value, nameof(right));
 
             return left.Value / right.Value;
         }
@@ -191,7 +191,7 @@ namespace Nautilus.Core.Model
         public static decimal operator /(decimal left, DecimalNumber<T> right)
         {
             Debug.NotNull(right, nameof(right));
-            Debug.NotOutOfRangeDecimal(right.Value, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveDecimal(right.Value, nameof(right));
 
             return left / right.Value;
         }
@@ -207,7 +207,7 @@ namespace Nautilus.Core.Model
         public static decimal operator /(DecimalNumber<T> left, decimal right)
         {
             Debug.NotNull(left, nameof(left));
-            Debug.NotOutOfRangeDecimal(right, nameof(right), 0, decimal.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveDecimal(right, nameof(right));
 
             return left.Value / right;
         }

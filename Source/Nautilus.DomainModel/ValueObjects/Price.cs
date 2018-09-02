@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents a none-negative financial market price.
+    /// Represents a positive financial market price.
     /// </summary>
     [Immutable]
     public sealed class Price
@@ -31,8 +31,8 @@ namespace Nautilus.DomainModel.ValueObjects
         private Price(decimal value, decimal tickSize)
             : base(value)
         {
-            Debug.NotOutOfRangeDecimal(value, nameof(value), decimal.Zero, decimal.MaxValue);
-            Debug.NotOutOfRangeDecimal(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue);
+            Debug.PositiveDecimal(value, nameof(value));
+            Debug.PositiveDecimal(tickSize, nameof(tickSize));
             Debug.True(value.GetDecimalPlaces() <= tickSize.GetDecimalPlaces(), nameof(tickSize));
 
             this.TickSize = tickSize;
@@ -50,15 +50,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public int Decimals { get; }
 
         /// <summary>
-        /// Creates a new <see cref="Price"/> with a value of zero.
-        /// </summary>
-        /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Zero()
-        {
-            return new Price(decimal.Zero, decimal.Zero);
-        }
-
-        /// <summary>
         /// Returns a new <see cref="Price"/> with the given value and tick size.
         /// </summary>
         /// <param name="value">The price value.</param>
@@ -66,6 +57,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public static Price Create(decimal value, decimal tickSize)
         {
+            // Validated in private constructor.
             return new Price(value, tickSize);
         }
 
