@@ -13,8 +13,8 @@ namespace Nautilus.DomainModel.ValueObjects
     using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// Represents a positive financial market price.

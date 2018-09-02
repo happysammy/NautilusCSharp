@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Core.Model;
+    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// Represents the concept of a bar type representing a <see cref="Symbol"/> and

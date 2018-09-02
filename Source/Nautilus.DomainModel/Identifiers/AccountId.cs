@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Identifiers.Base;
 
     /// <summary>
     /// Represents a valid and unique identifier for accounts.

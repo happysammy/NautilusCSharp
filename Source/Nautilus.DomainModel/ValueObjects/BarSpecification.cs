@@ -11,9 +11,9 @@ namespace Nautilus.DomainModel.ValueObjects
     using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
 
     /// <summary>

@@ -10,6 +10,7 @@ namespace Nautilus.Core.CQS
 {
     using System;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS.Base;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -17,7 +18,7 @@ namespace Nautilus.Core.CQS
     /// </summary>
     /// <typeparam name="T">The query type.</typeparam>
     [Immutable]
-    public sealed class QueryResult<T> : ResultBase
+    public sealed class QueryResult<T> : Result
     {
         private readonly T value;
 

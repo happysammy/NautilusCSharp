@@ -6,10 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core.Model
+namespace Nautilus.DomainModel.Entities.Base
 {
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
 
     /// <summary>

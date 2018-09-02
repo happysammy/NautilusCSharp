@@ -6,11 +6,13 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core.Model
+namespace Nautilus.DomainModel.Identifiers.Base
 {
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Entities.Base;
 
     /// <summary>
     /// Represents a validated and unique entity identifier.
@@ -74,8 +76,8 @@ namespace Nautilus.Core.Model
         public override bool Equals([CanBeNull] object other) => this.Equals(other as EntityId<T>);
 
         /// <summary>
-        /// Returns a value indicating whether this <see cref="ValueObject{T}"/> is equal
-        /// to the given <see cref="ValueObject{T}"/>.
+        /// Returns a value indicating whether this <see cref="EntityId{T}"/> is equal
+        /// to the given <see cref="EntityId{T}"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>

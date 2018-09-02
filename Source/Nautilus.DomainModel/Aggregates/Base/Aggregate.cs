@@ -6,13 +6,15 @@
 // </copyright>
 //---------------------------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core.Model
+namespace Nautilus.DomainModel.Aggregates.Base
 {
     using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Entities.Base;
+    using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
 
     /// <summary>

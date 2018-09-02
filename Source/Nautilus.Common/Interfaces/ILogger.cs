@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using Nautilus.Core.CQS;
+    using Nautilus.Core.CQS.Base;
 
     /// <summary>
     /// The adapter interface for logging with the <see cref="ILoggingAdapter"/>.
@@ -58,6 +58,6 @@ namespace Nautilus.Common.Interfaces
         /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="result">The result to handle.</param>
-        void Result(ResultBase result);
+        void Result(Result result);
     }
 }

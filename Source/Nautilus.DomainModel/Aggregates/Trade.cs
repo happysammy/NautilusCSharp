@@ -14,8 +14,8 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;

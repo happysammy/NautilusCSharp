@@ -12,7 +12,7 @@ namespace Nautilus.Common.Logging
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.CQS;
+    using Nautilus.Core.CQS.Base;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -120,7 +120,7 @@ namespace Nautilus.Common.Logging
         /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="result">The result to handle.</param>
-        public void Result(ResultBase result)
+        public void Result(Result result)
         {
             Validate.NotNull(result, nameof(result));
 

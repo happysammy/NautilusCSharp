@@ -1,12 +1,12 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ResultBase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Result.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core.CQS
+namespace Nautilus.Core.CQS.Base
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -15,14 +15,14 @@ namespace Nautilus.Core.CQS
     /// The base class for all result types.
     /// </summary>
     [Immutable]
-    public abstract class ResultBase
+    public abstract class Result
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResultBase"/> class.
+        /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
         /// <param name="isFailure">The is failure boolean flag.</param>
         /// <param name="message">The message string.</param>
-        protected ResultBase(bool isFailure, string message)
+        protected Result(bool isFailure, string message)
         {
             Debug.NotNull(message, nameof(message));
 

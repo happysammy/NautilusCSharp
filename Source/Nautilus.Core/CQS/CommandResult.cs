@@ -10,13 +10,14 @@ namespace Nautilus.Core.CQS
 {
     using System.Linq;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.CQS.Base;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents the result of a command operation. The type may contain a result message.
     /// </summary>
     [Immutable]
-    public sealed class CommandResult : ResultBase
+    public sealed class CommandResult : Result
     {
         private static readonly CommandResult OkResult = new CommandResult(false, "No result message");
 

@@ -8,10 +8,7 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
-    using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Model;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -19,7 +16,7 @@ namespace Nautilus.Data.Messages.Jobs
     /// Represents a bar job for the given symbol and bar specification (to close a bar).
     /// </summary>
     [Immutable]
-    public sealed class BarJob : ValueObject<BarJob>, IEquatable<BarJob>
+    public sealed class BarJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarJob"/> class.
@@ -44,18 +41,6 @@ namespace Nautilus.Data.Messages.Jobs
         public override string ToString()
         {
             return $"{nameof(BarJob)}-{this.BarSpec}";
-        }
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>A collection of objects.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[]
-            {
-                this.BarSpec,
-            };
         }
     }
 }
