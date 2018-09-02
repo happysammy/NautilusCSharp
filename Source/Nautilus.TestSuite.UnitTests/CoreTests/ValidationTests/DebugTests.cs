@@ -821,7 +821,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Theory]
-        [InlineData(double.NaN)]
         [InlineData(double.PositiveInfinity)]
         [InlineData(double.NegativeInfinity)]
         [InlineData(double.Epsilon)]
@@ -850,7 +849,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Theory]
-        [InlineData(double.NaN)]
         [InlineData(double.PositiveInfinity)]
         [InlineData(double.NegativeInfinity)]
         [InlineData(double.Epsilon)]
@@ -878,7 +876,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Theory]
-        [InlineData(double.NaN)]
         [InlineData(double.PositiveInfinity)]
         [InlineData(double.NegativeInfinity)]
         [InlineData(double.Epsilon)]
@@ -906,7 +903,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Theory]
-        [InlineData(double.NaN)]
         [InlineData(double.PositiveInfinity)]
         [InlineData(double.NegativeInfinity)]
         [InlineData(double.Epsilon)]
@@ -922,29 +918,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.NotOutOfRangeDouble(value, nameof(value), 1, 2, RangeEndPoints.Exclusive));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        internal void NotInvalidNumber_ValueInBounds_DoesNothing(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Debug.NotInvalidNumber(value, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(double.NaN)]
-        [InlineData(double.PositiveInfinity)]
-        [InlineData(double.NegativeInfinity)]
-        internal void NotInvalidNumber_VariousOutOfBoundsValuesAndValueAtBounds_Throws(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotInvalidNumber(value, nameof(value)));
         }
 
         [Theory]

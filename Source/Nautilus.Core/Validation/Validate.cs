@@ -586,14 +586,6 @@ namespace Nautilus.Core.Validation
             double upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            if (value.IsInvalidDouble())
-            {
-                throw new ValidationException(
-                    new ArgumentOutOfRangeException(
-                        paramName,
-                        $"{ExMessage} (The {paramName} value is an invalid number)."));
-            }
-
             switch (endPoints)
             {
                 case RangeEndPoints.Inclusive:
@@ -711,34 +703,6 @@ namespace Nautilus.Core.Validation
                 default:
                     throw new ArgumentOutOfRangeException(nameof(endPoints), endPoints, "The range end points is not recognized.");
             }
-        }
-
-        /// <summary>
-        /// The validation passes if the value is not an invalid number.
-        /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ValidationException">Throws if the value is not a valid number.</exception>
-        public static void NotInvalidNumber(double value, string paramName)
-        {
-            if (value.IsInvalidDouble())
-            {
-                throw new ValidationException(
-                    new ArgumentOutOfRangeException(
-                        paramName, $"{ExMessage} (The {paramName} is an invalid number)."));
-            }
-        }
-
-        /// <summary>
-        /// Returns a value indicating whether the given <see cref="double"/> is a valid number.
-        /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <returns>True if the value is in range; otherwise returns false.</returns>
-        private static bool IsInvalidDouble(this double value)
-        {
-            return double.IsNaN(value)
-                || double.IsNegativeInfinity(value)
-                || double.IsPositiveInfinity(value);
         }
     }
 }

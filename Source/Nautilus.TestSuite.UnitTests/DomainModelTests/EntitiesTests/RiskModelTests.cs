@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -272,27 +271,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 
             // Assert
             Assert.Equal(1, eventLog.Count);
-        }
-
-        [Fact]
-        internal void ToString_ReturnsExpectedString()
-        {
-            // Arrange
-            var riskModel = new RiskModel(
-                new RiskModelId("NONE"),
-                Percentage.Create(10),
-                Percentage.Create(1),
-                Quantity.Create(2),
-                true,
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result = LogFormatter.ToOutput(riskModel);
-            var expected =
-                $"RiskModel: GlobalMaxRiskExposure=10%, GlobalMaxRiskPerTrade=1%, PositionSizeHardLimits=True, EventCount=1, LastEventTime=1970-01-01T00:00:00.000Z";
-
-            // Assert
-            Assert.Equal(expected, result);
         }
     }
 }

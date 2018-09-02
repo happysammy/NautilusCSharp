@@ -53,34 +53,6 @@ namespace Nautilus.DomainModel.Factories
         }
 
         /// <summary>
-        /// Creates and returns a new and valid signal <see cref="SignalId"/> from the given inputs.
-        /// </summary>
-        /// <param name="time">The signal time.</param>
-        /// <param name="symbol">The signal symbol.</param>
-        /// <param name="orderSide">The signal order side.</param>
-        /// <param name="tradeType">The signal trade type.</param>
-        /// <param name="signalLabel">The signal label.</param>
-        /// <param name="signalCount">The signal count.</param>
-        /// <returns>A <see cref="SignalId"/>.</returns>
-        public static SignalId Signal(
-            ZonedDateTime time,
-            Symbol symbol,
-            OrderSide orderSide,
-            TradeType tradeType,
-            Label signalLabel,
-            int signalCount)
-        {
-            Debug.NotDefault(time, nameof(time));
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotDefault(orderSide, nameof(orderSide));
-            Debug.NotNull(tradeType, nameof(tradeType));
-            Debug.NotNull(signalLabel, nameof(signalLabel));
-            Debug.PositiveInt32(signalCount, nameof(signalCount));
-
-            return new SignalId($"{GetTimeString(time)}|{GetSignalIdString(symbol, tradeType, orderSide)}-{signalLabel}-{signalCount}");
-        }
-
-        /// <summary>
         /// Creates and returns a new and valid trade unit <see cref="TradeUnitId"/> from the given
         /// inputs.
         /// </summary>

@@ -429,18 +429,5 @@ namespace Nautilus.Core.Validation
         {
             Validate.NotOutOfRangeDecimal(value, paramName, lowerBound, upperBound, endPoints);
         }
-
-        /// <summary>
-        /// The validation passes if the value is not an invalid number [or throws].
-        /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ValidationException">Throws if the value is not a valid number.</exception>
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public static void NotInvalidNumber(double value, string paramName)
-        {
-            Validate.NotInvalidNumber(value, paramName);
-        }
     }
 }

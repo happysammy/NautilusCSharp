@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.BlackBox.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -131,7 +130,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Equal(instrument, result.Value);
-            this.output.WriteLine(LogFormatter.ToOutput(result.Value));
         }
 
         [Fact]

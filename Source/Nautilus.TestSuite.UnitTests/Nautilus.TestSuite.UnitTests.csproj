@@ -24,10 +24,6 @@
         <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
-        <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
-        <ProjectReference Include="..\Nautilus.BlackBox.Portfolio\Nautilus.BlackBox.Portfolio.csproj" />
-        <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
         <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
         <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />

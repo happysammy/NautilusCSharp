@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Core.Extensions
+namespace Nautilus.Core
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;

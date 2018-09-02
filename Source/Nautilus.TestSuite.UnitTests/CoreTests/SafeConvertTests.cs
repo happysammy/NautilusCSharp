@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
+namespace Nautilus.TestSuite.UnitTests.CoreTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Extensions;
+    using Nautilus.Core;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

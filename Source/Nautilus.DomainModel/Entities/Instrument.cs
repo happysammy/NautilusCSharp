@@ -72,16 +72,16 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNull(symbol, nameof(symbol));
             Validate.NotNull(instrumentId, nameof(instrumentId));
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Validate.NotOutOfRangeDecimal(tickDecimals, nameof(tickDecimals), decimal.Zero, decimal.MaxValue);
-            Validate.NotOutOfRangeDecimal(tickSize, nameof(tickSize), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-            Validate.NotOutOfRangeDecimal(tickValue, nameof(tickValue), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-            Validate.NotOutOfRangeDecimal(targetDirectSpread, nameof(targetDirectSpread), 0, int.MaxValue, RangeEndPoints.Exclusive);
-            Validate.NotOutOfRangeInt32(contractSize, nameof(contractSize), 0, int.MaxValue, RangeEndPoints.Exclusive);
-            Validate.NotOutOfRangeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry), 0, int.MaxValue);
-            Validate.NotOutOfRangeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry), 0, int.MaxValue);
-            Validate.NotOutOfRangeInt32(minStopDistance, nameof(minStopDistance), 0, int.MaxValue);
-            Validate.NotOutOfRangeInt32(minLimitDistance, nameof(minLimitDistance), 0, int.MaxValue);
-            Validate.NotOutOfRangeDecimal(minStopDistanceEntry, nameof(this.MinStopDistanceEntry), decimal.Zero, decimal.MaxValue);
+            Validate.NotNegativeInt32(tickDecimals, nameof(tickDecimals));
+            Validate.PositiveDecimal(tickSize, nameof(tickSize));
+            Validate.PositiveDecimal(tickValue, nameof(tickValue));
+            Validate.PositiveDecimal(targetDirectSpread, nameof(targetDirectSpread));
+            Validate.PositiveInt32(contractSize, nameof(contractSize));
+            Validate.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
+            Validate.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
+            Validate.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
+            Validate.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
+            Validate.NotNegativeDecimal(minStopDistanceEntry, nameof(this.MinStopDistanceEntry));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;

@@ -24,11 +24,9 @@
         <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.BlackBox.AlphaModel\Nautilus.BlackBox.AlphaModel.csproj" />
-        <ProjectReference Include="..\Nautilus.BlackBox.Core\Nautilus.BlackBox.Core.csproj" />
-        <ProjectReference Include="..\Nautilus.BlackBox.Risk\Nautilus.BlackBox.Risk.csproj" />
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />

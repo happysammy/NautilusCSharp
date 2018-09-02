@@ -10,8 +10,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
     using Moq;
-    using Nautilus.BlackBox.Core.Build;
-    using Nautilus.BlackBox.Core.Enums;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
@@ -20,6 +18,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusDB.Build;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -32,10 +31,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public StubClock Clock { get; set; }
 
-        public BlackBoxContainer Create()
+        public IComponentryContainer Create()
         {
-            var environment = BlackBoxEnvironment.Live;
-
             this.Clock = new StubClock();
             this.Clock.FreezeSetTime(StubZonedDateTime.UnixEpoch());
 
@@ -56,15 +53,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             var account = StubAccountFactory.Create();
 
-            return new BlackBoxContainer(
-                environment,
+            return new ComponentryContainer(
                 this.Clock,
                 guidFactory,
-                loggerFactory,
-                instrumentRepository,
-                this.QuoteProvider,
-                riskModel,
-                account);
+                loggerFactory);
         }
     }
 }
