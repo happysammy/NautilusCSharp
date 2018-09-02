@@ -8,8 +8,8 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
 
     /// <summary>

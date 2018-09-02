@@ -1,47 +1,45 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="IntegerNumber.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="FloatingPointNumber.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel.ValueObjects.Base
+namespace Nautilus.Core.Primitives
 {
     using System;
+    using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The base class for all <see cref="ValueObject{T}"/>(s) based on an integer number.
+    /// The base class for all primitive numbers based on a double-precision floating-point number.
     /// </summary>
-    /// <typeparam name="T">The type of <see cref="ValueObject{T}"/>.</typeparam>
     [Immutable]
-    public abstract class IntegerNumber<T> : ValueObject<T>
-        where T : IntegerNumber<T>, IEquatable<T>, IComparable<IntegerNumber<T>>
+    public abstract class FloatingPointNumber : IEquatable<FloatingPointNumber>, IComparable<FloatingPointNumber>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IntegerNumber{T}" /> class.
+        /// Initializes a new instance of the <see cref="FloatingPointNumber" /> class.
         /// </summary>
         /// <param name="value">The value.</param>
-        protected IntegerNumber(int value)
+        protected FloatingPointNumber(double value)
         {
             this.Value = value;
         }
 
         /// <summary>
-        /// Gets the value of the integer number.
+        /// Gets the value of the double number.
         /// </summary>
-        public int Value { get; }
+        public double Value { get; }
 
         /// <summary>
         /// Returns the sum of the left number and the right number.
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static int operator +(IntegerNumber<T> left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator +(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -54,9 +52,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static int operator +(int left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator +(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -68,9 +65,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static int operator +(IntegerNumber<T> left, int right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator +(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -82,9 +78,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static int operator -(IntegerNumber<T> left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator -(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -97,9 +92,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static int operator -(int left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator -(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -111,11 +105,10 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static int operator -(IntegerNumber<T> left, int right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator -(FloatingPointNumber left, double right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value - right;
         }
@@ -125,9 +118,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static int operator *(IntegerNumber<T> left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator *(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -140,9 +132,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static int operator *(int left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator *(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -154,9 +145,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static int operator *(IntegerNumber<T> left, int right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator *(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -168,13 +158,12 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static int operator /(IntegerNumber<T> left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator /(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
-            Debug.PositiveInt32(right.Value, nameof(right));
+            Debug.PositiveDouble(right.Value, nameof(right));
 
             return left.Value / right.Value;
         }
@@ -184,12 +173,11 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static int operator /(int left, IntegerNumber<T> right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator /(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
-            Debug.PositiveInt32(right.Value, nameof(right));
+            Debug.PositiveDouble(right.Value, nameof(right));
 
             return left / right.Value;
         }
@@ -199,12 +187,11 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static int operator /(IntegerNumber<T> left, int right)
+        /// <returns>A <see cref="double"/>.</returns>
+        public static double operator /(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
-            Debug.PositiveInt32(right, nameof(right));
+            Debug.PositiveDouble(right, nameof(right));
 
             return left.Value / right;
         }
@@ -215,8 +202,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator >(IntegerNumber<T> left, IntegerNumber<T> right)
+        public static bool operator >(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -230,8 +216,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator >(int left, IntegerNumber<T> right)
+        public static bool operator >(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -244,8 +229,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator >(IntegerNumber<T> left, int right)
+        public static bool operator >(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -258,8 +242,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator >=(IntegerNumber<T> left, IntegerNumber<T> right)
+        public static bool operator >=(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -273,8 +256,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator >=(int left, IntegerNumber<T> right)
+        public static bool operator >=(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -287,8 +269,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator >=(IntegerNumber<T> left, int right)
+        public static bool operator >=(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -301,8 +282,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator <(IntegerNumber<T> left, IntegerNumber<T> right)
+        public static bool operator <(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -316,8 +296,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator <(int left, IntegerNumber<T> right)
+        public static bool operator <(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -330,8 +309,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator <(IntegerNumber<T> left, int right)
+        public static bool operator <(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -344,8 +322,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator <=(IntegerNumber<T> left, IntegerNumber<T> right)
+        public static bool operator <=(FloatingPointNumber left, FloatingPointNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -359,8 +336,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator <=(int left, IntegerNumber<T> right)
+        public static bool operator <=(double left, FloatingPointNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -373,8 +349,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator <=(IntegerNumber<T> left, int right)
+        public static bool operator <=(FloatingPointNumber left, double right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -382,16 +357,80 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         }
 
         /// <summary>
-        /// Returns a value which indicates the relative order of the <see cref="IntegerNumber{T}"/>(s) being compared.
+        /// Returns a value indicating whether the <see cref="FloatingPointNumber"/>s are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator ==(
+            [CanBeNull] FloatingPointNumber left,
+            [CanBeNull] FloatingPointNumber right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="FloatingPointNumber"/>s are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator !=(
+            [CanBeNull] FloatingPointNumber left,
+            [CanBeNull] FloatingPointNumber right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as FloatingPointNumber);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal to the
+        /// given <see cref="FloatingPointNumber"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals([CanBeNull] FloatingPointNumber other)
+        {
+            return other != null && this.Value.Equals(other.Value);
+        }
+
+        /// <summary>
+        /// Returns a value which indicates the relative order of the <see cref="FloatingPointNumber"/>s
+        /// being compared.
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null.</exception>
-        public int CompareTo(IntegerNumber<T> other)
+        public int CompareTo(FloatingPointNumber other)
         {
             Debug.NotNull(other, nameof(other));
 
             return this.Value.CompareTo(other.Value);
         }
+
+        /// <summary>
+        /// Returns the hash code for this <see cref="FloatingPointNumber"/>.
+        /// </summary>
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.Value);
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="FloatingPointNumber"></see>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.Value.ToString(CultureInfo.InvariantCulture);
     }
 }

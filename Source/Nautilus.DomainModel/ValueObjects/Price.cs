@@ -8,20 +8,17 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// Represents a positive financial market price.
     /// </summary>
     [Immutable]
-    public sealed class Price
-        : DecimalNumber<Price>, IEquatable<Price>, IComparable<DecimalNumber<Price>>
+    public sealed class Price : PositiveDecimal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Price"/> class.
@@ -104,14 +101,5 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Value.ToString($"F{this.Decimals}", CultureInfo.InvariantCulture)}";
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>A <see cref="IEnumerable{T}"/>.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[] { this.Value, this.TickSize };
-        }
     }
 }

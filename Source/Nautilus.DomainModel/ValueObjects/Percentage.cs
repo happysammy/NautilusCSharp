@@ -8,18 +8,15 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// The immutable sealed <see cref="Percentage"/> class. Represents a percentage value.
     /// </summary>
     [Immutable]
-    public sealed class Percentage
-        : DecimalNumber<Percentage>, IEquatable<Percentage>, IComparable<DecimalNumber<Percentage>>
+    public sealed class Percentage : DecimalNumber
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Percentage"/> class.
@@ -122,15 +119,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public override string ToString()
         {
             return $"{this.Value}%";
-        }
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>A collection of objects for the equality check.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[] { this.Value };
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities.Base;
 

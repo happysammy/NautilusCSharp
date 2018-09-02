@@ -8,18 +8,17 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using System.Collections.Generic;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// Represents the concept of money.
     /// </summary>
     [Immutable]
-    public sealed class Money : DecimalNumber<Money>, IEquatable<Money>, IComparable<DecimalNumber<Money>>
+    public sealed class Money : NonNegativeDecimal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Money"/> class.
@@ -40,6 +39,39 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Gets the currency.
         /// </summary>
         public CurrencyCode Currency { get; }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Money"/> objects are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator ==(
+            [CanBeNull] Money left,
+            [CanBeNull] Money right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Money"/> objects are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator !=(
+            [CanBeNull] Money left,
+            [CanBeNull] Money right) => !(left == right);
 
         /// <summary>
         /// Returns a new <see cref="Money"/> object with a value of zero.
@@ -112,21 +144,37 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
+        /// Returns a value indicating whether this <see cref="Money"/> is equal to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as Money);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Money"/> is equal to the given <see cref="Money"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals([CanBeNull] Money other)
+        {
+            return other != null
+                   && this.Value.Equals(other.Value)
+                   && this.Currency.Equals(other.Currency);
+        }
+
+        /// <summary>
+        /// Returns the hash code for this <see cref="DecimalNumber"/>.
+        /// </summary>
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.Value, this.Currency);
+
+        /// <summary>
         /// Returns a string representation of the <see cref="Money"/> object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
             return $"{this.Value:N2}({this.Currency})";
-        }
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>A collection of objects.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[] { this.Value, this.Currency };
         }
     }
 }

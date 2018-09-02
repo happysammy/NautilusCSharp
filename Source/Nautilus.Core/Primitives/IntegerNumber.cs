@@ -1,47 +1,45 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="DecimalNumber.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IntegerNumber.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel.ValueObjects.Base
+namespace Nautilus.Core.Primitives
 {
     using System;
+    using System.Globalization;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The base class for all <see cref="ValueObject{T}"/>(s) based on a decimal number.
+    /// The base class for all primitive numbers based on an integer.
     /// </summary>
-    /// <typeparam name="T">The type of <see cref="ValueObject{T}"/>.</typeparam>
     [Immutable]
-    public abstract class DecimalNumber<T> : ValueObject<T>
-        where T : DecimalNumber<T>, IEquatable<T>, IComparable<DecimalNumber<T>>
+    public abstract class IntegerNumber : IEquatable<IntegerNumber>, IComparable<IntegerNumber>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DecimalNumber{T}" /> class.
+        /// Initializes a new instance of the <see cref="IntegerNumber" /> class.
         /// </summary>
         /// <param name="value">The value.</param>
-        protected DecimalNumber(decimal value)
+        protected IntegerNumber(int value)
         {
             this.Value = value;
         }
 
         /// <summary>
-        /// Gets the value of the decimal number.
+        /// Gets the value of the integer number.
         /// </summary>
-        public decimal Value { get; }
+        public int Value { get; }
 
         /// <summary>
         /// Returns the sum of the left number and the right number.
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static decimal operator +(DecimalNumber<T> left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator +(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -54,9 +52,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static decimal operator +(decimal left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator +(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -68,9 +65,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static decimal operator +(DecimalNumber<T> left, decimal right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator +(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -82,9 +78,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
-        public static decimal operator -(DecimalNumber<T> left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator -(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -97,9 +92,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static decimal operator -(decimal left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator -(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -111,11 +105,10 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static decimal operator -(DecimalNumber<T> left, decimal right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator -(IntegerNumber left, int right)
         {
-            Debug.NotNull(left, nameof(left));
+            Validate.NotNull(left, nameof(left));
 
             return left.Value - right;
         }
@@ -125,9 +118,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static decimal operator *(DecimalNumber<T> left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator *(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -140,9 +132,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static decimal operator *(decimal left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator *(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -154,9 +145,8 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static decimal operator *(DecimalNumber<T> left, decimal right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator *(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -168,14 +158,12 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null, or if the right
-        /// value is zero or negative.</exception>
-        public static decimal operator /(DecimalNumber<T> left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator /(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
-            Debug.PositiveDecimal(right.Value, nameof(right));
+            Debug.PositiveInt32(right.Value, nameof(right));
 
             return left.Value / right.Value;
         }
@@ -185,13 +173,11 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null, or if the right value
-        /// is zero or negative.</exception>
-        public static decimal operator /(decimal left, DecimalNumber<T> right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator /(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
-            Debug.PositiveDecimal(right.Value, nameof(right));
+            Debug.PositiveInt32(right.Value, nameof(right));
 
             return left / right.Value;
         }
@@ -201,13 +187,11 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
-        /// <returns>A <see cref="decimal"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null, or if the right is
-        /// negative.</exception>
-        public static decimal operator /(DecimalNumber<T> left, decimal right)
+        /// <returns>A <see cref="int"/>.</returns>
+        public static int operator /(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
-            Debug.PositiveDecimal(right, nameof(right));
+            Debug.PositiveInt32(right, nameof(right));
 
             return left.Value / right;
         }
@@ -218,12 +202,10 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator >(DecimalNumber<T> left, DecimalNumber<T> right)
+        public static bool operator >(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
-            Debug.NotEqualTo(right.Value, nameof(right.Value), decimal.Zero);
 
             return left.Value > right.Value;
         }
@@ -234,8 +216,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator >(decimal left, DecimalNumber<T> right)
+        public static bool operator >(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -248,8 +229,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator >(DecimalNumber<T> left, decimal right)
+        public static bool operator >(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -262,8 +242,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator >=(DecimalNumber<T> left, DecimalNumber<T> right)
+        public static bool operator >=(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -277,8 +256,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator >=(decimal left, DecimalNumber<T> right)
+        public static bool operator >=(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -291,8 +269,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator >=(DecimalNumber<T> left, decimal right)
+        public static bool operator >=(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -305,8 +282,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the either argument is null.</exception>
-        public static bool operator <(DecimalNumber<T> left, DecimalNumber<T> right)
+        public static bool operator <(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -320,8 +296,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator <(decimal left, DecimalNumber<T> right)
+        public static bool operator <(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -334,8 +309,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator <(DecimalNumber<T> left, decimal right)
+        public static bool operator <(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -348,8 +322,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either argument is null.</exception>
-        public static bool operator <=(DecimalNumber<T> left, DecimalNumber<T> right)
+        public static bool operator <=(IntegerNumber left, IntegerNumber right)
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
@@ -363,8 +336,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the right is null.</exception>
-        public static bool operator <=(decimal left, DecimalNumber<T> right)
+        public static bool operator <=(int left, IntegerNumber right)
         {
             Debug.NotNull(right, nameof(right));
 
@@ -377,8 +349,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left number.</param>
         /// <param name="right">The right number.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the left is null.</exception>
-        public static bool operator <=(DecimalNumber<T> left, decimal right)
+        public static bool operator <=(IntegerNumber left, int right)
         {
             Debug.NotNull(left, nameof(left));
 
@@ -386,16 +357,80 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         }
 
         /// <summary>
-        /// Returns a value which indicates the relative order of the <see cref="IntegerNumber{T}"/>(s) being compared.
+        /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator ==(
+            [CanBeNull] IntegerNumber left,
+            [CanBeNull] IntegerNumber right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="IntegerNumber"/>s are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator !=(
+            [CanBeNull] IntegerNumber left,
+            [CanBeNull] IntegerNumber right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>The result of the equality check.</returns>
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as IntegerNumber);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the
+        /// given <see cref="DecimalNumber"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals([CanBeNull] IntegerNumber other)
+        {
+            return other != null && this.Value.Equals(other.Value);
+        }
+
+        /// <summary>
+        /// Returns a value which indicates the relative order of the <see cref="IntegerNumber"/>s
+        /// being compared.
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the other is null.</exception>
-        public int CompareTo(DecimalNumber<T> other)
+        public int CompareTo(IntegerNumber other)
         {
             Debug.NotNull(other, nameof(other));
 
             return this.Value.CompareTo(other.Value);
         }
+
+        /// <summary>
+        /// Returns the hash code for this <see cref="IntegerNumber"/>.
+        /// </summary>
+        /// <returns>The hash code <see cref="int"/>.</returns>
+        public override int GetHashCode() => Hash.GetCode(this.Value);
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="IntegerNumber"></see>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.Value.ToString(CultureInfo.InvariantCulture);
     }
 }

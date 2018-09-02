@@ -8,18 +8,15 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System;
-    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
     /// Represents a none-negative quantity.
     /// </summary>
     [Immutable]
-    public sealed class Quantity
-        : IntegerNumber<Quantity>, IEquatable<Quantity>, IComparable<IntegerNumber<Quantity>>
+    public sealed class Quantity : NonNegativeInteger
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.
@@ -35,10 +32,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a new <see cref="Quantity"/> with zero value.
         /// </summary>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public static Quantity Zero()
-        {
-            return new Quantity(0);
-        }
+        public static Quantity Zero() => new Quantity(0);
 
         /// <summary>
         /// Returns a new <see cref="Quantity"/> with the given value amount.
@@ -89,23 +83,6 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.PositiveInt32(multiplier, nameof(multiplier));
 
             return new Quantity(this.Value * multiplier);
-        }
-
-        /// <summary>
-        /// Returns a string representation of this <see cref="Quantity"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Value.ToString();
-
-        /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>
-        /// A collection of objects.
-        /// </returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
-        {
-            return new object[] { this.Value };
         }
     }
 }
