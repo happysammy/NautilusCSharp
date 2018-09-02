@@ -11,12 +11,10 @@ namespace Nautilus.TestSuite.TestKit.Extensions
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.DomainModel.Events;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
