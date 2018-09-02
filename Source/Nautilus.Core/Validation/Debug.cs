@@ -227,6 +227,126 @@ namespace Nautilus.Core.Validation
         }
 
         /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void PositiveInt32(
+            int value,
+            string paramName)
+        {
+            Validate.PositiveInt32(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void NotNegativeInt32(
+            int value,
+            string paramName)
+        {
+            Validate.NotNegativeInt32(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void PositiveInt64(
+            long value,
+            string paramName)
+        {
+            Validate.PositiveInt64(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void NotNegativeInt64(
+            long value,
+            string paramName)
+        {
+            Validate.NotNegativeInt64(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void PositiveDouble(
+            double value,
+            string paramName)
+        {
+            Validate.PositiveDouble(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void NotNegativeDouble(
+            double value,
+            string paramName)
+        {
+            Validate.NotNegativeDouble(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void PositiveDecimal(
+            decimal value,
+            string paramName)
+        {
+            Validate.PositiveDecimal(value, paramName);
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public static void NotNegativeDecimal(
+            decimal value,
+            string paramName)
+        {
+            Validate.NotNegativeDecimal(value, paramName);
+        }
+
+        /// <summary>
         /// The validation passes if the value is not out of the specified range.
         /// </summary>
         /// <param name="value">The value to be checked.</param>

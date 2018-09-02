@@ -236,7 +236,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.NotOutOfRangeDecimal(bid, nameof(bid), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
                 Validate.NotOutOfRangeDecimal(ask, nameof(ask), decimal.Zero, decimal.MaxValue, RangeEndPoints.Exclusive);
-                Debug.NotOutOfRangeInt32(decimals, nameof(decimals), 0, int.MaxValue);
+                Debug.PositiveInt32(decimals, nameof(decimals));
 
                 var tick = new Tick(
                     new Symbol(symbol, venue),

@@ -174,7 +174,7 @@ namespace Nautilus.Core.Model
         {
             Debug.NotNull(left, nameof(left));
             Debug.NotNull(right, nameof(right));
-            Debug.NotOutOfRangeInt32(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveInt32(right.Value, nameof(right));
 
             return left.Value / right.Value;
         }
@@ -189,7 +189,7 @@ namespace Nautilus.Core.Model
         public static int operator /(int left, IntegerNumber<T> right)
         {
             Debug.NotNull(right, nameof(right));
-            Debug.NotOutOfRangeInt32(right.Value, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveInt32(right.Value, nameof(right));
 
             return left / right.Value;
         }
@@ -204,7 +204,7 @@ namespace Nautilus.Core.Model
         public static int operator /(IntegerNumber<T> left, int right)
         {
             Debug.NotNull(left, nameof(left));
-            Debug.NotOutOfRangeInt32(right, nameof(right), 0, int.MaxValue, RangeEndPoints.Exclusive);
+            Debug.PositiveInt32(right, nameof(right));
 
             return left.Value / right;
         }

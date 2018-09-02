@@ -35,7 +35,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>A decimal representation of the tick size.</returns>
         public static decimal ToTickSize(this int value)
         {
-            Debug.NotOutOfRangeInt32(value, nameof(value), 0, int.MaxValue);
+            Debug.NotNegativeInt32(value, nameof(value));
 
             decimal divisor = 1;
 

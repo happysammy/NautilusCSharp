@@ -94,7 +94,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money MultiplyBy(int multiplier)
         {
-            Debug.NotOutOfRangeInt32(multiplier, nameof(multiplier), 0, int.MaxValue);
+            Debug.PositiveInt32(multiplier, nameof(multiplier));
 
             return new Money(this.Value * multiplier, this.Currency);
         }
@@ -106,7 +106,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money DivideBy(int divisor)
         {
-            Debug.NotOutOfRangeInt32(divisor, nameof(divisor), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Debug.PositiveInt32(divisor, nameof(divisor));
 
             return new Money(this.Value / divisor, this.Currency);
         }

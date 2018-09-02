@@ -301,6 +301,139 @@ namespace Nautilus.Core.Validation
         }
 
         /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        public static void NotNegativeInt32(
+            int value,
+            string paramName)
+        {
+            if (value < 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is a negative int32. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        public static void PositiveInt64(
+            long value,
+            string paramName)
+        {
+            if (value <= 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is not a positive int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        public static void NotNegativeInt64(
+            long value,
+            string paramName)
+        {
+            if (value < 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is a negative int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        public static void PositiveDouble(
+            double value,
+            string paramName)
+        {
+            if (value <= 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is not a positive int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        public static void NotNegativeDouble(
+            double value,
+            string paramName)
+        {
+            if (value < 0)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is a negative int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than or equal to zero.</exception>
+        public static void PositiveDecimal(
+            decimal value,
+            string paramName)
+        {
+            if (value <= decimal.Zero)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is not a positive int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
+        /// The validation passes if the value is greater than or equal to zero.
+        /// </summary>
+        /// <param name="value">The value to be checked.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ValidationException">Throws if the argument is less than zero.</exception>
+        public static void NotNegativeDecimal(
+            decimal value,
+            string paramName)
+        {
+            if (value < decimal.Zero)
+            {
+                throw new ValidationException(
+                    new ArgumentOutOfRangeException(
+                        paramName,
+                        $"{ExMessage} (The {paramName} is a negative int64. Value = {value})."));
+            }
+        }
+
+        /// <summary>
         /// The validation passes if the value is not out of the specified range.
         /// </summary>
         /// <param name="value">The value to be checked.</param>

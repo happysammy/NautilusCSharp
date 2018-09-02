@@ -28,9 +28,9 @@ namespace Nautilus.Data.Keys
         /// <param name="day">The date key day.</param>
         public DateKey(int year, int month, int day)
         {
-            Debug.NotOutOfRangeInt32(year, nameof(year), 0, int.MaxValue);
-            Debug.NotOutOfRangeInt32(month, nameof(month), 0, int.MaxValue);
-            Debug.NotOutOfRangeInt32(day, nameof(day), 0, int.MaxValue);
+            Debug.PositiveInt32(year, nameof(year));
+            Debug.PositiveInt32(month, nameof(month));
+            Debug.PositiveInt32(day, nameof(day));
 
             this.Year = year;
             this.Month = month;

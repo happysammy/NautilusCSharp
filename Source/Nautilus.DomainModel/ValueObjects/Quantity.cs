@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.ValueObjects
         private Quantity(int amount)
             : base(amount)
         {
-            Debug.NotOutOfRangeInt32(amount, nameof(amount), 0, int.MaxValue);
+            Debug.NotNegativeInt32(amount, nameof(amount));
         }
 
         /// <summary>

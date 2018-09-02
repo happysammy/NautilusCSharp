@@ -39,7 +39,7 @@ namespace Nautilus.Data.Messages.Commands
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
-            Debug.NotOutOfRangeInt32(rollingWindow, nameof(rollingWindow), 0, int.MaxValue, RangeEndPoints.LowerExclusive);
+            Debug.PositiveInt32(rollingWindow, nameof(rollingWindow));
 
             this.Resolutions = resolutions;
             this.RollingWindowSize = rollingWindow;

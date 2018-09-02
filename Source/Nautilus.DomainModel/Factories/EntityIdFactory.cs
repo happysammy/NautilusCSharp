@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Factories
         {
             Debug.NotDefault(time, nameof(time));
             Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotOutOfRangeInt32(orderCount, nameof(orderCount), 0, int.MaxValue);
+            Debug.PositiveInt32(orderCount, nameof(orderCount));
 
             return new OrderId($"{GetTimeString(time)}_{symbol.Code}_{orderCount}");
         }
@@ -47,7 +47,7 @@ namespace Nautilus.DomainModel.Factories
         public static OrderId ModifiedOrder(OrderId orderId, int orderIdCount)
         {
             Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotOutOfRangeInt32(orderIdCount, nameof(orderIdCount), 0, int.MaxValue);
+            Debug.PositiveInt32(orderIdCount, nameof(orderIdCount));
 
             return new OrderId($"{orderId}_R{orderIdCount}");
         }
@@ -75,7 +75,7 @@ namespace Nautilus.DomainModel.Factories
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotNull(tradeType, nameof(tradeType));
             Debug.NotNull(signalLabel, nameof(signalLabel));
-            Debug.NotOutOfRangeInt32(signalCount, nameof(signalCount), 0, int.MaxValue);
+            Debug.PositiveInt32(signalCount, nameof(signalCount));
 
             return new SignalId($"{GetTimeString(time)}|{GetSignalIdString(symbol, tradeType, orderSide)}-{signalLabel}-{signalCount}");
         }
@@ -90,7 +90,7 @@ namespace Nautilus.DomainModel.Factories
         public static TradeUnitId TradeUnit(TradeId tradeId, int tradeUnit)
         {
             Debug.NotNull(tradeId, nameof(tradeId));
-            Debug.NotOutOfRangeInt32(tradeUnit, nameof(tradeUnit), 0, int.MaxValue);
+            Debug.NotNegativeInt32(tradeUnit, nameof(tradeUnit));
 
             return new TradeUnitId($"{tradeId}_U{tradeUnit}");
         }

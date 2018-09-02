@@ -420,6 +420,188 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Theory]
+        [InlineData(1)]
+        [InlineData(int.MaxValue)]
+        internal void PositiveInt32_VariousPositiveValues_DoesNothing(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.PositiveInt32(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        internal void PositiveInt32_VariousNotPositiveValues_Throws(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.PositiveInt32(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(int.MaxValue)]
+        internal void NotNegativeInt32_VariousNotNegativeValues_DoesNothing(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.NotNegativeInt32(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        internal void NotNegativeInt32_VariousNegativeValues_Throws(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.NotNegativeInt32(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(int.MaxValue)]
+        internal void PositiveInt64_VariousPositiveValues_DoesNothing(int value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.PositiveInt64(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(long.MinValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        internal void PositiveInt64_VariousNotPositiveValues_Throws(long value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.PositiveInt64(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(long.MaxValue)]
+        internal void NotNegativeInt64_VariousNotNegativeValues_DoesNothing(long value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.NotNegativeInt64(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(long.MinValue)]
+        [InlineData(-1)]
+        internal void NotNegativeInt64_VariousNegativeValues_Throws(long value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.NotNegativeInt64(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(double.MaxValue)]
+        internal void PositiveDouble_VariousPositiveValues_DoesNothing(double value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.PositiveDouble(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(double.MinValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        internal void PositiveDouble_VariousNotPositiveValues_Throws(double value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.PositiveDouble(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(double.MaxValue)]
+        internal void NotNegativeDouble_VariousNotNegativeValues_DoesNothing(double value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.NotNegativeDouble(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(double.MinValue)]
+        [InlineData(-1)]
+        internal void NotNegativeDouble_VariousNegativeValues_Throws(double value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.NotNegativeDouble(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(0.1)]
+        [InlineData(1.0)]
+        internal void PositiveDecimal_VariousPositiveValues_DoesNothing(decimal value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.PositiveDecimal(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(0.0)]
+        [InlineData(-1.0)]
+        internal void PositiveDecimal_VariousNotPositiveValues_Throws(decimal value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.PositiveDecimal(value, nameof(value)));
+        }
+
+        [Theory]
+        [InlineData(0.0)]
+        [InlineData(1)]
+        internal void NotNegativeDecimal_VariousNotNegativeValues_DoesNothing(decimal value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Validate.NotNegativeDecimal(value, nameof(value));
+        }
+
+        [Theory]
+        [InlineData(-0.1)]
+        [InlineData(-1.0)]
+        internal void NotNegativeDecimal_VariousNegativeValues_Throws(decimal value)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ValidationException>(() => Validate.NotNegativeDecimal(value, nameof(value)));
+        }
+
+        [Theory]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
