@@ -27,9 +27,9 @@ namespace Nautilus.Core
         private static readonly HexEncoder Encoder = new HexEncoder();
 
         /// <summary>
-        /// Returns hex representation of the byte array.
+        /// Returns a hex representation of the byte array.
         /// </summary>
-        /// <param name="data">bytes to encode.</param>
+        /// <param name="data">The bytes to encode.</param>
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data)
         {
@@ -37,9 +37,9 @@ namespace Nautilus.Core
         }
 
         /// <summary>
-        /// Returns hex representation of the byte array.
+        /// Returns a hex representation of the byte array.
         /// </summary>
-        /// <param name="data">bytes to encode.</param>
+        /// <param name="data">The bytes to encode.</param>
         /// <param name="off">offset.</param>
         /// <param name="length">number of bytes to encode.</param>
         /// <returns>The hex string.</returns>
@@ -51,7 +51,7 @@ namespace Nautilus.Core
         /// <summary>
         /// Decodes hex representation to a byte array.
         /// </summary>
-        /// <param name="hex">hex string to decode.</param>
+        /// <param name="hex">Th hex string to decode.</param>
         /// <returns>The decoded byte array.</returns>
         public static byte[] FromHexString(string hex)
         {
@@ -80,7 +80,7 @@ namespace Nautilus.Core
         /// Returns a string containing a nice representation of the byte array
         /// (similarly to the binary editors).
         /// </summary>
-        /// <param name="bytes">array of bytes to pretty print.</param>
+        /// <param name="bytes">The array of bytes to pretty print.</param>
         /// <returns>The pretty printed string.</returns>
         public static string PrettyPrint(byte[] bytes)
         {
