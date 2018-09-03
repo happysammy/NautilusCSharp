@@ -150,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.testEndpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
-                new Port(5557),
+                new Port(5558),
                 Guid.NewGuid())));
 
             // Act
