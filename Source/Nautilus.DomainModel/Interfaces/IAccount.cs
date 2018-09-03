@@ -14,7 +14,7 @@ namespace Nautilus.DomainModel.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Provides a read-only brokerage account abstraction.
+    /// Provides a read-only interface for brokerage accounts.
     /// </summary>
     public interface IAccount
     {

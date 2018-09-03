@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Represents a read-only interface for orders.
+    /// Provides a read-only interface for orders.
     /// </summary>
     public interface IOrder
     {

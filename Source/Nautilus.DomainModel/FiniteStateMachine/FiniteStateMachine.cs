@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -19,8 +20,10 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a simple generic finite state machine comprising of a state transition look-up
     /// table to determine trigger processing validity.
     /// </summary>
+    [PerformanceOptimized]
     internal class FiniteStateMachine
     {
+        // Concrete dictionary for performance reasons.
         private readonly ReadOnlyDictionary<StateTransition, State> stateTransitionTable;
 
         /// <summary>

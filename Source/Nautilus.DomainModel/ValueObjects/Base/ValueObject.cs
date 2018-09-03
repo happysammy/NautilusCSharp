@@ -14,9 +14,9 @@ namespace Nautilus.DomainModel.ValueObjects.Base
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// The base class for all trading domain value objects.
+    /// The base class for all domain model value objects.
     /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
+    /// <typeparam name="T">The value object type.</typeparam>
     [Immutable]
     public abstract class ValueObject<T>
         where T : ValueObject<T>, IEquatable<T>

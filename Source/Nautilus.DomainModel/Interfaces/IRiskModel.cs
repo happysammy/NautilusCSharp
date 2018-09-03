@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Provides a read-only risk model abstraction.
+    /// Provides a read-only interface for risk models.
     /// </summary>
     public interface IRiskModel
     {
