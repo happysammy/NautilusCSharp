@@ -17,12 +17,14 @@ namespace Nautilus.Core.Primitives
     /// The base class for all primitive numbers based on a decimal.
     /// </summary>
     [Immutable]
-    public abstract class DecimalNumber : IEquatable<DecimalNumber>, IComparable<DecimalNumber>
+    public abstract class DecimalNumber
+        : IEquatable<DecimalNumber>, IComparable<DecimalNumber>,
+          IEquatable<decimal>, IComparable<decimal>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DecimalNumber" /> class.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The decimal value.</param>
         protected DecimalNumber(decimal value)
         {
             this.Value = value;
@@ -409,6 +411,14 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
+        /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
+        /// given <see cref="Decimal"/>.
+        /// </summary>
+        /// <param name="other">The other decimal.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals(decimal other) => this.Value.Equals(other);
+
+        /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="DecimalNumber"/>s
         /// being compared.
         /// </summary>
@@ -420,6 +430,14 @@ namespace Nautilus.Core.Primitives
 
             return this.Value.CompareTo(other.Value);
         }
+
+        /// <summary>
+        /// Returns a value which indicates the relative order of the <see cref="Decimal"/>s
+        /// being compared.
+        /// </summary>
+        /// <param name="other">The other number.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        public int CompareTo(decimal other) => this.Value.CompareTo(other);
 
         /// <summary>
         /// Returns the hash code for this <see cref="DecimalNumber"/>.

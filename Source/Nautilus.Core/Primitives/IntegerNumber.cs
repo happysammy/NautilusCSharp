@@ -17,12 +17,14 @@ namespace Nautilus.Core.Primitives
     /// The base class for all primitive numbers based on an integer.
     /// </summary>
     [Immutable]
-    public abstract class IntegerNumber : IEquatable<IntegerNumber>, IComparable<IntegerNumber>
+    public abstract class IntegerNumber
+        : IEquatable<IntegerNumber>, IComparable<IntegerNumber>,
+          IEquatable<int>, IComparable<int>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IntegerNumber" /> class.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The integer value.</param>
         protected IntegerNumber(int value)
         {
             this.Value = value;
@@ -399,14 +401,22 @@ namespace Nautilus.Core.Primitives
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the
-        /// given <see cref="DecimalNumber"/>.
+        /// given <see cref="int"/>.
         /// </summary>
-        /// <param name="other">The other object.</param>
+        /// <param name="other">The other number.</param>
         /// <returns>The result of the equality check.</returns>
         public bool Equals([CanBeNull] IntegerNumber other)
         {
             return other != null && this.Value.Equals(other.Value);
         }
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the
+        /// given <see cref="int"/>.
+        /// </summary>
+        /// <param name="other">The other number.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals(int other) => this.Value.Equals(other);
 
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="IntegerNumber"/>s
@@ -420,6 +430,14 @@ namespace Nautilus.Core.Primitives
 
             return this.Value.CompareTo(other.Value);
         }
+
+        /// <summary>
+        /// Returns a value which indicates the relative order of the <see cref="Int32"/>s
+        /// being compared.
+        /// </summary>
+        /// <param name="other">The other number.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        public int CompareTo(int other) => this.Value.CompareTo(other);
 
         /// <summary>
         /// Returns the hash code for this <see cref="IntegerNumber"/>.

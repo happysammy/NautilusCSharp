@@ -17,12 +17,14 @@ namespace Nautilus.Core.Primitives
     /// The base class for all primitive numbers based on a double-precision floating-point number.
     /// </summary>
     [Immutable]
-    public abstract class FloatingPointNumber : IEquatable<FloatingPointNumber>, IComparable<FloatingPointNumber>
+    public abstract class FloatingPointNumber
+        : IEquatable<FloatingPointNumber>, IComparable<FloatingPointNumber>,
+          IEquatable<double>, IComparable<double>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatingPointNumber" /> class.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The floating-point value.</param>
         protected FloatingPointNumber(double value)
         {
             this.Value = value;
@@ -395,7 +397,13 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as FloatingPointNumber);
+        public override bool Equals([CanBeNull] object other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (other.GetType() != this.GetType()) return false;
+            return Equals((FloatingPointNumber) other);
+        }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal to the
@@ -405,8 +413,18 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public bool Equals([CanBeNull] FloatingPointNumber other)
         {
-            return other != null && this.Value.Equals(other.Value);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return this.Value.Equals(other.Value);
         }
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal
+        /// to the given <see cref="Double"/>.
+        /// </summary>
+        /// <param name="other">The other number.</param>
+        /// <returns>The result of the equality check.</returns>
+        public bool Equals(double other) => this.Value.Equals(other);
 
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="FloatingPointNumber"/>s
@@ -422,10 +440,18 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
+        /// Returns a value which indicates the relative order of the <see cref="Double"/>s
+        /// being compared.
+        /// </summary>
+        /// <param name="other">The other number.</param>
+        /// <returns>A <see cref="int"/>.</returns>
+        public int CompareTo(double other) => this.Value.CompareTo(other);
+
+        /// <summary>
         /// Returns the hash code for this <see cref="FloatingPointNumber"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Value);
+        public override int GetHashCode() => this.Value.GetHashCode();
 
         /// <summary>
         /// Returns a string representation of the <see cref="FloatingPointNumber"></see>.

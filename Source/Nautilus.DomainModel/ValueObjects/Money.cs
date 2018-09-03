@@ -28,9 +28,9 @@ namespace Nautilus.DomainModel.ValueObjects
         private Money(decimal amount, CurrencyCode currency)
             : base(amount)
         {
-            Debug.NotDefault(currency, nameof(currency));
             Debug.NotNegativeDecimal(amount, nameof(amount));
             Debug.True(amount % 0.01m == 0, nameof(amount));
+            Debug.NotDefault(currency, nameof(currency));
 
             this.Currency = currency;
         }
