@@ -16,6 +16,7 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging.Network;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -26,7 +27,7 @@ namespace Nautilus.Messaging
     {
         private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
         private readonly byte[] topic;
-        private readonly string serverAddress;
+        private readonly ZmqServerAddress serverAddress;
         private readonly PublisherSocket socket;
         private int cycles;
 
@@ -43,8 +44,8 @@ namespace Nautilus.Messaging
             IComponentryContainer container,
             Label label,
             string topic,
-            string host,
-            int port,
+            NetworkAddress host,
+            Port port,
             Guid id)
             : base(
                 NautilusService.Messaging,
@@ -54,11 +55,11 @@ namespace Nautilus.Messaging
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(label, nameof(label));
             Validate.NotNull(host, nameof(host));
-            Validate.NotEqualTo(port, nameof(host), 0);
+            Validate.NotNull(port, nameof(port));
             Validate.NotDefault(id, nameof(id));
 
             this.topic = Encoding.UTF8.GetBytes(topic);
-            this.serverAddress = $"tcp://{host}:{port}";
+            this.serverAddress = new ZmqServerAddress(host, port);
             this.socket = new PublisherSocket()
             {
                 Options =
@@ -80,7 +81,7 @@ namespace Nautilus.Messaging
             this.Execute(() =>
             {
                 base.PreStart();
-                this.socket.Bind(this.serverAddress);
+                this.socket.Bind(this.serverAddress.Value);
                 this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to publish...");
@@ -94,7 +95,7 @@ namespace Nautilus.Messaging
         {
             this.Execute(() =>
             {
-                this.socket.Unbind(this.serverAddress);
+                this.socket.Unbind(this.serverAddress.Value);
                 this.Log.Debug($"Unbound publisher socket from {this.serverAddress}");
 
                 this.socket.Dispose();
@@ -103,15 +104,15 @@ namespace Nautilus.Messaging
 
         private static byte[] Combine(params byte[][] arrays)
         {
-            var rv = new byte[arrays.Sum(a => a.Length)];
+            var combined = new byte[arrays.Sum(a => a.Length)];
             var offset = 0;
             foreach (var array in arrays)
             {
-                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                Buffer.BlockCopy(array, 0, combined, offset, array.Length);
                 offset += array.Length;
             }
 
-            return rv;
+            return combined;
         }
 
         private void OnMessage(byte[] message)

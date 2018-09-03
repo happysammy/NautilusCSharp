@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Execution;
+    using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -30,7 +31,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class CommandConsumerTests : TestKit
     {
-        private const string LocalHost = "127.0.0.1";
+        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
@@ -60,8 +61,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 this.setupContainer,
                 new MsgPackCommandSerializer(),
                 this.testEndpoint,
-                LocalHost,
-                5553)));
+                this.localHost,
+                new Port(5553))));
 
             var hexString = "85ac636f6d6d616e645f74797065ad6f726465725f636f6d6d616e64a56f72646572" +
                             "da016e38616136373337393664363236663663616234313535343435353533343432" +

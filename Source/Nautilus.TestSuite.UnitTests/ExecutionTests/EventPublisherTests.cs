@@ -16,6 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
     using Nautilus.Execution;
+    using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -28,8 +29,9 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class EventPublisherTests : TestKit
     {
-        private const string LocalHost = "127.0.0.1";
         private const string ExecutionEvents = "nautilus_execution_events";
+
+        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
@@ -69,8 +71,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var publisher = this.Sys.ActorOf(Props.Create(() => new EventPublisher(
                 this.setupContainer,
                 new MsgPackEventSerializer(),
-                LocalHost,
-                56601)));
+                this.localHost,
+                new Port(56601))));
 
             // Act
             publisher.Tell(rejected);

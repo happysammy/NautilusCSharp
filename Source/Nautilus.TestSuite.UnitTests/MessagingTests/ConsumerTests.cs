@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ;
@@ -29,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ConsumerTests : TestKit
     {
-        private const string LocalHost = "127.0.0.1";
+        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
@@ -59,8 +60,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 this.testEndpoint,
                 new Label("CommandConsumer"),
-                LocalHost,
-                5555,
+                this.localHost,
+                new Port(5555),
                 Guid.NewGuid())));
 
             // Act
@@ -86,8 +87,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 this.testEndpoint,
                 new Label("CommandConsumer"),
-                LocalHost,
-                5556,
+                this.localHost,
+                new Port(5556),
                 Guid.NewGuid())));
 
             // Act
@@ -120,8 +121,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 this.testEndpoint,
                 new Label("CommandConsumer"),
-                LocalHost,
-                5557,
+                this.localHost,
+                new Port(5557),
                 Guid.NewGuid())));
 
             // Act
@@ -148,8 +149,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 this.testEndpoint,
                 new Label("CommandConsumer"),
-                LocalHost,
-                5558,
+                this.localHost,
+                new Port(5557),
                 Guid.NewGuid())));
 
             // Act
@@ -181,8 +182,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 this.testEndpoint,
                 new Label("CommandConsumer"),
-                LocalHost,
-                5559,
+                this.localHost,
+                new Port(5559),
                 Guid.NewGuid())));
 
             // Act

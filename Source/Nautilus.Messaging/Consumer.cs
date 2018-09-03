@@ -18,6 +18,7 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging.Network;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -28,7 +29,7 @@ namespace Nautilus.Messaging
     {
         private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
         private readonly IEndpoint receiver;
-        private readonly string serverAddress;
+        private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
         private int cycles;
 
@@ -45,8 +46,8 @@ namespace Nautilus.Messaging
             IComponentryContainer container,
             IEndpoint receiver,
             Label label,
-            string host,
-            int port,
+            NetworkAddress host,
+            Port port,
             Guid id)
             : base(
                 NautilusService.Messaging,
@@ -57,11 +58,11 @@ namespace Nautilus.Messaging
             Validate.NotNull(receiver, nameof(receiver));
             Validate.NotNull(label, nameof(label));
             Validate.NotNull(host, nameof(host));
-            Validate.NotEqualTo(port, nameof(host), 0);
+            Validate.NotNull(port, nameof(port));
             Validate.NotDefault(id, nameof(id));
 
             this.receiver = receiver;
-            this.serverAddress = $"tcp://{host}:{port.ToString()}";
+            this.serverAddress = new ZmqServerAddress(host, port);
 
             this.socket = new RouterSocket()
             {
@@ -85,7 +86,7 @@ namespace Nautilus.Messaging
             {
                 base.PreStart();
 
-                this.socket.Bind(this.serverAddress);
+                this.socket.Bind(this.serverAddress.Value);
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
@@ -100,7 +101,7 @@ namespace Nautilus.Messaging
         {
             this.Execute(() =>
             {
-                this.socket.Unbind(this.serverAddress);
+                this.socket.Unbind(this.serverAddress.Value);
                 this.Log.Debug($"Unbound router socket from {this.serverAddress}");
 
                 this.socket.Dispose();

@@ -12,6 +12,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
+    using Nautilus.Messaging.Network;
 
     /// <summary>
     /// Provides MessageServer instances for the system.
@@ -56,9 +57,9 @@ namespace Nautilus.Execution
                         messagingAdapter,
                         commandSerializer,
                         eventSerializer,
-                        serverAddress,
-                        commandsPort,
-                        eventsPort))));
+                        new NetworkAddress(serverAddress),
+                        new Port(commandsPort),
+                        new Port(eventsPort)))));
         }
     }
 }

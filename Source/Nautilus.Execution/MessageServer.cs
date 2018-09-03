@@ -23,6 +23,7 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Messaging.Network;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
@@ -50,9 +51,9 @@ namespace Nautilus.Execution
             IMessagingAdapter messagingAdapter,
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
-            string serverAddress,
-            int commandsPort,
-            int eventsPort)
+            NetworkAddress serverAddress,
+            Port commandsPort,
+            Port eventsPort)
             : base(
                 NautilusService.Messaging,
                 LabelFactory.Component(nameof(MessageServer)),

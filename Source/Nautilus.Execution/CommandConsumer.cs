@@ -17,6 +17,7 @@ namespace Nautilus.Execution
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Network;
 
     /// <summary>
     /// Provides a command consumer for the messaging server.
@@ -39,8 +40,8 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             ICommandSerializer serializer,
             IEndpoint receiver,
-            string host,
-            int port)
+            NetworkAddress host,
+            Port port)
             : base(
                 NautilusService.Messaging,
                 LabelFactory.Component(nameof(CommandConsumer)),
@@ -50,7 +51,7 @@ namespace Nautilus.Execution
             Validate.NotNull(serializer, nameof(serializer));
             Validate.NotNull(receiver, nameof(receiver));
             Validate.NotNull(host, nameof(host));
-            Validate.NotOutOfRangeInt32(port, nameof(host), 0, 99999);
+            Validate.NotNull(port, nameof(host));
 
             this.serializer = serializer;
             this.receiver = receiver;

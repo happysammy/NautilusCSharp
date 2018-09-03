@@ -18,6 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Network;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.
@@ -37,15 +38,16 @@ namespace Nautilus.Execution
         public EventPublisher(
             IComponentryContainer container,
             IEventSerializer serializer,
-            string host,
-            int port)
+            NetworkAddress host,
+            Port port)
             : base(
                 NautilusService.Messaging,
                 LabelFactory.Component(nameof(EventPublisher)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(host, nameof(host));
+            Validate.NotNull(port, nameof(port));
 
             this.serializer = serializer;
 

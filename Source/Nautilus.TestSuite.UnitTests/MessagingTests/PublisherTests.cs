@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ.Sockets;
@@ -28,8 +29,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PublisherTests : TestKit
     {
-        private const string LocalHost = "127.0.0.1";
         private const string TestTopic = "test_topic";
+
+        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
@@ -62,8 +64,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
                 this.setupContainer,
                 new Label("EventPublisher"),
                 TestTopic,
-                LocalHost,
-                55504,
+                this.localHost,
+                new Port(55504),
                 Guid.NewGuid())));
 
             // Act
