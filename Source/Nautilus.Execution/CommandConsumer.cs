@@ -50,7 +50,7 @@ namespace Nautilus.Execution
             Validate.NotNull(serializer, nameof(serializer));
             Validate.NotNull(receiver, nameof(receiver));
             Validate.NotNull(host, nameof(host));
-            Validate.NotEqualTo(port, nameof(host), 0);
+            Validate.NotOutOfRangeInt32(port, nameof(host), 0, 99999);
 
             this.serializer = serializer;
             this.receiver = receiver;
