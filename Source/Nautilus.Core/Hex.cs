@@ -40,8 +40,8 @@ namespace Nautilus.Core
         /// Returns a hex representation of the byte array.
         /// </summary>
         /// <param name="data">The bytes to encode.</param>
-        /// <param name="off">offset.</param>
-        /// <param name="length">number of bytes to encode.</param>
+        /// <param name="off">The offset.</param>
+        /// <param name="length">The number of bytes to encode.</param>
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data, int off, int length)
         {
