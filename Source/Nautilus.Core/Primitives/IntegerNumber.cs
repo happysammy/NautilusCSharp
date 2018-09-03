@@ -432,7 +432,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value which indicates the relative order of the <see cref="Int32"/>s
+        /// Returns a value which indicates the relative order of the <see cref="int"/>s
         /// being compared.
         /// </summary>
         /// <param name="other">The other number.</param>

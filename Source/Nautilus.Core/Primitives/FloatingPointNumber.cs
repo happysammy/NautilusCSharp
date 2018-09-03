@@ -397,13 +397,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != this.GetType()) return false;
-            return Equals((FloatingPointNumber) other);
-        }
+        public override bool Equals([CanBeNull] object other) => this.Equals(other as FloatingPointNumber);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal to the
@@ -413,14 +407,12 @@ namespace Nautilus.Core.Primitives
         /// <returns>The result of the equality check.</returns>
         public bool Equals([CanBeNull] FloatingPointNumber other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return this.Value.Equals(other.Value);
+            return other != null && this.Value.Equals(other.Value);
         }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal
-        /// to the given <see cref="Double"/>.
+        /// to the given <see cref="double"/>.
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>The result of the equality check.</returns>
@@ -440,7 +432,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value which indicates the relative order of the <see cref="Double"/>s
+        /// Returns a value which indicates the relative order of the <see cref="double"/>s
         /// being compared.
         /// </summary>
         /// <param name="other">The other number.</param>

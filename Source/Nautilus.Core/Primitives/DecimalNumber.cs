@@ -412,7 +412,7 @@ namespace Nautilus.Core.Primitives
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
-        /// given <see cref="Decimal"/>.
+        /// given <see cref="decimal"/>.
         /// </summary>
         /// <param name="other">The other decimal.</param>
         /// <returns>The result of the equality check.</returns>
@@ -432,7 +432,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value which indicates the relative order of the <see cref="Decimal"/>s
+        /// Returns a value which indicates the relative order of the <see cref="decimal"/>s
         /// being compared.
         /// </summary>
         /// <param name="other">The other number.</param>
