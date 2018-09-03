@@ -48,7 +48,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="envelope">The envelope.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
+        /// <exception cref="InvalidOperationException">If the envelope receiver address is unknown.</exception>
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {

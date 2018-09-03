@@ -60,7 +60,7 @@ namespace Nautilus.Common.MessageStore
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
         public void Store(Envelope<Event> envelope)
         {
-            Validate.NotNull(envelope, nameof(envelope));
+            Debug.NotNull(envelope, nameof(envelope));
 
             this.eventEnvelopeList.Add(envelope);
         }
@@ -72,7 +72,7 @@ namespace Nautilus.Common.MessageStore
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
         public void Store(Envelope<Document> envelope)
         {
-            Validate.NotNull(envelope, nameof(envelope));
+            Debug.NotNull(envelope, nameof(envelope));
 
             this.documentEnvelopeList.Add(envelope);
         }

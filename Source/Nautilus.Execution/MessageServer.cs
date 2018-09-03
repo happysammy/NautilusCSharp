@@ -85,10 +85,10 @@ namespace Nautilus.Execution
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
             // Setup message handling.
-            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
-            this.Receive<CancelOrder>(msg => this.OnMessage(msg));
-            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<Event>(msg => this.OnMessage(msg));
+            this.Receive<SubmitOrder>(this.OnMessage);
+            this.Receive<CancelOrder>(this.OnMessage);
+            this.Receive<ModifyOrder>(this.OnMessage);
+            this.Receive<Event>(this.OnMessage);
         }
 
         /// <summary>

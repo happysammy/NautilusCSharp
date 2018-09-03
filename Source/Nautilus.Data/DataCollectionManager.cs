@@ -70,17 +70,17 @@ namespace Nautilus.Data
             this.barRollingWindow = barRollingWindow;
 
             // Setup message handling.
-            this.Receive<SystemStart>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<CollectData<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<TrimBarDataJob>(msg => this.OnMessage(msg));
-            this.Receive<JobCreated>(msg => this.OnMessage(msg));
-            this.Receive<JobRemoved>(msg => this.OnMessage(msg));
-            this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
-            this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg));
-            this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg));
-            this.Receive<DataPersisted<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<DataCollected<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<SystemStart>(this.OnMessage);
+            this.Receive<Subscribe<BarType>>(this.OnMessage);
+            this.Receive<CollectData<BarType>>(this.OnMessage);
+            this.Receive<TrimBarDataJob>(this.OnMessage);
+            this.Receive<JobCreated>(this.OnMessage);
+            this.Receive<JobRemoved>(this.OnMessage);
+            this.Receive<RemoveJobFail>(this.OnMessage);
+            this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
+            this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
+            this.Receive<DataPersisted<BarType>>(this.OnMessage);
+            this.Receive<DataCollected<BarType>>(this.OnMessage);
         }
 
         private void OnMessage(SystemStart message)
