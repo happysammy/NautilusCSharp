@@ -9,10 +9,7 @@
 namespace Nautilus.DomainModel.ValueObjects.Base
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Reflection.Metadata;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
