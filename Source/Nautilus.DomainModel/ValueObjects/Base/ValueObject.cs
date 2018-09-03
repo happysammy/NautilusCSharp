@@ -10,7 +10,10 @@ namespace Nautilus.DomainModel.ValueObjects.Base
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection.Metadata;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -68,28 +71,51 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
+        [PerformanceOptimized]
+        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Performance optimization.")]
         public bool Equals([CanBeNull] T other)
         {
-            return other != null && this.GetMembersForEqualityCheck()
-               .SequenceEqual(other.GetMembersForEqualityCheck());
+            if (other is null)
+            {
+                return false;
+            }
+
+            var thisEqualityArray = this.GetEqualityArray();
+            var otherEqualityArray = other.GetEqualityArray();
+            for (var i = 0; i < thisEqualityArray.Length; i++)
+            {
+                if (!thisEqualityArray[i].Equals(otherEqualityArray[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
         /// Returns the hash code for this object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
+        [PerformanceOptimized]
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach", Justification = "Performance optimization.")]
+        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Performance optimization.")]
         public override int GetHashCode()
         {
-            return this.GetMembersForEqualityCheck()
-               .Aggregate(17, (current, obj) => (current * 31) + (obj == null
-                                                    ? 0
-                                                    : obj.GetHashCode()));
+            var hash = 0;
+            var equalityArray = this.GetEqualityArray();
+            for (var i = 0; i < equalityArray.Length; i++)
+            {
+                hash += Hash.GetCode(equalityArray[i]);
+            }
+
+            return hash;
         }
 
         /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
+        /// Returns an array of objects to be included in equality checks.
         /// </summary>
-        /// <returns>A <see cref="IEnumerable{T}"/>.</returns>
-        protected abstract IEnumerable<object> GetMembersForEqualityCheck();
+        /// <returns>The array of equality members.</returns>
+        protected abstract object[] GetEqualityArray();
     }
 }

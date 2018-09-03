@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.DomainModel.ValueObjects.Base;
 
     /// <summary>
@@ -63,10 +62,10 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Returns a collection of objects to be included in equality checks.
+        /// Returns an array of objects to be included in equality checks.
         /// </summary>
-        /// <returns>A collection of objects.</returns>
-        protected override IEnumerable<object> GetMembersForEqualityCheck()
+        /// <returns>The array of equality members.</returns>
+        protected override object[] GetEqualityArray()
         {
             return new object[]
             {
