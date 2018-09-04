@@ -9,7 +9,6 @@
 namespace Nautilus.Scheduler
 {
     using System.Threading.Tasks;
-    using Akka.Actor;
     using Akka.Util.Internal;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
