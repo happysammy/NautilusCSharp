@@ -34,6 +34,12 @@ namespace Nautilus.Messaging.Network
         public string Value { get; }
 
         /// <summary>
+        /// Creates and returns a new local host 127.0.0.1 network address.
+        /// </summary>
+        /// <returns>The local host network address.</returns>
+        public static NetworkAddress LocalHost() => new NetworkAddress("127.0.0.1");
+
+        /// <summary>
         /// Returns a string representation of this <see cref="NetworkAddress"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>

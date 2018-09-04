@@ -151,7 +151,8 @@ namespace Nautilus.Data.Aggregators
                 .Build();
 
             var createJob = new CreateJob(
-                this.Self,
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
                 new MarketStatusJob(true),
                 trigger,
                 this.NewGuid(),
@@ -175,7 +176,8 @@ namespace Nautilus.Data.Aggregators
                 .Build();
 
             var createJob = new CreateJob(
-                this.Self,
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
                 new MarketStatusJob(false),
                 trigger,
                 this.NewGuid(),
@@ -250,7 +252,8 @@ namespace Nautilus.Data.Aggregators
                 var barJob = new BarJob(barSpec);
 
                 var createJob = new CreateJob(
-                    this.Self,
+                    new ActorEndpoint(this.Self),
+                    new ActorEndpoint(this.Self),
                     barJob,
                     this.triggers[duration],
                     this.NewGuid(),
@@ -315,7 +318,7 @@ namespace Nautilus.Data.Aggregators
                     job.Key,
                     job.Value,
                     "null job",
-                    this.Self,
+                    new ActorEndpoint(this.Self),
                     this.NewGuid(),
                     this.TimeNow());
 
@@ -438,7 +441,7 @@ namespace Nautilus.Data.Aggregators
                 {
                     var resumeJob = new ResumeJob(
                         barJob.Key,
-                        this.Self,
+                        new ActorEndpoint(this.Self),
                         this.NewGuid(),
                         this.TimeNow());
 
@@ -463,7 +466,7 @@ namespace Nautilus.Data.Aggregators
                 {
                     var pause = new PauseJob(
                         barJob.Key,
-                        this.Self,
+                        new ActorEndpoint(this.Self),
                         this.NewGuid(),
                         this.TimeNow());
 

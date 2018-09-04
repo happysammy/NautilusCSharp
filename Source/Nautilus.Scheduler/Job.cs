@@ -11,6 +11,7 @@ namespace Nautilus.Scheduler
     using System.Threading.Tasks;
     using Akka.Actor;
     using Akka.Util.Internal;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Quartz;
 
@@ -21,18 +22,18 @@ namespace Nautilus.Scheduler
     public sealed class Job : IJob
     {
         private const string MessageKey = "message";
-        private const string ActorKey = "actor";
+        private const string NautilusKey = "nautilus";
 
         /// <summary>
         /// Creates and returns a new job builder from the given parameters.
         /// </summary>
-        /// <param name="actorRef">The actor address.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="receiver">The jobs receiver.</param>
+        /// <param name="message">The job message.</param>
         /// <returns>The job builder.</returns>
-        public static JobBuilder CreateBuilderWithData(IActorRef actorRef, object message)
+        public static JobBuilder CreateBuilderWithData(IEndpoint receiver, object message)
         {
             var jdm = new JobDataMap();
-            jdm.AddAndReturn(MessageKey, message).Add(ActorKey, actorRef);
+            jdm.AddAndReturn(MessageKey, message).Add(NautilusKey, receiver);
 
             return JobBuilder.Create<Job>().UsingJobData(jdm);
         }
@@ -45,12 +46,14 @@ namespace Nautilus.Scheduler
         public Task Execute(IJobExecutionContext context)
         {
             var jdm = context.JobDetail.JobDataMap;
-            if (jdm.ContainsKey(MessageKey) && jdm.ContainsKey(ActorKey))
+            if (!jdm.ContainsKey(MessageKey) || !jdm.ContainsKey(NautilusKey))
             {
-                if (jdm[ActorKey] is IActorRef actor)
-                {
-                    actor.Tell(jdm[MessageKey]);
-                }
+                return Task.CompletedTask;
+            }
+
+            if (jdm[NautilusKey] is IEndpoint receiver)
+            {
+                receiver.Send(jdm[MessageKey]);
             }
 
             return Task.CompletedTask;

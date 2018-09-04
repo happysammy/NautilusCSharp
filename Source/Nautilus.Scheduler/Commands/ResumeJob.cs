@@ -9,7 +9,7 @@
 namespace Nautilus.Scheduler.Commands
 {
     using System;
-    using Akka.Actor;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -20,23 +20,26 @@ namespace Nautilus.Scheduler.Commands
     /// Represents a job command message to resume a job.
     /// </summary>
     [Immutable]
-    public sealed class ResumeJob : Command, IJobCommand
+    public sealed class ResumeJob : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ResumeJob"/> class.
         /// </summary>
-        /// <param name="jobKey">The job key.</param>
-        /// <param name="sender">The message sender.</param>
-        /// <param name="identifier">The message identifier.</param>
-        /// <param name="timestamp">The message timestamp.</param>
+        /// <param name="jobKey">The job key to resume.</param>
+        /// <param name="sender">The command sender.</param>
+        /// <param name="identifier">The command identifier.</param>
+        /// <param name="timestamp">The command timestamp.</param>
         public ResumeJob(
             JobKey jobKey,
-            IActorRef sender,
+            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
+            Debug.NotNull(sender, nameof(sender));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
             this.Sender = sender;
@@ -48,8 +51,8 @@ namespace Nautilus.Scheduler.Commands
         public JobKey JobKey { get; }
 
         /// <summary>
-        /// Gets the resume job message sender.
+        /// Gets the resume job commands sender.
         /// </summary>
-        public IActorRef Sender { get; }
+        public IEndpoint Sender { get; }
     }
 }

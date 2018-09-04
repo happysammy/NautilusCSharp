@@ -31,10 +31,10 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     {
         private const string TestTopic = "test_topic";
 
-        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
         private readonly IEndpoint testEndpoint;
 
         public PublisherTests(ITestOutputHelper output)

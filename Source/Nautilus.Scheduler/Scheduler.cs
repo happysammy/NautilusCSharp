@@ -9,7 +9,6 @@
 namespace Nautilus.Scheduler
 {
     using System.Collections.Specialized;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,9 +17,8 @@ namespace Nautilus.Scheduler
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using Nautilus.Scheduler.Exceptions;
+    using Quartz;
     using Quartz.Impl;
-
-    using IScheduler = Quartz.IScheduler;
 
     /// <summary>
     /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
@@ -77,30 +75,24 @@ namespace Nautilus.Scheduler
         {
             Debug.NotNull(message, nameof(message));
 
-            var destination = message.Destination;
-
-            try
+            this.Execute(() =>
             {
+                var receiver = message.Receiver;
                 var job = Job.CreateBuilderWithData(
-                        destination,
+                        receiver,
                         message.Message)
                     .WithIdentity(message.Trigger.JobKey)
                     .Build();
 
                 this.quartzScheduler.ScheduleJob(job, message.Trigger);
 
-                destination.Tell(new JobCreated(
+                receiver.Send(new JobCreated(
                     message.Trigger.JobKey,
                     message.Trigger.Key,
-                    message.Message));
-            }
-            catch (JobNotFoundException ex)
-            {
-                destination.Tell(new CreateJobFail(
-                    message.Trigger.JobKey,
-                    message.Trigger.Key,
-                    ex));
-            }
+                    message.Message,
+                    this.NewGuid(),
+                    this.TimeNow()));
+            });
         }
 
         private void OnMessage(PauseJob message)
@@ -158,19 +150,31 @@ namespace Nautilus.Scheduler
                 var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
                 if (deleted.IsCompletedSuccessfully)
                 {
-                    sender.Tell(new JobRemoved(
+                    sender.Send(new JobRemoved(
                         message.JobKey,
                         message.TriggerKey,
-                        message.Job));
+                        message.Job,
+                        this.NewGuid(),
+                        this.TimeNow()));
                 }
                 else
                 {
-                    sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, new JobNotFoundException()));
+                    sender.Send(new RemoveJobFail(
+                        message.JobKey,
+                        message.TriggerKey,
+                        new JobNotFoundException(),
+                        this.NewGuid(),
+                        this.TimeNow()));
                 }
             }
             catch (JobNotFoundException ex)
             {
-                sender.Tell(new RemoveJobFail(message.JobKey, message.TriggerKey, ex));
+                sender.Send(new RemoveJobFail(
+                    message.JobKey,
+                    message.TriggerKey,
+                    ex,
+                    this.NewGuid(),
+                    this.TimeNow()));
             }
         }
     }

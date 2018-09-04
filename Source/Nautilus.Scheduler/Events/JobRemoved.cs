@@ -8,8 +8,10 @@
 
 namespace Nautilus.Scheduler.Events
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using NodaTime;
     using Quartz;
 
     /// <summary>
@@ -24,11 +26,15 @@ namespace Nautilus.Scheduler.Events
         /// <param name="jobKey">The removed job key.</param>
         /// <param name="triggerKey">The removed trigger key.</param>
         /// <param name="job">The removed job.</param>
+        /// <param name="identifier">The event identifier.</param>
+        /// <param name="timestamp">The event timestamp.</param>
         public JobRemoved(
             JobKey jobKey,
             TriggerKey triggerKey,
-            object job)
-            : base(jobKey, triggerKey)
+            object job,
+            Guid identifier,
+            ZonedDateTime timestamp)
+        : base(jobKey, triggerKey, identifier, timestamp)
         {
             Debug.NotNull(job, nameof(job));
             Debug.NotNull(triggerKey, nameof(triggerKey));

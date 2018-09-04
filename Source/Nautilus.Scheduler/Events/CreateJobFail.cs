@@ -11,6 +11,7 @@ namespace Nautilus.Scheduler.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using NodaTime;
     using Quartz;
 
     /// <summary>
@@ -25,11 +26,15 @@ namespace Nautilus.Scheduler.Events
         /// <param name="jobKey">The job key.</param>
         /// <param name="triggerKey">The job trigger key.</param>
         /// <param name="reason">The creation failure reason.</param>
+        /// <param name="identifier">The event identifier.</param>
+        /// <param name="timestamp">The event timestamp.</param>
         public CreateJobFail(
             JobKey jobKey,
             TriggerKey triggerKey,
-            Exception reason)
-            : base(jobKey, triggerKey)
+            Exception reason,
+            Guid identifier,
+            ZonedDateTime timestamp)
+            : base(jobKey, triggerKey, identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
             Debug.NotNull(triggerKey, nameof(triggerKey));

@@ -14,6 +14,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;
@@ -184,7 +185,8 @@ namespace Nautilus.Data
                 .Build();
 
             var createJob = new CreateJob(
-                this.Self,
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
                 new TrimBarDataJob(),
                 trigger,
                 this.NewGuid(),

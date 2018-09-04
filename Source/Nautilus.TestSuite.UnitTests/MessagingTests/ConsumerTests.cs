@@ -30,10 +30,10 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class ConsumerTests : TestKit
     {
-        private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
         private readonly IEndpoint testEndpoint;
 
         public ConsumerTests(ITestOutputHelper output)
