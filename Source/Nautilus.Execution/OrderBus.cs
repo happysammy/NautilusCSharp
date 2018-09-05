@@ -105,7 +105,7 @@ namespace Nautilus.Execution
 
             this.gateway.ClosePosition(message.Position);
 
-            this.Log.Debug($"Routing ClosePosition ({message.Position} => {this.gateway.Broker}");
+            this.Log.Debug($"Routing ClosePosition {message.Position} => {this.gateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)
