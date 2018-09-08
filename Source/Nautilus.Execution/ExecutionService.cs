@@ -47,7 +47,7 @@ namespace Nautilus.Execution
 
             // Setup message handling.
             this.Receive<InitializeGateway>(this.OnMessage);
-            this.Receive<SystemShutdown>(this.OnMessage);
+            this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
@@ -77,18 +77,14 @@ namespace Nautilus.Execution
             });
         }
 
-        private void OnMessage(SystemStart message)
+        private void OnMessage(CollateralInquiry message)
         {
             Debug.NotNull(message, nameof(message));
 
-            // Not implemented.
-        }
-
-        private void OnMessage(SystemShutdown message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(this.PostStop);
+            this.Execute(() =>
+            {
+                this.orderBusRef.Send(message);
+            });
         }
 
         private void OnMessage(SubmitOrder message)

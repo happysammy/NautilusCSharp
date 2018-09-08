@@ -10,6 +10,7 @@ namespace Nautilus.Execution
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -155,6 +156,14 @@ namespace Nautilus.Execution
         public void UpdateInstrumentsSubscribeAll()
         {
             this.fixClient.UpdateInstrumentsSubscribeAll();
+        }
+
+        /// <summary>
+        /// Submits a collateral inquiry to the brokerage.
+        /// </summary>
+        public void CollateralInquiry()
+        {
+            this.fixClient.CollateralInquiry();
         }
 
         /// <summary>

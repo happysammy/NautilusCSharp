@@ -44,6 +44,7 @@ namespace Nautilus.Execution
 
             // Setup message handling.
             this.Receive<InitializeGateway>(this.OnMessage);
+            this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
@@ -57,6 +58,16 @@ namespace Nautilus.Execution
 
             this.gateway = message.ExecutionGateway;
             this.Log.Information($"{this.gateway} initialized.");
+        }
+
+        private void OnMessage(CollateralInquiry message)
+        {
+            Debug.NotNull(message, nameof(message));
+            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
+
+            this.gateway.CollateralInquiry();
+
+            this.Log.Debug($"Routing {message} => {this.gateway.Broker}");
         }
 
         private void OnMessage(SubmitOrder message)

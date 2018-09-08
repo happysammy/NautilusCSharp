@@ -68,6 +68,11 @@ namespace Nautilus.Common.Interfaces
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
+        /// Submits a collateral inquiry to the brokerage.
+        /// </summary>
+        void CollateralInquiry();
+
+        /// <summary>
         /// Submits an entry order with a stop-loss and profit target to the brokerage.
         /// </summary>
         /// <param name="order">The order to submit.</param>

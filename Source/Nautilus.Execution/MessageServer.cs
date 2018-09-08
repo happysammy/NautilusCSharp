@@ -89,6 +89,7 @@ namespace Nautilus.Execution
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
+            this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<Event>(this.OnMessage);
         }
 
@@ -184,6 +185,11 @@ namespace Nautilus.Execution
             {
                 this.AddToCache(modifyOrder);
             }
+        }
+
+        private void OnMessage(CollateralInquiry message)
+        {
+            this.Send(NautilusService.Execution, message);
         }
 
         private void OnMessage(Event @event)
