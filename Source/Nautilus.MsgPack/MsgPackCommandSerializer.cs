@@ -27,6 +27,7 @@ namespace Nautilus.MsgPack
         private const string SubmitOrder = "submit_order";
         private const string CancelOrder = "cancel_order";
         private const string ModifyOrder = "modify_order";
+        private const string CollateralInquiry = "collateral_inquiry";
 
         private readonly IOrderSerializer orderSerializer;
 
@@ -52,6 +53,15 @@ namespace Nautilus.MsgPack
                 case OrderCommand orderCommand:
                     return this.SerializeOrderCommand(orderCommand);
 
+                case CollateralInquiry collateralInquiry:
+                    var package = new MessagePackObjectDictionary
+                    {
+                        { new MessagePackObject(Key.CommandType), CollateralInquiry },
+                        { new MessagePackObject(Key.CommandId), collateralInquiry.Id.ToString() },
+                        { new MessagePackObject(Key.CommandTimestamp), collateralInquiry.Timestamp.ToIsoString() },
+                    };
+                    return MsgPackSerializer.Serialize(package.Freeze());
+
                 default: throw new InvalidOperationException(
                     "Cannot serialize the command (unrecognized command).");
             }
@@ -73,6 +83,9 @@ namespace Nautilus.MsgPack
             {
                 case OrderCommand:
                     return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
+
+                case CollateralInquiry:
+                    return new CollateralInquiry(commandId, commandTimestamp);
 
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the command (unrecognized command).");

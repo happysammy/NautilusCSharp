@@ -94,6 +94,22 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
+        internal void Test_can_serialize_and_deserialize_collateral_inquiry_commands()
+        {
+            // Arrange
+            var serializer = new MsgPackCommandSerializer();
+            var command = new CollateralInquiry(Guid.NewGuid(), StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(command);
+            var unpacked = serializer.Deserialize(packed) as CollateralInquiry;
+
+            // Assert
+            Assert.Equal(command, unpacked);
+            this.output.WriteLine(Hex.ToHexString(packed));
+        }
+
+        [Fact]
         internal void Test_can_deserialize_submit_order_from_python_msgpack()
         {
             // Arrange
@@ -188,6 +204,25 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(typeof(ModifyOrder), command?.GetType());
+        }
+
+        [Fact]
+        internal void Test_can_deserialize_collateral_inquiry_from_python_msgpack()
+        {
+            // Arrange
+            var serializer = new MsgPackCommandSerializer();
+            var hexString = "83aa636f6d6d616e645f6964da002465636133343630342d333936352d343631622d" +
+                            "616265362d626366396461366231386433b1636f6d6d616e645f74696d657374616d" +
+                            "70b8313937302d30312d30315430303a30303a30302e3030305aac636f6d6d616e64" +
+                            "5f74797065b2636f6c6c61746572616c5f696e7175697279";
+
+            var commandBytes = Hex.FromHexString(hexString);
+
+            // Act
+            var command = serializer.Deserialize(commandBytes) as CollateralInquiry;
+
+            // Assert
+            Assert.Equal(typeof(CollateralInquiry), command?.GetType());
         }
     }
 }
