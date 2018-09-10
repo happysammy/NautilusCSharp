@@ -244,7 +244,7 @@ namespace Nautilus.Execution
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
-                Debug.PositiveInt32(decimals, nameof(decimals));
+                Debug.NotNegativeInt32(decimals, nameof(decimals));
 
                 var tick = new Tick(
                     new Symbol(symbol, venue),
