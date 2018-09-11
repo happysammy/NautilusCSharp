@@ -66,7 +66,7 @@ namespace Nautilus.Execution
                         port,
                         Guid.NewGuid()))));
 
-            this.Receive<byte[]>(this.OnMessage);
+            this.Receive<byte[]>(msg => this.OnMessage(msg));
         }
 
         private void OnMessage(byte[] message)

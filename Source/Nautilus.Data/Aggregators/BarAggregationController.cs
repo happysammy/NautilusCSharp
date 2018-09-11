@@ -75,16 +75,16 @@ namespace Nautilus.Data.Aggregators
             this.isMarketOpen = this.IsFxMarketOpen();
 
             // Setup message handling.
-            this.Receive<SystemStart>(this.OnMessage);
-            this.Receive<Subscribe<BarType>>(this.OnMessage);
-            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
-            this.Receive<JobCreated>(this.OnMessage);
-            this.Receive<JobRemoved>(this.OnMessage);
-            this.Receive<RemoveJobFail>(this.OnMessage);
-            this.Receive<BarJob>(this.OnMessage);
-            this.Receive<MarketStatusJob>(this.OnMessage);
-            this.Receive<Tick>(this.OnMessage);
-            this.Receive<BarClosed>(this.OnMessage);
+            this.Receive<SystemStart>(msg => this.OnMessage(msg));
+            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
+            this.Receive<JobCreated>(msg => this.OnMessage(msg));
+            this.Receive<JobRemoved>(msg => this.OnMessage(msg));
+            this.Receive<RemoveJobFail>(msg => this.OnMessage(msg));
+            this.Receive<BarJob>(msg => this.OnMessage(msg));
+            this.Receive<MarketStatusJob>(msg => this.OnMessage(msg));
+            this.Receive<Tick>(msg => this.OnMessage(msg));
+            this.Receive<BarClosed>(msg => this.OnMessage(msg));
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)

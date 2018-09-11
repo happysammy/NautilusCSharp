@@ -70,7 +70,7 @@ namespace Nautilus.Messaging
             };
 
             // Setup message handling.
-            this.Receive<byte[]>(this.OnMessage);
+            this.Receive<byte[]>(msg => this.OnMessage(msg));
         }
 
         /// <summary>
