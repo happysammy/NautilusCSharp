@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a possible state within the <see cref="FiniteStateMachine"/>.
     /// </summary>
     [Immutable]
-    internal struct State
+    internal struct State : IEquatable<State>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="State"/> structure.
@@ -52,19 +52,19 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         public static bool operator !=(State left, State right) => !(left == right);
 
         /// <summary>
+        /// Returns a value indicating whether this instance is equal to a specified object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>A boolean.</returns>
+        public override bool Equals(object obj) => obj is State other && this.Value.Equals(other.Value);
+
+        /// <summary>
         /// Returns a value indicating whether this <see cref="State"/> is equal to the
         /// specified <see cref="State"/>.
         /// </summary>
         /// <param name="other">The other state.</param>
         /// <returns>A boolean.</returns>
         public bool Equals(State other) => this.Value.Equals(other.Value);
-
-        /// <summary>
-        /// Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) => obj is State other && this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns the hash code of this <see cref="State"/>.

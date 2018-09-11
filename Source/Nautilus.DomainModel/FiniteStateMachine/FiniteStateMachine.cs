@@ -41,13 +41,13 @@ namespace Nautilus.DomainModel.FiniteStateMachine
             Validate.NotNull(startingState, nameof(startingState));
 
             this.stateTransitionTable = new ReadOnlyDictionary<StateTransition, State>(stateTransitionTable);
-            this.CurrentState = startingState;
+            this.State = startingState;
         }
 
         /// <summary>
-        /// Gets the current <see cref="State"/>.
+        /// Gets the current <see cref="DomainModel.FiniteStateMachine.State"/>.
         /// </summary>
-        internal State CurrentState { get; private set; }
+        internal State State { get; private set; }
 
         /// <summary>
         /// Processes the finite state machine with the given <see cref="Trigger"/>.
@@ -59,11 +59,11 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         {
             Debug.NotNull(trigger, nameof(trigger));
 
-            var transition = new StateTransition(this.CurrentState, trigger);
+            var transition = new StateTransition(this.State, trigger);
 
             return this.IsValidStateTransition(transition)
                        ? CommandResult.Ok().OnSuccess(() => this.ChangeStateTo(this.StateTransitionResult(transition)))
-                       : CommandResult.Fail($"Invalid state transition: {this.CurrentState} -> {trigger}");
+                       : CommandResult.Fail($"Invalid state transition: {this.State} -> {trigger}");
         }
 
         private bool IsValidStateTransition(StateTransition transition) => this.stateTransitionTable.ContainsKey(transition);
@@ -72,7 +72,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         {
             Debug.NotDefault(state, nameof(state));
 
-            this.CurrentState = state;
+            this.State = state;
         }
 
         private State StateTransitionResult(StateTransition transition)

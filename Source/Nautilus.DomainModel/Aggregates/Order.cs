@@ -178,7 +178,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the current order status.
         /// </summary>
-        public OrderStatus Status => (OrderStatus)this.orderState.CurrentState.Value;
+        public OrderStatus Status => (OrderStatus)this.orderState.State.Value;
 
         /// <summary>
         /// Gets a value indicating whether the order status is complete.

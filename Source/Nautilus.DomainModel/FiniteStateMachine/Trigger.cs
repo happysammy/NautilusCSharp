@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.
     /// </summary>
     [Immutable]
-    internal struct Trigger
+    internal struct Trigger : IEquatable<Trigger>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Trigger"/> structure.
@@ -64,18 +64,18 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         public static bool operator !=(Trigger left, Trigger right) => !(left == right);
 
         /// <summary>
-        /// Returns a value indicating whether this instance is equal to the specified <see cref="Trigger"/>.
-        /// </summary>
-        /// <param name="other">The other state.</param>
-        /// <returns>A boolean.</returns>
-        public bool Equals(Trigger other) => this.Value == other.Value;
-
-        /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>A boolean.</returns>
         public override bool Equals(object obj) => obj is Trigger other && this.Value == other.Value;
+
+        /// <summary>
+        /// Returns a value indicating whether this instance is equal to the specified <see cref="Trigger"/>.
+        /// </summary>
+        /// <param name="other">The other state.</param>
+        /// <returns>A boolean.</returns>
+        public bool Equals(Trigger other) => this.Value == other.Value;
 
         /// <summary>
         /// Returns the hash code of this <see cref="Trigger"/>.
