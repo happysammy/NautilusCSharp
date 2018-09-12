@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="OrderBus.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TradeCommandBus.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -18,24 +18,24 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// Provides an order bus for the execution service.
+    /// Provides a trade command bus for the execution service.
     /// </summary>
     [Stateless]
-    public sealed class OrderBus : ActorComponentBusConnectedBase
+    public sealed class TradeCommandBus : ActorComponentBusConnectedBase
     {
         private IExecutionGateway gateway;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OrderBus"/> class.
+        /// Initializes a new instance of the <see cref="TradeCommandBus"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        public OrderBus(
+        public TradeCommandBus(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Execution,
-            LabelFactory.Component(nameof(OrderBus)),
+            LabelFactory.Component(nameof(TradeCommandBus)),
             container,
             messagingAdapter)
         {

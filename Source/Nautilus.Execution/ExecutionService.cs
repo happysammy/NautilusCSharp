@@ -27,7 +27,7 @@ namespace Nautilus.Execution
     {
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
-        private readonly IEndpoint orderBusRef;
+        private readonly IEndpoint tradeCommandBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
@@ -52,16 +52,16 @@ namespace Nautilus.Execution
             Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
-            this.orderBusRef = new ActorEndpoint(
+            this.tradeCommandBus = new ActorEndpoint(
                 Context.ActorOf(
-                Props.Create(() => new OrderBus(container, messagingAdapter))));
+                Props.Create(() => new TradeCommandBus(container, messagingAdapter))));
 
             this.commandThrottler = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
                     () => new Throttler<OrderCommand>(
                         container,
                         NautilusService.Execution,
-                        this.orderBusRef,
+                        this.tradeCommandBus,
                         Duration.FromSeconds(1),
                         commandsPerSecond))));
 
@@ -91,7 +91,7 @@ namespace Nautilus.Execution
         {
             this.Execute(() =>
             {
-                this.orderBusRef.Send(PoisonPill.Instance);
+                this.tradeCommandBus.Send(PoisonPill.Instance);
                 this.newOrderThrottler.Send(PoisonPill.Instance);
                 this.commandThrottler.Send(PoisonPill.Instance);
                 base.PostStop();
@@ -104,7 +104,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.tradeCommandBus.Send(message);
             });
         }
 
