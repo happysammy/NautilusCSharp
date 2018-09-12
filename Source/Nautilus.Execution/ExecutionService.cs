@@ -10,18 +10,23 @@ namespace Nautilus.Execution
 {
     using Akka.Actor;
     using Nautilus.Common.Commands;
+    using Nautilus.Common.Commands.Base;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
+    using NodaTime;
 
     /// <summary>
     /// The service context which handles all execution related operations.
     /// </summary>
     public sealed class ExecutionService : ActorComponentBusConnectedBase
     {
+        private readonly IEndpoint commandThrottler;
+        private readonly IEndpoint newOrderThrottler;
         private readonly IEndpoint orderBusRef;
 
         /// <summary>
@@ -29,9 +34,13 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="commandsPerSecond">The commands per second throttling.</param>
+        /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         public ExecutionService(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            int commandsPerSecond,
+            int newOrdersPerSecond)
             : base(
             NautilusService.Execution,
             LabelFactory.Component(nameof(ExecutionService)),
@@ -40,10 +49,30 @@ namespace Nautilus.Execution
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             this.orderBusRef = new ActorEndpoint(
                 Context.ActorOf(
                 Props.Create(() => new OrderBus(container, messagingAdapter))));
+
+            this.commandThrottler = new ActorEndpoint(
+                Context.ActorOf(Props.Create(
+                    () => new Throttler<OrderCommand>(
+                        container,
+                        NautilusService.Execution,
+                        this.orderBusRef,
+                        Duration.FromSeconds(1),
+                        commandsPerSecond))));
+
+            this.newOrderThrottler = new ActorEndpoint(
+                Context.ActorOf(Props.Create(
+                    () => new Throttler<SubmitOrder>(
+                        container,
+                        NautilusService.Execution,
+                        this.commandThrottler,
+                        Duration.FromSeconds(1),
+                        newOrdersPerSecond))));
 
             // Setup message handling.
             this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
@@ -63,6 +92,8 @@ namespace Nautilus.Execution
             this.Execute(() =>
             {
                 this.orderBusRef.Send(PoisonPill.Instance);
+                this.newOrderThrottler.Send(PoisonPill.Instance);
+                this.commandThrottler.Send(PoisonPill.Instance);
                 base.PostStop();
             });
         }
@@ -83,7 +114,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.commandThrottler.Send(message);
             });
         }
 
@@ -93,7 +124,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.newOrderThrottler.Send(message);
             });
         }
 
@@ -103,7 +134,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.commandThrottler.Send(message);
             });
         }
 
@@ -113,7 +144,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.commandThrottler.Send(message);
             });
         }
 
@@ -123,7 +154,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.commandThrottler.Send(message);
             });
         }
 
@@ -133,7 +164,7 @@ namespace Nautilus.Execution
 
             this.Execute(() =>
             {
-                this.orderBusRef.Send(message);
+                this.commandThrottler.Send(message);
             });
         }
     }

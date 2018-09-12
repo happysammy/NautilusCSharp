@@ -29,19 +29,29 @@ namespace Nautilus.Execution
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="commandsPerSecond">The commands per second throttling.</param>
+        /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         /// <returns>The services endpoint.</returns>
         public static Dictionary<NautilusService, IEndpoint> Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            int commandsPerSecond = 100,
+            int newOrdersPerSecond = 15)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var executionService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
-                () => new ExecutionService(container, messagingAdapter))));
+                () => new ExecutionService(
+                    container,
+                    messagingAdapter,
+                    commandsPerSecond,
+                    newOrdersPerSecond))));
 
             return new Dictionary<NautilusService, IEndpoint>
             {

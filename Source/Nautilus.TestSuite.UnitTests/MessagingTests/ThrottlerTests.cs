@@ -51,8 +51,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         {
             // Arrange
             var throttler = this.Sys.ActorOf(Props.Create(() => new Throttler<string>(
-                NautilusService.Execution,
                 this.setupContainer,
+                NautilusService.Execution,
                 this.testEndpoint,
                 Duration.FromSeconds(1),
                 10)));

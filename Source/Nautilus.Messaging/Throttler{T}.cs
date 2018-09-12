@@ -42,14 +42,14 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="Throttler{T}"/> class.
         /// </summary>
-        /// <param name="serviceContext">The service context.</param>
         /// <param name="container">The setup container.</param>
-        /// <param name="receiver">The receivers endpoint.</param>
+        /// <param name="serviceContext">The service context.</param>
+        /// <param name="receiver">The receiver service.</param>
         /// <param name="interval">The throttle timer interval.</param>
         /// <param name="limit">The message limit per second.</param>
         public Throttler(
-            NautilusService serviceContext,
             IComponentryContainer container,
+            NautilusService serviceContext,
             IEndpoint receiver,
             Duration interval,
             int limit)
@@ -110,10 +110,10 @@ namespace Nautilus.Messaging
         {
             if (this.isIdle)
             {
-                this.Log.Debug("Is Active.");
-
                 this.isIdle = false;
                 this.RunTimer().PipeTo(this.Self);
+
+                this.Log.Debug("Is Active.");
             }
 
             if (this.vouchers <= 0)
@@ -127,8 +127,9 @@ namespace Nautilus.Messaging
             {
                 var message = this.queue.Dequeue();
                 this.receiver.Send(message);
-                this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
                 this.vouchers--;
+
+                this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
             }
         }
 
