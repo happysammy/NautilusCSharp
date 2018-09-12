@@ -1,0 +1,89 @@
+//--------------------------------------------------------------------------------------------------
+// <copyright file="ThrottlerTests.cs" company="Nautech Systems Pty Ltd">
+//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  The use of this source code is governed by the license as found in the LICENSE.txt file.
+//  http://www.nautechsystems.net
+// </copyright>
+//--------------------------------------------------------------------------------------------------
+
+namespace Nautilus.TestSuite.UnitTests.MessagingTests
+{
+    using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
+    using Akka.Actor;
+    using Akka.TestKit.Xunit2;
+    using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
+    using Nautilus.Messaging;
+    using Nautilus.Messaging.Network;
+    using Nautilus.TestSuite.TestKit;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
+    using Xunit;
+    using Xunit.Abstractions;
+
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    public class ThrottlerTests : TestKit
+    {
+        private readonly ITestOutputHelper output;
+        private readonly IComponentryContainer setupContainer;
+        private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
+        private readonly IEndpoint testEndpoint;
+
+        public ThrottlerTests(ITestOutputHelper output)
+        {
+            // Fixture Setup
+            this.output = output;
+
+            var setupFactory = new StubSetupContainerFactory();
+            this.setupContainer = setupFactory.Create();
+            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+
+            this.testEndpoint = new ActorEndpoint(this.TestActor);
+        }
+
+        [Fact]
+        internal void Test_can_throttle_ten_messages_per_second()
+        {
+            // Arrange
+            var throttler = this.Sys.ActorOf(Props.Create(() => new Throttler<string>(
+                NautilusService.Execution,
+                this.setupContainer,
+                this.testEndpoint,
+                Duration.FromSeconds(1),
+                10)));
+
+            // Act
+            for (var i = 0; i < 21; i++)
+            {
+                throttler.Tell($"Message-{i + 1}");
+            }
+
+            // Assert
+            // Receives only the first 10 messages.
+            for (var i = 0; i < 10; i++)
+            {
+                this.ExpectMsg<string>();
+            }
+
+            // Wait for the throttle duration interval.
+            Task.Delay(1000).Wait();
+
+            // Receives the next 10 messages.
+            for (var j = 0; j < 10; j++)
+            {
+                this.ExpectMsg<string>();
+            }
+
+            // Receives final message.
+            Task.Delay(1000).Wait();
+            this.ExpectMsg<string>();
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+        }
+    }
+}
