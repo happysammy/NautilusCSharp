@@ -65,6 +65,16 @@ namespace Nautilus.Common.Enums
         Data,
 
         /// <summary>
+        /// The message server module context.
+        /// </summary>
+        MessageServer,
+
+        /// <summary>
+        /// The order manager module context.
+        /// </summary>
+        OrderManager,
+
+        /// <summary>
         /// The scheduler service context.
         /// </summary>
         Scheduler,

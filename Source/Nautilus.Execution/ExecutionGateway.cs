@@ -231,6 +231,7 @@ namespace Nautilus.Execution
         /// <param name="ask">The tick ask price.</param>
         /// <param name="decimals">The expected decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
+        [SystemBoundary]
         public void OnTick(
             string symbol,
             Venue venue,
@@ -263,6 +264,7 @@ namespace Nautilus.Execution
         /// Event handler for receiving FIX Position Reports.
         /// </summary>
         /// <param name="account">The account.</param>
+        [SystemBoundary]
         public void OnPositionReport(string account)
         {
             this.Execute(() =>
@@ -278,6 +280,7 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
         /// <param name="accountNumber">The account number.</param>
+        [SystemBoundary]
         public void OnCollateralInquiryAck(string inquiryId, string accountNumber)
         {
             this.Execute(() =>
@@ -295,6 +298,7 @@ namespace Nautilus.Execution
         /// Event handler for receiving FIX business messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SystemBoundary]
         public void OnBusinessMessage(string message)
         {
             this.Execute(() =>
@@ -311,6 +315,7 @@ namespace Nautilus.Execution
         /// <param name="instruments">The instruments collection.</param>
         /// <param name="responseId">The response identifier.</param>
         /// <param name="result">The result.</param>
+        [SystemBoundary]
         public void OnInstrumentsUpdate(
             IReadOnlyCollection<Instrument> instruments,
             string responseId,
@@ -337,6 +342,7 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="accountNumber">The account number.</param>
         /// <param name="positionRequestId">The position request identifier.</param>
+        [SystemBoundary]
         public void OnRequestForPositionsAck(string accountNumber, string positionRequestId)
         {
             this.Execute(() =>
@@ -363,6 +369,7 @@ namespace Nautilus.Execution
         /// <param name="marginRatio">The margin ratio.</param>
         /// <param name="marginCallStatus">The margin call status.</param>
         /// <param name="timestamp">The report timestamp.</param>
+        [SystemBoundary]
         public void OnAccountReport(
             string inquiryId,
             string accountNumber,
@@ -424,6 +431,7 @@ namespace Nautilus.Execution
         /// <param name="orderId">The order identifier.</param>
         /// <param name="rejectReason">The order reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderRejected(
             string symbol,
             Venue venue,
@@ -469,6 +477,7 @@ namespace Nautilus.Execution
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
         /// <param name="cancelRejectReason">The order cancel reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderCancelReject(
             string symbol,
             Venue venue,
@@ -518,6 +527,7 @@ namespace Nautilus.Execution
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderCancelled(
             string symbol,
             Venue venue,
@@ -565,6 +575,7 @@ namespace Nautilus.Execution
         /// <param name="price">The order price.</param>
         /// <param name="decimals">The price decimal precision.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderModified(
             string symbol,
             Venue venue,
@@ -623,6 +634,7 @@ namespace Nautilus.Execution
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderWorking(
             string symbol,
             Venue venue,
@@ -694,6 +706,7 @@ namespace Nautilus.Execution
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderExpired(
             string symbol,
             Venue venue,
@@ -745,6 +758,7 @@ namespace Nautilus.Execution
         /// <param name="averagePrice">The order average price.</param>
         /// <param name="decimals">The decimal precision for the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderFilled(
             string symbol,
             Venue venue,
@@ -815,6 +829,7 @@ namespace Nautilus.Execution
         /// <param name="averagePrice">The order average price.</param>
         /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
+        [SystemBoundary]
         public void OnOrderPartiallyFilled(
             string symbol,
             Venue venue,

@@ -10,11 +10,11 @@ namespace Nautilus.Execution
 {
     using Akka.Actor;
     using Nautilus.Common.Commands;
-    using Nautilus.Common.Commands.Base;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
@@ -58,7 +58,7 @@ namespace Nautilus.Execution
 
             this.commandThrottler = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
-                    () => new Throttler<OrderCommand>(
+                    () => new Throttler<Command>(
                         container,
                         NautilusService.Execution,
                         this.tradeCommandBus,

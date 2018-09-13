@@ -33,8 +33,6 @@ namespace Nautilus.Execution
     {
         private readonly IEndpoint commandConsumer;
         private readonly IEndpoint eventPublisher;
-        private readonly List<Order> orders;
-        private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer"/> class.
@@ -64,6 +62,9 @@ namespace Nautilus.Execution
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(commandSerializer, nameof(commandSerializer));
             Validate.NotNull(eventSerializer, nameof(eventSerializer));
+            Validate.NotNull(serverAddress, nameof(serverAddress));
+            Validate.NotNull(commandsPort, nameof(commandsPort));
+            Validate.NotNull(eventsPort, nameof(eventsPort));
 
             this.commandConsumer = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
@@ -81,9 +82,6 @@ namespace Nautilus.Execution
                         eventSerializer,
                         serverAddress,
                         eventsPort))));
-
-            this.orders = new List<Order>();
-            this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
             // Setup message handling.
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
@@ -107,84 +105,17 @@ namespace Nautilus.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            var orderToSubmit = message.Order;
-            var orderToAdd = new Order(
-                orderToSubmit.Symbol,
-                orderToSubmit.Id,
-                orderToSubmit.Label,
-                orderToSubmit.Side,
-                orderToSubmit.Type,
-                orderToSubmit.Quantity,
-                orderToSubmit.Price,
-                orderToSubmit.TimeInForce,
-                orderToSubmit.ExpireTime,
-                orderToSubmit.Timestamp);
-
-            this.orders.Add(orderToAdd);
-            this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
-
-            this.Send(NautilusService.Execution, message);
-
-            if (orderToSubmit.Price.HasValue && !this.modifyCache.ContainsKey(orderToSubmit.Id))
-            {
-                // Buffer modification cache preemptively.
-                this.modifyCache.Add(orderToSubmit.Id, new List<ModifyOrder>());
-            }
+            this.Send(NautilusService.OrderManager, message);
         }
 
         private void OnMessage(CancelOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
-
-            if (order is null)
-            {
-                this.Log.Warning(
-                    $"Order not found for CancelOrder (command order_id={message.Order.Id}).");
-                return;
-            }
-
-            var cancelOrder = new CancelOrder(
-                order,
-                message.Reason,
-                message.Id,
-                message.Timestamp);
-
-            this.Send(NautilusService.Execution, cancelOrder);
+            this.Send(NautilusService.OrderManager, message);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
-
-            if (order is null)
-            {
-                this.Log.Warning(
-                    $"Order not found for ModifyOrder (command order_id={message.Order.Id}).");
-                return;
-            }
-
-            var modifyOrder = new ModifyOrder(
-                order,
-                message.ModifiedPrice,
-                message.Id,
-                message.Timestamp);
-
-            if (!this.modifyCache.ContainsKey(order.Id))
-            {
-                // No cache for order id (this should never happen).
-                this.Log.Warning($"No modification cache found for {order.Id}.");
-                return;
-            }
-
-            if (this.modifyCache[order.Id].Count == 0)
-            {
-                this.Send(NautilusService.Execution, modifyOrder);
-                this.AddToCache(modifyOrder);
-            }
-            else
-            {
-                this.AddToCache(modifyOrder);
-            }
+            this.Send(NautilusService.OrderManager, message);
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -196,101 +127,8 @@ namespace Nautilus.Execution
         {
             Debug.NotNull(@event, nameof(@event));
 
-            this.Log.Debug($"Event {@event} received.");
-
-            if (@event is OrderEvent orderEvent)
-            {
-                var order = this.orders.FirstOrDefault(o => o.Id == orderEvent.OrderId);
-
-                if (order is null)
-                {
-                    this.Log.Warning($"Order not found for OrderEvent (event order_id={orderEvent.Id}).");
-                    return;
-                }
-
-                order.Apply(orderEvent);
-                this.Log.Debug($"Applied {@event} to {order.Id}.");
-
-                if (order.IsComplete)
-                {
-                    if (this.modifyCache.ContainsKey(order.Id))
-                    {
-                        // Flush cache.
-                        this.modifyCache.Remove(order.Id);
-                        this.Log.Debug($"Order {order.Id} complete, cache flushed.");
-                    }
-                }
-
-                if (@event is OrderModified orderModified)
-                {
-                    this.ProcessCache(order);
-                }
-            }
-
             this.eventPublisher.Send(@event);
             this.Log.Debug($"Published event {@event}.");
-        }
-
-        private void AddToCache(ModifyOrder modifyOrder)
-        {
-            Debug.NotNull(modifyOrder, nameof(modifyOrder));
-
-            var orderId = modifyOrder.Order.Id;
-            if (!this.modifyCache.ContainsKey(orderId))
-            {
-                // No cache for order id (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no cache for {orderId}.");
-                return;
-            }
-
-            // Any cached modify order command price equals the new modify order command price?
-            if (this.modifyCache[orderId].Any(command => command.ModifiedPrice.Equals(modifyOrder.ModifiedPrice)))
-            {
-                // No need to cache.
-                this.Log.Debug($"Duplicate price for {modifyOrder}, not cached.");
-                return;
-            }
-
-            this.modifyCache[orderId].Add(modifyOrder);
-            this.Log.Debug($"Added {modifyOrder} to cache.");
-        }
-
-        private void ProcessCache(Order order)
-        {
-            Debug.NotNull(order, nameof(order));
-
-            if (!this.modifyCache.ContainsKey(order.Id))
-            {
-                // Cannot process - no cache for order id (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no cache for {order.Id}.");
-                return;
-            }
-
-            if (order.Price.HasNoValue)
-            {
-                // Cannot process - no price for order (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no price {order.Id}.");
-                return;
-            }
-
-            this.Log.Verbose($"Processing modify order cache...");
-
-            foreach (var command in this.modifyCache[order.Id].ToList())
-            {
-                if (order.Price.Equals(command.ModifiedPrice))
-                {
-                    this.modifyCache[order.Id].Remove(command);
-                    this.Log.Verbose($"Removed {command} from cache.");
-                }
-            }
-
-            if (this.modifyCache[order.Id].Count > 0)
-            {
-                var command = this.modifyCache[order.Id][0];
-
-                this.Send(NautilusService.Execution, command);
-                this.Log.Debug($"Sent cached {command}.");
-            }
         }
     }
 }
