@@ -43,7 +43,7 @@ namespace Nautilus.Common.Interfaces
         /// Initializes the execution gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
-        void InitializeGateway(IExecutionGateway gateway);
+        void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.

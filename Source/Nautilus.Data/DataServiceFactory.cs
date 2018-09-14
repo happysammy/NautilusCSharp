@@ -42,7 +42,7 @@ namespace Nautilus.Data
             ActorSystem actorSystem,
             IComponentryContainer setupContainer,
             IMessagingAdapter messagingAdapter,
-            IExecutionGateway gateway,
+            IFixGateway gateway,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IReadOnlyList<string> symbols,

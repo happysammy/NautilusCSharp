@@ -85,12 +85,16 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixCredentials);
 
+            var fixGateway = FixGatewayFactory.Create(
+                setupContainer,
+                instrumentRepository,
+                fixClient);
+
             var switchboard = ExecutionServiceFactory.Create(
                 actorSystem,
                 setupContainer,
                 messagingAdapter,
-                fixClient,
-                instrumentRepository,
+                fixGateway,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),
                 serviceAddress,

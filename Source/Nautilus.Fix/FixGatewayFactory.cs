@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution
+namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
@@ -16,7 +16,7 @@ namespace Nautilus.Execution
     /// Provides a factory for execution gateways.
     /// </summary>
     [Stateless]
-    public static class ExecutionGatewayFactory
+    public static class FixGatewayFactory
     {
         /// <summary>
         /// Creates and returns a new execution gateway.
@@ -24,8 +24,8 @@ namespace Nautilus.Execution
         /// <param name="container">The setup container.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <returns>The execution gateway.</returns>
-        public static IExecutionGateway Create(
+        /// <returns>The FIX gateway.</returns>
+        public static IFixGateway Create(
             IComponentryContainer container,
             IInstrumentRepository instrumentRepository,
             IFixClient fixClient)
@@ -34,10 +34,14 @@ namespace Nautilus.Execution
             Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
-            return new ExecutionGateway(
+            var gateway = new FixGateway(
                 container,
                 instrumentRepository,
                 fixClient);
+
+            fixClient.InitializeGateway(gateway);
+
+            return gateway;
         }
     }
 }

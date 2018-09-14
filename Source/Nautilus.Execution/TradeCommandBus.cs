@@ -23,7 +23,7 @@ namespace Nautilus.Execution
     [Stateless]
     public sealed class TradeCommandBus : ActorComponentBusConnectedBase
     {
-        private readonly IExecutionGateway gateway;
+        private readonly IFixGateway gateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeCommandBus"/> class.
@@ -34,7 +34,7 @@ namespace Nautilus.Execution
         public TradeCommandBus(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IExecutionGateway gateway)
+            IFixGateway gateway)
             : base(
             NautilusService.Execution,
             LabelFactory.Component(nameof(TradeCommandBus)),

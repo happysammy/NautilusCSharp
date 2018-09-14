@@ -94,7 +94,7 @@ namespace Nautilus.Fix
         /// The initializes the execution gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
-        public void InitializeGateway(IExecutionGateway gateway)
+        public void InitializeGateway(IFixGateway gateway)
         {
             Validate.NotNull(gateway, nameof(gateway));
 

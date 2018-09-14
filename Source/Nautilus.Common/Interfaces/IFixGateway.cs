@@ -20,7 +20,7 @@ namespace Nautilus.Common.Interfaces
     /// <summary>
     /// Provides a gateway and anti-corruption layer into the system.
     /// </summary>
-    public interface IExecutionGateway
+    public interface IFixGateway
     {
         /// <summary>
         /// Gets the execution gateways broker name.

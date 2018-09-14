@@ -1,12 +1,12 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ExecutionGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="FixGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution
+namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -32,7 +32,7 @@ namespace Nautilus.Execution
     /// </summary>
     [Stateless]
     [PerformanceOptimized]
-    public sealed class ExecutionGateway : ComponentBase, IExecutionGateway
+    public sealed class FixGateway : ComponentBase, IFixGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
@@ -40,18 +40,18 @@ namespace Nautilus.Execution
         private ReadOnlyList<IEndpoint> eventReceivers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutionGateway"/> class.
+        /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The trade client.</param>
-        public ExecutionGateway(
+        public FixGateway(
             IComponentryContainer container,
             IInstrumentRepository instrumentRepository,
             IFixClient fixClient)
             : base(
                 NautilusService.Execution,
-                new Label(nameof(ExecutionGateway)),
+                new Label(nameof(FixGateway)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

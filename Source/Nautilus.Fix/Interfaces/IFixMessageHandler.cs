@@ -20,7 +20,7 @@ namespace Nautilus.Fix.Interfaces
         /// Initializes the execution gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
-        void InitializeGateway(IExecutionGateway gateway);
+        void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
         /// Handles business message reject messages.

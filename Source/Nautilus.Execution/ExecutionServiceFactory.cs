@@ -30,8 +30,7 @@ namespace Nautilus.Execution
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="fixClient">The FIX client.</param>
-        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="gateway">The FIX gateway.</param>
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>
         /// <param name="serviceAddress">The service address.</param>
@@ -44,8 +43,7 @@ namespace Nautilus.Execution
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixClient fixClient,
-            IInstrumentRepository instrumentRepository,
+            IFixGateway gateway,
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
             NetworkAddress serviceAddress,
@@ -59,13 +57,6 @@ namespace Nautilus.Execution
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
-
-            var gateway = ExecutionGatewayFactory.Create(
-                container,
-                instrumentRepository,
-                fixClient);
-
-            fixClient.InitializeGateway(gateway);
 
             var messageServer = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
