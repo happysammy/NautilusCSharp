@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="IExecutionGateway.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IFixGateway.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -23,7 +23,7 @@ namespace Nautilus.Common.Interfaces
     public interface IFixGateway
     {
         /// <summary>
-        /// Gets the execution gateways broker name.
+        /// Gets the gateways broker name.
         /// </summary>
         Broker Broker { get; }
 
