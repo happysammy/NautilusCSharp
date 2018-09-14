@@ -35,7 +35,7 @@ namespace Nautilus.Brokerage.FXCM
     {
         private readonly IReadOnlyDictionary<string, int> pricePrecisionIndex;
 
-        private IFixGateway _fixGateway;
+        private IFixGateway fixGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
@@ -58,7 +58,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             Validate.NotNull(gateway, nameof(gateway));
 
-            this._fixGateway = gateway;
+            this.fixGateway = gateway;
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Nautilus.Brokerage.FXCM
                 var responseId = message.GetField(Tags.SecurityResponseID);
                 var result = FixMessageHelper.GetSecurityRequestResult(message.SecurityRequestResult);
 
-                this._fixGateway.OnInstrumentsUpdate(instruments, responseId, result);
+                this.fixGateway.OnInstrumentsUpdate(instruments, responseId, result);
             });
         }
 
@@ -190,7 +190,7 @@ namespace Nautilus.Brokerage.FXCM
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
-                this._fixGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
+                this.fixGateway.OnCollateralInquiryAck(inquiryId, accountNumber);
             });
         }
 
@@ -215,7 +215,7 @@ namespace Nautilus.Brokerage.FXCM
                 var marginCall = message.GetField(9045);
                 var time = this.TimeNow(); // TODO: Replace with message time.
 
-                this._fixGateway.OnAccountReport(
+                this.fixGateway.OnAccountReport(
                     inquiryId,
                     accountNumber,
                     cashBalance,
@@ -241,7 +241,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                this._fixGateway.OnRequestForPositionsAck(
+                this.fixGateway.OnRequestForPositionsAck(
                     message.Account.ToString(),
                     message.PosReqID.ToString());
             });
@@ -297,7 +297,7 @@ namespace Nautilus.Brokerage.FXCM
                 message.GetGroup(2, group);
                 var ask = group.GetField(Tags.MDEntryPx);
 
-                this._fixGateway.OnTick(
+                this.fixGateway.OnTick(
                     symbol,
                     Venue.FXCM,
                     Convert.ToDecimal(bid),
@@ -325,7 +325,7 @@ namespace Nautilus.Brokerage.FXCM
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode})";
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
 
-                this._fixGateway.OnOrderCancelReject(
+                this.fixGateway.OnOrderCancelReject(
                     "NULL",
                     Venue.FXCM,
                     orderId,
@@ -373,7 +373,7 @@ namespace Nautilus.Brokerage.FXCM
                     var rejectReasonText = GetField(message, Tags.CxlRejReason);
                     var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
-                    this._fixGateway.OnOrderRejected(
+                    this.fixGateway.OnOrderRejected(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -383,7 +383,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
-                    this._fixGateway.OnOrderCancelled(
+                    this.fixGateway.OnOrderCancelled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -394,7 +394,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
-                    this._fixGateway.OnOrderModified(
+                    this.fixGateway.OnOrderModified(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -411,7 +411,7 @@ namespace Nautilus.Brokerage.FXCM
                                        ? (ZonedDateTime?)FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
                                        : null;
 
-                    this._fixGateway.OnOrderWorking(
+                    this.fixGateway.OnOrderWorking(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -429,7 +429,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
-                    this._fixGateway.OnOrderExpired(
+                    this.fixGateway.OnOrderExpired(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -445,7 +445,7 @@ namespace Nautilus.Brokerage.FXCM
                     var filledQuantity = Convert.ToInt32(GetField(message, Tags.CumQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this._fixGateway.OnOrderFilled(
+                    this.fixGateway.OnOrderFilled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -468,7 +468,7 @@ namespace Nautilus.Brokerage.FXCM
                     var leavesQuantity = Convert.ToInt32(GetField(message, Tags.LeavesQty));
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
-                    this._fixGateway.OnOrderPartiallyFilled(
+                    this.fixGateway.OnOrderPartiallyFilled(
                         symbol,
                         Venue.FXCM,
                         orderId,
@@ -498,7 +498,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                this._fixGateway.OnPositionReport(message.Account.ToString());
+                this.fixGateway.OnPositionReport(message.Account.ToString());
             });
         }
 
