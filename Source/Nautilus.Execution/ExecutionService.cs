@@ -34,11 +34,13 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="executionGateway">The execution gateway.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         public ExecutionService(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IExecutionGateway executionGateway,
             int commandsPerSecond,
             int newOrdersPerSecond)
             : base(
@@ -53,8 +55,11 @@ namespace Nautilus.Execution
             Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             this.tradeCommandBus = new ActorEndpoint(
-                Context.ActorOf(
-                Props.Create(() => new TradeCommandBus(container, messagingAdapter))));
+                Context.ActorOf(Props.Create(
+                    () => new TradeCommandBus(
+                        container,
+                        messagingAdapter,
+                        executionGateway))));
 
             this.commandThrottler = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
@@ -75,7 +80,6 @@ namespace Nautilus.Execution
                         newOrdersPerSecond))));
 
             // Setup message handling.
-            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<CollateralInquiry>(msg => this.OnMessage(msg));
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
@@ -95,16 +99,6 @@ namespace Nautilus.Execution
                 this.newOrderThrottler.Send(PoisonPill.Instance);
                 this.commandThrottler.Send(PoisonPill.Instance);
                 base.PostStop();
-            });
-        }
-
-        private void OnMessage(InitializeGateway message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.tradeCommandBus.Send(message);
             });
         }
 

@@ -23,16 +23,18 @@ namespace Nautilus.Execution
     [Stateless]
     public sealed class TradeCommandBus : ActorComponentBusConnectedBase
     {
-        private IExecutionGateway gateway;
+        private readonly IExecutionGateway gateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeCommandBus"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="gateway">The execution gateway.</param>
         public TradeCommandBus(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            IExecutionGateway gateway)
             : base(
             NautilusService.Execution,
             LabelFactory.Component(nameof(TradeCommandBus)),
@@ -41,23 +43,17 @@ namespace Nautilus.Execution
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(gateway, nameof(gateway));
+
+            this.gateway = gateway;
 
             // Setup message handling.
-            this.Receive<InitializeGateway>(msg => this.OnMessage(msg));
             this.Receive<CollateralInquiry>(msg => this.OnMessage(msg));
             this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
             this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
             this.Receive<CancelOrder>(msg => this.OnMessage(msg));
             this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
             this.Receive<ClosePosition>(msg => this.OnMessage(msg));
-        }
-
-        private void OnMessage(InitializeGateway message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.gateway = message.ExecutionGateway;
-            this.Log.Information($"{this.gateway} initialized.");
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -129,8 +125,6 @@ namespace Nautilus.Execution
 
         private bool IsConnected()
         {
-            Debug.NotNull(this.gateway, nameof(this.gateway));
-
             if (!this.gateway.IsConnected)
             {
                 this.Log.Warning("Cannot process orders (not connected to broker).");

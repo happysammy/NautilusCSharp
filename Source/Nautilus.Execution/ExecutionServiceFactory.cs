@@ -15,6 +15,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
+    using Nautilus.Messaging.Network;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
@@ -29,13 +30,27 @@ namespace Nautilus.Execution
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="fixClient">The FIX client.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="commandSerializer">The command serializer.</param>
+        /// <param name="eventSerializer">The event serializer.</param>
+        /// <param name="serviceAddress">The service address.</param>
+        /// <param name="commandsPort">The commands port.</param>
+        /// <param name="eventsPort">The events port.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
-        /// <returns>The services endpoint.</returns>
-        public static Dictionary<NautilusService, IEndpoint> Create(
+        /// <returns>The services switchboard.</returns>
+        public static Switchboard Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IFixClient fixClient,
+            IInstrumentRepository instrumentRepository,
+            ICommandSerializer commandSerializer,
+            IEventSerializer eventSerializer,
+            NetworkAddress serviceAddress,
+            Port commandsPort,
+            Port eventsPort,
             int commandsPerSecond = 100,
             int newOrdersPerSecond = 15)
         {
@@ -45,18 +60,47 @@ namespace Nautilus.Execution
             Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
+            var gateway = ExecutionGatewayFactory.Create(
+                container,
+                instrumentRepository,
+                fixClient);
+
+            fixClient.InitializeGateway(gateway);
+
+            var messageServer = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                    () => new MessageServer(
+                        container,
+                        messagingAdapter,
+                        commandSerializer,
+                        eventSerializer,
+                        serviceAddress,
+                        commandsPort,
+                        eventsPort))));
+
+            var orderManager = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                    () => new OrderManager(
+                        container,
+                        messagingAdapter))));
+
+            gateway.RegisterEventReceiver(orderManager);
+
             var executionService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
-                () => new ExecutionService(
-                    container,
-                    messagingAdapter,
-                    commandsPerSecond,
-                    newOrdersPerSecond))));
+                    () => new ExecutionService(
+                        container,
+                        messagingAdapter,
+                        gateway,
+                        commandsPerSecond,
+                        newOrdersPerSecond))));
 
-            return new Dictionary<NautilusService, IEndpoint>
+            return new Switchboard(new Dictionary<NautilusService, IEndpoint>
             {
+                { NautilusService.MessageServer, messageServer },
+                { NautilusService.OrderManager, orderManager },
                 { NautilusService.Execution, executionService },
-            };
+            });
         }
     }
 }

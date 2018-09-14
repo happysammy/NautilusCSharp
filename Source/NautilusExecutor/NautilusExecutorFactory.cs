@@ -22,6 +22,7 @@ namespace NautilusExecutor
     using Nautilus.Core.Validation;
     using Nautilus.Execution;
     using Nautilus.Fix;
+    using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
     using Nautilus.Redis;
     using Nautilus.Serilog;
@@ -40,13 +41,20 @@ namespace NautilusExecutor
         /// <param name="logLevel">The logger log level threshold.</param>
         /// <param name="fixCredentials">The FIX credentials.</param>
         /// <param name="serviceAddress">The services address.</param>
+        /// <param name="commandsPort">The commands port.</param>
+        /// <param name="eventsPort">The events port.</param>
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
             FixCredentials fixCredentials,
-            string serviceAddress)
+            NetworkAddress serviceAddress,
+            Port commandsPort,
+            Port eventsPort)
         {
             Validate.NotNull(fixCredentials, nameof(fixCredentials));
+            Validate.NotNull(serviceAddress, nameof(serviceAddress));
+            Validate.NotNull(commandsPort, nameof(commandsPort));
+            Validate.NotNull(eventsPort, nameof(eventsPort));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
@@ -77,37 +85,17 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixCredentials);
 
-            var gateway = ExecutionGatewayFactory.Create(
-                setupContainer,
-                instrumentRepository,
-                fixClient);
-
-            fixClient.InitializeGateway(gateway);
-
-            var messageServer = MessageServerFactory.Create(
+            var switchboard = ExecutionServiceFactory.Create(
                 actorSystem,
                 setupContainer,
                 messagingAdapter,
+                fixClient,
+                instrumentRepository,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),
                 serviceAddress,
-                5555,
-                5556);
-
-            var executionServiceAddresses = ExecutionServiceFactory.Create(
-                actorSystem,
-                setupContainer,
-                messagingAdapter);
-            executionServiceAddresses.Add(NautilusService.Messaging, messageServer);
-
-            var switchboard = new Switchboard(executionServiceAddresses);
-
-            gateway.RegisterEventReceiver(messageServer);
-
-            var initializeGateway =
-                new InitializeGateway(gateway, guidFactory.NewGuid(), clock.TimeNow());
-
-            executionServiceAddresses[NautilusService.Execution].Send(initializeGateway);
+                commandsPort,
+                eventsPort);
 
             var systemController = new SystemController(
                 setupContainer,
@@ -119,8 +107,7 @@ namespace NautilusExecutor
                 setupContainer,
                 messagingAdapter,
                 systemController,
-                fixClient,
-                messageServer);
+                fixClient);
         }
     }
 }

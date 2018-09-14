@@ -16,6 +16,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Core.Validation;
     using Nautilus.Fix;
+    using Nautilus.Messaging.Network;
     using Nautilus.Redis;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
@@ -71,9 +72,12 @@ namespace NautilusExecutor
             Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
             RedisServiceStack.ConfigureServiceStack();
 
-            var serviceAddress = this.Environment.IsDevelopment()
-                ? "127.0.0.1"
-                : (string)config[ConfigSection.Service]["address"];
+            var host = this.Environment.IsDevelopment()
+                ? new NetworkAddress("127.0.0.1")
+                : new NetworkAddress((string)config[ConfigSection.Service]["address"]);
+
+            var commandsPort = new Port((int)config[ConfigSection.Service]["commandsPort"]);
+            var eventsPort = new Port((int)config[ConfigSection.Service]["eventsPort"]);
 
             var logLevel = this.Environment.IsDevelopment()
                 ? LogEventLevel.Debug
@@ -87,7 +91,9 @@ namespace NautilusExecutor
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,
                 credentials,
-                serviceAddress);
+                host,
+                commandsPort,
+                eventsPort);
 
             this.executionSystem.Start();
         }
