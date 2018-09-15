@@ -8,8 +8,6 @@
 
 namespace Nautilus.Execution
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Akka.Actor;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
@@ -19,10 +17,7 @@ namespace Nautilus.Execution
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.Messaging.Network;
 
     /// <summary>
@@ -84,11 +79,11 @@ namespace Nautilus.Execution
                         eventsPort))));
 
             // Setup message handling.
-            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
-            this.Receive<CancelOrder>(msg => this.OnMessage(msg));
-            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<CollateralInquiry>(msg => this.OnMessage(msg));
-            this.Receive<Event>(msg => this.OnMessage(msg));
+            this.Receive<SubmitOrder>(this.OnMessage);
+            this.Receive<CancelOrder>(this.OnMessage);
+            this.Receive<ModifyOrder>(this.OnMessage);
+            this.Receive<CollateralInquiry>(this.OnMessage);
+            this.Receive<Event>(this.OnMessage);
         }
 
         /// <summary>

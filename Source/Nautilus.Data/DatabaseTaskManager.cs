@@ -55,7 +55,7 @@ namespace Nautilus.Data
             this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarClosed>>(msg => this.OnMessage(msg, this.Sender));
             this.Receive<DataDelivery<BarDataFrame>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<TrimBarData>(msg => this.OnMessage(msg));
+            this.Receive<TrimBarData>(this.OnMessage);
         }
 
         /// <summary>

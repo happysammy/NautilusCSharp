@@ -74,8 +74,8 @@ namespace Nautilus.Messaging
             this.totalCount = 0;
 
             // Setup message handling.
-            this.Receive<T>(msg => this.OnMessage(msg));
-            this.Receive<TimeSpan>(msg => this.OnMessage(msg));
+            this.Receive<T>(this.OnMessage);
+            this.Receive<TimeSpan>(this.OnMessage);
         }
 
         private void OnMessage(T message)

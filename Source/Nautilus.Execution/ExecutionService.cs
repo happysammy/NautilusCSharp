@@ -80,12 +80,12 @@ namespace Nautilus.Execution
                         newOrdersPerSecond))));
 
             // Setup message handling.
-            this.Receive<CollateralInquiry>(msg => this.OnMessage(msg));
-            this.Receive<SubmitOrder>(msg => this.OnMessage(msg));
-            this.Receive<SubmitTrade>(msg => this.OnMessage(msg));
-            this.Receive<ModifyOrder>(msg => this.OnMessage(msg));
-            this.Receive<CloseTradeUnit>(msg => this.OnMessage(msg));
-            this.Receive<CancelOrder>(msg => this.OnMessage(msg));
+            this.Receive<CollateralInquiry>(this.OnMessage);
+            this.Receive<SubmitOrder>(this.OnMessage);
+            this.Receive<SubmitTrade>(this.OnMessage);
+            this.Receive<ModifyOrder>(this.OnMessage);
+            this.Receive<CloseTradeUnit>(this.OnMessage);
+            this.Receive<CancelOrder>(this.OnMessage);
         }
 
         /// <summary>

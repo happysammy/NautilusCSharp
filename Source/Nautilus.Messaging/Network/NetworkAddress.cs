@@ -17,6 +17,8 @@ namespace Nautilus.Messaging.Network
     [Immutable]
     public sealed class NetworkAddress
     {
+        private const string LocalHostString = "127.0.0.1";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkAddress"/> class.
         /// </summary>
@@ -37,7 +39,7 @@ namespace Nautilus.Messaging.Network
         /// Creates and returns a new local host 127.0.0.1 network address.
         /// </summary>
         /// <returns>The local host network address.</returns>
-        public static NetworkAddress LocalHost() => new NetworkAddress("127.0.0.1");
+        public static NetworkAddress LocalHost() => new NetworkAddress(LocalHostString);
 
         /// <summary>
         /// Returns a string representation of this <see cref="NetworkAddress"/>.

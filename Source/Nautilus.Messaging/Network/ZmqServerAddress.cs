@@ -20,22 +20,22 @@ namespace Nautilus.Messaging.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="ZmqServerAddress"/> class.
         /// </summary>
-        /// <param name="networkAddress">The network address.</param>
+        /// <param name="host">The host network address.</param>
         /// <param name="port">The port.</param>
-        public ZmqServerAddress(NetworkAddress networkAddress, Port port)
+        public ZmqServerAddress(NetworkAddress host, Port port)
         {
-            Validate.NotNull(networkAddress, nameof(networkAddress));
+            Validate.NotNull(host, nameof(host));
             Validate.NotNull(port, nameof(port));
 
-            this.NetworkAddress = networkAddress;
+            this.Host = host;
             this.Port = port;
-            this.Value = $"tcp://{networkAddress}:{port}";
+            this.Value = $"tcp://{host}:{port}";
         }
 
         /// <summary>
         /// Gets the server addresses network address.
         /// </summary>
-        public NetworkAddress NetworkAddress { get; }
+        public NetworkAddress Host { get; }
 
         /// <summary>
         /// Gets the server addresses port.

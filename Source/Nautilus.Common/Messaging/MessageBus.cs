@@ -51,8 +51,8 @@ namespace Nautilus.Common.Messaging
             this.commandHandler = new CommandHandler(this.log);
 
             // Setup message handling.
-            this.Receive<InitializeSwitchboard>(msg => this.OnMessage(msg));
-            this.Receive<Envelope<T>>(msg => this.OnReceive(msg));
+            this.Receive<InitializeSwitchboard>(this.OnMessage);
+            this.Receive<Envelope<T>>(this.OnReceive);
         }
 
         /// <summary>

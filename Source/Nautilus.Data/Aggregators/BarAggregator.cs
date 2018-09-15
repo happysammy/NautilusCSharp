@@ -69,12 +69,12 @@ namespace Nautilus.Data.Aggregators
             this.isMarketOpen = isMarketOpen;
 
             // Setup message handling.
-            this.Receive<CloseBar>(msg => this.OnMessage(msg));
-            this.Receive<Subscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<Unsubscribe<BarType>>(msg => this.OnMessage(msg));
-            this.Receive<MarketOpened>(msg => this.OnMessage(msg));
-            this.Receive<MarketClosed>(msg => this.OnMessage(msg));
-            this.Receive<Tick>(msg => this.OnMessage(msg));
+            this.Receive<CloseBar>(this.OnMessage);
+            this.Receive<Subscribe<BarType>>(this.OnMessage);
+            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+            this.Receive<MarketOpened>(this.OnMessage);
+            this.Receive<MarketClosed>(this.OnMessage);
+            this.Receive<Tick>(this.OnMessage);
         }
 
         /// <summary>

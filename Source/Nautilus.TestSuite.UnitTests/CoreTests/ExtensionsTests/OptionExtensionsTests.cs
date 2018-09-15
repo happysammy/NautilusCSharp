@@ -177,7 +177,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Option<TestClass> option = new TestClass { Label = "Some value" };
 
             // Act
-            var option2 = option.Select(x => GetLabel(x));
+            var option2 = option.Select(GetLabel);
 
             // Assert
             Assert.True(option2.HasValue);
@@ -191,7 +191,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Option<TestClass> option = new TestClass { Label = null };
 
             // Act
-            var option2 = option.Select(x => GetLabel(x));
+            var option2 = option.Select(GetLabel);
 
             // Assert
             Assert.False(option2.HasValue);

@@ -51,10 +51,10 @@ namespace Nautilus.Common.Componentry
             this.commandHandler = new CommandHandler(this.Log);
 
             // Setup message handling.
-            this.Receive<Envelope<Command>>(envelope => this.Open(envelope));
-            this.Receive<Envelope<Event>>(envelope => this.Open(envelope));
-            this.Receive<Envelope<Document>>(envelope => this.Open(envelope));
-            this.Receive<SystemShutdown>(msg => this.OnMessage(msg));
+            this.Receive<Envelope<Command>>(this.Open);
+            this.Receive<Envelope<Event>>(this.Open);
+            this.Receive<Envelope<Document>>(this.Open);
+            this.Receive<SystemShutdown>(this.OnMessage);
         }
 
         /// <summary>
