@@ -330,9 +330,7 @@ namespace Nautilus.Data.Aggregators
         {
             Debug.NotNull(message, nameof(message));
 
-            var job = message.Job as BarJob;
-
-            if (job != null)
+            if (message.Job is BarJob job)
             {
                 var barSpec = job.BarSpec;
 

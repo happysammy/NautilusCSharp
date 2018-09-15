@@ -170,6 +170,7 @@ namespace Nautilus.DomainModel.Aggregates
                 this.Position.Apply(@event);
             }
 
+            // ReSharper disable once InvertIf (makes no sense to invert this).
             if (orderEvent is OrderRejected)
             {
                 this.StopLoss.Apply(orderEvent);
