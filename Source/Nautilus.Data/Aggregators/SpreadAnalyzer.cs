@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregators
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -77,12 +76,12 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime, decimal)> NegativeSpreads => this.negativeSpreads.ToImmutableList();
+        public IReadOnlyList<(ZonedDateTime, decimal)> NegativeSpreads => this.negativeSpreads.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.totalAverageSpreads.ToImmutableList();
+        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.totalAverageSpreads.ToList().AsReadOnly();
 
         /// <summary>
         /// Updates the spread analyzer with the given tick.
