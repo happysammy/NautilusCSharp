@@ -16,7 +16,7 @@ namespace Nautilus.Common.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where a brokerage had been disconnected.
+    /// Represents an event where a brokerage has been disconnected.
     /// </summary>
     [Immutable]
     public sealed class BrokerageDisconnected : Event

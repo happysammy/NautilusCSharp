@@ -19,6 +19,18 @@ namespace Nautilus.DomainModel.Enums
         Simulation,
 
         /// <summary>
+        /// The FXCM brokerage.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        FXCM,
+
+        /// <summary>
+        /// The Dukascopy brokerage.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        Dukascopy,
+
+        /// <summary>
         /// The Interactive Brokers brokerage.
         /// </summary>
         InteractiveBrokers,
@@ -28,11 +40,5 @@ namespace Nautilus.DomainModel.Enums
         /// </summary>
         // ReSharper disable once InconsistentNaming
         LMAX,
-
-        /// <summary>
-        /// The FXCM brokerage.
-        /// </summary>
-        // ReSharper disable once InconsistentNaming
-        FXCM,
     }
 }

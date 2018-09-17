@@ -16,7 +16,7 @@ namespace Nautilus.Common.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where a brokerage had been connected.
+    /// Represents an event where a brokerage has been connected.
     /// </summary>
     [Immutable]
     public sealed class BrokerageConnected : Event
