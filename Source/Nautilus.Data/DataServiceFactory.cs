@@ -38,7 +38,7 @@ namespace Nautilus.Data
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
-        public static Dictionary<NautilusService, IEndpoint> Create(
+        public static Switchboard Create(
             ActorSystem actorSystem,
             IComponentryContainer setupContainer,
             IMessagingAdapter messagingAdapter,
@@ -96,7 +96,7 @@ namespace Nautilus.Data
                         setupContainer,
                         messagingAdapter))));
 
-            return new Dictionary<NautilusService, IEndpoint>
+            return new Switchboard(new Dictionary<NautilusService, IEndpoint>
             {
                 { NautilusService.Scheduler, scheduler },
                 { NautilusService.DatabaseTaskManager, databaseTaskActor },
@@ -105,7 +105,7 @@ namespace Nautilus.Data
                 { NautilusService.TickPublisher, tickPublisher },
                 { NautilusService.BarPublisher, barPublisher },
                 { NautilusService.Data, dataService },
-            };
+            });
         }
     }
 }

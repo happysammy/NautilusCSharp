@@ -83,29 +83,25 @@ namespace NautilusDB
                 messagingAdapter,
                 fixCredentials);
 
-            var gateway = FixGatewayFactory.Create(
+            var fixGateway = FixGatewayFactory.Create(
                 setupContainer,
                 instrumentRepository,
                 fixClient);
-
-            fixClient.InitializeGateway(gateway);
 
             var barRepository = new RedisBarRepository(
                 clientManager,
                 CompressorFactory.Create(isCompression, compressionCodec));
 
-            var dataServiceAddresses = DataServiceFactory.Create(
+            var switchboard = DataServiceFactory.Create(
                 actorSystem,
                 setupContainer,
                 messagingAdapter,
-                gateway,
+                fixGateway,
                 new RedisChannelPublisherFactory(clientManager),
                 barRepository,
                 symbols,
                 resolutions,
                 barRollingWindow);
-
-            var switchboard = new Switchboard(dataServiceAddresses);
 
             var systemController = new SystemController(
                 setupContainer,

@@ -43,13 +43,17 @@ namespace NautilusExecutor
         /// <param name="serviceAddress">The services address.</param>
         /// <param name="commandsPort">The commands port.</param>
         /// <param name="eventsPort">The events port.</param>
+        /// <param name="commandsPerSecond">The commands per second throttle limit.</param>
+        /// <param name="newOrdersPerSecond">The new orders per second throttle limit.</param>
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
             FixCredentials fixCredentials,
             NetworkAddress serviceAddress,
             Port commandsPort,
-            Port eventsPort)
+            Port eventsPort,
+            int commandsPerSecond,
+            int newOrdersPerSecond)
         {
             Validate.NotNull(fixCredentials, nameof(fixCredentials));
             Validate.NotNull(serviceAddress, nameof(serviceAddress));
@@ -99,7 +103,9 @@ namespace NautilusExecutor
                 new MsgPackEventSerializer(),
                 serviceAddress,
                 commandsPort,
-                eventsPort);
+                eventsPort,
+                commandsPerSecond,
+                newOrdersPerSecond);
 
             var systemController = new SystemController(
                 setupContainer,

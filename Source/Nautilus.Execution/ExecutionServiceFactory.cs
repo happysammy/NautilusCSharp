@@ -49,8 +49,8 @@ namespace Nautilus.Execution
             NetworkAddress serviceAddress,
             Port commandsPort,
             Port eventsPort,
-            int commandsPerSecond = 100,
-            int newOrdersPerSecond = 15)
+            int commandsPerSecond,
+            int newOrdersPerSecond)
         {
             Validate.NotNull(actorSystem, nameof(actorSystem));
             Validate.NotNull(container, nameof(container));

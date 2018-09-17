@@ -74,11 +74,14 @@ namespace NautilusExecutor
             RedisServiceStack.ConfigureServiceStack();
 
             var host = this.Environment.IsDevelopment()
-                ? new NetworkAddress("127.0.0.1")
+                ? NetworkAddress.LocalHost()
                 : new NetworkAddress((string)config[ConfigSection.Service]["address"]);
 
             var commandsPort = new Port((int)config[ConfigSection.Service]["commandsPort"]);
             var eventsPort = new Port((int)config[ConfigSection.Service]["eventsPort"]);
+
+            var commandsPerSecond = (int)config[ConfigSection.Service]["commandsPerSecond"];
+            var newOrdersPerSecond = (int)config[ConfigSection.Service]["newOrdersPerSecond"];
 
             var logLevel = this.Environment.IsDevelopment()
                 ? LogEventLevel.Debug
@@ -94,7 +97,9 @@ namespace NautilusExecutor
                 credentials,
                 host,
                 commandsPort,
-                eventsPort);
+                eventsPort,
+                commandsPerSecond,
+                newOrdersPerSecond);
 
             this.executionSystem.Start();
         }
