@@ -9,6 +9,7 @@
 namespace NautilusExecutor
 {
     using System.IO;
+    using System.Threading.Tasks;
     using global::NautilusExecutor.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

@@ -8,6 +8,7 @@
 
 namespace NautilusExecutor
 {
+    using System.Threading.Tasks;
     using Akka.Actor;
     using global::NautilusExecutor.Build;
     using Nautilus.Brokerage.FXCM;
@@ -105,6 +106,9 @@ namespace NautilusExecutor
                 actorSystem,
                 messagingAdapter,
                 switchboard);
+
+            // Allow system to wire up (switchboard to initialize).
+            Task.Delay(500).Wait();
 
             return new NautilusExecutor(
                 setupContainer,
