@@ -94,25 +94,31 @@ namespace Nautilus.Messaging
 
             this.vouchers = this.limit;
 
-            if (this.queue.Count > 0)
+            if (this.queue.Count <= 0)
+            {
+                this.isIdle = true;
+                this.Log.Debug("Is Idle.");
+
+                return;
+            }
+
+            this.RunTimer().PipeTo(this.Self);
+
+            if (this.isIdle)
             {
                 this.isIdle = false;
-                this.RunTimer().PipeTo(this.Self);
-                this.ProcessQueue();
+                this.Log.Debug("Is Active.");
             }
-            else
-            {
-                this.Log.Debug("Is Idle.");
-            }
+
+            this.ProcessQueue();
         }
 
         private void ProcessQueue()
         {
             if (this.isIdle)
             {
-                this.isIdle = false;
                 this.RunTimer().PipeTo(this.Self);
-
+                this.isIdle = false;
                 this.Log.Debug("Is Active.");
             }
 
@@ -125,7 +131,7 @@ namespace Nautilus.Messaging
                 this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
             }
 
-            if (this.vouchers <= 0)
+            if (this.vouchers <= 0 & this.queue.Count > 0)
             {
                 // At message limit.
                 this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queueing_count={this.queue.Count}).");

@@ -47,14 +47,14 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void Test_can_throttle_ten_messages_per_second()
+        internal void Test_can_throttle_ten_messages_per_one_hundred_milliseconds()
         {
             // Arrange
             var throttler = this.Sys.ActorOf(Props.Create(() => new Throttler<string>(
                 this.setupContainer,
                 NautilusService.Execution,
                 this.testEndpoint,
-                Duration.FromSeconds(1),
+                Duration.FromMilliseconds(100),
                 10)));
 
             // Act
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             }
 
             // Wait for the throttle duration interval.
-            Task.Delay(1000).Wait();
+            Task.Delay(100).Wait();
 
             // Receives the next 10 messages.
             for (var j = 0; j < 10; j++)
@@ -80,8 +80,55 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             }
 
             // Receives final message.
-            Task.Delay(1000).Wait();
+            Task.Delay(100).Wait();
             this.ExpectMsg<string>();
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+        }
+
+        [Fact]
+        internal void Test_can_throttle_one_hundred_messages_per_one_hundred_milliseconds()
+        {
+            // Arrange
+            var throttler = this.Sys.ActorOf(Props.Create(() => new Throttler<string>(
+                this.setupContainer,
+                NautilusService.Execution,
+                this.testEndpoint,
+                Duration.FromMilliseconds(100),
+                10)));
+
+            // Act
+            for (var i = 0; i < 11; i++)
+            {
+                throttler.Tell($"Message-{i + 1}");
+            }
+
+            // Assert
+            // Receives only the first 10 messages.
+            for (var i = 0; i < 10; i++)
+            {
+                this.ExpectMsg<string>();
+            }
+
+            // Wait for the throttle duration interval.
+            Task.Delay(100).Wait();
+
+            // Receives the next message.
+            this.ExpectMsg<string>();
+
+            for (var i = 0; i < 22; i++)
+            {
+                throttler.Tell($"Message2-{i + 1}");
+            }
+
+            // Wait for the throttle duration interval.
+            Task.Delay(100).Wait();
+
+            // Receives the next 100 messages.
+            for (var j = 0; j < 10; j++)
+            {
+                this.ExpectMsg<string>();
+            }
 
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
