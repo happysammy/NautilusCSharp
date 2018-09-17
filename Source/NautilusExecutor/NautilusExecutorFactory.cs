@@ -14,6 +14,7 @@ namespace NautilusExecutor
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
     using Nautilus.Common.Build;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Logging;

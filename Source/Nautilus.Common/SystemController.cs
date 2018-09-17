@@ -65,9 +65,6 @@ namespace Nautilus.Common
         /// </summary>
         public void Start()
         {
-            // Allow system to initialize.
-            Task.Delay(1000).Wait();
-
             var initializeSwitchboard =
                 new InitializeSwitchboard(
                     this.switchboard,

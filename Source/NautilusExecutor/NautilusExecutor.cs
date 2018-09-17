@@ -64,7 +64,7 @@ namespace NautilusExecutor
             }
 
             // Allow system to prepare for incoming data.
-            Task.Delay(500).Wait();
+            Task.Delay(2000).Wait();
             this.fixClient.UpdateInstrumentsSubscribeAll();
             this.fixClient.CollateralInquiry();
             this.fixClient.TradingSessionStatus();

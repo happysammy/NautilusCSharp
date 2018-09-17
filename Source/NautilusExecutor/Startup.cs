@@ -86,7 +86,7 @@ namespace NautilusExecutor
                 ? LogEventLevel.Debug
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
-            var configFileName = (string)config[ConfigSection.Fix]["configFileName"];
+            var configFileName = (string)config[ConfigSection.Fix]["fileName"];
             var credentials = new FixCredentials(
                 (string)config[ConfigSection.Fix]["username"],
                 (string)config[ConfigSection.Fix]["password"],
