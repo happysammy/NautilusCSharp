@@ -39,7 +39,8 @@ namespace NautilusExecutor
         /// Creates and returns a new <see cref="NautilusExecutor"/> class.
         /// </summary>
         /// <param name="logLevel">The logger log level threshold.</param>
-        /// <param name="fixCredentials">The FIX credentials.</param>
+        /// <param name="configFileName">The FIX config file name.</param>
+        /// <param name="credentials">The FIX credentials.</param>
         /// <param name="serviceAddress">The services address.</param>
         /// <param name="commandsPort">The commands port.</param>
         /// <param name="eventsPort">The events port.</param>
@@ -48,17 +49,21 @@ namespace NautilusExecutor
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
-            FixCredentials fixCredentials,
+            string configFileName,
+            FixCredentials credentials,
             NetworkAddress serviceAddress,
             Port commandsPort,
             Port eventsPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Validate.NotNull(fixCredentials, nameof(fixCredentials));
+            Validate.NotNull(configFileName, nameof(configFileName));
+            Validate.NotNull(credentials, nameof(credentials));
             Validate.NotNull(serviceAddress, nameof(serviceAddress));
             Validate.NotNull(commandsPort, nameof(commandsPort));
             Validate.NotNull(eventsPort, nameof(eventsPort));
+            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
@@ -87,7 +92,8 @@ namespace NautilusExecutor
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
-                fixCredentials);
+                configFileName,
+                credentials);
 
             var fixGateway = FixGatewayFactory.Create(
                 setupContainer,

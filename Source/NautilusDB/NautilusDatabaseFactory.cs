@@ -19,6 +19,7 @@ namespace NautilusDB
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Compression;
+    using Nautilus.Core.Validation;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -40,7 +41,8 @@ namespace NautilusDB
         /// <param name="logLevel">The log level threshold.</param>
         /// <param name="isCompression">The is data compression on boolean flag.</param>
         /// <param name="compressionCodec">The data compression codec.</param>
-        /// <param name="fixCredentials">The FIX credentials.</param>
+        /// <param name="configFileName">The FIX config file name.</param>
+        /// <param name="credentials">The FIX credentials.</param>
         /// <param name="symbols">The symbols to collect.</param>
         /// <param name="resolutions">The resolutions to persist.</param>
         /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
@@ -49,11 +51,19 @@ namespace NautilusDB
             LogEventLevel logLevel,
             bool isCompression,
             string compressionCodec,
-            FixCredentials fixCredentials,
+            string configFileName,
+            FixCredentials credentials,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
+            Validate.NotNull(compressionCodec, nameof(compressionCodec));
+            Validate.NotNull(configFileName, nameof(configFileName));
+            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNullOrEmpty(symbols, nameof(symbols));
+            Validate.NotNullOrEmpty(resolutions, nameof(resolutions));
+            Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
             BuildVersionChecker.Run(loggingAdapter, "NautilusDB - Financial Market Data Service");
@@ -81,7 +91,8 @@ namespace NautilusDB
             var fixClient = FxcmFixClientFactory.Create(
                 setupContainer,
                 messagingAdapter,
-                fixCredentials);
+                configFileName,
+                credentials);
 
             var fixGateway = FixGatewayFactory.Create(
                 setupContainer,

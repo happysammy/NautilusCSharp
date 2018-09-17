@@ -14,6 +14,7 @@
   },
 
   "fix_config": {
+    "file_name": "fix_fxcm.cfg",
     "username": "D102862129",
     "password": "demo",
     "accountNumber": "02851908"

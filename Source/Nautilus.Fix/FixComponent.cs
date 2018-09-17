@@ -36,6 +36,7 @@ namespace Nautilus.Fix
         private readonly ILogger logger;
         private readonly CommandHandler commandHandler;
         private readonly FixCredentials credentials;
+        private readonly string configFileName;
 
         private SocketInitiator initiator;
         private Session session;
@@ -48,14 +49,19 @@ namespace Nautilus.Fix
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
+        /// <param name="configFileName">The FIX config file name.</param>
         protected FixComponent(
             IComponentryContainer container,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
-            FixCredentials credentials)
+            FixCredentials credentials,
+            string configFileName)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
+            Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
             Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(configFileName, nameof(configFileName));
 
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -64,6 +70,7 @@ namespace Nautilus.Fix
                 LabelFactory.Component(nameof(FixComponent)));
             this.commandHandler = new CommandHandler(this.logger);
             this.credentials = credentials;
+            this.configFileName = configFileName;
             this.FixMessageHandler = fixMessageHandler;
             this.FixMessageRouter = fixMessageRouter;
         }
@@ -137,7 +144,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var settings = new SessionSettings("fix_fxcm.cfg");
+                var settings = new SessionSettings(this.configFileName);
                 var storeFactory = new FileStoreFactory(settings);
 
                 // var logFactory = new ScreenLogFactory(settings);

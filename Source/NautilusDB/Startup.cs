@@ -82,6 +82,7 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
+            var configFileName = (string)config[ConfigSection.Fix]["configFileName"];
             var credentials = new FixCredentials(
                 (string)config[ConfigSection.Fix]["username"],
                 (string)config[ConfigSection.Fix]["password"],
@@ -110,6 +111,7 @@ namespace NautilusDB
                 logLevel,
                 isCompression,
                 compressionCodec,
+                configFileName,
                 credentials,
                 symbols,
                 resolutions,

@@ -29,7 +29,7 @@ namespace Nautilus.Data
         /// Builds the database and returns an <see cref="IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="gateway">The execution gateway.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
@@ -40,7 +40,7 @@ namespace Nautilus.Data
         /// <returns>The endpoint addresses for the data service.</returns>
         public static Switchboard Create(
             ActorSystem actorSystem,
-            IComponentryContainer setupContainer,
+            IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixGateway gateway,
             IChannelPublisherFactory publisherFactory,
@@ -49,33 +49,33 @@ namespace Nautilus.Data
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(container, nameof(container));
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(symbols, nameof(symbols));
 
             var scheduler = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
-                () => new Scheduler(setupContainer))));
+                () => new Scheduler(container))));
 
             var tickPublisher = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
-                () => new TickPublisher(setupContainer, publisherFactory.Create()))));
+                () => new TickPublisher(container, publisherFactory.Create()))));
 
             var barPublisher = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
-                () => new BarPublisher(setupContainer, publisherFactory.Create()))));
+                () => new BarPublisher(container, publisherFactory.Create()))));
 
             var databaseTaskActor = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
-                    setupContainer,
+                    container,
                     barRepository))));
 
             var dataCollectionActor = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                 () => new DataCollectionManager(
-                    setupContainer,
+                    container,
                     messagingAdapter,
                     barPublisher,
                     resolutions,
@@ -84,7 +84,7 @@ namespace Nautilus.Data
             var barAggregationController = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                 () => new BarAggregationController(
-                    setupContainer,
+                    container,
                     messagingAdapter))));
 
             gateway.RegisterTickReceiver(tickPublisher);
@@ -93,7 +93,7 @@ namespace Nautilus.Data
             var dataService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                     () => new DataService(
-                        setupContainer,
+                        container,
                         messagingAdapter))));
 
             return new Switchboard(new Dictionary<NautilusService, IEndpoint>

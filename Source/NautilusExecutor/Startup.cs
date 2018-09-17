@@ -9,7 +9,6 @@
 namespace NautilusExecutor
 {
     using System.IO;
-    using System.Threading.Tasks;
     using global::NautilusExecutor.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -87,6 +86,7 @@ namespace NautilusExecutor
                 ? LogEventLevel.Debug
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
+            var configFileName = (string)config[ConfigSection.Fix]["configFileName"];
             var credentials = new FixCredentials(
                 (string)config[ConfigSection.Fix]["username"],
                 (string)config[ConfigSection.Fix]["password"],
@@ -94,6 +94,7 @@ namespace NautilusExecutor
 
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,
+                configFileName,
                 credentials,
                 host,
                 commandsPort,
