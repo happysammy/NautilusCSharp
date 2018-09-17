@@ -87,6 +87,14 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
+        /// Actions to be performed when the component is started.
+        /// </summary>
+        protected override void Start()
+        {
+            // Do nothing else.
+        }
+
+        /// <summary>
         /// Actions to be performed when the component is stopping.
         /// </summary>
         protected override void PostStop()

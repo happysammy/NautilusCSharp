@@ -54,6 +54,7 @@ namespace Nautilus.Common.Componentry
             this.Receive<Envelope<Command>>(this.Open);
             this.Receive<Envelope<Event>>(this.Open);
             this.Receive<Envelope<Document>>(this.Open);
+            this.Receive<SystemStart>(this.OnMessage);
             this.Receive<SystemShutdown>(this.OnMessage);
         }
 
@@ -118,7 +119,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Pre start method when actor base class is called.
+        /// Pre start method called when actor is initializing.
         /// </summary>
         protected override void PreStart()
         {
@@ -126,7 +127,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Post restart method when the actor base class is restarted.
+        /// Post restart method called when the actor base class is restarted.
         /// </summary>
         /// <param name="ex">The restart reason exception.</param>
         /// <exception cref="ValidationException">Throws if the validation fails.</exception>
@@ -138,11 +139,18 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Post stop method when the actor base class is stopped.
+        /// Post stop method called when the actor base class is stopped.
         /// </summary>
         protected override void PostStop()
         {
             this.Log.Debug($"Stopped.");
+        }
+
+        /// <summary>
+        /// Start method called when the <see cref="SystemStart"/> message is received.
+        /// </summary>
+        protected virtual void Start()
+        {
         }
 
         /// <summary>
@@ -152,7 +160,7 @@ namespace Nautilus.Common.Componentry
         private void OnMessage(SystemStart message)
         {
             this.Log.Information($"Starting from {message}-{message.Id}...");
-            this.PreStart();
+            this.Start();
         }
 
         /// <summary>
