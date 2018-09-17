@@ -39,7 +39,6 @@ namespace Nautilus.Data.Messages.Events
             Debug.NotNull(barType, nameof(barType));
             Debug.NotNull(bar, nameof(bar));
             Debug.NotNull(lastTick, nameof(lastTick));
-            Debug.NotNegativeDecimal(averageSpread, nameof(averageSpread));
             Debug.NotDefault(id, nameof(id));
 
             this.BarType = barType;

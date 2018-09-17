@@ -28,7 +28,8 @@ namespace Nautilus.Data.Aggregators
         private readonly List<(ZonedDateTime, decimal)> totalAverageSpreads;
 
         // Initialized on first tick.
-        private decimal tickPrecision;
+        private bool isInitialized;
+        private int decimalPrecision;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpreadAnalyzer"/> class.
@@ -91,9 +92,10 @@ namespace Nautilus.Data.Aggregators
         {
             Debug.NotNull(tick, nameof(tick));
 
-            if (this.tickPrecision == decimal.Zero)
+            if (!this.isInitialized)
             {
-                this.tickPrecision = tick.Bid.Decimals;
+                this.decimalPrecision = tick.Bid.Decimals;
+                this.isInitialized = true;
             }
 
             this.CurrentBid = tick.Bid;
@@ -129,7 +131,7 @@ namespace Nautilus.Data.Aggregators
         /// <param name="timestamp">The timestamp.</param>
         public void OnBarUpdate(ZonedDateTime timestamp)
         {
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.AverageSpread = this.CalculateAverageSpread();
             this.totalAverageSpreads.Add((timestamp, this.AverageSpread));
@@ -138,14 +140,14 @@ namespace Nautilus.Data.Aggregators
 
         private decimal CalculateAverageSpread()
         {
-            if (this.CurrentBid is null)
+            if (!this.isInitialized)
             {
-                return 0;
+                return decimal.Zero;
             }
 
             return Math.Round(
                 this.thisBarsSpreads.Sum() / Math.Max(this.thisBarsSpreads.Count, 1),
-                this.CurrentBid.Decimals);
+                this.decimalPrecision);
         }
     }
 }
