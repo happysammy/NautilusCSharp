@@ -116,13 +116,6 @@ namespace Nautilus.Messaging
                 this.Log.Debug("Is Active.");
             }
 
-            if (this.vouchers <= 0)
-            {
-                // At message limit.
-                this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queueing_count={this.queue.Count}).");
-                return;
-            }
-
             while (this.vouchers > 0 & this.queue.Count > 0)
             {
                 var message = this.queue.Dequeue();
@@ -130,6 +123,12 @@ namespace Nautilus.Messaging
                 this.vouchers--;
 
                 this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
+            }
+
+            if (this.vouchers <= 0)
+            {
+                // At message limit.
+                this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queueing_count={this.queue.Count}).");
             }
         }
 
