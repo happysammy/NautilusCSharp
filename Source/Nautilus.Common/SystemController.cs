@@ -28,8 +28,6 @@ namespace Nautilus.Common
     {
         private readonly ActorSystem actorSystem;
         private readonly string actorSystemName;
-        private readonly MessagingAdapter messagingAdapter;
-        private readonly Switchboard switchboard;
         private readonly ReadOnlyList<NautilusService> services;
 
         /// <summary>
@@ -55,17 +53,15 @@ namespace Nautilus.Common
 
             this.actorSystem = actorSystem;
             this.actorSystemName = actorSystem.Name;
-            this.messagingAdapter = messagingAdapter;
-            this.switchboard = switchboard;
             this.services = switchboard.Services;
 
             var initializeSwitchboard =
                 new InitializeSwitchboard(
-                    this.switchboard,
+                    switchboard,
                     this.NewGuid(),
                     this.TimeNow());
 
-            this.messagingAdapter.Send(initializeSwitchboard);
+            messagingAdapter.Send(initializeSwitchboard);
         }
 
         /// <summary>

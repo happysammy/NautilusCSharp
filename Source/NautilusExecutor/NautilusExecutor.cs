@@ -8,7 +8,6 @@
 
 namespace NautilusExecutor
 {
-    using System.Threading.Tasks;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
