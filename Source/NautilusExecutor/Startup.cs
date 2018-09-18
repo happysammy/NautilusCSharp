@@ -74,7 +74,7 @@ namespace NautilusExecutor
 
             var host = this.Environment.IsDevelopment()
                 ? NetworkAddress.LocalHost()
-                : new NetworkAddress((string)config[ConfigSection.Service]["address"]);
+                : new NetworkAddress((string)config[ConfigSection.Service]["host"]);
 
             var commandsPort = new Port((int)config[ConfigSection.Service]["commandsPort"]);
             var eventsPort = new Port((int)config[ConfigSection.Service]["eventsPort"]);
