@@ -9,12 +9,17 @@
 namespace Nautilus.Fix
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Fix.Interfaces;
     using NodaTime;
@@ -38,6 +43,7 @@ namespace Nautilus.Fix
         private readonly FixCredentials credentials;
         private readonly string configFileName;
 
+        private ReadOnlyList<IEndpoint> connectionEventReceivers;
         private SocketInitiator initiator;
         private Session session;
         private Session sessionMd;
@@ -46,12 +52,14 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
+        /// <param name="broker">The FIX components brokerage.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         /// <param name="configFileName">The FIX config file name.</param>
         protected FixComponent(
             IComponentryContainer container,
+            Broker broker,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
@@ -69,16 +77,24 @@ namespace Nautilus.Fix
                 NautilusService.FIX,
                 LabelFactory.Component(nameof(FixComponent)));
             this.commandHandler = new CommandHandler(this.logger);
+            this.Broker = broker;
             this.credentials = credentials;
             this.configFileName = configFileName;
             this.FixMessageHandler = fixMessageHandler;
             this.FixMessageRouter = fixMessageRouter;
+
+            this.connectionEventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
         }
 
         /// <summary>
         /// Gets the components logger.
         /// </summary>
         public ILogger Log => this.logger;
+
+        /// <summary>
+        /// Gets the name of the brokerage.
+        /// </summary>
+        public Broker Broker { get; }
 
         /// <summary>
         /// Gets the components FIX message handler.
@@ -135,6 +151,21 @@ namespace Nautilus.Fix
         public void Execute(Action action)
         {
             this.commandHandler.Execute(action);
+        }
+
+        /// <summary>
+        /// Registers the given receiver to receive connection events from the FIX client.
+        /// </summary>
+        /// <param name="receiver">The event receiver endpoint.</param>
+        public void RegisterConnectionEventReceiver(IEndpoint receiver)
+        {
+            Validate.NotNull(receiver, nameof(receiver));
+            Debug.DoesNotContain(receiver, nameof(receiver), this.connectionEventReceivers);
+
+            var receivers = this.connectionEventReceivers.ToList();
+            receivers.Add(receiver);
+
+            this.connectionEventReceivers = new ReadOnlyList<IEndpoint>(receivers);
         }
 
         /// <summary>
@@ -205,6 +236,14 @@ namespace Nautilus.Fix
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
 
+                foreach (var receiver in this.connectionEventReceivers)
+                {
+                    receiver.Send(new BrokerageConnected(
+                        this.Broker,
+                        this.NewGuid(),
+                        this.TimeNow()));
+                }
+
                 this.Log.Information($"Logon - {sessionId}");
             });
         }
@@ -218,6 +257,14 @@ namespace Nautilus.Fix
             this.commandHandler.Execute(() =>
             {
                 Validate.NotNull(sessionId, nameof(sessionId));
+
+                foreach (var receiver in this.connectionEventReceivers)
+                {
+                    receiver.Send(new BrokerageDisconnected(
+                        this.Broker,
+                        this.NewGuid(),
+                        this.TimeNow()));
+                }
 
                 this.Log.Information($"Logout - {sessionId}");
             });

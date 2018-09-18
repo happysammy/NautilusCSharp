@@ -105,6 +105,7 @@ namespace NautilusExecutor
                 actorSystem,
                 container,
                 messagingAdapter,
+                fixClient,
                 fixGateway,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),

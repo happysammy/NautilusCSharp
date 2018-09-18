@@ -30,6 +30,12 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
+        /// Registers the given receiver for brokerage connection events.
+        /// </summary>
+        /// <param name="receiver">The event receiver.</param>
+        void RegisterConnectionEventReceiver(IEndpoint receiver);
+
+        /// <summary>
         /// Connects to the FIX session.
         /// </summary>
         void Connect();

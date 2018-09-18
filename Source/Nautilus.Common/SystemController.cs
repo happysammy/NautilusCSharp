@@ -58,13 +58,7 @@ namespace Nautilus.Common
             this.messagingAdapter = messagingAdapter;
             this.switchboard = switchboard;
             this.services = switchboard.Services;
-        }
 
-        /// <summary>
-        /// Starts the <see cref="Nautilus"/> system.
-        /// </summary>
-        public void Start()
-        {
             var initializeSwitchboard =
                 new InitializeSwitchboard(
                     this.switchboard,
@@ -72,10 +66,13 @@ namespace Nautilus.Common
                     this.TimeNow());
 
             this.messagingAdapter.Send(initializeSwitchboard);
+        }
 
-            // Allow messaging system to initialize.
-            Task.Delay(300).Wait();
-
+        /// <summary>
+        /// Starts the <see cref="Nautilus"/> system.
+        /// </summary>
+        public void Start()
+        {
             var start = new SystemStart(this.NewGuid(), this.TimeNow());
             this.services.ForEach(s => this.Send(s, start));
         }

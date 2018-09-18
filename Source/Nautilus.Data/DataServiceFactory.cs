@@ -31,7 +31,8 @@ namespace Nautilus.Data
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="gateway">The execution gateway.</param>
+        /// <param name="client">The FIX client.</param>
+        /// <param name="gateway">The FIX gateway.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The database market data repo.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
@@ -42,6 +43,7 @@ namespace Nautilus.Data
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IFixClient client,
             IFixGateway gateway,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
@@ -87,14 +89,16 @@ namespace Nautilus.Data
                     container,
                     messagingAdapter))));
 
-            gateway.RegisterTickReceiver(tickPublisher);
-            gateway.RegisterTickReceiver(barAggregationController);
-
             var dataService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                     () => new DataService(
                         container,
-                        messagingAdapter))));
+                        messagingAdapter,
+                        gateway))));
+
+            gateway.RegisterTickReceiver(tickPublisher);
+            gateway.RegisterTickReceiver(barAggregationController);
+            client.RegisterConnectionEventReceiver(dataService);
 
             return new Switchboard(new Dictionary<NautilusService, IEndpoint>
             {

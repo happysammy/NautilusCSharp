@@ -46,6 +46,7 @@ namespace Nautilus.Fix
             IReadOnlyList<Symbol> symbols)
         : base(
             container,
+            broker,
             fixMessageHandler,
             fixMessageRouter,
             credentials,
@@ -59,15 +60,9 @@ namespace Nautilus.Fix
             Validate.NotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
             Validate.NotNullOrEmpty(symbols, nameof(symbols));
 
-            this.Broker = broker;
             this.brokerSymbols = brokerSymbols;
             this.symbols = symbols;
         }
-
-        /// <summary>
-        /// Gets the name of the brokerage.
-        /// </summary>
-        public Broker Broker { get; }
 
         /// <summary>
         /// Gets a value indicating whether the FIX session is connected.
@@ -91,15 +86,6 @@ namespace Nautilus.Fix
         {
             this.Log.Information("Disconnecting from FIX session...");
             this.DisconnectFix();
-        }
-
-        /// <summary>
-        /// Registers the given receiver to receive connection events from the FIX client.
-        /// </summary>
-        /// <param name="receiver"></param>
-        public void RegisterConnectionEventReceiver(IEndpoint receiver)
-        {
-
         }
 
         /// <summary>

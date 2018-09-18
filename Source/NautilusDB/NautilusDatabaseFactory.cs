@@ -108,6 +108,7 @@ namespace NautilusDB
                 actorSystem,
                 container,
                 messagingAdapter,
+                fixClient,
                 fixGateway,
                 new RedisChannelPublisherFactory(clientManager),
                 barRepository,

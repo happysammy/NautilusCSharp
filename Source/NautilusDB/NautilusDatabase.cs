@@ -94,11 +94,6 @@ namespace NautilusDB
                     this.Send(NautilusService.DataCollectionManager, subscribe);
                 }
             }
-
-            // Allow system to prepare for incoming data.
-            Task.Delay(500).Wait();
-            this.fixClient.UpdateInstrumentsSubscribeAll();
-            this.fixClient.RequestMarketDataSubscribeAll();
         }
 
         /// <summary>

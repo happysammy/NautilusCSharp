@@ -30,6 +30,7 @@ namespace Nautilus.Execution
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="client">The FIX client.</param>
         /// <param name="gateway">The FIX gateway.</param>
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>
@@ -43,6 +44,7 @@ namespace Nautilus.Execution
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IFixClient client,
             IFixGateway gateway,
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
@@ -85,6 +87,7 @@ namespace Nautilus.Execution
                         newOrdersPerSecond))));
 
             gateway.RegisterEventReceiver(orderManager);
+            client.RegisterConnectionEventReceiver(executionService);
 
             return new Switchboard(new Dictionary<NautilusService, IEndpoint>
             {
