@@ -71,14 +71,14 @@ namespace NautilusDB
             var actorSystem = ActorSystem.Create(nameof(NautilusDB));
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
-            var setupContainer = new ComponentryContainer(
+            var container = new ComponentryContainer(
                 clock,
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
-                setupContainer,
+                container,
                 new FakeMessageStore());
 
             var clientManager = new BasicRedisClientManager(
@@ -89,13 +89,14 @@ namespace NautilusDB
             instrumentRepository.CacheAll();
 
             var fixClient = FxcmFixClientFactory.Create(
-                setupContainer,
+                container,
                 messagingAdapter,
                 configFileName,
                 credentials);
 
             var fixGateway = FixGatewayFactory.Create(
-                setupContainer,
+                container,
+                messagingAdapter,
                 instrumentRepository,
                 fixClient);
 
@@ -105,7 +106,7 @@ namespace NautilusDB
 
             var switchboard = DataServiceFactory.Create(
                 actorSystem,
-                setupContainer,
+                container,
                 messagingAdapter,
                 fixGateway,
                 new RedisChannelPublisherFactory(clientManager),
@@ -115,13 +116,13 @@ namespace NautilusDB
                 barRollingWindow);
 
             var systemController = new SystemController(
-                setupContainer,
+                container,
                 actorSystem,
                 messagingAdapter,
                 switchboard);
 
             return new NautilusDatabase(
-                setupContainer,
+                container,
                 messagingAdapter,
                 systemController,
                 fixClient);

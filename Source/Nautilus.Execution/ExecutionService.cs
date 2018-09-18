@@ -12,6 +12,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
@@ -25,6 +26,7 @@ namespace Nautilus.Execution
     /// </summary>
     public sealed class ExecutionService : ActorComponentBusConnectedBase
     {
+        private readonly IFixGateway gateway;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
         private readonly IEndpoint tradeCommandBus;
@@ -34,13 +36,13 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="fixGateway">The execution gateway.</param>
+        /// <param name="gateway">The execution gateway.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         public ExecutionService(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixGateway fixGateway,
+            IFixGateway gateway,
             int commandsPerSecond,
             int newOrdersPerSecond)
             : base(
@@ -51,15 +53,18 @@ namespace Nautilus.Execution
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(gateway, nameof(gateway));
             Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+
+            this.gateway = gateway;
 
             this.tradeCommandBus = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
                     () => new TradeCommandBus(
                         container,
                         messagingAdapter,
-                        fixGateway))));
+                        gateway))));
 
             this.commandThrottler = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
@@ -80,6 +85,8 @@ namespace Nautilus.Execution
                         newOrdersPerSecond))));
 
             // Setup message handling.
+            this.Receive<BrokerageConnected>(this.OnMessage);
+            this.Receive<BrokerageDisconnected>(this.OnMessage);
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
@@ -100,6 +107,19 @@ namespace Nautilus.Execution
                 this.commandThrottler.Send(PoisonPill.Instance);
                 base.PostStop();
             });
+        }
+
+        private void OnMessage(BrokerageConnected message)
+        {
+            this.Log.Information($"{message.Broker} brokerage is connected.");
+            this.gateway.UpdateInstrumentsSubscribeAll();
+            this.gateway.CollateralInquiry();
+            this.gateway.TradingSessionStatus();
+        }
+
+        private void OnMessage(BrokerageDisconnected message)
+        {
+            this.Log.Warning($"{message.Broker} brokerage has been disconnected.");
         }
 
         private void OnMessage(CollateralInquiry message)

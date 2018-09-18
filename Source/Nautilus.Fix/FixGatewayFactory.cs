@@ -22,11 +22,13 @@ namespace Nautilus.Fix
         /// Creates and returns a new execution gateway.
         /// </summary>
         /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The FIX client.</param>
         /// <returns>The FIX gateway.</returns>
         public static IFixGateway Create(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             IInstrumentRepository instrumentRepository,
             IFixClient fixClient)
         {
@@ -36,6 +38,7 @@ namespace Nautilus.Fix
 
             var gateway = new FixGateway(
                 container,
+                messagingAdapter,
                 instrumentRepository,
                 fixClient);
 

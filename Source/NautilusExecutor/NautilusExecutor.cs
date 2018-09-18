@@ -63,12 +63,6 @@ namespace NautilusExecutor
                 // Wait for connection.
             }
 
-            // Allow system to prepare for incoming data.
-            Task.Delay(2000).Wait();
-            this.fixClient.UpdateInstrumentsSubscribeAll();
-            this.fixClient.CollateralInquiry();
-            this.fixClient.TradingSessionStatus();
-
             this.systemController.Start();
         }
 

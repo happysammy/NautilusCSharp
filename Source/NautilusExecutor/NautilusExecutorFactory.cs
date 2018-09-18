@@ -72,14 +72,14 @@ namespace NautilusExecutor
             var actorSystem = ActorSystem.Create(nameof(NautilusExecutor));
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
-            var setupContainer = new ComponentryContainer(
+            var container = new ComponentryContainer(
                 clock,
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(
                 actorSystem,
-                setupContainer,
+                container,
                 new FakeMessageStore());
 
             var clientManager = new BasicRedisClientManager(
@@ -90,19 +90,20 @@ namespace NautilusExecutor
             instrumentRepository.CacheAll();
 
             var fixClient = FxcmFixClientFactory.Create(
-                setupContainer,
+                container,
                 messagingAdapter,
                 configFileName,
                 credentials);
 
             var fixGateway = FixGatewayFactory.Create(
-                setupContainer,
+                container,
+                messagingAdapter,
                 instrumentRepository,
                 fixClient);
 
             var switchboard = ExecutionServiceFactory.Create(
                 actorSystem,
-                setupContainer,
+                container,
                 messagingAdapter,
                 fixGateway,
                 new MsgPackCommandSerializer(),
@@ -114,7 +115,7 @@ namespace NautilusExecutor
                 newOrdersPerSecond);
 
             var systemController = new SystemController(
-                setupContainer,
+                container,
                 actorSystem,
                 messagingAdapter,
                 switchboard);
@@ -123,7 +124,7 @@ namespace NautilusExecutor
             Task.Delay(500).Wait();
 
             return new NautilusExecutor(
-                setupContainer,
+                container,
                 messagingAdapter,
                 systemController,
                 fixClient);

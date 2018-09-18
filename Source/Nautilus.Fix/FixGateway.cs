@@ -32,7 +32,7 @@ namespace Nautilus.Fix
     /// </summary>
     [Stateless]
     [PerformanceOptimized]
-    public sealed class FixGateway : ComponentBase, IFixGateway
+    public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
@@ -43,16 +43,19 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// /// <param name="instrumentRepository">The instrument repository.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The trade client.</param>
         public FixGateway(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             IInstrumentRepository instrumentRepository,
             IFixClient fixClient)
             : base(
-                NautilusService.Execution,
+                NautilusService.FIX,
                 new Label(nameof(FixGateway)),
-                container)
+                container,
+                messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(fixClient, nameof(fixClient));
@@ -163,6 +166,14 @@ namespace Nautilus.Fix
         public void CollateralInquiry()
         {
             this.fixClient.CollateralInquiry();
+        }
+
+        /// <summary>
+        /// Submits a trading session status request to the brokerage.
+        /// </summary>
+        public void TradingSessionStatus()
+        {
+            this.fixClient.TradingSessionStatus();
         }
 
         /// <summary>

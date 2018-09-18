@@ -75,8 +75,6 @@ namespace Nautilus.Execution
                         container,
                         messagingAdapter))));
 
-            gateway.RegisterEventReceiver(orderManager);
-
             var executionService = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
                     () => new ExecutionService(
@@ -85,6 +83,8 @@ namespace Nautilus.Execution
                         gateway,
                         commandsPerSecond,
                         newOrdersPerSecond))));
+
+            gateway.RegisterEventReceiver(orderManager);
 
             return new Switchboard(new Dictionary<NautilusService, IEndpoint>
             {

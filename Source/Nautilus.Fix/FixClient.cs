@@ -94,6 +94,15 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
+        /// Registers the given receiver to receive connection events from the FIX client.
+        /// </summary>
+        /// <param name="receiver"></param>
+        public void RegisterConnectionEventReceiver(IEndpoint receiver)
+        {
+
+        }
+
+        /// <summary>
         /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
