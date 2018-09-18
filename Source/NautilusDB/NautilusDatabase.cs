@@ -9,7 +9,6 @@
 namespace NautilusDB
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Nautilus.Common;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
