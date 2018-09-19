@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Entities
     using NodaTime;
 
     /// <summary>
-    /// Represents a trade-able financial market instrument.
+    /// Represents a tradeable financial market instrument.
     /// </summary>
     [Immutable]
     public sealed class Instrument : Entity<Instrument>
@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
-        /// <param name="tickDecimals">The instruments decimal precision.</param>
+        /// <param name="tickDecimals">The instruments tick decimal precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="tickValue">The instruments tick value.</param>
         /// <param name="targetDirectSpread">The instruments target direct spread.</param>
@@ -81,7 +81,9 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
             Validate.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
             Validate.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
-            Validate.NotNegativeDecimal(minStopDistanceEntry, nameof(this.MinStopDistanceEntry));
+            Validate.PositiveInt32(minTradeSize, nameof(minTradeSize));
+            Validate.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
+            Validate.PositiveDecimal(marginRequirement, nameof(marginRequirement));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
