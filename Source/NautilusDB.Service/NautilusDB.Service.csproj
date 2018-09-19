@@ -14,7 +14,7 @@
         <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusDB.Service.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="ServiceStack" Version="5.2.0" />
+        <PackageReference Include="ServiceStack" Version="5.4.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
