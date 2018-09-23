@@ -83,7 +83,7 @@ namespace Nautilus.DomainModel.Entities
             Validate.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
             Validate.PositiveInt32(minTradeSize, nameof(minTradeSize));
             Validate.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
-            Validate.PositiveDecimal(marginRequirement, nameof(marginRequirement));
+            Validate.NotNegativeDecimal(marginRequirement, nameof(marginRequirement));
             Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;

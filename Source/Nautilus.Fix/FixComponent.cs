@@ -240,6 +240,7 @@ namespace Nautilus.Fix
                 {
                     receiver.Send(new BrokerageConnected(
                         this.Broker,
+                        sessionId.ToString(),
                         this.NewGuid(),
                         this.TimeNow()));
                 }
@@ -262,6 +263,7 @@ namespace Nautilus.Fix
                 {
                     receiver.Send(new BrokerageDisconnected(
                         this.Broker,
+                        sessionId.ToString(),
                         this.NewGuid(),
                         this.TimeNow()));
                 }

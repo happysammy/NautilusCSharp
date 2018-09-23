@@ -54,14 +54,14 @@ namespace Nautilus.Data
 
         private void OnMessage(BrokerageConnected message)
         {
-            this.Log.Information($"{message.Broker} brokerage is connected.");
+            this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
             this.gateway.UpdateInstrumentsSubscribeAll();
             this.gateway.RequestMarketDataSubscribeAll();
         }
 
         private void OnMessage(BrokerageDisconnected message)
         {
-            this.Log.Warning($"{message.Broker} brokerage has been disconnected.");
+            this.Log.Warning($"{message.Broker} brokerage {message.Session} session has been disconnected.");
         }
     }
 }

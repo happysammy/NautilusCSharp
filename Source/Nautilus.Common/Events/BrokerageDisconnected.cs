@@ -24,11 +24,13 @@ namespace Nautilus.Common.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokerageDisconnected"/> class.
         /// </summary>
-        /// <param name="broker">The brokerage disconnected from.</param>
+        /// <param name="broker">The events brokerage disconnected from.</param>
+        /// <param name="session">The events session information.</param>
         /// <param name="identifier">The event identifier (cannot be default).</param>
         /// <param name="timestamp">The event timestamp (cannot be default).</param>
         public BrokerageDisconnected(
             Broker broker,
+            string session,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
@@ -37,11 +39,17 @@ namespace Nautilus.Common.Events
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
+            this.Session = session;
         }
 
         /// <summary>
         /// Gets the events brokerage.
         /// </summary>
         public Broker Broker { get; }
+
+        /// <summary>
+        /// Gets the events session information.
+        /// </summary>
+        public string Session { get; }
     }
 }
