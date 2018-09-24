@@ -73,6 +73,6 @@ namespace Nautilus.Common.Interfaces
         /// Returns the dictionary index of broker symbols and their corresponding tick precision.
         /// </summary>
         /// <returns>The tick precision index.</returns>
-        Dictionary<string, int> GetTickPrecisionIndex();
+        Dictionary<string, int> GetPricePrecisionIndex();
     }
 }

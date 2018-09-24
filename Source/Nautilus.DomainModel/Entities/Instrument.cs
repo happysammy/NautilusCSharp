@@ -34,7 +34,7 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="tickValue">The instruments tick value.</param>
         /// <param name="targetDirectSpread">The instruments target direct spread.</param>
-        /// <param name="roundLot">The instruments rounded lot size.</param>
+        /// <param name="roundLotSize">The instruments rounded lot size.</param>
         /// <param name="contractSize">The instruments contract size.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
         /// <param name="minLimitDistanceEntry">The instruments minimum limit distance for entry.</param>
@@ -56,7 +56,7 @@ namespace Nautilus.DomainModel.Entities
             decimal tickSize,
             decimal tickValue,
             decimal targetDirectSpread,
-            int roundLot,
+            int roundLotSize,
             int contractSize,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
@@ -78,7 +78,7 @@ namespace Nautilus.DomainModel.Entities
             Validate.PositiveDecimal(tickSize, nameof(tickSize));
             Validate.PositiveDecimal(tickValue, nameof(tickValue));
             Validate.NotNegativeDecimal(targetDirectSpread, nameof(targetDirectSpread));
-            Validate.PositiveInt32(roundLot, nameof(roundLot));
+            Validate.PositiveInt32(roundLotSize, nameof(roundLotSize));
             Validate.PositiveInt32(contractSize, nameof(contractSize));
             Validate.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
             Validate.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
@@ -97,7 +97,7 @@ namespace Nautilus.DomainModel.Entities
             this.TickSize = tickSize;
             this.TickValue = tickValue;
             this.TargetDirectSpread = targetDirectSpread;
-            this.RoundLotSize = roundLot;
+            this.RoundLotSize = roundLotSize;
             this.ContractSize = contractSize;
             this.MinStopDistanceEntry = minStopDistanceEntry;
             this.MinLimitDistanceEntry = minLimitDistanceEntry;

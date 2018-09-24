@@ -64,7 +64,7 @@ namespace Nautilus.Fix
 
             this.fixClient = fixClient;
             this.instrumentRepository = instrumentRepository;
-            this.pricePrecisionIndex = instrumentRepository.GetTickPrecisionIndex();
+            this.pricePrecisionIndex = instrumentRepository.GetPricePrecisionIndex();
             this.tickReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
             this.eventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
         }
