@@ -181,7 +181,7 @@ namespace Nautilus.Fix
                 // var logFactory = new ScreenLogFactory(settings);
                 this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
-                this.Log.Information("Starting initiator...");
+                this.Log.Debug("Starting initiator...");
                 this.initiator.Start();
 
                 Task.Delay(1000);
@@ -199,7 +199,7 @@ namespace Nautilus.Fix
 
                 this.initiator.Stop();
 
-                this.Log.Information("Stopping initiator... ");
+                this.Log.Debug("Stopping initiator... ");
             });
         }
 
@@ -215,10 +215,10 @@ namespace Nautilus.Fix
 
                 if (this.session == null)
                 {
-                    this.Log.Information("Creating session...");
+                    this.Log.Debug("Creating session...");
                     this.session = Session.LookupSession(sessionId);
                     this.FixMessageRouter.ConnectSession(this.session);
-                    this.Log.Information($"Session {this.session}");
+                    this.Log.Debug($"Session {this.session}");
                 }
 
                 this.sessionMd = Session.LookupSession(sessionId);
@@ -245,7 +245,7 @@ namespace Nautilus.Fix
                         this.TimeNow()));
                 }
 
-                this.Log.Information($"Logon - {sessionId}");
+                this.Log.Debug($"Logon - {sessionId}");
             });
         }
 
@@ -268,7 +268,7 @@ namespace Nautilus.Fix
                         this.TimeNow()));
                 }
 
-                this.Log.Information($"Logout - {sessionId}");
+                this.Log.Debug($"Logout - {sessionId}");
             });
         }
 
@@ -298,7 +298,7 @@ namespace Nautilus.Fix
                     message.SetField(new Username(this.credentials.Username));
                     message.SetField(new Password(this.credentials.Password));
 
-                    this.Log.Information("Authorizing session...");
+                    this.Log.Debug("Authorizing session...");
                 }
 
                 message.SetField(new Account(this.credentials.AccountNumber));

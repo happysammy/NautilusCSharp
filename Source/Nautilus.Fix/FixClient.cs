@@ -75,7 +75,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void Connect()
         {
-            this.Log.Information("Connecting to FIX session...");
+            this.Log.Debug("Connecting to FIX session...");
             this.ConnectFix();
         }
 
@@ -84,7 +84,7 @@ namespace Nautilus.Fix
         /// </summary>
         public void Disconnect()
         {
-            this.Log.Information("Disconnecting from FIX session...");
+            this.Log.Debug("Disconnecting from FIX session...");
             this.DisconnectFix();
         }
 

@@ -94,7 +94,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.fixSession.Send(message);
 
-                this.Log.Information($"CollateralInquiry + SubscribeCollateralReports...");
+                this.Log.Debug($"CollateralInquiry + SubscribeCollateralReports...");
             });
         }
 
@@ -109,7 +109,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.fixSession.Send(message);
 
-                this.Log.Information($"TradingSessionStatusRequest...");
+                this.Log.Debug($"TradingSessionStatusRequest...");
             });
         }
 
@@ -124,7 +124,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.fixSession.Send(message);
 
-                this.Log.Information($"RequestForOpenPositions + SubscribePositionReports...");
+                this.Log.Debug($"RequestForOpenPositions + SubscribePositionReports...");
             });
         }
 
@@ -146,7 +146,7 @@ namespace Nautilus.Brokerage.FXCM
                     fxcmSymbol.Value,
                     this.TimeNow()));
 
-                this.Log.Information($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
+                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
             });
         }
 
@@ -159,7 +159,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 this.fixSession.Send(SecurityListRequestFactory.Create(this.TimeNow()));
 
-                this.Log.Information($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
+                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
             });
         }
 
@@ -179,7 +179,7 @@ namespace Nautilus.Brokerage.FXCM
                     fxcmSymbol,
                     this.TimeNow()));
 
-                this.Log.Information($"MarketDataRequest + SubscribeUpdates ({symbol})...");
+                this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({symbol})...");
             });
         }
 
@@ -196,7 +196,7 @@ namespace Nautilus.Brokerage.FXCM
                         fxcmSymbol,
                         this.TimeNow()));
 
-                    this.Log.Information($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
+                    this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
                 }
             });
         }

@@ -112,9 +112,16 @@ namespace Nautilus.Execution
         private void OnMessage(BrokerageConnected message)
         {
             this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
-            this.gateway.UpdateInstrumentsSubscribeAll();
-            this.gateway.CollateralInquiry();
-            this.gateway.TradingSessionStatus();
+
+            if (message.Session.Contains("MD"))
+            {
+                this.gateway.UpdateInstrumentsSubscribeAll();
+            }
+            else
+            {
+                this.gateway.CollateralInquiry();
+                this.gateway.TradingSessionStatus();
+            }
         }
 
         private void OnMessage(BrokerageDisconnected message)

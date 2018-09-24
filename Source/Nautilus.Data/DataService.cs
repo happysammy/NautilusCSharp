@@ -8,6 +8,7 @@
 
 namespace Nautilus.Data
 {
+    using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Events;
@@ -55,8 +56,13 @@ namespace Nautilus.Data
         private void OnMessage(BrokerageConnected message)
         {
             this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
-            this.gateway.UpdateInstrumentsSubscribeAll();
-            this.gateway.RequestMarketDataSubscribeAll();
+
+            if (message.Session.Contains("MD"))
+            {
+                Task.Delay(1000).Wait();
+                this.gateway.UpdateInstrumentsSubscribeAll();
+                this.gateway.RequestMarketDataSubscribeAll();
+            }
         }
 
         private void OnMessage(BrokerageDisconnected message)

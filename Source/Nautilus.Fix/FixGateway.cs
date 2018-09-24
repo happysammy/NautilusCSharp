@@ -257,6 +257,12 @@ namespace Nautilus.Fix
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
 
+                if (!this.pricePrecisionIndex.ContainsKey(symbol))
+                {
+                    this.Log.Warning($"Cannot process tick (symbol {symbol} not contained in tick precision index).");
+                    return;
+                }
+
                 var tick = new Tick(
                     new Symbol(symbol, venue),
                     Price.Create(bid, this.pricePrecisionIndex[symbol]),
