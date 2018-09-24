@@ -39,6 +39,7 @@ namespace Nautilus.Data.Aggregators
             this.TickDecimals = startingInstrument.TickDecimals;
             this.TickSize = startingInstrument.TickSize;
             this.TickValue = startingInstrument.TickValue;
+            this.RoundLotSize = startingInstrument.RoundLotSize;
             this.TargetDirectSpread = startingInstrument.TargetDirectSpread;
             this.ContractSize = startingInstrument.ContractSize;
             this.MinStopDistanceEntry = startingInstrument.MinStopDistanceEntry;
@@ -72,6 +73,8 @@ namespace Nautilus.Data.Aggregators
         private decimal TickValue { get; set; }
 
         private decimal TargetDirectSpread { get; set; }
+
+        private int RoundLotSize { get; set; }
 
         private int ContractSize { get; set; }
 
@@ -244,6 +247,7 @@ namespace Nautilus.Data.Aggregators
                 this.TickSize,
                 this.TickValue,
                 this.TargetDirectSpread,
+                this.RoundLotSize,
                 this.ContractSize,
                 this.MinStopDistanceEntry,
                 this.MinLimitDistanceEntry,

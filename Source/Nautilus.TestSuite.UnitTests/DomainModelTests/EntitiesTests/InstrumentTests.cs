@@ -52,6 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
                 Convert.ToDecimal(deserialized["TickSize"]),
                 Convert.ToInt32(deserialized["TickValue"]),
                 Convert.ToInt32(deserialized["TargetDirectSpread"]),
+                Convert.ToInt32(deserialized["RoundLotSize"]),
                 Convert.ToInt32(deserialized["ContractSize"]),
                 Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
                 Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),

@@ -30,6 +30,7 @@ namespace Nautilus.Brokerage.FXCM
             { "AUD/USD",  (1m, CurrencyCode.USD) },
             { "AUS200",   (1m, CurrencyCode.AUD) },
             { "Bund",     (1m, CurrencyCode.EUR) },
+            { "Copper",   (1m, CurrencyCode.USD) },
             { "CAD/CHF",  (1m, CurrencyCode.CHF) },
             { "CAD/JPY",  (1m, CurrencyCode.JPY) },
             { "CHF/JPY",  (1m, CurrencyCode.JPY) },

@@ -168,16 +168,7 @@ namespace Nautilus.Redis
             Debug.NotNull(instruments, nameof(instruments));
             Debug.NotNull(timeNow, nameof(timeNow));
 
-            var results = new List<CommandResult>();
-
-            foreach (var instrument in instruments)
-            {
-                var result = this.Add(instrument, timeNow);
-
-                results.Add(result);
-            }
-
-            return CommandResult.Combine(results.ToArray());
+            return CommandResult.Combine(instruments.Select(instrument => this.Add(instrument, timeNow)).ToArray());
         }
 
         /// <summary>
@@ -206,41 +197,42 @@ namespace Nautilus.Redis
 
             using (var redis = this.clientsManager.GetClient())
             {
-                if (redis.ContainsKey(key))
+                if (!redis.ContainsKey(key))
                 {
-                    var serialized = redis.Get<string>(key);
-                    var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
-                    var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
-                    var symbolCode = deserializedSymbol["Code"];
-                    var exchange = deserializedSymbol["Venue"];
-                    var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
-
-                    var instrument = new Instrument(
-                        new Symbol(symbolCode, exchange.ToEnum<Venue>()),
-                        new InstrumentId(deserializedSymbol["Value"]),
-                        new BrokerSymbol(brokerSymbol),
-                        deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
-                        deserialized["SecurityType"].ToEnum<SecurityType>(),
-                        Convert.ToInt32(deserialized["TickDecimals"]),
-                        Convert.ToDecimal(deserialized["TickSize"]),
-                        Convert.ToDecimal(deserialized["TickValue"]),
-                        Convert.ToDecimal(deserialized["TargetDirectSpread"]),
-                        Convert.ToInt32(deserialized["ContractSize"]),
-                        Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
-                        Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
-                        Convert.ToInt32(deserialized["MinStopDistance"]),
-                        Convert.ToInt32(deserialized["MinLimitDistance"]),
-                        Convert.ToInt32(deserialized["MinTradeSize"]),
-                        Convert.ToInt32(deserialized["MaxTradeSize"]),
-                        Convert.ToInt32(deserialized["MarginRequirement"]),
-                        Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
-                        Convert.ToDecimal(deserialized["RollOverInterestSell"]),
-                        deserialized["Timestamp"].ToZonedDateTimeFromIso());
-
-                    return QueryResult<Instrument>.Ok(instrument);
+                    return QueryResult<Instrument>.Fail($"Cannot find {key}");
                 }
 
-                return QueryResult<Instrument>.Fail($"Cannot find {key}");
+                var serialized = redis.Get<string>(key);
+                var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
+                var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
+                var symbolCode = deserializedSymbol["Code"];
+                var exchange = deserializedSymbol["Venue"];
+                var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
+
+                var instrument = new Instrument(
+                    new Symbol(symbolCode, exchange.ToEnum<Venue>()),
+                    new InstrumentId(deserializedSymbol["Value"]),
+                    new BrokerSymbol(brokerSymbol),
+                    deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
+                    deserialized["SecurityType"].ToEnum<SecurityType>(),
+                    Convert.ToInt32(deserialized["TickDecimals"]),
+                    Convert.ToDecimal(deserialized["TickSize"]),
+                    Convert.ToDecimal(deserialized["TickValue"]),
+                    Convert.ToDecimal(deserialized["TargetDirectSpread"]),
+                    Convert.ToInt32(deserialized["RoundLotSize"]),
+                    Convert.ToInt32(deserialized["ContractSize"]),
+                    Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
+                    Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
+                    Convert.ToInt32(deserialized["MinStopDistance"]),
+                    Convert.ToInt32(deserialized["MinLimitDistance"]),
+                    Convert.ToInt32(deserialized["MinTradeSize"]),
+                    Convert.ToInt32(deserialized["MaxTradeSize"]),
+                    Convert.ToInt32(deserialized["MarginRequirement"]),
+                    Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
+                    Convert.ToDecimal(deserialized["RollOverInterestSell"]),
+                    deserialized["Timestamp"].ToZonedDateTimeFromIso());
+
+                return QueryResult<Instrument>.Ok(instrument);
             }
         }
 
@@ -254,11 +246,11 @@ namespace Nautilus.Redis
         /// Returns the dictionary index of symbols and their corresponding tick size.
         /// </summary>
         /// <returns>The tick size index.</returns>
-        public IReadOnlyDictionary<Symbol, decimal> GetTickSizeIndex()
+        public Dictionary<string, int> GetTickPrecisionIndex()
         {
             return this.cache.ToDictionary(
-                symbol => symbol.Key,
-                symbol => symbol.Value.TickSize);
+                symbol => symbol.Value.BrokerSymbol.ToString(),
+                symbol => symbol.Value.TickDecimals);
         }
 
         /// <summary>

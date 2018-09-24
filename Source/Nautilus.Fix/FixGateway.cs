@@ -34,8 +34,9 @@ namespace Nautilus.Fix
     [PerformanceOptimized]
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
-        private readonly IInstrumentRepository instrumentRepository;
         private readonly IFixClient fixClient;
+        private readonly IInstrumentRepository instrumentRepository;
+        private readonly Dictionary<string, int> pricePrecisionIndex;
         private ReadOnlyList<IEndpoint> tickReceivers;
         private ReadOnlyList<IEndpoint> eventReceivers;
 
@@ -61,8 +62,9 @@ namespace Nautilus.Fix
             Validate.NotNull(fixClient, nameof(fixClient));
             Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
-            this.instrumentRepository = instrumentRepository;
             this.fixClient = fixClient;
+            this.instrumentRepository = instrumentRepository;
+            this.pricePrecisionIndex = instrumentRepository.GetTickPrecisionIndex();
             this.tickReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
             this.eventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
         }
@@ -240,7 +242,6 @@ namespace Nautilus.Fix
         /// <param name="venue">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
-        /// <param name="decimals">The expected decimal precision of the tick prices.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         [SystemBoundary]
         public void OnTick(
@@ -248,7 +249,6 @@ namespace Nautilus.Fix
             Venue venue,
             decimal bid,
             decimal ask,
-            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -256,12 +256,11 @@ namespace Nautilus.Fix
                 Validate.NotNull(symbol, nameof(symbol));
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
-                Debug.NotNegativeInt32(decimals, nameof(decimals));
 
                 var tick = new Tick(
                     new Symbol(symbol, venue),
-                    Price.Create(bid, decimals),
-                    Price.Create(ask, decimals),
+                    Price.Create(bid, this.pricePrecisionIndex[symbol]),
+                    Price.Create(ask, this.pricePrecisionIndex[symbol]),
                     timestamp);
 
                 foreach (var receiver in this.tickReceivers)
@@ -484,7 +483,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
         /// <param name="cancelRejectReason">The order cancel reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
@@ -493,7 +491,6 @@ namespace Nautilus.Fix
             string symbol,
             Venue venue,
             string orderId,
-            string brokerOrderId,
             string cancelRejectResponseTo,
             string cancelRejectReason,
             ZonedDateTime timestamp)
@@ -584,7 +581,6 @@ namespace Nautilus.Fix
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="price">The order price.</param>
-        /// <param name="decimals">The price decimal precision.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderModified(
@@ -594,7 +590,6 @@ namespace Nautilus.Fix
             string brokerOrderId,
             string orderLabel,
             decimal price,
-            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -610,7 +605,7 @@ namespace Nautilus.Fix
                     new Symbol(symbol, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(brokerOrderId),
-                    Price.Create(price, decimals),
+                    Price.Create(price, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -641,7 +636,6 @@ namespace Nautilus.Fix
         /// <param name="orderType">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price.</param>
-        /// <param name="decimals">The price decimal precision.</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
@@ -656,7 +650,6 @@ namespace Nautilus.Fix
             OrderType orderType,
             int quantity,
             decimal price,
-            int decimals,
             TimeInForce timeInForce,
             Option<ZonedDateTime?> expireTime,
             ZonedDateTime timestamp)
@@ -679,7 +672,7 @@ namespace Nautilus.Fix
                     orderSide,
                     orderType,
                     Quantity.Create(quantity),
-                    Price.Create(price, decimals),
+                    Price.Create(price, this.pricePrecisionIndex[symbol]),
                     timeInForce,
                     expireTime,
                     timestamp,
@@ -767,7 +760,6 @@ namespace Nautilus.Fix
         /// <param name="orderSide">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
-        /// <param name="decimals">The decimal precision for the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderFilled(
@@ -781,7 +773,6 @@ namespace Nautilus.Fix
             OrderSide orderSide,
             int filledQuantity,
             decimal averagePrice,
-            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -803,7 +794,7 @@ namespace Nautilus.Fix
                     new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, decimals),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -838,7 +829,6 @@ namespace Nautilus.Fix
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="leavesQuantity">The order leaves quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
-        /// <param name="decimals">The decimal precision of the price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderPartiallyFilled(
@@ -853,7 +843,6 @@ namespace Nautilus.Fix
             int filledQuantity,
             int leavesQuantity,
             decimal averagePrice,
-            int decimals,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
@@ -877,7 +866,7 @@ namespace Nautilus.Fix
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, decimals),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());

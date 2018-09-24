@@ -33,21 +33,19 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
-        private readonly IReadOnlyDictionary<string, int> pricePrecisionIndex;
-
         private IFixGateway fixGateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        public FxcmFixMessageHandler(IComponentryContainer container)
+        public FxcmFixMessageHandler(
+            IComponentryContainer container)
             : base(
                 NautilusService.FIX,
                 LabelFactory.Component(nameof(FxcmFixMessageHandler)),
                 container)
         {
-            this.pricePrecisionIndex = FxcmPricePrecisionProvider.GetIndex();
         }
 
         /// <summary>
@@ -106,8 +104,6 @@ namespace Nautilus.Brokerage.FXCM
                     {
                         this.Log.Warning(symbolQuery.FullMessage);
                         continue;
-
-                        // throw new InvalidOperationException(symbolQuery.Message);
                     }
 
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
@@ -117,7 +113,9 @@ namespace Nautilus.Brokerage.FXCM
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
-                    var tickSize = Convert.ToDecimal(group.GetField(9002));
+
+                    // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
+                    var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
 
                     var tickValueQuery = FxcmTickValueProvider.GetTickValue(fxcmSymbol.Value);
                     if (tickValueQuery.IsFailure)
@@ -155,6 +153,7 @@ namespace Nautilus.Brokerage.FXCM
                         tickSize,
                         tickValue,
                         targetDirectSpread,
+                        roundLot,
                         contractSize,
                         minStopDistanceEntry,
                         minLimitDistanceEntry,
@@ -162,7 +161,7 @@ namespace Nautilus.Brokerage.FXCM
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        decimal.Zero, // TODO margin requirement, also add round lot.
+                        decimal.Zero, // TODO margin requirement.
                         interestBuy,
                         interestSell,
                         this.TimeNow());
@@ -209,11 +208,11 @@ namespace Nautilus.Brokerage.FXCM
                 var cashBalance = Convert.ToDecimal(message.GetField(Tags.CashOutstanding));
                 var cashStart = Convert.ToDecimal(message.GetField(Tags.StartCash));
                 var cashDaily = Convert.ToDecimal(message.GetField(9047));
-                var marginUsedMaint = Convert.ToDecimal(message.GetField(9046));
+                var marginUsedMaintenance = Convert.ToDecimal(message.GetField(9046));
                 var marginUsedLiq = Convert.ToDecimal(message.GetField(9038));
                 var marginRatio = Convert.ToDecimal(message.GetField(Tags.MarginRatio));
                 var marginCall = message.GetField(9045);
-                var time = this.TimeNow(); // TODO: Replace with message time.
+                var time = this.TimeNow();
 
                 this.fixGateway.OnAccountReport(
                     inquiryId,
@@ -221,7 +220,7 @@ namespace Nautilus.Brokerage.FXCM
                     cashBalance,
                     cashStart,
                     cashDaily,
-                    marginUsedMaint,
+                    marginUsedMaintenance,
                     marginUsedLiq,
                     marginRatio,
                     marginCall,
@@ -302,7 +301,6 @@ namespace Nautilus.Brokerage.FXCM
                     Venue.FXCM,
                     Convert.ToDecimal(bid),
                     Convert.ToDecimal(ask),
-                    this.pricePrecisionIndex[fxcmSymbol],
                     timestamp);
             });
         }
@@ -317,9 +315,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                // var symbol = FxcmSymbolProvider.GetNautilusSymbol(GetField(message, Tags.Symbol)).Value;
                 var orderId = message.ClOrdID.ToString();
-                var brokerOrderId = message.OrderID.ToString();
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
@@ -329,7 +325,6 @@ namespace Nautilus.Brokerage.FXCM
                     "NULL",
                     Venue.FXCM,
                     orderId,
-                    brokerOrderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
                     timestamp);
@@ -401,7 +396,6 @@ namespace Nautilus.Brokerage.FXCM
                         brokerOrderId,
                         orderLabel,
                         price,
-                        this.pricePrecisionIndex[fxcmSymbol],
                         timestamp);
                 }
 
@@ -421,7 +415,6 @@ namespace Nautilus.Brokerage.FXCM
                         orderType,
                         orderQty,
                         price,
-                        this.pricePrecisionIndex[fxcmSymbol],
                         timeInForce,
                         expireTime,
                         timestamp);
@@ -456,7 +449,6 @@ namespace Nautilus.Brokerage.FXCM
                         orderSide,
                         filledQuantity,
                         averagePrice,
-                        this.pricePrecisionIndex[fxcmSymbol],
                         timestamp);
                 }
 
@@ -480,7 +472,6 @@ namespace Nautilus.Brokerage.FXCM
                         filledQuantity,
                         leavesQuantity,
                         averagePrice,
-                        this.pricePrecisionIndex[fxcmSymbol],
                         timestamp);
                 }
 

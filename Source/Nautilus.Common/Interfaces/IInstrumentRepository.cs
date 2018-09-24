@@ -70,9 +70,9 @@ namespace Nautilus.Common.Interfaces
         IReadOnlyCollection<Symbol> GetSymbols();
 
         /// <summary>
-        /// Returns the dictionary index of symbols and their corresponding tick size.
+        /// Returns the dictionary index of broker symbols and their corresponding tick precision.
         /// </summary>
-        /// <returns>The tick size index.</returns>
-        IReadOnlyDictionary<Symbol, decimal> GetTickSizeIndex();
+        /// <returns>The tick precision index.</returns>
+        Dictionary<string, int> GetTickPrecisionIndex();
     }
 }

@@ -32,6 +32,7 @@ namespace Nautilus.Brokerage.FXCM
             { "CAD/CHF",  5 },
             { "CAD/JPY",  5 },
             { "CHF/JPY",  5 },
+            { "COPPER",   2 },
             { "CHN50",    15 },
             { "ESP35",    8 },
             { "EUR/AUD",  5 },

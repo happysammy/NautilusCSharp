@@ -69,16 +69,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             var instrument = new Instrument(
-                new Symbol("AUDUSD", Venue.FXCM),
+                new Symbol("SPX500", Venue.FXCM),
                 new InstrumentId("NONE"),
                 new BrokerSymbol("NONE"),
                 CurrencyCode.CAD,
                 SecurityType.Bond,
                 2,
-                0.25m,
+                0.01m,
                 10m,
-                3,
-                1000,
+                0,
+                1,
+                1,
                 1,
                 1,
                 1,
@@ -96,7 +97,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                .Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(12, instrumentBuilder.Changes.Count);
+            Assert.Equal(10, instrumentBuilder.Changes.Count);
 
             foreach (var change in instrumentBuilder.Changes)
             {
