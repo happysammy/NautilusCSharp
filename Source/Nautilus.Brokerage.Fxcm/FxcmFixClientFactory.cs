@@ -40,7 +40,7 @@ namespace Nautilus.Brokerage.FXCM
             return new FixClient(
                 container,
                 new FxcmFixMessageHandler(container),
-                new FxcmFixMessageRouter(container, credentials.AccountNumber),
+                new FxcmFixMessageRouter(container, credentials.Account),
                 configFileName,
                 credentials,
                 Broker.FXCM,

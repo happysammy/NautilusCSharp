@@ -15,11 +15,11 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Common.Build;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Redis;
-    using NautilusDB.Configuration;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
     using ServiceStack;
@@ -82,11 +82,12 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
-            var configFileName = (string)config[ConfigSection.Fix]["fileName"];
+            var configFileName = (string)config[ConfigSection.Fix44]["fileName"];
+            var fixSettings = ConfigReader.LoadConfig(configFileName);
             var credentials = new FixCredentials(
-                (string)config[ConfigSection.Fix]["username"],
-                (string)config[ConfigSection.Fix]["password"],
-                (string)config[ConfigSection.Fix]["accountNumber"]);
+                account: fixSettings["Account"],
+                username: fixSettings["Username"],
+                password: fixSettings["Password"]);
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();

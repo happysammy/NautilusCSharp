@@ -67,7 +67,7 @@ namespace NautilusExecutor
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
-            BuildVersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
+            VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
             var actorSystem = ActorSystem.Create(nameof(NautilusExecutor));
             var clock = new Clock(DateTimeZone.Utc);

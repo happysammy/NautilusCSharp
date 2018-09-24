@@ -301,7 +301,7 @@ namespace Nautilus.Fix
                     this.Log.Debug("Authorizing session...");
                 }
 
-                message.SetField(new Account(this.credentials.AccountNumber));
+                message.SetField(new Account(this.credentials.Account));
             });
         }
 
@@ -338,7 +338,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute<FieldNotFoundException>(() =>
             {
-                message.SetField(new Account(this.credentials.AccountNumber));
+                message.SetField(new Account(this.credentials.Account));
 
                 var possDupFlag = false;
 

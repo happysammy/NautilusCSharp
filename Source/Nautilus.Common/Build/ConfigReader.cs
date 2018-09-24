@@ -9,9 +9,9 @@
 namespace Nautilus.Common.Build
 {
     using System;
-    using System.Collections.Specialized;
-    using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using System.Collections.Generic;
+    using System.IO;
+    using Nautilus.Core.Collections;
 
     /// <summary>
     /// Provides a configuration file reader.
@@ -19,24 +19,36 @@ namespace Nautilus.Common.Build
     public static class ConfigReader
     {
         /// <summary>
-        /// Returns the string value of the given argument name from the given arguments.
+        /// Parse the configuration file with the given name.
         /// </summary>
-        /// <param name="arguments">The arguments.</param>
-        /// <param name="argumentName">The argument name.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetArgumentValue(NameValueCollection arguments, string argumentName)
+        /// <param name="fileName">The configuration filename.</param>
+        /// <returns>A read-only dictionary of key value pairs.</returns>
+        public static ReadOnlyDictionary<string, string> LoadConfig(string fileName)
         {
-            Validate.NotNull(arguments, nameof(arguments));
-            Validate.NotNull(argumentName, nameof(argumentName));
+            var dic = new Dictionary<string, string>();
 
-            var argument = arguments[argumentName];
-
-            if (string.IsNullOrEmpty(argument))
+            if (!File.Exists(fileName))
             {
-                throw new ArgumentException($"Cannot find {argumentName} in {arguments}");
+                throw new InvalidOperationException($"Cannot load configuration (the file {fileName} was not found).");
             }
 
-            return argument.RemoveAllWhitespace();
+            var settings = File.ReadAllLines(fileName);
+            for (var i = 0; i < settings.Length; i++)
+            {
+                var setting = settings[i];
+                var index = setting.IndexOf("=", StringComparison.Ordinal);
+                if (index >= 0)
+                {
+                    var skey = setting.Substring(0, index);
+                    var svalue = setting.Substring(index + 1);
+                    if (!dic.ContainsKey(skey))
+                    {
+                        dic.Add(skey, svalue);
+                    }
+                }
+            }
+
+            return new ReadOnlyDictionary<string, string>(dic);
         }
     }
 }

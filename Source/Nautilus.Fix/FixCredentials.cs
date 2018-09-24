@@ -18,22 +18,27 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="FixCredentials"/> class.
         /// </summary>
+        /// <param name="account">The FIX account number.</param>
         /// <param name="username">The FIX account username.</param>
         /// <param name="password">The FIX account password.</param>
-        /// <param name="accountNumber">The FIX account number.</param>
         public FixCredentials(
+            string account,
             string username,
-            string password,
-            string accountNumber)
+            string password)
         {
+            Validate.NotNull(account, nameof(account));
             Validate.NotNull(username, nameof(username));
             Validate.NotNull(password, nameof(password));
-            Validate.NotNull(accountNumber, nameof(accountNumber));
 
+            this.Account = account;
             this.Username = username;
             this.Password = password;
-            this.AccountNumber = accountNumber;
         }
+
+        /// <summary>
+        /// Gets the FIX account.
+        /// </summary>
+        public string Account { get; }
 
         /// <summary>
         /// Gets the FIX account username.
@@ -44,10 +49,5 @@ namespace Nautilus.Fix
         /// Gets the FIX account password.
         /// </summary>
         public string Password { get; }
-
-        /// <summary>
-        /// Gets the FIX account number.
-        /// </summary>
-        public string AccountNumber { get; }
     }
 }

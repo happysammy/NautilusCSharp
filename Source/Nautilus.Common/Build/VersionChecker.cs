@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="BuildVersionChecker.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="VersionChecker.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -19,7 +19,7 @@ namespace Nautilus.Common.Build
     /// Provides a means of checking dependency versions and outputting to the log at system initialization.
     /// </summary>
     [Stateless]
-    public static class BuildVersionChecker
+    public static class VersionChecker
     {
         /// <summary>
         /// Runs the version checker which produces log events.

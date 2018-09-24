@@ -9,11 +9,11 @@
 namespace NautilusExecutor
 {
     using System.IO;
-    using global::NautilusExecutor.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Common.Build;
     using Nautilus.Core.Validation;
     using Nautilus.Fix;
     using Nautilus.Messaging.Network;
@@ -86,11 +86,12 @@ namespace NautilusExecutor
                 ? LogEventLevel.Debug
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
-            var configFileName = (string)config[ConfigSection.Fix]["fileName"];
+            var configFileName = (string)config[ConfigSection.Fix44]["fileName"];
+            var fixSettings = ConfigReader.LoadConfig(configFileName);
             var credentials = new FixCredentials(
-                (string)config[ConfigSection.Fix]["username"],
-                (string)config[ConfigSection.Fix]["password"],
-                (string)config[ConfigSection.Fix]["accountNumber"]);
+                account: fixSettings["Account"],
+                username: fixSettings["Username"],
+                password: fixSettings["Password"]);
 
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,

@@ -66,7 +66,7 @@ namespace NautilusDB
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
-            BuildVersionChecker.Run(loggingAdapter, "NautilusDB - Financial Market Data Service");
+            VersionChecker.Run(loggingAdapter, "NautilusDB - Financial Market Data Service");
 
             var actorSystem = ActorSystem.Create(nameof(NautilusDB));
             var clock = new Clock(DateTimeZone.Utc);

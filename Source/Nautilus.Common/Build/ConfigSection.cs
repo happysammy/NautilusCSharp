@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusExecutor.Configuration
+namespace Nautilus.Common.Build
 {
     /// <summary>
     /// Provides JSON configuration section strings.
@@ -16,12 +16,17 @@ namespace NautilusExecutor.Configuration
         /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
-        public static string Service => "service";
+        public static string Logging => "logging";
+
+        /// <summary>
+        /// Gets the database configuration section string.
+        /// </summary>
+        public static string Database => "database";
 
         /// <summary>
         /// Gets the logging configuration section string.
         /// </summary>
-        public static string Logging => "logging";
+        public static string Service => "service";
 
         /// <summary>
         /// Gets the Service Stack configuration section string.
@@ -31,7 +36,7 @@ namespace NautilusExecutor.Configuration
         /// <summary>
         /// Gets the FIX configuration section string.
         /// </summary>
-        public static string Fix => "fix_config";
+        public static string Fix44 => "fix44";
 
         /// <summary>
         /// Gets the symbols to subscribe to configuration section string.
