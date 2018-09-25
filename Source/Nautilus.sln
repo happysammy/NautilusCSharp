@@ -8,6 +8,10 @@ ProjectSection(SolutionItems) = preProject
 	fix_fxcm3.cfg = fix_fxcm3.cfg
 	fix_fxcm4.cfg = fix_fxcm4.cfg
 	fix_duka1.cfg = fix_duka1.cfg
+	fix_fxcm3_md.cfg = fix_fxcm3_md.cfg
+	fix_fxcm1_md.cfg = fix_fxcm1_md.cfg
+	fix_fxcm2_md.cfg = fix_fxcm2_md.cfg
+	fix_fxcm4_md.cfg = fix_fxcm4_md.cfg
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
