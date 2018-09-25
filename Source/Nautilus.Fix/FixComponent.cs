@@ -41,7 +41,7 @@ namespace Nautilus.Fix
         private readonly ILogger logger;
         private readonly CommandHandler commandHandler;
         private readonly FixCredentials credentials;
-        private readonly string configFileName;
+        private readonly string configFilePath;
 
         private ReadOnlyList<IEndpoint> connectionEventReceivers;
         private SocketInitiator initiator;
@@ -56,20 +56,20 @@ namespace Nautilus.Fix
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
         /// <param name="credentials">The FIX account credentials.</param>
-        /// <param name="configFileName">The FIX config file name.</param>
+        /// <param name="configFilePath">The FIX config file path.</param>
         protected FixComponent(
             IComponentryContainer container,
             Broker broker,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
             FixCredentials credentials,
-            string configFileName)
+            string configFilePath)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
             Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
             Validate.NotNull(credentials, nameof(credentials));
-            Validate.NotNull(configFileName, nameof(configFileName));
+            Validate.NotNull(configFilePath, nameof(configFilePath));
 
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -79,7 +79,7 @@ namespace Nautilus.Fix
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = broker;
             this.credentials = credentials;
-            this.configFileName = configFileName;
+            this.configFilePath = configFilePath;
             this.FixMessageHandler = fixMessageHandler;
             this.FixMessageRouter = fixMessageRouter;
 
@@ -175,7 +175,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var settings = new SessionSettings(this.configFileName);
+                var settings = new SessionSettings(this.configFilePath);
                 var storeFactory = new FileStoreFactory(settings);
 
                 // var logFactory = new ScreenLogFactory(settings);
@@ -183,8 +183,6 @@ namespace Nautilus.Fix
 
                 this.Log.Debug("Starting initiator...");
                 this.initiator.Start();
-
-                Task.Delay(1000);
             });
         }
 

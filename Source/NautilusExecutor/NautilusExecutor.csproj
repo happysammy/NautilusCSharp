@@ -36,13 +36,26 @@
         <Content Include="hosting.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\FIXFXCM10.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\DUKAFIX44.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\fix_fxcm1.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\fix_fxcm2.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\fix_fxcm3.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\fix_fxcm4.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
-        <AdditionalFiles Include="..\FIXFXCM10.xml" />
-        <AdditionalFiles Include="..\fix_fxcm1.cfg" />
-        <AdditionalFiles Include="..\fix_fxcm2.cfg" />
-        <AdditionalFiles Include="..\fix_fxcm3.cfg" />
-        <AdditionalFiles Include="..\fix_fxcm4.cfg" />
     </ItemGroup>
 </Project>

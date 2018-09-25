@@ -8,9 +8,11 @@
 
 namespace NautilusDB
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -82,8 +84,11 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
+            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             var configFileName = (string)config[ConfigSection.Fix44]["fileName"];
-            var fixSettings = ConfigReader.LoadConfig(configFileName);
+            var configFilePath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFileName));
+
+            var fixSettings = ConfigReader.LoadConfig(configFilePath);
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
@@ -112,7 +117,7 @@ namespace NautilusDB
                 logLevel,
                 isCompression,
                 compressionCodec,
-                configFileName,
+                configFilePath,
                 credentials,
                 symbols,
                 resolutions,

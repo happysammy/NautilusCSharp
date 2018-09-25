@@ -31,7 +31,7 @@ namespace Nautilus.Fix
         /// <param name="broker">The account brokerage.</param>
         /// <param name="fixMessageHandler">The FIX message handler.</param>
         /// <param name="fixMessageRouter">The FIX message router.</param>
-        /// <param name="configFileName">The FIX config file name.</param>
+        /// <param name="configFilePath">The FIX config file name.</param>
         /// <param name="credentials">The FIX account credentials.</param>
         /// <param name="brokerSymbols">The list of broker symbols.</param>
         /// <param name="symbols">The list of symbols.</param>
@@ -39,7 +39,7 @@ namespace Nautilus.Fix
             IComponentryContainer container,
             IFixMessageHandler fixMessageHandler,
             IFixMessageRouter fixMessageRouter,
-            string configFileName,
+            string configFilePath,
             FixCredentials credentials,
             Broker broker,
             IReadOnlyList<string> brokerSymbols,
@@ -50,12 +50,12 @@ namespace Nautilus.Fix
             fixMessageHandler,
             fixMessageRouter,
             credentials,
-            configFileName)
+            configFilePath)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
             Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
-            Validate.NotNull(configFileName, nameof(configFileName));
+            Validate.NotNull(configFilePath, nameof(configFilePath));
             Validate.NotNull(credentials, nameof(credentials));
             Validate.NotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
             Validate.NotNullOrEmpty(symbols, nameof(symbols));
