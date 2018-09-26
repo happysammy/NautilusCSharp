@@ -97,7 +97,6 @@ namespace NautilusDB
             var fixGateway = FixGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                instrumentRepository,
                 fixClient,
                 FxcmInstrumentDataProvider.GetTickDecimalsIndex());
 
@@ -113,6 +112,7 @@ namespace NautilusDB
                 fixGateway,
                 new RedisChannelPublisherFactory(clientManager),
                 barRepository,
+                instrumentRepository,
                 symbols,
                 resolutions,
                 barRollingWindow);

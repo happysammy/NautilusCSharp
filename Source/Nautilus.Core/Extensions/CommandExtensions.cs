@@ -96,6 +96,19 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
+        /// Passes the result to the given action on either a success or failure.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action to perform on the result.</param>
+        public static void OnBoth(this CommandResult result, Action<CommandResult> action)
+        {
+            Debug.NotNull(result, nameof(result));
+            Debug.NotNull(action, nameof(action));
+
+            action(result);
+        }
+
+        /// <summary>
         /// Calls the given function on either a success or failure result result.
         /// </summary>
         /// <param name="result">The result to evaluate (cannot be null).</param>

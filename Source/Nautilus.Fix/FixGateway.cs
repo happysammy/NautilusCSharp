@@ -9,8 +9,8 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -34,23 +34,21 @@ namespace Nautilus.Fix
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IFixClient fixClient;
-        private readonly IInstrumentRepository instrumentRepository;
         private readonly ReadOnlyDictionary<string, int> tickPrecisionIndex;
-        private ReadOnlyList<IEndpoint> tickReceivers;
-        private ReadOnlyList<IEndpoint> eventReceivers;
+        private readonly List<IEndpoint> tickReceivers;
+        private readonly List<IEndpoint> eventReceivers;
+        private readonly List<NautilusService> instrumentReceivers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="instrumentRepository">The instrument repository.</param>
-        /// <param name="fixClient">The trade client.</param>
+        /// <param name="fixClient">The FIX client.</param>
         /// <param name="tickPrecisionIndex">The tick decimal precision index.</param>
         public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IInstrumentRepository instrumentRepository,
             IFixClient fixClient,
             ReadOnlyDictionary<string, int> tickPrecisionIndex)
             : base(
@@ -60,14 +58,14 @@ namespace Nautilus.Fix
                 messagingAdapter)
         {
             Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(fixClient, nameof(fixClient));
-            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             this.fixClient = fixClient;
-            this.instrumentRepository = instrumentRepository;
             this.tickPrecisionIndex = tickPrecisionIndex;
-            this.tickReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
-            this.eventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
+            this.tickReceivers = new List<IEndpoint>();
+            this.eventReceivers = new List<IEndpoint>();
+            this.instrumentReceivers = new List<NautilusService>();
         }
 
         /// <summary>
@@ -86,16 +84,7 @@ namespace Nautilus.Fix
         public bool IsConnected => this.fixClient.IsConnected;
 
         /// <summary>
-        /// Returns the current time of the system clock.
-        /// </summary>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public ZonedDateTime GetTimeNow()
-        {
-            return this.TimeNow();
-        }
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
+        /// Registers the receiver endpoint to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
         public void RegisterTickReceiver(IEndpoint receiver)
@@ -103,14 +92,11 @@ namespace Nautilus.Fix
             Validate.NotNull(receiver, nameof(receiver));
             Debug.DoesNotContain(receiver, nameof(receiver), this.tickReceivers);
 
-            var receivers = this.tickReceivers.ToList();
-            receivers.Add(receiver);
-
-            this.tickReceivers = new ReadOnlyList<IEndpoint>(receivers);
+            this.tickReceivers.Add(receiver);
         }
 
         /// <summary>
-        /// Registers the receiver to receive <see cref="Event"/>s from the gateway.
+        /// Registers the receiver endpoint to receive <see cref="Event"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
         public void RegisterEventReceiver(IEndpoint receiver)
@@ -118,10 +104,19 @@ namespace Nautilus.Fix
             Validate.NotNull(receiver, nameof(receiver));
             Debug.DoesNotContain(receiver, nameof(receiver), this.eventReceivers);
 
-            var receivers = this.eventReceivers.ToList();
-            receivers.Add(receiver);
+            this.eventReceivers.Add(receiver);
+        }
 
-            this.eventReceivers = new ReadOnlyList<IEndpoint>(receivers);
+        /// <summary>
+        /// Registers the service to receive <see cref="Instrument"/> updates from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterInstrumentReceiver(NautilusService receiver)
+        {
+            Validate.NotNull(receiver, nameof(receiver));
+            Debug.DoesNotContain(receiver, nameof(receiver), this.instrumentReceivers);
+
+            this.instrumentReceivers.Add(receiver);
         }
 
         /// <summary>
@@ -348,9 +343,15 @@ namespace Nautilus.Fix
                     $"SecurityListReceived: " +
                     $"(SecurityResponseId={responseId}) result={result}");
 
-                var commandResult = this.instrumentRepository.Add(instruments, this.TimeNow());
+                var dataDelivery = new DataDelivery<IReadOnlyCollection<Instrument>>(
+                    instruments,
+                    this.NewGuid(),
+                    this.TimeNow());
 
-                this.Log.Result(commandResult);
+                foreach (var receiver in this.instrumentReceivers)
+                {
+                    this.Send(receiver, dataDelivery);
+                }
             });
         }
 

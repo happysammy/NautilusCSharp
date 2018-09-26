@@ -24,25 +24,21 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="fixClient">The FIX client.</param>
         /// <param name="tickPrecisionIndex">The tick decimal precision index.</param>
         /// <returns>The FIX gateway.</returns>
         public static IFixGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IInstrumentRepository instrumentRepository,
             IFixClient fixClient,
             ReadOnlyDictionary<string, int> tickPrecisionIndex)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(fixClient, nameof(fixClient));
-            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             var gateway = new FixGateway(
                 container,
                 messagingAdapter,
-                instrumentRepository,
                 fixClient,
                 tickPrecisionIndex);
 

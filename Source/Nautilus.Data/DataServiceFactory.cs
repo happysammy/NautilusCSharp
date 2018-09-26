@@ -34,7 +34,8 @@ namespace Nautilus.Data
         /// <param name="client">The FIX client.</param>
         /// <param name="gateway">The FIX gateway.</param>
         /// <param name="publisherFactory">The channel publisher factory.</param>
-        /// <param name="barRepository">The database market data repo.</param>
+        /// <param name="barRepository">The bar repository.</param>
+        /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
@@ -47,6 +48,7 @@ namespace Nautilus.Data
             IFixGateway gateway,
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
+            IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
@@ -72,7 +74,8 @@ namespace Nautilus.Data
                 actorSystem.ActorOf(Props.Create(
                 () => new DatabaseTaskManager(
                     container,
-                    barRepository))));
+                    barRepository,
+                    instrumentRepository))));
 
             var dataCollectionActor = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
@@ -98,6 +101,7 @@ namespace Nautilus.Data
 
             gateway.RegisterTickReceiver(tickPublisher);
             gateway.RegisterTickReceiver(barAggregationController);
+            gateway.RegisterInstrumentReceiver(NautilusService.DatabaseTaskManager);
             client.RegisterConnectionEventReceiver(dataService);
 
             return new Switchboard(new Dictionary<NautilusService, IEndpoint>

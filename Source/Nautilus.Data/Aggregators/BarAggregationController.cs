@@ -13,6 +13,7 @@ namespace Nautilus.Data.Aggregators
     using Akka.Actor;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
@@ -20,7 +21,6 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;

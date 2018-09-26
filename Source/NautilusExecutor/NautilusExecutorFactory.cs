@@ -8,7 +8,6 @@
 
 namespace NautilusExecutor
 {
-    using System.Threading.Tasks;
     using Akka.Actor;
     using global::NautilusExecutor.Build;
     using Nautilus.Brokerage.FXCM;
@@ -24,11 +23,9 @@ namespace NautilusExecutor
     using Nautilus.Fix;
     using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
-    using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
     using Serilog.Events;
-    using ServiceStack.Redis;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="NautilusExecutor"/> system.
@@ -82,13 +79,6 @@ namespace NautilusExecutor
                 container,
                 new FakeMessageStore());
 
-            var clientManager = new BasicRedisClientManager(
-                new[] { RedisConstants.LocalHost },
-                new[] { RedisConstants.LocalHost });
-
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
-            instrumentRepository.CacheAll();
-
             var fixClient = FxcmFixClientFactory.Create(
                 container,
                 messagingAdapter,
@@ -98,7 +88,6 @@ namespace NautilusExecutor
             var fixGateway = FixGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                instrumentRepository,
                 fixClient,
                 FxcmInstrumentDataProvider.GetTickDecimalsIndex());
 
@@ -121,9 +110,6 @@ namespace NautilusExecutor
                 actorSystem,
                 messagingAdapter,
                 switchboard);
-
-            // Allow system to wire up (switchboard to initialize).
-            Task.Delay(500).Wait();
 
             return new NautilusExecutor(
                 container,
