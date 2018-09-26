@@ -117,7 +117,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public static QueryResult<decimal> GetTargetDirectSpread(string brokerSymbol)
         {
-            Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
 
             return TargetSpreadIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(TargetSpreadIndex[brokerSymbol])
@@ -134,8 +134,8 @@ namespace Nautilus.Brokerage.FXCM
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
 
-            return TickValueIndex.ContainsKey(brokerSymbol)
-                ? QueryResult<decimal>.Ok(TickValueIndex[brokerSymbol])
+            return MarginRequirementIndex.ContainsKey(brokerSymbol)
+                ? QueryResult<decimal>.Ok(MarginRequirementIndex[brokerSymbol])
                 : QueryResult<decimal>.Fail($"Cannot find tick value for {brokerSymbol}");
         }
 
