@@ -20,12 +20,63 @@ namespace Nautilus.Core.Extensions
     public static class CommandExtensions
     {
         /// <summary>
+        /// Passes the result to the given action if the result is a success.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action to perform on the result.</param>
+        /// <returns>The original result.</returns>
+        public static CommandResult OnSuccess(this CommandResult result, Action<CommandResult> action)
+        {
+            Debug.NotNull(result, nameof(result));
+            Debug.NotNull(action, nameof(action));
+
+            if (result.IsSuccess)
+            {
+                action(result);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Passes the result to the given action if the result is a failure.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action to perform on the result.</param>
+        /// <returns>The original result.</returns>
+        public static CommandResult OnFailure(this CommandResult result, Action<CommandResult> action)
+        {
+            Debug.NotNull(result, nameof(result));
+            Debug.NotNull(action, nameof(action));
+
+            if (result.IsFailure)
+            {
+                action(result);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Passes the result to the given action on either a success or failure.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action to perform on the result.</param>
+        public static void OnBoth(this CommandResult result, Action<CommandResult> action)
+        {
+            Debug.NotNull(result, nameof(result));
+            Debug.NotNull(action, nameof(action));
+
+            action(result);
+        }
+
+        /// <summary>
         /// Invokes the given action for a successful <see cref="CommandResult"/>, then returns the
         /// <see cref="CommandResult"/>.
         /// </summary>
         /// <param name="result">The result to evaluate (cannot be null).</param>
         /// <param name="action">The action to invoke (cannot be null).</param>
-        /// <returns>The commands result.</returns>
+        /// <returns>The result.</returns>
         public static CommandResult OnSuccess(this CommandResult result, Action action)
         {
             Debug.NotNull(result, nameof(result));
@@ -93,19 +144,6 @@ namespace Nautilus.Core.Extensions
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Passes the result to the given action on either a success or failure.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="action">The action to perform on the result.</param>
-        public static void OnBoth(this CommandResult result, Action<CommandResult> action)
-        {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(action, nameof(action));
-
-            action(result);
         }
 
         /// <summary>

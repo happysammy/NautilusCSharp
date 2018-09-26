@@ -10,12 +10,14 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Cryptography.X509Certificates;
     using Akka.Actor;
     using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
@@ -120,7 +122,8 @@ namespace Nautilus.Data
 
             this.instrumentRepository
                 .Add(message.Data, this.TimeNow())
-                .OnBoth(result => this.Log.Result(result));
+                .OnSuccess(result => this.Log.Information(result.Message))
+                .OnFailure(result => this.Log.Warning(result.Message));
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
