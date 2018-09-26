@@ -228,7 +228,7 @@ namespace Nautilus.Redis
                     Convert.ToInt32(deserialized["MinLimitDistance"]),
                     Convert.ToInt32(deserialized["MinTradeSize"]),
                     Convert.ToInt32(deserialized["MaxTradeSize"]),
-                    Convert.ToInt32(deserialized["MarginRequirement"]),
+                    Convert.ToDecimal(deserialized["MarginRequirement"]),
                     Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
                     Convert.ToDecimal(deserialized["RollOverInterestSell"]),
                     deserialized["Timestamp"].ToZonedDateTimeFromIso());
