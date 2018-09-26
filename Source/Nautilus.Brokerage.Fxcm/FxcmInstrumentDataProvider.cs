@@ -28,6 +28,7 @@ namespace Nautilus.Brokerage.FXCM
         private static readonly string AssemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         private static readonly string CsvDataFilePath = Path.GetFullPath(Path.Combine(AssemblyDirectory, CsvDataFileName));
         private static readonly ReadOnlyDictionary<string, string> SymbolIndex;
+        private static readonly ReadOnlyDictionary<string, int> TickDecimalsIndex;
         private static readonly ReadOnlyDictionary<string, decimal> TickValueIndex;
         private static readonly ReadOnlyDictionary<string, decimal> TargetSpreadIndex;
         private static readonly ReadOnlyDictionary<string, decimal> MarginRequirementIndex;
@@ -35,6 +36,7 @@ namespace Nautilus.Brokerage.FXCM
         static FxcmInstrumentDataProvider()
         {
             SymbolIndex = LoadSymbols();
+            TickDecimalsIndex = LoadTickDecimals();
             TickValueIndex = LoadTickValues();
             TargetSpreadIndex = LoadTargetSpreads();
             MarginRequirementIndex = LoadMarginRequirements();
@@ -93,6 +95,12 @@ namespace Nautilus.Brokerage.FXCM
 
             return new ReadOnlyList<string>(brokerSymbols);
         }
+
+        /// <summary>
+        /// Gets the tick decimals index (key is Nautilus symbol), loaded from the brokerage instrument data CSV file.
+        /// </summary>
+        /// <returns>The tick decimals index.</returns>
+        public static ReadOnlyDictionary<string, int> GetTickDecimalsIndex() => TickDecimalsIndex;
 
         /// <summary>
         /// Gets tick value of the given symbol, loaded from the brokerage instrument data CSV file
@@ -159,6 +167,26 @@ namespace Nautilus.Brokerage.FXCM
             return new ReadOnlyDictionary<string, string>(symbols);
         }
 
+        private static ReadOnlyDictionary<string, int> LoadTickDecimals()
+        {
+            var decimals = new Dictionary<string, int>();
+
+            using (var textReader = File.OpenText(CsvDataFilePath))
+            {
+                var reader = new CsvReader(textReader);
+
+                // Skip header.
+                textReader.ReadLine();
+
+                while (reader.Read())
+                {
+                    decimals.Add(reader.GetField<string>(1), reader.GetField<int>(2));
+                }
+            }
+
+            return new ReadOnlyDictionary<string, int>(decimals);
+        }
+
         private static ReadOnlyDictionary<string, decimal> LoadTickValues()
         {
             var values = new Dictionary<string, decimal>();
@@ -172,7 +200,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 while (reader.Read())
                 {
-                    values.Add(reader.GetField<string>(0), reader.GetField<decimal>(2));
+                    values.Add(reader.GetField<string>(0), reader.GetField<decimal>(3));
                 }
             }
 
@@ -192,7 +220,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 while (reader.Read())
                 {
-                    spreads.Add(reader.GetField<string>(0), reader.GetField<decimal>(3));
+                    spreads.Add(reader.GetField<string>(0), reader.GetField<decimal>(4));
                 }
             }
 
@@ -212,7 +240,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 while (reader.Read())
                 {
-                    margins.Add(reader.GetField<string>(0), reader.GetField<decimal>(4));
+                    margins.Add(reader.GetField<string>(0), reader.GetField<decimal>(5));
                 }
             }
 

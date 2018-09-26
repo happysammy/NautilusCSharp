@@ -98,7 +98,8 @@ namespace NautilusDB
                 container,
                 messagingAdapter,
                 instrumentRepository,
-                fixClient);
+                fixClient,
+                FxcmInstrumentDataProvider.GetTickDecimalsIndex());
 
             var barRepository = new RedisBarRepository(
                 clientManager,

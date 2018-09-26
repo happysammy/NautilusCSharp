@@ -99,7 +99,8 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter,
                 instrumentRepository,
-                fixClient);
+                fixClient,
+                FxcmInstrumentDataProvider.GetTickDecimalsIndex());
 
             var switchboard = ExecutionServiceFactory.Create(
                 actorSystem,
