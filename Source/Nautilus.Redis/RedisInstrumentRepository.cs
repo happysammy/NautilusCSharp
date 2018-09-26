@@ -199,7 +199,7 @@ namespace Nautilus.Redis
                     new Symbol(symbolCode, exchange.ToEnum<Venue>()),
                     new InstrumentId(deserializedSymbol["Value"]),
                     new BrokerSymbol(brokerSymbol),
-                    deserialized["CurrencyCode"].ToEnum<CurrencyCode>(),
+                    deserialized["QuoteCurrency"].ToEnum<CurrencyCode>(),
                     deserialized["SecurityType"].ToEnum<SecurityType>(),
                     Convert.ToInt32(deserialized["TickDecimals"]),
                     Convert.ToDecimal(deserialized["TickSize"]),
@@ -214,8 +214,8 @@ namespace Nautilus.Redis
                     Convert.ToInt32(deserialized["MinTradeSize"]),
                     Convert.ToInt32(deserialized["MaxTradeSize"]),
                     Convert.ToDecimal(deserialized["MarginRequirement"]),
-                    Convert.ToDecimal(deserialized["RollOverInterestBuy"]),
-                    Convert.ToDecimal(deserialized["RollOverInterestSell"]),
+                    Convert.ToDecimal(deserialized["RolloverInterestBuy"]),
+                    Convert.ToDecimal(deserialized["RolloverInterestSell"]),
                     deserialized["Timestamp"].ToZonedDateTimeFromIso());
 
                 return QueryResult<Instrument>.Ok(instrument);
