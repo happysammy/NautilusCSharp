@@ -41,24 +41,26 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns the Nautilus symbol <see cref="string"/> from the given FXCM symbol.
+        /// Gets the Nautilus symbol from the given broker symbol, loaded from the brokerage
+        /// instrument data CSV file (must be contained in the index).
         /// </summary>
-        /// <param name="fxcmSymbol">The FXCM symbol.</param>
-        /// <returns>The <see cref="Nautilus"/> symbol.</returns>
-        public static QueryResult<string> GetNautilusSymbol(string fxcmSymbol)
+        /// <param name="brokerSymbol">The broker symbol.</param>
+        /// <returns>If successful returns the result, otherwise returns failure result.</returns>
+        public static QueryResult<string> GetNautilusSymbol(string brokerSymbol)
         {
-            Debug.NotNull(fxcmSymbol, nameof(fxcmSymbol));
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
 
-            return SymbolIndex.ContainsKey(fxcmSymbol)
-                 ? QueryResult<string>.Ok(SymbolIndex[fxcmSymbol])
-                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {fxcmSymbol}");
+            return SymbolIndex.ContainsKey(brokerSymbol)
+                 ? QueryResult<string>.Ok(SymbolIndex[brokerSymbol])
+                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {brokerSymbol}");
         }
 
         /// <summary>
-        /// Returns the FXCM symbol <see cref="string"/> from the given Nautilus symbol.
+        /// Gets the broker symbol from the given Nautilus symbol, loaded from the brokerage
+        /// instrument data CSV file (must be contained in the index).
         /// </summary>
         /// <param name="nautilusSymbol">The Nautilus symbol.</param>
-        /// <returns>The FXCM symbol.</returns>
+        /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public static QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
         {
             Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));
@@ -69,7 +71,7 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns a read only list of all Nautilus symbols.
+        /// Gets all Nautilus symbols, loaded from the brokerage instrument data CSV file.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
         public static ReadOnlyList<Symbol> GetAllSymbols()
@@ -82,7 +84,7 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns a read only list of all FXCM symbols.
+        /// Gets all broker symbols, loaded from the brokerage instrument data CSV file.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
         public static ReadOnlyList<string> GetAllBrokerSymbols()
@@ -93,11 +95,11 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns the <see cref="decimal"/> tick value of the given symbol if its contained in the
-        /// index.
+        /// Gets tick value of the given symbol, loaded from the brokerage instrument data CSV file
+        /// (must be contained in the index).
         /// </summary>
         /// <param name="brokerSymbol">The broker symbol.</param>
-        /// <returns> A <see cref="decimal"/>.</returns>
+        /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public static QueryResult<decimal> GetTickValue(string brokerSymbol)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -108,10 +110,11 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
-        /// Returns the target direct spread of the given symbol if its contained in the index.
+        /// Gets the target direct spread of the given symbol, loaded from the brokerage instrument data CSV file
+        /// (must be contained in the index).
         /// </summary>
         /// <param name="brokerSymbol">The broker symbol.</param>
-        /// <returns>An <see cref="int"/>.</returns>
+        /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public static QueryResult<decimal> GetTargetDirectSpread(string brokerSymbol)
         {
             Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -119,6 +122,21 @@ namespace Nautilus.Brokerage.FXCM
             return TargetSpreadIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(TargetSpreadIndex[brokerSymbol])
                 : QueryResult<decimal>.Fail($"Cannot find the target direct spread for {brokerSymbol}");
+        }
+
+        /// <summary>
+        /// Gets the margin requirement of the given symbol per minimum trade size, loaded from the
+        /// brokerage instrument data CSV file (must be contained in the index).
+        /// </summary>
+        /// <param name="brokerSymbol">The broker symbol.</param>
+        /// <returns>If successful returns the result, otherwise returns failure result.</returns>
+        public static QueryResult<decimal> GetMarginRequirement(string brokerSymbol)
+        {
+            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+
+            return TickValueIndex.ContainsKey(brokerSymbol)
+                ? QueryResult<decimal>.Ok(TickValueIndex[brokerSymbol])
+                : QueryResult<decimal>.Fail($"Cannot find tick value for {brokerSymbol}");
         }
 
         private static ReadOnlyDictionary<string, string> LoadSymbols()

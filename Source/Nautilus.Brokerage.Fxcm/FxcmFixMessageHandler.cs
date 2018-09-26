@@ -97,7 +97,8 @@ namespace Nautilus.Brokerage.FXCM
                         continue;
                     }
 
-                    var fxcmSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
+                    var symbolString = group.GetField(Tags.Symbol);
+                    var fxcmSymbol = new BrokerSymbol(symbolString);
 
                     var symbolQuery = FxcmInstrumentDataProvider.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
@@ -161,7 +162,7 @@ namespace Nautilus.Brokerage.FXCM
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        decimal.Zero, // TODO margin requirement.
+                        FxcmInstrumentDataProvider.GetMarginRequirement(symbolString).Value,
                         interestBuy,
                         interestSell,
                         this.TimeNow());
