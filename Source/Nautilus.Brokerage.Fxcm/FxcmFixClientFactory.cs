@@ -44,8 +44,8 @@ namespace Nautilus.Brokerage.FXCM
                 configFilePath,
                 credentials,
                 Broker.FXCM,
-                FxcmSymbolProvider.GetAllBrokerSymbols(),
-                FxcmSymbolProvider.GetAllSymbols());
+                FxcmInstrumentDataProvider.GetAllBrokerSymbols(),
+                FxcmInstrumentDataProvider.GetAllSymbols());
         }
     }
 }

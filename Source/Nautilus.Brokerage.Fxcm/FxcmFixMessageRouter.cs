@@ -8,10 +8,10 @@
 
 namespace Nautilus.Brokerage.FXCM
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -75,13 +75,13 @@ namespace Nautilus.Brokerage.FXCM
         /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<string> GetAllBrokerSymbols() => FxcmSymbolProvider.GetAllBrokerSymbols();
+        public ReadOnlyList<string> GetAllBrokerSymbols() => FxcmInstrumentDataProvider.GetAllBrokerSymbols();
 
         /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyList<Symbol> GetAllSymbols() => FxcmSymbolProvider.GetAllSymbols();
+        public ReadOnlyList<Symbol> GetAllSymbols() => FxcmInstrumentDataProvider.GetAllSymbols();
 
         /// <summary>
         /// Sends a new collateral inquiry FIX message.
@@ -140,7 +140,7 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var fxcmSymbol = FxcmSymbolProvider.GetBrokerSymbol(symbol.Code);
+                var fxcmSymbol = FxcmInstrumentDataProvider.GetBrokerSymbol(symbol.Code);
 
                 this.fixSession.Send(SecurityListRequestFactory.Create(
                     fxcmSymbol.Value,
@@ -173,7 +173,7 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var fxcmSymbol = FxcmSymbolProvider.GetBrokerSymbol(symbol.Code).Value;
+                var fxcmSymbol = FxcmInstrumentDataProvider.GetBrokerSymbol(symbol.Code).Value;
 
                 this.fixSessionMd.Send(MarketDataRequestFactory.Create(
                     fxcmSymbol,
@@ -190,7 +190,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                foreach (var fxcmSymbol in FxcmSymbolProvider.GetAllBrokerSymbols())
+                foreach (var fxcmSymbol in FxcmInstrumentDataProvider.GetAllBrokerSymbols())
                 {
                     this.fixSessionMd.Send(MarketDataRequestFactory.Create(
                         fxcmSymbol,
@@ -212,7 +212,7 @@ namespace Nautilus.Brokerage.FXCM
             this.Execute(() =>
             {
                 var message = NewOrderSingleFactory.Create(
-                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                    FxcmInstrumentDataProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     this.accountNumber,
                     order,
                     this.TimeNow());
@@ -233,7 +233,7 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var brokerSymbol = FxcmSymbolProvider.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+                var brokerSymbol = FxcmInstrumentDataProvider.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
 
                 if (atomicOrder.ProfitTarget.HasValue)
                 {
@@ -271,7 +271,7 @@ namespace Nautilus.Brokerage.FXCM
             this.Execute(() =>
             {
                 var message = OrderCancelReplaceRequestFactory.Create(
-                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                    FxcmInstrumentDataProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     order,
                     modifiedPrice.Value,
                     this.TimeNow());
@@ -296,7 +296,7 @@ namespace Nautilus.Brokerage.FXCM
             this.Execute(() =>
             {
                 var message = OrderCancelRequestFactory.Create(
-                    FxcmSymbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                    FxcmInstrumentDataProvider.GetBrokerSymbol(order.Symbol.Code).Value,
                     order,
                     this.TimeNow());
 

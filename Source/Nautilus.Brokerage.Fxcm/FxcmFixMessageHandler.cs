@@ -99,7 +99,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     var fxcmSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
-                    var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol.Value);
+                    var symbolQuery = FxcmInstrumentDataProvider.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Warning(symbolQuery.FullMessage);
@@ -117,7 +117,7 @@ namespace Nautilus.Brokerage.FXCM
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
 
-                    var tickValueQuery = FxcmTickValueProvider.GetTickValue(fxcmSymbol.Value);
+                    var tickValueQuery = FxcmInstrumentDataProvider.GetTickValue(fxcmSymbol.Value);
                     if (tickValueQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
@@ -125,7 +125,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     var tickValue = tickValueQuery.Value;
 
-                    var targetDirectSpreadQuery = FxcmTargetDirectSpreadProvider.GetTargetDirectSpread(fxcmSymbol.Value);
+                    var targetDirectSpreadQuery = FxcmInstrumentDataProvider.GetTargetDirectSpread(fxcmSymbol.Value);
                     if (targetDirectSpreadQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
@@ -278,7 +278,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 var fxcmSymbol = message.GetField(Tags.Symbol);
 
-                var symbolQuery = FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol);
+                var symbolQuery = FxcmInstrumentDataProvider.GetNautilusSymbol(fxcmSymbol);
                 if (symbolQuery.IsFailure)
                 {
                     throw new InvalidOperationException(symbolQuery.Message);
@@ -344,7 +344,7 @@ namespace Nautilus.Brokerage.FXCM
                 var fxcmSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? FxcmSymbolProvider.GetNautilusSymbol(fxcmSymbol).Value
+                    ? FxcmInstrumentDataProvider.GetNautilusSymbol(fxcmSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);

@@ -10,6 +10,8 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
+    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
@@ -19,10 +21,12 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic FIX client.
     /// </summary>
+    [Stateless]
+    [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {
-        private readonly IReadOnlyList<string> brokerSymbols;
-        private readonly IReadOnlyList<Symbol> symbols;
+        private readonly ReadOnlyList<string> brokerSymbols;
+        private readonly ReadOnlyList<Symbol> symbols;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -42,8 +46,8 @@ namespace Nautilus.Fix
             string configFilePath,
             FixCredentials credentials,
             Broker broker,
-            IReadOnlyList<string> brokerSymbols,
-            IReadOnlyList<Symbol> symbols)
+            ReadOnlyList<string> brokerSymbols,
+            ReadOnlyList<Symbol> symbols)
         : base(
             container,
             broker,
