@@ -139,8 +139,8 @@ namespace Nautilus.Brokerage.FXCM
                     var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
                     var minStopDistance = Convert.ToInt32(group.GetField(9090));
                     var minLimitDistance = Convert.ToInt32(group.GetField(9091));
-                    var interestBuy = Convert.ToDecimal(group.GetField(9003));
-                    var interestSell = Convert.ToDecimal(group.GetField(9004));
+                    var rolloverInterestBuy = Convert.ToDecimal(group.GetField(9003));
+                    var rolloverInterestSell = Convert.ToDecimal(group.GetField(9004));
                     var minTradeSize = Convert.ToInt32(group.GetField(9095));
                     var maxTradeSize = Convert.ToInt32(group.GetField(9094));
 
@@ -163,8 +163,8 @@ namespace Nautilus.Brokerage.FXCM
                         minTradeSize,
                         maxTradeSize,
                         FxcmInstrumentDataProvider.GetMarginRequirement(symbolString).Value,
-                        interestBuy,
-                        interestSell,
+                        rolloverInterestBuy,
+                        rolloverInterestSell,
                         this.TimeNow());
 
                     instruments.Add(instrument);

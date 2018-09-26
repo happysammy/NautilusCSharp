@@ -137,8 +137,7 @@ namespace Nautilus.Redis
                 return this.Write(instrument);
             }
 
-            var instrumentBuilder = new InstrumentBuilder(this.cache[symbol])
-                .Update(instrument);
+            var instrumentBuilder = new InstrumentBuilder(this.cache[symbol]).Update(instrument);
 
             if (instrumentBuilder.Changes.Count == 0)
             {
@@ -154,21 +153,7 @@ namespace Nautilus.Redis
             this.cache[symbol] = updatedInstrument;
             this.Write(instrument);
 
-            return CommandResult.Ok($"Updated instrument {symbol} " + changesString);
-        }
-
-        /// <summary>
-        /// Adds the given instruments to the repository.
-        /// </summary>
-        /// <param name="instruments">The instruments.</param>
-        /// <param name="timeNow">The time now.</param>
-        /// <returns>The result of the operation.</returns>
-        public CommandResult Add(IReadOnlyCollection<Instrument> instruments, ZonedDateTime timeNow)
-        {
-            Debug.NotNull(instruments, nameof(instruments));
-            Debug.NotNull(timeNow, nameof(timeNow));
-
-            return CommandResult.Combine(instruments.Select(instrument => this.Add(instrument, timeNow)).ToArray());
+            return CommandResult.Ok($"Updated instrument {symbol}" + changesString);
         }
 
         /// <summary>
@@ -274,7 +259,7 @@ namespace Nautilus.Redis
                     KeyProvider.GetInstrumentKey(symbol),
                     JsonSerializer.SerializeToString(instrument));
 
-                return CommandResult.Ok($"Added instrument ({symbol})...");
+                return CommandResult.Ok($"Added instrument ({symbol}).");
             }
         }
     }

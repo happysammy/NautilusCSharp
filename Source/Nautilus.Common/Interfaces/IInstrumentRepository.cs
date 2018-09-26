@@ -49,14 +49,6 @@ namespace Nautilus.Common.Interfaces
         CommandResult Add(Instrument instrument, ZonedDateTime timeNow);
 
         /// <summary>
-        /// Updates the given collection of instruments in the database.
-        /// </summary>
-        /// <param name="instruments">The instruments collection.</param>
-        /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        CommandResult Add(IReadOnlyCollection<Instrument> instruments, ZonedDateTime timeNow);
-
-        /// <summary>
         /// Returns the instrument corresponding to the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

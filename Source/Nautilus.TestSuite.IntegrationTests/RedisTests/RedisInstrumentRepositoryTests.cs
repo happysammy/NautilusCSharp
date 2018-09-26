@@ -9,9 +9,7 @@
 namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using ServiceStack.Redis;
@@ -79,35 +77,37 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         internal void Test_can_add_collection_of_instruments()
         {
             // Arrange
-            var instruments = new List<Instrument>
-            {
-                StubInstrumentFactory.AUDUSD(),
-                StubInstrumentFactory.EURUSD(),
-                StubInstrumentFactory.USDJPY(),
-            };
+            var instrument1 = StubInstrumentFactory.AUDUSD();
+            var instrument2 = StubInstrumentFactory.EURUSD();
+            var instrument3 = StubInstrumentFactory.USDJPY();
 
             // Act
-            var result = this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
+            var result1 = this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
+            var result2 = this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
+            var result3 = this.repository.Add(instrument3, StubZonedDateTime.UnixEpoch());
             var count = this.repository.GetAllKeys().Count;
 
             // Assert
-            Assert.True(result.IsSuccess);
+            Assert.True(result1.IsSuccess);
+            Assert.True(result2.IsSuccess);
+            Assert.True(result3.IsSuccess);
             Assert.Equal(3, count);
-            this.output.WriteLine(result.Message);
+            this.output.WriteLine(result1.Message);
+            this.output.WriteLine(result2.Message);
+            this.output.WriteLine(result3.Message);
         }
 
         [Fact]
         internal void Test_can_delete_all_instruments()
         {
             // Arrange
-            var instruments = new List<Instrument>
-            {
-                StubInstrumentFactory.AUDUSD(),
-                StubInstrumentFactory.EURUSD(),
-                StubInstrumentFactory.USDJPY(),
-            };
+            var instrument1 = StubInstrumentFactory.AUDUSD();
+            var instrument2 = StubInstrumentFactory.EURUSD();
+            var instrument3 = StubInstrumentFactory.USDJPY();
 
-            this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument3, StubZonedDateTime.UnixEpoch());
 
             // Act
             this.repository.DeleteAll();
@@ -140,17 +140,12 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var instrument2 = StubInstrumentFactory.EURUSD();
             var instrument3 = StubInstrumentFactory.USDJPY();
 
-            var instruments = new List<Instrument>
-            {
-                instrument1,
-                instrument2,
-                instrument3,
-            };
-
-            this.repository.Add(instruments, StubZonedDateTime.UnixEpoch());
-            this.repository.CacheAll();
+            this.repository.Add(instrument1, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument2, StubZonedDateTime.UnixEpoch());
+            this.repository.Add(instrument3, StubZonedDateTime.UnixEpoch());
 
             // Act
+            this.repository.CacheAll();
             var result1 = this.repository.FindInCache(instrument1.Symbol);
             var result2 = this.repository.FindInCache(instrument2.Symbol);
             var result3 = this.repository.FindInCache(instrument3.Symbol);

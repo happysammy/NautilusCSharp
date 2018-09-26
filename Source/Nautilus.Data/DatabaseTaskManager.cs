@@ -120,10 +120,11 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.instrumentRepository
-                .Add(message.Data, this.TimeNow())
-                .OnSuccess(result => this.Log.Information(result.Message))
-                .OnFailure(result => this.Log.Warning(result.Message));
+            message.Data
+                .ForEach(i => this.instrumentRepository
+                    .Add(i, this.TimeNow())
+                    .OnSuccess(result => this.Log.Information(result.Message))
+                    .OnFailure(result => this.Log.Warning(result.Message)));
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
