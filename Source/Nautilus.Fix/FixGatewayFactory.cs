@@ -10,7 +10,6 @@ namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -25,13 +24,11 @@ namespace Nautilus.Fix
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <param name="tickPrecisionIndex">The tick decimal precision index.</param>
         /// <returns>The FIX gateway.</returns>
         public static IFixGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixClient fixClient,
-            ReadOnlyDictionary<string, int> tickPrecisionIndex)
+            IFixClient fixClient)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(fixClient, nameof(fixClient));
@@ -39,8 +36,7 @@ namespace Nautilus.Fix
             var gateway = new FixGateway(
                 container,
                 messagingAdapter,
-                fixClient,
-                tickPrecisionIndex);
+                fixClient);
 
             fixClient.InitializeGateway(gateway);
 

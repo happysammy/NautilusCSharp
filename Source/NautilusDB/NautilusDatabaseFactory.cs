@@ -85,16 +85,18 @@ namespace NautilusDB
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
             instrumentRepository.CacheAll();
 
+            var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
+
             var fixClient = FxcmFixClientFactory.Create(
                 container,
                 messagingAdapter,
-                fixConfig);
+                fixConfig,
+                instrumentData);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,
                 messagingAdapter,
-                fixClient,
-                FxcmInstrumentDataProvider.GetTickDecimalsIndex());
+                fixClient);
 
             var barRepository = new RedisBarRepository(
                 clientManager,

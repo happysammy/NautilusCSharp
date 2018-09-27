@@ -6,40 +6,40 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Brokerage.Dukascopy
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.Fix;
 
     /// <summary>
-    /// Provides a factory for creating FXCM FIX clients.
+    /// Provides a factory for creating Dukascopy FIX clients.
     /// </summary>
-    public static class FxcmFixClientFactory
+    public static class DukascopyFixClientFactory
     {
         /// <summary>
-        /// Creates and returns a new FXCM FIX client.
+        /// Creates and returns a new Dukascopy FIX client.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
-        /// <param name="instrumentData">The instrument data provider.</param>
-        /// <returns>The FXCM FIX client.</returns>
+        /// <returns>The Dukascopy FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            FixConfiguration config,
-            InstrumentDataProvider instrumentData)
+            FixConfiguration config)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(config, nameof(config));
 
+            var instrumentData = new InstrumentDataProvider(config.InstrumentDataFileName);
+
             return new FixClient(
                 container,
                 config,
-                new FxcmFixMessageHandler(container, instrumentData),
-                new FxcmFixMessageRouter(container, instrumentData, config.Credentials.Account),
+                new DukascopyFixMessageHandler(container, instrumentData),
+                new DukascopyFixMessageRouter(container, instrumentData, config.Credentials.Account),
                 instrumentData);
         }
     }

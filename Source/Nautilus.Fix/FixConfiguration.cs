@@ -24,17 +24,21 @@ namespace Nautilus.Fix
         /// <param name="broker">The FIX brokerage.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
+        /// <param name="instrumentDataFileName">The instrument data file name.</param>
         public FixConfiguration(
             Broker broker,
             string configPath,
-            FixCredentials credentials)
+            FixCredentials credentials,
+            string instrumentDataFileName)
         {
             Validate.NotNull(configPath, nameof(configPath));
             Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(instrumentDataFileName, nameof(instrumentDataFileName));
 
             this.Broker = broker;
             this.ConfigPath = configPath;
             this.Credentials = credentials;
+            this.InstrumentDataFileName = instrumentDataFileName;
         }
 
         /// <summary>
@@ -51,5 +55,10 @@ namespace Nautilus.Fix
         /// Gets the FIX account password.
         /// </summary>
         public FixCredentials Credentials { get; }
+
+        /// <summary>
+        /// Gets the FIX instrument data file name.
+        /// </summary>
+        public string InstrumentDataFileName { get; }
     }
 }

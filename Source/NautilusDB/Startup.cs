@@ -93,7 +93,13 @@ namespace NautilusDB
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var fixConfig = new FixConfiguration(broker, configPath, credentials);
+            var instrumentDataFileName = (string)config[ConfigSection.Fix44]["instrumentDataFileName"];
+
+            var fixConfig = new FixConfiguration(
+                broker,
+                configPath,
+                credentials,
+                instrumentDataFileName);
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();

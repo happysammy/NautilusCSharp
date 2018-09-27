@@ -1,12 +1,12 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FxcmFixMessageRouter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="DukascopyFixMessageRouter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Brokerage.Dukascopy
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -22,9 +22,9 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix;
 
     /// <summary>
-    /// Provides an implementation for routing FXCM FIX messages.
+    /// Provides an Dukascopy implementation for routing FIX messages.
     /// </summary>
-    public class FxcmFixMessageRouter : ComponentBase, IFixMessageRouter
+    public class DukascopyFixMessageRouter : ComponentBase, IFixMessageRouter
     {
         private readonly InstrumentDataProvider instrumentData;
         private readonly string accountNumber;
@@ -33,22 +33,21 @@ namespace Nautilus.Brokerage.FXCM
         private Session fixSessionMd;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
+        /// Initializes a new instance of the <see cref="DukascopyFixMessageRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="instrumentData">The instrument data provider.</param>
         /// <param name="accountNumber">The FIX account number.</param>
-        public FxcmFixMessageRouter(
+        public DukascopyFixMessageRouter(
             IComponentryContainer container,
             InstrumentDataProvider instrumentData,
             string accountNumber)
         : base(
             NautilusService.FIX,
-            LabelFactory.Component(nameof(FxcmFixMessageRouter)),
+            LabelFactory.Component(nameof(DukascopyFixMessageRouter)),
             container)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(instrumentData, nameof(instrumentData));
             Validate.NotNull(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
@@ -85,7 +84,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                var message = CollateralInquiryFactory.Create(this.TimeNow(), Broker.FXCM);
+                var message = CollateralInquiryFactory.Create(this.TimeNow(), Broker.Dukascopy);
 
                 this.fixSession.Send(message);
 

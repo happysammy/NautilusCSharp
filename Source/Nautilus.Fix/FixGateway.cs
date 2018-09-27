@@ -34,7 +34,7 @@ namespace Nautilus.Fix
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IFixClient fixClient;
-        private readonly ReadOnlyDictionary<string, int> tickPrecisionIndex;
+        private readonly ReadOnlyDictionary<string, int> pricePrecisionIndex;
         private readonly List<IEndpoint> tickReceivers;
         private readonly List<IEndpoint> eventReceivers;
         private readonly List<NautilusService> instrumentReceivers;
@@ -45,12 +45,10 @@ namespace Nautilus.Fix
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <param name="tickPrecisionIndex">The tick decimal precision index.</param>
         public FixGateway(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            IFixClient fixClient,
-            ReadOnlyDictionary<string, int> tickPrecisionIndex)
+            IFixClient fixClient)
             : base(
                 NautilusService.FIX,
                 new Label(nameof(FixGateway)),
@@ -62,7 +60,7 @@ namespace Nautilus.Fix
             Validate.NotNull(fixClient, nameof(fixClient));
 
             this.fixClient = fixClient;
-            this.tickPrecisionIndex = tickPrecisionIndex;
+            this.pricePrecisionIndex = fixClient.GetPricePrecisionIndex();
             this.tickReceivers = new List<IEndpoint>();
             this.eventReceivers = new List<IEndpoint>();
             this.instrumentReceivers = new List<NautilusService>();
@@ -253,7 +251,7 @@ namespace Nautilus.Fix
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
 
-                if (!this.tickPrecisionIndex.ContainsKey(symbol))
+                if (!this.pricePrecisionIndex.ContainsKey(symbol))
                 {
                     this.Log.Warning($"Cannot process tick (symbol {symbol} not contained in tick precision index).");
                     return;
@@ -261,8 +259,8 @@ namespace Nautilus.Fix
 
                 var tick = new Tick(
                     new Symbol(symbol, venue),
-                    Price.Create(bid, this.tickPrecisionIndex[symbol]),
-                    Price.Create(ask, this.tickPrecisionIndex[symbol]),
+                    Price.Create(bid, this.pricePrecisionIndex[symbol]),
+                    Price.Create(ask, this.pricePrecisionIndex[symbol]),
                     timestamp);
 
                 foreach (var receiver in this.tickReceivers)
@@ -613,7 +611,7 @@ namespace Nautilus.Fix
                     new Symbol(symbol, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(brokerOrderId),
-                    Price.Create(price, this.tickPrecisionIndex[symbol]),
+                    Price.Create(price, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -680,7 +678,7 @@ namespace Nautilus.Fix
                     orderSide,
                     orderType,
                     Quantity.Create(quantity),
-                    Price.Create(price, this.tickPrecisionIndex[symbol]),
+                    Price.Create(price, this.pricePrecisionIndex[symbol]),
                     timeInForce,
                     expireTime,
                     timestamp,
@@ -802,7 +800,7 @@ namespace Nautilus.Fix
                     new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, this.tickPrecisionIndex[symbol]),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -874,7 +872,7 @@ namespace Nautilus.Fix
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, this.tickPrecisionIndex[symbol]),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());

@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
+    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
@@ -56,6 +57,12 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <returns>The list of symbols.</returns>
         IReadOnlyCollection<Symbol> GetAllSymbols();
+
+        /// <summary>
+        /// Returns a read-only dictionary of symbol to price decimal precisions.
+        /// </summary>
+        /// <returns>The tick precision index.</returns>
+        ReadOnlyDictionary<string, int> GetPricePrecisionIndex();
 
         /// <summary>
         /// Subscribes to market data for the given symbol.

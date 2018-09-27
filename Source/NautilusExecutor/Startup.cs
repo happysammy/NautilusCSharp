@@ -98,7 +98,13 @@ namespace NautilusExecutor
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var fixConfig = new FixConfiguration(broker, configPath, credentials);
+            var instrumentDataFileName = (string)config[ConfigSection.Fix44]["instrumentDataFileName"];
+
+            var fixConfig = new FixConfiguration(
+                broker,
+                configPath,
+                credentials,
+                instrumentDataFileName);
 
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,

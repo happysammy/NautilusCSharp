@@ -1,12 +1,12 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="FxcmFixMessageHandler.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="DukascopyFixMessageHandler.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Brokerage.FXCM
+namespace Nautilus.Brokerage.Dukascopy
 {
     using System;
     using System.Collections.Generic;
@@ -29,25 +29,25 @@ namespace Nautilus.Brokerage.FXCM
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
-    /// Provides an implementation for handling FXCM FIX messages.
+    /// Provides an implementation for handling Dukascopy FIX messages.
     /// </summary>
-    public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
+    public class DukascopyFixMessageHandler : ComponentBase, IFixMessageHandler
     {
         private readonly InstrumentDataProvider instrumentData;
 
         private IFixGateway fixGateway;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
+        /// Initializes a new instance of the <see cref="DukascopyFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="instrumentData">The instrument data provider.</param>
-        public FxcmFixMessageHandler(
+        public DukascopyFixMessageHandler(
             IComponentryContainer container,
             InstrumentDataProvider instrumentData)
             : base(
                 NautilusService.FIX,
-                LabelFactory.Component(nameof(FxcmFixMessageHandler)),
+                LabelFactory.Component(nameof(DukascopyFixMessageHandler)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -332,7 +332,7 @@ namespace Nautilus.Brokerage.FXCM
 
                 this.fixGateway.OnOrderCancelReject(
                     "NULL",
-                    Venue.FXCM,
+                    Venue.Dukascopy,
                     orderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -379,7 +379,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderRejected(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         rejectReason,
                         timestamp);
@@ -389,7 +389,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderCancelled(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -400,7 +400,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderModified(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -416,7 +416,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderWorking(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -433,7 +433,7 @@ namespace Nautilus.Brokerage.FXCM
                 {
                     this.fixGateway.OnOrderExpired(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -449,7 +449,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderFilled(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         executionId,
@@ -471,7 +471,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     this.fixGateway.OnOrderPartiallyFilled(
                         symbol,
-                        Venue.FXCM,
+                        Venue.Dukascopy,
                         orderId,
                         brokerOrderId,
                         executionId,

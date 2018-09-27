@@ -18,7 +18,8 @@
 
   "fix44": {
     "broker": "FXCM",
-    "config": "fix_fxcm3.cfg"
+    "config": "fix_fxcm3.cfg",
+    "instrumentDataFileName": "brokerage_fxcm_instruments.csv"
   },
 
   "symbols": [

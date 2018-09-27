@@ -24,8 +24,7 @@ namespace Nautilus.Fix
     [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {
-        private readonly ReadOnlyList<string> brokerSymbols;
-        private readonly ReadOnlyList<Symbol> symbols;
+        private readonly InstrumentDataProvider instrumentDataProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -34,15 +33,13 @@ namespace Nautilus.Fix
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
-        /// <param name="brokerSymbols">The list of broker symbols.</param>
-        /// <param name="symbols">The list of symbols.</param>
+        /// <param name="instrumentDataProvider">The instrument data provider.</param>
         public FixClient(
             IComponentryContainer container,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter,
-            ReadOnlyList<string> brokerSymbols,
-            ReadOnlyList<Symbol> symbols)
+            InstrumentDataProvider instrumentDataProvider)
         : base(
             container,
             config,
@@ -53,11 +50,9 @@ namespace Nautilus.Fix
             Validate.NotNull(config, nameof(config));
             Validate.NotNull(messageHandler, nameof(messageHandler));
             Validate.NotNull(messageRouter, nameof(messageRouter));
-            Validate.NotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
-            Validate.NotNullOrEmpty(symbols, nameof(symbols));
+            Validate.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
 
-            this.brokerSymbols = brokerSymbols;
-            this.symbols = symbols;
+            this.instrumentDataProvider = instrumentDataProvider;
         }
 
         /// <summary>
@@ -85,16 +80,18 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Returns a read-only list of all symbol <see cref="string"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        public IReadOnlyCollection<string> GetAllBrokerSymbols() => this.brokerSymbols;
-
-        /// <summary>
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyCollection<Symbol> GetAllSymbols() => this.symbols;
+        public IReadOnlyCollection<Symbol> GetAllSymbols() =>
+            this.instrumentDataProvider.GetAllSymbols();
+
+        /// <summary>
+        /// Returns a read-only dictionary of symbol to price decimal precisions.
+        /// </summary>
+        /// <returns>The tick precision index.</returns>
+        public ReadOnlyDictionary<string, int> GetPricePrecisionIndex() =>
+            this.instrumentDataProvider.GetPriceDecimalPrecisionIndex();
 
         /// <summary>
         /// Submit a command to execute the given order.
