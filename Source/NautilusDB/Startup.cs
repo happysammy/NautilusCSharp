@@ -82,15 +82,18 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
+            var broker = ((string)config[ConfigSection.Fix44]["broker"]).ToEnum<Broker>();
+            var configFile = (string)config[ConfigSection.Fix44]["config"];
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            var configFileName = (string)config[ConfigSection.Fix44]["fileName"];
-            var configFilePath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFileName));
+            var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
-            var fixSettings = ConfigReader.LoadConfig(configFilePath);
+            var fixSettings = ConfigReader.LoadConfig(configPath);
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
+
+            var fixConfig = new FixConfiguration(broker, configPath, credentials);
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();
@@ -115,8 +118,7 @@ namespace NautilusDB
                 logLevel,
                 isCompression,
                 compressionCodec,
-                configFilePath,
-                credentials,
+                fixConfig,
                 symbols,
                 resolutions,
                 barRollingWindow);

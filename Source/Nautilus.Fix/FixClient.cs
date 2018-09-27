@@ -13,7 +13,6 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
@@ -31,36 +30,29 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
-        /// <param name="broker">The account brokerage.</param>
-        /// <param name="fixMessageHandler">The FIX message handler.</param>
-        /// <param name="fixMessageRouter">The FIX message router.</param>
-        /// <param name="configFilePath">The FIX config file name.</param>
-        /// <param name="credentials">The FIX account credentials.</param>
+        /// <param name="container">The componentry container.</param>
+        /// <param name="config">The FIX configuration.</param>
+        /// <param name="messageHandler">The FIX message handler.</param>
+        /// <param name="messageRouter">The FIX message router.</param>
         /// <param name="brokerSymbols">The list of broker symbols.</param>
         /// <param name="symbols">The list of symbols.</param>
         public FixClient(
             IComponentryContainer container,
-            IFixMessageHandler fixMessageHandler,
-            IFixMessageRouter fixMessageRouter,
-            string configFilePath,
-            FixCredentials credentials,
-            Broker broker,
+            FixConfiguration config,
+            IFixMessageHandler messageHandler,
+            IFixMessageRouter messageRouter,
             ReadOnlyList<string> brokerSymbols,
             ReadOnlyList<Symbol> symbols)
         : base(
             container,
-            broker,
-            fixMessageHandler,
-            fixMessageRouter,
-            credentials,
-            configFilePath)
+            config,
+            messageHandler,
+            messageRouter)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
-            Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
-            Validate.NotNull(configFilePath, nameof(configFilePath));
-            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(config, nameof(config));
+            Validate.NotNull(messageHandler, nameof(messageHandler));
+            Validate.NotNull(messageRouter, nameof(messageRouter));
             Validate.NotNullOrEmpty(brokerSymbols, nameof(brokerSymbols));
             Validate.NotNullOrEmpty(symbols, nameof(symbols));
 

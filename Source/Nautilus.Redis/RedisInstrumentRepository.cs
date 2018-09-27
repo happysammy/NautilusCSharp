@@ -259,7 +259,7 @@ namespace Nautilus.Redis
                     KeyProvider.GetInstrumentKey(symbol),
                     JsonSerializer.SerializeToString(instrument));
 
-                return CommandResult.Ok($"Added instrument ({symbol}).");
+                return CommandResult.Ok($"Added instrument {symbol}");
             }
         }
     }

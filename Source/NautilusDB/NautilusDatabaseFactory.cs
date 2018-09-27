@@ -41,8 +41,7 @@ namespace NautilusDB
         /// <param name="logLevel">The log level threshold.</param>
         /// <param name="isCompression">The is data compression on boolean flag.</param>
         /// <param name="compressionCodec">The data compression codec.</param>
-        /// <param name="configFileName">The FIX config file name.</param>
-        /// <param name="credentials">The FIX credentials.</param>
+        /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="symbols">The symbols to collect.</param>
         /// <param name="resolutions">The resolutions to persist.</param>
         /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
@@ -51,15 +50,13 @@ namespace NautilusDB
             LogEventLevel logLevel,
             bool isCompression,
             string compressionCodec,
-            string configFileName,
-            FixCredentials credentials,
+            FixConfiguration fixConfig,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
             Validate.NotNull(compressionCodec, nameof(compressionCodec));
-            Validate.NotNull(configFileName, nameof(configFileName));
-            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(fixConfig, nameof(fixConfig));
             Validate.NotNullOrEmpty(symbols, nameof(symbols));
             Validate.NotNullOrEmpty(resolutions, nameof(resolutions));
             Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
@@ -91,8 +88,7 @@ namespace NautilusDB
             var fixClient = FxcmFixClientFactory.Create(
                 container,
                 messagingAdapter,
-                configFileName,
-                credentials);
+                fixConfig);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,

@@ -11,12 +11,11 @@ namespace Nautilus.Fix
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Collections;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -33,16 +32,16 @@ namespace Nautilus.Fix
     /// </summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Reviewed. Access OK.")]
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Reviewed. Access OK.")]
+    [PerformanceOptimized]
     public class FixComponent : MessageCracker, IApplication
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly ILogger logger;
         private readonly CommandHandler commandHandler;
-        private readonly FixCredentials credentials;
-        private readonly string configFilePath;
+        private readonly FixConfiguration config;
+        private readonly List<IEndpoint> connectionEventReceivers;
 
-        private ReadOnlyList<IEndpoint> connectionEventReceivers;
         private SocketInitiator initiator;
         private Session session;
         private Session sessionMd;
@@ -51,24 +50,19 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="broker">The FIX components brokerage.</param>
-        /// <param name="fixMessageHandler">The FIX message handler.</param>
-        /// <param name="fixMessageRouter">The FIX message router.</param>
-        /// <param name="credentials">The FIX account credentials.</param>
-        /// <param name="configFilePath">The FIX config file path.</param>
+        /// <param name="config">The FIX configuration.</param>
+        /// <param name="messageHandler">The FIX message handler.</param>
+        /// <param name="messageRouter">The FIX message router.</param>
         protected FixComponent(
             IComponentryContainer container,
-            Broker broker,
-            IFixMessageHandler fixMessageHandler,
-            IFixMessageRouter fixMessageRouter,
-            FixCredentials credentials,
-            string configFilePath)
+            FixConfiguration config,
+            IFixMessageHandler messageHandler,
+            IFixMessageRouter messageRouter)
         {
             Validate.NotNull(container, nameof(container));
-            Validate.NotNull(fixMessageHandler, nameof(fixMessageHandler));
-            Validate.NotNull(fixMessageRouter, nameof(fixMessageRouter));
-            Validate.NotNull(credentials, nameof(credentials));
-            Validate.NotNull(configFilePath, nameof(configFilePath));
+            Validate.NotNull(config, nameof(config));
+            Validate.NotNull(messageHandler, nameof(messageHandler));
+            Validate.NotNull(messageRouter, nameof(messageRouter));
 
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -76,13 +70,12 @@ namespace Nautilus.Fix
                 NautilusService.FIX,
                 LabelFactory.Component(nameof(FixComponent)));
             this.commandHandler = new CommandHandler(this.logger);
-            this.Broker = broker;
-            this.credentials = credentials;
-            this.configFilePath = configFilePath;
-            this.FixMessageHandler = fixMessageHandler;
-            this.FixMessageRouter = fixMessageRouter;
+            this.Broker = config.Broker;
+            this.config = config;
+            this.FixMessageHandler = messageHandler;
+            this.FixMessageRouter = messageRouter;
 
-            this.connectionEventReceivers = new ReadOnlyList<IEndpoint>(new List<IEndpoint>());
+            this.connectionEventReceivers = new List<IEndpoint>();
         }
 
         /// <summary>
@@ -161,10 +154,7 @@ namespace Nautilus.Fix
             Validate.NotNull(receiver, nameof(receiver));
             Debug.DoesNotContain(receiver, nameof(receiver), this.connectionEventReceivers);
 
-            var receivers = this.connectionEventReceivers.ToList();
-            receivers.Add(receiver);
-
-            this.connectionEventReceivers = new ReadOnlyList<IEndpoint>(receivers);
+            this.connectionEventReceivers.Add(receiver);
         }
 
         /// <summary>
@@ -174,7 +164,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                var settings = new SessionSettings(this.configFilePath);
+                var settings = new SessionSettings(this.config.ConfigPath);
                 var storeFactory = new FileStoreFactory(settings);
 
                 // var logFactory = new ScreenLogFactory(settings);
@@ -292,13 +282,13 @@ namespace Nautilus.Fix
 
                 if (message.GetType() == typeof(Logon))
                 {
-                    message.SetField(new Username(this.credentials.Username));
-                    message.SetField(new Password(this.credentials.Password));
+                    message.SetField(new Username(this.config.Credentials.Username));
+                    message.SetField(new Password(this.config.Credentials.Password));
 
                     this.Log.Debug("Authorizing session...");
                 }
 
-                message.SetField(new Account(this.credentials.Account));
+                message.SetField(new Account(this.config.Credentials.Account));
             });
         }
 
@@ -335,7 +325,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute<FieldNotFoundException>(() =>
             {
-                message.SetField(new Account(this.credentials.Account));
+                message.SetField(new Account(this.config.Credentials.Account));
 
                 var possDupFlag = false;
 

@@ -36,8 +36,7 @@ namespace NautilusExecutor
         /// Creates and returns a new <see cref="NautilusExecutor"/> class.
         /// </summary>
         /// <param name="logLevel">The logger log level threshold.</param>
-        /// <param name="configFilePath">The FIX config file path.</param>
-        /// <param name="credentials">The FIX credentials.</param>
+        /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="serviceAddress">The services address.</param>
         /// <param name="commandsPort">The commands port.</param>
         /// <param name="eventsPort">The events port.</param>
@@ -46,16 +45,14 @@ namespace NautilusExecutor
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
         public static NautilusExecutor Create(
             LogEventLevel logLevel,
-            string configFilePath,
-            FixCredentials credentials,
+            FixConfiguration fixConfig,
             NetworkAddress serviceAddress,
             Port commandsPort,
             Port eventsPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Validate.NotNull(configFilePath, nameof(configFilePath));
-            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(fixConfig, nameof(fixConfig));
             Validate.NotNull(serviceAddress, nameof(serviceAddress));
             Validate.NotNull(commandsPort, nameof(commandsPort));
             Validate.NotNull(eventsPort, nameof(eventsPort));
@@ -82,8 +79,7 @@ namespace NautilusExecutor
             var fixClient = FxcmFixClientFactory.Create(
                 container,
                 messagingAdapter,
-                configFilePath,
-                credentials);
+                fixConfig);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,

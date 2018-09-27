@@ -14,7 +14,8 @@
   },
 
   "fix44": {
-    "fileName": "fix_fxcm3_md.cfg"
+    "broker": "FXCM",
+    "config": "fix_fxcm3_md.cfg"
   },
 
   "barSpecifications": [

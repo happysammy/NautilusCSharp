@@ -8,12 +8,14 @@
 
 namespace Nautilus.Fix
 {
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents the credentials for a FIX session.
     /// </summary>
-    public class FixCredentials
+    [Immutable]
+    public sealed class FixCredentials
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FixCredentials"/> class.

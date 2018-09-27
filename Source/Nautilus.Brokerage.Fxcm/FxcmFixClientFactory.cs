@@ -10,7 +10,6 @@ namespace Nautilus.Brokerage.FXCM
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
 
     /// <summary>
@@ -23,27 +22,22 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="configFilePath">The FIX config file path.</param>
-        /// <param name="credentials">The FIX credentials.</param>
+        /// <param name="config">The FIX configuration.</param>
         /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            string configFilePath,
-            FixCredentials credentials)
+            FixConfiguration config)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(configFilePath, nameof(configFilePath));
-            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotNull(config, nameof(config));
 
             return new FixClient(
                 container,
+                config,
                 new FxcmFixMessageHandler(container),
-                new FxcmFixMessageRouter(container, credentials.Account),
-                configFilePath,
-                credentials,
-                Broker.FXCM,
+                new FxcmFixMessageRouter(container, config.Credentials.Account),
                 FxcmInstrumentDataProvider.GetAllBrokerSymbols(),
                 FxcmInstrumentDataProvider.GetAllSymbols());
         }

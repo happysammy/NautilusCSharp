@@ -17,7 +17,8 @@
   },
 
   "fix44": {
-    "fileName": "fix_fxcm3.cfg"
+    "broker": "FXCM",
+    "config": "fix_fxcm3.cfg"
   },
 
   "symbols": [

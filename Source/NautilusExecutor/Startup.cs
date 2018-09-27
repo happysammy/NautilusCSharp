@@ -15,6 +15,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Common.Build;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Messaging.Network;
     using Nautilus.Redis;
@@ -86,20 +87,22 @@ namespace NautilusExecutor
                 ? LogEventLevel.Debug
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
+            var broker = ((string)config[ConfigSection.Fix44]["broker"]).ToEnum<Broker>();
+            var configFile = (string)config[ConfigSection.Fix44]["config"];
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            var configFileName = (string)config[ConfigSection.Fix44]["fileName"];
-            var configFilePath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFileName));
+            var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
-            var fixSettings = ConfigReader.LoadConfig(configFilePath);
+            var fixSettings = ConfigReader.LoadConfig(configPath);
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
+            var fixConfig = new FixConfiguration(broker, configPath, credentials);
+
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,
-                configFilePath,
-                credentials,
+                fixConfig,
                 host,
                 commandsPort,
                 eventsPort,
