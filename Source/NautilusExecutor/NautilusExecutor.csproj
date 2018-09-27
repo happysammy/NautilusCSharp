@@ -45,6 +45,9 @@
         <Content Include="..\fix_duka1.cfg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="..\fix_duka1_md.cfg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\fix_fxcm1.cfg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
