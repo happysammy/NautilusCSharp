@@ -417,7 +417,8 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal GetOrderPrice(OrderType orderType, decimal stopPrice, decimal limitPrice)
         {
-            if (orderType == OrderType.STOP_MARKET)
+            if (orderType == OrderType.STOP_MARKET
+             || orderType == OrderType.MIT)
             {
                 return stopPrice;
             }
