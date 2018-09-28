@@ -24,6 +24,7 @@ namespace NautilusDB
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Redis;
+    using Nautilus.Scheduler;
     using Nautilus.Serilog;
     using NautilusDB.Build;
     using NodaTime;
@@ -78,6 +79,10 @@ namespace NautilusDB
                 container,
                 new FakeMessageStore());
 
+            var scheduler = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                    () => new Scheduler(container))));
+
             var clientManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
@@ -102,7 +107,7 @@ namespace NautilusDB
                 messagingAdapter,
                 fixClient);
 
-            var switchboard = DataServiceFactory.Create(
+            var dataServiceAddresses = DataServiceFactory.Create(
                 actorSystem,
                 container,
                 messagingAdapter,
@@ -114,6 +119,9 @@ namespace NautilusDB
                 symbols,
                 resolutions,
                 barRollingWindow);
+
+            dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
+            var switchboard = new Switchboard(dataServiceAddresses);
 
             var systemController = new SystemController(
                 container,

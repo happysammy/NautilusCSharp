@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="SystemShutdown.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ShutdownSystem.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -18,14 +18,14 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command to shutdown the system.
     /// </summary>
     [Immutable]
-    public sealed class SystemShutdown : SystemCommand
+    public sealed class ShutdownSystem : SystemCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SystemShutdown"/> class.
+        /// Initializes a new instance of the <see cref="ShutdownSystem"/> class.
         /// </summary>
         /// <param name="messageId">The commands identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The commands timestamp (cannot be default).</param>
-        public SystemShutdown(
+        public ShutdownSystem(
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)

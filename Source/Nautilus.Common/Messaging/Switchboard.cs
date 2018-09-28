@@ -43,25 +43,22 @@ namespace Nautilus.Common.Messaging
         public ReadOnlyList<Address> Addresses { get; }
 
         /// <summary>
-        /// Sends the given envelope to its receiver address(s).
+        /// Sends the given envelope to its receiver address.
         /// </summary>
-        /// <param name="envelope">The envelope.</param>
-        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="envelope">The envelope to send.</param>
+        /// <typeparam name="T">The envelope message type.</typeparam>
         /// <exception cref="InvalidOperationException">If the envelope receiver address is unknown.</exception>
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
             Debug.NotNull(envelope, nameof(envelope));
 
-            var receiver = envelope.Receiver;
-
             if (!this.addresses.ContainsKey(envelope.Receiver))
             {
-                throw new InvalidOperationException(
-                    "Cannot send message (envelope receiver address unknown).");
+                throw new InvalidOperationException("Cannot send message (envelope receiver address unknown).");
             }
 
-            this.addresses[receiver].Send(envelope);
+            this.addresses[envelope.Receiver].Send(envelope);
         }
     }
 }

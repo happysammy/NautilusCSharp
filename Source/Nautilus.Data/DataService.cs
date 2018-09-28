@@ -57,9 +57,10 @@ namespace Nautilus.Data
         }
 
         /// <summary>
-        /// Called on start.
+        /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void Start()
+        /// <param name="message">The message.</param>
+        protected override void Start(StartSystem message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
         }
@@ -70,7 +71,7 @@ namespace Nautilus.Data
 
             this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
 
-            if (message.Session.Contains("MD"))
+            if (message.IsMarketDataSession)
             {
                 this.gateway.UpdateInstrumentsSubscribeAll();
                 this.gateway.MarketDataSubscribeAll();

@@ -96,9 +96,10 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Called on start.
+        /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void Start()
+        /// <param name="message">The message.</param>
+        protected override void Start(StartSystem message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
         }

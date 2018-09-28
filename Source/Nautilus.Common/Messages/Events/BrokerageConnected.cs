@@ -40,6 +40,7 @@ namespace Nautilus.Common.Messages.Events
 
             this.Broker = broker;
             this.Session = session;
+            this.IsMarketDataSession = session.Contains("MD");
         }
 
         /// <summary>
@@ -51,5 +52,10 @@ namespace Nautilus.Common.Messages.Events
         /// Gets the events session information.
         /// </summary>
         public string Session { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this event is for a market data session.
+        /// </summary>
+        public bool IsMarketDataSession { get; }
     }
 }

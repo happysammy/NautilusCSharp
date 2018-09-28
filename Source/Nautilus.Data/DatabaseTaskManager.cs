@@ -14,7 +14,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -74,11 +73,6 @@ namespace Nautilus.Data
         {
             this.barRepository.SnapshotDatabase();
             base.PostStop();
-        }
-
-        private void OnMessage(SystemShutdown message)
-        {
-            this.PostStop();
         }
 
         private void OnMessage(DataDelivery<BarClosed> message)

@@ -40,7 +40,7 @@ namespace Nautilus.Execution
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         /// <returns>The services switchboard.</returns>
-        public static Switchboard Create(
+        public static Dictionary<Address, IEndpoint> Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
@@ -89,12 +89,12 @@ namespace Nautilus.Execution
             gateway.RegisterEventReceiver(orderManager);
             client.RegisterConnectionEventReceiver(executionService);
 
-            return new Switchboard(new Dictionary<Address, IEndpoint>
+            return new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Execution, executionService },
                 { ExecutionServiceAddress.MessageServer, messageServer },
                 { ExecutionServiceAddress.OrderManager, orderManager },
-            });
+            };
         }
     }
 }

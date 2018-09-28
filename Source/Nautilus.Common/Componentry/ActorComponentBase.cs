@@ -54,8 +54,8 @@ namespace Nautilus.Common.Componentry
             this.Receive<Envelope<Command>>(this.Open);
             this.Receive<Envelope<Event>>(this.Open);
             this.Receive<Envelope<Document>>(this.Open);
-            this.Receive<SystemStart>(this.OnMessage);
-            this.Receive<SystemShutdown>(this.OnMessage);
+            this.Receive<StartSystem>(this.OnMessage);
+            this.Receive<ShutdownSystem>(this.OnMessage);
         }
 
         /// <summary>
@@ -120,6 +120,14 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Start method called when the <see cref="StartSystem"/> message is received.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected virtual void Start(StartSystem message)
+        {
+        }
+
+        /// <summary>
         /// Post restart method called when the actor base class is restarted.
         /// </summary>
         /// <param name="ex">The restart reason exception.</param>
@@ -140,27 +148,20 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Start method called when the <see cref="SystemStart"/> message is received.
-        /// </summary>
-        protected virtual void Start()
-        {
-        }
-
-        /// <summary>
         /// Handles system start messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void OnMessage(SystemStart message)
+        private void OnMessage(StartSystem message)
         {
             this.Log.Debug($"Starting from {message}-{message.Id}...");
-            this.Start();
+            this.Start(message);
         }
 
         /// <summary>
         /// Handles system shutdown messages.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void OnMessage(SystemShutdown message)
+        private void OnMessage(ShutdownSystem message)
         {
             this.Log.Debug($"Shutting down from {message}-{message.Id}...");
             this.PostStop();

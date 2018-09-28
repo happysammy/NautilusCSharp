@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="SystemStart.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="StartSystem.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -18,14 +18,14 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command message to start the system.
     /// </summary>
     [Immutable]
-    public sealed class SystemStart : SystemCommand
+    public sealed class StartSystem : SystemCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SystemStart"/> class.
+        /// Initializes a new instance of the <see cref="StartSystem"/> class.
         /// </summary>
         /// <param name="identifier">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
-        public SystemStart(Guid identifier, ZonedDateTime timestamp)
+        public StartSystem(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Debug.NotNull(identifier, nameof(identifier));

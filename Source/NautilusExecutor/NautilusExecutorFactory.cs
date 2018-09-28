@@ -23,6 +23,7 @@ namespace NautilusExecutor
     using Nautilus.Fix;
     using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
+    using Nautilus.Scheduler;
     using Nautilus.Serilog;
     using NodaTime;
     using Serilog.Events;
@@ -76,6 +77,10 @@ namespace NautilusExecutor
                 container,
                 new FakeMessageStore());
 
+            var scheduler = new ActorEndpoint(
+                actorSystem.ActorOf(Props.Create(
+                    () => new Scheduler(container))));
+
             var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
 
             var fixClient = FxcmFixClientFactory.Create(
@@ -89,7 +94,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
-            var switchboard = ExecutionServiceFactory.Create(
+            var executionServiceAddresses = ExecutionServiceFactory.Create(
                 actorSystem,
                 container,
                 messagingAdapter,
@@ -102,6 +107,9 @@ namespace NautilusExecutor
                 eventsPort,
                 commandsPerSecond,
                 newOrdersPerSecond);
+
+            executionServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
+            var switchboard = new Switchboard(executionServiceAddresses);
 
             var systemController = new SystemController(
                 container,

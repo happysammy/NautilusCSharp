@@ -17,7 +17,6 @@ namespace Nautilus.Data
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Scheduler;
     using Address = Nautilus.Common.Messaging.Address;
 
     /// <summary>
@@ -40,7 +39,7 @@ namespace Nautilus.Data
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
-        public static Switchboard Create(
+        public static Dictionary<Address, IEndpoint> Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
@@ -57,10 +56,6 @@ namespace Nautilus.Data
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
             Validate.NotNull(barRepository, nameof(barRepository));
             Validate.NotNull(symbols, nameof(symbols));
-
-            var scheduler = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new Scheduler(container))));
 
             var tickPublisher = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(
@@ -104,16 +99,15 @@ namespace Nautilus.Data
             gateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
             client.RegisterConnectionEventReceiver(dataService);
 
-            return new Switchboard(new Dictionary<Address, IEndpoint>
+            return new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Scheduler, scheduler },
                 { ServiceAddress.Data, dataService },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskActor },
                 { DataServiceAddress.DataCollectionManager, dataCollectionActor },
                 { DataServiceAddress.BarAggregationController, barAggregationController },
                 { DataServiceAddress.TickPublisher, tickPublisher },
                 { DataServiceAddress.BarPublisher, barPublisher },
-            });
+            };
         }
     }
 }

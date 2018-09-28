@@ -72,7 +72,6 @@ namespace Nautilus.Data
             this.barRollingWindow = barRollingWindow;
 
             // Setup message handling.
-            this.Receive<SystemStart>(this.OnMessage);
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<CollectData<BarType>>(this.OnMessage);
             this.Receive<TrimBarDataJob>(this.OnMessage);
@@ -85,7 +84,11 @@ namespace Nautilus.Data
             this.Receive<DataCollected<BarType>>(this.OnMessage);
         }
 
-        private void OnMessage(SystemStart message)
+        /// <summary>
+        /// Start method called when the <see cref="StartSystem"/> message is received.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected override void Start(StartSystem message)
         {
             Debug.NotNull(message, nameof(message));
 

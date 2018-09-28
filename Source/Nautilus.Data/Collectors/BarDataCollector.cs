@@ -60,13 +60,13 @@ namespace Nautilus.Data.Collectors
             this.collectionSchedule = collectionSchedule;
 
             // Setup message handling.
-            this.Receive<SystemStart>(this.OnMessage);
+            this.Receive<StartSystem>(this.OnMessage);
             this.Receive<CollectData<BarType>>(this.OnMessage);
             this.Receive<DataStatusResponse<ZonedDateTime>>(this.OnMessage);
             this.Receive<DataPersisted<BarType>>(this.OnMessage);
         }
 
-        private void OnMessage(SystemStart message)
+        private void OnMessage(StartSystem message)
         {
             Debug.NotNull(message, nameof(message));
         }
