@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -31,7 +30,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
         private readonly IEndpoint testEndpoint;
 
         public ThrottlerTests(ITestOutputHelper output)

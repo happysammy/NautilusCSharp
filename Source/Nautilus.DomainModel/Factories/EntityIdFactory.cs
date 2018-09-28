@@ -19,7 +19,7 @@ namespace Nautilus.DomainModel.Factories
     /// <summary>
     /// A factory which creates valid <see cref="OrderId"/>(s) for the system.
     /// </summary>
-    [Immutable]
+    [Stateless]
     public static class EntityIdFactory
     {
         /// <summary>
@@ -78,15 +78,6 @@ namespace Nautilus.DomainModel.Factories
             Debug.NotNull(accountNumber, nameof(accountNumber));
 
             return new AccountId($"{broker}-{accountNumber}");
-        }
-
-        private static string GetSignalIdString(Symbol symbol, TradeType tradeType, OrderSide orderSide)
-        {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(tradeType, nameof(tradeType));
-            Debug.NotDefault(orderSide, nameof(orderSide));
-
-            return $"{symbol}|{tradeType}-{orderSide}";
         }
 
         private static string GetTimeString(ZonedDateTime time)
