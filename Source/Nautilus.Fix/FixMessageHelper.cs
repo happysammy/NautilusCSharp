@@ -170,12 +170,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetFixOrderSide(OrderSide orderSide)
         {
-            if (orderSide == OrderSide.BUY)
-            {
-                return new Side(Side.BUY);
-            }
-
-            return new Side(Side.SELL);
+            return orderSide == OrderSide.BUY
+                ? new Side(Side.BUY)
+                : new Side(Side.SELL);
         }
 
         /// <summary>
@@ -185,12 +182,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="Side"/>.</returns>
         public static Side GetOppositeFixOrderSide(OrderSide orderSide)
         {
-            if (orderSide == OrderSide.BUY)
-            {
-                return new Side(Side.SELL);
-            }
-
-            return new Side(Side.BUY);
+            return orderSide == OrderSide.BUY
+                ? new Side(Side.SELL)
+                : new Side(Side.BUY);
         }
 
         /// <summary>

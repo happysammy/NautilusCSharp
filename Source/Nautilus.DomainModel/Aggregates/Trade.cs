@@ -99,11 +99,6 @@ namespace Nautilus.DomainModel.Aggregates
         public MarketPosition MarketPosition => TradeLogic.CalculateMarketPosition(this.TradeUnits);
 
         /// <summary>
-        /// Gets the trades timestamp.
-        /// </summary>
-        public ZonedDateTime TradeTimestamp => this.Timestamp;
-
-        /// <summary>
         /// Returns an <see cref="Option{Order}"/> containing the <see cref="Order"/> (or no value
         /// if the order is not found).
         /// </summary>
