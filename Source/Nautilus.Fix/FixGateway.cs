@@ -29,7 +29,7 @@ namespace Nautilus.Fix
     using NodaTime;
 
     /// <summary>
-    /// The system boundary for the execution implementation.
+    /// Provides a gateway to the FIX implementation of the system.
     /// </summary>
     [PerformanceOptimized]
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
