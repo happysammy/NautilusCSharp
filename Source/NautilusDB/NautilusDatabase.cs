@@ -10,10 +10,10 @@ namespace NautilusDB
 {
     using System.Collections.Generic;
     using Nautilus.Common;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;

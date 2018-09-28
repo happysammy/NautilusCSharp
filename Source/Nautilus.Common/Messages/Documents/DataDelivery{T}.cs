@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Documents
+namespace Nautilus.Common.Messages.Documents
 {
     using System;
     using Nautilus.Core;

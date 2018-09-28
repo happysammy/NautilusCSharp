@@ -13,8 +13,8 @@ namespace Nautilus.Fix
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;

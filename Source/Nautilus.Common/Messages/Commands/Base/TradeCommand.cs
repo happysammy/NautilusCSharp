@@ -1,15 +1,15 @@
-﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="CloseTradeUnit.cs" company="Nautech Systems Pty Ltd">
+//--------------------------------------------------------------------------------------------------
+// <copyright file="TradeCommand.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Commands
+namespace Nautilus.Common.Messages.Commands.Base
 {
     using System;
-    using Nautilus.Common.Commands.Base;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Identifiers;
@@ -17,43 +17,48 @@ namespace Nautilus.Common.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to close a trade position by trade unit id.
+    /// The base class for all trade commands.
     /// </summary>
     [Immutable]
-    public sealed class CloseTradeUnit : TradeCommand
+    public abstract class TradeCommand : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CloseTradeUnit"/> class.
+        /// Initializes a new instance of the <see cref="TradeCommand"/> class.
         /// </summary>
-        /// <param name="tradeSymbol">The command trade symbol to close.</param>
-        /// <param name="tradeId">The commands for trade identifier.</param>
-        /// <param name="tradeUnitId">The commands trade unit identifier.</param>
+        /// <param name="tradeSymbol">The commands trade symbol.</param>
+        /// <param name="tradeId">The commands trade identifier.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
-        public CloseTradeUnit(
+        protected TradeCommand(
             Symbol tradeSymbol,
             TradeId tradeId,
-            TradeUnitId tradeUnitId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(
-                tradeSymbol,
-                tradeId,
-                commandId,
-                commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
             Debug.NotNull(tradeSymbol, nameof(tradeSymbol));
             Debug.NotNull(tradeId, nameof(tradeId));
-            Debug.NotNull(tradeUnitId, nameof(tradeUnitId));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.TradeUnitId = tradeUnitId;
+            this.TradeSymbol = tradeSymbol;
+            this.TradeId = tradeId;
         }
 
         /// <summary>
-        /// Gets the commands trade unit identifier to close.
+        /// Gets the commands trade symbol.
         /// </summary>
-        public TradeUnitId TradeUnitId { get; }
+        public Symbol TradeSymbol { get; }
+
+        /// <summary>
+        /// Gets the commands trade identifier.
+        /// </summary>
+        public TradeId TradeId { get; }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="CancelOrder"/> command message.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{base.ToString()}-{this.TradeSymbol}-{this.TradeId}";
     }
 }

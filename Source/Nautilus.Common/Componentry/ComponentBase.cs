@@ -53,7 +53,7 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
-        /// Returns the time the component was last started or reset.
+        /// Gets the time the component was last started or reset.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         protected ZonedDateTime StartTime { get; }

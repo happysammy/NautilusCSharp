@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;

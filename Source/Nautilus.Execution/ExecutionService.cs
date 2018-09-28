@@ -9,11 +9,11 @@
 namespace Nautilus.Execution
 {
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
@@ -93,6 +93,14 @@ namespace Nautilus.Execution
             this.Receive<ModifyOrder>(this.OnMessage);
             this.Receive<CloseTradeUnit>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
+        }
+
+        /// <summary>
+        /// Called on start.
+        /// </summary>
+        protected override void Start()
+        {
+            this.Log.Information($"Started at {this.StartTime}.");
         }
 
         /// <summary>

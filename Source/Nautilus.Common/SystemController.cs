@@ -11,10 +11,10 @@ namespace Nautilus.Common
     using System;
     using System.Threading.Tasks;
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;

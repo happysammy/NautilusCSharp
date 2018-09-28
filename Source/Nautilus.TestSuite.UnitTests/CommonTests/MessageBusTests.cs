@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.Event;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.TestSuite.TestKit;

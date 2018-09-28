@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Common.Commands;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;

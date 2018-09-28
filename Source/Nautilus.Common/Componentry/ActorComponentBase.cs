@@ -10,9 +10,9 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -64,7 +64,7 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
-        /// Returns the time the component was last started or reset.
+        /// Gets the time the component was last started or reset.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         protected ZonedDateTime StartTime { get; }

@@ -10,9 +10,9 @@ namespace Nautilus.MsgPack
 {
     using System;
     using global::MsgPack;
-    using Nautilus.Common.Commands;
-    using Nautilus.Common.Commands.Base;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;

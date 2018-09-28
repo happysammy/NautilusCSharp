@@ -6,10 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Commands
+namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Commands.Base;
+    using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Interfaces;
     using NodaTime;

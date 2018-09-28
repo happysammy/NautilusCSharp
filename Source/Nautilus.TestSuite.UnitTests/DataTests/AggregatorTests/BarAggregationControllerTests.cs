@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Threading;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
-    using Nautilus.Common.Commands;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

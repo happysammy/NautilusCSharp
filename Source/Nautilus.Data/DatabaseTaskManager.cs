@@ -11,11 +11,11 @@ namespace Nautilus.Data
     using System;
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;

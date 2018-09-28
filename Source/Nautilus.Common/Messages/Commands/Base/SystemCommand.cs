@@ -1,50 +1,37 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ClosePosition.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SystemCommand.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Commands
+namespace Nautilus.Common.Messages.Commands.Base
 {
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to close a trade position.
+    /// The base class for all system commands.
     /// </summary>
     [Immutable]
-    public sealed class ClosePosition : Command
+    public class SystemCommand : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClosePosition"/> class.
+        /// Initializes a new instance of the <see cref="SystemCommand"/> class.
         /// </summary>
-        /// <param name="position">The commands position to close.</param>
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
-        public ClosePosition(
-            IPosition position,
+        protected SystemCommand(
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(
-                commandId,
-                commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
-            Debug.NotNull(position, nameof(position));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
-
-            this.Position = position;
         }
-
-        /// <summary>
-        /// Gets the commands for trade unit.
-        /// </summary>
-        public IPosition Position { get; }
     }
 }

@@ -10,9 +10,9 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;

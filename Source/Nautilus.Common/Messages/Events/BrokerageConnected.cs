@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Events
+namespace Nautilus.Common.Messages.Events
 {
     using System;
     using Nautilus.Core;

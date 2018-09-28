@@ -8,11 +8,11 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Events;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
@@ -54,6 +54,14 @@ namespace Nautilus.Data
             this.Receive<BrokerageDisconnected>(this.OnMessage);
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+        }
+
+        /// <summary>
+        /// Called on start.
+        /// </summary>
+        protected override void Start()
+        {
+            this.Log.Information($"Started at {this.StartTime}.");
         }
 
         private void OnMessage(BrokerageConnected message)

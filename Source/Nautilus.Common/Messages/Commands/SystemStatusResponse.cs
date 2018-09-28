@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Commands
+namespace Nautilus.Common.Messages.Commands
 {
     using System;
     using Nautilus.Common.Enums;
