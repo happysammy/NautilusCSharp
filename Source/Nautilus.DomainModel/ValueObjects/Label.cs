@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a validated label.
     /// </summary>
     [Immutable]
-    public sealed class Label : ValidString
+    public sealed class Label : ValidString<Label>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Label"/> class.

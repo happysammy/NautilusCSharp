@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a validated broker symbol.
     /// </summary>
     [Immutable]
-    public sealed class BrokerSymbol : ValidString
+    public sealed class BrokerSymbol : ValidString<BrokerSymbol>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokerSymbol"/> class.

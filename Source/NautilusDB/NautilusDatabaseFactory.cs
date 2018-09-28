@@ -82,6 +82,10 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
+            var barRepository = new RedisBarRepository(
+                clientManager,
+                CompressorFactory.Create(isCompression, compressionCodec));
+
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
             instrumentRepository.CacheAll();
 
@@ -97,10 +101,6 @@ namespace NautilusDB
                 container,
                 messagingAdapter,
                 fixClient);
-
-            var barRepository = new RedisBarRepository(
-                clientManager,
-                CompressorFactory.Create(isCompression, compressionCodec));
 
             var switchboard = DataServiceFactory.Create(
                 actorSystem,

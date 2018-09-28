@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Identifiers.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Primitives;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities.Base;
 
@@ -91,7 +90,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         public override int GetHashCode() => Hash.GetCode(this.Value);
 
         /// <summary>
-        /// Returns a string representation of the <see cref="ValidString"></see>.
+        /// Returns a string representation of the <see cref="EntityId{T}"></see>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => this.Value;

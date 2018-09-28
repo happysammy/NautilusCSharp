@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a unique trade strategy type.
     /// </summary>
     [Immutable]
-    public sealed class TradeType : ValidString
+    public sealed class TradeType : ValidString<TradeType>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TradeType"/> class.

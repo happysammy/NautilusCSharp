@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market instruments symbol.
     /// </summary>
     [Immutable]
-    public sealed class Symbol : ValidString
+    public sealed class Symbol : ValidString<Symbol>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Symbol"/> class.
