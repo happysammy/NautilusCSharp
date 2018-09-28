@@ -11,7 +11,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a components address within the system.
+    /// Represents a components messaging address within the system.
     /// </summary>
     public class Address : ValidString<Address>
     {

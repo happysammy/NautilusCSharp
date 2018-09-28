@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
     using NodaTime;
@@ -29,23 +28,23 @@ namespace Nautilus.Common.Messaging
         /// <param name="receiver">The envelope receivers.</param>
         /// <param name="sender">The envelope sender.</param>
         /// <param name="message">The envelopes message.</param>
-        /// <param name="envelopeId">The envelopes identifier.</param>
+        /// <param name="id">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(
-            NautilusService receiver,
-            NautilusService sender,
+            Address receiver,
+            Address sender,
             T message,
-            Guid envelopeId,
+            Guid id,
             ZonedDateTime timestamp)
         {
             Debug.NotNull(receiver, nameof(receiver));
             Debug.NotNull(message, nameof(message));
-            Debug.NotDefault(envelopeId, nameof(envelopeId));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Receiver = receiver;
             this.Sender = sender;
-            this.EnvelopeId = envelopeId;
+            this.Id = id;
             this.Timestamp = timestamp;
             this.message = message;
         }
@@ -53,17 +52,17 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelope receiver(s).
         /// </summary>
-        public NautilusService Receiver { get; }
+        public Address Receiver { get; }
 
         /// <summary>
         /// Gets the envelope sender.
         /// </summary>
-        public NautilusService Sender { get; }
+        public Address Sender { get; }
 
         /// <summary>
         /// Gets the envelope identifier.
         /// </summary>
-        public Guid EnvelopeId { get; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Gets the envelope creation timestamp.
@@ -102,7 +101,7 @@ namespace Nautilus.Common.Messaging
         /// Returns the hash code for this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.EnvelopeId);
+        public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
         /// Returns a string representation of this <see cref="Envelope{T}"/>.

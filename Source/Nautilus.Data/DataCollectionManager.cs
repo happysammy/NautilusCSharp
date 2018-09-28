@@ -91,7 +91,7 @@ namespace Nautilus.Data
 
             this.CreateTrimBarDataJob();
 
-            this.Send(NautilusService.BarAggregationController, message);
+            this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(JobCreated message)
@@ -119,7 +119,7 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Send(NautilusService.BarAggregationController, message);
+            this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(CollectData<BarType> message)
@@ -134,7 +134,7 @@ namespace Nautilus.Data
             Debug.NotNull(message, nameof(message));
 
             this.barPublisher.Send(message.Data);
-            this.Send(NautilusService.DatabaseTaskManager, message);
+            this.Send(DataServiceAddress.DatabaseTaskManager, message);
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message)
@@ -168,7 +168,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(NautilusService.DatabaseTaskManager, trimCommand);
+            this.Send(DataServiceAddress.DatabaseTaskManager, trimCommand);
             this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 
@@ -193,7 +193,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(NautilusService.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
 

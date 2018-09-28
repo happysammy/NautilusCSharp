@@ -10,10 +10,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Address = Nautilus.Common.Messaging.Address;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -27,13 +27,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.testActorRef = testActorRef;
         }
 
-        public void Send<T>(NautilusService receiver, T message, NautilusService sender)
+        public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
             this.testActorRef.Tell(message);
         }
 
-        public void Send<T>(ReadOnlyList<NautilusService> receivers, T message, NautilusService sender)
+        public void Send<T>(ReadOnlyList<Address> receivers, T message, Address sender)
             where T : Message
         {
             this.testActorRef.Tell(message);

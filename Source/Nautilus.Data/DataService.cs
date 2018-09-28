@@ -8,7 +8,7 @@
 
 namespace Nautilus.Data
 {
-    using System.Threading.Tasks;
+    using Nautilus.Common.Commands;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Events;
@@ -16,6 +16,7 @@ namespace Nautilus.Data
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// The main macro object which contains the <see cref="DataService"/> and presents its API.
@@ -51,15 +52,18 @@ namespace Nautilus.Data
             // Setup message handling.
             this.Receive<BrokerageConnected>(this.OnMessage);
             this.Receive<BrokerageDisconnected>(this.OnMessage);
+            this.Receive<Subscribe<BarType>>(this.OnMessage);
+            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
         }
 
         private void OnMessage(BrokerageConnected message)
         {
+            Debug.NotNull(message, nameof(message));
+
             this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
 
             if (message.Session.Contains("MD"))
             {
-                Task.Delay(1000).Wait();
                 this.gateway.UpdateInstrumentsSubscribeAll();
                 this.gateway.RequestMarketDataSubscribeAll();
             }
@@ -67,7 +71,23 @@ namespace Nautilus.Data
 
         private void OnMessage(BrokerageDisconnected message)
         {
+            Debug.NotNull(message, nameof(message));
+
             this.Log.Warning($"{message.Broker} brokerage {message.Session} session has been disconnected.");
+        }
+
+        private void OnMessage(Subscribe<BarType> message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Send(DataServiceAddress.DataCollectionManager, message);
+        }
+
+        private void OnMessage(Unsubscribe<BarType> message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Send(DataServiceAddress.DataCollectionManager, message);
         }
     }
 }

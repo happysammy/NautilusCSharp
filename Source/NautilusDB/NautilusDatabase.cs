@@ -14,6 +14,7 @@ namespace NautilusDB
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -90,7 +91,7 @@ namespace NautilusDB
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(NautilusService.DataCollectionManager, subscribe);
+                    this.Send(ServiceAddress.Data, subscribe);
                 }
             }
         }

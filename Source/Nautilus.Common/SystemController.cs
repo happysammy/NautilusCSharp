@@ -20,6 +20,7 @@ namespace Nautilus.Common
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
+    using Address = Nautilus.Common.Messaging.Address;
 
     /// <summary>
     /// Provides a means of controlling services within the system.
@@ -28,7 +29,7 @@ namespace Nautilus.Common
     {
         private readonly ActorSystem actorSystem;
         private readonly string actorSystemName;
-        private readonly ReadOnlyList<NautilusService> services;
+        private readonly ReadOnlyList<Address> components;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemController"/> class.
@@ -53,7 +54,7 @@ namespace Nautilus.Common
 
             this.actorSystem = actorSystem;
             this.actorSystemName = actorSystem.Name;
-            this.services = switchboard.Services;
+            this.components = switchboard.Addresses;
 
             var initializeSwitchboard =
                 new InitializeSwitchboard(
@@ -70,7 +71,7 @@ namespace Nautilus.Common
         public void Start()
         {
             var start = new SystemStart(this.NewGuid(), this.TimeNow());
-            this.services.ForEach(s => this.Send(s, start));
+            this.components.ForEach(s => this.Send(s, start));
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace Nautilus.Common
         public void Shutdown()
         {
             var shutdown = new SystemShutdown(this.NewGuid(), this.TimeNow());
-            this.services.ForEach(s => this.Send(s, shutdown));
+            this.components.ForEach(s => this.Send(s, shutdown));
 
             // Allow actor components to shutdown.
             Task.Delay(1000).Wait();

@@ -10,7 +10,6 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -24,24 +23,24 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public sealed class Switchboard
     {
-        private readonly ReadOnlyDictionary<NautilusService, IEndpoint> addresses;
+        private readonly ReadOnlyDictionary<Address, IEndpoint> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <param name="addresses">The system addresses.</param>
-        public Switchboard(Dictionary<NautilusService, IEndpoint> addresses)
+        public Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
             Debug.NotNullOrEmpty(addresses, nameof(addresses));
 
-            this.addresses = new ReadOnlyDictionary<NautilusService, IEndpoint>(addresses);
-            this.Services = new ReadOnlyList<NautilusService>(addresses.Keys);
+            this.addresses = new ReadOnlyDictionary<Address, IEndpoint>(addresses);
+            this.Addresses = new ReadOnlyList<Address>(addresses.Keys);
         }
 
         /// <summary>
-        /// Gets the switchboards registered services.
+        /// Gets the switchboards registered addresses.
         /// </summary>
-        public ReadOnlyList<NautilusService> Services { get; }
+        public ReadOnlyList<Address> Addresses { get; }
 
         /// <summary>
         /// Sends the given envelope to its receiver address(s).
@@ -59,7 +58,7 @@ namespace Nautilus.Common.Messaging
             if (!this.addresses.ContainsKey(envelope.Receiver))
             {
                 throw new InvalidOperationException(
-                    "Cannot send message (envelope receiver endpoint address unknown).");
+                    "Cannot send message (envelope receiver address unknown).");
             }
 
             this.addresses[receiver].Send(envelope);

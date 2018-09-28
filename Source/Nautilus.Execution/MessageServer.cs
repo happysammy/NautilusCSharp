@@ -108,22 +108,22 @@ namespace Nautilus.Execution
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Send(NautilusService.OrderManager, message);
+            this.Send(ExecutionServiceAddress.OrderManager, message);
         }
 
         private void OnMessage(CancelOrder message)
         {
-            this.Send(NautilusService.OrderManager, message);
+            this.Send(ExecutionServiceAddress.OrderManager, message);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            this.Send(NautilusService.OrderManager, message);
+            this.Send(ExecutionServiceAddress.OrderManager, message);
         }
 
         private void OnMessage(CollateralInquiry message)
         {
-            this.Send(NautilusService.Execution, message);
+            this.Send(ServiceAddress.Execution, message);
         }
 
         private void OnMessage(Event @event)

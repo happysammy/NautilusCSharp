@@ -10,7 +10,6 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using Nautilus.Common.Commands;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -67,7 +66,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
-        public void Send<T>(NautilusService receiver, T message, NautilusService sender)
+        public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
             Debug.NotNull(receiver, nameof(receiver));

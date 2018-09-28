@@ -30,9 +30,9 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
-        /// <param name="serviceContext">The service name.</param>
-        /// <param name="component">The component label.</param>
-        /// <param name="container">The setup container.</param>
+        /// <param name="serviceContext">The components service context.</param>
+        /// <param name="component">The components label.</param>
+        /// <param name="container">The components componentry container.</param>
         protected ComponentBase(
             NautilusService serviceContext,
             Label component,
@@ -50,7 +50,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Gets the black box service context.
+        /// Gets the components service context.
         /// </summary>
         protected NautilusService Service { get; }
 

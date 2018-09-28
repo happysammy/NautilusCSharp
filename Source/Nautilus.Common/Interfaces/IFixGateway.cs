@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Enums;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -46,10 +46,10 @@ namespace Nautilus.Common.Interfaces
         void RegisterEventReceiver(IEndpoint receiver);
 
         /// <summary>
-        /// Registers the service to receive <see cref="Instrument"/> updates from the gateway.
+        /// Registers the receiver to receive <see cref="Instrument"/> updates from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        void RegisterInstrumentReceiver(NautilusService receiver);
+        void RegisterInstrumentReceiver(Address receiver);
 
         /// <summary>
         /// Requests market data for the given symbol from the brokerage.

@@ -13,6 +13,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Documents;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
@@ -37,7 +38,7 @@ namespace Nautilus.Fix
         private readonly ReadOnlyDictionary<string, int> pricePrecisionIndex;
         private readonly List<IEndpoint> tickReceivers;
         private readonly List<IEndpoint> eventReceivers;
-        private readonly List<NautilusService> instrumentReceivers;
+        private readonly List<Address> instrumentReceivers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
@@ -63,7 +64,7 @@ namespace Nautilus.Fix
             this.pricePrecisionIndex = fixClient.GetPricePrecisionIndex();
             this.tickReceivers = new List<IEndpoint>();
             this.eventReceivers = new List<IEndpoint>();
-            this.instrumentReceivers = new List<NautilusService>();
+            this.instrumentReceivers = new List<Address>();
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace Nautilus.Fix
         /// Registers the service to receive <see cref="Instrument"/> updates from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        public void RegisterInstrumentReceiver(NautilusService receiver)
+        public void RegisterInstrumentReceiver(Address receiver)
         {
             Validate.NotNull(receiver, nameof(receiver));
             Debug.DoesNotContain(receiver, nameof(receiver), this.instrumentReceivers);

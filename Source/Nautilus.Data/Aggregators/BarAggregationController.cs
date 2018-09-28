@@ -158,7 +158,7 @@ namespace Nautilus.Data.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(NautilusService.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
         }
 
@@ -183,7 +183,7 @@ namespace Nautilus.Data.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(NautilusService.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
@@ -259,7 +259,7 @@ namespace Nautilus.Data.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Scheduler, createJob);
+                this.Send(ServiceAddress.Scheduler, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -322,7 +322,7 @@ namespace Nautilus.Data.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(NautilusService.Scheduler, removeJob);
+                this.Send(ServiceAddress.Scheduler, removeJob);
             }
         }
 
@@ -443,7 +443,7 @@ namespace Nautilus.Data.Aggregators
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(NautilusService.Scheduler, resumeJob);
+                    this.Send(ServiceAddress.Scheduler, resumeJob);
                 }
 
                 // Tell all bar aggregators the market is now open.
@@ -468,7 +468,7 @@ namespace Nautilus.Data.Aggregators
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(NautilusService.Scheduler, pause);
+                    this.Send(ServiceAddress.Scheduler, pause);
                 }
 
                 // Tell all aggregators the market is now closed.
@@ -492,7 +492,7 @@ namespace Nautilus.Data.Aggregators
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(NautilusService.DataCollectionManager, barClosed);
+            this.Send(DataServiceAddress.DataCollectionManager, barClosed);
         }
     }
 }

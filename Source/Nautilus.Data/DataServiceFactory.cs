@@ -10,7 +10,6 @@ namespace Nautilus.Data
 {
     using System.Collections.Generic;
     using Akka.Actor;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Validation;
@@ -19,6 +18,7 @@ namespace Nautilus.Data
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Scheduler;
+    using Address = Nautilus.Common.Messaging.Address;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="DataService"/>.
@@ -26,7 +26,7 @@ namespace Nautilus.Data
     public static class DataServiceFactory
     {
         /// <summary>
-        /// Builds the database and returns an <see cref="IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
+        /// Builds the database and returns an <see cref="Akka.Actor.IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
         /// </summary>
         /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
@@ -101,18 +101,18 @@ namespace Nautilus.Data
 
             gateway.RegisterTickReceiver(tickPublisher);
             gateway.RegisterTickReceiver(barAggregationController);
-            gateway.RegisterInstrumentReceiver(NautilusService.DatabaseTaskManager);
+            gateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
             client.RegisterConnectionEventReceiver(dataService);
 
-            return new Switchboard(new Dictionary<NautilusService, IEndpoint>
+            return new Switchboard(new Dictionary<Address, IEndpoint>
             {
-                { NautilusService.Scheduler, scheduler },
-                { NautilusService.DatabaseTaskManager, databaseTaskActor },
-                { NautilusService.DataCollectionManager, dataCollectionActor },
-                { NautilusService.BarAggregationController, barAggregationController },
-                { NautilusService.TickPublisher, tickPublisher },
-                { NautilusService.BarPublisher, barPublisher },
-                { NautilusService.Data, dataService },
+                { ServiceAddress.Scheduler, scheduler },
+                { DataServiceAddress.DatabaseTaskManager, databaseTaskActor },
+                { DataServiceAddress.DataCollectionManager, dataCollectionActor },
+                { DataServiceAddress.BarAggregationController, barAggregationController },
+                { DataServiceAddress.TickPublisher, tickPublisher },
+                { DataServiceAddress.BarPublisher, barPublisher },
+                { ServiceAddress.Data, dataService },
             });
         }
     }

@@ -8,12 +8,12 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Enums;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
 
     /// <summary>
-    /// An adapter to facilitate service components sending messages to other service components via
-    /// the messaging service.
+    /// An adapter to facilitate components sending messages to other components via the messaging
+    /// service.
     /// </summary>
     public interface IMessagingAdapter
     {
@@ -21,10 +21,10 @@ namespace Nautilus.Common.Interfaces
         /// Sends the given message to the given receiver marked from the given sender.
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="receiver">The message receiver.</param>
+        /// <param name="receiver">The receiver address.</param>
         /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
-        void Send<T>(NautilusService receiver, T message, NautilusService sender)
+        /// <param name="sender">The sender address.</param>
+        void Send<T>(Address receiver, T message, Address sender)
             where T : Message;
     }
 }

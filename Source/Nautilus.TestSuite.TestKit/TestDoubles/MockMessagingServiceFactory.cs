@@ -14,11 +14,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Akka.Actor;
     using Akka.Event;
     using Nautilus.Common.Commands;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Address = Nautilus.Common.Messaging.Address;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -55,14 +55,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var messagingAdapter = new MessagingAdapter(commandBus, eventBus, serviceBus);
 
             var mockEndpoint = new ActorEndpoint(new StandardOutLogger());
-            var addresses = new Dictionary<NautilusService, IEndpoint>
+            var addresses = new Dictionary<Address, IEndpoint>
             {
-                { NautilusService.AlphaModel, mockEndpoint },
-                { NautilusService.Brokerage, mockEndpoint },
-                { NautilusService.Data, mockEndpoint },
-                { NautilusService.Portfolio, mockEndpoint },
-                { NautilusService.Risk, mockEndpoint },
-                { NautilusService.Execution, mockEndpoint },
+                { ServiceAddress.Alpha, mockEndpoint },
+                { ServiceAddress.Data, mockEndpoint },
+                { ServiceAddress.Portfolio, mockEndpoint },
+                { ServiceAddress.Risk, mockEndpoint },
+                { ServiceAddress.Execution, mockEndpoint },
             };
 
             var switchboard = new Switchboard(addresses);

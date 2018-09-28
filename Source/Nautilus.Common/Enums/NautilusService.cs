@@ -14,9 +14,24 @@ namespace Nautilus.Common.Enums
     public enum NautilusService
     {
         /// <summary>
+        /// The ASP.NET core host service context.
+        /// </summary>
+        AspCoreHost,
+
+        /// <summary>
         /// The system core service context.
         /// </summary>
         Core,
+
+        /// <summary>
+        /// The scheduler service context.
+        /// </summary>
+        Scheduler,
+
+        /// <summary>
+        /// The data service context.
+        /// </summary>
+        Data,
 
         /// <summary>
         /// The messaging service context.
@@ -58,55 +73,5 @@ namespace Nautilus.Common.Enums
         /// </summary>
         // ReSharper disable once InconsistentNaming (FIX is the name).
         FIX,
-
-        /// <summary>
-        /// The data service context.
-        /// </summary>
-        Data,
-
-        /// <summary>
-        /// The message server module context.
-        /// </summary>
-        MessageServer,
-
-        /// <summary>
-        /// The order manager module context.
-        /// </summary>
-        OrderManager,
-
-        /// <summary>
-        /// The scheduler service context.
-        /// </summary>
-        Scheduler,
-
-        /// <summary>
-        /// The database task manager service context.
-        /// </summary>
-        DatabaseTaskManager,
-
-        /// <summary>
-        /// The data collection manager service context.
-        /// </summary>
-        DataCollectionManager,
-
-        /// <summary>
-        /// The bar aggregation controller service context.
-        /// </summary>
-        BarAggregationController,
-
-        /// <summary>
-        /// The tick publisher service context.
-        /// </summary>
-        TickPublisher,
-
-        /// <summary>
-        /// The bar publisher service context.
-        /// </summary>
-        BarPublisher,
-
-        /// <summary>
-        /// The ASP.NET core host service context.
-        /// </summary>
-        AspCoreHost,
     }
 }

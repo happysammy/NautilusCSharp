@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
@@ -47,7 +48,13 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.messagingAdapter = messagingAdapter;
+            this.Address = new Address(this.GetType().Name);
         }
+
+        /// <summary>
+        /// Gets the components messaging address.
+        /// </summary>
+        protected Address Address { get; }
 
         /// <summary>
         /// Sends the given message to the given service via the messaging system.
@@ -55,12 +62,12 @@ namespace Nautilus.Common.Componentry
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(NautilusService receiver, T message)
+        protected void Send<T>(Address receiver, T message)
             where T : Message
         {
             Debug.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receiver, message, this.Service);
+            this.messagingAdapter.Send(receiver, message, this.Address);
         }
 
         /// <summary>
@@ -69,22 +76,13 @@ namespace Nautilus.Common.Componentry
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(ReadOnlyList<NautilusService> receivers, T message)
+        protected void Send<T>(ReadOnlyList<Address> receivers, T message)
             where T : Message
         {
             Debug.NotNullOrEmpty(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
             receivers.ForEach(r => this.Send(r, message));
-        }
-
-        /// <summary>
-        /// Returns the <see cref="IMessagingAdapter"/> held by the base class.
-        /// </summary>
-        /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
-        protected IMessagingAdapter GetMessagingAdapter()
-        {
-            return this.messagingAdapter;
         }
     }
 }
