@@ -90,11 +90,8 @@ namespace Nautilus.Core
         /// to the given <see cref="Message"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals([CanBeNull] Message other)
-        {
-            return other != null && this.Id == other.Id;
-        }
+        /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
+        public bool Equals([CanBeNull] Message other) => other != null && this.Id == other.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.
