@@ -85,33 +85,41 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            var result = this.barRepository.Add(
-                message.Data.BarType,
-                message.Data.Bar);
-
-            this.Log.Result(result);
+            this.barRepository
+                .Add(
+                    message.Data.BarType,
+                    message.Data.Bar)
+                .OnSuccess(result => this.Log.Debug(result.Message))
+                .OnFailure(result => this.Log.Warning(result.Message));
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message)
         {
             Debug.NotNull(message, nameof(message));
 
-            var barType = message.Data.BarType;
-            var result = this.barRepository.Add(message.Data);
-            this.Log.Result(result);
+            this.barRepository
+                .Add(message.Data)
+                .OnSuccess(result => this.SendLastBarTimestamp(message.Data.BarType))
+                .OnFailure(result => this.Log.Warning(result.Message));
+        }
 
-            var lastBarTimeQuery = this.barRepository.LastBarTimestamp(barType);
+        private void SendLastBarTimestamp(BarType barType)
+        {
+            Debug.NotNull(barType, nameof(barType));
 
-            if (result.IsSuccess
-             && lastBarTimeQuery.IsSuccess
-             && lastBarTimeQuery.Value != default(ZonedDateTime))
-            {
-                this.Sender.Tell(new DataPersisted<BarType>(
-                    barType,
-                    lastBarTimeQuery.Value,
-                    this.NewGuid(),
-                    this.TimeNow()));
-            }
+            this.barRepository
+                .LastBarTimestamp(barType)
+                .OnSuccess(query =>
+                {
+                    if (query != default)
+                    {
+                        this.Sender.Tell(new DataPersisted<BarType>(
+                            barType,
+                            query,
+                            this.NewGuid(),
+                            this.TimeNow()));
+                    }
+                });
         }
 
         private void OnMessage(DataDelivery<IReadOnlyCollection<Instrument>> message)
@@ -119,10 +127,10 @@ namespace Nautilus.Data
             Debug.NotNull(message, nameof(message));
 
             message.Data
-                .ForEach(i => this.instrumentRepository
-                    .Add(i, this.TimeNow())
+                .ForEach(instrument => this.instrumentRepository
+                    .Add(instrument, this.TimeNow())
                     .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Warning(result.Message)));
+                    .OnFailure(result => this.Log.Error(result.Message)));
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
@@ -157,8 +165,10 @@ namespace Nautilus.Data
 
             foreach (var resolution in message.Resolutions)
             {
-                var result = this.barRepository.TrimToDays(resolution, message.RollingWindowSize);
-                this.Log.Result(result);
+                this.barRepository
+                    .TrimToDays(resolution, message.RollingWindowSize)
+                    .OnSuccess(result => this.Log.Information(result.Message))
+                    .OnFailure(result => this.Log.Error(result.Message));
             }
         }
     }

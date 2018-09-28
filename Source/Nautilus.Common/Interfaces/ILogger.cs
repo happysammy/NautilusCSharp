@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Interfaces
 {
     using System;
-    using Nautilus.Core.CQS.Base;
 
     /// <summary>
     /// The adapter interface for logging with the <see cref="ILoggingAdapter"/>.
@@ -41,6 +40,12 @@ namespace Nautilus.Common.Interfaces
         void Warning(string message);
 
         /// <summary>
+        /// Sends the given error message to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        void Error(string message);
+
+        /// <summary>
         /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
@@ -53,11 +58,5 @@ namespace Nautilus.Common.Interfaces
         /// <param name="message">The message to log.</param>
         /// <param name="ex">The exception to log.</param>
         void Fatal(string message, Exception ex);
-
-        /// <summary>
-        /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="result">The result to handle.</param>
-        void Result(Result result);
     }
 }

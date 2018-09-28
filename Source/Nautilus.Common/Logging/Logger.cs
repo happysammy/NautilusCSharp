@@ -12,7 +12,6 @@ namespace Nautilus.Common.Logging
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.CQS.Base;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -94,6 +93,17 @@ namespace Nautilus.Common.Logging
         /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
         /// </summary>
         /// <param name="message">The message to log.</param>
+        public void Error(string message)
+        {
+            Validate.NotNull(message, nameof(message));
+
+            this.loggingAdapter.Error(this.service, $"{this.component}: {message}");
+        }
+
+        /// <summary>
+        /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         /// <param name="ex">The exception to log.</param>
         public void Error(string message, Exception ex)
         {
@@ -114,24 +124,6 @@ namespace Nautilus.Common.Logging
             Validate.NotNull(ex, nameof(ex));
 
             this.loggingAdapter.Fatal(this.service, $"{this.component}: {message}", ex);
-        }
-
-        /// <summary>
-        /// Sends the message of the given result at an appropriate to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="result">The result to handle.</param>
-        public void Result(Result result)
-        {
-            Validate.NotNull(result, nameof(result));
-
-            if (result.IsSuccess)
-            {
-                this.Debug(result.Message);
-            }
-            else
-            {
-                this.Warning(result.Message);
-            }
         }
     }
 }

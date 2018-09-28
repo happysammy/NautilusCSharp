@@ -56,6 +56,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.stash.Enqueue(message);
         }
 
+        public void Error(Enum service, string message)
+        {
+            this.stash.Enqueue(message);
+        }
+
         public void Error(Enum service, string message, Exception ex)
         {
             this.stash.Enqueue(message);

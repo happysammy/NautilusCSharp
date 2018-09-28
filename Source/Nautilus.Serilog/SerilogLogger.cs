@@ -80,6 +80,16 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
+        public void Error(Enum service, string message)
+        {
+            Log.Error($"[{ToOutput(service)}] {message}");
+        }
+
+        /// <summary>
+        /// Creates an error log event.
+        /// </summary>
+        /// <param name="service">The system service.</param>
+        /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         public void Error(Enum service, string message, Exception ex)
         {

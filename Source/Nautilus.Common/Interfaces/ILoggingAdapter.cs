@@ -54,6 +54,13 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
+        void Error(Enum service, string message);
+
+        /// <summary>
+        /// Logs the given message and exception with an error log level.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         void Error(Enum service, string message, Exception ex);
 
