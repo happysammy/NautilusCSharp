@@ -12,6 +12,7 @@ namespace Nautilus.Serilog
     using System.Reflection;
     using global::Serilog;
     using global::Serilog.Events;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>
@@ -40,7 +41,7 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
-        public void Verbose(Enum service, string message)
+        public void Verbose(NautilusService service, string message)
         {
             Log.Verbose($"[{ToOutput(service)}] {message}");
         }
@@ -50,7 +51,7 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
-        public void Debug(Enum service, string message)
+        public void Debug(NautilusService service, string message)
         {
             Log.Debug($"[{ToOutput(service)}] {message}");
         }
@@ -60,7 +61,7 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
-        public void Information(Enum service, string message)
+        public void Information(NautilusService service, string message)
         {
             Log.Information($"[{ToOutput(service)}] {message}");
         }
@@ -70,7 +71,7 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
-        public void Warning(Enum service, string message)
+        public void Warning(NautilusService service, string message)
         {
             Log.Warning($"[{ToOutput(service)}] {message}");
         }
@@ -80,18 +81,18 @@ namespace Nautilus.Serilog
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
-        public void Error(Enum service, string message)
+        public void Error(NautilusService service, string message)
         {
             Log.Error($"[{ToOutput(service)}] {message}");
         }
 
         /// <summary>
-        /// Creates an error log event.
+        /// Creates an error log event including an exception.
         /// </summary>
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
-        public void Error(Enum service, string message, Exception ex)
+        public void Error(NautilusService service, string message, Exception ex)
         {
             Log.Error(ex, $"[{ToOutput(service)}] {message}");
         }
@@ -102,13 +103,13 @@ namespace Nautilus.Serilog
         /// <param name="service">The system service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The fatal exception.</param>
-        public void Fatal(Enum service, string message, Exception ex)
+        public void Fatal(NautilusService service, string message, Exception ex)
         {
             Log.Fatal(ex, $"[{ToOutput(service)}] {message}");
         }
 
         // TODO: Refactor.
-        private static string ToOutput(Enum service)
+        private static string ToOutput(NautilusService service)
         {
             const int logStringLength = 10;
 

@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Akka.Util.Internal;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
 
@@ -36,37 +37,37 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this.GetLogStashTextAsStringList().Any(logEntry => logEntry.StartsWith(text));
         }
 
-        public void Verbose(Enum service, string message)
+        public void Verbose(NautilusService service, string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Debug(Enum service, string message)
+        public void Debug(NautilusService service, string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Information(Enum service, string message)
+        public void Information(NautilusService service, string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Warning(Enum service, string message)
+        public void Warning(NautilusService service, string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Error(Enum service, string message)
+        public void Error(NautilusService service, string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Error(Enum service, string message, Exception ex)
+        public void Error(NautilusService service, string message, Exception ex)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Fatal(Enum service, string message, Exception ex)
+        public void Fatal(NautilusService service, string message, Exception ex)
         {
             this.stash.Enqueue(message);
         }
