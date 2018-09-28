@@ -45,6 +45,7 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(setupContainer, nameof(setupContainer));
 
             this.clock = setupContainer.Clock;
+            this.StartTime = this.clock.TimeNow();
             this.guidFactory = setupContainer.GuidFactory;
             this.Log = setupContainer.LoggerFactory.Create(service, component);
             this.commandHandler = new CommandHandler(this.Log);
@@ -63,11 +64,15 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
+        /// Returns the time the component was last started or reset.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        protected ZonedDateTime StartTime { get; }
+
+        /// <summary>
         /// Returns the current time of the system clock.
         /// </summary>
-        /// <returns>
-        /// A <see cref="ZonedDateTime"/>.
-        /// </returns>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
@@ -131,7 +136,7 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         protected override void PostStop()
         {
-            this.Log.Debug($"Stopped.");
+            this.Log.Debug("Stopped.");
         }
 
         /// <summary>
@@ -147,7 +152,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         private void OnMessage(SystemStart message)
         {
-            this.Log.Information($"Starting from {message}-{message.Id}...");
+            this.Log.Debug($"Starting from {message}-{message.Id}...");
             this.Start();
         }
 
@@ -157,7 +162,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         private void OnMessage(SystemShutdown message)
         {
-            this.Log.Information($"Shutting down from {message}-{message.Id}...");
+            this.Log.Debug($"Shutting down from {message}-{message.Id}...");
             this.PostStop();
         }
 

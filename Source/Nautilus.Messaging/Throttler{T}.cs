@@ -27,13 +27,10 @@ namespace Nautilus.Messaging
     [PerformanceOptimized]
     public sealed class Throttler<T> : ActorComponentBase
     {
-        private const string TimerReset = "TR";
-
         private readonly IEndpoint receiver;
         private readonly TimeSpan interval;
         private readonly int limit;
         private readonly Queue<T> queue;
-        private readonly ZonedDateTime startTime;
 
         private bool isIdle;
         private int vouchers;
@@ -67,7 +64,6 @@ namespace Nautilus.Messaging
             this.interval = interval.ToTimeSpan();
             this.limit = limit;
             this.queue = new Queue<T>();
-            this.startTime = this.TimeNow();
 
             this.isIdle = true;
             this.vouchers = limit;

@@ -41,6 +41,7 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(container, nameof(container));
 
             this.clock = container.Clock;
+            this.StartTime = this.clock.TimeNow();
             this.Log = container.LoggerFactory.Create(serviceContext, component);
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
@@ -52,7 +53,13 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
-        /// Returns the current time of the black box system clock.
+        /// Returns the time the component was last started or reset.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        protected ZonedDateTime StartTime { get; }
+
+        /// <summary>
+        /// Returns the current time of the system clock.
         /// </summary>
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
@@ -60,7 +67,7 @@ namespace Nautilus.Common.Componentry
         protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
-        /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
+        /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
         protected Guid NewGuid() => this.guidFactory.NewGuid();
