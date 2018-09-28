@@ -126,11 +126,13 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            message.Data
-                .ForEach(instrument => this.instrumentRepository
+            foreach (var instrument in message.Data)
+            {
+                this.instrumentRepository
                     .Add(instrument, this.TimeNow())
                     .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Error(result.Message)));
+                    .OnFailure(result => this.Log.Error(result.Message));
+            }
         }
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)

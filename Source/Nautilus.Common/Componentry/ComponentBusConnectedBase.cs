@@ -14,7 +14,6 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -24,10 +23,8 @@ namespace Nautilus.Common.Componentry
     [Stateless]
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
-        /// <summary>
-        /// Gets the components messaging adapter.
-        /// </summary>
         private readonly IMessagingAdapter messagingAdapter;
+        private readonly Address address;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
@@ -42,20 +39,18 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
-            : base(serviceContext, component, container)
+            : base(
+                serviceContext,
+                component,
+                container)
         {
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.messagingAdapter = messagingAdapter;
-            this.Address = new Address(this.GetType().Name);
+            this.address = new Address(this.GetType().Name);
         }
-
-        /// <summary>
-        /// Gets the components messaging address.
-        /// </summary>
-        protected Address Address { get; }
 
         /// <summary>
         /// Sends the given object to the given endpoint via the messaging system.
@@ -68,7 +63,7 @@ namespace Nautilus.Common.Componentry
         {
             Debug.NotNull(message, nameof(message));
 
-            this.messagingAdapter.Send(receiver, message, this.Address);
+            this.messagingAdapter.Send(receiver, message, this.address);
         }
 
         /// <summary>
@@ -83,7 +78,10 @@ namespace Nautilus.Common.Componentry
             Debug.NotNull(receivers, nameof(receivers));
             Debug.NotNull(message, nameof(message));
 
-            receivers.ForEach(r => this.Send(r, message));
+            foreach (var receiver in receivers)
+            {
+                this.Send(receiver, message);
+            }
         }
     }
 }

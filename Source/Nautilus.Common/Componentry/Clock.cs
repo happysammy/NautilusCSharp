@@ -37,18 +37,12 @@ namespace Nautilus.Common.Componentry
         /// Returns the current time of this clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public ZonedDateTime TimeNow()
-        {
-            return this.clock.GetCurrentZonedDateTime();
-        }
+        public ZonedDateTime TimeNow() => this.clock.GetCurrentZonedDateTime();
 
         /// <summary>
         /// Returns the time zone of this clock.
         /// </summary>
         /// <returns>A <see cref="DateTimeZone"/>.</returns>
-        public DateTimeZone GetTimeZone()
-        {
-            return this.dateTimeZone;
-        }
+        public DateTimeZone GetTimeZone() => this.dateTimeZone;
     }
 }

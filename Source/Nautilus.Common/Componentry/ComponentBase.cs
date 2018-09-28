@@ -23,7 +23,6 @@ namespace Nautilus.Common.Componentry
     public abstract class ComponentBase
     {
         private readonly IZonedClock clock;
-        private readonly ILogger logger;
         private readonly IGuidFactory guidFactory;
         private readonly CommandHandler commandHandler;
 
@@ -41,28 +40,16 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(container, nameof(container));
 
-            this.Service = serviceContext;
-            this.Component = component;
             this.clock = container.Clock;
-            this.logger = container.LoggerFactory.Create(serviceContext, this.Component);
+            this.Log = container.LoggerFactory.Create(serviceContext, component);
             this.guidFactory = container.GuidFactory;
-            this.commandHandler = new CommandHandler(this.logger);
+            this.commandHandler = new CommandHandler(this.Log);
         }
-
-        /// <summary>
-        /// Gets the components service context.
-        /// </summary>
-        protected NautilusService Service { get; }
-
-        /// <summary>
-        /// Gets the components label.
-        /// </summary>
-        protected Label Component { get; }
 
         /// <summary>
         /// Gets the components logger.
         /// </summary>
-        protected ILogger Log => this.logger;
+        protected ILogger Log { get; }
 
         /// <summary>
         /// Returns the current time of the black box system clock.
@@ -70,19 +57,13 @@ namespace Nautilus.Common.Componentry
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
         /// </returns>
-        protected ZonedDateTime TimeNow()
-        {
-            return this.clock.TimeNow();
-        }
+        protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
         /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid()
-        {
-            return this.guidFactory.NewGuid();
-        }
+        protected Guid NewGuid() => this.guidFactory.NewGuid();
 
         /// <summary>
         /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.

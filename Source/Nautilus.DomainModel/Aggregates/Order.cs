@@ -172,7 +172,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the orders last event time.
         /// </summary>
         public ZonedDateTime LastEventTime => this.Events.Count > 0
-            ? this.Events[this.Events.LastIndex()].Timestamp
+            ? this.Events.Last().Timestamp
             : this.Timestamp;
 
         /// <summary>

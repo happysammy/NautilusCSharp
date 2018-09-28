@@ -13,6 +13,7 @@ namespace Nautilus.Redis
     using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
@@ -124,6 +125,7 @@ namespace Nautilus.Redis
         /// <param name="instrument">The instrument.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The result of the operation.</returns>
+        [PerformanceOptimized]
         public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
         {
             Debug.NotNull(instrument, nameof(instrument));
@@ -146,7 +148,10 @@ namespace Nautilus.Redis
 
             var changesString = new StringBuilder();
 
-            instrumentBuilder.Changes.ForEach(c => changesString.Append(c));
+            foreach (var change in instrumentBuilder.Changes)
+            {
+                changesString.Append(change);
+            }
 
             var updatedInstrument = instrumentBuilder.Build(timeNow);
 

@@ -44,7 +44,6 @@ namespace Nautilus.Common.Componentry
             Validate.NotNull(component, nameof(component));
             Validate.NotNull(setupContainer, nameof(setupContainer));
 
-            this.Service = service;
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;
             this.Log = setupContainer.LoggerFactory.Create(service, component);
@@ -59,34 +58,23 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Gets the components service context.
-        /// </summary>
-        protected NautilusService Service { get; }
-
-        /// <summary>
         /// Gets the components logger.
         /// </summary>
         protected ILogger Log { get; }
 
         /// <summary>
-        /// Returns the current time of the black box system clock.
+        /// Returns the current time of the system clock.
         /// </summary>
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
         /// </returns>
-        protected ZonedDateTime TimeNow()
-        {
-            return this.clock.TimeNow();
-        }
+        protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
-        /// Returns a new <see cref="Guid"/> from the black box systems <see cref="Guid"/> factory.
+        /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>
-        protected Guid NewGuid()
-        {
-            return this.guidFactory.NewGuid();
-        }
+        protected Guid NewGuid() => this.guidFactory.NewGuid();
 
         /// <summary>
         /// Passes the given <see cref="Action"/> to the <see cref="CommandHandler"/> for execution.

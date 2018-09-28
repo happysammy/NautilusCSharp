@@ -17,7 +17,6 @@ namespace Nautilus.Common
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Address = Nautilus.Common.Messaging.Address;
@@ -51,6 +50,8 @@ namespace Nautilus.Common
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(actorSystem, nameof(actorSystem));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(switchboard, nameof(switchboard));
 
             this.actorSystem = actorSystem;
             this.actorSystemName = actorSystem.Name;
@@ -71,7 +72,11 @@ namespace Nautilus.Common
         public void Start()
         {
             var start = new SystemStart(this.NewGuid(), this.TimeNow());
-            this.components.ForEach(s => this.Send(s, start));
+
+            foreach (var component in this.components)
+            {
+                this.Send(component, start);
+            }
         }
 
         /// <summary>
@@ -80,7 +85,11 @@ namespace Nautilus.Common
         public void Shutdown()
         {
             var shutdown = new SystemShutdown(this.NewGuid(), this.TimeNow());
-            this.components.ForEach(s => this.Send(s, shutdown));
+
+            foreach (var component in this.components)
+            {
+                this.Send(component, shutdown);
+            }
 
             // Allow actor components to shutdown.
             Task.Delay(1000).Wait();
