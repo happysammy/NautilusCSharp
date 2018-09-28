@@ -98,15 +98,6 @@ namespace Nautilus.Core.CQS
                 : Ok();
         }
 
-        /// <summary>
-        /// Returns the result message encapsulated inside a 'CommandResult Failure()' if
-        /// IsFailure=True.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public string FullMessage() => this.IsSuccess
-                                           ? this.Message
-                                           : $"CommandResult Failure ({this.Message}).";
-
         private static string CombineErrorMessages(CommandResult[] failedResults)
         {
             Debug.NotNullOrEmpty(failedResults, nameof(failedResults));

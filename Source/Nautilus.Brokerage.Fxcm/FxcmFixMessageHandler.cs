@@ -95,7 +95,7 @@ namespace Nautilus.Brokerage.FXCM
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
                 var group = new SecurityList.NoRelatedSymGroup();
 
-                for (int i = 1; i <= groupCount; i++)
+                for (var i = 1; i <= groupCount; i++)
                 {
                     message.GetGroup(i, group);
 
@@ -111,7 +111,7 @@ namespace Nautilus.Brokerage.FXCM
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
-                        this.Log.Warning(symbolQuery.FullMessage);
+                        this.Log.Error(symbolQuery.Message);
                         continue;
                     }
 
@@ -129,7 +129,8 @@ namespace Nautilus.Brokerage.FXCM
                     var tickValueQuery = this.instrumentData.GetTickValue(fxcmSymbol.Value);
                     if (tickValueQuery.IsFailure)
                     {
-                        throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
+                        this.Log.Error(tickValueQuery.Message);
+                        continue;
                     }
 
                     var tickValue = tickValueQuery.Value;
@@ -137,7 +138,8 @@ namespace Nautilus.Brokerage.FXCM
                     var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(fxcmSymbol.Value);
                     if (targetDirectSpreadQuery.IsFailure)
                     {
-                        throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
+                        this.Log.Error(targetDirectSpreadQuery.Message);
+                        continue;
                     }
 
                     var targetDirectSpread = targetDirectSpreadQuery.Value;

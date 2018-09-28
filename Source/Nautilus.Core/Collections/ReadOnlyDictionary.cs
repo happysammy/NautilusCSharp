@@ -17,7 +17,7 @@ namespace Nautilus.Core.Collections
 
     /// <summary>
     /// Provides a read-only dictionary instantiated with a standard concrete dictionary which then
-    /// becomes the internal dictionary.
+    /// becomes the internal dictionary. If the clone option is used it is a shallow copy only.
     /// </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
@@ -33,12 +33,15 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyDictionary{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="dictionary">The original dictionary.</param>
+        /// <param name="clone">The optional flag to clone the internal dictionary.</param>
         /// <exception cref="ValidationException">Throws if the dictionary is null.</exception>
-        public ReadOnlyDictionary(Dictionary<TKey, TValue> dictionary)
+        public ReadOnlyDictionary(Dictionary<TKey, TValue> dictionary, bool clone = false)
         {
             Debug.NotNull(dictionary, nameof(dictionary));
 
-            this.internalDictionary = dictionary;
+            this.internalDictionary = clone
+                ? new Dictionary<TKey, TValue>(dictionary)
+                : dictionary;
         }
 
         /// <summary>
@@ -87,6 +90,7 @@ namespace Nautilus.Core.Collections
         /// Returns the value associated with the given key.
         /// </summary>
         /// <param name="key">The key.</param>
+        /// <exception cref="NotSupportedException">Throws if set is called.</exception>
         public TValue this[TKey key]
         {
             get => this.internalDictionary[key];

@@ -54,18 +54,10 @@ namespace Nautilus.Core.CQS
                         : throw new InvalidOperationException("There is no value for a query failure.");
 
         /// <summary>
-        /// Gets the result message encapsulated inside a 'QueryResult Failure()' if
-        /// IsFailure=True.
-        /// </summary>
-        public string FullMessage => this.IsSuccess
-                                   ? this.Message
-                                   : $"QueryResult Failure ({this.Message}).";
-
-        /// <summary>
         /// Create a success <see cref="QueryResult{T}"/> with the given value.
         /// </summary>
         /// <param name="value">The query value (cannot be null).</param>
-        /// <returns>The query reult of T.</returns>
+        /// <returns>The query result of T.</returns>
         public static QueryResult<T> Ok(T value)
         {
             Debug.NotNull(value, nameof(value));
@@ -96,7 +88,7 @@ namespace Nautilus.Core.CQS
         {
             Debug.NotNull(error, nameof(error));
 
-            return new QueryResult<T>(true, default(T), error);
+            return new QueryResult<T>(true, default, error);
         }
     }
 }

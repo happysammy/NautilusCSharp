@@ -16,7 +16,7 @@ namespace Nautilus.Core.Collections
 
     /// <summary>
     /// Provides a read-only list instantiated with a standard concrete list which then becomes
-    /// the internal list.
+    /// the internal list. If the clone option is used it is a shallow copy only.
     /// </summary>
     /// <typeparam name="T">The list value type.</typeparam>
     [Immutable]
@@ -30,19 +30,20 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
         /// <param name="list">The original list.</param>
-        /// <exception cref="ValidationException">Throws if the list is null.</exception>
-        public ReadOnlyList(List<T> list)
+        /// <param name="clone">The optional flag to clone the internal list.</param>
+        public ReadOnlyList(List<T> list, bool clone = false)
         {
             Debug.NotNull(list, nameof(list));
 
-            this.internalList = list;
+            this.internalList = clone
+                ? new List<T>(list)
+                : list;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
         /// <param name="list">The original list.</param>
-        /// <exception cref="ValidationException">Throws if the list is null.</exception>
         public ReadOnlyList(IList<T> list)
         {
             Debug.NotNull(list, nameof(list));
@@ -54,7 +55,6 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
         /// <param name="list">The original list.</param>
-        /// <exception cref="ValidationException">Throws if the list is null.</exception>
         public ReadOnlyList(IReadOnlyCollection<T> list)
         {
             Debug.NotNull(list, nameof(list));
@@ -66,7 +66,6 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyList{T}"/> class.
         /// </summary>
         /// <param name="element">The single element for the list to contain.</param>
-        /// <exception cref="ValidationException">Throws if the element is null.</exception>
         public ReadOnlyList(T element)
         {
             Debug.NotNull(element, nameof(element));
@@ -88,7 +87,7 @@ namespace Nautilus.Core.Collections
         /// Returns the element at the given index.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">Throws if set is called.</exception>
         public T this[int index]
         {
             get => this.internalList[index];

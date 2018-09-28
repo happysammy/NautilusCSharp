@@ -126,15 +126,15 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allbarTypeKeys = this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard);
+            var allBarTypeKeys = this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard);
 
-            if (allbarTypeKeys.Length == 0)
+            if (allBarTypeKeys.Length == 0)
             {
                 return 0;
             }
 
-            return allbarTypeKeys
-                .Select(key => Encoding.Default.GetString(key))
+            return allBarTypeKeys
+                .Select(key => Encoding.UTF8.GetString(key))
                 .ToList()
                 .Select(this.GetBarsByDay)
                 .Sum(k => k.Value.Count);
@@ -151,7 +151,7 @@ namespace Nautilus.Redis
 
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<List<string>>.Fail($"No market data found for {barType}");
+                return QueryResult<List<string>>.Fail($"No market data found for {barType}.");
             }
 
             var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType));
@@ -221,7 +221,7 @@ namespace Nautilus.Redis
 
             this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
 
-            return CommandResult.Ok($"Added 1 bar to {barType}");
+            return CommandResult.Ok($"Added 1 bar to {barType}.");
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Nautilus.Redis
             }
 
             return CommandResult.Ok(
-                $"Added {barsAddedCounter} bars to {barType} (TotalCount={this.BarsCount(barType)})");
+                $"Added {barsAddedCounter} bars to {barType} (TotalCount={this.BarsCount(barType)}).");
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Nautilus.Redis
 
             if (this.KeysCount(barType) == 0)
             {
-                return QueryResult<BarDataFrame>.Fail($"No market data found for {barType}");
+                return QueryResult<BarDataFrame>.Fail($"No market data found for {barType}.");
             }
 
             var barKeysQuery = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
@@ -336,7 +336,7 @@ namespace Nautilus.Redis
                 return QueryResult<BarDataFrame>.Fail(
                     $"No market data found for {barType} in time range from " +
                     $"{fromDateTime.ToIsoString()} to " +
-                    $"{toDateTime.ToIsoString()}");
+                    $"{toDateTime.ToIsoString()}.");
             }
 
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
@@ -372,7 +372,7 @@ namespace Nautilus.Redis
             }
 
             return QueryResult<Bar>.Fail($"No market data found for {barType} " +
-                                         $"at {timestamp.ToIsoString()}");
+                                         $"at {timestamp.ToIsoString()}.");
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Nautilus.Redis
 
             if (!this.KeyExists(key))
             {
-                return QueryResult<List<Bar>>.Fail($"No market data found for {key}");
+                return QueryResult<List<Bar>>.Fail($"No market data found for {key}.");
             }
 
             var barBytes = this.redisClient.LRange(key, 0, -1);
@@ -405,12 +405,12 @@ namespace Nautilus.Redis
 
             if (!this.KeyExists(key))
             {
-                return CommandResult.Ok($"Cannot find {key} to delete in the database");
+                return CommandResult.Fail($"Cannot find {key} to delete in the database.");
             }
 
             this.redisClient.Del(key);
 
-            return CommandResult.Ok($"Removed {key} from the database");
+            return CommandResult.Ok($"Removed {key} from the database.");
         }
     }
 }

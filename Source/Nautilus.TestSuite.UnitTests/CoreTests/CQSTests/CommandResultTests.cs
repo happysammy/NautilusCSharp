@@ -56,7 +56,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             Assert.True(result.IsFailure);
             Assert.False(result.IsSuccess);
             Assert.Equal("error message", result.Message);
-            Assert.Equal("CommandResult Failure (error message).", result.FullMessage());
         }
 
         [Fact]
@@ -83,7 +82,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal("failure 1", result.Message);
-            Assert.Equal("CommandResult Failure (failure 1).", result.FullMessage());
         }
 
         [Fact]
@@ -115,7 +113,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal("error 1; error 2", result.Message);
-            Assert.Equal("CommandResult Failure (error 1; error 2).", result.FullMessage());
         }
 
         [Fact]

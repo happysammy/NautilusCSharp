@@ -111,7 +111,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
-                        this.Log.Warning(symbolQuery.FullMessage);
+                        this.Log.Warning(symbolQuery.Message);
                         continue;
                     }
 

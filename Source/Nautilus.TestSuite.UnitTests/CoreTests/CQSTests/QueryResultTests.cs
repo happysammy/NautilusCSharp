@@ -71,7 +71,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             Assert.True(result.IsFailure);
             Assert.False(result.IsSuccess);
             Assert.Equal("error message", result.Message);
-            Assert.Equal("QueryResult Failure (error message).", result.FullMessage);
         }
 
         [Fact]

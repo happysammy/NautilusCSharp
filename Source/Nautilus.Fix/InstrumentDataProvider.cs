@@ -19,11 +19,10 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides data for FXCM tradeable instruments.
+    /// Provides data for tradeable instruments.
     /// </summary>
     public class InstrumentDataProvider
     {
-        // All keys are ISO convention broker symbols.
         private readonly ReadOnlyDictionary<string, string> symbolIndex;
         private readonly ReadOnlyDictionary<string, int> priceDecimalPrecisionIndex;
         private readonly ReadOnlyDictionary<string, decimal> tickValueIndex;
@@ -58,7 +57,7 @@ namespace Nautilus.Fix
 
             return this.symbolIndex.ContainsKey(brokerSymbol)
                  ? QueryResult<string>.Ok(this.symbolIndex[brokerSymbol])
-                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol from the given broker symbol {brokerSymbol}");
+                 : QueryResult<string>.Fail($"Cannot find the Nautilus symbol (index did not contain the given broker symbol {brokerSymbol}).");
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace Nautilus.Fix
 
             return this.symbolIndex.ContainsValue(nautilusSymbol)
                  ? QueryResult<string>.Ok(this.symbolIndex.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
-                 : QueryResult<string>.Fail($"Cannot find the broker symbol from the given Nautilus symbol {nautilusSymbol}");
+                 : QueryResult<string>.Fail($"Cannot find the broker symbol (index did not contain the given Nautilus symbol {nautilusSymbol}.");
         }
 
         /// <summary>
@@ -118,7 +117,7 @@ namespace Nautilus.Fix
 
             return this.tickValueIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.tickValueIndex[brokerSymbol])
-                : QueryResult<decimal>.Fail($"Cannot find tick value for {brokerSymbol}");
+                : QueryResult<decimal>.Fail($"Cannot get tick value (index did not contain the given broker symbol {brokerSymbol}).");
         }
 
         /// <summary>
@@ -133,7 +132,7 @@ namespace Nautilus.Fix
 
             return this.targetSpreadIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.targetSpreadIndex[brokerSymbol])
-                : QueryResult<decimal>.Fail($"Cannot find the target direct spread for {brokerSymbol}");
+                : QueryResult<decimal>.Fail($"Cannot get target direct spread (index did not contain the given broker symbol {brokerSymbol}).");
         }
 
         /// <summary>
@@ -148,7 +147,7 @@ namespace Nautilus.Fix
 
             return this.marginRequirementIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.marginRequirementIndex[brokerSymbol])
-                : QueryResult<decimal>.Fail($"Cannot find tick value for {brokerSymbol}");
+                : QueryResult<decimal>.Fail($"Cannot get margin requirement (index did not contain the given broker symbol {brokerSymbol}).");
         }
 
         private static ReadOnlyDictionary<TKey, TValue> LoadData<TKey, TValue>(

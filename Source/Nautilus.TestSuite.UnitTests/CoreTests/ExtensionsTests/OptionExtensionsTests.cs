@@ -98,7 +98,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal("error", result.Message);
-            Assert.Equal("QueryResult Failure (error).", result.FullMessage);
         }
 
         [Fact]
