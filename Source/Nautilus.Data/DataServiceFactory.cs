@@ -107,12 +107,12 @@ namespace Nautilus.Data
             return new Switchboard(new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler },
+                { ServiceAddress.Data, dataService },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskActor },
                 { DataServiceAddress.DataCollectionManager, dataCollectionActor },
                 { DataServiceAddress.BarAggregationController, barAggregationController },
                 { DataServiceAddress.TickPublisher, tickPublisher },
                 { DataServiceAddress.BarPublisher, barPublisher },
-                { ServiceAddress.Data, dataService },
             });
         }
     }

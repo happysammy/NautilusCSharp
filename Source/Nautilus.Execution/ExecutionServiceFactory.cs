@@ -91,9 +91,9 @@ namespace Nautilus.Execution
 
             return new Switchboard(new Dictionary<Address, IEndpoint>
             {
+                { ServiceAddress.Execution, executionService },
                 { ExecutionServiceAddress.MessageServer, messageServer },
                 { ExecutionServiceAddress.OrderManager, orderManager },
-                { ServiceAddress.Execution, executionService },
             });
         }
     }
