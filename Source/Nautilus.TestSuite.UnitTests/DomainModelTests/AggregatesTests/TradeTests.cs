@@ -589,7 +589,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             trade.Apply(StubEventMessages.OrderWorkingEvent(entryOrder));
             trade.Apply(StubEventMessages.OrderFilledEvent(entryOrder));
             trade.Apply(StubEventMessages.OrderWorkingEvent(stopLossOrder2));
-            trade.Apply(StubEventMessages.OrderModifiedEvent(stopLossOrder2, Price.Create(0.79950m, 0.00001m)));
+            trade.Apply(StubEventMessages.OrderModifiedEvent(stopLossOrder2, Price.Create(0.79950m, 5)));
 
             var result = trade.GetOrderById(new OrderId("StoplossOrderId2")).Value;
 

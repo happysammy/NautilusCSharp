@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(1000),
-                Price.Create(2000, 0.01m),
+                Price.Create(2000, 2),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -55,7 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);
             Assert.Equal(1, position.EventCount);
-            Assert.Equal(Price.Create(2000, 0.01m), position.AverageEntryPrice);
+            Assert.Equal(Price.Create(2000, 2), position.AverageEntryPrice);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(5000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(5000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(7000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(100000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -143,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(200000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -155,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(50000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -167,7 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(250000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -200,7 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(1000000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -212,7 +212,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(500000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -224,7 +224,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(1000000),
-                Price.Create(1.00000m, 0.00001m),
+                Price.Create(1.00000m, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

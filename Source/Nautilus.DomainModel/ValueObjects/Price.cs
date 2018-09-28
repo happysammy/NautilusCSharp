@@ -24,49 +24,31 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Price"/> class.
         /// </summary>
         /// <param name="value">The price value.</param>
-        /// <param name="tickSize">The price tick size.</param>
-        private Price(decimal value, decimal tickSize)
+        /// <param name="decimalPrecision">The price decimal precision.</param>
+        private Price(decimal value, int decimalPrecision)
             : base(value)
         {
             Debug.PositiveDecimal(value, nameof(value));
-            Debug.PositiveDecimal(tickSize, nameof(tickSize));
-            Debug.True(value.GetDecimalPlaces() <= tickSize.GetDecimalPlaces(), nameof(tickSize));
+            Debug.NotNegativeInt32(decimalPrecision, nameof(decimalPrecision));
+            Debug.True(value.GetDecimalPlaces() <= decimalPrecision, nameof(decimalPrecision));
 
-            this.TickSize = tickSize;
-            this.Decimals = tickSize.GetDecimalPlaces();
+            this.DecimalPrecision = decimalPrecision;
         }
-
-        /// <summary>
-        /// Gets the prices tick size.
-        /// </summary>
-        public decimal TickSize { get; }
 
         /// <summary>
         /// Gets the prices number of decimal places.
         /// </summary>
-        public int Decimals { get; }
-
-        /// <summary>
-        /// Returns a new <see cref="Price"/> with the given value and tick size.
-        /// </summary>
-        /// <param name="value">The price value.</param>
-        /// <param name="tickSize">The price tick size.</param>
-        /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Create(decimal value, decimal tickSize)
-        {
-            // Validated in private constructor.
-            return new Price(value, tickSize);
-        }
+        public int DecimalPrecision { get; }
 
         /// <summary>
         /// Returns a new <see cref="Price"/> with the given value and decimal places.
         /// </summary>
         /// <param name="value">The price value.</param>
-        /// <param name="decimals">The price decimal places.</param>
+        /// <param name="decimalPrecision">The price decimal precision.</param>
         /// <returns>A <see cref="Price"/>.</returns>
-        public static Price Create(decimal value, int decimals)
+        public static Price Create(decimal value, int decimalPrecision)
         {
-            return new Price(value, decimals.ToTickSize());
+            return new Price(value, decimalPrecision);
         }
 
         /// <summary>
@@ -79,7 +61,7 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotNull(other, nameof(other));
 
-            return new Price(this.Value + other.Value, this.TickSize);
+            return new Price(this.Value + other.Value, this.DecimalPrecision);
         }
 
         /// <summary>
@@ -93,13 +75,13 @@ namespace Nautilus.DomainModel.ValueObjects
         {
             Debug.NotNull(other, nameof(other));
 
-            return new Price(this.Value - other.Value, this.TickSize);
+            return new Price(this.Value - other.Value, this.DecimalPrecision);
         }
 
         /// <summary>
         /// Returns a string representation of the <see cref="Price"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Value.ToString($"F{this.Decimals}", CultureInfo.InvariantCulture)}";
+        public override string ToString() => $"{this.Value.ToString($"F{this.DecimalPrecision}", CultureInfo.InvariantCulture)}";
     }
 }

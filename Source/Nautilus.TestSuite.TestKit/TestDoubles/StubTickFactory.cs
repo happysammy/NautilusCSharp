@@ -25,8 +25,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new Tick(
                 symbol,
-                Price.Create(LastBid, 0.00001m),
-                Price.Create(LastAsk, 0.00001m),
+                Price.Create(LastBid, 5),
+                Price.Create(LastAsk, 5),
                 StubZonedDateTime.UnixEpoch());
         }
 
@@ -49,8 +49,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new Tick(
                 symbol,
-                Price.Create(bid, 0.00001m),
-                Price.Create(ask, 0.00001m),
+                Price.Create(bid, 5),
+                Price.Create(ask, 5),
                 StubZonedDateTime.UnixEpoch());
         }
     }

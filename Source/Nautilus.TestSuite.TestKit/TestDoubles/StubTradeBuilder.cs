@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var atomicOrder = new AtomicOrder(
                 new TradeType("TestTrade"),
                 new StubOrderBuilder().EntryOrder("EntryOrderId").WithOrderSide(OrderSide.SELL).BuildStopMarketOrder(),
-                new StubOrderBuilder().StopLossOrder("StopLossOrderId").WithOrderSide(OrderSide.BUY).WithPrice(Price.Create(1.30000m, 0.00001m)).BuildStopMarketOrder(),
+                new StubOrderBuilder().StopLossOrder("StopLossOrderId").WithOrderSide(OrderSide.BUY).WithPrice(Price.Create(1.30000m, 5)).BuildStopMarketOrder(),
                 new StubOrderBuilder().ProfitTargetOrder("ProfitTargetOrderId").WithOrderSide(OrderSide.BUY).BuildStopMarketOrder());
             var atomicOrders = new List<AtomicOrder> { atomicOrder };
             var orderPacket = new AtomicOrderPacket(

@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.BUY;
             this.Quantity = Quantity.Create(100000);
-            this.Price = Price.Create(0.80000m, 0.00001m);
+            this.Price = Price.Create(0.80000m, 5);
             this.TimeInForce = TimeInForce.GTD;
             this.ExpireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
 
@@ -122,7 +122,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
-            this.Price = Price.Create(0.79900m, 0.00001m);
+            this.Price = Price.Create(0.79900m, 5);
             this.TimeInForce = TimeInForce.GTC;
 
             return this;
@@ -134,7 +134,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.OrderId = new OrderId(orderId);
             this.OrderSide = OrderSide.SELL;
             this.Quantity = Quantity.Create(100000);
-            this.Price = Price.Create(0.80100m, 0.00001m);
+            this.Price = Price.Create(0.80100m, 5);
             this.TimeInForce = TimeInForce.GTC;
 
             return this;

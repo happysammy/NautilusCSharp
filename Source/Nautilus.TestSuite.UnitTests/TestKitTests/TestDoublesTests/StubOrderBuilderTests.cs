@@ -51,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
                .WithLabel("TestOrderLabel")
                .WithOrderSide(OrderSide.SELL)
                .WithQuantity(Quantity.Create(100000))
-               .WithPrice(Price.Create(1.00000m, 0.00001m))
+               .WithPrice(Price.Create(1.00000m, 5))
                .WithTimeInForce(TimeInForce.GTD)
                .WithExpireTime(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration())
                .WithTimestamp(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration())
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(OrderSide.SELL, order.Side);
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(Quantity.Create(100000), order.Quantity);
-            Assert.Equal(Price.Create(1.00000m, 0.00001m), order.Price);
+            Assert.Equal(Price.Create(1.00000m, 5), order.Price);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(), order.Timestamp);

@@ -93,7 +93,7 @@ namespace Nautilus.Data.Aggregators
 
             if (!this.isInitialized)
             {
-                this.decimalPrecision = tick.Bid.Decimals;
+                this.decimalPrecision = tick.Bid.DecimalPrecision;
                 this.isInitialized = true;
             }
 

@@ -100,7 +100,7 @@ namespace Nautilus.Data.Aggregators
                         break;
 
                     case QuoteType.Mid:
-                        var decimalsPlusOne = tick.Bid.Decimals + 1;
+                        var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
                         builder.Value.Update(
                             Price.Create(
                                 Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),

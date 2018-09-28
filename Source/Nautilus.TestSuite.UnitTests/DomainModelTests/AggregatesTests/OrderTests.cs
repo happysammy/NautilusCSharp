@@ -357,7 +357,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder()
                .WithOrderSide(OrderSide.BUY)
-               .WithPrice(Price.Create(0.80000m, 0.00001m))
+               .WithPrice(Price.Create(0.80000m, 5))
                .BuildStopMarketOrder();
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
@@ -368,7 +368,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_ticket"),
                 order.Side,
                 order.Quantity,
-                Price.Create(averagePrice, 0.00001m),
+                Price.Create(averagePrice, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -393,7 +393,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder()
                .WithOrderSide(OrderSide.SELL)
-               .WithPrice(Price.Create(1.20000m, 0.00001m))
+               .WithPrice(Price.Create(1.20000m, 5))
                .BuildStopMarketOrder();
 
             var message1 = StubEventMessages.OrderWorkingEvent(order);
@@ -404,7 +404,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionId("some_execution_ticket"),
                 order.Side,
                 order.Quantity,
-                Price.Create(averagePrice, 0.00001m),
+                Price.Create(averagePrice, 5),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

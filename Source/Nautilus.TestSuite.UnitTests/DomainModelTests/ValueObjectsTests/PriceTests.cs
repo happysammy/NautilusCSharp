@@ -18,26 +18,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     public class PriceTests
     {
         [Theory]
-        [InlineData(0.1, 0.1, 0.1)]
-        [InlineData(0.001, 0.001, 0.001)]
-        [InlineData(1, 0.1, 1)]
-        [InlineData(100, 0.1, 100)]
-        [InlineData(500.5, 0.1, 500.5)]
-        [InlineData(424242, 0.1, 424242)]
-        internal void Create_VariousValues_ReturnsExpectedValue(
-            decimal value,
-            decimal tickSize,
-            decimal expected)
-        {
-            // Arrange
-            // Act
-            var result = Price.Create(value, tickSize);
-
-            // Assert
-            Assert.Equal(expected, result.Value);
-        }
-
-        [Theory]
         [InlineData(0.1, 1, 0.1)]
         [InlineData(0.001, 3, 0.001)]
         [InlineData(1, 1, 1)]
@@ -55,40 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Assert
             Assert.Equal(expected, result.Value);
-            Assert.Equal(decimals, result.Decimals);
-        }
-
-        [Theory]
-        [InlineData(1, 1, 1)]
-        [InlineData(1, 0.01, 0.01)]
-        [InlineData(1, 0.25, 0.25)]
-        [InlineData(1, 0.001, 0.001)]
-        [InlineData(1, 0.00001, 0.00001)]
-        internal void Create_TickSizesValid_ReturnsExpectedTickSize(decimal value, decimal tickSize, decimal expected)
-        {
-            // Arrange
-            // Act
-            var result = Price.Create(value, tickSize);
-
-            // Assert
-            Assert.Equal(expected, result.TickSize);
-        }
-
-        [Theory]
-        [InlineData(1, 1, 0)]
-        [InlineData(1, 0.1, 1)]
-        [InlineData(1, 0.01, 2)]
-        [InlineData(1, 0.001, 3)]
-        [InlineData(1, 0.0001, 4)]
-        [InlineData(1, 0.00001, 5)]
-        internal void Create_TickSizesValid_ReturnsExpectedDecimalPlaces(decimal value, decimal tickSize, decimal expected)
-        {
-            // Arrange
-            // Act
-            var result = Price.Create(value, tickSize);
-
-            // Assert
-            Assert.Equal(expected, result.Decimals);
+            Assert.Equal(decimals, result.DecimalPrecision);
         }
 
         [Theory]
@@ -100,8 +47,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Add_VariousPrices_ReturnsExpectedPriceValues(decimal value1, decimal value2, decimal expected)
         {
             // Arrange
-            var price1 = Price.Create(value1, 0.00001m);
-            var price2 = Price.Create(value2, 0.00001m);
+            var price1 = Price.Create(value1, 5);
+            var price2 = Price.Create(value2, 5);
 
             // Act
             var result1 = price1.Add(price2);
@@ -120,8 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Subtract_VariousPrices_ReturnsExpectedPriceValues(decimal value1, decimal value2, decimal expected)
         {
             // Arrange
-            var price1 = Price.Create(value1, 0.00001m);
-            var price2 = Price.Create(value2, 0.00001m);
+            var price1 = Price.Create(value1, 5);
+            var price2 = Price.Create(value2, 5);
 
             // Act
             var result1 = price1.Subtract(price2);
@@ -139,8 +86,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void CompareTo_VariousPrices_ReturnsExpectedResult(int value1, int value2, int expected)
         {
             // Arrange
-            var price1 = Price.Create(value1, 0.00001m);
-            var price2 = Price.Create(value2, 0.00001m);
+            var price1 = Price.Create(value1, 5);
+            var price2 = Price.Create(value2, 5);
 
             // Act
             var result = price1.CompareTo(price2);
@@ -150,20 +97,23 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Theory]
-        [InlineData(1, 1, "1")]
-        [InlineData(0.1, 0.1, "0.1")]
-        [InlineData(0.01, 0.01, "0.01")]
-        [InlineData(0.01, 0.001, "0.010")]
-        [InlineData(0.1, 0.0001, "0.1000")]
-        [InlineData(0.0020, 0.00001, "0.00200")]
-        [InlineData(10000, 0.01, "10000.00")]
-        [InlineData(5000, 0.1, "5000.0")]
-        [InlineData(100000, 1, "100000")]
-        internal void ToString_VariousValues_ReturnsExpectedString(decimal value, decimal tickSize, string expected)
+        [InlineData(1, 0, "1")]
+        [InlineData(0.1, 1, "0.1")]
+        [InlineData(0.01, 2, "0.01")]
+        [InlineData(0.01, 3, "0.010")]
+        [InlineData(0.1, 4, "0.1000")]
+        [InlineData(0.0020, 5, "0.00200")]
+        [InlineData(10000, 2, "10000.00")]
+        [InlineData(5000, 1, "5000.0")]
+        [InlineData(100000, 0, "100000")]
+        internal void ToString_VariousValues_ReturnsExpectedString(
+            decimal value,
+            int decimals,
+            string expected)
         {
             // Arrange
             // Act
-            var price = Price.Create(value, tickSize);
+            var price = Price.Create(value, decimals);
 
             // Assert
             Assert.Equal(expected, price.ToString());
@@ -185,8 +135,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var price1 = Price.Create(value1, 0.00001m);
-            var price2 = Price.Create(value2, 0.00001m);
+            var price1 = Price.Create(value1, 5);
+            var price2 = Price.Create(value2, 5);
 
             var result1 = price1.Equals(price2);
             var result2 = price1 == price2;
@@ -201,7 +151,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var price = Price.Create(1, 0.00001m);
+            var price = Price.Create(1, 5);
 
             var result = price.GetHashCode();
 

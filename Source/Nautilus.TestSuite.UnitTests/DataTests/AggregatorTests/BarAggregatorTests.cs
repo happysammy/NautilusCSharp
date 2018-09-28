@@ -107,8 +107,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80005m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage = new CloseBar(
@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80005m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage = new CloseBar(
@@ -177,8 +177,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick1 = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80005m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage1 = new CloseBar(
@@ -189,8 +189,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick2 = new Tick(
                 this.symbol,
-                Price.Create(0.80100m, 0.00001m),
-                Price.Create(0.80110m, 0.00001m),
+                Price.Create(0.80100m, 5),
+                Price.Create(0.80110m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage2 = new CloseBar(
@@ -235,14 +235,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick1 = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80005m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(10));
 
             var tick2 = new Tick(
                 this.symbol,
-                Price.Create(0.80100m, 0.00001m),
-                Price.Create(0.80105m, 0.00001m),
+                Price.Create(0.80100m, 5),
+                Price.Create(0.80105m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
             var closeBarMessage1 = new CloseBar(
@@ -253,8 +253,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick3 = new Tick(
                 this.symbol,
-                Price.Create(0.80200m, 0.00001m),
-                Price.Create(0.80210m, 0.00001m),
+                Price.Create(0.80200m, 5),
+                Price.Create(0.80210m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
 
             var closeBarMessage2 = new CloseBar(
@@ -296,14 +296,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var tick1 = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80010m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80010m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1));
 
             var tick2 = new Tick(
                 this.symbol,
-                Price.Create(0.80000m, 0.00001m),
-                Price.Create(0.80070m, 0.00001m),
+                Price.Create(0.80000m, 5),
+                Price.Create(0.80070m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1001));
 
             var closeBarMessage = new CloseBar(
