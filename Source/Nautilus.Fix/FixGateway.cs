@@ -119,10 +119,10 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Requests market data for the given symbol from the brokerage.
+        /// Submits a market data subscribe FIX message for the given symbol to the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        public void RequestMarketDataSubscribe(Symbol symbol)
+        public void MarketDataSubscribe(Symbol symbol)
         {
             Debug.NotNull(symbol, nameof(symbol));
 
@@ -130,18 +130,18 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Requests market data for all symbols from the brokerage.
+        /// Submits a market data subscribe all FIX message for all symbols to the brokerage.
         /// </summary>
-        public void RequestMarketDataSubscribeAll()
+        public void MarketDataSubscribeAll()
         {
             this.fixClient.RequestMarketDataSubscribeAll();
         }
 
         /// <summary>
-        /// Request an update on the instrument corresponding to the given symbol from the brokerage,
-        /// and subscribe to updates.
+        /// Submits an update on the instrument corresponding to the given symbol, and subscribe to
+        /// updates FIX message, to the brokerage.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <param name="symbol">The symbol of the instrument to update.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             Debug.NotNull(symbol, nameof(symbol));
@@ -150,7 +150,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Requests an update on all instruments from the brokerage.
+        /// Submits an update all instruments FIX message to the brokerage.
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
@@ -158,7 +158,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits a collateral inquiry to the brokerage.
+        /// Submits a collateral inquiry FIX message to the brokerage.
         /// </summary>
         public void CollateralInquiry()
         {
@@ -166,7 +166,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits a trading session status request to the brokerage.
+        /// Submits a trading session status FIX message to the brokerage.
         /// </summary>
         public void TradingSessionStatus()
         {
@@ -174,9 +174,9 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits an entry order with a stop-loss and profit target to the brokerage.
+        /// Submits a new order FIX message to the brokerage.
         /// </summary>
-        /// <param name="order">The order to submit.</param>
+        /// <param name="order">The new order.</param>
         public void SubmitOrder(IOrder order)
         {
             Debug.NotNull(order, nameof(order));
@@ -185,9 +185,9 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits an entry order with a stop-loss to the brokerage.
+        /// Submits a new atomic order FIX message to the brokerage.
         /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
+        /// <param name="atomicOrder">The new atomic order.</param>
         public void SubmitOrder(IAtomicOrder atomicOrder)
         {
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
@@ -196,7 +196,8 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits a request to modify the stop-loss of an existing order.
+        /// Submits an order cancel replace FIX message to modify the stop-loss of an existing order,
+        /// to the brokerage.
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
@@ -208,7 +209,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits a request to cancel the given order.
+        /// Submits a cancel order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(IOrder order)
@@ -219,7 +220,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Submits a request to close the given position to the brokerage client.
+        /// Submits a new marker order FIX message to close the given position to the brokerage.
         /// </summary>
         /// <param name="position">The position to close.</param>
         public void ClosePosition(IPosition position)
@@ -230,17 +231,16 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
-        /// controller.
+        /// Creates a new <see cref="Tick"/> and sends it directly to registered tick receivers.
         /// </summary>
-        /// <param name="symbol">The tick symbol.</param>
-        /// <param name="venue">The tick exchange.</param>
-        /// <param name="bid">The tick bid price.</param>
-        /// <param name="ask">The tick ask price.</param>
+        /// <param name="symbolCode">The tick symbol code.</param>
+        /// <param name="venue">The tick venue.</param>
+        /// <param name="bid">The tick best bid price.</param>
+        /// <param name="ask">The tick best ask price.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         [SystemBoundary]
         public void OnTick(
-            string symbol,
+            string symbolCode,
             Venue venue,
             decimal bid,
             decimal ask,
@@ -248,20 +248,20 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
 
-                if (!this.pricePrecisionIndex.ContainsKey(symbol))
+                if (!this.pricePrecisionIndex.ContainsKey(symbolCode))
                 {
-                    this.Log.Warning($"Cannot process tick (symbol {symbol} not contained in tick precision index).");
+                    this.Log.Warning($"Cannot process tick (symbol {symbolCode} not contained in price precision index).");
                     return;
                 }
 
                 var tick = new Tick(
-                    new Symbol(symbol, venue),
-                    Price.Create(bid, this.pricePrecisionIndex[symbol]),
-                    Price.Create(ask, this.pricePrecisionIndex[symbol]),
+                    new Symbol(symbolCode, venue),
+                    Price.Create(bid, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(ask, this.pricePrecisionIndex[symbolCode]),
                     timestamp);
 
                 foreach (var receiver in this.tickReceivers)
@@ -443,14 +443,14 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderRejected"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="rejectReason">The order reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderRejected(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string rejectReason,
@@ -458,13 +458,13 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(rejectReason, nameof(rejectReason));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderRejected = new OrderRejected(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     rejectReason,
@@ -487,15 +487,15 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderCancelReject"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
         /// <param name="cancelRejectReason">The order cancel reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderCancelReject(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string cancelRejectResponseTo,
@@ -504,14 +504,14 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
                 Validate.NotNull(cancelRejectReason, nameof(cancelRejectReason));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelReject = new OrderCancelReject(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     cancelRejectResponseTo,
@@ -536,15 +536,15 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderCancelled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderCancelled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -553,14 +553,14 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelled = new OrderCancelled(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -582,8 +582,8 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderModified"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -591,7 +591,7 @@ namespace Nautilus.Fix
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderModified(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -601,7 +601,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
@@ -609,10 +609,10 @@ namespace Nautilus.Fix
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderModified = new OrderModified(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(brokerOrderId),
-                    Price.Create(price, this.pricePrecisionIndex[symbol]),
+                    Price.Create(price, this.pricePrecisionIndex[symbolCode]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -634,8 +634,8 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderWorking"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
@@ -648,7 +648,7 @@ namespace Nautilus.Fix
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderWorking(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -663,7 +663,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
@@ -672,14 +672,14 @@ namespace Nautilus.Fix
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderWorking = new OrderWorking(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(brokerOrderId),
                     new Label(orderLabel),
                     orderSide,
                     orderType,
                     Quantity.Create(quantity),
-                    Price.Create(price, this.pricePrecisionIndex[symbol]),
+                    Price.Create(price, this.pricePrecisionIndex[symbolCode]),
                     timeInForce,
                     expireTime,
                     timestamp,
@@ -711,15 +711,15 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderExpired"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderExpired(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -728,14 +728,14 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(orderLabel, nameof(orderLabel));
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderExpired = new OrderExpired(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     timestamp,
                     this.NewGuid(),
@@ -757,8 +757,8 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderFilled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -770,7 +770,7 @@ namespace Nautilus.Fix
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderFilled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -784,7 +784,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(executionId, nameof(executionId));
@@ -795,13 +795,13 @@ namespace Nautilus.Fix
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderFilled = new OrderFilled(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new ExecutionId(executionId),
                     new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbolCode]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -825,8 +825,8 @@ namespace Nautilus.Fix
         /// Creates an <see cref="OrderPartiallyFilled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
-        /// <param name="venue">The order exchange.</param>
+        /// <param name="symbolCode">The order symbol code.</param>
+        /// <param name="venue">The order venue.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
@@ -839,7 +839,7 @@ namespace Nautilus.Fix
         /// <param name="timestamp">The event timestamp.</param>
         [SystemBoundary]
         public void OnOrderPartiallyFilled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -854,7 +854,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Validate.NotNull(symbol, nameof(symbol));
+                Validate.NotNull(symbolCode, nameof(symbolCode));
                 Validate.NotNull(orderId, nameof(orderId));
                 Validate.NotNull(brokerOrderId, nameof(brokerOrderId));
                 Validate.NotNull(executionId, nameof(executionId));
@@ -866,14 +866,14 @@ namespace Nautilus.Fix
                 Validate.NotDefault(timestamp, nameof(timestamp));
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(
-                    new Symbol(symbol, venue),
+                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new ExecutionId(executionId),
                     new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, this.pricePrecisionIndex[symbol]),
+                    Price.Create(averagePrice, this.pricePrecisionIndex[symbolCode]),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());

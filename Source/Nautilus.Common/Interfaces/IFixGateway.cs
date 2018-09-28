@@ -52,65 +52,66 @@ namespace Nautilus.Common.Interfaces
         void RegisterInstrumentReceiver(Address receiver);
 
         /// <summary>
-        /// Requests market data for the given symbol from the brokerage.
+        /// Submits a market data subscribe FIX message for the given symbol to the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        void RequestMarketDataSubscribe(Symbol symbol);
+        void MarketDataSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Requests market data for all symbols from the brokerage.
+        /// Submits a market data subscribe all FIX message for all symbols to the brokerage.
         /// </summary>
-        void RequestMarketDataSubscribeAll();
+        void MarketDataSubscribeAll();
 
         /// <summary>
-        /// Request an update on the instrument corresponding to the given symbol from the brokerage,
-        /// and subscribe to updates.
+        /// Submits an update on the instrument for the given symbol, and subscribe to updates FIX
+        /// message, to the brokerage.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <param name="symbol">The symbol of the instrument to update.</param>
         void UpdateInstrumentSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Requests an update on all instruments from the brokerage.
+        /// Submits an update all instruments FIX message to the brokerage.
         /// </summary>
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
-        /// Submits a collateral inquiry to the brokerage.
+        /// Submits a collateral inquiry FIX message to the brokerage.
         /// </summary>
         void CollateralInquiry();
 
         /// <summary>
-        /// Submits a trading session status request to the brokerage.
+        /// Submits a trading session status FIX message to the brokerage.
         /// </summary>
         void TradingSessionStatus();
 
         /// <summary>
-        /// Submits an entry order with a stop-loss and profit target to the brokerage.
+        /// Submits a new order FIX message to the brokerage.
         /// </summary>
-        /// <param name="order">The order to submit.</param>
+        /// <param name="order">The new order.</param>
         void SubmitOrder(IOrder order);
 
         /// <summary>
-        /// Submits an entry order with a stop-loss to the brokerage.
+        /// Submits a new atomic order FIX message to the brokerage.
         /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
+        /// <param name="atomicOrder">The new atomic order.</param>
         void SubmitOrder(IAtomicOrder atomicOrder);
 
         /// <summary>
-        /// Submits a request to modify the stop-loss of an existing order.
+        /// Submits an order cancel replace FIX message to modify the stop-loss of an existing order,
+        /// to the brokerage.
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
         void ModifyOrder(IOrder order, Price modifiedPrice);
 
         /// <summary>
-        /// Submits a request to cancel the given order.
+        /// Submits a cancel order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
         void CancelOrder(IOrder order);
 
         /// <summary>
-        /// Submits a request to close the given position to the brokerage client.
+        /// Submits a new marker order FIX message to close the given position to the brokerage.
         /// </summary>
         /// <param name="position">The position to close.</param>
         void ClosePosition(IPosition position);
@@ -119,13 +120,13 @@ namespace Nautilus.Common.Interfaces
         /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation
         /// controller.
         /// </summary>
-        /// <param name="symbol">The tick symbol.</param>
+        /// <param name="symbolCode">The tick symbol.</param>
         /// <param name="venue">The tick exchange.</param>
         /// <param name="bid">The tick bid price.</param>
         /// <param name="ask">The tick ask price.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         void OnTick(
-            string symbol,
+            string symbolCode,
             Venue venue,
             decimal bid,
             decimal ask,
@@ -195,13 +196,13 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderRejected"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="rejectReason">The order reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderRejected(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string rejectReason,
@@ -211,14 +212,14 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderCancelReject"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
         /// <param name="cancelRejectReason">The order cancel reject reason.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderCancelReject(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string cancelRejectResponseTo,
@@ -229,14 +230,14 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderCancelled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderCancelled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -247,7 +248,7 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderModified"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
@@ -255,7 +256,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="price">The order price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderModified(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -267,7 +268,7 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderWorking"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
@@ -280,7 +281,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="expireTime">The order expire time.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderWorking(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -297,14 +298,14 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderExpired"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
         /// <param name="orderLabel">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderExpired(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -315,7 +316,7 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderFilled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
@@ -327,7 +328,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="averagePrice">The order average price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderFilled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,
@@ -343,7 +344,7 @@ namespace Nautilus.Common.Interfaces
         /// Creates an <see cref="OrderPartiallyFilled"/> event, and sends it to the Portfolio
         /// Service via the Messaging system.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
+        /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
         /// <param name="brokerOrderId">The order broker order identifier.</param>
@@ -356,7 +357,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="averagePrice">The order average price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderPartiallyFilled(
-            string symbol,
+            string symbolCode,
             Venue venue,
             string orderId,
             string brokerOrderId,

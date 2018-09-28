@@ -65,7 +65,7 @@ namespace Nautilus.Data
             if (message.Session.Contains("MD"))
             {
                 this.gateway.UpdateInstrumentsSubscribeAll();
-                this.gateway.RequestMarketDataSubscribeAll();
+                this.gateway.MarketDataSubscribeAll();
             }
         }
 

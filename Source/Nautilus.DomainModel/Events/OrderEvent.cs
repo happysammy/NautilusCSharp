@@ -61,6 +61,6 @@ namespace Nautilus.DomainModel.Events
         /// Returns a string representation of this <see cref="OrderEvent"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.GetType().Name}({this.OrderId}";
+        public override string ToString() => $"{this.GetType().Name}({this.OrderId})";
     }
 }
