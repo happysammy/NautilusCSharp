@@ -68,7 +68,7 @@ namespace Nautilus.Fix
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(
                 NautilusService.FIX,
-                LabelFactory.Component(nameof(FixComponent)));
+                LabelFactory.Component(nameof(FixClient)));
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
             this.config = config;

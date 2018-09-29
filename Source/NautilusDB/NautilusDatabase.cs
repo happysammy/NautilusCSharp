@@ -63,6 +63,7 @@ namespace NautilusDB
 
             while (!this.fixClient.IsConnected)
             {
+                // TODO: Create timeout.
                 // Wait for connection.
             }
 

@@ -51,11 +51,11 @@ namespace Nautilus.Common.Componentry
             this.commandHandler = new CommandHandler(this.Log);
 
             // Setup message handling.
+            this.Receive<StartSystem>(this.OnMessage);
+            this.Receive<ShutdownSystem>(this.OnMessage);
             this.Receive<Envelope<Command>>(this.Open);
             this.Receive<Envelope<Event>>(this.Open);
             this.Receive<Envelope<Document>>(this.Open);
-            this.Receive<StartSystem>(this.OnMessage);
-            this.Receive<ShutdownSystem>(this.OnMessage);
         }
 
         /// <summary>
@@ -125,6 +125,9 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         protected virtual void Start(StartSystem message)
         {
+            // To implement - override method in subclass.
+            // Temporary logging.
+            this.Log.Warning($"No actions taken for start system message...");
         }
 
         /// <summary>
