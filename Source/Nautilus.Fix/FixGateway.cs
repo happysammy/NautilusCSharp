@@ -83,6 +83,22 @@ namespace Nautilus.Fix
         public bool IsConnected => this.fixClient.IsConnected;
 
         /// <summary>
+        /// Connect to the FIX platform.
+        /// </summary>
+        public void Connect()
+        {
+            this.fixClient.Connect();
+        }
+
+        /// <summary>
+        /// Disconnect from the the FIX platform.
+        /// </summary>
+        public void Disconnect()
+        {
+            this.fixClient.Disconnect();
+        }
+
+        /// <summary>
         /// Registers the receiver endpoint to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>

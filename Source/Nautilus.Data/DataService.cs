@@ -50,8 +50,10 @@ namespace Nautilus.Data
             this.gateway = gateway;
 
             // Setup message handling.
-            this.Receive<BrokerageConnected>(this.OnMessage);
-            this.Receive<BrokerageDisconnected>(this.OnMessage);
+            this.Receive<ConnectFixSession>(this.OnMessage);
+            this.Receive<DisconnectFixSession>(this.OnMessage);
+            this.Receive<FixSessionConnected>(this.OnMessage);
+            this.Receive<FixSessionDisconnected>(this.OnMessage);
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
         }
@@ -65,11 +67,21 @@ namespace Nautilus.Data
             this.Log.Information($"Started at {this.StartTime}.");
         }
 
-        private void OnMessage(BrokerageConnected message)
+        private void OnMessage(ConnectFixSession message)
+        {
+            this.gateway.Connect();
+        }
+
+        private void OnMessage(DisconnectFixSession message)
+        {
+            this.gateway.Disconnect();
+        }
+
+        private void OnMessage(FixSessionConnected message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
+            this.Log.Information($"{message.Broker}-{message.SessionId} FIX session is connected.");
 
             if (message.IsMarketDataSession)
             {
@@ -78,11 +90,11 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(BrokerageDisconnected message)
+        private void OnMessage(FixSessionDisconnected message)
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Warning($"{message.Broker} brokerage {message.Session} session has been disconnected.");
+            this.Log.Warning($"{message.Broker}-{message.SessionId} FIX session has been disconnected.");
         }
 
         private void OnMessage(Subscribe<BarType> message)

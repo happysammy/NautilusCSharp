@@ -71,6 +71,7 @@ namespace Nautilus.Fix
                 LabelFactory.Component(nameof(FixClient)));
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
+            this.Account = config.Credentials.Account;
             this.config = config;
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
@@ -87,6 +88,11 @@ namespace Nautilus.Fix
         /// Gets the name of the brokerage.
         /// </summary>
         public Broker Broker { get; }
+
+        /// <summary>
+        /// Gets the account number for FIX component.
+        /// </summary>
+        public string Account { get; }
 
         /// <summary>
         /// Gets the components FIX message handler.
@@ -225,7 +231,7 @@ namespace Nautilus.Fix
 
                 foreach (var receiver in this.connectionEventReceivers)
                 {
-                    receiver.Send(new BrokerageConnected(
+                    receiver.Send(new FixSessionConnected(
                         this.Broker,
                         sessionId.ToString(),
                         this.NewGuid(),
@@ -248,7 +254,7 @@ namespace Nautilus.Fix
 
                 foreach (var receiver in this.connectionEventReceivers)
                 {
-                    receiver.Send(new BrokerageDisconnected(
+                    receiver.Send(new FixSessionDisconnected(
                         this.Broker,
                         sessionId.ToString(),
                         this.NewGuid(),

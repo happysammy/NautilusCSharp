@@ -85,8 +85,10 @@ namespace Nautilus.Execution
                         newOrdersPerSecond))));
 
             // Setup message handling.
-            this.Receive<BrokerageConnected>(this.OnMessage);
-            this.Receive<BrokerageDisconnected>(this.OnMessage);
+            this.Receive<ConnectFixSession>(this.OnMessage);
+            this.Receive<DisconnectFixSession>(this.OnMessage);
+            this.Receive<FixSessionConnected>(this.OnMessage);
+            this.Receive<FixSessionDisconnected>(this.OnMessage);
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
@@ -118,11 +120,21 @@ namespace Nautilus.Execution
             });
         }
 
-        private void OnMessage(BrokerageConnected message)
+        private void OnMessage(ConnectFixSession message)
         {
-            this.Log.Information($"{message.Broker} brokerage {message.Session} session is connected.");
+            this.gateway.Connect();
+        }
 
-            if (message.Session.Contains("MD"))
+        private void OnMessage(DisconnectFixSession message)
+        {
+            this.gateway.Disconnect();
+        }
+
+        private void OnMessage(FixSessionConnected message)
+        {
+            this.Log.Information($"{message.Broker}-{message.SessionId} FIX session is connected.");
+
+            if (message.SessionId.Contains("MD"))
             {
                 this.gateway.UpdateInstrumentsSubscribeAll();
             }
@@ -133,9 +145,9 @@ namespace Nautilus.Execution
             }
         }
 
-        private void OnMessage(BrokerageDisconnected message)
+        private void OnMessage(FixSessionDisconnected message)
         {
-            this.Log.Warning($"{message.Broker} brokerage {message.Session} session has been disconnected.");
+            this.Log.Warning($"{message.Broker}-{message.SessionId} FIX session has been disconnected.");
         }
 
         private void OnMessage(CollateralInquiry message)

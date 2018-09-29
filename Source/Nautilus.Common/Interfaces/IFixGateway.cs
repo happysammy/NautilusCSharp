@@ -34,6 +34,16 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
+        /// Connect to the FIX platform.
+        /// </summary>
+        void Connect();
+
+        /// <summary>
+        /// Disconnect from the FIX platform.
+        /// </summary>
+        void Disconnect();
+
+        /// <summary>
         /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
@@ -144,7 +154,10 @@ namespace Nautilus.Common.Interfaces
         /// <param name="instruments">The instruments collection.</param>
         /// <param name="responseId">The response identifier.</param>
         /// <param name="result">The result.</param>
-        void OnInstrumentsUpdate(IReadOnlyCollection<Instrument> instruments, string responseId, string result);
+        void OnInstrumentsUpdate(
+            IReadOnlyCollection<Instrument> instruments,
+            string responseId,
+            string result);
 
         /// <summary>
         /// Event handler for receiving FIX business messages.
