@@ -95,8 +95,6 @@ namespace Nautilus.Data
             Debug.NotNull(message, nameof(message));
 
             this.CreateTrimBarDataJob();
-
-            this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(JobCreated message)

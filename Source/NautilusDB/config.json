@@ -1,6 +1,6 @@
 ﻿{
   "logging": {
-    "logLevel": "Debug"
+    "logLevel": "Information"
   },
 
   "database": {

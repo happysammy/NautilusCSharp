@@ -401,13 +401,7 @@ namespace Nautilus.Data.Aggregators
                 aggregator.Value.Send(closeBar1);
                 aggregator.Value.Send(closeBar2);
                 aggregator.Value.Send(closeBar3);
-
-                // Log for testing only.
-                // this.Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
             }
-
-            // Log for testing only.
-            this.Log.Warning($"{this.barTriggers}");
         }
 
         /// <summary>

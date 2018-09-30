@@ -21,7 +21,6 @@ namespace Nautilus.Execution
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
-    using Nautilus.Scheduler;
     using Nautilus.Scheduler.Commands;
     using Nautilus.Scheduler.Events;
     using NodaTime;
