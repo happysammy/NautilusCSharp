@@ -81,7 +81,7 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Information($"{message.Broker}-{message.SessionId} FIX session is connected.");
+            this.Log.Information($"{message.SessionId} session is connected.");
 
             if (message.IsMarketDataSession)
             {
@@ -94,7 +94,7 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Warning($"{message.Broker}-{message.SessionId} FIX session has been disconnected.");
+            this.Log.Warning($"{message.SessionId} session has been disconnected.");
         }
 
         private void OnMessage(Subscribe<BarType> message)
