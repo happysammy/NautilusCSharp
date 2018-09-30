@@ -130,7 +130,7 @@ namespace Nautilus.Scheduler
                 }
                 else
                 {
-                    this.Log.Warning($"Job resume failed for {message.JobKey}.");
+                    this.Log.Error($"Job resume failed for {message.JobKey}.");
                 }
             }
             catch (JobNotFoundException ex)
@@ -143,38 +143,21 @@ namespace Nautilus.Scheduler
         {
             Debug.NotNull(message, nameof(message));
 
-            var sender = message.Sender;
-
             try
             {
                 var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
                 if (deleted.Result)
                 {
-                    sender.Send(new JobRemoved(
-                        message.JobKey,
-                        message.TriggerKey,
-                        message.Job,
-                        this.NewGuid(),
-                        this.TimeNow()));
+                    this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
                 }
                 else
                 {
-                    sender.Send(new RemoveJobFail(
-                        message.JobKey,
-                        message.TriggerKey,
-                        new JobNotFoundException(),
-                        this.NewGuid(),
-                        this.TimeNow()));
+                    this.Log.Error($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason=JobNotFound");
                 }
             }
             catch (JobNotFoundException ex)
             {
-                sender.Send(new RemoveJobFail(
-                    message.JobKey,
-                    message.TriggerKey,
-                    ex,
-                    this.NewGuid(),
-                    this.TimeNow()));
+                this.Log.Error($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={ex.Message}");
             }
         }
     }

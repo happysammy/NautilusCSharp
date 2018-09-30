@@ -225,7 +225,11 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-            this.ExpectMsg<RemoveJobFail>();
+            CustomAssert.EventuallyContains(
+                "Scheduler: Remove job failed Key=DEFAULT.bogus-job-key, TriggerKey=DEFAULT.bogus-trigger, Reason=JobNotFound",
+                this.logger,
+                EventuallyContains.TimeoutMilliseconds,
+                EventuallyContains.PollIntervalMilliseconds);
         }
     }
 }

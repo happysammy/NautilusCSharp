@@ -15,6 +15,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Messages.Commands;

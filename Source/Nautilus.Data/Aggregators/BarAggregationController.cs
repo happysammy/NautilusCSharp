@@ -16,6 +16,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
+    using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
@@ -79,8 +80,6 @@ namespace Nautilus.Data.Aggregators
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
             this.Receive<JobCreated>(this.OnMessage);
-            this.Receive<JobRemoved>(this.OnMessage);
-            this.Receive<RemoveJobFail>(this.OnMessage);
             this.Receive<BarJob>(this.OnMessage);
             this.Receive<MarketStatusJob>(this.OnMessage);
             this.Receive<Tick>(this.OnMessage);
@@ -275,9 +274,9 @@ namespace Nautilus.Data.Aggregators
 
         /// <summary>
         /// Handles the message by cancelling the bar jobs with the scheduler, then
-        /// forwarding the message to the <see cref="BarAggregator"/> for the relevant symbol.
+        /// forwards the message to the <see cref="BarAggregator"/> for the relevant symbol.
         /// </summary>
-        /// <param name="message">The received message.</param>
+        /// <param name="message">The received unsubscribe message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
         {
             Debug.NotNull(message, nameof(message));
@@ -288,6 +287,7 @@ namespace Nautilus.Data.Aggregators
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
+                // Nothing to unsubscribe from.
                 return;
             }
 
@@ -342,20 +342,6 @@ namespace Nautilus.Data.Aggregators
             }
 
             this.Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
-        }
-
-        private void OnMessage(JobRemoved message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
-        }
-
-        private void OnMessage(RemoveJobFail message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
         }
 
         /// <summary>
@@ -413,11 +399,12 @@ namespace Nautilus.Data.Aggregators
                 aggregator.Value.Send(closeBar2);
                 aggregator.Value.Send(closeBar3);
 
-                // Log for unit testing only.
-                // Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
+                // Log for testing only.
+                // this.Log.Debug($"Received {job} at {this.TimeNow().ToIsoString()}.");
             }
 
-            // Log.Warning($"Does not contain aggregator to close bar for {job}.");
+            // Log for testing only.
+            this.Log.Warning($"Does not contain aggregator to close bar for {job}.");
         }
 
         /// <summary>

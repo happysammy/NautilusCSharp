@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MarketClosed.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MarketOpened.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages.Events
+namespace Nautilus.Common.Messages.Events
 {
     using System;
     using Nautilus.Core;
@@ -15,17 +15,17 @@ namespace Nautilus.Data.Messages.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where a financial market has closed.
+    /// Represents an event where a financial market has opened.
     /// </summary>
     [Immutable]
-    public class MarketClosed : Event
+    public class MarketOpened : Event
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketClosed"/> class.
+        /// Initializes a new instance of the <see cref="MarketOpened"/> class.
         /// </summary>
         /// <param name="id">The event identifier.</param>
         /// <param name="timestamp">The event timestamp.</param>
-        public MarketClosed(Guid id, ZonedDateTime timestamp)
+        public MarketOpened(Guid id, ZonedDateTime timestamp)
             : base(id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
