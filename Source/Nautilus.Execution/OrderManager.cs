@@ -52,10 +52,12 @@ namespace Nautilus.Execution
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
+
+            // Event messages.
             this.Receive<Event>(this.OnMessage);
         }
 

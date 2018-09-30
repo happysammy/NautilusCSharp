@@ -71,13 +71,15 @@ namespace Nautilus.Data
             this.resolutionsPersisting = new ReadOnlyList<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<CollectData<BarType>>(this.OnMessage);
             this.Receive<TrimBarDataJob>(this.OnMessage);
+
+            // Event messages.
             this.Receive<JobCreated>(this.OnMessage);
-            this.Receive<JobRemoved>(this.OnMessage);
-            this.Receive<RemoveJobFail>(this.OnMessage);
+
+            // Document messages.
             this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
             this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
             this.Receive<DataPersisted<BarType>>(this.OnMessage);
@@ -101,21 +103,7 @@ namespace Nautilus.Data
         {
             Debug.NotNull(message, nameof(message));
 
-            this.Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
-        }
-
-        private void OnMessage(JobRemoved message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
-        }
-
-        private void OnMessage(RemoveJobFail message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Warning($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={message.Reason.Message}");
+            // Do nothing
         }
 
         private void OnMessage(Subscribe<BarType> message)

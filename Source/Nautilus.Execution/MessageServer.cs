@@ -78,11 +78,13 @@ namespace Nautilus.Execution
                         serverAddress,
                         eventsPort))));
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
             this.Receive<CollateralInquiry>(this.OnMessage);
+
+            // Event messages.
             this.Receive<Event>(this.OnMessage);
         }
 

@@ -75,15 +75,29 @@ namespace Nautilus.Data.Aggregators
 
             this.isMarketOpen = this.IsFxMarketOpen();
 
-            // Setup message handling.
-            this.Receive<StartSystem>(this.OnMessage);
+            // Command messages.
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
-            this.Receive<JobCreated>(this.OnMessage);
             this.Receive<BarJob>(this.OnMessage);
             this.Receive<MarketStatusJob>(this.OnMessage);
+
+            // Event messages.
+            this.Receive<JobCreated>(this.OnMessage);
             this.Receive<Tick>(this.OnMessage);
             this.Receive<BarClosed>(this.OnMessage);
+        }
+
+        /// <summary>
+        /// Start method called when the <see cref="StartSystem"/> message is received.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected override void Start(StartSystem message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Log.Information($"Started at {this.StartTime}.");
+            this.CreateMarketOpenedJob();
+            this.CreateMarketClosedJob();
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
@@ -145,7 +159,7 @@ namespace Nautilus.Data.Aggregators
 
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"market_opened", "bar_aggregation")
+                .WithIdentity("market_opened", "bar_aggregation")
                 .WithSchedule(scheduleBuilder)
                 .Build();
 
@@ -170,7 +184,7 @@ namespace Nautilus.Data.Aggregators
 
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"market_closed", "bar_aggregation")
+                .WithIdentity("market_closed", "bar_aggregation")
                 .WithSchedule(scheduleBuilder)
                 .Build();
 
@@ -194,15 +208,6 @@ namespace Nautilus.Data.Aggregators
                 this.TimeNow(),
                 (IsoDayOfWeek.Saturday, 20, 00),
                 (IsoDayOfWeek.Sunday, 21, 00));
-        }
-
-        private void OnMessage(StartSystem message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Log.Information("Starting...");
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
         }
 
         /// <summary>
@@ -340,8 +345,6 @@ namespace Nautilus.Data.Aggregators
                         barSpec, new KeyValuePair<JobKey, TriggerKey>(message.JobKey, message.TriggerKey));
                 }
             }
-
-            this.Log.Information($"Job created Key={message.JobKey}, TriggerKey={message.TriggerKey}");
         }
 
         /// <summary>
@@ -404,7 +407,7 @@ namespace Nautilus.Data.Aggregators
             }
 
             // Log for testing only.
-            this.Log.Warning($"Does not contain aggregator to close bar for {job}.");
+            this.Log.Warning($"{this.barTriggers}");
         }
 
         /// <summary>

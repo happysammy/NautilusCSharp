@@ -92,6 +92,8 @@ namespace Nautilus.Scheduler
                     message.Message,
                     this.NewGuid(),
                     this.TimeNow()));
+
+                this.Log.Information($"Job created Key={message.Trigger.JobKey}, TriggerKey={message.Trigger.Key}");
             });
         }
 

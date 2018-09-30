@@ -11,7 +11,6 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Events;
@@ -43,18 +42,6 @@ namespace Nautilus.Data.Publishers
 
             // Setup message handling.
             this.Receive<BarClosed>(this.OnMessage);
-            this.Receive<Subscribe<Symbol>>(this.OnMessage);
-            this.Receive<Unsubscribe<Symbol>>(this.OnMessage);
-        }
-
-        private void OnMessage(Subscribe<Symbol> message)
-        {
-            // Not implemented.
-        }
-
-        private void OnMessage(Unsubscribe<Symbol> message)
-        {
-            // Not implemented.
         }
 
         private void OnMessage(BarClosed message)

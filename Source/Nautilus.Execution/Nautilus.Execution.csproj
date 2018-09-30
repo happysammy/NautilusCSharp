@@ -17,8 +17,14 @@
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
         <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
+        <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Quartz, Version=3.0.6.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\quartz\3.0.6\lib\netstandard2.0\Quartz.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

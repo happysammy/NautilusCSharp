@@ -57,13 +57,15 @@ namespace Nautilus.Data
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
 
-            // Setup message handling.
+            // Command messages.
+            this.Receive<TrimBarData>(this.OnMessage);
+            this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
+            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
+
+            // Document messages.
             this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
             this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
             this.Receive<DataDelivery<IReadOnlyCollection<Instrument>>>(this.OnMessage);
-            this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<TrimBarData>(this.OnMessage);
         }
 
         /// <summary>
@@ -73,6 +75,45 @@ namespace Nautilus.Data
         {
             this.barRepository.SnapshotDatabase();
             base.PostStop();
+        }
+
+        private void OnMessage(TrimBarData message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            foreach (var resolution in message.Resolutions)
+            {
+                this.barRepository
+                    .TrimToDays(resolution, message.RollingWindowSize)
+                    .OnSuccess(result => this.Log.Information(result.Message))
+                    .OnFailure(result => this.Log.Error(result.Message));
+            }
+        }
+
+        private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
+
+            sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
+        }
+
+        private void OnMessage(QueryRequest<BarType> message, IActorRef sender)
+        {
+            Debug.NotNull(message, nameof(message));
+            Debug.NotNull(sender, nameof(sender));
+
+            var barDataQuery = this.barRepository.Find(
+                message.DataType,
+                message.FromDateTime,
+                message.ToDateTime);
+
+            sender.Tell(
+                new QueryResponse<BarDataFrame>(
+                    barDataQuery,
+                    this.NewGuid(),
+                    this.TimeNow()));
         }
 
         private void OnMessage(DataDelivery<BarClosed> message)
@@ -124,45 +165,6 @@ namespace Nautilus.Data
             {
                 this.instrumentRepository
                     .Add(instrument, this.TimeNow())
-                    .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Error(result.Message));
-            }
-        }
-
-        private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
-
-            sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
-        }
-
-        private void OnMessage(QueryRequest<BarType> message, IActorRef sender)
-        {
-            Debug.NotNull(message, nameof(message));
-            Debug.NotNull(sender, nameof(sender));
-
-            var barDataQuery = this.barRepository.Find(
-                message.DataType,
-                message.FromDateTime,
-                message.ToDateTime);
-
-            sender.Tell(
-                new QueryResponse<BarDataFrame>(
-                    barDataQuery,
-                    this.NewGuid(),
-                    this.TimeNow()));
-        }
-
-        private void OnMessage(TrimBarData message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            foreach (var resolution in message.Resolutions)
-            {
-                this.barRepository
-                    .TrimToDays(resolution, message.RollingWindowSize)
                     .OnSuccess(result => this.Log.Information(result.Message))
                     .OnFailure(result => this.Log.Error(result.Message));
             }

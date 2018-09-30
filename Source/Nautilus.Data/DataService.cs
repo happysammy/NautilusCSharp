@@ -8,15 +8,21 @@
 
 namespace Nautilus.Data
 {
+    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
+    using Nautilus.Common.Messages.Jobs;
+    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Scheduler.Commands;
+    using Nautilus.Scheduler.Events;
+    using Quartz;
 
     /// <summary>
     /// The main macro object which contains the <see cref="DataService"/> and presents its API.
@@ -49,13 +55,16 @@ namespace Nautilus.Data
 
             this.gateway = gateway;
 
-            // Setup message handling.
-            this.Receive<ConnectFixSession>(this.OnMessage);
-            this.Receive<DisconnectFixSession>(this.OnMessage);
-            this.Receive<FixSessionConnected>(this.OnMessage);
-            this.Receive<FixSessionDisconnected>(this.OnMessage);
+            // Command messages.
+            this.Receive<ConnectFixJob>(this.OnMessage);
+            this.Receive<DisconnectFixJob>(this.OnMessage);
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+
+            // Event messages.
+            this.Receive<JobCreated>(this.OnMessage);
+            this.Receive<FixSessionConnected>(this.OnMessage);
+            this.Receive<FixSessionDisconnected>(this.OnMessage);
         }
 
         /// <summary>
@@ -65,16 +74,83 @@ namespace Nautilus.Data
         protected override void Start(StartSystem message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
+
+            this.CreateConnectFixJob();
+            this.CreateDisconnectFixJob();
         }
 
-        private void OnMessage(ConnectFixSession message)
+        private void CreateConnectFixJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"connect_fix", "fix44")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
+                new ConnectFixJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
+        }
+
+        private void CreateDisconnectFixJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"disconnect_fix", "fix44")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
+                new DisconnectFixJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
+        }
+
+        private void OnMessage(ConnectFixJob message)
         {
             this.gateway.Connect();
         }
 
-        private void OnMessage(DisconnectFixSession message)
+        private void OnMessage(DisconnectFixJob message)
         {
             this.gateway.Disconnect();
+        }
+
+        private void OnMessage(Subscribe<BarType> message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Send(DataServiceAddress.DataCollectionManager, message);
+        }
+
+        private void OnMessage(Unsubscribe<BarType> message)
+        {
+            Debug.NotNull(message, nameof(message));
+
+            this.Send(DataServiceAddress.DataCollectionManager, message);
         }
 
         private void OnMessage(FixSessionConnected message)
@@ -97,18 +173,9 @@ namespace Nautilus.Data
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
         }
 
-        private void OnMessage(Subscribe<BarType> message)
+        private void OnMessage(JobCreated message)
         {
-            Debug.NotNull(message, nameof(message));
-
-            this.Send(DataServiceAddress.DataCollectionManager, message);
-        }
-
-        private void OnMessage(Unsubscribe<BarType> message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Send(DataServiceAddress.DataCollectionManager, message);
+            // Do nothing.
         }
     }
 }

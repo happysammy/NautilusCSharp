@@ -12,7 +12,6 @@ namespace Nautilus.Data.Collectors
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
@@ -59,16 +58,12 @@ namespace Nautilus.Data.Collectors
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;
 
-            // Setup message handling.
-            this.Receive<StartSystem>(this.OnMessage);
+            // Command messages.
             this.Receive<CollectData<BarType>>(this.OnMessage);
+
+            // Document messages.
             this.Receive<DataStatusResponse<ZonedDateTime>>(this.OnMessage);
             this.Receive<DataPersisted<BarType>>(this.OnMessage);
-        }
-
-        private void OnMessage(StartSystem message)
-        {
-            Debug.NotNull(message, nameof(message));
         }
 
         private void OnMessage(CollectData<BarType> message)
@@ -86,7 +81,7 @@ namespace Nautilus.Data.Collectors
 
             foreach (var csv in this.dataReader.GetAllCsvFilesOrdered().Value)
             {
-                // TODO: Changed to just read all bars to get all data in.
+                // Changed to just read all bars to get all data in.
                 var csvQuery = this.dataReader.GetAllBars(csv);
 
                 if (csvQuery.IsSuccess)

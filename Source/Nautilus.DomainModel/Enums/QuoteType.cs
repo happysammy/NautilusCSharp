@@ -24,13 +24,13 @@ namespace Nautilus.DomainModel.Enums
         Ask = 1,
 
         /// <summary>
-        /// The last price quote type.
-        /// </summary>
-        Last = 2,
-
-        /// <summary>
         /// The mid price quote type.
         /// </summary>
-        Mid = 3,
+        Mid = 2,
+
+        /// <summary>
+        /// The last price quote type.
+        /// </summary>
+        Last = 3,
     }
 }

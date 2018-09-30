@@ -47,7 +47,7 @@ namespace Nautilus.Execution
 
             this.gateway = gateway;
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
@@ -127,7 +127,7 @@ namespace Nautilus.Execution
         {
             if (!this.gateway.IsConnected)
             {
-                this.Log.Warning("Cannot process orders (not connected to broker).");
+                this.Log.Error("Cannot process command (not connected to broker).");
 
                 return false;
             }

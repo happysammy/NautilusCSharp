@@ -8,18 +8,24 @@
 
 namespace Nautilus.Execution
 {
+    using System;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
+    using Nautilus.Scheduler;
+    using Nautilus.Scheduler.Commands;
+    using Nautilus.Scheduler.Events;
     using NodaTime;
+    using Quartz;
 
     /// <summary>
     /// The service context which handles all execution related operations.
@@ -84,17 +90,20 @@ namespace Nautilus.Execution
                         Duration.FromSeconds(1),
                         newOrdersPerSecond))));
 
-            // Setup message handling.
-            this.Receive<ConnectFixSession>(this.OnMessage);
-            this.Receive<DisconnectFixSession>(this.OnMessage);
-            this.Receive<FixSessionConnected>(this.OnMessage);
-            this.Receive<FixSessionDisconnected>(this.OnMessage);
+            // Command messages.
+            this.Receive<ConnectFixJob>(this.OnMessage);
+            this.Receive<DisconnectFixJob>(this.OnMessage);
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
             this.Receive<SubmitTrade>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
             this.Receive<CloseTradeUnit>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
+
+            // Event messages.
+            this.Receive<JobCreated>(this.OnMessage);
+            this.Receive<FixSessionConnected>(this.OnMessage);
+            this.Receive<FixSessionDisconnected>(this.OnMessage);
         }
 
         /// <summary>
@@ -104,6 +113,9 @@ namespace Nautilus.Execution
         protected override void Start(StartSystem message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
+
+            this.CreateConnectFixJob();
+            this.CreateDisconnectFixJob();
         }
 
         /// <summary>
@@ -120,34 +132,64 @@ namespace Nautilus.Execution
             });
         }
 
-        private void OnMessage(ConnectFixSession message)
+        private void CreateConnectFixJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"connect_fix", "fix44")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
+                new ConnectFixJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
+        }
+
+        private void CreateDisconnectFixJob()
+        {
+            var scheduleBuilder = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
+
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity($"disconnect_fix", "fix44")
+                .WithSchedule(scheduleBuilder)
+                .Build();
+
+            var createJob = new CreateJob(
+                new ActorEndpoint(this.Self),
+                new ActorEndpoint(this.Self),
+                new DisconnectFixJob(),
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
+        }
+
+        private void OnMessage(ConnectFixJob message)
         {
             this.gateway.Connect();
         }
 
-        private void OnMessage(DisconnectFixSession message)
+        private void OnMessage(DisconnectFixJob message)
         {
             this.gateway.Disconnect();
-        }
-
-        private void OnMessage(FixSessionConnected message)
-        {
-            this.Log.Information($"{message.SessionId} session is connected.");
-
-            if (message.IsMarketDataSession)
-            {
-                this.gateway.UpdateInstrumentsSubscribeAll();
-            }
-            else
-            {
-                this.gateway.CollateralInquiry();
-                this.gateway.TradingSessionStatus();
-            }
-        }
-
-        private void OnMessage(FixSessionDisconnected message)
-        {
-            this.Log.Warning($"{message.SessionId} session has been disconnected.");
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -208,6 +250,31 @@ namespace Nautilus.Execution
             {
                 this.commandThrottler.Send(message);
             });
+        }
+
+        private void OnMessage(FixSessionConnected message)
+        {
+            this.Log.Information($"{message.SessionId} session is connected.");
+
+            if (message.IsMarketDataSession)
+            {
+                this.gateway.UpdateInstrumentsSubscribeAll();
+            }
+            else
+            {
+                this.gateway.CollateralInquiry();
+                this.gateway.TradingSessionStatus();
+            }
+        }
+
+        private void OnMessage(FixSessionDisconnected message)
+        {
+            this.Log.Warning($"{message.SessionId} session has been disconnected.");
+        }
+
+        private void OnMessage(JobCreated message)
+        {
+            // Do nothing.
         }
     }
 }

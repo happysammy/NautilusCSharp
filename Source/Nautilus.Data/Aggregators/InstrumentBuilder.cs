@@ -58,23 +58,23 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         public IList<string> Changes { get; } = new List<string>();
 
-        private Symbol Symbol { get; set; }
+        private Symbol Symbol { get; }
 
-        private BrokerSymbol BrokerSymbol { get; set; }
+        private BrokerSymbol BrokerSymbol { get; }
 
-        private CurrencyCode QuoteCurrency { get; set; }
+        private CurrencyCode QuoteCurrency { get; }
 
-        private SecurityType SecurityType { get; set; }
+        private SecurityType SecurityType { get; }
 
-        private int TickDecimals { get; set; }
+        private int TickDecimals { get; }
 
-        private decimal TickSize { get; set; }
+        private decimal TickSize { get; }
 
         private decimal TickValue { get; set; }
 
         private decimal TargetDirectSpread { get; set; }
 
-        private int RoundLotSize { get; set; }
+        private int RoundLotSize { get; }
 
         private int ContractSize { get; set; }
 

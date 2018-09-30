@@ -69,10 +69,12 @@ namespace Nautilus.Data.Aggregators
 
             this.isMarketOpen = isMarketOpen;
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<CloseBar>(this.OnMessage);
             this.Receive<Subscribe<BarType>>(this.OnMessage);
             this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+
+            // Event messages.
             this.Receive<MarketOpened>(this.OnMessage);
             this.Receive<MarketClosed>(this.OnMessage);
             this.Receive<Tick>(this.OnMessage);
