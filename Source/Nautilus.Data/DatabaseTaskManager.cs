@@ -124,7 +124,7 @@ namespace Nautilus.Data
                 .Add(
                     message.Data.BarType,
                     message.Data.Bar)
-                .OnSuccess(result => this.Log.Debug(result.Message))
+                .OnSuccess(result => this.Log.Verbose(result.Message))
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 

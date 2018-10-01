@@ -102,7 +102,7 @@ namespace Nautilus.Common.Messaging
                 this.messageCount++;
                 this.messageStore.Send(envelope);
 
-                this.log.Debug($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+                this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
             });
         }
 

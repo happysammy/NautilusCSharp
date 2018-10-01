@@ -182,7 +182,7 @@ namespace Nautilus.Common.Componentry
 
             this.Self.Tell(message);
 
-            this.Log.Debug($"Received {message}.");
+            this.Log.Verbose($"Received {message}.");
         }
     }
 }
