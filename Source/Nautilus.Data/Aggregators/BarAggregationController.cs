@@ -322,7 +322,6 @@ namespace Nautilus.Data.Aggregators
                 var removeJob = new RemoveJob(
                     job.Key,
                     job.Value,
-                    "null job",
                     new ActorEndpoint(this.Self),
                     this.NewGuid(),
                     this.TimeNow());

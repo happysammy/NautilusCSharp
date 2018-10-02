@@ -8,6 +8,7 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
@@ -16,7 +17,7 @@ namespace Nautilus.Data.Messages.Jobs
     /// Represents a bar job for the given symbol and bar specification (to close a bar).
     /// </summary>
     [Immutable]
-    public sealed class BarJob
+    public sealed class BarJob : IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarJob"/> class.

@@ -34,7 +34,7 @@ namespace Nautilus.Scheduler
         /// <param name="container">The setup container.</param>
         public Scheduler(IComponentryContainer container)
             : base(
-                NautilusService.Data,
+                NautilusService.Scheduling,
                 LabelFactory.Component(nameof(Scheduler)),
                 container)
         {
@@ -46,7 +46,7 @@ namespace Nautilus.Scheduler
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
 
-            // Setup message handling.
+            // Command messages.
             this.Receive<CreateJob>(this.OnMessage);
             this.Receive<RemoveJob>(this.OnMessage);
             this.Receive<PauseJob>(this.OnMessage);
@@ -77,10 +77,10 @@ namespace Nautilus.Scheduler
 
             this.Execute(() =>
             {
-                var receiver = message.Receiver;
+                var receiver = message.JobReceiver;
                 var job = Job.CreateBuilderWithData(
                         receiver,
-                        message.Message)
+                        message.Job)
                     .WithIdentity(message.Trigger.JobKey)
                     .Build();
 
@@ -89,7 +89,7 @@ namespace Nautilus.Scheduler
                 receiver.Send(new JobCreated(
                     message.Trigger.JobKey,
                     message.Trigger.Key,
-                    message.Message,
+                    message.Job,
                     this.NewGuid(),
                     this.TimeNow()));
 

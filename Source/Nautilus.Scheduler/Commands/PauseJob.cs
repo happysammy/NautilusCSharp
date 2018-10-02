@@ -17,7 +17,7 @@ namespace Nautilus.Scheduler.Commands
     using Quartz;
 
     /// <summary>
-    /// Represents a job command message to pause a job.
+    /// Represents a command to pause a job.
     /// </summary>
     [Immutable]
     public sealed class PauseJob : Command

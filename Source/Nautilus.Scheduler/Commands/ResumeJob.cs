@@ -17,7 +17,7 @@ namespace Nautilus.Scheduler.Commands
     using Quartz;
 
     /// <summary>
-    /// Represents a job command message to resume a job.
+    /// Represents a command to resume a job.
     /// </summary>
     [Immutable]
     public sealed class ResumeJob : Command

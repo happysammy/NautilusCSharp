@@ -40,7 +40,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Executes the job task.
         /// </summary>
-        /// <param name="context">THe context.</param>
+        /// <param name="context">The context.</param>
         /// <returns>The task completed token.</returns>
         public Task Execute(IJobExecutionContext context)
         {

@@ -8,6 +8,7 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace Nautilus.Data.Messages.Jobs
     /// to be equal to the size of the given rolling window.
     /// </summary>
     [Immutable]
-    public class TrimBarDataJob
+    public class TrimBarDataJob : IScheduledJob
     {
     }
 }

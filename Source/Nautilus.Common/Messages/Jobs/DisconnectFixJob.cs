@@ -14,7 +14,7 @@ namespace Nautilus.Common.Messages.Jobs
     /// Represents a job to disconnect the FIX sessions.
     /// </summary>
     [Immutable]
-    public sealed class DisconnectFixJob
+    public sealed class DisconnectFixJob : IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DisconnectFixJob"/> class.

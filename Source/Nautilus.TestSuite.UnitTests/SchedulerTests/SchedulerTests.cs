@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Scheduler;
     using Nautilus.Scheduler.Commands;
@@ -68,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var createJob = new CreateJob(
                 this.testActor,
                 this.testActor,
-                "some_job",
+                new TestJob(),
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -91,14 +92,14 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"unit_test_job", "unit_testing")
+                .WithIdentity("unit_test_job", "unit_testing")
                 .WithSchedule(scheduleBuilder)
                 .Build();
 
             var createJob = new CreateJob(
                 this.testActor,
                 this.testActor,
-                "some_job",
+                new TestJob(),
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -109,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Assert
             LogDumper.Dump(this.logger, this.output);
             this.ExpectMsg<JobCreated>();
-            this.ExpectMsg<string>();
+            this.ExpectMsg<TestJob>();
         }
 
         [Fact]
@@ -129,7 +130,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var createJob = new CreateJob(
                 this.testActor,
                 this.testActor,
-                "some_job",
+                new TestJob(),
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -173,7 +174,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var createJob = new CreateJob(
                 this.testActor,
                 this.testActor,
-                "some_job",
+                new TestJob(),
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -215,7 +216,6 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             var removeJob = new RemoveJob(
                 new JobKey("bogus-job-key"),
                 new TriggerKey("bogus-trigger"),
-                "some_job",
                 this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -230,6 +230,14 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
                 this.logger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
+        }
+
+        // Only used within this class for testing purposes.
+        private class TestJob : IScheduledJob
+        {
+            public override int GetHashCode() => 555;
+
+            public override string ToString() => "test_job";
         }
     }
 }

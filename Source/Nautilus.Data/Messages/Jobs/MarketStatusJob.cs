@@ -8,13 +8,14 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Core.Annotations;
 
     /// <summary>
     /// A scheduled job to check for and potentially change market status.
     /// </summary>
     [Immutable]
-    public sealed class MarketStatusJob
+    public sealed class MarketStatusJob : IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketStatusJob"/> class.

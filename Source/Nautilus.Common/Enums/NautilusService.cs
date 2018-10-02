@@ -24,9 +24,9 @@ namespace Nautilus.Common.Enums
         Core,
 
         /// <summary>
-        /// The scheduler service context.
+        /// The scheduling service context.
         /// </summary>
-        Scheduler,
+        Scheduling,
 
         /// <summary>
         /// The data service context.
@@ -39,12 +39,12 @@ namespace Nautilus.Common.Enums
         Messaging,
 
         /// <summary>
-        /// The alpha model service context.
+        /// The alpha service context.
         /// </summary>
-        AlphaModel,
+        Alpha,
 
         /// <summary>
-        /// The black box core service context.
+        /// The black box service context.
         /// </summary>
         BlackBox,
 

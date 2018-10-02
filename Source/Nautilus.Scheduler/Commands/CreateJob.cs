@@ -10,6 +10,7 @@ namespace Nautilus.Scheduler.Commands
 {
     using System;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -17,7 +18,7 @@ namespace Nautilus.Scheduler.Commands
     using Quartz;
 
     /// <summary>
-    /// The job command to create a new job..
+    /// Represents a command to create a new job.
     /// </summary>
     [Immutable]
     public sealed class CreateJob : Command
@@ -25,48 +26,48 @@ namespace Nautilus.Scheduler.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateJob"/> class.
         /// </summary>
-        /// <param name="sender">The sender of the job.</param>
-        /// <param name="receiver">The receiver for the job.</param>
-        /// <param name="message">The job message to send.</param>
+        /// <param name="jobSender">The sender of the job.</param>
+        /// <param name="jobReceiver">The receiver for the job.</param>
+        /// <param name="job">The job to schedule.</param>
         /// <param name="trigger">The job trigger.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public CreateJob(
-            IEndpoint sender,
-            IEndpoint receiver,
-            object message,
+            IEndpoint jobSender,
+            IEndpoint jobReceiver,
+            IScheduledJob job,
             ITrigger trigger,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(sender, nameof(sender));
-            Debug.NotNull(receiver, nameof(receiver));
-            Debug.NotNull(message, nameof(message));
+            Debug.NotNull(jobSender, nameof(jobSender));
+            Debug.NotNull(jobReceiver, nameof(jobReceiver));
+            Debug.NotNull(job, nameof(job));
             Debug.NotNull(trigger, nameof(trigger));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Sender = sender;
-            this.Receiver = receiver;
-            this.Message = message;
+            this.JobSender = jobSender;
+            this.JobReceiver = jobReceiver;
+            this.Job = job;
             this.Trigger = trigger;
         }
 
         /// <summary>
         /// Gets the jobs sender.
         /// </summary>
-        public IEndpoint Sender { get; }
+        public IEndpoint JobSender { get; }
 
         /// <summary>
         /// Gets the jobs destination actor.
         /// </summary>
-        public IEndpoint Receiver { get; }
+        public IEndpoint JobReceiver { get; }
 
         /// <summary>
         /// Gets the jobs message.
         /// </summary>
-        public object Message { get; }
+        public IScheduledJob Job { get; }
 
         /// <summary>
         /// Gets the jobs trigger.
