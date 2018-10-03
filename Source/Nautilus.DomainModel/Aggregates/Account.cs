@@ -39,7 +39,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// any struct argument is the default value.</exception>
         public Account(
             AccountId accountId,
-            Broker broker,
+            Brokerage broker,
             string accountNumber,
             string username,
             string password,
@@ -76,7 +76,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the accounts broker name.
         /// </summary>
-        public Broker Broker { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the accounts number.

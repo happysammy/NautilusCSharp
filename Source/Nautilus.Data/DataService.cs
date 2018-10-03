@@ -161,8 +161,8 @@ namespace Nautilus.Data
 
             if (message.IsMarketDataSession)
             {
-                this.gateway.UpdateInstrumentsSubscribeAll();
-                this.gateway.MarketDataSubscribeAll();
+                // this.gateway.UpdateInstrumentsSubscribeAll();
+                // this.gateway.MarketDataSubscribeAll();
             }
         }
 

@@ -39,8 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var account = new Account(
-                EntityIdFactory.Account(Broker.FXCM, "123456789"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
+                Brokerage.FXCM,
                 "123456789",
                 "some username",
                 "some password",
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             // Assert
-            Assert.Equal(Broker.FXCM, account.Broker);
+            Assert.Equal(Brokerage.FXCM, account.Broker);
             Assert.Equal("FXCM-123456789", account.Id.ToString());
             Assert.Equal(this.currency, account.Currency);
             Assert.Equal(decimal.Zero, account.CashBalance.Value);
@@ -59,8 +59,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                EntityIdFactory.Account(Broker.FXCM, "123456789"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
+                Brokerage.FXCM,
                 "123456789",
                 "some username",
                 "some password",
@@ -68,8 +68,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                EntityIdFactory.Account(Broker.FXCM, "123456789"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
+                Brokerage.FXCM,
                 "123456789",
                 this.currency,
                 Money.Create(150000m, this.currency),
@@ -100,8 +100,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var account = new Account(
-                EntityIdFactory.Account(Broker.FXCM, "123456789"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
+                Brokerage.FXCM,
                 "123456789",
                 "some username",
                 "some password",
@@ -109,8 +109,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
-                EntityIdFactory.Account(Broker.FXCM, "123456789"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
+                Brokerage.FXCM,
                 "123456789",
                 CurrencyCode.USD,
                 Money.Create(150000m, this.currency),

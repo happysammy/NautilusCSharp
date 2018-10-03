@@ -29,7 +29,7 @@ namespace Nautilus.Common.Messages.Events
         /// <param name="id">The events identifier (cannot be default).</param>
         /// <param name="timestamp">The events timestamp (cannot be default).</param>
         public FixSessionConnected(
-            Broker broker,
+            Brokerage broker,
             string sessionId,
             Guid id,
             ZonedDateTime timestamp)
@@ -46,7 +46,7 @@ namespace Nautilus.Common.Messages.Events
         /// <summary>
         /// Gets the events brokerage.
         /// </summary>
-        public Broker Broker { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the events session information.

@@ -73,7 +73,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="broker">The account broker.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <returns>A <see cref="AccountId"/>.</returns>
-        public static AccountId Account(Broker broker, string accountNumber)
+        public static AccountId Account(Brokerage broker, string accountNumber)
         {
             Debug.NotNull(accountNumber, nameof(accountNumber));
 

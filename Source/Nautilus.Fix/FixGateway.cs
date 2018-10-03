@@ -70,7 +70,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the brokerage gateways broker name.
         /// </summary>
-        public Broker Broker => this.fixClient.Broker;
+        public Brokerage Broker => this.fixClient.Broker;
 
         /// <summary>
         /// Gets the brokerage account currency.

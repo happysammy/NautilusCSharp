@@ -22,7 +22,7 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Gets the name of the brokerage.
         /// </summary>
-        Broker Broker { get; }
+        Brokerage Broker { get; }
 
         /// <summary>
         /// Gets a value indicating whether the FIX session is connected.

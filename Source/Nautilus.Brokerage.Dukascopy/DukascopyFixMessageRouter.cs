@@ -84,7 +84,7 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                var message = CollateralInquiryFactory.Create(this.TimeNow(), Broker.Dukascopy);
+                var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.Dukascopy);
 
                 this.fixSession.Send(message);
 
@@ -213,7 +213,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixSession.Send(message);
 
-                this.Log.Information($"Submitting Order => {Broker.FXCM}");
+                this.Log.Information($"Submitting Order => {Brokerage.FXCM}");
             });
         }
 
@@ -248,7 +248,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     this.fixSession.Send(message);
                 }
 
-                this.Log.Information($"Submitting ELS Order => {Broker.FXCM}");
+                this.Log.Information($"Submitting ELS Order => {Brokerage.FXCM}");
             });
         }
 
@@ -275,7 +275,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderReplaceRequest: " +
                     $"(ClOrdId={order.Id}, " +
-                    $"OrderId={order.IdBroker}) => {Broker.FXCM}");
+                    $"OrderId={order.IdBroker}) => {Brokerage.FXCM}");
             });
         }
 
@@ -298,7 +298,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
-                    $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Broker.FXCM}");
+                    $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Brokerage.FXCM}");
             });
         }
 

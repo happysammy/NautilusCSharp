@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The account event timestamp.</param>
         public AccountEvent(
             AccountId accountId,
-            Broker broker,
+            Brokerage broker,
             string accountNumber,
             CurrencyCode currency,
             Money cashBalance,
@@ -86,7 +86,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events broker name.
         /// </summary>
-        public Broker Broker { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the events account number.

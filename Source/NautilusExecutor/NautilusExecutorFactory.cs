@@ -12,8 +12,8 @@ namespace NautilusExecutor
     using global::NautilusExecutor.Build;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
-    using Nautilus.Common.Build;
     using Nautilus.Common.Componentry;
+    using Nautilus.Common.Configuration;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;

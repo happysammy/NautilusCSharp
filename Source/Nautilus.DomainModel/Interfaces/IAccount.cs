@@ -21,7 +21,7 @@ namespace Nautilus.DomainModel.Interfaces
         /// <summary>
         /// Gets the broker name.
         /// </summary>
-        Broker Broker { get; }
+        Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the brokerage accounts identifier.

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Build
+namespace Nautilus.Common.Configuration
 {
     using System;
     using System.Collections.Generic;

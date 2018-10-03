@@ -322,8 +322,8 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             // Arrange
             var serializer = new MsgPackEventSerializer();
             var accountEvent = new AccountEvent(
-                EntityIdFactory.Account(Broker.FXCM, "123456"),
-                Broker.FXCM,
+                EntityIdFactory.Account(Brokerage.FXCM, "123456"),
+                Brokerage.FXCM,
                 "123456",
                 CurrencyCode.USD,
                 Money.Create(100000, CurrencyCode.USD),

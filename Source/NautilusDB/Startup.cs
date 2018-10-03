@@ -8,6 +8,7 @@
 
 namespace NautilusDB
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -15,7 +16,7 @@ namespace NautilusDB
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Common.Build;
+    using Nautilus.Common.Configuration;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -82,23 +83,25 @@ namespace NautilusDB
             var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
-            var broker = ((string)config[ConfigSection.Fix44]["broker"]).ToEnum<Broker>();
             var configFile = (string)config[ConfigSection.Fix44]["config"];
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
+            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var instrumentDataFileName = (string)config[ConfigSection.Fix44]["instrumentDataFileName"];
+            var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
+            var instrumentDataFileName = fixSettings["InstrumentData"];
 
             var fixConfig = new FixConfiguration(
                 broker,
                 configPath,
                 credentials,
+                sendAccountTag,
                 instrumentDataFileName);
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];

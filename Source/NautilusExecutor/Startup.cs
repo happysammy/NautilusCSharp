@@ -8,12 +8,13 @@
 
 namespace NautilusExecutor
 {
+    using System;
     using System.IO;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Common.Build;
+    using Nautilus.Common.Configuration;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -87,23 +88,25 @@ namespace NautilusExecutor
                 ? LogEventLevel.Debug
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
-            var broker = ((string)config[ConfigSection.Fix44]["broker"]).ToEnum<Broker>();
             var configFile = (string)config[ConfigSection.Fix44]["config"];
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
+            var brokerage = fixSettings["Brokerage"].ToEnum<Brokerage>();
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var instrumentDataFileName = (string)config[ConfigSection.Fix44]["instrumentDataFileName"];
+            var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
+            var instrumentDataFileName = fixSettings["InstrumentData"];
 
             var fixConfig = new FixConfiguration(
-                broker,
+                brokerage,
                 configPath,
                 credentials,
+                sendAccountTag,
                 instrumentDataFileName);
 
             this.executionSystem = NautilusExecutorFactory.Create(

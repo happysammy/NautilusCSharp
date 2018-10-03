@@ -40,6 +40,7 @@ namespace Nautilus.Fix
         private readonly ILogger logger;
         private readonly CommandHandler commandHandler;
         private readonly FixConfiguration config;
+        private readonly bool sendAccountTag;
         private readonly List<IEndpoint> connectionEventReceivers;
 
         private SocketInitiator initiator;
@@ -73,6 +74,8 @@ namespace Nautilus.Fix
             this.Broker = config.Broker;
             this.Account = config.Credentials.Account;
             this.config = config;
+            this.sendAccountTag = config.SendAccountTag;
+
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
 
@@ -87,7 +90,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the name of the brokerage.
         /// </summary>
-        public Broker Broker { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the account number for FIX component.
@@ -173,8 +176,8 @@ namespace Nautilus.Fix
                 var settings = new SessionSettings(this.config.ConfigPath);
                 var storeFactory = new FileStoreFactory(settings);
 
-                // var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
+                var logFactory = new ScreenLogFactory(settings);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
 
                 this.Log.Debug("Starting initiator...");
                 this.initiator.Start();
@@ -294,7 +297,10 @@ namespace Nautilus.Fix
                     this.Log.Debug("Authorizing session...");
                 }
 
-                message.SetField(new Account(this.config.Credentials.Account));
+                if (this.sendAccountTag)
+                {
+                    message.SetField(new Account(this.config.Credentials.Account));
+                }
             });
         }
 

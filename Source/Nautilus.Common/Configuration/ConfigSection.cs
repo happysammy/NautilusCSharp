@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Build
+namespace Nautilus.Common.Configuration
 {
     /// <summary>
     /// Provides JSON configuration section strings.

@@ -24,11 +24,13 @@ namespace Nautilus.Fix
         /// <param name="broker">The FIX brokerage.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
+        /// <param name="sendAccountTag">The SendAccountTag option flag.</param>
         /// <param name="instrumentDataFileName">The instrument data file name.</param>
         public FixConfiguration(
-            Broker broker,
+            Brokerage broker,
             string configPath,
             FixCredentials credentials,
+            bool sendAccountTag,
             string instrumentDataFileName)
         {
             Validate.NotNull(configPath, nameof(configPath));
@@ -38,13 +40,14 @@ namespace Nautilus.Fix
             this.Broker = broker;
             this.ConfigPath = configPath;
             this.Credentials = credentials;
+            this.SendAccountTag = sendAccountTag;
             this.InstrumentDataFileName = instrumentDataFileName;
         }
 
         /// <summary>
         /// Gets the FIX brokerage.
         /// </summary>
-        public Broker Broker { get; }
+        public Brokerage Broker { get; }
 
         /// <summary>
         /// Gets the FIX account username.
@@ -55,6 +58,11 @@ namespace Nautilus.Fix
         /// Gets the FIX account password.
         /// </summary>
         public FixCredentials Credentials { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the Account tag should be sent with FIX messages.
+        /// </summary>
+        public bool SendAccountTag { get; }
 
         /// <summary>
         /// Gets the FIX instrument data file name.

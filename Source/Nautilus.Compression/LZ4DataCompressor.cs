@@ -40,7 +40,7 @@ namespace Nautilus.Compression
         /// <exception cref="ValidationException">Throws if the string argument is null, empty or white space.</exception>
         public byte[] Write(string stringToCompress)
         {
-            Validate.NotNull(stringToCompress, nameof(stringToCompress));
+            Debug.NotNull(stringToCompress, nameof(stringToCompress));
 
             return this.isCompressionOn
                  ? LZ4Codec.Wrap(Encoding.UTF8.GetBytes(stringToCompress))
@@ -55,7 +55,7 @@ namespace Nautilus.Compression
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public string Read(byte[] bytesToDecompress)
         {
-            Validate.NotNull(bytesToDecompress, nameof(bytesToDecompress));
+            Debug.NotNull(bytesToDecompress, nameof(bytesToDecompress));
 
             return this.isCompressionOn
                  ? Encoding.UTF8.GetString(LZ4Codec.Unwrap(bytesToDecompress))
@@ -71,7 +71,7 @@ namespace Nautilus.Compression
         [PerformanceOptimized]
         public string[] Read(byte[][] byteArraysToDecompress)
         {
-            Validate.NotNull(byteArraysToDecompress, nameof(byteArraysToDecompress));
+            Debug.NotNull(byteArraysToDecompress, nameof(byteArraysToDecompress));
 
             var stringArray = new string[byteArraysToDecompress.Length];
 

@@ -105,7 +105,7 @@ namespace Nautilus.MsgPack
                     var currency = unpacked[Key.Currency].ToString().ToEnum<CurrencyCode>();
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
-                        unpacked[Key.Broker].ToString().ToEnum<Broker>(),
+                        unpacked[Key.Broker].ToString().ToEnum<Brokerage>(),
                         unpacked[Key.AccountNumber].ToString(),
                         currency,
                         Money.Create(Convert.ToDecimal(unpacked[Key.CashBalance].ToString()), currency),

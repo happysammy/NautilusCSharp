@@ -25,7 +25,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="timeNow">The time now.</param>
         /// <param name="broker">The brokers name.</param>
         /// <returns>A <see cref="CollateralInquiry"/>.</returns>
-        public static CollateralInquiry Create(ZonedDateTime timeNow, Broker broker)
+        public static CollateralInquiry Create(ZonedDateTime timeNow, Brokerage broker)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
 

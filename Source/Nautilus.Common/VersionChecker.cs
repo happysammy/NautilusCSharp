@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Build
+namespace Nautilus.Common
 {
     using System;
     using System.Reflection;
