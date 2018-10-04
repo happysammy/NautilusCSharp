@@ -293,6 +293,7 @@ namespace Nautilus.Fix
                 {
                     message.SetField(new Username(this.config.Credentials.Username));
                     message.SetField(new Password(this.config.Credentials.Password));
+                    message.SetField(new EncryptMethod(EncryptMethod.NONE));
 
                     this.Log.Debug("Authorizing session...");
                 }
