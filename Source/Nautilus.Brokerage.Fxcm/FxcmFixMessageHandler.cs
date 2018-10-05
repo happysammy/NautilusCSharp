@@ -258,6 +258,20 @@ namespace Nautilus.Brokerage.FXCM
         }
 
         /// <summary>
+        /// Handles quote status report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public void OnMessage(QuoteStatusReport message)
+        {
+            this.Execute(() =>
+            {
+                Validate.NotNull(message, nameof(message));
+
+                this.Log.Information(message.Product.ToString());
+            });
+        }
+
+        /// <summary>
         /// Handles market data request reject messages.
         /// </summary>
         /// <param name="message">The message.</param>

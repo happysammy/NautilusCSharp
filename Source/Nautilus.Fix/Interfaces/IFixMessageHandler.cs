@@ -35,6 +35,12 @@ namespace Nautilus.Fix.Interfaces
         void OnMessage(SecurityList message);
 
         /// <summary>
+        /// Handles quote status report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void OnMessage(QuoteStatusReport message);
+
+        /// <summary>
         /// Handles collateral inquiry acknowledgement messages.
         /// </summary>
         /// <param name="message">The message.</param>

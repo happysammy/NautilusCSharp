@@ -106,16 +106,16 @@ namespace Nautilus.Brokerage.Dukascopy
                     }
 
                     var symbolString = group.GetField(Tags.Symbol);
-                    var fxcmSymbol = new BrokerSymbol(symbolString);
+                    var brokerSymbol = new BrokerSymbol(symbolString);
 
-                    var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol.Value);
+                    var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Warning(symbolQuery.Message);
                         continue;
                     }
 
-                    var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
+                    var symbol = new Symbol(symbolQuery.Value, Venue.DUKASCOPY);
 
                     var symbolId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
@@ -126,7 +126,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
 
-                    var tickValueQuery = this.instrumentData.GetTickValue(fxcmSymbol.Value);
+                    var tickValueQuery = this.instrumentData.GetTickValue(brokerSymbol.Value);
                     if (tickValueQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
@@ -134,7 +134,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     var tickValue = tickValueQuery.Value;
 
-                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(fxcmSymbol.Value);
+                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(brokerSymbol.Value);
                     if (targetDirectSpreadQuery.IsFailure)
                     {
                         throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
@@ -155,7 +155,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var instrument = new Instrument(
                         symbol,
                         symbolId,
-                        fxcmSymbol,
+                        brokerSymbol,
                         quoteCurrency,
                         securityType,
                         tickDecimals,
@@ -238,11 +238,23 @@ namespace Nautilus.Brokerage.Dukascopy
         }
 
         /// <summary>
+        /// Handles quote status report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public void OnMessage(QuoteStatusReport message)
+        {
+            this.Execute(() =>
+            {
+                Validate.NotNull(message, nameof(message));
+
+                this.Log.Information(message.ToString());
+            });
+        }
+
+        /// <summary>
         /// Handles request for positions acknowledgement messages.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
+        /// <param name="message">The message.</param>
         public void OnMessage(RequestForPositionsAck message)
         {
             this.Execute(() =>
@@ -332,7 +344,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixGateway.OnOrderCancelReject(
                     "NULL",
-                    Venue.Dukascopy,
+                    Venue.DUKASCOPY,
                     orderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -379,7 +391,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     this.fixGateway.OnOrderRejected(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         rejectReason,
                         timestamp);
@@ -389,7 +401,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 {
                     this.fixGateway.OnOrderCancelled(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -400,7 +412,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 {
                     this.fixGateway.OnOrderModified(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -416,7 +428,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     this.fixGateway.OnOrderWorking(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -433,7 +445,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 {
                     this.fixGateway.OnOrderExpired(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -449,7 +461,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     this.fixGateway.OnOrderFilled(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         executionId,
@@ -471,7 +483,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     this.fixGateway.OnOrderPartiallyFilled(
                         symbol,
-                        Venue.Dukascopy,
+                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         executionId,

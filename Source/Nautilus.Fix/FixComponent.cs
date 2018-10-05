@@ -176,8 +176,8 @@ namespace Nautilus.Fix
                 var settings = new SessionSettings(this.config.ConfigPath);
                 var storeFactory = new FileStoreFactory(settings);
 
-                var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
+                // var logFactory = new ScreenLogFactory(settings);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
                 this.Log.Debug("Starting initiator...");
                 this.initiator.Start();
@@ -377,11 +377,21 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Handles the security list message.
+        /// Handles security list messages.
         /// </summary>
         /// <param name="message">The FIX message.</param>
         /// <param name="sessionId">The session identifier.</param>
         public void OnMessage(SecurityList message, SessionID sessionId)
+        {
+            this.FixMessageHandler.OnMessage(message);
+        }
+
+        /// <summary>
+        /// Handles quote status report messages.
+        /// </summary>
+        /// <param name="message">The FIX message.</param>
+        /// <param name="sessionId">The session identifier.</param>
+        public void OnMessage(QuoteStatusReport message, SessionID sessionId)
         {
             this.FixMessageHandler.OnMessage(message);
         }

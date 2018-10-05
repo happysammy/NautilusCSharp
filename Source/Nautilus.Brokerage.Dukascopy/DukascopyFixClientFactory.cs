@@ -23,17 +23,17 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
+        /// <param name="instrumentData">The instrument data provider.</param>
         /// <returns>The Dukascopy FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
-            FixConfiguration config)
+            FixConfiguration config,
+            InstrumentDataProvider instrumentData)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
             Validate.NotNull(config, nameof(config));
-
-            var instrumentData = new InstrumentDataProvider(config.InstrumentDataFileName);
 
             return new FixClient(
                 container,

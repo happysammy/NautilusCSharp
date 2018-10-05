@@ -29,7 +29,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The Dukascopy brokerage venue (OTC products).
         /// </summary>
-        Dukascopy = 2,
+        DUKASCOPY = 2,
 
         /// <summary>
         /// The GLOBEX exchange venue.

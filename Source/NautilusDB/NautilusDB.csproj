@@ -20,6 +20,7 @@
         <PackageReference Include="ServiceStack" Version="5.4.0" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Brokerage.Dukascopy\Nautilus.Brokerage.Dukascopy.csproj" />
         <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />

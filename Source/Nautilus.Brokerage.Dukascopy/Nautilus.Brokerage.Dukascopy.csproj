@@ -19,6 +19,11 @@
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <Content Include="..\brokerage_fxcm_instruments.csv">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
     <ItemGroup>

@@ -10,6 +10,7 @@ namespace NautilusDB
 {
     using System.Collections.Generic;
     using Akka.Actor;
+    using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
@@ -96,7 +97,7 @@ namespace NautilusDB
 
             var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
 
-            var fixClient = FxcmFixClientFactory.Create(
+            var fixClient = DukascopyFixClientFactory.Create(
                 container,
                 messagingAdapter,
                 fixConfig,

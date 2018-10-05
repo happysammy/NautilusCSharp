@@ -125,12 +125,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
             foreach (var symbol in symbols)
             {
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Minute, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Hour, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Hour, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Bid, Resolution.Day, 1)));
-                barTypes.Add(new BarType(new Symbol(symbol, Venue.Dukascopy), new BarSpecification(QuoteType.Ask, Resolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Bid, Resolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Ask, Resolution.Minute, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Bid, Resolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Ask, Resolution.Hour, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Bid, Resolution.Day, 1)));
+                barTypes.Add(new BarType(new Symbol(symbol, Venue.DUKASCOPY), new BarSpecification(QuoteType.Ask, Resolution.Day, 1)));
             }
 
             return barTypes.AsReadOnly();
