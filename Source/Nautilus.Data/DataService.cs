@@ -159,11 +159,8 @@ namespace Nautilus.Data
 
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            if (message.IsMarketDataSession)
-            {
-                this.gateway.UpdateInstrumentsSubscribeAll();
-                this.gateway.MarketDataSubscribeAll();
-            }
+            this.gateway.UpdateInstrumentsSubscribeAll();
+            this.gateway.MarketDataSubscribeAll();
         }
 
         private void OnMessage(FixSessionDisconnected message)

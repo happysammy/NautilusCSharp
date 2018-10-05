@@ -108,6 +108,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var symbolString = group.GetField(Tags.Symbol);
                     var brokerSymbol = new BrokerSymbol(symbolString);
 
+                    Console.WriteLine($"RECEIVED {brokerSymbol}");
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
@@ -319,7 +320,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixGateway.OnTick(
                     symbol,
-                    Venue.FXCM,
+                    Venue.DUKASCOPY,
                     Convert.ToDecimal(bid),
                     Convert.ToDecimal(ask),
                     timestamp);

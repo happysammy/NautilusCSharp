@@ -21,7 +21,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="FixConfiguration"/> class.
         /// </summary>
-        /// <param name="broker">The FIX brokerage.</param>
+        /// <param name="broker">The FIX brokerage name.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
         /// <param name="sendAccountTag">The SendAccountTag option flag.</param>
@@ -45,7 +45,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Gets the FIX brokerage.
+        /// Gets the FIX brokerage name.
         /// </summary>
         public Brokerage Broker { get; }
 

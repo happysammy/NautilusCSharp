@@ -76,7 +76,7 @@ namespace NautilusDB
             RedisServiceStack.ConfigureServiceStack();
 
             var logLevel = this.Environment.IsDevelopment()
-                ? LogEventLevel.Debug
+                ? LogEventLevel.Information
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
             var isCompression = (bool)config[ConfigSection.Database]["compression"];

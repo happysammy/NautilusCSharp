@@ -28,12 +28,13 @@ namespace Nautilus.DomainModel.Enums
         /// The Dukascopy brokerage.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        Dukascopy,
+        DUKASCOPY,
 
         /// <summary>
         /// The Interactive Brokers brokerage.
         /// </summary>
-        InteractiveBrokers,
+        // ReSharper disable once InconsistentNaming
+        IB,
 
         /// <summary>
         /// The LMAX exchange.

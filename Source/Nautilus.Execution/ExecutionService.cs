@@ -255,15 +255,9 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            if (message.IsMarketDataSession)
-            {
-                this.gateway.UpdateInstrumentsSubscribeAll();
-            }
-            else
-            {
-                this.gateway.CollateralInquiry();
-                this.gateway.TradingSessionStatus();
-            }
+            this.gateway.UpdateInstrumentsSubscribeAll();
+            this.gateway.CollateralInquiry();
+            this.gateway.TradingSessionStatus();
         }
 
         private void OnMessage(FixSessionDisconnected message)
