@@ -88,7 +88,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixSession.Send(message);
 
-                this.Log.Debug($"CollateralInquiry + SubscribeCollateralReports...");
+                this.Log.Information($"CollateralInquiry + SubscribeCollateralReports...");
             });
         }
 
@@ -103,7 +103,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixSession.Send(message);
 
-                this.Log.Debug($"TradingSessionStatusRequest...");
+                this.Log.Information($"TradingSessionStatusRequest...");
             });
         }
 
@@ -118,7 +118,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 this.fixSession.Send(message);
 
-                this.Log.Debug($"RequestForOpenPositions + SubscribePositionReports...");
+                this.Log.Information($"RequestForOpenPositions + SubscribePositionReports...");
             });
         }
 
@@ -140,7 +140,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     fxcmSymbol.Value,
                     this.TimeNow()));
 
-                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
+                this.Log.Information($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
             });
         }
 
@@ -153,7 +153,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 this.fixSession.Send(SecurityListRequestFactory.Create(this.TimeNow()));
 
-                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
+                this.Log.Information($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
             });
         }
 
@@ -173,7 +173,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     fxcmSymbol,
                     this.TimeNow()));
 
-                this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({symbol})...");
+                this.Log.Information($"MarketDataRequest + SubscribeUpdates ({symbol})...");
             });
         }
 
@@ -190,7 +190,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         fxcmSymbol,
                         this.TimeNow()));
 
-                    this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
+                    this.Log.Information($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
                 }
             });
         }
