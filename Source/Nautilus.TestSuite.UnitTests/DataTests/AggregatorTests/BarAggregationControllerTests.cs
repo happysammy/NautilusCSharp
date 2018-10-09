@@ -35,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubSetupContainerFactory();
+            var setupFactory = new StubComponentryContainerFactory();
             this.logger = setupFactory.LoggingAdapter;
             var container = setupFactory.Create();
 

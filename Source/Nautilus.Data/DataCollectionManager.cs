@@ -26,8 +26,6 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Scheduler.Commands;
-    using Nautilus.Scheduler.Events;
     using Quartz;
 
     /// <summary>
@@ -76,9 +74,6 @@ namespace Nautilus.Data
             this.Receive<CollectData<BarType>>(this.OnMessage);
             this.Receive<TrimBarDataJob>(this.OnMessage);
 
-            // Event messages.
-            this.Receive<JobCreated>(this.OnMessage);
-
             // Document messages.
             this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
             this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
@@ -95,13 +90,6 @@ namespace Nautilus.Data
             Debug.NotNull(message, nameof(message));
 
             this.CreateTrimBarDataJob();
-        }
-
-        private void OnMessage(JobCreated message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            // Do nothing
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -163,37 +151,28 @@ namespace Nautilus.Data
 
         private void CreateTrimBarDataJob()
         {
-            var scheduleBuilder = CronScheduleBuilder
+            var schedule = CronScheduleBuilder
                 .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 00, 01)
                 .InTimeZone(TimeZoneInfo.Utc)
                 .WithMisfireHandlingInstructionFireAndProceed();
 
+            var jobKey = new JobKey("trim_bar_data", "data_management");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"trim_bar_data", "data_management")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 new ActorEndpoint(this.Self),
-                new ActorEndpoint(this.Self),
                 new TrimBarDataJob(),
+                jobKey,
                 trigger,
                 this.NewGuid(),
                 this.TimeNow());
 
             this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
-        }
-
-        private void InitializeMarketDataCollectors()
-        {
-            // Not implemented.
-        }
-
-        private void CollectMarketData()
-        {
-            // Not implemented.
         }
     }
 }

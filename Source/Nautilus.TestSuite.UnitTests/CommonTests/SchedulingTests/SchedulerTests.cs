@@ -6,18 +6,16 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.SchedulerTests
+namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Akka.Actor;
     using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Jobs;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Scheduler;
-    using Nautilus.Scheduler.Commands;
-    using Nautilus.Scheduler.Events;
+    using Nautilus.Common.Scheduling;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -41,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubSetupContainerFactory();
+            var setupFactory = new StubComponentryContainerFactory();
             var setupContainer = setupFactory.Create();
             this.logger = setupFactory.LoggingAdapter;
             this.clock = setupContainer.Clock;
@@ -56,20 +54,21 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         internal void Test_can_receive_create_job_command_with_valid_job()
         {
             // Arrange
-            var scheduleBuilder = SimpleScheduleBuilder
+            var schedule = SimpleScheduleBuilder
                 .RepeatSecondlyForTotalCount(1)
                 .WithMisfireHandlingInstructionFireNow();
 
+            var jobKey = new JobKey("unit_test_job", "unit_testing");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"unit_test_job", "unit_testing")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 this.testActor,
-                this.testActor,
                 new TestJob(),
+                jobKey,
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -79,27 +78,27 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-            this.ExpectMsg<JobCreated>();
         }
 
         [Fact]
         internal void Test_can_create_job_and_send_message_based_on_quartz_trigger()
         {
             // Arrange
-            var scheduleBuilder = SimpleScheduleBuilder
+            var schedule = SimpleScheduleBuilder
                 .RepeatSecondlyForTotalCount(1)
                 .WithMisfireHandlingInstructionFireNow();
 
+            var jobKey = new JobKey("unit_test_job", "unit_testing");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity("unit_test_job", "unit_testing")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 this.testActor,
-                this.testActor,
                 new TestJob(),
+                jobKey,
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -109,7 +108,6 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-            this.ExpectMsg<JobCreated>();
             this.ExpectMsg<TestJob>();
         }
 
@@ -117,30 +115,29 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         internal void Test_can_pause_a_created_job()
         {
             // Arrange
-            var scheduleBuilder = SimpleScheduleBuilder
+            var schedule = SimpleScheduleBuilder
                 .RepeatSecondlyForTotalCount(1)
                 .WithMisfireHandlingInstructionFireNow();
 
+            var jobKey = new JobKey("unit_test_job", "unit_testing");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"unit_test_job", "unit_testing")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 this.testActor,
-                this.testActor,
                 new TestJob(),
+                jobKey,
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
-            // Used to get job key.
             this.scheduler.Send(createJob);
-            var jobCreated = this.ExpectMsg<JobCreated>();
 
             var pauseJob = new PauseJob(
-                jobCreated.JobKey,
+                jobKey,
                 this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
@@ -151,7 +148,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Assert
             LogDumper.Dump(this.logger, this.output);
             CustomAssert.EventuallyContains(
-                $"Scheduler: Job paused successfully {jobCreated.JobKey}.",
+                $"Scheduler: Job paused successfully (JobKey={jobKey}).",
                 this.logger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -161,27 +158,27 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         internal void Test_can_resume_a_paused_job()
         {
             // Arrange
-            var scheduleBuilder = SimpleScheduleBuilder
+            var schedule = SimpleScheduleBuilder
                 .RepeatSecondlyForTotalCount(1)
                 .WithMisfireHandlingInstructionFireNow();
 
+            var jobKey = new JobKey("unit_test_job", "unit_testing");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity($"unit_test_job", "unit_testing")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 this.testActor,
-                this.testActor,
                 new TestJob(),
+                jobKey,
                 trigger,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
             // Used to get job key.
             this.scheduler.Send(createJob);
-            var jobKey = this.ExpectMsg<JobCreated>().JobKey;
 
             var pauseJob = new PauseJob(
                 jobKey,
@@ -203,7 +200,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Assert
             LogDumper.Dump(this.logger, this.output);
             CustomAssert.EventuallyContains(
-                $"Scheduler: Job resumed successfully {jobKey}.",
+                $"Scheduler: Job resumed successfully (JobKey={jobKey}).",
                 this.logger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);
@@ -226,7 +223,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             // Assert
             LogDumper.Dump(this.logger, this.output);
             CustomAssert.EventuallyContains(
-                "Scheduler: Remove job failed Key=DEFAULT.bogus-job-key, TriggerKey=DEFAULT.bogus-trigger, Reason=JobNotFound",
+                "Scheduler: Job remove failed (JobKey=DEFAULT.bogus-job-key, TriggerKey=DEFAULT.bogus-trigger, Reason=JobNotFound).",
                 this.logger,
                 EventuallyContains.TimeoutMilliseconds,
                 EventuallyContains.PollIntervalMilliseconds);

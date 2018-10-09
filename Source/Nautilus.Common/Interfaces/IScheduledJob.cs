@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Jobs
+namespace Nautilus.Common.Interfaces
 {
     /// <summary>
     /// Represents a job.

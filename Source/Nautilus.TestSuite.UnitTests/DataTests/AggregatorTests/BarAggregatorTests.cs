@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.output = output;
 
             this.symbol = new Symbol("AUDUSD", Venue.FXCM);
-            var setupFactory = new StubSetupContainerFactory();
+            var setupFactory = new StubComponentryContainerFactory();
             var container = setupFactory.Create();
             this.logger = setupFactory.LoggingAdapter;
 

@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubSetupContainerFactory();
+            var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
 

@@ -33,7 +33,6 @@
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
         <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
         <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
-        <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
         <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
         <ProjectReference Include="..\NautilusDB.Service\NautilusDB.Service.csproj" />
         <ProjectReference Include="..\NautilusDB\NautilusDB.csproj" />

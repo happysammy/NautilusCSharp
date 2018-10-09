@@ -6,11 +6,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Commands
+namespace Nautilus.Common.Messages.Commands
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Jobs;
+    using Nautilus.Common.Scheduling;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -26,52 +26,56 @@ namespace Nautilus.Scheduler.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateJob"/> class.
         /// </summary>
-        /// <param name="jobSender">The sender of the job.</param>
         /// <param name="jobReceiver">The receiver for the job.</param>
         /// <param name="job">The job to schedule.</param>
+        /// <param name="jobKey">The job key.</param>
         /// <param name="trigger">The job trigger.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public CreateJob(
-            IEndpoint jobSender,
             IEndpoint jobReceiver,
             IScheduledJob job,
+            JobKey jobKey,
             ITrigger trigger,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(jobSender, nameof(jobSender));
             Debug.NotNull(jobReceiver, nameof(jobReceiver));
+            Debug.NotNull(jobKey, nameof(jobKey));
             Debug.NotNull(job, nameof(job));
             Debug.NotNull(trigger, nameof(trigger));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.JobSender = jobSender;
             this.JobReceiver = jobReceiver;
-            this.Job = job;
+            this.JobKey = jobKey;
             this.Trigger = trigger;
+            this.JobDetail = Job.CreateBuilderWithData(
+                    jobReceiver,
+                    job)
+                .WithIdentity(trigger.JobKey)
+                .Build();
         }
 
         /// <summary>
-        /// Gets the jobs sender.
-        /// </summary>
-        public IEndpoint JobSender { get; }
-
-        /// <summary>
-        /// Gets the jobs destination actor.
+        /// Gets the jobs receiver endpoint.
         /// </summary>
         public IEndpoint JobReceiver { get; }
 
         /// <summary>
-        /// Gets the jobs message.
+        /// Gets the jobs key.
         /// </summary>
-        public IScheduledJob Job { get; }
+        public JobKey JobKey { get; }
 
         /// <summary>
         /// Gets the jobs trigger.
         /// </summary>
         public ITrigger Trigger { get; }
+
+        /// <summary>
+        /// Gets the jobs detail.
+        /// </summary>
+        public IJobDetail JobDetail { get; }
     }
 }

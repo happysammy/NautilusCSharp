@@ -8,10 +8,11 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
-    using Nautilus.Common.Messages.Jobs;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
+    using Quartz;
 
     /// <summary>
     /// Represents a bar job for the given symbol and bar specification (to close a bar).
@@ -28,12 +29,18 @@ namespace Nautilus.Data.Messages.Jobs
             Debug.NotNull(barSpec, nameof(barSpec));
 
             this.BarSpec = barSpec;
+            this.Key = new JobKey(this.BarSpec.ToString(), "bar_aggregation");
         }
 
         /// <summary>
-        /// Gets the jobs symbol.
+        /// Gets the jobs bar specification.
         /// </summary>
         public BarSpecification BarSpec { get; }
+
+        /// <summary>
+        /// Gets the jobs key.
+        /// </summary>
+        public JobKey Key { get; }
 
         /// <summary>
         /// Returns a string representation of this <see cref="BarJob"/>.

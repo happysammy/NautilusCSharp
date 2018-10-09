@@ -27,8 +27,6 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Scheduler.Commands;
-    using Nautilus.Scheduler.Events;
     using NodaTime;
     using Quartz;
 
@@ -82,7 +80,6 @@ namespace Nautilus.Data.Aggregators
             this.Receive<MarketStatusJob>(this.OnMessage);
 
             // Event messages.
-            this.Receive<JobCreated>(this.OnMessage);
             this.Receive<Tick>(this.OnMessage);
             this.Receive<BarClosed>(this.OnMessage);
         }
@@ -152,21 +149,22 @@ namespace Nautilus.Data.Aggregators
 
         private void CreateMarketOpenedJob()
         {
-            var scheduleBuilder = CronScheduleBuilder
+            var schedule = CronScheduleBuilder
                 .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
                 .InTimeZone(TimeZoneInfo.Utc)
                 .WithMisfireHandlingInstructionFireAndProceed();
 
+            var jobKey = new JobKey("market_opened", "bar_aggregation");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity("market_opened", "bar_aggregation")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 new ActorEndpoint(this.Self),
-                new ActorEndpoint(this.Self),
                 new MarketStatusJob(true),
+                jobKey,
                 trigger,
                 this.NewGuid(),
                 this.TimeNow());
@@ -177,21 +175,22 @@ namespace Nautilus.Data.Aggregators
 
         private void CreateMarketClosedJob()
         {
-            var scheduleBuilder = CronScheduleBuilder
+            var schedule = CronScheduleBuilder
                 .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
                 .InTimeZone(TimeZoneInfo.Utc)
                 .WithMisfireHandlingInstructionFireAndProceed();
 
+            var jobKey = new JobKey("market_closed", "bar_aggregation");
             var trigger = TriggerBuilder
                 .Create()
-                .WithIdentity("market_closed", "bar_aggregation")
-                .WithSchedule(scheduleBuilder)
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
                 .Build();
 
             var createJob = new CreateJob(
                 new ActorEndpoint(this.Self),
-                new ActorEndpoint(this.Self),
                 new MarketStatusJob(false),
+                jobKey,
                 trigger,
                 this.NewGuid(),
                 this.TimeNow());
@@ -257,11 +256,14 @@ namespace Nautilus.Data.Aggregators
 
                 var createJob = new CreateJob(
                     new ActorEndpoint(this.Self),
-                    new ActorEndpoint(this.Self),
                     barJob,
+                    barJob.Key,
                     this.triggers[duration],
                     this.NewGuid(),
                     this.TimeNow());
+
+                this.barJobs.Add(
+                    barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
 
                 this.Send(ServiceAddress.Scheduler, createJob);
             }
@@ -327,22 +329,6 @@ namespace Nautilus.Data.Aggregators
                     this.TimeNow());
 
                 this.Send(ServiceAddress.Scheduler, removeJob);
-            }
-        }
-
-        private void OnMessage(JobCreated message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            if (message.Job is BarJob job)
-            {
-                var barSpec = job.BarSpec;
-
-                if (!this.barJobs.ContainsKey(barSpec))
-                {
-                    this.barJobs.Add(
-                        barSpec, new KeyValuePair<JobKey, TriggerKey>(message.JobKey, message.TriggerKey));
-                }
             }
         }
 

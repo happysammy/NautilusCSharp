@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusDB.Build
+namespace Nautilus.Common.Componentry
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;

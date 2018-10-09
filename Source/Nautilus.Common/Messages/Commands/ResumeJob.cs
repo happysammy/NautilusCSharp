@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="PauseJob.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ResumeJob.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler.Commands
+namespace Nautilus.Common.Messages.Commands
 {
     using System;
     using Nautilus.Common.Interfaces;
@@ -17,19 +17,19 @@ namespace Nautilus.Scheduler.Commands
     using Quartz;
 
     /// <summary>
-    /// Represents a command to pause a job.
+    /// Represents a command to resume a job.
     /// </summary>
     [Immutable]
-    public sealed class PauseJob : Command
+    public sealed class ResumeJob : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PauseJob"/> class.
+        /// Initializes a new instance of the <see cref="ResumeJob"/> class.
         /// </summary>
-        /// <param name="jobKey">The job key to pause.</param>
+        /// <param name="jobKey">The job key to resume.</param>
         /// <param name="sender">The command sender.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
-        public PauseJob(
+        public ResumeJob(
             JobKey jobKey,
             IEndpoint sender,
             Guid identifier,
@@ -46,12 +46,12 @@ namespace Nautilus.Scheduler.Commands
         }
 
         /// <summary>
-        /// Gets the job to pause key.
+        /// Gets the job to resume key.
         /// </summary>
         public JobKey JobKey { get; }
 
         /// <summary>
-        /// Gets the pause job message sender.
+        /// Gets the resume job commands sender.
         /// </summary>
         public IEndpoint Sender { get; }
     }

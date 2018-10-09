@@ -8,7 +8,7 @@
 
 namespace Nautilus.Data.Messages.Jobs
 {
-    using Nautilus.Common.Messages.Jobs;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
 
     /// <summary>

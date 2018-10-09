@@ -6,17 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Common.Scheduling
 {
     using System.Collections.Specialized;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Scheduler.Commands;
-    using Nautilus.Scheduler.Events;
-    using Nautilus.Scheduler.Exceptions;
     using Quartz;
     using Quartz.Impl;
 
@@ -77,23 +75,9 @@ namespace Nautilus.Scheduler
 
             this.Execute(() =>
             {
-                var receiver = message.JobReceiver;
-                var job = Job.CreateBuilderWithData(
-                        receiver,
-                        message.Job)
-                    .WithIdentity(message.Trigger.JobKey)
-                    .Build();
+                this.quartzScheduler.ScheduleJob(message.JobDetail, message.Trigger);
 
-                this.quartzScheduler.ScheduleJob(job, message.Trigger);
-
-                receiver.Send(new JobCreated(
-                    message.Trigger.JobKey,
-                    message.Trigger.Key,
-                    message.Job,
-                    this.NewGuid(),
-                    this.TimeNow()));
-
-                this.Log.Information($"Job created Key={message.Trigger.JobKey}, TriggerKey={message.Trigger.Key}");
+                this.Log.Information($"Job created (JobKey={message.JobKey}, TriggerKey={message.Trigger.Key}).");
             });
         }
 
@@ -101,66 +85,54 @@ namespace Nautilus.Scheduler
         {
             Debug.NotNull(message, nameof(message));
 
-            try
+            this.Execute(() =>
             {
                 var paused = this.quartzScheduler.PauseJob(message.JobKey);
                 if (paused.IsCompletedSuccessfully)
                 {
-                    this.Log.Information($"Job paused successfully {message.JobKey}.");
+                    this.Log.Information($"Job paused successfully (JobKey={message.JobKey}).");
                 }
                 else
                 {
-                    this.Log.Warning($"Job pause failed for {message.JobKey}.");
+                    this.Log.Warning($"Job pause failed (JobKey={message.JobKey}).");
                 }
-            }
-            catch (JobNotFoundException ex)
-            {
-                this.Log.Error($"Job pause failed with error for {message.JobKey}.", ex);
-            }
+            });
         }
 
         private void OnMessage(ResumeJob message)
         {
             Debug.NotNull(message, nameof(message));
 
-            try
+            this.Execute(() =>
             {
                 var resume = this.quartzScheduler.ResumeJob(message.JobKey);
                 if (resume.IsCompletedSuccessfully)
                 {
-                    this.Log.Information($"Job resumed successfully {message.JobKey}.");
+                    this.Log.Information($"Job resumed successfully (JobKey={message.JobKey}).");
                 }
                 else
                 {
-                    this.Log.Error($"Job resume failed for {message.JobKey}.");
+                    this.Log.Error($"Job resume failed (JobKey={message.JobKey}).");
                 }
-            }
-            catch (JobNotFoundException ex)
-            {
-                this.Log.Error($"Job resume failed with error for {message.JobKey}.", ex);
-            }
+            });
         }
 
         private void OnMessage(RemoveJob message)
         {
             Debug.NotNull(message, nameof(message));
 
-            try
+            this.Execute(() =>
             {
                 var deleted = this.quartzScheduler.DeleteJob(message.JobKey);
                 if (deleted.Result)
                 {
-                    this.Log.Information($"Job removed Key={message.JobKey}, TriggerKey={message.TriggerKey}");
+                    this.Log.Information($"Job removed (JobKey={message.JobKey}, TriggerKey={message.TriggerKey}).");
                 }
                 else
                 {
-                    this.Log.Error($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason=JobNotFound");
+                    this.Log.Error($"Job remove failed (JobKey={message.JobKey}, TriggerKey={message.TriggerKey}, Reason=JobNotFound).");
                 }
-            }
-            catch (JobNotFoundException ex)
-            {
-                this.Log.Error($"Remove job failed Key={message.JobKey}, TriggerKey={message.TriggerKey}, Reason={ex.Message}");
-            }
+            });
         }
     }
 }

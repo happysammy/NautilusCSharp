@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Common.Scheduling
 {
     using System.Threading.Tasks;
     using Akka.Util.Internal;
@@ -29,7 +29,7 @@ namespace Nautilus.Scheduler
         /// <param name="receiver">The jobs receiver.</param>
         /// <param name="message">The job message.</param>
         /// <returns>The job builder.</returns>
-        public static JobBuilder CreateBuilderWithData(IEndpoint receiver, object message)
+        public static JobBuilder CreateBuilderWithData(IEndpoint receiver, IScheduledJob message)
         {
             var jdm = new JobDataMap();
             jdm.AddAndReturn(MessageKey, message).Add(NautilusKey, receiver);
