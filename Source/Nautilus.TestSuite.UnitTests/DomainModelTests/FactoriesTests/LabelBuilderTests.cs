@@ -74,7 +74,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
                 StubBarType.AUDUSD());
 
             // Assert
-            Assert.Equal("TickBarAggregator-AUDUSD.Dukascopy-1-Minute[Ask]", result.ToString());
+            Assert.Equal("TickBarAggregator-AUDUSD.DUKASCOPY-1-Minute[Ask]", result.ToString());
         }
     }
 }
