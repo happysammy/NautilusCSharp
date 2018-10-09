@@ -39,7 +39,7 @@ namespace Nautilus.Data.Publishers
 
             this.publisher = publisher;
 
-            // Setup message handling.
+            // Event messages.
             this.Receive<Tick>(this.OnMessage);
         }
 
@@ -49,7 +49,7 @@ namespace Nautilus.Data.Publishers
 
             this.publisher.Publish(
                 message.Symbol.ToString().ToLower(),
-                message.ToChannel());
+                message.ToChannelString());
         }
     }
 }

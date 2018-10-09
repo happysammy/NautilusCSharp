@@ -40,7 +40,7 @@ namespace Nautilus.Data.Publishers
 
             this.publisher = publisher;
 
-            // Setup message handling.
+            // Event messages.
             this.Receive<BarClosed>(this.OnMessage);
         }
 
@@ -49,7 +49,7 @@ namespace Nautilus.Data.Publishers
             Debug.NotNull(message, nameof(message));
 
             this.publisher.Publish(
-                message.BarType.ToChannel(),
+                message.BarType.ToChannelString(),
                 message.Bar.ToString());
         }
     }

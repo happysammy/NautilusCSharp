@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="BarType"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public string ToChannel()
+        public string ToChannelString()
         {
             return $"{this.Symbol.ToString().ToLower()}" +
                    $"-{this.Specification.Period}" +

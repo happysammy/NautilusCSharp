@@ -148,7 +148,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public string ToChannel() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
+        public string ToChannelString() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
 
         /// <summary>
         /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
