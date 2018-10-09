@@ -50,12 +50,12 @@ namespace Nautilus.Fix
         public Brokerage Broker { get; }
 
         /// <summary>
-        /// Gets the FIX account username.
+        /// Gets the FIX configuration file path.
         /// </summary>
         public string ConfigPath { get; }
 
         /// <summary>
-        /// Gets the FIX account password.
+        /// Gets the FIX account credentials.
         /// </summary>
         public FixCredentials Credentials { get; }
 

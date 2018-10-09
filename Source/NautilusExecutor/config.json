@@ -1,13 +1,4 @@
 ﻿{
-  "service": {
-    "name": "NautilusExecutor",
-    "host": "10.135.55.111",
-    "commandsPort": 5555,
-    "eventsPort": 5556,
-    "commandsPerSecond": 100,
-    "newOrdersPerSecond": 15
-  },
-
   "logging": {
     "logLevel": "Information"
   },
@@ -18,6 +9,15 @@
 
   "fix44": {
     "config": "fix_fxcm1.cfg"
+  },
+
+  "execution": {
+    "name": "NautilusExecutor",
+    "host": "10.135.55.111",
+    "commandsPort": 5555,
+    "eventsPort": 5556,
+    "commandsPerSecond": 100,
+    "newOrdersPerSecond": 15
   },
 
   "symbols": [

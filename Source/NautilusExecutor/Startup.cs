@@ -76,13 +76,13 @@ namespace NautilusExecutor
 
             var host = this.Environment.IsDevelopment()
                 ? NetworkAddress.LocalHost()
-                : new NetworkAddress((string)config[ConfigSection.Service]["host"]);
+                : new NetworkAddress((string)config[ConfigSection.Execution]["host"]);
 
-            var commandsPort = new Port((int)config[ConfigSection.Service]["commandsPort"]);
-            var eventsPort = new Port((int)config[ConfigSection.Service]["eventsPort"]);
+            var commandsPort = new Port((int)config[ConfigSection.Execution]["commandsPort"]);
+            var eventsPort = new Port((int)config[ConfigSection.Execution]["eventsPort"]);
 
-            var commandsPerSecond = (int)config[ConfigSection.Service]["commandsPerSecond"];
-            var newOrdersPerSecond = (int)config[ConfigSection.Service]["newOrdersPerSecond"];
+            var commandsPerSecond = (int)config[ConfigSection.Execution]["commandsPerSecond"];
+            var newOrdersPerSecond = (int)config[ConfigSection.Execution]["newOrdersPerSecond"];
 
             var logLevel = this.Environment.IsDevelopment()
                 ? LogEventLevel.Debug

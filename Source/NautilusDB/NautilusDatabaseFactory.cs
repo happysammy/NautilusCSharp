@@ -8,12 +8,15 @@
 
 namespace NautilusDB
 {
+    using System;
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Brokerage.Dukascopy;
+    using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
@@ -94,7 +97,7 @@ namespace NautilusDB
 
             var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
 
-            var fixClient = DukascopyFixClientFactory.Create(
+            var fixClient = GetFixClient(
                 container,
                 messagingAdapter,
                 fixConfig,
@@ -132,6 +135,33 @@ namespace NautilusDB
                 messagingAdapter,
                 systemController,
                 fixClient);
+        }
+
+        private static IFixClient GetFixClient(
+            ComponentryContainer container,
+            MessagingAdapter messagingAdapter,
+            FixConfiguration configuration,
+            InstrumentDataProvider instrumentData)
+        {
+            switch (configuration.Broker)
+            {
+                case Brokerage.FXCM:
+                    return FxcmFixClientFactory.Create(
+                        container,
+                        messagingAdapter,
+                        configuration,
+                        instrumentData);
+
+                case Brokerage.DUKASCOPY:
+                    return DukascopyFixClientFactory.Create(
+                        container,
+                        messagingAdapter,
+                        configuration,
+                        instrumentData);
+
+                default:
+                    throw new InvalidOperationException($"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
+            }
         }
     }
 }
