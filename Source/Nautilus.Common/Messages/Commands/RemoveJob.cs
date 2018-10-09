@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -27,26 +26,22 @@ namespace Nautilus.Common.Messages.Commands
         /// </summary>
         /// <param name="jobKey">The job key to remove.</param>
         /// <param name="triggerKey">The job trigger key to remove.</param>
-        /// <param name="sender">The command sender.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public RemoveJob(
             JobKey jobKey,
             TriggerKey triggerKey,
-            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
             Debug.NotNull(triggerKey, nameof(triggerKey));
-            Debug.NotNull(sender, nameof(sender));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
             this.TriggerKey = triggerKey;
-            this.Sender = sender;
         }
 
         /// <summary>
@@ -58,10 +53,5 @@ namespace Nautilus.Common.Messages.Commands
         /// Gets the jobs trigger key.
         /// </summary>
         public TriggerKey TriggerKey { get; }
-
-        /// <summary>
-        /// Gets the jobs message sender.
-        /// </summary>
-        public IEndpoint Sender { get; }
     }
 }

@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -26,33 +25,24 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="ResumeJob"/> class.
         /// </summary>
         /// <param name="jobKey">The job key to resume.</param>
-        /// <param name="sender">The command sender.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public ResumeJob(
             JobKey jobKey,
-            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
-            Debug.NotNull(sender, nameof(sender));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
-            this.Sender = sender;
         }
 
         /// <summary>
         /// Gets the job to resume key.
         /// </summary>
         public JobKey JobKey { get; }
-
-        /// <summary>
-        /// Gets the resume job commands sender.
-        /// </summary>
-        public IEndpoint Sender { get; }
     }
 }

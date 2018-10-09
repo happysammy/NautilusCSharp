@@ -138,7 +138,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             var pauseJob = new PauseJob(
                 jobKey,
-                this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
@@ -182,7 +181,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             var pauseJob = new PauseJob(
                 jobKey,
-                this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
@@ -190,7 +188,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             var resumeJob = new ResumeJob(
                 jobKey,
-                this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 
@@ -213,7 +210,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
             var removeJob = new RemoveJob(
                 new JobKey("bogus-job-key"),
                 new TriggerKey("bogus-trigger"),
-                this.testActor,
                 Guid.NewGuid(),
                 this.clock.TimeNow());
 

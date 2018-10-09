@@ -324,7 +324,6 @@ namespace Nautilus.Data.Aggregators
                 var removeJob = new RemoveJob(
                     job.Key,
                     job.Value,
-                    new ActorEndpoint(this.Self),
                     this.NewGuid(),
                     this.TimeNow());
 
@@ -408,7 +407,6 @@ namespace Nautilus.Data.Aggregators
                 {
                     var resumeJob = new ResumeJob(
                         barJob.Key,
-                        new ActorEndpoint(this.Self),
                         this.NewGuid(),
                         this.TimeNow());
 
@@ -433,7 +431,6 @@ namespace Nautilus.Data.Aggregators
                 {
                     var pause = new PauseJob(
                         barJob.Key,
-                        new ActorEndpoint(this.Self),
                         this.NewGuid(),
                         this.TimeNow());
 

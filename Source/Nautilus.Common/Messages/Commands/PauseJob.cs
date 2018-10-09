@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
@@ -26,33 +25,24 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="PauseJob"/> class.
         /// </summary>
         /// <param name="jobKey">The job key to pause.</param>
-        /// <param name="sender">The command sender.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public PauseJob(
             JobKey jobKey,
-            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             Debug.NotNull(jobKey, nameof(jobKey));
-            Debug.NotNull(sender, nameof(sender));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
-            this.Sender = sender;
         }
 
         /// <summary>
         /// Gets the job to pause key.
         /// </summary>
         public JobKey JobKey { get; }
-
-        /// <summary>
-        /// Gets the pause job message sender.
-        /// </summary>
-        public IEndpoint Sender { get; }
     }
 }
