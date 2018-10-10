@@ -25,7 +25,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="brokerSymbol">The brokers symbol.</param>
         /// <param name="order">The order.</param>
         /// <param name="transactionTime">The transaction time.</param>
-        /// <returns>The <see cref="OrderCancelRequest"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static OrderCancelRequest Create(
             string brokerSymbol,
             IOrder order,

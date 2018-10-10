@@ -22,7 +22,7 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new trading session status request message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="TradingSessionStatusRequest"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static TradingSessionStatusRequest Create(ZonedDateTime timeNow)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));

@@ -40,9 +40,13 @@ namespace Nautilus.Fix.MessageFactories
             var symbolGroup = new MarketDataRequest.NoRelatedSymGroup();
             symbolGroup.Set(new Symbol(symbol));
 
-            var message = new MarketDataRequest(new MDReqID($"MD_{timeNow.TickOfDay}"), subscriptionType, new MarketDepth(marketDepth));
+            var message = new MarketDataRequest(
+                new MDReqID($"MD_{timeNow.TickOfDay}"),
+                subscriptionType,
+                new MarketDepth(marketDepth));
             message.AddGroup(marketDataEntryGroup);
             message.AddGroup(symbolGroup);
+            message.Set(new NoRelatedSym(1));
             message.Set(new MDUpdateType(0));
 
             return message;

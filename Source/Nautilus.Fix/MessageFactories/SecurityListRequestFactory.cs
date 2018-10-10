@@ -22,7 +22,7 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new security list request message for all symbols.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="SecurityListRequestFactory"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static SecurityListRequest Create(ZonedDateTime timeNow)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));
@@ -41,7 +41,7 @@ namespace Nautilus.Fix.MessageFactories
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="SecurityListRequestFactory"/>.</returns>
+        /// <returns>The FIX message.</returns>
         public static SecurityListRequest Create(string symbol, ZonedDateTime timeNow)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));

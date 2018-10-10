@@ -176,8 +176,8 @@ namespace Nautilus.Fix
                 var settings = new SessionSettings(this.config.ConfigPath);
                 var storeFactory = new FileStoreFactory(settings);
 
-                // var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
+                var logFactory = new ScreenLogFactory(settings);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
 
                 this.Log.Debug("Starting initiator...");
                 this.initiator.Start();

@@ -26,7 +26,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="accountNumber">The account number.</param>
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="NewOrderList"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLoss(
             string brokerSymbol,
             string accountNumber,
@@ -94,7 +94,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="accountNumber">The FIX account number.</param>
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="NewOrderList"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static NewOrderList CreateWithStopLossAndProfitTarget(
             string brokerSymbol,
             string accountNumber,

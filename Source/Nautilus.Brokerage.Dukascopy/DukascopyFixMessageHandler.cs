@@ -108,7 +108,6 @@ namespace Nautilus.Brokerage.Dukascopy
                     var brokerSymbolString = group.GetField(Tags.Symbol);
                     var brokerSymbol = new BrokerSymbol(brokerSymbolString);
 
-                    Console.WriteLine($"RECEIVED {brokerSymbol}");
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
@@ -119,7 +118,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     var symbol = new Symbol(symbolQuery.Value, Venue.DUKASCOPY);
 
                     var symbolId = new InstrumentId(symbol.ToString());
-                    var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
+                    var quoteCurrency = message.GetField(Tags.Currency).ToEnum<CurrencyCode>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));
@@ -187,6 +186,25 @@ namespace Nautilus.Brokerage.Dukascopy
         }
 
         /// <summary>
+        /// Handles quote status report messages.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public void OnMessage(QuoteStatusReport message)
+        {
+            this.Execute(() =>
+            {
+                Validate.NotNull(message, nameof(message));
+
+                var brokerSymbolString = message.GetField(Tags.Symbol);
+                var brokerSymbol = new BrokerSymbol(brokerSymbolString);
+
+                var symbol = new Symbol(brokerSymbolString.Replace("/", string.Empty), Venue.DUKASCOPY);
+
+                this.Log.Information(message.ToString());
+            });
+        }
+
+        /// <summary>
         /// Handles collateral inquiry acknowledgement messages.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -235,20 +253,6 @@ namespace Nautilus.Brokerage.Dukascopy
                     marginRatio,
                     marginCall,
                     time);
-            });
-        }
-
-        /// <summary>
-        /// Handles quote status report messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        public void OnMessage(QuoteStatusReport message)
-        {
-            this.Execute(() =>
-            {
-                Validate.NotNull(message, nameof(message));
-
-                this.Log.Information(message.ToString());
             });
         }
 

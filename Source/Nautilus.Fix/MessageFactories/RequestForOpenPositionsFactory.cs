@@ -22,7 +22,7 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new request for open positions message.
         /// </summary>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="RequestForPositions"/> message.</returns>
+        /// <returns>The FIX message.</returns>
         public static RequestForPositions Create(ZonedDateTime timeNow)
         {
             Debug.NotDefault(timeNow, nameof(timeNow));

@@ -28,7 +28,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="accountNumber">The account number.</param>
         /// <param name="order">The order to submit.</param>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>The created new order single message.</returns>
+        /// <returns>The FIX message.</returns>
         public static QuickFix.FIX44.NewOrderSingle Create(
             string brokerSymbol,
             string accountNumber,
