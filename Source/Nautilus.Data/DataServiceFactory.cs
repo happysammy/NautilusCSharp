@@ -38,6 +38,7 @@ namespace Nautilus.Data
         /// <param name="symbols">The symbols to initially subscribe to.</param>
         /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
+        /// <param name="updateInstruments">The option flag to update instruments.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
         public static Dictionary<Address, IEndpoint> Create(
             ActorSystem actorSystem,
@@ -50,7 +51,8 @@ namespace Nautilus.Data
             IInstrumentRepository instrumentRepository,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
-            int barRollingWindow)
+            int barRollingWindow,
+            bool updateInstruments)
         {
             Validate.NotNull(container, nameof(container));
             Validate.NotNull(publisherFactory, nameof(publisherFactory));
@@ -92,7 +94,8 @@ namespace Nautilus.Data
                     () => new DataService(
                         container,
                         messagingAdapter,
-                        gateway))));
+                        gateway,
+                        updateInstruments))));
 
             gateway.RegisterTickReceiver(tickPublisher);
             gateway.RegisterTickReceiver(barAggregationController);

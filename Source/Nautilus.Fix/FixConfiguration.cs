@@ -24,14 +24,16 @@ namespace Nautilus.Fix
         /// <param name="broker">The FIX brokerage name.</param>
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
-        /// <param name="sendAccountTag">The SendAccountTag option flag.</param>
         /// <param name="instrumentDataFileName">The instrument data file name.</param>
+        /// <param name="sendAccountTag">The option flag to send account tags with messages.</param>
+        /// <param name="updateInstruments">The option to update instruments.</param>
         public FixConfiguration(
             Brokerage broker,
             string configPath,
             FixCredentials credentials,
+            string instrumentDataFileName,
             bool sendAccountTag,
-            string instrumentDataFileName)
+            bool updateInstruments)
         {
             Validate.NotNull(configPath, nameof(configPath));
             Validate.NotNull(credentials, nameof(credentials));
@@ -40,8 +42,9 @@ namespace Nautilus.Fix
             this.Broker = broker;
             this.ConfigPath = configPath;
             this.Credentials = credentials;
-            this.SendAccountTag = sendAccountTag;
             this.InstrumentDataFileName = instrumentDataFileName;
+            this.SendAccountTag = sendAccountTag;
+            this.UpdateInstruments = updateInstruments;
         }
 
         /// <summary>
@@ -60,13 +63,18 @@ namespace Nautilus.Fix
         public FixCredentials Credentials { get; }
 
         /// <summary>
+        /// Gets the FIX instrument data file name.
+        /// </summary>
+        public string InstrumentDataFileName { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the Account tag should be sent with FIX messages.
         /// </summary>
         public bool SendAccountTag { get; }
 
         /// <summary>
-        /// Gets the FIX instrument data file name.
+        /// Gets a value indicating whether the instruments should be updated.
         /// </summary>
-        public string InstrumentDataFileName { get; }
+        public bool UpdateInstruments { get; }
     }
 }

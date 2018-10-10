@@ -19,7 +19,7 @@
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="..\brokerage_fxcm_instruments.csv">
+        <Content Include="..\brokerage_dukascopy_instruments.csv">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

@@ -29,6 +29,7 @@ namespace Nautilus.Data
     public sealed class DataService : ActorComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;
+        private readonly bool updateInstruments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -36,11 +37,12 @@ namespace Nautilus.Data
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="gateway">The FIX gateway.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
             IMessagingAdapter messagingAdapter,
-            IFixGateway gateway)
+            IFixGateway gateway,
+            bool updateInstruments)
             : base(
                 NautilusService.Data,
                 LabelFactory.Component(nameof(DataService)),
@@ -52,6 +54,7 @@ namespace Nautilus.Data
             Validate.NotNull(gateway, nameof(gateway));
 
             this.gateway = gateway;
+            this.updateInstruments = updateInstruments;
 
             // Command messages.
             this.Receive<ConnectFixJob>(this.OnMessage);
@@ -164,7 +167,11 @@ namespace Nautilus.Data
 
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            this.gateway.UpdateInstrumentsSubscribeAll();
+            if (this.updateInstruments)
+            {
+                this.gateway.UpdateInstrumentsSubscribeAll();
+            }
+
             this.gateway.MarketDataSubscribeAll();
         }
 

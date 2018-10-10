@@ -105,10 +105,10 @@ namespace Nautilus.Brokerage.FXCM
                         continue;
                     }
 
-                    var symbolString = group.GetField(Tags.Symbol);
-                    var fxcmSymbol = new BrokerSymbol(symbolString);
+                    var brokerSymbolString = group.GetField(Tags.Symbol);
+                    var brokerSymbol = new BrokerSymbol(brokerSymbolString);
 
-                    var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol.Value);
+                    var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Error(symbolQuery.Message);
@@ -126,7 +126,7 @@ namespace Nautilus.Brokerage.FXCM
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
 
-                    var tickValueQuery = this.instrumentData.GetTickValue(fxcmSymbol.Value);
+                    var tickValueQuery = this.instrumentData.GetTickValue(brokerSymbol.Value);
                     if (tickValueQuery.IsFailure)
                     {
                         this.Log.Error(tickValueQuery.Message);
@@ -135,7 +135,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     var tickValue = tickValueQuery.Value;
 
-                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(fxcmSymbol.Value);
+                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(brokerSymbol.Value);
                     if (targetDirectSpreadQuery.IsFailure)
                     {
                         this.Log.Error(targetDirectSpreadQuery.Message);
@@ -157,7 +157,7 @@ namespace Nautilus.Brokerage.FXCM
                     var instrument = new Instrument(
                         symbol,
                         symbolId,
-                        fxcmSymbol,
+                        brokerSymbol,
                         quoteCurrency,
                         securityType,
                         tickDecimals,
@@ -172,7 +172,7 @@ namespace Nautilus.Brokerage.FXCM
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        this.instrumentData.GetMarginRequirement(symbolString).Value,
+                        this.instrumentData.GetMarginRequirement(brokerSymbolString).Value,
                         rolloverInterestBuy,
                         rolloverInterestSell,
                         this.TimeNow());
@@ -301,9 +301,9 @@ namespace Nautilus.Brokerage.FXCM
                     return;
                 }
 
-                var fxcmSymbol = message.GetField(Tags.Symbol);
+                var brokerSymbol = message.GetField(Tags.Symbol);
 
-                var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol);
+                var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol);
                 if (symbolQuery.IsFailure)
                 {
                     throw new InvalidOperationException(symbolQuery.Message);
@@ -366,10 +366,10 @@ namespace Nautilus.Brokerage.FXCM
             {
                 Validate.NotNull(message, nameof(message));
 
-                var fxcmSymbol = message.GetField(Tags.Symbol);
+                var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? this.instrumentData.GetNautilusSymbol(fxcmSymbol).Value
+                    ? this.instrumentData.GetNautilusSymbol(brokerSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);

@@ -93,21 +93,19 @@ namespace NautilusExecutor
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
-            var brokerage = fixSettings["Brokerage"].ToEnum<Brokerage>();
+            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
             var credentials = new FixCredentials(
                 account: fixSettings["Account"],
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
-            var instrumentDataFileName = fixSettings["InstrumentData"];
-
             var fixConfig = new FixConfiguration(
-                brokerage,
+                broker,
                 configPath,
                 credentials,
-                sendAccountTag,
-                instrumentDataFileName);
+                fixSettings["InstrumentData"],
+                Convert.ToBoolean(fixSettings["SendAccountTag"]),
+                Convert.ToBoolean(fixSettings["UpdateInstruments"]));
 
             this.executionSystem = NautilusExecutorFactory.Create(
                 logLevel,

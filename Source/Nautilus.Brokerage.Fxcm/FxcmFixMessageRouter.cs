@@ -168,10 +168,11 @@ namespace Nautilus.Brokerage.FXCM
 
             this.Execute(() =>
             {
-                var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
+                var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
                 this.fixSessionMd.Send(MarketDataRequestFactory.Create(
-                    fxcmSymbol,
+                    brokerSymbol,
+                    0,
                     this.TimeNow()));
 
                 this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({symbol})...");
@@ -185,13 +186,14 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                foreach (var fxcmSymbol in this.instrumentData.GetAllBrokerSymbols())
+                foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
                 {
                     this.fixSessionMd.Send(MarketDataRequestFactory.Create(
-                        fxcmSymbol,
+                        brokerSymbol,
+                        0,
                         this.TimeNow()));
 
-                    this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
+                    this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({brokerSymbol})...");
                 }
             });
         }

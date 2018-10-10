@@ -167,10 +167,11 @@ namespace Nautilus.Brokerage.Dukascopy
 
             this.Execute(() =>
             {
-                var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
+                var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
                 this.fixSessionMd.Send(MarketDataRequestFactory.Create(
-                    fxcmSymbol,
+                    brokerSymbol,
+                    1,
                     this.TimeNow()));
 
                 this.Log.Information($"MarketDataRequest + SubscribeUpdates ({symbol})...");
@@ -184,13 +185,14 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                foreach (var fxcmSymbol in this.instrumentData.GetAllBrokerSymbols())
+                foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
                 {
                     this.fixSessionMd.Send(MarketDataRequestFactory.Create(
-                        fxcmSymbol,
+                        brokerSymbol,
+                        1,
                         this.TimeNow()));
 
-                    this.Log.Information($"MarketDataRequest + SubscribeUpdates ({fxcmSymbol})...");
+                    this.Log.Information($"MarketDataRequest + SubscribeUpdates ({brokerSymbol})...");
                 }
             });
         }

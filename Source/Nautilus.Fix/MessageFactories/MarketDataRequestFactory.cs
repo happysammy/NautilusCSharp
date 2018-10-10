@@ -22,25 +22,28 @@ namespace Nautilus.Fix.MessageFactories
         /// Creates and returns a new market data request FIX message.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
+        /// <param name="marketDepth">The market depth.</param>
         /// <param name="timeNow">The time now.</param>
-        /// <returns>A <see cref="MarketDataRequest"/> message.</returns>
-        public static MarketDataRequest Create(string symbol, ZonedDateTime timeNow)
+        /// <returns>The FIX message.</returns>
+        public static MarketDataRequest Create(string symbol, int marketDepth, ZonedDateTime timeNow)
         {
             Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotNegativeInt32(marketDepth, nameof(marketDepth));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var subType = new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES);
-            var marketDepth = new MarketDepth(0);
+            var subscriptionType = new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES);
 
             var marketDataEntryGroup = new MarketDataRequest.NoMDEntryTypesGroup();
             marketDataEntryGroup.Set(new MDEntryType(MDEntryType.BID));
+            marketDataEntryGroup.Set(new MDEntryType(MDEntryType.OFFER));
 
             var symbolGroup = new MarketDataRequest.NoRelatedSymGroup();
             symbolGroup.Set(new Symbol(symbol));
 
-            var message = new MarketDataRequest(new MDReqID($"MD_{timeNow.TickOfDay}"), subType, marketDepth);
+            var message = new MarketDataRequest(new MDReqID($"MD_{timeNow.TickOfDay}"), subscriptionType, new MarketDepth(marketDepth));
             message.AddGroup(marketDataEntryGroup);
             message.AddGroup(symbolGroup);
+            message.Set(new MDUpdateType(0));
 
             return message;
         }

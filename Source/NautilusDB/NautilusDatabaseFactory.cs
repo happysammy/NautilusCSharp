@@ -119,7 +119,8 @@ namespace NautilusDB
                 instrumentRepository,
                 symbols,
                 resolutions,
-                barRollingWindow);
+                barRollingWindow,
+                fixConfig.UpdateInstruments);
 
             dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
             var switchboard = new Switchboard(dataServiceAddresses);

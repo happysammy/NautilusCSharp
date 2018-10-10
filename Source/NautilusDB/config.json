@@ -8,7 +8,7 @@
   },
 
   "fix44": {
-    "config": "fix_fxcm1_md.cfg"
+    "config": "fix_duka1_md.cfg"
   },
 
   "database": {

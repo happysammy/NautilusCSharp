@@ -94,15 +94,13 @@ namespace NautilusDB
                 username: fixSettings["Username"],
                 password: fixSettings["Password"]);
 
-            var sendAccountTag = Convert.ToBoolean(fixSettings["SendAccountTag"]);
-            var instrumentDataFileName = fixSettings["InstrumentData"];
-
             var fixConfig = new FixConfiguration(
                 broker,
                 configPath,
                 credentials,
-                sendAccountTag,
-                instrumentDataFileName);
+                fixSettings["InstrumentData"],
+                Convert.ToBoolean(fixSettings["SendAccountTag"]),
+                Convert.ToBoolean(fixSettings["UpdateInstruments"]));
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();

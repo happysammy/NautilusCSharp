@@ -105,8 +105,8 @@ namespace Nautilus.Brokerage.Dukascopy
                         continue;
                     }
 
-                    var symbolString = group.GetField(Tags.Symbol);
-                    var brokerSymbol = new BrokerSymbol(symbolString);
+                    var brokerSymbolString = group.GetField(Tags.Symbol);
+                    var brokerSymbol = new BrokerSymbol(brokerSymbolString);
 
                     Console.WriteLine($"RECEIVED {brokerSymbol}");
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
@@ -171,7 +171,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        this.instrumentData.GetMarginRequirement(symbolString).Value,
+                        this.instrumentData.GetMarginRequirement(brokerSymbolString).Value,
                         rolloverInterestBuy,
                         rolloverInterestSell,
                         this.TimeNow());
@@ -298,9 +298,11 @@ namespace Nautilus.Brokerage.Dukascopy
                     return;
                 }
 
-                var fxcmSymbol = message.GetField(Tags.Symbol);
+                var brokerSymbol = message.GetField(Tags.Symbol);
 
-                var symbolQuery = this.instrumentData.GetNautilusSymbol(fxcmSymbol);
+                Console.WriteLine($"RECEIVED A TICK for {brokerSymbol}");
+
+                var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol);
                 if (symbolQuery.IsFailure)
                 {
                     throw new InvalidOperationException(symbolQuery.Message);
@@ -363,10 +365,10 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 Validate.NotNull(message, nameof(message));
 
-                var fxcmSymbol = message.GetField(Tags.Symbol);
+                var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? this.instrumentData.GetNautilusSymbol(fxcmSymbol).Value
+                    ? this.instrumentData.GetNautilusSymbol(brokerSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);
