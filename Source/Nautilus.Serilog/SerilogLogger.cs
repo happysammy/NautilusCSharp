@@ -124,7 +124,7 @@ namespace Nautilus.Serilog
             var builder = new System.Text.StringBuilder();
             builder.Append(underscoreAppend);
 
-            for (int i = 0; i < lengthDifference; i++)
+            for (var i = 0; i < lengthDifference; i++)
             {
                 builder.Append("_");
             }

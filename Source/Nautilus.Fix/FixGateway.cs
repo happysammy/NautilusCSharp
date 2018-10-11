@@ -16,7 +16,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
@@ -35,7 +34,6 @@ namespace Nautilus.Fix
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
     {
         private readonly IFixClient fixClient;
-        private readonly ReadOnlyDictionary<string, int> pricePrecisionIndex;
         private readonly List<IEndpoint> tickReceivers;
         private readonly List<IEndpoint> eventReceivers;
         private readonly List<Address> instrumentReceivers;
@@ -61,7 +59,6 @@ namespace Nautilus.Fix
             Validate.NotNull(fixClient, nameof(fixClient));
 
             this.fixClient = fixClient;
-            this.pricePrecisionIndex = fixClient.GetPricePrecisionIndex();
             this.tickReceivers = new List<IEndpoint>();
             this.eventReceivers = new List<IEndpoint>();
             this.instrumentReceivers = new List<Address>();
@@ -268,16 +265,10 @@ namespace Nautilus.Fix
                 Validate.PositiveDecimal(bid, nameof(bid));
                 Validate.PositiveDecimal(ask, nameof(ask));
 
-                if (!this.pricePrecisionIndex.ContainsKey(symbolCode))
-                {
-                    this.Log.Warning($"Cannot process tick (symbol {symbolCode} not contained in price precision index).");
-                    return;
-                }
-
                 var tick = new Tick(
                     new Symbol(symbolCode, venue),
-                    Price.Create(bid, this.pricePrecisionIndex[symbolCode]),
-                    Price.Create(ask, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(bid, bid.GetDecimalPlaces()),
+                    Price.Create(ask, ask.GetDecimalPlaces()),
                     timestamp);
 
                 foreach (var receiver in this.tickReceivers)
@@ -628,7 +619,7 @@ namespace Nautilus.Fix
                     new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(brokerOrderId),
-                    Price.Create(price, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -695,7 +686,7 @@ namespace Nautilus.Fix
                     orderSide,
                     orderType,
                     Quantity.Create(quantity),
-                    Price.Create(price, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(price, price.GetDecimalPlaces()),
                     timeInForce,
                     expireTime,
                     timestamp,
@@ -817,7 +808,7 @@ namespace Nautilus.Fix
                     new ExecutionId(executionTicket),
                     orderSide,
                     Quantity.Create(filledQuantity),
-                    Price.Create(averagePrice, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -889,7 +880,7 @@ namespace Nautilus.Fix
                     orderSide,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
-                    Price.Create(averagePrice, this.pricePrecisionIndex[symbolCode]),
+                    Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());

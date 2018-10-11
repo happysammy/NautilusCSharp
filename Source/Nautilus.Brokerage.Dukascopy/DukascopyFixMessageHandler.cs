@@ -304,8 +304,6 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
-                Console.WriteLine($"RECEIVED A TICK for {brokerSymbol}");
-
                 var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol);
                 if (symbolQuery.IsFailure)
                 {
@@ -317,19 +315,17 @@ namespace Nautilus.Brokerage.Dukascopy
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
                 message.GetGroup(1, group);
-                var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
-                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
-                var bid = group.GetField(Tags.MDEntryPx);
+                var ask = group.GetField(Tags.MDEntryPx);
 
                 message.GetGroup(2, group);
-                var ask = group.GetField(Tags.MDEntryPx);
+                var bid = group.GetField(Tags.MDEntryPx);
 
                 this.fixGateway.OnTick(
                     symbol,
                     Venue.DUKASCOPY,
                     Convert.ToDecimal(bid),
                     Convert.ToDecimal(ask),
-                    timestamp);
+                    this.TimeNow());
             });
         }
 

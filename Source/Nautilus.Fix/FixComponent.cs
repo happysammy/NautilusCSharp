@@ -176,8 +176,8 @@ namespace Nautilus.Fix
                 var settings = new SessionSettings(this.config.ConfigPath);
                 var storeFactory = new FileStoreFactory(settings);
 
-                var logFactory = new ScreenLogFactory(settings);
-                this.initiator = new SocketInitiator(this, storeFactory, settings, logFactory);
+                // var logFactory = new ScreenLogFactory(settings);
+                this.initiator = new SocketInitiator(this, storeFactory, settings, null);
 
                 this.Log.Debug("Starting initiator...");
                 this.initiator.Start();
@@ -289,11 +289,10 @@ namespace Nautilus.Fix
                 Validate.NotNull(message, nameof(message));
                 Validate.NotNull(sessionId, nameof(sessionId));
 
-                if (message.GetType() == typeof(Logon))
+                if (message is Logon)
                 {
                     message.SetField(new Username(this.config.Credentials.Username));
                     message.SetField(new Password(this.config.Credentials.Password));
-                    message.SetField(new EncryptMethod(EncryptMethod.NONE));
 
                     this.Log.Debug("Authorizing session...");
                 }
@@ -338,7 +337,10 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute<FieldNotFoundException>(() =>
             {
-                message.SetField(new Account(this.config.Credentials.Account));
+                if (this.sendAccountTag)
+                {
+                    message.SetField(new Account(this.config.Credentials.Account));
+                }
 
                 var possDupFlag = false;
 
