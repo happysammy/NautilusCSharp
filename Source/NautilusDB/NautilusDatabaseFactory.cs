@@ -22,6 +22,7 @@ namespace NautilusDB
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
     using Nautilus.Compression;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
@@ -95,7 +96,8 @@ namespace NautilusDB
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
             instrumentRepository.CacheAll();
 
-            var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
+            var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
+            var instrumentData = new InstrumentDataProvider(venue, fixConfig.InstrumentDataFileName);
 
             var fixClient = GetFixClient(
                 container,

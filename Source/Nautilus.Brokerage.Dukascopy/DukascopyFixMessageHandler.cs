@@ -200,7 +200,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                 var symbol = new Symbol(brokerSymbolString.Replace("/", string.Empty), Venue.DUKASCOPY);
 
-                this.Log.Information(message.ToString());
+                this.Log.Information($"QuoteStatusReport({symbol})");
             });
         }
 

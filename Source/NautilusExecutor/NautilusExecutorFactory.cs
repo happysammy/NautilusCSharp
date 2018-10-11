@@ -20,6 +20,7 @@ namespace NautilusExecutor
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
@@ -83,7 +84,8 @@ namespace NautilusExecutor
                 actorSystem.ActorOf(Props.Create(
                     () => new Scheduler(container))));
 
-            var instrumentData = new InstrumentDataProvider(fixConfig.InstrumentDataFileName);
+            var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
+            var instrumentData = new InstrumentDataProvider(venue, fixConfig.InstrumentDataFileName);
 
             var fixClient = GetFixClient(
                 container,

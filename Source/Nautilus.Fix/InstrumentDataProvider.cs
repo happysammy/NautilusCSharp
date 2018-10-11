@@ -23,6 +23,7 @@ namespace Nautilus.Fix
     /// </summary>
     public class InstrumentDataProvider
     {
+        private readonly Venue venue;
         private readonly ReadOnlyDictionary<string, string> symbolIndex;
         private readonly ReadOnlyDictionary<string, int> priceDecimalPrecisionIndex;
         private readonly ReadOnlyDictionary<string, decimal> tickValueIndex;
@@ -32,9 +33,11 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentDataProvider"/> class.
         /// </summary>
+        /// <param name="venue">The instrument data providers venue.</param>
         /// <param name="csvDataFileName">The CSV data file name.</param>
-        public InstrumentDataProvider(string csvDataFileName)
+        public InstrumentDataProvider(Venue venue, string csvDataFileName)
         {
+            this.venue = venue;
             var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             var csvDataFilePath = Path.GetFullPath(Path.Combine(assemblyDirectory, csvDataFileName));
 
@@ -82,7 +85,7 @@ namespace Nautilus.Fix
         public ReadOnlyList<Symbol> GetAllSymbols()
         {
             var symbols = this.symbolIndex.Values
-                .Select(symbol => new Symbol(symbol, Venue.FXCM))
+                .Select(symbol => new Symbol(symbol, this.venue))
                 .ToList();
 
             return new ReadOnlyList<Symbol>(symbols);
