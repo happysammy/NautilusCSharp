@@ -31,23 +31,24 @@ namespace Nautilus.Fix.MessageFactories
             Debug.NotNegativeInt32(marketDepth, nameof(marketDepth));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
-            var subscriptionType = new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES);
+            var marketDataEntryGroup1 = new MarketDataRequest.NoMDEntryTypesGroup();
+            marketDataEntryGroup1.Set(new MDEntryType(MDEntryType.BID));
 
-            var marketDataEntryGroup = new MarketDataRequest.NoMDEntryTypesGroup();
-            marketDataEntryGroup.Set(new MDEntryType(MDEntryType.BID));
-            marketDataEntryGroup.Set(new MDEntryType(MDEntryType.OFFER));
+            var marketDataEntryGroup2 = new MarketDataRequest.NoMDEntryTypesGroup();
+            marketDataEntryGroup2.Set(new MDEntryType(MDEntryType.OFFER));
 
             var symbolGroup = new MarketDataRequest.NoRelatedSymGroup();
-            symbolGroup.Set(new Symbol(symbol));
+            symbolGroup.SetField(new Symbol(symbol));
 
             var message = new MarketDataRequest(
                 new MDReqID($"MD_{timeNow.TickOfDay}"),
-                subscriptionType,
+                new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES),
                 new MarketDepth(marketDepth));
-            message.AddGroup(marketDataEntryGroup);
-            message.AddGroup(symbolGroup);
-            message.Set(new NoRelatedSym(1));
             message.Set(new MDUpdateType(0));
+            message.AddGroup(marketDataEntryGroup1);
+            message.AddGroup(marketDataEntryGroup2);
+            message.Set(new NoRelatedSym(1));
+            message.AddGroup(symbolGroup);
 
             return message;
         }
