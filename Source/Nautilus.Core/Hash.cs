@@ -52,6 +52,7 @@ namespace Nautilus.Core
                 var hash = Initializer;
                 hash = (hash * Multiplier) + value1.GetHashCode();
                 hash = (hash * Multiplier) + value2.GetHashCode();
+
                 return hash;
             }
         }
