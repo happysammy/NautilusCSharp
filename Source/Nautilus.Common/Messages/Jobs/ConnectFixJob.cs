@@ -12,16 +12,10 @@ namespace Nautilus.Common.Messages.Jobs
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents a job to connect to the FIX sessions.
+    /// Represents a job to connect to a FIX session.
     /// </summary>
     [Immutable]
     public sealed class ConnectFixJob : IScheduledJob
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConnectFixJob"/> class.
-        /// </summary>
-        public ConnectFixJob()
-        {
-        }
     }
 }

@@ -12,16 +12,10 @@ namespace Nautilus.Common.Messages.Jobs
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents a job to disconnect the FIX sessions.
+    /// Represents a job to disconnect a FIX session.
     /// </summary>
     [Immutable]
     public sealed class DisconnectFixJob : IScheduledJob
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DisconnectFixJob"/> class.
-        /// </summary>
-        public DisconnectFixJob()
-        {
-        }
     }
 }
