@@ -15,7 +15,7 @@ namespace Nautilus.Core.Annotations
     /// performance optimized, therefore there is a tendency towards low level implementations over
     /// typical OO abstractions as follows;
     /// - primitive types
-    /// - concrete types (avoiding interface dispatch overhead).
+    /// - concrete types (avoiding interface dispatch overhead)
     /// - arrays
     /// - for loops
     ///

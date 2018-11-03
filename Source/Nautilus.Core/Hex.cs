@@ -45,7 +45,7 @@ namespace Nautilus.Core
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] data, int off, int length)
         {
-            return Encoding.ASCII.GetString(Encode(data, off, length));
+            return Encoding.UTF8.GetString(Encode(data, off, length));
         }
 
         /// <summary>
