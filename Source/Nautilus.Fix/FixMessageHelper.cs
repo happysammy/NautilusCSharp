@@ -120,7 +120,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="timeInForce">The time in force.</param>
         /// <returns>A <see cref="TimeInForce"/>.</returns>
-        public static TimeInForce GetNautilusTimeInForce(string timeInForce)
+        public static TimeInForce GetTimeInForce(string timeInForce)
         {
             return TimeInForceStringIndex.ContainsKey(timeInForce)
                 ? TimeInForceStringIndex[timeInForce]
@@ -148,7 +148,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="side">The side.</param>
         /// <returns>The <see cref="OrderSide"/>.</returns>
-        public static OrderSide GetNautilusOrderSide(string side)
+        public static OrderSide GetOrderSide(string side)
         {
             if (side == Side.BUY.ToString())
             {
@@ -192,7 +192,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="fixType">The fix type.</param>
         /// <returns>The <see cref="OrderType"/>.</returns>
-        public static OrderType GetNautilusOrderType(string fixType)
+        public static OrderType GetOrderType(string fixType)
         {
             if (fixType == OrdType.MARKET.ToString())
             {

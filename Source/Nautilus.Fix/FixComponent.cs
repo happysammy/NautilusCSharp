@@ -111,8 +111,7 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsFixConnected => this.session.IsLoggedOn
-                                         && this.sessionMd.IsLoggedOn;
+        public bool IsFixConnected => this.session.IsLoggedOn || this.sessionMd.IsLoggedOn;
 
         /// <summary>
         /// The initializes the execution gateway.

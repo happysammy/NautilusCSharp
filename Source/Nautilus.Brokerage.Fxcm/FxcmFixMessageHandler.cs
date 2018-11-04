@@ -375,13 +375,13 @@ namespace Nautilus.Brokerage.FXCM
                 var orderId = GetField(message, Tags.ClOrdID);
                 var brokerOrderId = GetField(message, Tags.OrderID);
                 var orderLabel = GetField(message, Tags.SecondaryClOrdID);
-                var orderSide = FixMessageHelper.GetNautilusOrderSide(GetField(message, Tags.Side));
-                var orderType = FixMessageHelper.GetNautilusOrderType(GetField(message, Tags.OrdType));
+                var orderSide = FixMessageHelper.GetOrderSide(GetField(message, Tags.Side));
+                var orderType = FixMessageHelper.GetOrderType(GetField(message, Tags.OrdType));
                 var price = FixMessageHelper.GetOrderPrice(
                     orderType,
                     Convert.ToDecimal(GetField(message, Tags.StopPx)),
                     Convert.ToDecimal(GetField(message, Tags.Price)));
-                var timeInForce = FixMessageHelper.GetNautilusTimeInForce(GetField(message, Tags.TimeInForce));
+                var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
                 var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
                 var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
 
