@@ -427,7 +427,7 @@ namespace Nautilus.Fix
 
         private static readonly ZonedDateTimePattern ExecutionReportParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
-                "yyyyMMdd-HH:mm:ss",
+                "yyyyMMdd-HH:mm:ss.fff",
                 DateTimeZoneProviders.Tzdb);
 
         /// <summary>

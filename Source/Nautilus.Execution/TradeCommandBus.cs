@@ -59,7 +59,6 @@ namespace Nautilus.Execution
         private void OnMessage(CollateralInquiry message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.CollateralInquiry();
 
@@ -69,7 +68,6 @@ namespace Nautilus.Execution
         private void OnMessage(SubmitOrder message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.SubmitOrder(message.Order);
         }
@@ -77,7 +75,6 @@ namespace Nautilus.Execution
         private void OnMessage(SubmitTrade message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             foreach (var atomicOrder in message.OrderPacket.Orders)
             {
@@ -90,7 +87,6 @@ namespace Nautilus.Execution
         private void OnMessage(CancelOrder message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.CancelOrder(message.Order);
         }
@@ -98,7 +94,6 @@ namespace Nautilus.Execution
         private void OnMessage(ModifyOrder message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
 
@@ -108,7 +103,6 @@ namespace Nautilus.Execution
         private void OnMessage(ClosePosition message)
         {
             Debug.NotNull(message, nameof(message));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.ClosePosition(message.Position);
 
@@ -118,21 +112,8 @@ namespace Nautilus.Execution
         private void RouteOrder(AtomicOrder atomicOrder)
         {
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
-            Validate.True(this.IsConnected(), nameof(this.gateway.IsConnected));
 
             this.gateway.SubmitOrder(atomicOrder);
-        }
-
-        private bool IsConnected()
-        {
-            if (!this.gateway.IsConnected)
-            {
-                this.Log.Error("Cannot process command (not connected to broker).");
-
-                return false;
-            }
-
-            return true;
         }
     }
 }
