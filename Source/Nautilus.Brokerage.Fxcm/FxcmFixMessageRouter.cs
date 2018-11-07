@@ -30,7 +30,6 @@ namespace Nautilus.Brokerage.FXCM
         private readonly string accountNumber;
 
         private Session fixSession;
-        private Session fixSessionMd;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
@@ -64,18 +63,6 @@ namespace Nautilus.Brokerage.FXCM
             Validate.NotNull(session, nameof(session));
 
             this.fixSession = session;
-        }
-
-        /// <summary>
-        /// Connects the FIX session md.
-        /// </summary>
-        /// <param name="sessionMd">The FIX session md.
-        /// </param>
-        public void ConnectSessionMd(Session sessionMd)
-        {
-            Validate.NotNull(sessionMd, nameof(sessionMd));
-
-            this.fixSessionMd = sessionMd;
         }
 
         /// <summary>
@@ -170,7 +157,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
-                this.fixSessionMd.Send(MarketDataRequestFactory.Create(
+                this.fixSession.Send(MarketDataRequestFactory.Create(
                     brokerSymbol,
                     0,
                     this.TimeNow()));
@@ -188,7 +175,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
                 {
-                    this.fixSessionMd.Send(MarketDataRequestFactory.Create(
+                    this.fixSession.Send(MarketDataRequestFactory.Create(
                         brokerSymbol,
                         0,
                         this.TimeNow()));
