@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The trade status.
+    /// The status of a particular trade.
     /// </summary>
     public enum TradeStatus
     {
