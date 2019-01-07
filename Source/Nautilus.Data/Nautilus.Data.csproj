@@ -16,7 +16,7 @@
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Data.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CsvHelper" Version="9.1.0" />
+        <PackageReference Include="CsvHelper" Version="12.1.1" />
         <PackageReference Include="ServiceStack" Version="5.4.0" />
         <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
     </ItemGroup>
