@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The security type.
+    /// The type of security.
     /// </summary>
     public enum SecurityType
     {

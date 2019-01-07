@@ -29,7 +29,7 @@ namespace Nautilus.DomainModel.Entities
         private readonly Option<Order> profitTarget;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AtomicOrder" /> class.
+        /// Initializes a new instance of the <see cref="AtomicOrder"/> class.
         /// </summary>
         /// <param name="tradeType">The trade type.</param>
         /// <param name="entry">The entry order.</param>

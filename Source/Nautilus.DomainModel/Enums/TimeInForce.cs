@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.Enums
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents the time in force for an order.
+    /// The time in force for an order.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum TimeInForce

@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.Enums
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents the type of order.
+    /// The type of order at the brokerage.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
     public enum OrderType

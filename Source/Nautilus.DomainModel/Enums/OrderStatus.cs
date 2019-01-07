@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Enums
 {
     /// <summary>
-    /// The order status enumeration.
+    /// The status of an order at the brokerage.
     /// </summary>
     public enum OrderStatus
     {
