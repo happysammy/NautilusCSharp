@@ -35,7 +35,7 @@ namespace Nautilus.Data.Readers
         /// Initializes a new instance of the <see cref="CsvBarDataReader"/> class.
         /// </summary>
         /// <param name="barType">The symbol bar data.</param>
-        /// <param name="dataProvider">The market data provider.</param>
+        /// <param name="dataProvider">The bar data provider.</param>
         /// <param name="decimals">The decimal precision for bars.</param>
         /// <exception cref="Nautilus.Core.Validation.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
@@ -45,11 +45,13 @@ namespace Nautilus.Data.Readers
         {
             Validate.NotNull(barType, nameof(barType));
             Validate.NotNull(dataProvider, nameof(dataProvider));
+            Validate.NotNegativeInt32(decimals, nameof(decimals));
+
+            this.decimals = decimals;
 
             this.BarType = barType;
             this.DataProvider = dataProvider;
             this.FilePathWildcard = this.BuildFilePathWildcard(dataProvider);
-            this.decimals = decimals;
         }
 
         /// <summary>
