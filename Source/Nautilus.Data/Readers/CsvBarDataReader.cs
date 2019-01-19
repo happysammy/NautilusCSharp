@@ -118,40 +118,40 @@ namespace Nautilus.Data.Readers
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
-            if (readAllBarsQuery.IsSuccess)
+            if (readAllBarsQuery.IsFailure)
             {
-                if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
-                {
-                    QueryResult<BarDataFrame>.Fail(
-                        $"No bars found to collect for {this.BarType} " +
-                        $"after {fromDateTime.ToIsoString()}");
-                }
-
-                var bars = readAllBarsQuery.Value.Bars;
-                var barsAfterFromDate = new List<Bar>();
-
-                for (var i = 0; i < bars.Length; i++)
-                {
-                    if (bars[i].Timestamp.IsGreaterThan(fromDateTime))
-                    {
-                        barsAfterFromDate.Add(bars[i]);
-                    }
-                }
-
-                // TODO: Redundant check due to bars 0 bug.
-                if (barsAfterFromDate.Count == 0)
-                {
-                    return QueryResult<BarDataFrame>.Fail(
-                        $"No bars found to collect for {this.BarType} " +
-                        $"after {fromDateTime.ToIsoString()}");
-                }
-
-                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
-                    this.BarType,
-                    barsAfterFromDate.ToArray()));
+                return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
             }
 
-            return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
+            if (readAllBarsQuery.Value.Bars.Last().Timestamp.IsLessThan(fromDateTime))
+            {
+                QueryResult<BarDataFrame>.Fail(
+                    $"No bars found to collect for {this.BarType} " +
+                    $"after {fromDateTime.ToIsoString()}");
+            }
+
+            var bars = readAllBarsQuery.Value.Bars;
+            var barsAfterFromDate = new List<Bar>();
+
+            for (var i = 0; i < bars.Length; i++)
+            {
+                if (bars[i].Timestamp.IsGreaterThan(fromDateTime))
+                {
+                    barsAfterFromDate.Add(bars[i]);
+                }
+            }
+
+            // TODO: Redundant check due to bars 0 bug.
+            if (barsAfterFromDate.Count == 0)
+            {
+                return QueryResult<BarDataFrame>.Fail(
+                    $"No bars found to collect for {this.BarType} " +
+                    $"after {fromDateTime.ToIsoString()}");
+            }
+
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(
+                this.BarType,
+                barsAfterFromDate.ToArray()));
         }
 
         /// <summary>
@@ -165,17 +165,17 @@ namespace Nautilus.Data.Readers
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
-            if (readAllBarsQuery.IsSuccess)
+            if (readAllBarsQuery.IsFailure)
             {
-                var lastBar = readAllBarsQuery
-                    .Value
-                    .Bars
-                    .Last();
-
-                return QueryResult<BarDataFrame>.Ok(new BarDataFrame(this.BarType, new[] { lastBar }));
+                return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
             }
 
-            return QueryResult<BarDataFrame>.Fail(readAllBarsQuery.Message);
+            var lastBar = readAllBarsQuery
+                .Value
+                .Bars
+                .Last();
+
+            return QueryResult<BarDataFrame>.Ok(new BarDataFrame(this.BarType, new[] { lastBar }));
         }
 
         /// <summary>
@@ -244,6 +244,7 @@ namespace Nautilus.Data.Readers
                 catch (IOException)
                 {
                     // Empty catch block to restart method due to concurrent file access.
+                    // Yuck...
                 }
             }
         }
