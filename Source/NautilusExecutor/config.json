@@ -13,7 +13,7 @@
 
   "execution": {
     "name": "NautilusExecutor",
-    "host": "10.135.55.111",
+    "host": "127.0.0.1",
     "commandsPort": 5555,
     "eventsPort": 5556,
     "commandsPerSecond": 100,
