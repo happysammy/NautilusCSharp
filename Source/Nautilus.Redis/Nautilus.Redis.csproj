@@ -17,7 +17,6 @@
         <PackageReference Include="ServiceStack.Redis" Version="5.4.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Compression\Nautilus.Compression.csproj" />
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     </ItemGroup>

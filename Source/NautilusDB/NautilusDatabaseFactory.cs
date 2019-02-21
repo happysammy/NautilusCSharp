@@ -21,7 +21,6 @@ namespace NautilusDB
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
-    using Nautilus.Compression;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data;
@@ -89,9 +88,7 @@ namespace NautilusDB
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
 
-            var barRepository = new RedisBarRepository(
-                clientManager,
-                CompressorFactory.Create(isCompression, compressionCodec));
+            var barRepository = new RedisBarRepository(clientManager);
 
             var instrumentRepository = new RedisInstrumentRepository(clientManager);
             instrumentRepository.CacheAll();

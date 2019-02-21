@@ -15,7 +15,6 @@ namespace Nautilus.Redis
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
-    using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Types;
     using Nautilus.Data.Wranglers;
@@ -33,20 +32,16 @@ namespace Nautilus.Redis
     public class RedisBarClient
     {
         private readonly RedisNativeClient redisClient;
-        private readonly IDataCompressor compressor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarClient"/> class.
         /// </summary>
         /// <param name="clientsManager">The redis clients manager.</param>
-        /// <param name="compressor">The data compressor.</param>
-        public RedisBarClient(IRedisClientsManager clientsManager, IDataCompressor compressor)
+        public RedisBarClient(IRedisClientsManager clientsManager)
         {
             Validate.NotNull(clientsManager, nameof(clientsManager));
-            Validate.NotNull(compressor, nameof(compressor));
 
             this.redisClient = (RedisNativeClient)clientsManager.GetClient();
-            this.compressor = compressor;
         }
 
         /// <summary>

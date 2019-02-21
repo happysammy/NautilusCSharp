@@ -30,13 +30,11 @@ namespace Nautilus.Redis
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
         /// <param name="clientsManager">The clients manager.</param>
-        /// <param name="compressor">The data compressor.</param>
-        public RedisBarRepository(IRedisClientsManager clientsManager, IDataCompressor compressor)
+        public RedisBarRepository(IRedisClientsManager clientsManager)
         {
             Validate.NotNull(clientsManager, nameof(clientsManager));
-            Validate.NotNull(compressor, nameof(compressor));
 
-            this.barClient = new RedisBarClient(clientsManager, compressor);
+            this.barClient = new RedisBarClient(clientsManager);
         }
 
         /// <summary>

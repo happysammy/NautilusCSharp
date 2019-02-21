@@ -73,9 +73,7 @@ namespace Nautilus.Core
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(
-            [CanBeNull] Message left,
-            [CanBeNull] Message right) => !(left == right);
+        public static bool operator !=([CanBeNull] Message left, [CanBeNull] Message right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Message"/> is equal

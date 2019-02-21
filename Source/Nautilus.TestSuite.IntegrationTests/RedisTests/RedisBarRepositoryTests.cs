@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Compression;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -36,10 +35,9 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             this.clientsManager = new BasicRedisClientManager(
                 new[] { RedisConstants.LocalHost },
                 new[] { RedisConstants.LocalHost });
-            var compressor = new LZ4DataCompressor(false);
 
             // Data compression off so that redis-cli is readable.
-            this.repository = new RedisBarRepository(this.clientsManager, compressor);
+            this.repository = new RedisBarRepository(this.clientsManager);
 
             this.clientsManager.GetClient().FlushAll();
         }
