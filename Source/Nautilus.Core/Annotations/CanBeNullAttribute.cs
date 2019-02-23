@@ -11,7 +11,7 @@ namespace Nautilus.Core.Annotations
     using System;
 
     /// <summary>
-    /// This decorative attribute indicates that null is a possible and expected value of the
+    /// This decorative attribute indicates that null is a possible or expected value of the
     /// annotated parameter (therefore an explicit check for null is not required).
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]

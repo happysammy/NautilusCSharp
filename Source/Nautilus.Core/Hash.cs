@@ -12,7 +12,7 @@ namespace Nautilus.Core
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Provides hash codes for the system.
+    /// Provides standardized hash code generation.
     /// </summary>
     [Immutable]
     [PerformanceOptimized]

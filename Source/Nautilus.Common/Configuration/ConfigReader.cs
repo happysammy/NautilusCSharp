@@ -32,19 +32,19 @@ namespace Nautilus.Common.Configuration
                 throw new InvalidOperationException($"Cannot load configuration (the file {fileName} was not found).");
             }
 
-            var settings = File.ReadAllLines(fileName);
-            for (var i = 0; i < settings.Length; i++)
+            foreach (var setting in File.ReadAllLines(fileName))
             {
-                var setting = settings[i];
                 var index = setting.IndexOf("=", StringComparison.Ordinal);
-                if (index >= 0)
+                if (index < 0)
                 {
-                    var skey = setting.Substring(0, index);
-                    var svalue = setting.Substring(index + 1);
-                    if (!dic.ContainsKey(skey))
-                    {
-                        dic.Add(skey, svalue);
-                    }
+                    continue;
+                }
+
+                var skey = setting.Substring(0, index);
+                var svalue = setting.Substring(index + 1);
+                if (!dic.ContainsKey(skey))
+                {
+                    dic.Add(skey, svalue);
                 }
             }
 
