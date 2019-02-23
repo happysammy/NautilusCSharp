@@ -55,7 +55,7 @@ namespace Nautilus.Data
             int barRollingWindow)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(DataCollectionManager)),
+                LabelFactory.Create(nameof(DataCollectionManager)),
                 container,
                 messagingAdapter)
         {

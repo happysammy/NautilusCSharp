@@ -37,7 +37,7 @@ namespace NautilusExecutor.Service
             this.guidFactory = setupContainer.GuidFactory;
             this.logger = setupContainer.LoggerFactory.Create(
                 NautilusService.Execution,
-                LabelFactory.Component(nameof(NautilusExecutorService)));
+                LabelFactory.Create(nameof(NautilusExecutorService)));
         }
 
         /// <summary>

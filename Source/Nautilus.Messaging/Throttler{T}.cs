@@ -52,7 +52,7 @@ namespace Nautilus.Messaging
             int limit)
             : base(
                 serviceContext,
-                LabelFactory.Component(nameof(Throttler<T>)),
+                LabelFactory.Create(nameof(Throttler<T>)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

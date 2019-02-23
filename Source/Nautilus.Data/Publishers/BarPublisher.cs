@@ -32,7 +32,7 @@ namespace Nautilus.Data.Publishers
         public BarPublisher(IComponentryContainer container, IChannelPublisher publisher)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(BarPublisher)),
+                LabelFactory.Create(nameof(BarPublisher)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

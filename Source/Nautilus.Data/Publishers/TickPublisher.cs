@@ -31,7 +31,7 @@ namespace Nautilus.Data.Publishers
         public TickPublisher(IComponentryContainer container, IChannelPublisher publisher)
         : base(
             NautilusService.Data,
-            LabelFactory.Component(nameof(TickPublisher)),
+            LabelFactory.Create(nameof(TickPublisher)),
             container)
         {
             Validate.NotNull(container, nameof(container));

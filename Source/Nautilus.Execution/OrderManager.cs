@@ -42,7 +42,7 @@ namespace Nautilus.Execution
             IMessagingAdapter messagingAdapter)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(MessageServer)),
+                LabelFactory.Create(nameof(MessageServer)),
                 container,
                 messagingAdapter)
         {

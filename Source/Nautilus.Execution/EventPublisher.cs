@@ -42,7 +42,7 @@ namespace Nautilus.Execution
             Port port)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(EventPublisher)),
+                LabelFactory.Create(nameof(EventPublisher)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -55,7 +55,7 @@ namespace Nautilus.Execution
                 Context.ActorOf(Props.Create(
                     () => new Publisher(
                         container,
-                        LabelFactory.Component("EventPublisher"),
+                        LabelFactory.Create("EventPublisher"),
                         "nautilus_execution_events",
                         host,
                         port,

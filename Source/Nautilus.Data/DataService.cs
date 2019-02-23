@@ -45,7 +45,7 @@ namespace Nautilus.Data
             bool updateInstruments)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(DataService)),
+                LabelFactory.Create(nameof(DataService)),
                 setupContainer,
                 messagingAdapter)
         {

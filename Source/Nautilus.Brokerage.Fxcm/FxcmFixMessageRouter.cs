@@ -44,7 +44,7 @@ namespace Nautilus.Brokerage.FXCM
             string accountNumber)
         : base(
             NautilusService.FIX,
-            LabelFactory.Component(nameof(FxcmFixMessageRouter)),
+            LabelFactory.Create(nameof(FxcmFixMessageRouter)),
             container)
         {
             Validate.NotNull(container, nameof(container));

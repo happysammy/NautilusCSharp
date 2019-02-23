@@ -47,7 +47,7 @@ namespace Nautilus.Brokerage.FXCM
             InstrumentDataProvider instrumentData)
             : base(
                 NautilusService.FIX,
-                LabelFactory.Component(nameof(FxcmFixMessageHandler)),
+                LabelFactory.Create(nameof(FxcmFixMessageHandler)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

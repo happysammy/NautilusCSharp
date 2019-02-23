@@ -44,7 +44,7 @@ namespace Nautilus.Common
             Switchboard switchboard)
             : base(
                 NautilusService.Core,
-                LabelFactory.Component(nameof(SystemController)),
+                LabelFactory.Create(nameof(SystemController)),
                 container,
                 messagingAdapter)
         {

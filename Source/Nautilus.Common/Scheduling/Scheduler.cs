@@ -33,7 +33,7 @@ namespace Nautilus.Common.Scheduling
         public Scheduler(IComponentryContainer container)
             : base(
                 NautilusService.Scheduling,
-                LabelFactory.Component(nameof(Scheduler)),
+                LabelFactory.Create(nameof(Scheduler)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

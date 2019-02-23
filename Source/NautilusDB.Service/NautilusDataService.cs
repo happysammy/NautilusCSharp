@@ -35,7 +35,7 @@ namespace NautilusDB.Service
             this.guidFactory = setupContainer.GuidFactory;
             this.logger = setupContainer.LoggerFactory.Create(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(NautilusDataService)));
+                LabelFactory.Create(nameof(NautilusDataService)));
         }
 
         /// <summary>

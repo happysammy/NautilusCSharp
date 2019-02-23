@@ -57,7 +57,7 @@ namespace Nautilus.Data.Aggregators
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Data,
-            LabelFactory.Component(nameof(BarAggregationController)),
+            LabelFactory.Create(nameof(BarAggregationController)),
             container,
             messagingAdapter)
         {

@@ -44,7 +44,7 @@ namespace Nautilus.Execution
             Port port)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(CommandConsumer)),
+                LabelFactory.Create(nameof(CommandConsumer)),
                 container)
         {
             Validate.NotNull(container, nameof(container));
@@ -61,7 +61,7 @@ namespace Nautilus.Execution
                     () => new Consumer(
                         container,
                         new ActorEndpoint(Context.Self),
-                        LabelFactory.Component("RouterSocket"),
+                        LabelFactory.Create("RouterSocket"),
                         host,
                         port,
                         Guid.NewGuid()))));

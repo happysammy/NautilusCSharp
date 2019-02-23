@@ -21,12 +21,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
     public class LabelBuilderTests
     {
         [Fact]
-        internal void ComponentLabel_WithComponentSymbolExchange_ReturnsExpectedLabel()
+        internal void Create_WithComponentSymbolExchange_ReturnsExpectedLabel()
         {
             // Arrange
 
             // Act
-            var result = LabelFactory.Component(
+            var result = LabelFactory.Create(
                 "Portfolio",
                 new Symbol("AUDUSD", Venue.LMAX));
 
@@ -35,27 +35,26 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithComponentSymbolExchangeTradeType_ReturnsExpectedLabel()
+        internal void Create_WithComponentSymbolExchangeTradeType_ReturnsExpectedLabel()
         {
             // Arrange
 
             // Act
-            var result = LabelFactory.Component(
+            var result = LabelFactory.Create(
                 "Portfolio",
-                new Symbol("AUDUSD", Venue.LMAX),
-                new TradeType("TestScalps"));
+                new Symbol("AUDUSD", Venue.LMAX));
 
             // Assert
-            Assert.Equal("Portfolio-AUDUSD.LMAX-TestScalps", result.ToString());
+            Assert.Equal("Portfolio-AUDUSD.LMAX", result.ToString());
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentSymbolExchange_ReturnsExpectedLabel()
+        internal void Create_WithModuleComponentSymbolExchange_ReturnsExpectedLabel()
         {
             // Arrange
 
             // Act
-            var result = LabelFactory.Component(
+            var result = LabelFactory.Create(
                 "TradeBook",
                 new Symbol("AUDUSD", Venue.LMAX));
 
@@ -64,12 +63,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
         }
 
         [Fact]
-        internal void ComponentLabel_WithModuleComponentAndSymbol_ReturnsExpectedLabel()
+        internal void Create_WithModuleComponentAndSymbol_ReturnsExpectedLabel()
         {
             // Arrange
 
             // Act
-            var result = LabelFactory.Component(
+            var result = LabelFactory.Create(
                 "TickBarAggregator",
                 StubBarType.AUDUSD());
 

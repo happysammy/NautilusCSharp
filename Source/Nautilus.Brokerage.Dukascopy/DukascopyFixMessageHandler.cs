@@ -47,7 +47,7 @@ namespace Nautilus.Brokerage.Dukascopy
             InstrumentDataProvider instrumentData)
             : base(
                 NautilusService.FIX,
-                LabelFactory.Component(nameof(DukascopyFixMessageHandler)),
+                LabelFactory.Create(nameof(DukascopyFixMessageHandler)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

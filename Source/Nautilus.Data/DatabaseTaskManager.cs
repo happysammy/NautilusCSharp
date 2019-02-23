@@ -47,7 +47,7 @@ namespace Nautilus.Data
             IInstrumentRepository instrumentRepository)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component(nameof(DatabaseTaskManager)),
+                LabelFactory.Create(nameof(DatabaseTaskManager)),
                 container)
         {
             Validate.NotNull(container, nameof(container));

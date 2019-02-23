@@ -49,7 +49,7 @@ namespace Nautilus.Execution
             Port eventsPort)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Component(nameof(MessageServer)),
+                LabelFactory.Create(nameof(MessageServer)),
                 container,
                 messagingAdapter)
         {

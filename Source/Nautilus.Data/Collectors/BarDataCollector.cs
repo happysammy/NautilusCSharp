@@ -48,7 +48,7 @@ namespace Nautilus.Data.Collectors
             DataCollectionSchedule collectionSchedule)
             : base(
                 NautilusService.Data,
-                LabelFactory.Component($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
+                LabelFactory.Create($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
             Validate.NotNull(container, nameof(container));

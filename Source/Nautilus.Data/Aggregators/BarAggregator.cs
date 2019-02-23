@@ -55,7 +55,7 @@ namespace Nautilus.Data.Aggregators
             bool isMarketOpen)
             : base(
             NautilusService.Data,
-            LabelFactory.Component(
+            LabelFactory.Create(
                 nameof(BarAggregator),
                 symbol),
             container)

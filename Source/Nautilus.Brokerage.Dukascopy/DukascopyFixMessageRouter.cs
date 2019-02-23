@@ -44,7 +44,7 @@ namespace Nautilus.Brokerage.Dukascopy
             string accountNumber)
         : base(
             NautilusService.FIX,
-            LabelFactory.Component(nameof(DukascopyFixMessageRouter)),
+            LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
             container)
         {
             Validate.NotNull(container, nameof(container));

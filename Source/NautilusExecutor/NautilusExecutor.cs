@@ -37,7 +37,7 @@ namespace NautilusExecutor
             IFixClient fixClient)
             : base(
                 NautilusService.Core,
-                LabelFactory.Component(nameof(NautilusExecutor)),
+                LabelFactory.Create(nameof(NautilusExecutor)),
                 container,
                 messagingAdapter)
         {

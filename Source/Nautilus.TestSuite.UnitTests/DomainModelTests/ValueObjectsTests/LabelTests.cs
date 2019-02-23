@@ -23,8 +23,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_IdenticalComponentLabels_ReturnsTrue()
         {
             // Arrange
-            var label1 = LabelFactory.Component("TimeBarAggregator", new Symbol("AUDUSD", Venue.LMAX));
-            var label2 = LabelFactory.Component("TimeBarAggregator", new Symbol("AUDUSD", Venue.LMAX));
+            var label1 = LabelFactory.Create("TimeBarAggregator", new Symbol("AUDUSD", Venue.LMAX));
+            var label2 = LabelFactory.Create("TimeBarAggregator", new Symbol("AUDUSD", Venue.LMAX));
 
             // Act
             var result = label1.Equals(label2);
@@ -50,8 +50,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithTheSameValue_ReturnsTrue()
         {
             // Arrange
-            var label1 = LabelFactory.Component("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
-            var label2 = LabelFactory.Component("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
+            var label1 = LabelFactory.Create("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
+            var label2 = LabelFactory.Create("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
 
             // Act
             var result1 = label1.Equals(label2);
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithNullObject_ReturnsFalse()
         {
             // Arrange
-            var label1 = LabelFactory.Component("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
+            var label1 = LabelFactory.Create("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
 
             // Act
             var result = label1.Equals(null);
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithObjectOfDifferentType_ReturnsFalse()
         {
             // Arrange
-            var label1 = LabelFactory.Component("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
+            var label1 = LabelFactory.Create("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
             const string obj = "some_random_object";
 
             // Act (ignore the warning, this is why the result is false!).

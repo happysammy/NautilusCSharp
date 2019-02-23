@@ -50,7 +50,7 @@ namespace Nautilus.Execution
             int newOrdersPerSecond)
             : base(
             NautilusService.Execution,
-            LabelFactory.Component(nameof(ExecutionService)),
+            LabelFactory.Create(nameof(ExecutionService)),
             container,
             messagingAdapter)
         {

@@ -37,7 +37,7 @@ namespace Nautilus.Execution
             IFixGateway gateway)
             : base(
             NautilusService.Execution,
-            LabelFactory.Component(nameof(OrderCommandBus)),
+            LabelFactory.Create(nameof(OrderCommandBus)),
             container,
             messagingAdapter)
         {

@@ -42,7 +42,7 @@ namespace NautilusDB
             IFixClient fixClient)
             : base(
                 NautilusService.Core,
-                LabelFactory.Component(nameof(NautilusDatabase)),
+                LabelFactory.Create(nameof(NautilusDatabase)),
                 container,
                 messagingAdapter)
         {
