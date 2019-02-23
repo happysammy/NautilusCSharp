@@ -141,11 +141,6 @@ namespace NautilusExecutor
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseServiceStack(new AppHost
-                                    {
-                                        AppSettings = new NetCoreAppSettings(this.Configuration),
-                                    });
         }
 
         private void OnShutdown()

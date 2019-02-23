@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IZonedClock"/> interface. The clock for the database system.
+    /// The <see cref="IZonedClock"/> interface. The clock for the system.
     /// </summary>
     public interface IZonedClock
     {

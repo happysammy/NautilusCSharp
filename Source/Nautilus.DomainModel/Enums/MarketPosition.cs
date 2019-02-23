@@ -8,8 +8,6 @@
 
 namespace Nautilus.DomainModel.Enums
 {
-    using Nautilus.DomainModel.Aggregates;
-
     /// <summary>
     /// Represents relative market position.
     /// </summary>
@@ -18,21 +16,21 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// An unknown market position.
         /// </summary>
-        Unknown,
+        Unknown = -1,
 
         /// <summary>
         /// A flat market position.
         /// </summary>
-        Flat,
+        Flat = 0,
 
         /// <summary>
         /// A long market position.
         /// </summary>
-        Long,
+        Long = 1,
 
         /// <summary>
         /// A short market position.
         /// </summary>
-        Short,
+        Short = 2,
     }
 }

@@ -13,13 +13,12 @@ namespace NautilusExecutor.Service
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
-    using ServiceStack;
 
     /// <summary>
     /// Provides a REST API for the <see cref="NautilusExecutor"/> system.
     /// </summary>
     [Immutable]
-    public sealed class NautilusExecutorService : Service
+    public sealed class NautilusExecutorService
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;

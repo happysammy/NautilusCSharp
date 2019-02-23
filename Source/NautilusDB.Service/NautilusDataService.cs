@@ -12,12 +12,11 @@ namespace NautilusDB.Service
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
-    using ServiceStack;
 
     /// <summary>
     /// Provides a REST API for the <see cref="NautilusDB"/> system.
     /// </summary>
-    public class NautilusDataService : Service
+    public class NautilusDataService
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;

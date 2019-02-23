@@ -16,7 +16,6 @@ namespace Nautilus.Data.Integrity.Checkers
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using ServiceStack;
 
     /// <summary>
     /// Checks various data forms for known anomalies. Performance optimized.
@@ -47,7 +46,7 @@ namespace Nautilus.Data.Integrity.Checkers
             CheckBarsInOrder(barType, bars, anomalyList);
             CheckBarsComplete(barType, bars, anomalyList);
 
-            return anomalyList.IsEmpty()
+            return anomalyList.Count == 0
                        ? PassResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp)
                        : FailResult(barType, anomalyList, bars.First().Timestamp, bars.Last().Timestamp);
         }

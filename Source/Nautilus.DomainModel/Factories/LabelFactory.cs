@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Factories
 {
-    using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
 
