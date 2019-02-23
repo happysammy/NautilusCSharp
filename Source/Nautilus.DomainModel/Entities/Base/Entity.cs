@@ -60,7 +60,6 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other entity.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        // ReSharper disable once PossibleNullReferenceException (already checked for null?).
         public bool Equals([CanBeNull] T other)
         {
             return other != null && this.Id.Equals(other.Id);

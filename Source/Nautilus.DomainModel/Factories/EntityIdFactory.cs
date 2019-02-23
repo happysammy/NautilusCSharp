@@ -53,21 +53,6 @@ namespace Nautilus.DomainModel.Factories
         }
 
         /// <summary>
-        /// Creates and returns a new and valid trade unit <see cref="TradeUnitId"/> from the given
-        /// inputs.
-        /// </summary>
-        /// <param name="tradeId">The trade identifier.</param>
-        /// <param name="tradeUnit">The trade unit.</param>
-        /// <returns>A <see cref="TradeUnitId"/>.</returns>
-        public static TradeUnitId TradeUnit(TradeId tradeId, int tradeUnit)
-        {
-            Debug.NotNull(tradeId, nameof(tradeId));
-            Debug.NotNegativeInt32(tradeUnit, nameof(tradeUnit));
-
-            return new TradeUnitId($"{tradeId}_U{tradeUnit}");
-        }
-
-        /// <summary>
         /// Creates and returns a new and valid account <see cref="AccountId"/> from the given inputs.
         /// </summary>
         /// <param name="broker">The account broker.</param>

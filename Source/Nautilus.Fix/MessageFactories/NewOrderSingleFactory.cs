@@ -10,11 +10,12 @@ namespace Nautilus.Fix.MessageFactories
 {
     using System;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Interfaces;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
+    using Account = QuickFix.Fields.Account;
 
     /// <summary>
     /// Provides new order single FIX messages.
@@ -32,7 +33,7 @@ namespace Nautilus.Fix.MessageFactories
         public static QuickFix.FIX44.NewOrderSingle Create(
             string brokerSymbol,
             string accountNumber,
-            IOrder order,
+            Order order,
             ZonedDateTime timeNow)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));

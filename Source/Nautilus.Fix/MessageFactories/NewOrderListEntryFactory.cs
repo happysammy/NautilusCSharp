@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Entities;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -30,7 +30,7 @@ namespace Nautilus.Fix.MessageFactories
         public static NewOrderList CreateWithStopLoss(
             string brokerSymbol,
             string accountNumber,
-            IAtomicOrder atomicOrder,
+            AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
@@ -98,7 +98,7 @@ namespace Nautilus.Fix.MessageFactories
         public static NewOrderList CreateWithStopLossAndProfitTarget(
             string brokerSymbol,
             string accountNumber,
-            IAtomicOrder atomicOrder,
+            AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));

@@ -8,7 +8,8 @@
 
 namespace Nautilus.Fix.Interfaces
 {
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using QuickFix;
 
@@ -66,31 +67,25 @@ namespace Nautilus.Fix.Interfaces
         /// Submits an order.
         /// </summary>
         /// <param name="order">The order.</param>
-        void SubmitOrder(IOrder order);
+        void SubmitOrder(Order order);
 
         /// <summary>
         /// Submits an atomic order.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
-        void SubmitOrder(IAtomicOrder atomicOrder);
+        void SubmitOrder(AtomicOrder atomicOrder);
 
         /// <summary>
         /// Submits a modify stop-loss order.
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(IOrder order, Price modifiedPrice);
+        void ModifyOrder(Order order, Price modifiedPrice);
 
         /// <summary>
         /// Submits a cancel order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        void CancelOrder(IOrder order);
-
-        /// <summary>
-        /// Submits a request to close a position.
-        /// </summary>
-        /// <param name="position">The position to close.</param>
-        void ClosePosition(IPosition position);
+        void CancelOrder(Order order);
     }
 }

@@ -11,7 +11,7 @@ namespace Nautilus.Common.Messages.Commands
     using System;
     using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitOrder(
-            IOrder order,
+            Order order,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(order, commandId, commandTimestamp)

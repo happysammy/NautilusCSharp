@@ -14,7 +14,6 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -22,21 +21,15 @@ namespace Nautilus.DomainModel.Entities
     /// be managed together.
     /// </summary>
     [Immutable]
-    public sealed class AtomicOrder : Entity<AtomicOrder>, IAtomicOrder
+    public sealed class AtomicOrder : Entity<AtomicOrder>
     {
-        private readonly Order entry;
-        private readonly Order stopLoss;
-        private readonly Option<Order> profitTarget;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicOrder"/> class.
         /// </summary>
-        /// <param name="tradeType">The trade type.</param>
         /// <param name="entry">The entry order.</param>
         /// <param name="stopLoss">The stop-loss order.</param>
         /// <param name="profitTarget">The profit target order.</param>
         public AtomicOrder(
-            TradeType tradeType,
             Order entry,
             Order stopLoss,
             Option<Order> profitTarget)
@@ -44,21 +37,15 @@ namespace Nautilus.DomainModel.Entities
                   new AtomicOrderId(entry.Id.Value),
                   entry.Timestamp)
         {
-            Debug.NotNull(tradeType, nameof(tradeType));
             Debug.NotNull(entry, nameof(entry));
             Debug.NotNull(stopLoss, nameof(stopLoss));
             Debug.NotNull(profitTarget, nameof(profitTarget));
 
-            this.entry = entry;
-            this.stopLoss = stopLoss;
-            this.profitTarget = profitTarget;
-            this.TradeType = tradeType;
             this.Entry = entry;
             this.StopLoss = stopLoss;
-
             this.ProfitTarget = profitTarget.HasValue
-                ? Option<IOrder>.Some(profitTarget.Value)
-                : Option<IOrder>.None();
+                ? Option<Order>.Some(profitTarget.Value)
+                : Option<Order>.None();
         }
 
         /// <summary>
@@ -67,41 +54,18 @@ namespace Nautilus.DomainModel.Entities
         public Symbol Symbol => this.Entry.Symbol;
 
         /// <summary>
-        /// Gets the atomic orders trade type.
-        /// </summary>
-        public TradeType TradeType { get; }
-
-        /// <summary>
         /// Gets the atomic orders entry order.
         /// </summary>
-        public IOrder Entry { get; }
+        public Order Entry { get; }
 
         /// <summary>
         /// Gets the atomic orders stop-loss order.
         /// </summary>
-        public IOrder StopLoss { get; }
+        public Order StopLoss { get; }
 
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public Option<IOrder> ProfitTarget { get; }
-
-        /// <summary>
-        /// Return the atomic orders concrete entry order.
-        /// </summary>
-        /// <returns>The entry order.</returns>
-        public Order GetEntry() => this.entry;
-
-        /// <summary>
-        /// Return the atomic orders concrete stop-loss order.
-        /// </summary>
-        /// <returns>The entry order.</returns>
-        public Order GetStopLoss() => this.stopLoss;
-
-        /// <summary>
-        /// Return the atomic orders concrete profit-target order.
-        /// </summary>
-        /// <returns>The entry order.</returns>
-        public Option<Order> GetProfitTarget() => this.profitTarget;
+        public Option<Order> ProfitTarget { get; }
     }
 }

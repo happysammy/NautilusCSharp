@@ -12,9 +12,10 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
@@ -189,7 +190,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits an order.
         /// </summary>
         /// <param name="order">The order to submit.</param>
-        public void SubmitOrder(IOrder order)
+        public void SubmitOrder(Order order)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -211,7 +212,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits a trade.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
-        public void SubmitOrder(IAtomicOrder atomicOrder)
+        public void SubmitOrder(AtomicOrder atomicOrder)
         {
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
@@ -247,7 +248,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        public void ModifyOrder(IOrder order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Price modifiedPrice)
         {
             Debug.NotNull(order, nameof(order));
             Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
@@ -273,7 +274,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits a cancel order.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        public void CancelOrder(IOrder order)
+        public void CancelOrder(Order order)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -296,7 +297,7 @@ namespace Nautilus.Brokerage.FXCM
         /// Submits a request to close a position.
         /// </summary>
         /// <param name="command">The close position command.</param>
-        public void ClosePosition(IPosition command)
+        public void ClosePosition(Position command)
         {
             Debug.NotNull(command, nameof(command));
 

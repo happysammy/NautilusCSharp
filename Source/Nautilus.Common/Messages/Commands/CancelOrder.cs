@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         public CancelOrder(
-            IOrder order,
+            Order order,
             string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)

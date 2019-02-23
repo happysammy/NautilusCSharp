@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Commands.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace Nautilus.Common.Messages.Commands.Base
         /// <param name="commandId">The commands identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
         protected OrderCommand(
-            IOrder order,
+            Order order,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
@@ -43,7 +43,7 @@ namespace Nautilus.Common.Messages.Commands.Base
         /// <summary>
         /// Gets the commands order symbol.
         /// </summary>
-        public IOrder Order { get; }
+        public Order Order { get; }
 
         /// <summary>
         /// Returns a string representation of the <see cref="CancelOrder"/> command message.

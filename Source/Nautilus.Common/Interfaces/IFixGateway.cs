@@ -11,10 +11,10 @@ namespace Nautilus.Common.Interfaces
     using System.Collections.Generic;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -98,13 +98,13 @@ namespace Nautilus.Common.Interfaces
         /// Submits a new order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The new order.</param>
-        void SubmitOrder(IOrder order);
+        void SubmitOrder(Order order);
 
         /// <summary>
         /// Submits a new atomic order FIX message to the brokerage.
         /// </summary>
         /// <param name="atomicOrder">The new atomic order.</param>
-        void SubmitOrder(IAtomicOrder atomicOrder);
+        void SubmitOrder(AtomicOrder atomicOrder);
 
         /// <summary>
         /// Submits an order cancel replace FIX message to modify the stop-loss of an existing order,
@@ -112,19 +112,13 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        void ModifyOrder(IOrder order, Price modifiedPrice);
+        void ModifyOrder(Order order, Price modifiedPrice);
 
         /// <summary>
         /// Submits a cancel order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        void CancelOrder(IOrder order);
-
-        /// <summary>
-        /// Submits a new marker order FIX message to close the given position to the brokerage.
-        /// </summary>
-        /// <param name="position">The position to close.</param>
-        void ClosePosition(IPosition position);
+        void CancelOrder(Order order);
 
         /// <summary>
         /// Creates a new <see cref="Tick"/> and sends it to the tick publisher and bar aggregation

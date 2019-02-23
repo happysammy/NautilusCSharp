@@ -16,14 +16,13 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
     /// Represents a brokerage account.
     /// </summary>
-    public sealed class Account : Aggregate<Account>, IAccount
+    public sealed class Account : Aggregate<Account>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Account"/> class.

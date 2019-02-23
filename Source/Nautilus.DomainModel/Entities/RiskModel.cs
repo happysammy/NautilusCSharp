@@ -16,7 +16,6 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -24,7 +23,7 @@ namespace Nautilus.DomainModel.Entities
     /// The sealed <see cref="RiskModel"/> class. Represents a systems model for quantifying
     /// financial market risk exposure.
     /// </summary>
-    public sealed class RiskModel : Entity<RiskModel>, IRiskModel
+    public sealed class RiskModel : Entity<RiskModel>
     {
         private readonly IDictionary<Symbol, Quantity> positionSizeHardLimitsIndex = new Dictionary<Symbol, Quantity>();
         private readonly IDictionary<TradeType, Percentage> maxRiskPerTradeTypeIndex = new Dictionary<TradeType, Percentage>();

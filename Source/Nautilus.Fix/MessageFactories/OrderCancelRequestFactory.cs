@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -28,7 +28,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static OrderCancelRequest Create(
             string brokerSymbol,
-            IOrder order,
+            Order order,
             ZonedDateTime transactionTime)
         {
             Debug.NotNull(brokerSymbol, nameof(brokerSymbol));

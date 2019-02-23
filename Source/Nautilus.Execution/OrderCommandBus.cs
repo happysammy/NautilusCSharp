@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="TradeCommandBus.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="OrderCommandBus.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -21,23 +21,23 @@ namespace Nautilus.Execution
     /// Provides a trade command bus for the execution service.
     /// </summary>
     [Stateless]
-    public sealed class TradeCommandBus : ActorComponentBusConnectedBase
+    public sealed class OrderCommandBus : ActorComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TradeCommandBus"/> class.
+        /// Initializes a new instance of the <see cref="OrderCommandBus"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="gateway">The execution gateway.</param>
-        public TradeCommandBus(
+        public OrderCommandBus(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixGateway gateway)
             : base(
             NautilusService.Execution,
-            LabelFactory.Component(nameof(TradeCommandBus)),
+            LabelFactory.Component(nameof(OrderCommandBus)),
             container,
             messagingAdapter)
         {
@@ -50,10 +50,8 @@ namespace Nautilus.Execution
             // Command messages.
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<SubmitTrade>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
-            this.Receive<ClosePosition>(this.OnMessage);
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -72,18 +70,6 @@ namespace Nautilus.Execution
             this.gateway.SubmitOrder(message.Order);
         }
 
-        private void OnMessage(SubmitTrade message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            foreach (var atomicOrder in message.OrderPacket.Orders)
-            {
-                this.RouteOrder(atomicOrder);
-
-                this.Log.Debug($"Routing ELS Order {atomicOrder.Symbol} => {this.gateway.Broker}");
-            }
-        }
-
         private void OnMessage(CancelOrder message)
         {
             Debug.NotNull(message, nameof(message));
@@ -98,15 +84,6 @@ namespace Nautilus.Execution
             this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
 
             this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
-        }
-
-        private void OnMessage(ClosePosition message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.gateway.ClosePosition(message.Position);
-
-            this.Log.Debug($"Routing ClosePosition {message.Position} => {this.gateway.Broker}");
         }
 
         private void RouteOrder(AtomicOrder atomicOrder)

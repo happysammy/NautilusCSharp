@@ -18,7 +18,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -26,7 +25,7 @@ namespace Nautilus.DomainModel.Aggregates
     /// Represents a financial market position.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Position : Aggregate<Position>, IPosition
+    public sealed class Position : Aggregate<Position>
     {
         private int relativeQuantity;
 

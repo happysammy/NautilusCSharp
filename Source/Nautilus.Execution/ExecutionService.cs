@@ -64,7 +64,7 @@ namespace Nautilus.Execution
 
             this.tradeCommandBus = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
-                    () => new TradeCommandBus(
+                    () => new OrderCommandBus(
                         container,
                         messagingAdapter,
                         gateway))));
@@ -92,9 +92,7 @@ namespace Nautilus.Execution
             this.Receive<DisconnectFixJob>(this.OnMessage);
             this.Receive<CollateralInquiry>(this.OnMessage);
             this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<SubmitTrade>(this.OnMessage);
             this.Receive<ModifyOrder>(this.OnMessage);
-            this.Receive<CloseTradeUnit>(this.OnMessage);
             this.Receive<CancelOrder>(this.OnMessage);
 
             // Event messages.
@@ -216,27 +214,7 @@ namespace Nautilus.Execution
             });
         }
 
-        private void OnMessage(SubmitTrade message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.commandThrottler.Send(message);
-            });
-        }
-
         private void OnMessage(ModifyOrder message)
-        {
-            Debug.NotNull(message, nameof(message));
-
-            this.Execute(() =>
-            {
-                this.commandThrottler.Send(message);
-            });
-        }
-
-        private void OnMessage(CloseTradeUnit message)
         {
             Debug.NotNull(message, nameof(message));
 

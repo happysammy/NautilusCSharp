@@ -12,7 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -30,7 +30,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="commandId">The command identifier (cannot be default).</param>
         /// <param name="commandTimestamp">The command timestamp (cannot be default).</param>
         public ModifyOrder(
-            IOrder order,
+            Order order,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)

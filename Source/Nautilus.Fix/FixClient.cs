@@ -13,7 +13,8 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Validation;
-    using Nautilus.DomainModel.Interfaces;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
 
@@ -97,7 +98,7 @@ namespace Nautilus.Fix
         /// Submit a command to execute the given order.
         /// </summary>
         /// <param name="order">The order to submit.</param>
-        public void SubmitOrder(IOrder order)
+        public void SubmitOrder(Order order)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -111,7 +112,7 @@ namespace Nautilus.Fix
         /// Submit a command to execute the given trade.
         /// </summary>
         /// <param name="atomicOrder">The atomic order to submit.</param>
-        public void SubmitOrder(IAtomicOrder atomicOrder)
+        public void SubmitOrder(AtomicOrder atomicOrder)
         {
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
@@ -126,7 +127,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        public void ModifyOrder(IOrder order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Price modifiedPrice)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -137,22 +138,11 @@ namespace Nautilus.Fix
         /// Submit the command to the execution system to cancel the given order.
         /// </summary>
         /// <param name="command">The cancel order command.</param>
-        public void CancelOrder(IOrder command)
+        public void CancelOrder(Order command)
         {
             Debug.NotNull(command, nameof(command));
 
             this.FixMessageRouter.CancelOrder(command);
-        }
-
-        /// <summary>
-        /// Submit the command to the execution system to close the given position.
-        /// </summary>
-        /// <param name="command">The close position command.</param>
-        public void ClosePosition(IPosition command)
-        {
-            Debug.NotNull(command, nameof(command));
-
-            this.FixMessageRouter.ClosePosition(command);
         }
 
         /// <summary>

@@ -18,12 +18,12 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -190,7 +190,7 @@ namespace Nautilus.Fix
         /// Submits a new order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The new order.</param>
-        public void SubmitOrder(IOrder order)
+        public void SubmitOrder(Order order)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -201,7 +201,7 @@ namespace Nautilus.Fix
         /// Submits a new atomic order FIX message to the brokerage.
         /// </summary>
         /// <param name="atomicOrder">The new atomic order.</param>
-        public void SubmitOrder(IAtomicOrder atomicOrder)
+        public void SubmitOrder(AtomicOrder atomicOrder)
         {
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
 
@@ -214,7 +214,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
-        public void ModifyOrder(IOrder order, Price modifiedPrice)
+        public void ModifyOrder(Order order, Price modifiedPrice)
         {
             Debug.NotNull(order, nameof(order));
 
@@ -225,22 +225,11 @@ namespace Nautilus.Fix
         /// Submits a cancel order FIX message to the brokerage.
         /// </summary>
         /// <param name="order">The order to cancel.</param>
-        public void CancelOrder(IOrder order)
+        public void CancelOrder(Order order)
         {
             Debug.NotNull(order, nameof(order));
 
             this.fixClient.CancelOrder(order);
-        }
-
-        /// <summary>
-        /// Submits a new marker order FIX message to close the given position to the brokerage.
-        /// </summary>
-        /// <param name="position">The position to close.</param>
-        public void ClosePosition(IPosition position)
-        {
-            Debug.NotNull(position, nameof(position));
-
-            this.fixClient.ClosePosition(position);
         }
 
         /// <summary>

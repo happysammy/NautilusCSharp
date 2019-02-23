@@ -16,7 +16,6 @@ namespace Nautilus.MsgPack
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -29,7 +28,7 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="order">The order to serialize.</param>
         /// <returns>The serialized order.</returns>
-        public byte[] Serialize(IOrder order)
+        public byte[] Serialize(Order order)
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
