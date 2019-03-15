@@ -27,8 +27,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             var testBool = false;
 
             // Act
-            var myResult = QueryResult<TestClass>.Fail(ErrorMessage);
-            myResult.OnFailure(() => testBool = true);
+            var result = QueryResult<TestClass>.Fail(ErrorMessage);
+            result.OnFailure(() => testBool = true);
 
             // Assert
             Assert.True(testBool);
