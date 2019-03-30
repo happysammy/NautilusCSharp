@@ -256,7 +256,7 @@ namespace Nautilus.Redis
         {
             using (var client = this.clientsManager.GetClient())
             {
-                JsConfig.EmitCamelCaseNames = false;
+                JsConfig.TextCase = TextCase.PascalCase;
 
                 var symbol = instrument.Symbol;
 

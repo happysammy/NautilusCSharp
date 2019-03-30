@@ -24,7 +24,7 @@ namespace Nautilus.Redis
         {
             JsConfig<ZonedDateTime>.RawSerializeFn = ZonedDateTimeExtensions.ToIsoString;
             JsConfig<ZonedDateTime>.RawDeserializeFn = ZonedDateTimeExtensions.ToZonedDateTimeFromIso;
-            JsConfig.EmitCamelCaseNames = false;
+            JsConfig.TextCase = TextCase.PascalCase;
         }
     }
 }

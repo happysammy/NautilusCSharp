@@ -14,7 +14,7 @@
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Redis.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="ServiceStack.Redis" Version="5.4.0" />
+        <PackageReference Include="ServiceStack.Redis" Version="5.5.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
