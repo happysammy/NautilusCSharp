@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit
     using System;
     using System.IO;
     using Newtonsoft.Json.Linq;
-    using ServiceStack;
 
     /// <summary>
     /// Provides constant values to be used in the test suite.
@@ -37,8 +36,6 @@ namespace Nautilus.TestSuite.TestKit
         {
             var nautilusDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..//..//..//..//")) + "Nautilus//";
             var config = JObject.Parse(File.ReadAllText(nautilusDirectory + "config.json"));
-
-            Licensing.RegisterLicense((string)config["serviceStack"]["licenseKey"]);
         }
     }
 }

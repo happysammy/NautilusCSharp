@@ -30,6 +30,7 @@ namespace NautilusDB
     using Nautilus.Serilog;
     using NodaTime;
     using Serilog.Events;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="NautilusDatabase"/> system.
@@ -83,13 +84,9 @@ namespace NautilusDB
                 actorSystem.ActorOf(Props.Create(
                     () => new Scheduler(container))));
 
-            var clientManager = new BasicRedisClientManager(
-                new[] { RedisConstants.LocalHost },
-                new[] { RedisConstants.LocalHost });
-
-            var barRepository = new RedisBarRepository(clientManager);
-
-            var instrumentRepository = new RedisInstrumentRepository(clientManager);
+            var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var barRepository = new RedisBarRepository(redisConnection);
+            var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
             var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
@@ -112,7 +109,7 @@ namespace NautilusDB
                 messagingAdapter,
                 fixClient,
                 fixGateway,
-                new RedisChannelPublisherFactory(clientManager),
+                new RedisChannelPublisherFactory(redisConnection),
                 barRepository,
                 instrumentRepository,
                 symbols,

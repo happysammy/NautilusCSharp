@@ -25,24 +25,27 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.ValueObjects;
     using Newtonsoft.Json;
     using NodaTime;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides a Redis implementation for the system instrument repository.
     /// </summary>
-    public class RedisInstrumentRepository : IInstrumentRepository, IDisposable
+    public class RedisInstrumentRepository : IInstrumentRepository
     {
-        private readonly IRedisClientsManager clientsManager;
+        private readonly IServer redisServer;
+        private readonly IDatabase redisDatabase;
         private readonly IDictionary<Symbol, Instrument> cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisInstrumentRepository"/> class.
         /// </summary>
-        /// <param name="clientsManager">The redis clients manager.</param>
-        public RedisInstrumentRepository(IRedisClientsManager clientsManager)
+        /// <param name="connection">The redis clients manager.</param>
+        public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(clientsManager, nameof(clientsManager));
+            Validate.NotNull(connection, nameof(connection));
 
-            this.clientsManager = clientsManager;
+            this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
         }
 
@@ -82,10 +85,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(symbol, nameof(symbol));
 
-            using (var client = this.clientsManager.GetClient())
-            {
-                client.Remove(KeyProvider.GetInstrumentKey(symbol));
-            }
+            this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentKey(symbol));
         }
 
         /// <summary>
@@ -93,14 +93,11 @@ namespace Nautilus.Redis
         /// </summary>
         public void DeleteAll()
         {
-            using (var client = this.clientsManager.GetClient())
-            {
-                var keys = this.GetAllKeys();
+            var keys = this.GetAllKeys();
 
-                foreach (var key in keys)
-                {
-                    client.Remove(key);
-                }
+            foreach (var key in keys)
+            {
+                this.redisDatabase.KeyDelete(key);
             }
         }
 
@@ -110,12 +107,10 @@ namespace Nautilus.Redis
         /// <returns>The keys.</returns>
         public IReadOnlyCollection<string> GetAllKeys()
         {
-            using (var client = this.clientsManager.GetClient())
-            {
-                return client.GetKeysByPattern(KeyProvider.InstrumentsWildcard)
-                    .ToList()
-                    .AsReadOnly();
-            }
+            return this.redisServer.Keys(pattern: KeyProvider.InstrumentsWildcard)
+                .Select(k => k.ToString())
+                .ToList()
+                .AsReadOnly();
         }
 
         /// <summary>
@@ -184,48 +179,42 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(key, nameof(key));
 
-            using (var redis = this.clientsManager.GetClient())
+            if (!this.redisDatabase.KeyExists(key))
             {
-                if (!redis.ContainsKey(key))
-                {
-                    return QueryResult<Instrument>.Fail($"Cannot find {key}");
-                }
-
-                var serialized = redis.Get<string>(key);
-                var serializer = JsonSerializer.Create();
-                var deserialized = serializer.Deserialize(serialized);
-                // var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
-
-                var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
-                var symbolCode = deserializedSymbol["Code"];
-                var exchange = deserializedSymbol["Venue"];
-                var brokerSymbol = deserialized["BrokerSymbol"].ToStringDictionary()["Value"];
-
-                var instrument = new Instrument(
-                    new Symbol(symbolCode, exchange.ToEnum<Venue>()),
-                    new InstrumentId(deserializedSymbol["Value"]),
-                    new BrokerSymbol(brokerSymbol),
-                    deserialized["QuoteCurrency"].ToEnum<CurrencyCode>(),
-                    deserialized["SecurityType"].ToEnum<SecurityType>(),
-                    Convert.ToInt32(deserialized["TickDecimals"]),
-                    Convert.ToDecimal(deserialized["TickSize"]),
-                    Convert.ToDecimal(deserialized["TickValue"]),
-                    Convert.ToDecimal(deserialized["TargetDirectSpread"]),
-                    Convert.ToInt32(deserialized["RoundLotSize"]),
-                    Convert.ToInt32(deserialized["ContractSize"]),
-                    Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
-                    Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
-                    Convert.ToInt32(deserialized["MinStopDistance"]),
-                    Convert.ToInt32(deserialized["MinLimitDistance"]),
-                    Convert.ToInt32(deserialized["MinTradeSize"]),
-                    Convert.ToInt32(deserialized["MaxTradeSize"]),
-                    Convert.ToDecimal(deserialized["MarginRequirement"]),
-                    Convert.ToDecimal(deserialized["RolloverInterestBuy"]),
-                    Convert.ToDecimal(deserialized["RolloverInterestSell"]),
-                    deserialized["Timestamp"].ToZonedDateTimeFromIso());
-
-                return QueryResult<Instrument>.Ok(instrument);
+                return QueryResult<Instrument>.Fail($"Cannot find {key}");
             }
+
+            var serialized = this.redisDatabase.StringGet(key).ToString();
+            var deserialized = JsonConvert.DeserializeObject(serialized);
+
+// var deserializedSymbol = deserialized["Symbol"];
+//            var symbolCode = deserializedSymbol["Code"];
+//            var exchange = deserializedSymbol["Symbol"]["Venue"];
+//            var brokerSymbol = deserialized["BrokerSymbol"]["Value"];
+//
+//            var instrument = new Instrument(
+//                new Symbol(symbolCode, exchange.ToEnum<Venue>()),
+//                new InstrumentId(deserializedSymbol["Value"]),
+//                new BrokerSymbol(brokerSymbol),
+//                deserialized["QuoteCurrency"].ToEnum<CurrencyCode>(),
+//                deserialized["SecurityType"].ToEnum<SecurityType>(),
+//                Convert.ToInt32(deserialized["TickDecimals"]),
+//                Convert.ToDecimal(deserialized["TickSize"]),
+//                Convert.ToDecimal(deserialized["TickValue"]),
+//                Convert.ToDecimal(deserialized["TargetDirectSpread"]),
+//                Convert.ToInt32(deserialized["RoundLotSize"]),
+//                Convert.ToInt32(deserialized["ContractSize"]),
+//                Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
+//                Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
+//                Convert.ToInt32(deserialized["MinStopDistance"]),
+//                Convert.ToInt32(deserialized["MinLimitDistance"]),
+//                Convert.ToInt32(deserialized["MinTradeSize"]),
+//                Convert.ToInt32(deserialized["MaxTradeSize"]),
+//                Convert.ToDecimal(deserialized["MarginRequirement"]),
+//                Convert.ToDecimal(deserialized["RolloverInterestBuy"]),
+//                Convert.ToDecimal(deserialized["RolloverInterestSell"]),
+//                deserialized["Timestamp"].ToZonedDateTimeFromIso());
+            return QueryResult<Instrument>.Fail("OOPS");
         }
 
         /// <summary>
@@ -245,28 +234,13 @@ namespace Nautilus.Redis
                 symbol => symbol.Value.TickDecimals);
         }
 
-        /// <summary>
-        /// Disposes the instrument repository resources.
-        /// </summary>
-        public void Dispose()
-        {
-            this.clientsManager.Dispose();
-        }
-
         private CommandResult Write(Instrument instrument)
         {
-            using (var client = this.clientsManager.GetClient())
-            {
-                JsConfig.TextCase = TextCase.PascalCase;
+            var symbol = instrument.Symbol;
 
-                var symbol = instrument.Symbol;
+            this.redisDatabase.StringSet(KeyProvider.GetInstrumentKey(symbol), JsonConvert.SerializeObject(instrument));
 
-                client.Set(
-                    KeyProvider.GetInstrumentKey(symbol),
-                    JsonSerializer.SerializeToString(instrument));
-
-                return CommandResult.Ok($"Added instrument {symbol}");
-            }
+            return CommandResult.Ok($"Added instrument {symbol}");
         }
     }
 }

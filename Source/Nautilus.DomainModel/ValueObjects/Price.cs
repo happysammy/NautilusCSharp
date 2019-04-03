@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents a positive financial market price.
+    /// Represents a financial market price.
     /// </summary>
     [Immutable]
     public sealed class Price : PositiveDecimal

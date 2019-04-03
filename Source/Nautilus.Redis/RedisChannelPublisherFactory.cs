@@ -10,24 +10,24 @@ namespace Nautilus.Redis
 {
     using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
-    using ServiceStack.Redis;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides Redis implementations of the <see cref="IChannelPublisher"/>.
     /// </summary>
     public sealed class RedisChannelPublisherFactory : IChannelPublisherFactory
     {
-        private readonly IRedisClientsManager clientsManager;
+        private readonly ConnectionMultiplexer connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisChannelPublisherFactory"/> class.
         /// </summary>
-        /// <param name="clientsManager">The Redis client manager.</param>
-        public RedisChannelPublisherFactory(IRedisClientsManager clientsManager)
+        /// <param name="connection">The Redis client manager.</param>
+        public RedisChannelPublisherFactory(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(clientsManager, nameof(clientsManager));
+            Validate.NotNull(connection, nameof(connection));
 
-            this.clientsManager = clientsManager;
+            this.connection = connection;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nautilus.Redis
         /// <returns>The channel publisher.</returns>
         public IChannelPublisher Create()
         {
-            return new RedisChannelPublisher(this.clientsManager);
+            return new RedisChannelPublisher(this.connection.GetSubscriber());
         }
     }
 }

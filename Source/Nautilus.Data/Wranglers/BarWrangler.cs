@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Wranglers
 {
     using System.Collections.Generic;
-    using System.Text;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Keys;
@@ -25,16 +24,16 @@ namespace Nautilus.Data.Wranglers
         /// <summary>
         /// Parses the given bar string array and returns a list of <see cref="Bar"/>(s).
         /// </summary>
-        /// <param name="barsBytes">The bar strings.</param>
+        /// <param name="barsStrings">The bar strings.</param>
         /// <returns>The list of parsed bars.</returns>
-        public static List<Bar> ParseBars(byte[][] barsBytes)
+        public static List<Bar> ParseBars(string[] barsStrings)
         {
-            Validate.NotNull(barsBytes, nameof(barsBytes));
+            Validate.NotNull(barsStrings, nameof(barsStrings));
 
             var barData = new List<Bar>();
-            for (var i = 0; i < barsBytes.Length; i++)
+            for (var i = 0; i < barsStrings.Length; i++)
             {
-                barData.Add(Bar.GetFromString(Encoding.UTF8.GetString(barsBytes[i])));
+                barData.Add(Bar.GetFromString(barsStrings[i]));
             }
 
             return barData;

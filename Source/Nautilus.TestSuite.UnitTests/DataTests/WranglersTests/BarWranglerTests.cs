@@ -28,11 +28,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
             var bar = StubBarData.Create();
 
             var expectedBarList = new List<Bar> { bar, bar, bar };
-            var barStringArray = new List<byte[]>
+            var barStringArray = new List<string>
             {
-                bar.ToUtf8Bytes(),
-                bar.ToUtf8Bytes(),
-                bar.ToUtf8Bytes(),
+                bar.ToString(),
+                bar.ToString(),
+                bar.ToString(),
             }.ToArray();
 
             // Act

@@ -17,6 +17,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="CsvHelper" Version="12.1.2" />
+        <PackageReference Include="StackExchange.Redis" Version="2.0.571" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />

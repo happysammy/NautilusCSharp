@@ -17,7 +17,7 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using ServiceStack.Redis;
+    using StackExchange.Redis;
 
     /// <summary>
     /// Provides a repository for persisting <see cref="Bar"/> objects into Redis.
@@ -29,12 +29,12 @@ namespace Nautilus.Redis
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarRepository"/> class.
         /// </summary>
-        /// <param name="clientsManager">The clients manager.</param>
-        public RedisBarRepository(IRedisClientsManager clientsManager)
+        /// <param name="connection">The clients manager.</param>
+        public RedisBarRepository(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(clientsManager, nameof(clientsManager));
+            Validate.NotNull(connection, nameof(connection));
 
-            this.barClient = new RedisBarClient(clientsManager);
+            this.barClient = new RedisBarClient(connection);
         }
 
         /// <summary>

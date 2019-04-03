@@ -21,26 +21,26 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
+    using StackExchange.Redis;
 
     /// <summary>
-    /// A client for accessing bar data from <see cref="Redis"/> with a
-    /// <see cref="RedisNativeClient"/>. This client is not thread-safe and therefor should be
-    /// encapsulated in a thread-safe environment for sequential operations on the
-    /// <see cref="Redis"/> database.
+    /// Provides a thread-safe client for accessing bar data from <see cref="Redis"/>.
     /// </summary>
     public class RedisBarClient
     {
-        private readonly RedisNativeClient redisClient;
+        private readonly IServer redisServer;
+        private readonly IDatabase redisDatabase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisBarClient"/> class.
         /// </summary>
-        /// <param name="clientsManager">The redis clients manager.</param>
-        public RedisBarClient(IRedisClientsManager clientsManager)
+        /// <param name="connection">The redis connection multiplexer.</param>
+        public RedisBarClient(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(clientsManager, nameof(clientsManager));
+            Validate.NotNull(connection, nameof(connection));
 
-            this.redisClient = (RedisNativeClient)clientsManager.GetClient();
+            this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
+            this.redisDatabase = connection.GetDatabase();
         }
 
         /// <summary>
@@ -51,10 +51,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="bool"/>.</returns>
         public bool KeyExists(string key)
         {
-            Debug.NotNull(key, nameof(key));
-
-            // Redis returns 1 if the key exists or 0 if the key does not exist.
-            return this.redisClient.Exists(key) == 1;
+            return this.redisDatabase.KeyExists(key);
         }
 
         /// <summary>
@@ -76,7 +73,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllKeysCount()
         {
-            return this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard).Length;
+            return this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).Count();
         }
 
         /// <summary>
@@ -88,7 +85,7 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(barType, nameof(barType));
 
-            return this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType)).Length;
+            return this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType)).Count();
         }
 
         /// <summary>
@@ -100,9 +97,9 @@ namespace Nautilus.Redis
         {
             Debug.NotNull(barType, nameof(barType));
 
-            var allKeys = this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType));
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
 
-            if (allKeys.Length == 0)
+            if (!allKeys.Any())
             {
                 return 0;
             }
@@ -120,9 +117,9 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allBarTypeKeys = this.redisClient.Keys(KeyProvider.BarsNamespaceWildcard);
+            var allBarTypeKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard);
 
-            if (allBarTypeKeys.Length == 0)
+            if (!allBarTypeKeys.Any())
             {
                 return 0;
             }
@@ -148,7 +145,7 @@ namespace Nautilus.Redis
                 return QueryResult<List<string>>.Fail($"No market data found for {barType}.");
             }
 
-            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarTypeWildcardString(barType));
+            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
 
             var keysCollection = allKeysBytes
                 .Select(key => Encoding.UTF8.GetString(key))
@@ -166,7 +163,7 @@ namespace Nautilus.Redis
         /// <returns>The result of the query.</returns>
         public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(Resolution resolution)
         {
-            var allKeysBytes = this.redisClient.Keys(KeyProvider.GetBarsWildcardString());
+            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardString());
 
             var keysCollection = allKeysBytes
                 .Select(key => Encoding.UTF8.GetString(key))
@@ -213,7 +210,7 @@ namespace Nautilus.Redis
             var key = new BarDataKey(barType, dateKey);
             var keyString = key.ToString();
 
-            this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
+            this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
 
             return CommandResult.Ok($"Added 1 bar to {barType}.");
         }
@@ -244,7 +241,7 @@ namespace Nautilus.Redis
                 {
                     foreach (var bar in value)
                     {
-                        this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
                         barsAddedCounter++;
                     }
 
@@ -258,7 +255,7 @@ namespace Nautilus.Redis
                 {
                     if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
                     {
-                        this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
                         barsAddedCounter++;
                     }
                 }
@@ -288,7 +285,9 @@ namespace Nautilus.Redis
 
             var barsArray = barKeysQuery
                 .Value
-                .SelectMany(key => BarWrangler.ParseBars(this.redisClient.LRange(key, 0, -1)))
+                .SelectMany(key => this.redisDatabase.ListRange(key, 0, -1))
+                .Select(value => value.ToString())
+                .Select(Bar.GetFromString)
                 .ToArray();
 
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
@@ -319,8 +318,9 @@ namespace Nautilus.Redis
             var barKeysQuery = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
 
             var barsArray = barKeysQuery
-                .Select(key => this.redisClient.LRange(key, 0, -1))
-                .SelectMany(BarWrangler.ParseBars)
+                .Select(key => this.redisDatabase.ListRange(key, 0, -1))
+                .Select(value => value.ToString())
+                .Select(Bar.GetFromString)
                 .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
                            && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
                 .ToArray();
@@ -383,9 +383,14 @@ namespace Nautilus.Redis
                 return QueryResult<List<Bar>>.Fail($"No market data found for {key}.");
             }
 
-            var barBytes = this.redisClient.LRange(key, 0, -1);
+            var values = this.redisDatabase.ListRange(key, 0, -1);
+            var barStrings = new string[values.Count()];
+            foreach (var element in values)
+            {
+                barStrings.Append(element.ToString());
+            }
 
-            return QueryResult<List<Bar>>.Ok(BarWrangler.ParseBars(barBytes));
+            return QueryResult<List<Bar>>.Ok(BarWrangler.ParseBars(barStrings));
         }
 
         /// <summary>
@@ -402,7 +407,7 @@ namespace Nautilus.Redis
                 return CommandResult.Fail($"Cannot find {key} to delete in the database.");
             }
 
-            this.redisClient.Del(key);
+            this.redisDatabase.KeyDelete(key);
 
             return CommandResult.Ok($"Removed {key} from the database.");
         }

@@ -8,29 +8,22 @@
 
 namespace Nautilus.Redis
 {
-    using ServiceStack.Redis;
-
     /// <summary>
     /// Provides constants for the <see cref="Redis"/> database infrastructure.
     /// </summary>
     public static class RedisConstants
     {
-        private const string LocalIpString = "127.0.0.1";
+        private const string LocalHostString = "localhost";
         private const int LocalPortInt = 6379;
 
         /// <summary>
         /// Gets the <see cref="Redis"/> local host internet protocol string.
         /// </summary>
-        public static string LocalIp => LocalIpString;
+        public static string LocalHost => LocalHostString;
 
         /// <summary>
         /// Gets the <see cref="Redis"/> default port.
         /// </summary>
         public static int DefaultPort => LocalPortInt;
-
-        /// <summary>
-        /// Gets the <see cref="Redis"/> local host end point.
-        /// </summary>
-        public static RedisEndpoint LocalHost => new RedisEndpoint(LocalIpString, LocalPortInt);
     }
 }

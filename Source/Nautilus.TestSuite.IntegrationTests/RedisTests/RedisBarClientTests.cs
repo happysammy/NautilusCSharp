@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     using Nautilus.Redis;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
-    using ServiceStack.Redis;
+    using StackExchange.Redis;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -25,27 +25,22 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
     public class RedisBarClientTests : IDisposable
     {
         private readonly ITestOutputHelper output;
-        private readonly IRedisClientsManager clientsManager;
+        private readonly ConnectionMultiplexer redisConnection;
         private readonly RedisBarClient client;
 
         public RedisBarClientTests(ITestOutputHelper output)
         {
             // Fixture Setup
-            RedisServiceStack.ConfigureServiceStack();
-
             this.output = output;
-            this.clientsManager = new BasicRedisClientManager(
-                new[] { RedisConstants.LocalHost },
-                new[] { RedisConstants.LocalHost });
+            this.redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            this.client = new RedisBarClient(this.redisConnection);
 
-            // Data compression off so that redis-cli is readable.
-            this.client = new RedisBarClient(this.clientsManager);
-            this.clientsManager.GetClient().FlushAll();
+            this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
 
         public void Dispose()
         {
-            this.clientsManager.GetClient().FlushAll();
+            this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
 
         [Fact]

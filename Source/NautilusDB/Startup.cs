@@ -21,7 +21,6 @@ namespace NautilusDB
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
-    using Nautilus.Redis;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
 
