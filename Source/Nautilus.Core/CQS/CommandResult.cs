@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------------------------------
 // <copyright file="CommandResult.cs" company="Nautech Systems Pty Ltd">
-//  Copyright (C) 2015-2018 Nautech Systems Pty Ltd. All rights reserved.
+//  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
@@ -56,8 +56,7 @@ namespace Nautilus.Core.CQS
         /// <summary>
         /// Returns a failure <see cref="CommandResult"/> with the given message.
         /// </summary>
-        /// <param name="errorMessage">The result error message (cannot be null or white
-        /// space).</param>
+        /// <param name="errorMessage">The result error message (cannot be null or white space).</param>
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Fail(string errorMessage)
         {
