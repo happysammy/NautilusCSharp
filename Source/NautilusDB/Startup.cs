@@ -17,13 +17,13 @@ namespace NautilusDB
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Common.Configuration;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Redis;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
-    using ServiceStack;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -71,9 +71,6 @@ namespace NautilusDB
             Validate.NotNull(services, nameof(services));
 
             var config = JObject.Parse(File.ReadAllText("config.json"));
-
-            Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
-            RedisServiceStack.ConfigureServiceStack();
 
             var logLevel = this.Environment.IsDevelopment()
                 ? LogEventLevel.Information

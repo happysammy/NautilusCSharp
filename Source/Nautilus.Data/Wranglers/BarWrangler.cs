@@ -19,6 +19,7 @@ namespace Nautilus.Data.Wranglers
     /// Provides wrangling operations for <see cref="Bar"/> objects.
     /// </summary>
     [Immutable]
+    [PerformanceOptimized]
     public static class BarWrangler
     {
         /// <summary>
@@ -31,9 +32,6 @@ namespace Nautilus.Data.Wranglers
             Validate.NotNull(barsBytes, nameof(barsBytes));
 
             var barData = new List<Bar>();
-
-            // ReSharper disable once ForCanBeConvertedToForeach
-            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < barsBytes.Length; i++)
             {
                 barData.Add(Bar.GetFromString(Encoding.UTF8.GetString(barsBytes[i])));
@@ -53,9 +51,6 @@ namespace Nautilus.Data.Wranglers
             Validate.NotNullOrEmpty(bars, nameof(bars));
 
             var barsDictionary = new Dictionary<DateKey, List<Bar>>();
-
-            // ReSharper disable once ForCanBeConvertedToForeach
-            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < bars.Length; i++)
             {
                 var dateKey = new DateKey(bars[i].Timestamp);

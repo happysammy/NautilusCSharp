@@ -21,7 +21,6 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
-    using ServiceStack.Redis;
 
     /// <summary>
     /// A client for accessing bar data from <see cref="Redis"/> with a
@@ -236,14 +235,14 @@ namespace Nautilus.Redis
             var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
             var barsAddedCounter = 0;
 
-            foreach (var barsToAddDictionary in barsIndex)
+            foreach (var (dateKey, value) in barsIndex)
             {
-                var key = new BarDataKey(barType, barsToAddDictionary.Key);
+                var key = new BarDataKey(barType, dateKey);
                 var keyString = key.ToString();
 
                 if (!this.KeyExists(key))
                 {
-                    foreach (var bar in barsToAddDictionary.Value)
+                    foreach (var bar in value)
                     {
                         this.redisClient.RPush(keyString, bar.ToUtf8Bytes());
                         barsAddedCounter++;
@@ -255,7 +254,7 @@ namespace Nautilus.Redis
                 // The key should exist in Redis because it was just checked by KeyExists().
                 var persistedBars = this.GetBarsByDay(keyString).Value;
 
-                foreach (var bar in barsToAddDictionary.Value)
+                foreach (var bar in value)
                 {
                     if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
                     {

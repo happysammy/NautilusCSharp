@@ -30,7 +30,6 @@ namespace NautilusDB
     using Nautilus.Serilog;
     using NodaTime;
     using Serilog.Events;
-    using ServiceStack.Redis;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="NautilusDatabase"/> system.

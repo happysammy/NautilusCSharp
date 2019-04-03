@@ -23,9 +23,8 @@ namespace Nautilus.Redis
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Newtonsoft.Json;
     using NodaTime;
-    using ServiceStack.Redis;
-    using ServiceStack.Text;
 
     /// <summary>
     /// Provides a Redis implementation for the system instrument repository.
@@ -193,7 +192,9 @@ namespace Nautilus.Redis
                 }
 
                 var serialized = redis.Get<string>(key);
-                var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
+                var serializer = JsonSerializer.Create();
+                var deserialized = serializer.Deserialize(serialized);
+                // var deserialized = JsonSerializer.DeserializeFromString<JsonObject>(serialized);
 
                 var deserializedSymbol = deserialized["Symbol"].ToStringDictionary();
                 var symbolCode = deserializedSymbol["Code"];

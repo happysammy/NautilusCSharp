@@ -15,6 +15,7 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Common.Configuration;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -22,7 +23,6 @@ namespace NautilusExecutor
     using Nautilus.Redis;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
-    using ServiceStack;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -70,9 +70,6 @@ namespace NautilusExecutor
             Validate.NotNull(services, nameof(services));
 
             var config = JObject.Parse(File.ReadAllText("config.json"));
-
-            Licensing.RegisterLicense((string)config[ConfigSection.ServiceStack]["licenseKey"]);
-            RedisServiceStack.ConfigureServiceStack();
 
             var host = this.Environment.IsDevelopment()
                 ? NetworkAddress.LocalHost()
