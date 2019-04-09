@@ -27,11 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{D7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestSuite", "TestSuite", "{33E9E1BA-15F1-4786-9038-90EC96E2C6F2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusDB", "NautilusDB", "{8AB6560F-56D5-4D01-AF21-15AABE70BF82}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusData", "NautilusData", "{8AB6560F-56D5-4D01-AF21-15AABE70BF82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB", "NautilusDB\NautilusDB.csproj", "{7A6A88B0-3179-4D92-A585-CE890A4F6FF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusData", "NautilusData\NautilusData.csproj", "{7A6A88B0-3179-4D92-A585-CE890A4F6FF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusDB.Service", "NautilusDB.Service\NautilusDB.Service.csproj", "{933D3504-F1B7-42AE-ADE7-AEBABF379DB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusData.Service", "NautilusData.Service\NautilusData.Service.csproj", "{933D3504-F1B7-42AE-ADE7-AEBABF379DB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusExecutor", "NautilusExecutor", "{BE9D07AC-25B5-49D0-80A7-023E0198AD2C}"
 EndProject

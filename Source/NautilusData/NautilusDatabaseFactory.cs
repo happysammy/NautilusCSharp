@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusDB
+namespace NautilusData
 {
     using System;
     using System.Collections.Generic;
@@ -64,10 +64,10 @@ namespace NautilusDB
             Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusDB)} builder...");
-            VersionChecker.Run(loggingAdapter, "NautilusDB - Financial Market Data Service");
+            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusData)} builder...");
+            VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
 
-            var actorSystem = ActorSystem.Create(nameof(NautilusDB));
+            var actorSystem = ActorSystem.Create(nameof(NautilusData));
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(

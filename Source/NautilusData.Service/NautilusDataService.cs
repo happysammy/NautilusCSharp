@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusDB.Service
+namespace NautilusData.Service
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -14,7 +14,7 @@ namespace NautilusDB.Service
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// Provides a REST API for the <see cref="NautilusDB"/> system.
+    /// Provides a REST API for the <see cref="NautilusData"/> system.
     /// </summary>
     public class NautilusDataService
     {

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusDB
+namespace NautilusData
 {
     using System;
     using System.Collections.Generic;
