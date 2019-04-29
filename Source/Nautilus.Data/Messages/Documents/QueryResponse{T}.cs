@@ -49,11 +49,11 @@ namespace Nautilus.Data.Messages.Documents
         /// <summary>
         /// Gets a value indicating whether the result of the response message is successful.
         /// </summary>
-        public bool IsSuccess => Result.IsSuccess;
+        public bool IsSuccess => this.Result.IsSuccess;
 
         /// <summary>
         /// Gets the message of the response message.
         /// </summary>
-        public string Message => Result.Message;
+        public string Message => this.Result.Message;
     }
 }

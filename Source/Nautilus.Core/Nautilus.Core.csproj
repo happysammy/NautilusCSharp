@@ -15,7 +15,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="NodaTime" Version="2.4.5" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     </ItemGroup>
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />

@@ -14,8 +14,8 @@
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Redis.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-        <PackageReference Include="StackExchange.Redis" Version="2.0.600" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
