@@ -141,9 +141,9 @@ namespace Nautilus.Core
         /// otherwise returns false.</returns>
         public override bool Equals([CanBeNull] object obj)
         {
-            if (obj is T)
+            if (obj is T o)
             {
-                obj = new Option<T>((T)obj);
+                obj = new Option<T>(o);
             }
 
             if (!(obj is Option<T>))
