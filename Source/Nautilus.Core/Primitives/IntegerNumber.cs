@@ -110,7 +110,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator -(IntegerNumber left, int right)
         {
-            Validate.NotNull(left, nameof(left));
+            Debug.NotNull(left, nameof(left));
 
             return left.Value - right;
         }

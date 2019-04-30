@@ -42,10 +42,10 @@ namespace Nautilus.Data.Orchestration
             bool intervalicCollection,
             int intervalMinutes)
         {
-            Validate.NotDefault(collectionDay, nameof(collectionDay));
-            Validate.NotOutOfRangeInt32(collectionHour, nameof(collectionHour), 0, 23);
-            Validate.NotOutOfRangeInt32(collectionMinute, nameof(collectionMinute), 0, 59);
-            Validate.NotNegativeInt32(intervalMinutes, nameof(intervalMinutes));
+            Precondition.NotDefault(collectionDay, nameof(collectionDay));
+            Precondition.NotOutOfRangeInt32(collectionHour, nameof(collectionHour), 0, 23);
+            Precondition.NotOutOfRangeInt32(collectionMinute, nameof(collectionMinute), 0, 59);
+            Precondition.NotNegativeInt32(intervalMinutes, nameof(intervalMinutes));
 
             this.collectionDay = collectionDay;
             this.collectionHour = collectionHour;
@@ -87,7 +87,7 @@ namespace Nautilus.Data.Orchestration
         /// <param name="timeNow">The last collected time.</param>
         public void UpdateLastCollectedTime(ZonedDateTime timeNow)
         {
-            Validate.NotDefault(timeNow, nameof(timeNow));
+            Precondition.NotDefault(timeNow, nameof(timeNow));
 
             this.LastCollectedTime = timeNow;
             this.NextCollectionTime = this.SetNextCollectionTime(timeNow);
@@ -100,7 +100,7 @@ namespace Nautilus.Data.Orchestration
         /// <returns>A <see cref="Duration"/>.</returns>
         public Duration GetNextCollectionTimeToGo(ZonedDateTime timeNow)
         {
-            Validate.NotDefault(timeNow, nameof(timeNow));
+            Precondition.NotDefault(timeNow, nameof(timeNow));
 
             return this.NextCollectionTime - timeNow;
         }
@@ -112,7 +112,7 @@ namespace Nautilus.Data.Orchestration
         /// <returns>A <see cref="bool"/>.</returns>
         public bool IsDataDueForCollection(ZonedDateTime currentTime)
         {
-            Validate.NotDefault(currentTime, nameof(currentTime));
+            Precondition.NotDefault(currentTime, nameof(currentTime));
 
             return this.LastCollectedTime.HasNoValue || currentTime.Compare(this.NextCollectionTime) >= 0;
         }

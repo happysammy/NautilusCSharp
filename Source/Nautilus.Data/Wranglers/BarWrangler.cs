@@ -28,7 +28,7 @@ namespace Nautilus.Data.Wranglers
         /// <returns>The list of parsed bars.</returns>
         public static List<Bar> ParseBars(string[] barsStrings)
         {
-            Validate.NotNull(barsStrings, nameof(barsStrings));
+            Precondition.NotNull(barsStrings, nameof(barsStrings));
 
             var barData = new List<Bar>();
             for (var i = 0; i < barsStrings.Length; i++)
@@ -47,7 +47,7 @@ namespace Nautilus.Data.Wranglers
         [PerformanceOptimized]
         public static Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
         {
-            Validate.NotNullOrEmpty(bars, nameof(bars));
+            Precondition.NotNullOrEmpty(bars, nameof(bars));
 
             var barsDictionary = new Dictionary<DateKey, List<Bar>>();
             for (var i = 0; i < bars.Length; i++)

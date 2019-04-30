@@ -26,7 +26,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="actorRef">The actor address.</param>
         public ActorEndpoint(IActorRef actorRef)
         {
-            Validate.NotNull(actorRef, nameof(actorRef));
+            Precondition.NotNull(actorRef, nameof(actorRef));
 
             this.actorRef = actorRef;
         }

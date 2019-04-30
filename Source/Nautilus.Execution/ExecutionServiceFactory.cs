@@ -52,11 +52,11 @@ namespace Nautilus.Execution
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Validate.NotNull(actorSystem, nameof(actorSystem));
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Precondition.NotNull(actorSystem, nameof(actorSystem));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var messageServer = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(

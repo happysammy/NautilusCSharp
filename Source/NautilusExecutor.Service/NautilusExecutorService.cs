@@ -30,7 +30,7 @@ namespace NautilusExecutor.Service
         /// <param name="setupContainer">The setup container.</param>
         public NautilusExecutorService(IComponentryContainer setupContainer)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Precondition.NotNull(setupContainer, nameof(setupContainer));
 
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;

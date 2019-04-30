@@ -42,7 +42,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis clients manager.</param>
         public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(connection, nameof(connection));
+            Precondition.NotNull(connection, nameof(connection));
 
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();

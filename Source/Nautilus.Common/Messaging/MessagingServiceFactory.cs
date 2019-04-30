@@ -31,9 +31,9 @@ namespace Nautilus.Common.Messaging
             IComponentryContainer container,
             IMessageStore store)
         {
-            Validate.NotNull(actorSystem, nameof(actorSystem));
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(store, nameof(store));
+            Precondition.NotNull(actorSystem, nameof(actorSystem));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(store, nameof(store));
 
             var messageStoreRef = new ActorEndpoint(actorSystem.ActorOf(Props.Create(() => new MessageStorer(store))));
 

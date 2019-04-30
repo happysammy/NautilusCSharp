@@ -40,8 +40,8 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer setupContainer)
         {
-            Validate.NotNull(component, nameof(component));
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Precondition.NotNull(component, nameof(component));
+            Precondition.NotNull(setupContainer, nameof(setupContainer));
 
             this.clock = setupContainer.Clock;
             this.StartTime = this.clock.TimeNow();

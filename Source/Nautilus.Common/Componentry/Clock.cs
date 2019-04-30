@@ -27,7 +27,7 @@ namespace Nautilus.Common.Componentry
         /// <exception cref="ValidationException">If the argument is null.</exception>
         public Clock(DateTimeZone dateTimeZone)
         {
-            Validate.NotNull(dateTimeZone, nameof(dateTimeZone));
+            Precondition.NotNull(dateTimeZone, nameof(dateTimeZone));
 
             this.clock = new ZonedClock(SystemClock.Instance, dateTimeZone, CalendarSystem.Iso);
             this.dateTimeZone = dateTimeZone;

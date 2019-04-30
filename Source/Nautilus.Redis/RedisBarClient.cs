@@ -37,7 +37,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis connection multiplexer.</param>
         public RedisBarClient(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(connection, nameof(connection));
+            Precondition.NotNull(connection, nameof(connection));
 
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();

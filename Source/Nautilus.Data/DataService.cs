@@ -49,9 +49,9 @@ namespace Nautilus.Data
                 setupContainer,
                 messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(gateway, nameof(gateway));
+            Precondition.NotNull(setupContainer, nameof(setupContainer));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(gateway, nameof(gateway));
 
             this.gateway = gateway;
             this.updateInstruments = updateInstruments;

@@ -60,8 +60,8 @@ namespace Nautilus.Data.Aggregators
                 symbol),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(symbol, nameof(symbol));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();

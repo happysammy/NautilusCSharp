@@ -48,10 +48,10 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(riskModelId, timestamp)
         {
-            Validate.NotNull(riskModelId, nameof(riskModelId));
-            Validate.NotNull(globalMaxRiskExposure, nameof(globalMaxRiskExposure));
-            Validate.NotNull(globalMaxRiskPerTrade, nameof(globalMaxRiskPerTrade));
-            Validate.NotNull(globalMaxTradesPerType, nameof(globalMaxTradesPerType));
+            Precondition.NotNull(riskModelId, nameof(riskModelId));
+            Precondition.NotNull(globalMaxRiskExposure, nameof(globalMaxRiskExposure));
+            Precondition.NotNull(globalMaxRiskPerTrade, nameof(globalMaxRiskPerTrade));
+            Precondition.NotNull(globalMaxTradesPerType, nameof(globalMaxTradesPerType));
 
             this.GlobalMaxRiskExposure = globalMaxRiskExposure;
             this.GlobalMaxRiskPerTrade = globalMaxRiskPerTrade;
@@ -100,8 +100,8 @@ namespace Nautilus.DomainModel.Entities
         /// the update timestamp is the default value.</exception>
         public void UpdateGlobalMaxRiskPerTrade(Percentage maxRiskPerTrade, ZonedDateTime timestamp)
         {
-            Validate.NotNull(maxRiskPerTrade, nameof(maxRiskPerTrade));
-            Validate.NotEqualTo(timestamp, nameof(timestamp), default(ZonedDateTime));
+            Precondition.NotNull(maxRiskPerTrade, nameof(maxRiskPerTrade));
+            Precondition.NotEqualTo(timestamp, nameof(timestamp), default(ZonedDateTime));
 
             this.GlobalMaxRiskPerTrade = maxRiskPerTrade;
             this.eventLog.Add(Tuple.Create(timestamp, $"Global max risk per trade updated ({maxRiskPerTrade})."));
@@ -117,9 +117,9 @@ namespace Nautilus.DomainModel.Entities
         /// the update timestamp is the default value.</exception>
         public void UpdatePositionSizeHardLimit(Symbol symbol, Quantity hardLimit, ZonedDateTime timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(hardLimit, nameof(hardLimit));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotNull(symbol, nameof(symbol));
+            Precondition.NotNull(hardLimit, nameof(hardLimit));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.positionSizeHardLimitsIndex.ContainsKey(symbol))
             {
@@ -143,9 +143,9 @@ namespace Nautilus.DomainModel.Entities
         /// the update timestamp is the default value.</exception>
         public void UpdateMaxRiskPerTradeType(TradeType tradeType, Percentage riskPerTrade, ZonedDateTime timestamp)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(riskPerTrade, nameof(riskPerTrade));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotNull(tradeType, nameof(tradeType));
+            Precondition.NotNull(riskPerTrade, nameof(riskPerTrade));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxRiskPerTradeTypeIndex.ContainsKey(tradeType))
             {
@@ -169,9 +169,9 @@ namespace Nautilus.DomainModel.Entities
         /// the timestamp is the default value.</exception>
         public void UpdateMaxTradesPerSymbolType(TradeType tradeType, Quantity maxTrades, ZonedDateTime timestamp)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
-            Validate.NotNull(maxTrades, nameof(maxTrades));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotNull(tradeType, nameof(tradeType));
+            Precondition.NotNull(maxTrades, nameof(maxTrades));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxTradesPerSymbolType.ContainsKey(tradeType))
             {
@@ -193,7 +193,7 @@ namespace Nautilus.DomainModel.Entities
         /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public Option<Quantity> GetHardLimitQuantity(Symbol symbol)
         {
-            Validate.NotNull(symbol, nameof(symbol));
+            Precondition.NotNull(symbol, nameof(symbol));
 
             return this.positionSizeHardLimitsIndex.ContainsKey(symbol)
                 ? this.positionSizeHardLimitsIndex[symbol]
@@ -208,7 +208,7 @@ namespace Nautilus.DomainModel.Entities
         /// <exception cref="ValidationException">Throws if the trade type is null.</exception>
         public Percentage GetRiskPerTrade(TradeType tradeType)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
+            Precondition.NotNull(tradeType, nameof(tradeType));
 
             return this.maxRiskPerTradeTypeIndex.ContainsKey(tradeType)
                 ? this.maxRiskPerTradeTypeIndex[tradeType]
@@ -222,7 +222,7 @@ namespace Nautilus.DomainModel.Entities
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity GetMaxTrades(TradeType tradeType)
         {
-            Validate.NotNull(tradeType, nameof(tradeType));
+            Precondition.NotNull(tradeType, nameof(tradeType));
 
             return this.maxTradesPerSymbolType.ContainsKey(tradeType)
                  ? this.maxTradesPerSymbolType[tradeType]

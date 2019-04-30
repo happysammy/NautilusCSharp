@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a none-negative quantity.
     /// </summary>
     [Immutable]
-    public sealed class Quantity : NonNegativeInteger
+    public sealed class Quantity : IntegerNumber
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.

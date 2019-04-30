@@ -25,7 +25,7 @@ namespace Nautilus.Messaging.Network
         /// <param name="address">The network address.</param>
         public NetworkAddress(string address)
         {
-            Validate.NotNull(address, nameof(address));
+            Precondition.NotNull(address, nameof(address));
 
             this.Value = address;
         }

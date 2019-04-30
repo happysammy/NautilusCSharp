@@ -33,9 +33,9 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
         {
-            Validate.NotNull(switchboard, nameof(switchboard));
-            Validate.NotDefault(commandId, nameof(commandId));
-            Validate.NotDefault(commandTimestamp, nameof(commandTimestamp));
+            Precondition.NotNull(switchboard, nameof(switchboard));
+            Precondition.NotDefault(commandId, nameof(commandId));
+            Precondition.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.Switchboard = switchboard;
         }

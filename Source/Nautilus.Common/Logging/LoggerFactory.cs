@@ -26,7 +26,7 @@ namespace Nautilus.Common.Logging
         /// <param name="loggingAdapter">The logging adapter.</param>
         public LoggerFactory(ILoggingAdapter loggingAdapter)
         {
-            Validate.NotNull(loggingAdapter, nameof(loggingAdapter));
+            Precondition.NotNull(loggingAdapter, nameof(loggingAdapter));
 
             this.loggingAdapter = loggingAdapter;
         }
@@ -39,7 +39,7 @@ namespace Nautilus.Common.Logging
         /// <returns>The logger.</returns>
         public ILogger Create(NautilusService service, Label component)
         {
-            Validate.NotNull(component, nameof(component));
+            Precondition.NotNull(component, nameof(component));
 
             return new Logger(this.loggingAdapter, service, component);
         }

@@ -61,8 +61,8 @@ namespace Nautilus.Data.Aggregators
             container,
             messagingAdapter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();

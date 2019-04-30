@@ -42,9 +42,9 @@ namespace Nautilus.Common.Componentry
                 component,
                 container)
         {
-            Validate.NotNull(component, nameof(component));
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(component, nameof(component));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.messagingAdapter = messagingAdapter;
             this.address = new Address(this.GetType().Name);

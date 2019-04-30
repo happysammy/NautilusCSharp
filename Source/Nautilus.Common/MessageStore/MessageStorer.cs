@@ -31,7 +31,7 @@ namespace Nautilus.Common.MessageStore
         /// <param name="store">The message store.</param>
         public MessageStorer(IMessageStore store)
         {
-            Validate.NotNull(store, nameof(store));
+            Precondition.NotNull(store, nameof(store));
 
             this.store = store;
 

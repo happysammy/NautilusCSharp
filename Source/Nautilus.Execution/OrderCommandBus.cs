@@ -39,9 +39,9 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(gateway, nameof(gateway));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(gateway, nameof(gateway));
 
             this.gateway = gateway;
 

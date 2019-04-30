@@ -715,7 +715,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Validate.NotOutOfRangeInt64(value, nameof(value), 0, 3);
+            Precondition.NotOutOfRangeInt64(value, nameof(value), 0, 3);
         }
 
         [Theory]

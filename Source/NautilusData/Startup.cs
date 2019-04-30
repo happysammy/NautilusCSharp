@@ -38,8 +38,8 @@ namespace NautilusData
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            Validate.NotNull(configuration, nameof(configuration));
-            Validate.NotNull(environment, nameof(environment));
+            Precondition.NotNull(configuration, nameof(configuration));
+            Precondition.NotNull(environment, nameof(environment));
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -67,7 +67,7 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            Validate.NotNull(services, nameof(services));
+            Precondition.NotNull(services, nameof(services));
 
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
@@ -141,9 +141,9 @@ namespace NautilusData
             IApplicationLifetime appLifetime,
             IHostingEnvironment env)
         {
-            Validate.NotNull(app, nameof(app));
-            Validate.NotNull(appLifetime, nameof(appLifetime));
-            Validate.NotNull(env, nameof(env));
+            Precondition.NotNull(app, nameof(app));
+            Precondition.NotNull(appLifetime, nameof(appLifetime));
+            Precondition.NotNull(env, nameof(env));
 
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 

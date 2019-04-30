@@ -47,8 +47,8 @@ namespace Nautilus.Brokerage.Dukascopy
             LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(accountNumber, nameof(accountNumber));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
             this.accountNumber = accountNumber;
@@ -60,7 +60,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="session">The FIX session.</param>
         public void ConnectSession(Session session)
         {
-            Validate.NotNull(session, nameof(session));
+            Precondition.NotNull(session, nameof(session));
 
             this.fixSession = session;
         }

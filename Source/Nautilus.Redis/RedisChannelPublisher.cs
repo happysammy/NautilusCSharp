@@ -27,7 +27,7 @@ namespace Nautilus.Redis
         /// <param name="subscriber">The Redis subscriber.</param>
         public RedisChannelPublisher(ISubscriber subscriber)
         {
-            Validate.NotNull(subscriber, nameof(subscriber));
+            Precondition.NotNull(subscriber, nameof(subscriber));
 
             this.subscriber = subscriber;
             this.channelCache = new List<string>();

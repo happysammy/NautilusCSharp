@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market price.
     /// </summary>
     [Immutable]
-    public sealed class Price : PositiveDecimal
+    public sealed class Price : DecimalNumber
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Price"/> class.

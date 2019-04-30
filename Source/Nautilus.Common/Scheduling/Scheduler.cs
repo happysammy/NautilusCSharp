@@ -36,7 +36,7 @@ namespace Nautilus.Common.Scheduling
                 LabelFactory.Create(nameof(Scheduler)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
+            Precondition.NotNull(container, nameof(container));
 
             var properties = new NameValueCollection
             {

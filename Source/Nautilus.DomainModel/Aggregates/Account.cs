@@ -48,11 +48,11 @@ namespace Nautilus.DomainModel.Aggregates
                 accountId,
                 timestamp)
         {
-            Validate.NotNull(accountId, nameof(accountId));
-            Validate.NotNull(username, nameof(username));
-            Validate.NotNull(password, nameof(password));
-            Validate.NotDefault(currency, nameof(currency));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotNull(accountId, nameof(accountId));
+            Precondition.NotNull(username, nameof(username));
+            Precondition.NotNull(password, nameof(password));
+            Precondition.NotDefault(currency, nameof(currency));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;

@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Validate.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Precondition.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -20,7 +20,7 @@ namespace Nautilus.Core.Validation
     /// <see cref="ArgumentException"/> with details including a message and parameter name.
     /// </summary>
     [Immutable]
-    public static class Validate
+    public static class Precondition
     {
         private const string ExMessage = "Validation Failed";
 

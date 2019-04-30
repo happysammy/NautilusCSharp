@@ -24,8 +24,8 @@ namespace Nautilus.Messaging.Network
         /// <param name="port">The port.</param>
         public ZmqServerAddress(NetworkAddress host, Port port)
         {
-            Validate.NotNull(host, nameof(host));
-            Validate.NotNull(port, nameof(port));
+            Precondition.NotNull(host, nameof(host));
+            Precondition.NotNull(port, nameof(port));
 
             this.Host = host;
             this.Port = port;

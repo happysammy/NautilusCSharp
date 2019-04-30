@@ -50,9 +50,9 @@ namespace Nautilus.Data
                 LabelFactory.Create(nameof(DatabaseTaskManager)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(barRepository, nameof(barRepository));
+            Precondition.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;

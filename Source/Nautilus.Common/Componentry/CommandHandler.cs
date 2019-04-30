@@ -28,7 +28,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="logger">The logger.</param>
         public CommandHandler(ILogger logger)
         {
-            Validate.NotNull(logger, nameof(logger));
+            Precondition.NotNull(logger, nameof(logger));
 
             this.log = logger;
         }

@@ -377,14 +377,14 @@ namespace Nautilus.DomainModel.Aggregates
 
             if (expireTime.HasNoValue)
             {
-                Validate.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+                Precondition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
             }
             else
             {
                 // ReSharper disable once PossibleInvalidOperationException
                 var expireTimeValue = (ZonedDateTime)expireTime.Value;
-                Validate.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
-                Validate.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+                Precondition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Precondition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
         }
 

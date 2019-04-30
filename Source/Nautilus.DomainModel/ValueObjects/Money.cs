@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents the concept of money.
     /// </summary>
     [Immutable]
-    public sealed class Money : NonNegativeDecimal
+    public sealed class Money : DecimalNumber
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Money"/> class.

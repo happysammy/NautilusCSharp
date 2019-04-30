@@ -55,10 +55,10 @@ namespace Nautilus.Messaging
                 LabelFactory.Create(nameof(Throttler<T>)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(receiver, nameof(receiver));
-            Validate.NotDefault(interval, nameof(interval));
-            Validate.PositiveInt32(limit, nameof(limit));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(receiver, nameof(receiver));
+            Precondition.NotDefault(interval, nameof(interval));
+            Precondition.PositiveInt32(limit, nameof(limit));
 
             this.receiver = receiver;
             this.interval = interval.ToTimeSpan();

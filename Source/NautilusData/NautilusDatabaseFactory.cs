@@ -57,11 +57,11 @@ namespace NautilusData
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
-            Validate.NotNull(compressionCodec, nameof(compressionCodec));
-            Validate.NotNull(fixConfig, nameof(fixConfig));
-            Validate.NotNullOrEmpty(symbols, nameof(symbols));
-            Validate.NotNullOrEmpty(resolutions, nameof(resolutions));
-            Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+            Precondition.NotNull(compressionCodec, nameof(compressionCodec));
+            Precondition.NotNull(fixConfig, nameof(fixConfig));
+            Precondition.NotNullOrEmpty(symbols, nameof(symbols));
+            Precondition.NotNullOrEmpty(resolutions, nameof(resolutions));
+            Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusData)} builder...");
