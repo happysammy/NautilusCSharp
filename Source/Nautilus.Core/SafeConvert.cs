@@ -18,18 +18,6 @@ namespace Nautilus.Core
     public static class SafeConvert
     {
         /// <summary>
-        /// Return a valid decimal number (or zero if the given string is unable to be parsed).
-        /// </summary>
-        /// <param name="input">The input string.</param>
-        /// <returns>The converted decimal.</returns>
-        public static Option<decimal?> ToDecimal([CanBeNull] string input)
-        {
-            return decimal.TryParse(input, out var output)
-                 ? output
-                 : Option<decimal?>.None();
-        }
-
-        /// <summary>
         /// Return a valid decimal number (or the given alternative value if the given string is
         /// unable to be parsed).
         /// </summary>
