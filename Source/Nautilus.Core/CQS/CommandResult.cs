@@ -14,7 +14,7 @@ namespace Nautilus.Core.CQS
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents the result of a command operation. The type may contain a result message.
+    /// Represents the result of a command operation. May contain a result message.
     /// </summary>
     [Immutable]
     public sealed class CommandResult : Result
