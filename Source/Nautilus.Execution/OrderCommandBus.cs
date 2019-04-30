@@ -12,7 +12,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
@@ -20,7 +19,6 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a trade command bus for the execution service.
     /// </summary>
-    [Stateless]
     public sealed class OrderCommandBus : ActorComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;

@@ -20,7 +20,6 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all Akka.NET components in the system.
     /// </summary>
-    [Stateless]
     public class ActorComponentBusConnectedBase : ActorComponentBase
     {
         private readonly IMessagingAdapter messagingAdapter;

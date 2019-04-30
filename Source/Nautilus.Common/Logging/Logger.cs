@@ -11,14 +11,12 @@ namespace Nautilus.Common.Logging
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a logger with sends log events to the <see cref="ILoggingAdapter"/>.
     /// </summary>
-    [Stateless]
     public sealed class Logger : ILogger
     {
         private readonly ILoggingAdapter loggingAdapter;

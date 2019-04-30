@@ -9,13 +9,11 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a factory for FIX gateways.
     /// </summary>
-    [Stateless]
     public static class FixGatewayFactory
     {
         /// <summary>

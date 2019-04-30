@@ -23,7 +23,6 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all system components which inherit from the Akka.NET <see cref="ReceiveActor"/>.
     /// </summary>
-    [Stateless]
     public abstract class ActorComponentBase : ReceiveActor
     {
         private readonly IZonedClock clock;

@@ -21,7 +21,6 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a generic FIX client.
     /// </summary>
-    [Stateless]
     [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {

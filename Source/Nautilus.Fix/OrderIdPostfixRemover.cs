@@ -9,13 +9,11 @@
 namespace Nautilus.Fix
 {
     using System;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Removes the '_R#' from any modified order identifier.
     /// </summary>
-    [Stateless]
     public static class OrderIdPostfixRemover
     {
         /// <summary>

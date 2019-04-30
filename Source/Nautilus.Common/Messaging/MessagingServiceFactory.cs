@@ -12,13 +12,11 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a factory to create the systems messaging service.
     /// </summary>
-    [Stateless]
     public static class MessagingServiceFactory
     {
         /// <summary>

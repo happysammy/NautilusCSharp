@@ -14,7 +14,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -22,7 +21,6 @@ namespace Nautilus.Common.Messaging
     /// Represents a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
-    [Stateless]
     public sealed class MessageBus<T> : ReceiveActor
         where T : Message
     {

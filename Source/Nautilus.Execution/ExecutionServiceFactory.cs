@@ -12,7 +12,6 @@ namespace Nautilus.Execution
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.Messaging.Network;
     using Address = Nautilus.Common.Messaging.Address;
@@ -20,7 +19,6 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
     /// </summary>
-    [Stateless]
     public static class ExecutionServiceFactory
     {
         /// <summary>

@@ -11,7 +11,6 @@ namespace Nautilus.Core.Validation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Provides validation methods which are executed in debug configuration only.
@@ -19,7 +18,6 @@ namespace Nautilus.Core.Validation
     /// <see cref="ValidationException"/> is throw which will contain the inner
     /// <see cref="ArgumentException"/> with details including a message and parameter name.
     /// </summary>
-    [Stateless]
     public static class Debug
     {
         /// <summary>

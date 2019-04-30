@@ -10,14 +10,12 @@ namespace Nautilus.Common.Logging
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a factory for creating <see cref="Logger"/>s.
     /// </summary>
-    [Stateless]
     public sealed class LoggerFactory : ILoggerFactory
     {
         private readonly ILoggingAdapter loggingAdapter;

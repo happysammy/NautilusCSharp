@@ -12,13 +12,11 @@ namespace Nautilus.Common
     using System.Reflection;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a means of checking dependency versions and outputting to the log at system initialization.
     /// </summary>
-    [Stateless]
     public static class VersionChecker
     {
         /// <summary>

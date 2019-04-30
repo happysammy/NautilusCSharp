@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System.Globalization;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -19,7 +18,6 @@ namespace Nautilus.DomainModel.Factories
     /// <summary>
     /// A factory which creates valid <see cref="OrderId"/>(s) for the system.
     /// </summary>
-    [Stateless]
     public static class EntityIdFactory
     {
         /// <summary>

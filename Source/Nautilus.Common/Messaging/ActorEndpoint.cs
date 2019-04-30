@@ -11,13 +11,11 @@ namespace Nautilus.Common.Messaging
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides an Akka.NET actor endpoint.
     /// </summary>
-    [Stateless]
     public sealed class ActorEndpoint : IEndpoint
     {
         private readonly IActorRef actorRef;
