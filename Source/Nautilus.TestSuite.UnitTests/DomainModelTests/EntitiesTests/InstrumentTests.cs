@@ -8,7 +8,6 @@
 
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;

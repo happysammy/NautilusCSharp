@@ -15,7 +15,7 @@ namespace Nautilus.Data.Keys
     using NodaTime;
 
     /// <summary>
-    /// Represents a strongly typed trading session date based on the given inputs.
+    /// Represents a trading session date.
     /// </summary>
     [Immutable]
     public struct DateKey : IComparable<DateKey>, IEquatable<DateKey>
