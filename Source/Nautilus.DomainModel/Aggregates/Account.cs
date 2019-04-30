@@ -153,9 +153,7 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotNull(@event, nameof(@event));
             Debug.True(@event is AccountEvent, nameof(@event));
 
-            var accountEvent = @event as AccountEvent;
-
-            if (accountEvent is null)
+            if (!(@event is AccountEvent accountEvent))
             {
                 return CommandResult.Fail($"Event not recognized by {this}).");
             }
