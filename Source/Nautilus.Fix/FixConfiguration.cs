@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
@@ -35,9 +35,9 @@ namespace Nautilus.Fix
             bool sendAccountTag,
             bool updateInstruments)
         {
-            Validate.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
-            Validate.NotNull(credentials, nameof(credentials));
-            Validate.NotEmptyOrWhiteSpace(instrumentDataFileName, nameof(instrumentDataFileName));
+            Precondition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
+            Precondition.NotNull(credentials, nameof(credentials));
+            Precondition.NotEmptyOrWhiteSpace(instrumentDataFileName, nameof(instrumentDataFileName));
 
             this.Broker = broker;
             this.ConfigPath = configPath;

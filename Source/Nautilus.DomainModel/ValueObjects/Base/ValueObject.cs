@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.ValueObjects.Base
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
@@ -65,7 +64,6 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         [PerformanceOptimized]
-        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Performance optimization.")]
         public bool Equals(T other)
         {
             if (other is null)
@@ -91,8 +89,6 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
         [PerformanceOptimized]
-        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach", Justification = "Performance optimization.")]
-        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Performance optimization.")]
         public override int GetHashCode()
         {
             var hash = 0;

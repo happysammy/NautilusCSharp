@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messaging
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides an Akka.NET actor endpoint.
@@ -26,7 +25,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="actorRef">The actor address.</param>
         public ActorEndpoint(IActorRef actorRef)
         {
-            Validate.NotNull(actorRef, nameof(actorRef));
+            Precondition.NotNull(actorRef, nameof(actorRef));
 
             this.actorRef = actorRef;
         }

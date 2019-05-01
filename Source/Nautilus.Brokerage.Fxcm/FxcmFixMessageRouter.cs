@@ -11,7 +11,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -47,9 +47,9 @@ namespace Nautilus.Brokerage.FXCM
             LabelFactory.Create(nameof(FxcmFixMessageRouter)),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(instrumentData, nameof(instrumentData));
-            Validate.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(instrumentData, nameof(instrumentData));
+            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
             this.accountNumber = accountNumber;
@@ -61,7 +61,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="session">The FIX session.</param>
         public void ConnectSession(Session session)
         {
-            Validate.NotNull(session, nameof(session));
+            Precondition.NotNull(session, nameof(session));
 
             this.fixSession = session;
         }

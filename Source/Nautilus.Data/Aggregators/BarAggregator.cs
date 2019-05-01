@@ -17,7 +17,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Enums;
@@ -60,8 +60,8 @@ namespace Nautilus.Data.Aggregators
                 symbol),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(symbol, nameof(symbol));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();

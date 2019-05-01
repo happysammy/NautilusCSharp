@@ -20,7 +20,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
@@ -61,8 +61,8 @@ namespace Nautilus.Data.Aggregators
             container,
             messagingAdapter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
 
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();

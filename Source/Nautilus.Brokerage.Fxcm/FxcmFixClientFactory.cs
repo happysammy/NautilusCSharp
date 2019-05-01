@@ -9,7 +9,7 @@
 namespace Nautilus.Brokerage.FXCM
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Fix;
 
     /// <summary>
@@ -31,9 +31,9 @@ namespace Nautilus.Brokerage.FXCM
             FixConfiguration config,
             InstrumentDataProvider instrumentData)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(config, nameof(config));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(config, nameof(config));
 
             return new FixClient(
                 container,

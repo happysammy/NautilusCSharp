@@ -14,7 +14,7 @@ namespace Nautilus.Fix
     using CsvHelper;
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 

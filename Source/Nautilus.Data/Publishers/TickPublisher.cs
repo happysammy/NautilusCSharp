@@ -11,7 +11,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -34,8 +34,8 @@ namespace Nautilus.Data.Publishers
             LabelFactory.Create(nameof(TickPublisher)),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(publisher, nameof(publisher));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(publisher, nameof(publisher));
 
             this.publisher = publisher;
 

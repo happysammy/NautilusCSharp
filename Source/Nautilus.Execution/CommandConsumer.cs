@@ -14,7 +14,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Network;
@@ -47,11 +47,11 @@ namespace Nautilus.Execution
                 LabelFactory.Create(nameof(CommandConsumer)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(serializer, nameof(serializer));
-            Validate.NotNull(receiver, nameof(receiver));
-            Validate.NotNull(host, nameof(host));
-            Validate.NotNull(port, nameof(host));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(serializer, nameof(serializer));
+            Precondition.NotNull(receiver, nameof(receiver));
+            Precondition.NotNull(host, nameof(host));
+            Precondition.NotNull(port, nameof(host));
 
             this.serializer = serializer;
             this.receiver = receiver;

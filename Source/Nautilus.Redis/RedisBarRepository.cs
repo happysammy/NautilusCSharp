@@ -11,7 +11,7 @@ namespace Nautilus.Redis
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
@@ -32,7 +32,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The clients manager.</param>
         public RedisBarRepository(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(connection, nameof(connection));
+            Precondition.NotNull(connection, nameof(connection));
 
             this.barClient = new RedisBarClient(connection);
         }

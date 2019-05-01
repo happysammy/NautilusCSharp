@@ -12,8 +12,6 @@ namespace Nautilus.DomainModel.Entities
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core;
-
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -48,10 +46,10 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(riskModelId, timestamp)
         {
-            Validate.NotNull(riskModelId, nameof(riskModelId));
-            Validate.NotNull(globalMaxRiskExposure, nameof(globalMaxRiskExposure));
-            Validate.NotNull(globalMaxRiskPerTrade, nameof(globalMaxRiskPerTrade));
-            Validate.NotNull(globalMaxTradesPerType, nameof(globalMaxTradesPerType));
+            Precondition.NotNull(riskModelId, nameof(riskModelId));
+            Precondition.NotNull(globalMaxRiskExposure, nameof(globalMaxRiskExposure));
+            Precondition.NotNull(globalMaxRiskPerTrade, nameof(globalMaxRiskPerTrade));
+            Precondition.NotNull(globalMaxTradesPerType, nameof(globalMaxTradesPerType));
 
             this.GlobalMaxRiskExposure = globalMaxRiskExposure;
             this.GlobalMaxRiskPerTrade = globalMaxRiskPerTrade;
@@ -114,7 +112,7 @@ namespace Nautilus.DomainModel.Entities
         /// the update timestamp is the default value.</exception>
         public void UpdatePositionSizeHardLimit(Symbol symbol, Quantity hardLimit, ZonedDateTime timestamp)
         {
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.positionSizeHardLimitsIndex.ContainsKey(symbol))
             {
@@ -138,7 +136,7 @@ namespace Nautilus.DomainModel.Entities
         /// the update timestamp is the default value.</exception>
         public void UpdateMaxRiskPerTradeType(TradeType tradeType, Percentage riskPerTrade, ZonedDateTime timestamp)
         {
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxRiskPerTradeTypeIndex.ContainsKey(tradeType))
             {
@@ -162,7 +160,7 @@ namespace Nautilus.DomainModel.Entities
         /// the timestamp is the default value.</exception>
         public void UpdateMaxTradesPerSymbolType(TradeType tradeType, Quantity maxTrades, ZonedDateTime timestamp)
         {
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxTradesPerSymbolType.ContainsKey(tradeType))
             {

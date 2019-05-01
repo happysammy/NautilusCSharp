@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Primitives;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents a validated broker symbol.

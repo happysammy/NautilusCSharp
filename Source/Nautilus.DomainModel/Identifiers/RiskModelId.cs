@@ -8,8 +8,8 @@
 
 namespace Nautilus.DomainModel.Identifiers
 {
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers.Base;
 
@@ -26,7 +26,7 @@ namespace Nautilus.DomainModel.Identifiers
         public RiskModelId(string value)
             : base(value)
         {
-            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Precondition.NotEmptyOrWhiteSpace(value, nameof(value));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Network;
     using NetMQ;
@@ -52,11 +52,11 @@ namespace Nautilus.Messaging
                 label,
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(label, nameof(label));
-            Validate.NotNull(host, nameof(host));
-            Validate.NotNull(port, nameof(port));
-            Validate.NotDefault(id, nameof(id));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(label, nameof(label));
+            Precondition.NotNull(host, nameof(host));
+            Precondition.NotNull(port, nameof(port));
+            Precondition.NotDefault(id, nameof(id));
 
             this.topic = Encoding.UTF8.GetBytes(topic);
             this.serverAddress = new ZmqServerAddress(host, port);

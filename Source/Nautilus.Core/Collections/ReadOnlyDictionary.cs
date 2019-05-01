@@ -13,7 +13,6 @@ namespace Nautilus.Core.Collections
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides a read-only dictionary instantiated with a standard concrete dictionary which then
@@ -34,11 +33,8 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="dictionary">The original dictionary.</param>
         /// <param name="clone">The optional flag to clone the internal dictionary.</param>
-        /// <exception cref="ValidationException">Throws if the dictionary is null.</exception>
         public ReadOnlyDictionary(Dictionary<TKey, TValue> dictionary, bool clone = false)
         {
-            Debug.NotNull(dictionary, nameof(dictionary));
-
             this.internalDictionary = clone
                 ? new Dictionary<TKey, TValue>(dictionary)
                 : dictionary;
@@ -48,11 +44,8 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="ReadOnlyDictionary{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="dictionary">The original read-only dictionary.</param>
-        /// <exception cref="ValidationException">Throws if the dictionary is null.</exception>
         public ReadOnlyDictionary(IReadOnlyDictionary<TKey, TValue> dictionary)
         {
-            Debug.NotNull(dictionary, nameof(dictionary));
-
             this.internalDictionary = new Dictionary<TKey, TValue>(dictionary);
         }
 
@@ -105,8 +98,6 @@ namespace Nautilus.Core.Collections
         /// <returns>The value found for the given key.</returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
-            Debug.NotNull(key, nameof(key));
-
             return this.internalDictionary.TryGetValue(key, out value);
         }
 
@@ -118,8 +109,6 @@ namespace Nautilus.Core.Collections
         /// false.</returns>
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            Debug.NotNull(item, nameof(item));
-
             return this.internalDictionary.Contains(item);
         }
 
@@ -131,8 +120,6 @@ namespace Nautilus.Core.Collections
         /// false.</returns>
         public bool ContainsKey(TKey key)
         {
-            Debug.NotNull(key, nameof(key));
-
             return this.internalDictionary.ContainsKey(key);
         }
 
@@ -144,8 +131,6 @@ namespace Nautilus.Core.Collections
         /// false.</returns>
         public bool ContainsValue(TValue value)
         {
-            Debug.NotNull(value, nameof(value));
-
             return this.internalDictionary.ContainsValue(value);
         }
 

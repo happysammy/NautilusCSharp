@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Identifiers
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers.Base;
 

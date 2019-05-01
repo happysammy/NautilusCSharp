@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messages.Commands
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using NodaTime;
     using Quartz;
 

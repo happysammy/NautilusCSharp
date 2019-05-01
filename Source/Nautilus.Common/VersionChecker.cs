@@ -12,7 +12,7 @@ namespace Nautilus.Common
     using System.Reflection;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides a means of checking dependency versions and outputting to the log at system initialization.
@@ -26,8 +26,8 @@ namespace Nautilus.Common
         /// <param name="serviceTitle">The service title string.</param>
         public static void Run(ILoggingAdapter log, string serviceTitle)
         {
-            Validate.NotNull(log, nameof(log));
-            Validate.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
+            Precondition.NotNull(log, nameof(log));
+            Precondition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
             log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
             log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");

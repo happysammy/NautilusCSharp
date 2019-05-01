@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -47,10 +46,10 @@ namespace Nautilus.DomainModel.Aggregates
                   positionId,
                   timestamp)
         {
-            Validate.NotNull(symbol, nameof(symbol));
-            Validate.NotNull(fromEntryOrderId, nameof(fromEntryOrderId));
-            Validate.NotNull(positionId, nameof(positionId));
-            Validate.NotEqualTo(timestamp, nameof(timestamp), default(ZonedDateTime));
+            Precondition.NotNull(symbol, nameof(symbol));
+            Precondition.NotNull(fromEntryOrderId, nameof(fromEntryOrderId));
+            Precondition.NotNull(positionId, nameof(positionId));
+            Precondition.NotEqualTo(timestamp, nameof(timestamp), default(ZonedDateTime));
 
             this.Symbol = symbol;
             this.FromEntryOrderId = fromEntryOrderId;

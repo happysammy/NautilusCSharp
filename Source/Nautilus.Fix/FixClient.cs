@@ -12,7 +12,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -46,11 +46,11 @@ namespace Nautilus.Fix
             messageHandler,
             messageRouter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(config, nameof(config));
-            Validate.NotNull(messageHandler, nameof(messageHandler));
-            Validate.NotNull(messageRouter, nameof(messageRouter));
-            Validate.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(config, nameof(config));
+            Precondition.NotNull(messageHandler, nameof(messageHandler));
+            Precondition.NotNull(messageRouter, nameof(messageRouter));
+            Precondition.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
 
             this.instrumentDataProvider = instrumentDataProvider;
         }

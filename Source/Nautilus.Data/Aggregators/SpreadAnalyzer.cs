@@ -14,7 +14,7 @@ namespace Nautilus.Data.Aggregators
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

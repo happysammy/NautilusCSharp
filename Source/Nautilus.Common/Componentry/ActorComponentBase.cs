@@ -15,7 +15,6 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -39,8 +38,8 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer setupContainer)
         {
-            Validate.NotNull(component, nameof(component));
-            Validate.NotNull(setupContainer, nameof(setupContainer));
+            Precondition.NotNull(component, nameof(component));
+            Precondition.NotNull(setupContainer, nameof(setupContainer));
 
             this.clock = setupContainer.Clock;
             this.StartTime = this.clock.TimeNow();

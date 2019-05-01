@@ -10,7 +10,7 @@ namespace Nautilus.MsgPack
 {
     using System.IO;
     using global::MsgPack.Serialization;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides a serializer for Message Pack specification.

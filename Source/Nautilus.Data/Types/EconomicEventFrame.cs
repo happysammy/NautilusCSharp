@@ -12,7 +12,7 @@ namespace Nautilus.Data.Types
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using NodaTime;

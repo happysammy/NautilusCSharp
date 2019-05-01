@@ -9,7 +9,7 @@
 namespace Nautilus.Core.CQS.Base
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// The base class for all <see cref="Result"/> types.

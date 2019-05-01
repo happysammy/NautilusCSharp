@@ -9,8 +9,8 @@
 namespace Nautilus.Core
 {
     using System;
-    using System.Diagnostics;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -27,8 +27,8 @@ namespace Nautilus.Core
         protected Command(Guid id, ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Debug.Assert(id != default, AssertMsg.IsDefault(nameof(id)));
-            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
+            Debug.NotDefault(id, nameof(id));
+            Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }
 }

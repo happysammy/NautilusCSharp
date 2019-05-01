@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents the credentials for a FIX session.
@@ -28,9 +28,9 @@ namespace Nautilus.Fix
             string username,
             string password)
         {
-            Validate.NotEmptyOrWhiteSpace(account, nameof(account));
-            Validate.NotEmptyOrWhiteSpace(username, nameof(username));
-            Validate.NotEmptyOrWhiteSpace(password, nameof(password));
+            Precondition.NotEmptyOrWhiteSpace(account, nameof(account));
+            Precondition.NotEmptyOrWhiteSpace(username, nameof(username));
+            Precondition.NotEmptyOrWhiteSpace(password, nameof(password));
 
             this.Account = account;
             this.Username = username;

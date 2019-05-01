@@ -11,7 +11,7 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -47,8 +47,8 @@ namespace Nautilus.Brokerage.Dukascopy
             LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
             container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
             this.accountNumber = accountNumber;

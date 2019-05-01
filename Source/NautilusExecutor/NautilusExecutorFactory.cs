@@ -21,7 +21,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
     using Nautilus.Fix;
@@ -56,12 +56,12 @@ namespace NautilusExecutor
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Validate.NotNull(fixConfig, nameof(fixConfig));
-            Validate.NotNull(serviceAddress, nameof(serviceAddress));
-            Validate.NotNull(commandsPort, nameof(commandsPort));
-            Validate.NotNull(eventsPort, nameof(eventsPort));
-            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Precondition.NotNull(fixConfig, nameof(fixConfig));
+            Precondition.NotNull(serviceAddress, nameof(serviceAddress));
+            Precondition.NotNull(commandsPort, nameof(commandsPort));
+            Precondition.NotNull(eventsPort, nameof(eventsPort));
+            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");

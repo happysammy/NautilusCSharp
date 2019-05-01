@@ -9,7 +9,7 @@
 namespace Nautilus.Redis
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using StackExchange.Redis;
 
@@ -27,7 +27,7 @@ namespace Nautilus.Redis
         /// <param name="subscriber">The Redis subscriber.</param>
         public RedisChannelPublisher(ISubscriber subscriber)
         {
-            Validate.NotNull(subscriber, nameof(subscriber));
+            Precondition.NotNull(subscriber, nameof(subscriber));
 
             this.subscriber = subscriber;
             this.channelCache = new List<string>();

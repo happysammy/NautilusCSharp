@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using System;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using NodaTime;

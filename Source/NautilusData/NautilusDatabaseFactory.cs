@@ -22,7 +22,7 @@ namespace NautilusData
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -57,11 +57,11 @@ namespace NautilusData
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
-            Validate.NotEmptyOrWhiteSpace(compressionCodec, nameof(compressionCodec));
-            Validate.NotNull(fixConfig, nameof(fixConfig));
-            Validate.NotNullOrEmpty(symbols, nameof(symbols));
-            Validate.NotNullOrEmpty(resolutions, nameof(resolutions));
-            Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+            Precondition.NotEmptyOrWhiteSpace(compressionCodec, nameof(compressionCodec));
+            Precondition.NotNull(fixConfig, nameof(fixConfig));
+            Precondition.NotNullOrEmpty(symbols, nameof(symbols));
+            Precondition.NotNullOrEmpty(resolutions, nameof(resolutions));
+            Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusData)} builder...");

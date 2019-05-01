@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Provides a factory for FIX gateways.
@@ -28,8 +28,8 @@ namespace Nautilus.Fix
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(fixClient, nameof(fixClient));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(fixClient, nameof(fixClient));
 
             var gateway = new FixGateway(
                 container,

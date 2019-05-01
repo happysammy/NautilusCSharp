@@ -9,10 +9,10 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Diagnostics;
     using System.Text;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects.Base;
@@ -37,8 +37,6 @@ namespace Nautilus.DomainModel.ValueObjects
             Price ask,
             ZonedDateTime timestamp)
         {
-            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
-
             this.Symbol = symbol;
             this.Bid = bid;
             this.Ask = ask;
@@ -58,8 +56,6 @@ namespace Nautilus.DomainModel.ValueObjects
             decimal ask,
             ZonedDateTime timestamp)
         {
-            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
-
             this.Symbol = symbol;
             this.Bid = Price.Create(bid, bid.GetDecimalPlaces());
             this.Ask = Price.Create(ask, ask.GetDecimalPlaces());
@@ -93,7 +89,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Tick"/>.</returns>
         public static Tick GetFromString(string tickString)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(tickString) != default, AssertMsg.IsDefault(nameof(tickString)));
+            Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
 
             var values = tickString.Split(',');
             var header = values[0].Split('.');
@@ -102,8 +98,8 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new Tick(
                 new Symbol(code, exchange.ToEnum<Venue>()),
-                SafeConvert.ToDecimalOr(values[1], 0m),
-                SafeConvert.ToDecimalOr(values[2], 0m),
+                values[1].ToDecimalOr(decimal.Zero),
+                values[2].ToDecimalOr(decimal.Zero),
                 values[3].ToZonedDateTimeFromIso());
         }
 

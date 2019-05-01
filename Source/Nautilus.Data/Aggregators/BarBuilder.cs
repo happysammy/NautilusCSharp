@@ -10,7 +10,7 @@
 
 namespace Nautilus.Data.Aggregators
 {
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

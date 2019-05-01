@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

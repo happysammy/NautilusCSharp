@@ -10,7 +10,7 @@ namespace Nautilus.Data.Types
 {
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 

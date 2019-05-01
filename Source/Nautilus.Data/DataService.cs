@@ -17,7 +17,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Quartz;
@@ -49,9 +49,9 @@ namespace Nautilus.Data
                 setupContainer,
                 messagingAdapter)
         {
-            Validate.NotNull(setupContainer, nameof(setupContainer));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(gateway, nameof(gateway));
+            Precondition.NotNull(setupContainer, nameof(setupContainer));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(gateway, nameof(gateway));
 
             this.gateway = gateway;
             this.updateInstruments = updateInstruments;

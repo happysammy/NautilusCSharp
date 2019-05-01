@@ -13,7 +13,6 @@ namespace Nautilus.Data.Aggregators
     using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 

@@ -13,7 +13,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The immutable sealed <see cref="MessagingAdapter"/> class.
@@ -36,9 +35,9 @@ namespace Nautilus.Common.Messaging
             IEndpoint eventBus,
             IEndpoint documentBus)
         {
-            Validate.NotNull(commandBus, nameof(commandBus));
-            Validate.NotNull(eventBus, nameof(eventBus));
-            Validate.NotNull(documentBus, nameof(documentBus));
+            Precondition.NotNull(commandBus, nameof(commandBus));
+            Precondition.NotNull(eventBus, nameof(eventBus));
+            Precondition.NotNull(documentBus, nameof(documentBus));
 
             this.commandBus = commandBus;
             this.eventBus = eventBus;

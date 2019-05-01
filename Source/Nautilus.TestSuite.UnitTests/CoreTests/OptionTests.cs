@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

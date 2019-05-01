@@ -13,7 +13,6 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Scheduling;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using NodaTime;
     using Quartz;
 

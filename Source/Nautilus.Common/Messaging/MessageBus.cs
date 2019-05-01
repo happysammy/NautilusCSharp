@@ -14,7 +14,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -41,8 +40,8 @@ namespace Nautilus.Common.Messaging
             IComponentryContainer container,
             IEndpoint messageStore)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messageStore, nameof(messageStore));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messageStore, nameof(messageStore));
 
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStore = messageStore;

@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// <param name="value">The string value.</param>
         protected EntityId(string value)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(value), AssertMsg.IsNullOrWhitespace(nameof(value)));
+            Debug.Assert(!string.IsNullOrWhiteSpace(value), FailedMsg.IsNullOrWhitespace(nameof(value)));
             Debug.Assert(value.Length <= 1024, "The string length cannot be more than 1024 characters.");
 
             this.Value = value.RemoveAllWhitespace();

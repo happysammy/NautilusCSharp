@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messages.Commands.Base
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

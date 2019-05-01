@@ -12,7 +12,7 @@ namespace Nautilus.Data
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;
@@ -54,10 +54,10 @@ namespace Nautilus.Data
             int barRollingWindow,
             bool updateInstruments)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(publisherFactory, nameof(publisherFactory));
-            Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(symbols, nameof(symbols));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(publisherFactory, nameof(publisherFactory));
+            Precondition.NotNull(barRepository, nameof(barRepository));
+            Precondition.NotNull(symbols, nameof(symbols));
 
             var tickPublisher = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(

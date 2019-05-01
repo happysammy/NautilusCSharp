@@ -10,8 +10,8 @@ namespace Nautilus.Core.Extensions
 {
     using System;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides useful <see cref="QueryResult{T}"/> extension methods.
@@ -30,9 +30,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, TK> func)
         {
-            Debug.NotNull(queryResult, nameof(queryResult));
-            Debug.NotNull(func, nameof(func));
-
             return queryResult.IsFailure
                  ? QueryResult<TK>.Fail(queryResult.Message)
                  : QueryResult<TK>.Ok(func(queryResult.Value));
@@ -48,9 +45,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, QueryResult<TK>> func)
         {
-            Debug.NotNull(queryResult, nameof(queryResult));
-            Debug.NotNull(func, nameof(func));
-
             return queryResult.IsFailure
                  ? QueryResult<TK>.Fail(queryResult.Message)
                  : func(queryResult.Value);
@@ -66,9 +60,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<QueryResult<TK>> func)
         {
-            Debug.NotNull(queryResult, nameof(queryResult));
-            Debug.NotNull(func, nameof(func));
-
             return queryResult.IsFailure
                  ? QueryResult<TK>.Fail(queryResult.Message)
                  : func();
@@ -83,9 +74,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnSuccess<T>(this QueryResult<T> result, Action<T> action)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(action, nameof(action));
-
             if (result.IsSuccess)
             {
                 action(result.Value);
@@ -103,9 +91,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnFailure<T>(this QueryResult<T> result, Action action)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(action, nameof(action));
-
             if (result.IsFailure)
             {
                 action();
@@ -123,9 +108,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnFailure<T>(this QueryResult<T> result, Action<string> action)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(action, nameof(action));
-
             if (result.IsFailure)
             {
                 action(result.Message);
@@ -144,9 +126,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static TK OnBoth<T, TK>(this QueryResult<T> result, Func<QueryResult<T>, TK> func)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(func, nameof(func));
-
             return func(result);
         }
 
@@ -160,8 +139,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<T> Ensure<T>(this QueryResult<T> result, Func<T, bool> predicate, string errorMessage)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(predicate, nameof(predicate));
             Debug.NotEmptyOrWhiteSpace(errorMessage, nameof(errorMessage));
 
             if (result.IsFailure)

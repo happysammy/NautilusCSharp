@@ -10,7 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// A class which provides encapsulated execution of <see cref="Action"/>(s)
@@ -27,7 +27,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="logger">The logger.</param>
         public CommandHandler(ILogger logger)
         {
-            Validate.NotNull(logger, nameof(logger));
+            Precondition.NotNull(logger, nameof(logger));
 
             this.log = logger;
         }

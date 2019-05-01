@@ -17,7 +17,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Events;
@@ -59,10 +59,10 @@ namespace Nautilus.Data
                 container,
                 messagingAdapter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(barPublisher, nameof(barPublisher));
-            Validate.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(barPublisher, nameof(barPublisher));
+            Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             this.storedContainer = container;
             this.barPublisher = barPublisher;

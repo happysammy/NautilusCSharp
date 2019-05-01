@@ -14,7 +14,7 @@ namespace Nautilus.Redis
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
@@ -38,7 +38,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis clients manager.</param>
         public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(connection, nameof(connection));
+            Precondition.NotNull(connection, nameof(connection));
 
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();

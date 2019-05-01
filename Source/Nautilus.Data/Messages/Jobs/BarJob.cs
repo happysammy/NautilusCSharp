@@ -10,7 +10,7 @@ namespace Nautilus.Data.Messages.Jobs
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Quartz;
 

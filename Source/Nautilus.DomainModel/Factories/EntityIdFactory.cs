@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System.Globalization;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;

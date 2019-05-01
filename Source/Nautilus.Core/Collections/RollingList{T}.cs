@@ -12,7 +12,7 @@ namespace Nautilus.Core.Collections
     using System.Collections;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Provides a fixed-capacity list. The capacity of the internal collection is set at
@@ -23,7 +23,6 @@ namespace Nautilus.Core.Collections
     [PerformanceOptimized]
     public class RollingList<T> : IList<T>
     {
-        // Concrete list for performance reasons.
         private readonly List<T> internalList;
         private readonly int capacity;
 
@@ -31,10 +30,10 @@ namespace Nautilus.Core.Collections
         /// Initializes a new instance of the <see cref="RollingList{T}"/> class.
         /// </summary>
         /// <param name="capacity">The list capacity.</param>
-        /// <exception cref="ValidationException">The capacity is less than or equal to zero.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The capacity is not positive (> 0).</exception>
         public RollingList(int capacity)
         {
-            Validate.PositiveInt32(capacity, nameof(capacity));
+            Precondition.PositiveInt32(capacity, nameof(capacity));
 
             this.internalList = new List<T>(capacity);
             this.capacity = capacity;
@@ -54,7 +53,7 @@ namespace Nautilus.Core.Collections
         /// Returns the element at the given index.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">If called.</exception>
         public T this[int index]
         {
             get => this.internalList[index];
@@ -69,8 +68,6 @@ namespace Nautilus.Core.Collections
         /// <param name="element">The element to be added.</param>
         public void Add(T element)
         {
-            Debug.NotNull(element, nameof(element));
-
             this.internalList.Add(element);
 
             while (this.internalList.Count > this.capacity)
@@ -94,8 +91,6 @@ namespace Nautilus.Core.Collections
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Contains(T item)
         {
-            Debug.NotNull(item, nameof(item));
-
             return this.internalList.Contains(item);
         }
 
@@ -104,7 +99,7 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="array">\The array.</param>
         /// <param name="arrayIndex">\The array index.</param>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">If called.</exception>
         public void CopyTo(T[] array, int arrayIndex)
         {
             throw new NotSupportedException("Cannot copy a rolling list to an array.");
@@ -115,7 +110,7 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="item">The item to remove.</param>
         /// <returns>Not supported.</returns>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">If called.</exception>
         public bool Remove(T item)
         {
             throw new NotSupportedException("Cannot remove an element from a rolling list.");
@@ -128,8 +123,6 @@ namespace Nautilus.Core.Collections
         /// <returns>An <see cref="int"/>.</returns>
         public int IndexOf(T item)
         {
-            Debug.NotNull(item, nameof(item));
-
             return this.internalList.IndexOf(item);
         }
 
@@ -138,7 +131,7 @@ namespace Nautilus.Core.Collections
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">If called.</exception>
         public void Insert(int index, T item)
         {
             throw new NotSupportedException("Cannot insert at an index of a rolling list.");
@@ -148,7 +141,7 @@ namespace Nautilus.Core.Collections
         /// Not implemented.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <exception cref="NotSupportedException">Throws if called.</exception>
+        /// <exception cref="NotSupportedException">If called.</exception>
         public void RemoveAt(int index)
         {
             throw new NotSupportedException("Cannot remove at an index from a rolling list.");

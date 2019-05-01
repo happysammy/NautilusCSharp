@@ -16,7 +16,6 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Sends received messages to the <see cref="InMemoryMessageStore"/>.
@@ -31,7 +30,7 @@ namespace Nautilus.Common.MessageStore
         /// <param name="store">The message store.</param>
         public MessageStorer(IMessageStore store)
         {
-            Validate.NotNull(store, nameof(store));
+            Precondition.NotNull(store, nameof(store));
 
             this.store = store;
 

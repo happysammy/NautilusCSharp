@@ -9,7 +9,7 @@
 namespace Nautilus.Messaging.Network
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents a valid network port number.
@@ -25,7 +25,7 @@ namespace Nautilus.Messaging.Network
         /// <param name="portNumber">The port number.</param>
         public Port(int portNumber)
         {
-            Validate.NotOutOfRangeInt32(portNumber, nameof(portNumber), 0, 65535);
+            Precondition.NotOutOfRangeInt32(portNumber, nameof(portNumber), 0, 65535);
 
             this.Value = portNumber;
             this.valueString = portNumber.ToString();

@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Aggregates
     using System;
     using Nautilus.Core;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -48,11 +47,11 @@ namespace Nautilus.DomainModel.Aggregates
                 accountId,
                 timestamp)
         {
-            Validate.NotNull(accountId, nameof(accountId));
-            Validate.NotEmptyOrWhiteSpace(username, nameof(username));
-            Validate.NotEmptyOrWhiteSpace(password, nameof(password));
-            Validate.NotDefault(currency, nameof(currency));
-            Validate.NotDefault(timestamp, nameof(timestamp));
+            Precondition.NotNull(accountId, nameof(accountId));
+            Precondition.NotEmptyOrWhiteSpace(username, nameof(username));
+            Precondition.NotEmptyOrWhiteSpace(password, nameof(password));
+            Precondition.NotDefault(currency, nameof(currency));
+            Precondition.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;

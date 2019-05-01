@@ -11,7 +11,7 @@ namespace Nautilus.Data.Keys
     using System;
     using System.Collections.Generic;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>

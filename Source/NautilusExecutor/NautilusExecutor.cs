@@ -12,7 +12,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -41,10 +41,10 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Validate.NotNull(systemController, nameof(systemController));
-            Validate.NotNull(fixClient, nameof(fixClient));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Precondition.NotNull(systemController, nameof(systemController));
+            Precondition.NotNull(fixClient, nameof(fixClient));
 
             this.systemController = systemController;
             this.fixClient = fixClient;

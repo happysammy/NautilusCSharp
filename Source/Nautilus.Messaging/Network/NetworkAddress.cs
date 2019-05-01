@@ -9,7 +9,7 @@
 namespace Nautilus.Messaging.Network
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents a valid network address.
@@ -25,7 +25,7 @@ namespace Nautilus.Messaging.Network
         /// <param name="address">The network address.</param>
         public NetworkAddress(string address)
         {
-            Validate.NotEmptyOrWhiteSpace(address, nameof(address));
+            Precondition.NotEmptyOrWhiteSpace(address, nameof(address));
 
             this.Value = address;
         }

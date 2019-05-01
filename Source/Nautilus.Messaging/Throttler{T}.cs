@@ -56,7 +56,7 @@ namespace Nautilus.Messaging
                 LabelFactory.Create(nameof(Throttler<T>)),
                 container)
         {
-            Debug.Assert(interval != default, AssertMsg.IsDefault(nameof(interval)));
+            Debug.Assert(interval != default, FailedMsg.IsDefault(nameof(interval)));
             Debug.Assert(limit > 0, "The limit value cannot be <= 0.");
 
             this.receiver = receiver;
@@ -83,7 +83,7 @@ namespace Nautilus.Messaging
 
         private void OnMessage(TimeSpan message)
         {
-            Debug.Assert(message != default, AssertMsg.IsDefault(nameof(message)));
+            Debug.Assert(message != default, FailedMsg.IsDefault(nameof(message)));
 
             this.vouchers = this.limit;
 
@@ -119,7 +119,7 @@ namespace Nautilus.Messaging
             {
                 var message = this.queue.Dequeue();
 
-                Debug.Assert(message != null, AssertMsg.IsNull(nameof(message)));
+                Debug.Assert(message != null, FailedMsg.IsNull(nameof(message)));
 
                 this.receiver.Send(message);
                 this.vouchers--;

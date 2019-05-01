@@ -16,7 +16,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -50,9 +50,9 @@ namespace Nautilus.Data
                 LabelFactory.Create(nameof(DatabaseTaskManager)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(barRepository, nameof(barRepository));
-            Validate.NotNull(instrumentRepository, nameof(instrumentRepository));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(barRepository, nameof(barRepository));
+            Precondition.NotNull(instrumentRepository, nameof(instrumentRepository));
 
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;

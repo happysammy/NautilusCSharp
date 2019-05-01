@@ -12,7 +12,6 @@ namespace Nautilus.Data.Messages.Documents
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

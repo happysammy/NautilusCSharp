@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messages.Events
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

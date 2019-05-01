@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents a possible state within the <see cref="FiniteStateMachine"/>.

@@ -14,7 +14,6 @@ namespace Nautilus.MsgPack
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;

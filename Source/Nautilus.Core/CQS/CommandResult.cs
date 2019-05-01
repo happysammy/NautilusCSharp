@@ -8,9 +8,9 @@
 
 namespace Nautilus.Core.CQS
 {
-    using System.Diagnostics;
     using System.Linq;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS.Base;
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace Nautilus.Core.CQS
         private CommandResult(bool isFailure, string message)
             : base(isFailure, message)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(message), AssertMsg.IsNullOrWhitespace(nameof(message)));
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult FirstFailureOrSuccess(params CommandResult[] results)
         {
-            Debug.Assert(results.Length > 0, "The results array cannot be empty.");
+            Debug.NotEmpty(results, nameof(results));
 
             return results.FirstOrDefault(c => c.IsFailure) ?? Ok();
         }
@@ -82,7 +82,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Combine(params CommandResult[] results)
         {
-            Debug.Assert(results.Length > 0, "The results array cannot be empty.");
+            Debug.NotEmpty(results, nameof(results));
 
             var failedResults = results
                 .Where(x => x.IsFailure)
@@ -95,7 +95,7 @@ namespace Nautilus.Core.CQS
 
         private static string CombineErrorMessages(CommandResult[] failedResults)
         {
-            Debug.Assert(failedResults.Length > 0, "The results array cannot be empty.");
+            Debug.NotEmpty(failedResults, nameof(failedResults));
 
             return string.Join("; ", failedResults.Select(x => x.Message));
         }

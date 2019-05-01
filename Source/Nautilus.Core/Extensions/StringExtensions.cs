@@ -11,7 +11,7 @@ namespace Nautilus.Core.Extensions
     using System;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.

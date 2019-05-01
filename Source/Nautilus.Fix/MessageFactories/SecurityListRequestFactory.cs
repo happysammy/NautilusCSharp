@@ -8,7 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;

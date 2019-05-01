@@ -12,7 +12,6 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents an in-memory message store.
@@ -48,7 +47,7 @@ namespace Nautilus.Common.MessageStore
         /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
         public void Store(Envelope<Command> envelope)
         {
-            Validate.NotNull(envelope, nameof(envelope));
+            Precondition.NotNull(envelope, nameof(envelope));
 
             this.commandEnvelopeList.Add(envelope);
         }

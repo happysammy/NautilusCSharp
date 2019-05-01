@@ -11,7 +11,6 @@ namespace Nautilus.MsgPack
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

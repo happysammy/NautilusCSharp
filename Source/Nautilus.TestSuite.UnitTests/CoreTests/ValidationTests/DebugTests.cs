@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -667,7 +667,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Validate.NotOutOfRangeInt64(value, nameof(value), 0, 3);
+            Precondition.NotOutOfRangeInt64(value, nameof(value), 0, 3);
         }
 
         [Theory]

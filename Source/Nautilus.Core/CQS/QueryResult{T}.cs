@@ -9,9 +9,8 @@
 namespace Nautilus.Core.CQS
 {
     using System;
-    using System.Diagnostics;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS.Base;
 
     /// <summary>
@@ -32,7 +31,7 @@ namespace Nautilus.Core.CQS
         private QueryResult(string error)
             : base(true, error)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(error), AssertMsg.IsNullOrWhitespace(nameof(error)));
+            Debug.NotEmptyOrWhiteSpace(error, nameof(error));
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace Nautilus.Core.CQS
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Ok(T value, string message)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(message), AssertMsg.IsNullOrWhitespace(nameof(message)));
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
 
             return new QueryResult<T>(value);
         }
@@ -85,7 +84,7 @@ namespace Nautilus.Core.CQS
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Fail(string error)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(error), AssertMsg.IsNullOrWhitespace(nameof(error)));
+            Debug.NotEmptyOrWhiteSpace(error, nameof(error));
 
             return new QueryResult<T>(error);
         }

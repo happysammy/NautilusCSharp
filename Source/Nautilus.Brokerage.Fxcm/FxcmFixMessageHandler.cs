@@ -14,7 +14,7 @@ namespace Nautilus.Brokerage.FXCM
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -50,8 +50,8 @@ namespace Nautilus.Brokerage.FXCM
                 LabelFactory.Create(nameof(FxcmFixMessageHandler)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(instrumentData, nameof(instrumentData));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(instrumentData, nameof(instrumentData));
 
             this.instrumentData = instrumentData;
         }
@@ -62,7 +62,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="gateway">The execution gateway.</param>
         public void InitializeGateway(IFixGateway gateway)
         {
-            Validate.NotNull(gateway, nameof(gateway));
+            Precondition.NotNull(gateway, nameof(gateway));
 
             this.fixGateway = gateway;
         }
@@ -75,7 +75,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 this.Log.Debug($"BusinessMessageReject: {message}");
             });
@@ -89,7 +89,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 var instruments = new List<Instrument>();
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
@@ -195,7 +195,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
@@ -212,7 +212,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 var inquiryId = message.GetField(Tags.CollRptID);
                 var accountNumber = message.GetField(Tags.Account);
@@ -249,7 +249,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 this.fixGateway?.OnRequestForPositionsAck(
                     message.Account.ToString(),
@@ -265,7 +265,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 this.Log.Information(message.Product.ToString());
             });
@@ -279,7 +279,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 this.Log.Warning($"MarketDataRequestReject: {message.GetField(Tags.Text)}");
             });
@@ -293,7 +293,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 if (!message.IsSetField(Tags.Symbol))
                 {
@@ -338,7 +338,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 var orderId = message.ClOrdID.ToString();
                 var fxcmCode = message.GetField(9025);
@@ -364,7 +364,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
@@ -512,7 +512,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                Validate.NotNull(message, nameof(message));
+                Precondition.NotNull(message, nameof(message));
 
                 this.fixGateway?.OnPositionReport(message.Account.ToString());
             });

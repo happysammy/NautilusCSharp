@@ -15,7 +15,6 @@ namespace Nautilus.Data.Collectors
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -51,9 +50,9 @@ namespace Nautilus.Data.Collectors
                 LabelFactory.Create($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
-            Validate.NotNull(dataReader, nameof(dataReader));
-            Validate.NotNull(collectionSchedule, nameof(collectionSchedule));
+            Precondition.NotNull(container, nameof(container));
+            Precondition.NotNull(dataReader, nameof(dataReader));
+            Precondition.NotNull(collectionSchedule, nameof(collectionSchedule));
 
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;

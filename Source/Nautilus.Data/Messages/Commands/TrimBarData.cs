@@ -12,7 +12,6 @@ namespace Nautilus.Data.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 

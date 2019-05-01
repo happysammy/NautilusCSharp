@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Primitives;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents a none-negative quantity.

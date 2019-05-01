@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents the concept of a starting <see cref="State"/>, which is then affected by an event
@@ -27,8 +27,8 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
         internal StateTransition(State currentState, Trigger trigger)
         {
-            Validate.NotNull(currentState, nameof(currentState));
-            Validate.NotNull(trigger, nameof(trigger));
+            Precondition.NotNull(currentState, nameof(currentState));
+            Precondition.NotNull(trigger, nameof(trigger));
 
             this.CurrentState = currentState;
             this.Trigger = trigger;

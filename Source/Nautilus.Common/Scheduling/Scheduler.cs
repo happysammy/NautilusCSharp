@@ -13,7 +13,7 @@ namespace Nautilus.Common.Scheduling
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Quartz;
     using Quartz.Impl;
@@ -36,7 +36,7 @@ namespace Nautilus.Common.Scheduling
                 LabelFactory.Create(nameof(Scheduler)),
                 container)
         {
-            Validate.NotNull(container, nameof(container));
+            Precondition.NotNull(container, nameof(container));
 
             var properties = new NameValueCollection
             {

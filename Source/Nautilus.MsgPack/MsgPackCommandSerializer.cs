@@ -15,7 +15,6 @@ namespace Nautilus.MsgPack
     using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>

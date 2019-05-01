@@ -8,7 +8,7 @@
 
 namespace Nautilus.Redis
 {
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using StackExchange.Redis;
 
@@ -25,7 +25,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The Redis client manager.</param>
         public RedisChannelPublisherFactory(ConnectionMultiplexer connection)
         {
-            Validate.NotNull(connection, nameof(connection));
+            Precondition.NotNull(connection, nameof(connection));
 
             this.connection = connection;
         }

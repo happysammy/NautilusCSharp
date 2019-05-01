@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using System;
-    using Nautilus.Core.Validation;
+    using Nautilus.Core;
 
     /// <summary>
     /// Removes the '_R#' from any modified order identifier.

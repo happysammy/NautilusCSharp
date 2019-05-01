@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Collections;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -377,15 +376,15 @@ namespace Nautilus.DomainModel.Aggregates
 
             if (expireTime.HasNoValue)
             {
-                Validate.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+                Precondition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
             }
             else
             {
                 #pragma warning disable 8629
                 // ReSharper disable once PossibleInvalidOperationException (already checked above).
                 var expireTimeValue = (ZonedDateTime)expireTime.Value;
-                Validate.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
-                Validate.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+                Precondition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Precondition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
         }
 
