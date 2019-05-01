@@ -8,6 +8,7 @@
 
 namespace Nautilus.Messaging.Network
 {
+    using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
@@ -23,6 +24,7 @@ namespace Nautilus.Messaging.Network
         /// Initializes a new instance of the <see cref="NetworkAddress"/> class.
         /// </summary>
         /// <param name="address">The network address.</param>
+        /// <exception cref="ArgumentException">If the address is empty or white space.</exception>
         public NetworkAddress(string address)
         {
             Precondition.NotEmptyOrWhiteSpace(address, nameof(address));
