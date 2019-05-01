@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public static Quantity Zero() => new Quantity(0);
 
         /// <summary>
-        /// Returns a new <see cref="Quantity"/> with the given value amount.
+        /// Returns a new <see cref="Quantity"/> with the given amount.
         /// </summary>
         /// <param name="amount">The amount.</param>
         /// <returns>A <see cref="Quantity"/>.</returns>
