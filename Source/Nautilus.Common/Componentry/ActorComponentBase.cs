@@ -167,7 +167,6 @@ namespace Nautilus.Common.Componentry
             var message = envelope.Open(this.clock.TimeNow());
 
             this.Self.Tell(message);
-
             this.Log.Verbose($"Received {message}.");
         }
     }
