@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
 
     /// <summary>
     /// Represents a possible state within the <see cref="FiniteStateMachine"/>.
@@ -25,8 +24,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         internal State(Enum state)
         {
-            Debug.NotNull(state, nameof(state));
-
             this.Value = state;
         }
 

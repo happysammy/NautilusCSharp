@@ -12,9 +12,9 @@ namespace Nautilus.Redis
     using System.Linq;
     using System.Text;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Types;
     using Nautilus.Data.Wranglers;
@@ -37,8 +37,6 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis connection multiplexer.</param>
         public RedisBarClient(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
-
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
         }
@@ -83,8 +81,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long KeysCount(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             return this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType)).Count();
         }
 
@@ -95,8 +91,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long BarsCount(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
 
             if (!allKeys.Any())
@@ -138,8 +132,6 @@ namespace Nautilus.Redis
         /// <returns>A query result of <see cref="IReadOnlyList{T}"/> strings.</returns>
         public QueryResult<List<string>> GetAllSortedKeys(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             if (this.KeysCount(barType) == 0)
             {
                 return QueryResult<List<string>>.Fail($"No market data found for {barType}.");
@@ -204,8 +196,6 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public CommandResult AddBar(BarType barType, Bar bar)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             var dateKey = new DateKey(bar.Timestamp);
             var key = new BarDataKey(barType, dateKey);
             var keyString = key.ToString();
@@ -225,9 +215,8 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public CommandResult AddBars(BarType barType, Bar[] bars)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
-            Debug.NotNullOrEmpty(bars, nameof(bars));
+            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
+            Debug.NotEmpty(bars, nameof(bars));
 
             var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
             var barsAddedCounter = 0;
@@ -273,8 +262,7 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public QueryResult<BarDataFrame> GetAllBars(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
+            Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
 
             var barKeysQuery = this.GetAllSortedKeys(barType);
 
@@ -306,7 +294,6 @@ namespace Nautilus.Redis
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Debug.NotNull(barType, nameof(barType));
             Debug.NotDefault(fromDateTime, nameof(fromDateTime));
             Debug.NotDefault(toDateTime, nameof(toDateTime));
 
@@ -346,7 +333,6 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public QueryResult<Bar> GetBar(BarType barType, ZonedDateTime timestamp)
         {
-            Debug.NotNull(barType, nameof(barType));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             var key = new BarDataKey(barType, new DateKey(timestamp));

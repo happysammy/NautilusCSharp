@@ -45,9 +45,6 @@ namespace Nautilus.Execution
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
@@ -62,8 +59,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var orderToSubmit = message.Order;
             var orderToAdd = new Order(
                 orderToSubmit.Symbol,
@@ -146,8 +141,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(Event @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             this.Log.Debug($"Event {@event} received.");
 
             if (@event is OrderEvent orderEvent)
@@ -184,8 +177,6 @@ namespace Nautilus.Execution
 
         private void AddToCache(ModifyOrder modifyOrder)
         {
-            Debug.NotNull(modifyOrder, nameof(modifyOrder));
-
             var orderId = modifyOrder.Order.Id;
             if (!this.modifyCache.ContainsKey(orderId))
             {
@@ -208,8 +199,6 @@ namespace Nautilus.Execution
 
         private void ProcessCache(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             if (!this.modifyCache.ContainsKey(order.Id))
             {
                 // Cannot process - no cache for order id (this should never happen).

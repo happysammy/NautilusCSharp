@@ -52,14 +52,6 @@ namespace Nautilus.Execution
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(commandSerializer, nameof(commandSerializer));
-            Precondition.NotNull(eventSerializer, nameof(eventSerializer));
-            Precondition.NotNull(serverAddress, nameof(serverAddress));
-            Precondition.NotNull(commandsPort, nameof(commandsPort));
-            Precondition.NotNull(eventsPort, nameof(eventsPort));
-
             this.commandConsumer = new ActorEndpoint(
                 Context.ActorOf(Props.Create(
                     () => new CommandConsumer(
@@ -99,8 +91,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Send(ExecutionServiceAddress.OrderManager, message);
         }
 
@@ -121,8 +111,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(Event @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             this.eventPublisher.Send(@event);
             this.Log.Debug($"Published event {@event}.");
         }

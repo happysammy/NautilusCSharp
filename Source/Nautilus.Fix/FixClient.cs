@@ -12,7 +12,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -46,12 +45,6 @@ namespace Nautilus.Fix
             messageHandler,
             messageRouter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(config, nameof(config));
-            Precondition.NotNull(messageHandler, nameof(messageHandler));
-            Precondition.NotNull(messageRouter, nameof(messageRouter));
-            Precondition.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
-
             this.instrumentDataProvider = instrumentDataProvider;
         }
 
@@ -99,8 +92,6 @@ namespace Nautilus.Fix
         /// <param name="order">The order to submit.</param>
         public void SubmitOrder(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitOrder(order);
@@ -113,8 +104,6 @@ namespace Nautilus.Fix
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            Debug.NotNull(atomicOrder, nameof(atomicOrder));
-
             this.Execute(() =>
             {
                 this.FixMessageRouter.SubmitOrder(atomicOrder);
@@ -128,8 +117,6 @@ namespace Nautilus.Fix
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.FixMessageRouter.ModifyOrder(order, modifiedPrice);
         }
 
@@ -139,8 +126,6 @@ namespace Nautilus.Fix
         /// <param name="command">The cancel order command.</param>
         public void CancelOrder(Order command)
         {
-            Debug.NotNull(command, nameof(command));
-
             this.FixMessageRouter.CancelOrder(command);
         }
 
@@ -174,8 +159,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
         }
 
@@ -193,8 +176,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
 

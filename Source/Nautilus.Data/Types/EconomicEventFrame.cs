@@ -12,7 +12,6 @@ namespace Nautilus.Data.Types
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -30,8 +29,6 @@ namespace Nautilus.Data.Types
         /// <param name="events">The list of economic events.</param>
         public EconomicEventFrame(List<EconomicEvent> events)
         {
-            Debug.NotNullOrEmpty(events, nameof(events));
-
             this.Events = new ReadOnlyList<EconomicEvent>(events);
         }
 

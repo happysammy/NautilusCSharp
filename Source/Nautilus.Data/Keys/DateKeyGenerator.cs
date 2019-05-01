@@ -10,8 +10,8 @@ namespace Nautilus.Data.Keys
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using NodaTime;
 
     /// <summary>

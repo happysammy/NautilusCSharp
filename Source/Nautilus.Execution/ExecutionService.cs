@@ -18,6 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using NodaTime;
@@ -41,6 +42,8 @@ namespace Nautilus.Execution
         /// <param name="gateway">The execution gateway.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public ExecutionService(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
@@ -53,9 +56,6 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(gateway, nameof(gateway));
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
@@ -195,8 +195,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(CollateralInquiry message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 this.commandThrottler.Send(message);
@@ -205,8 +203,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 this.newOrderThrottler.Send(message);
@@ -215,8 +211,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(ModifyOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 this.commandThrottler.Send(message);
@@ -225,8 +219,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(CancelOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 this.commandThrottler.Send(message);

@@ -12,6 +12,7 @@ namespace Nautilus.Data.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 
@@ -36,8 +37,6 @@ namespace Nautilus.Data.Messages.Commands
             ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
             Debug.PositiveInt32(rollingWindow, nameof(rollingWindow));
 
             this.Resolutions = resolutions;

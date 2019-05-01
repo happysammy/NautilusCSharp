@@ -13,8 +13,8 @@ namespace Nautilus.Fix
     using System.Linq;
     using CsvHelper;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 

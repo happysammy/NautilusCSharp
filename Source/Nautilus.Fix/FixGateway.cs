@@ -16,6 +16,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
@@ -53,10 +54,6 @@ namespace Nautilus.Fix
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(fixClient, nameof(fixClient));
-
             this.fixClient = fixClient;
             this.tickReceivers = new List<IEndpoint>();
             this.eventReceivers = new List<IEndpoint>();
@@ -100,8 +97,7 @@ namespace Nautilus.Fix
         /// <param name="receiver">The receiver.</param>
         public void RegisterTickReceiver(IEndpoint receiver)
         {
-            Precondition.NotNull(receiver, nameof(receiver));
-            Debug.DoesNotContain(receiver, nameof(receiver), this.tickReceivers);
+            Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.tickReceivers));
 
             this.tickReceivers.Add(receiver);
         }
@@ -112,8 +108,7 @@ namespace Nautilus.Fix
         /// <param name="receiver">The receiver.</param>
         public void RegisterEventReceiver(IEndpoint receiver)
         {
-            Precondition.NotNull(receiver, nameof(receiver));
-            Debug.DoesNotContain(receiver, nameof(receiver), this.eventReceivers);
+            Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.eventReceivers));
 
             this.eventReceivers.Add(receiver);
         }
@@ -124,8 +119,7 @@ namespace Nautilus.Fix
         /// <param name="receiver">The receiver.</param>
         public void RegisterInstrumentReceiver(Address receiver)
         {
-            Precondition.NotNull(receiver, nameof(receiver));
-            Debug.DoesNotContain(receiver, nameof(receiver), this.instrumentReceivers);
+            Debug.NotIn(receiver, this.instrumentReceivers, nameof(receiver), nameof(this.instrumentReceivers));
 
             this.instrumentReceivers.Add(receiver);
         }
@@ -136,8 +130,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol.</param>
         public void MarketDataSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.fixClient.RequestMarketDataSubscribe(symbol);
         }
 
@@ -156,8 +148,6 @@ namespace Nautilus.Fix
         /// <param name="symbol">The symbol of the instrument to update.</param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.fixClient.UpdateInstrumentSubscribe(symbol);
         }
 
@@ -191,8 +181,6 @@ namespace Nautilus.Fix
         /// <param name="order">The new order.</param>
         public void SubmitOrder(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.fixClient.SubmitOrder(order);
         }
 
@@ -202,8 +190,6 @@ namespace Nautilus.Fix
         /// <param name="atomicOrder">The new atomic order.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            Debug.NotNull(atomicOrder, nameof(atomicOrder));
-
             this.fixClient.SubmitOrder(atomicOrder);
         }
 
@@ -215,8 +201,6 @@ namespace Nautilus.Fix
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.fixClient.ModifyOrder(order, modifiedPrice);
         }
 
@@ -226,8 +210,6 @@ namespace Nautilus.Fix
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.fixClient.CancelOrder(order);
         }
 
@@ -329,7 +311,6 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(instruments, nameof(instruments));
                 Precondition.NotEmptyOrWhiteSpace(responseId, nameof(responseId));
                 Precondition.NotEmptyOrWhiteSpace(result, nameof(result));
 

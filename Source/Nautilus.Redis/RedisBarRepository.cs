@@ -11,7 +11,6 @@ namespace Nautilus.Redis
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.CQS;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
@@ -32,8 +31,6 @@ namespace Nautilus.Redis
         /// <param name="connection">The clients manager.</param>
         public RedisBarRepository(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
-
             this.barClient = new RedisBarClient(connection);
         }
 
@@ -54,8 +51,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="int"/>.</returns>
         public long BarsCount(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             return this.barClient.BarsCount(barType);
         }
 
@@ -67,9 +62,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public CommandResult Add(BarType barType, Bar bar)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.NotNull(bar, nameof(bar));
-
             return this.barClient.AddBar(barType, bar);
         }
 
@@ -80,8 +72,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public CommandResult Add(BarDataFrame barData)
         {
-            Debug.NotNull(barData, nameof(barData));
-
             return this.barClient.AddBars(barData.BarType, barData.Bars);
         }
 
@@ -126,8 +116,6 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="QueryResult{T}"/> containing the <see cref="Bar"/>.</returns>
         public QueryResult<ZonedDateTime> LastBarTimestamp(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             var barKeysQuery = this.barClient.GetAllSortedKeys(barType);
 
             if (barKeysQuery.IsFailure)

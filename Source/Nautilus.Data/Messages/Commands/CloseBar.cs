@@ -11,6 +11,7 @@ namespace Nautilus.Data.Messages.Commands
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -34,7 +35,6 @@ namespace Nautilus.Data.Messages.Commands
             ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
             Debug.NotDefault(closeTime, nameof(closeTime));
 
             this.BarSpecification = barSpec;

@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a possible trigger within the <see cref="FiniteStateMachine"/>.
@@ -37,8 +37,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         internal Trigger(Enum trigger)
         {
-            Debug.NotNull(trigger, nameof(trigger));
-
             this.Value = trigger.ToString();
         }
 

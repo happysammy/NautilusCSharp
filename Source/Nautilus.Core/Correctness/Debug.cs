@@ -118,7 +118,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
         [Conditional("DEBUG")]
-        public static void NotEmpty<T>(ICollection<T> collection, string paramName)
+        public static void NotEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             Precondition.NotEmpty(collection, paramName);
         }
@@ -131,7 +131,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
         [Conditional("DEBUG")]
-        public static void Empty<T>(ICollection<T> collection, string paramName)
+        public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             Precondition.Empty(collection, paramName);
         }
@@ -145,7 +145,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
         [Conditional("DEBUG")]
-        public static void NotEmpty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+        public static void NotEmpty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
             Precondition.NotEmpty(dictionary, paramName);
         }
@@ -159,7 +159,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
         [Conditional("DEBUG")]
-        public static void Empty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+        public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
             Precondition.Empty(dictionary, paramName);
         }
@@ -189,13 +189,13 @@ namespace Nautilus.Core.Correctness
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
-        public static void IsNotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
+        public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
-            Precondition.IsNotIn(element, collection, paramName, collectionName);
+            Precondition.NotIn(element, collection, paramName, collectionName);
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> contains the given key.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> contains the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -205,13 +205,13 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
-        public static void KeyIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+        public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             Precondition.KeyIn(key, dictionary, paramName, dictName);
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> does not contain the given key.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> does not contain the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -221,7 +221,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
         [Conditional("DEBUG")]
-        public static void KeyNotIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+        public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             Precondition.KeyNotIn(key, dictionary, paramName, dictName);
         }

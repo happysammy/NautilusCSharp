@@ -10,6 +10,7 @@ namespace Nautilus.MsgPack
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;

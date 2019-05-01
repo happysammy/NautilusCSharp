@@ -11,7 +11,6 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Factories;
@@ -35,9 +34,6 @@ namespace Nautilus.Data.Publishers
                 LabelFactory.Create(nameof(BarPublisher)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(publisher, nameof(publisher));
-
             this.publisher = publisher;
 
             // Event messages.
@@ -46,8 +42,6 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(BarClosed message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.publisher.Publish(
                 message.BarType.ToChannelString(),
                 message.Bar.ToString());

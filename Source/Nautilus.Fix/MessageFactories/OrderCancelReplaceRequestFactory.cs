@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -35,10 +35,8 @@ namespace Nautilus.Fix.MessageFactories
             decimal modifiedPrice,
             ZonedDateTime transactionTime)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotNull(order, nameof(order));
-            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
-            Debug.NotDefault(transactionTime, nameof(transactionTime));
+            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Precondition.NotDefault(transactionTime, nameof(transactionTime));
 
             var message = new OrderCancelReplaceRequest();
 

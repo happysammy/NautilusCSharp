@@ -12,7 +12,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
@@ -41,11 +40,6 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(systemController, nameof(systemController));
-            Precondition.NotNull(fixClient, nameof(fixClient));
-
             this.systemController = systemController;
             this.fixClient = fixClient;
         }

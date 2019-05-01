@@ -19,8 +19,8 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
@@ -51,7 +51,6 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregationController(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
@@ -61,9 +60,6 @@ namespace Nautilus.Data.Aggregators
             container,
             messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-
             this.storedContainer = container;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();
             this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
@@ -90,8 +86,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The message.</param>
         protected override void Start(StartSystem message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Log.Information($"Started at {this.StartTime}.");
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
@@ -99,8 +93,6 @@ namespace Nautilus.Data.Aggregators
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
-
             var scheduleBuilder = SimpleScheduleBuilder
                 .Create()
                 .RepeatForever()
@@ -134,8 +126,7 @@ namespace Nautilus.Data.Aggregators
 
         private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
-            Debug.DoesNotContainKey(barSpec.Duration, nameof(barSpec.Duration), this.triggers);
+            Debug.KeyNotIn(barSpec.Duration, this.triggers, nameof(barSpec.Duration), nameof(this.triggers));
 
             var duration = barSpec.Duration;
 
@@ -217,8 +208,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(Subscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var symbol = message.DataType.Symbol;
             var barSpec = message.DataType.Specification;
 
@@ -286,8 +275,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The received unsubscribe message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var symbol = message.DataType.Symbol;
             var barSpec = message.DataType.Specification;
             var duration = barSpec.Duration;
@@ -338,8 +325,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="tick">The received tick.</param>
         private void OnMessage(Tick tick)
         {
-            Debug.NotNull(tick, nameof(tick));
-
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
                 this.barAggregators[tick.Symbol].Send(tick);
@@ -358,8 +343,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="job">The received job.</param>
         private void OnMessage(BarJob job)
         {
-            Debug.NotNull(job, nameof(job));
-
             var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
             foreach (var aggregator in this.barAggregators)
             {
@@ -395,8 +378,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="job">The received job.</param>
         private void OnMessage(MarketStatusJob job)
         {
-            Debug.NotNull(job, nameof(job));
-
             if (job.IsMarketOpen)
             {
                 // The market is now open.

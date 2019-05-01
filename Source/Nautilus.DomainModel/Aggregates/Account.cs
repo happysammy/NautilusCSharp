@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
@@ -33,8 +34,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="password">The account password.</param>
         /// <param name="currency">The account base currency.</param>
         /// <param name="timestamp">The account creation timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if
-        /// any struct argument is the default value.</exception>
+        /// <exception cref="ArgumentException">If any string is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">If any struct is the default value.</exception>
         public Account(
             AccountId accountId,
             Brokerage broker,
@@ -47,11 +48,10 @@ namespace Nautilus.DomainModel.Aggregates
                 accountId,
                 timestamp)
         {
-            Precondition.NotNull(accountId, nameof(accountId));
             Precondition.NotEmptyOrWhiteSpace(username, nameof(username));
             Precondition.NotEmptyOrWhiteSpace(password, nameof(password));
             Precondition.NotDefault(currency, nameof(currency));
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;
@@ -147,21 +147,14 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="event">The event.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        /// <exception cref="ValidationException">Throws if the event is null.</exception>
         public override CommandResult Apply(Event @event)
         {
-            Debug.NotNull(@event, nameof(@event));
             Debug.True(@event is AccountEvent, nameof(@event));
+            var accountEvent = @event as AccountEvent;
+            Debug.NotNull(accountEvent, nameof(accountEvent));
 
-            if (!(@event is AccountEvent accountEvent))
-            {
-                return CommandResult.Fail($"Event not recognized by {this}).");
-            }
-
-            if (accountEvent.AccountId != this.Id)
-            {
-                return CommandResult.Fail($"Event account identifier does not match {this}).");
-            }
+            // ReSharper disable once PossibleNullReferenceException (checked above).
+            Debug.EqualTo(accountEvent.AccountId, this.Id, nameof(accountEvent.AccountId));
 
             this.CashBalance = accountEvent.CashBalance;
             this.CashStartDay = accountEvent.CashStartDay;

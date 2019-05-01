@@ -8,7 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using NodaTime;
     using QuickFix.Fields;
@@ -31,9 +31,8 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime transactionTime)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotNull(order, nameof(order));
-            Debug.NotDefault(transactionTime, nameof(transactionTime));
+            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Precondition.NotDefault(transactionTime, nameof(transactionTime));
 
             var message = new OrderCancelRequest();
 

@@ -126,13 +126,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> is not empty.
+        /// The check passes if the <see cref="IReadOnlyCollection{T}"/> is not empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
-        public static void NotEmpty<T>(ICollection<T> collection, string paramName)
+        public static void NotEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection.Count == 0)
             {
@@ -141,13 +141,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> is empty.
+        /// The check passes if the <see cref="IReadOnlyCollection{T}"/> is empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
-        public static void Empty<T>(ICollection<T> collection, string paramName)
+        public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
             if (collection.Count == 0)
             {
@@ -156,14 +156,14 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="Dictionary{TKey,TValue}"/> is not empty.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is not empty.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
-        public static void NotEmpty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+        public static void NotEmpty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
             if (dictionary.Count == 0)
             {
@@ -172,14 +172,14 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="Dictionary{TKey,TValue}"/> is empty.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is empty.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
-        public static void Empty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+        public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
             if (dictionary.Count > 0)
             {
@@ -213,7 +213,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
-        public static void IsNotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
+        public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
             if (collection.Contains(element))
             {
@@ -222,7 +222,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> contains the given key.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> contains the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -231,7 +231,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
-        public static void KeyIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+        public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             if (!dictionary.ContainsKey(key))
             {
@@ -240,7 +240,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> does not contain the given key.
+        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> does not contain the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -249,7 +249,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
         /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
-        public static void KeyNotIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
+        public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             if (dictionary.ContainsKey(key))
             {

@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
 
@@ -45,9 +46,9 @@ namespace Nautilus.DomainModel.Entities
             Debug.NotDefault(country, nameof(country));
             Debug.NotDefault(currency, nameof(currency));
             Debug.NotDefault(impact, nameof(impact));
-            Debug.NotOutOfRangeDecimal(actual, nameof(impact), decimal.Zero, decimal.MaxValue);
-            Debug.NotOutOfRangeDecimal(consensus, nameof(consensus), decimal.Zero, decimal.MaxValue);
-            Debug.NotOutOfRangeDecimal(previous, nameof(previous), decimal.Zero, decimal.MaxValue);
+            Debug.NotNegativeDecimal(actual, nameof(impact));
+            Debug.NotNegativeDecimal(consensus, nameof(consensus));
+            Debug.NotNegativeDecimal(previous, nameof(previous));
 
             this.Time = time;
             this.Title = title;

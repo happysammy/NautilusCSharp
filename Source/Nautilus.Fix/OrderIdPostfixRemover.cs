@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Removes the '_R#' from any modified order identifier.
@@ -21,10 +21,10 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
+        /// <exception cref="ArgumentException">If the orderId is empty or whitespace.</exception>
         public static string Remove(string orderId)
         {
-            Debug.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+            Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);

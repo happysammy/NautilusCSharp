@@ -16,7 +16,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -50,10 +49,6 @@ namespace Nautilus.Data
                 LabelFactory.Create(nameof(DatabaseTaskManager)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(barRepository, nameof(barRepository));
-            Precondition.NotNull(instrumentRepository, nameof(instrumentRepository));
-
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
 
@@ -79,8 +74,6 @@ namespace Nautilus.Data
 
         private void OnMessage(TrimBarData message)
         {
-            Debug.NotNull(message, nameof(message));
-
             foreach (var resolution in message.Resolutions)
             {
                 this.barRepository
@@ -92,8 +85,6 @@ namespace Nautilus.Data
 
         private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
         {
-            Debug.NotNull(message, nameof(message));
-
             var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
 
             sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
@@ -101,9 +92,6 @@ namespace Nautilus.Data
 
         private void OnMessage(QueryRequest<BarType> message, IActorRef sender)
         {
-            Debug.NotNull(message, nameof(message));
-            Debug.NotNull(sender, nameof(sender));
-
             var barDataQuery = this.barRepository.Find(
                 message.DataType,
                 message.FromDateTime,
@@ -118,8 +106,6 @@ namespace Nautilus.Data
 
         private void OnMessage(DataDelivery<BarClosed> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.barRepository
                 .Add(
                     message.Data.BarType,
@@ -130,8 +116,6 @@ namespace Nautilus.Data
 
         private void OnMessage(DataDelivery<BarDataFrame> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.barRepository
                 .Add(message.Data)
                 .OnSuccess(result => this.SendLastBarTimestamp(message.Data.BarType))
@@ -140,8 +124,6 @@ namespace Nautilus.Data
 
         private void SendLastBarTimestamp(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             this.barRepository
                 .LastBarTimestamp(barType)
                 .OnSuccess(query =>
@@ -159,8 +141,6 @@ namespace Nautilus.Data
 
         private void OnMessage(DataDelivery<IReadOnlyCollection<Instrument>> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             foreach (var instrument in message.Data)
             {
                 this.instrumentRepository

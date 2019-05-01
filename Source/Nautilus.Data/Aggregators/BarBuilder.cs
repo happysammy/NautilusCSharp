@@ -10,7 +10,7 @@
 
 namespace Nautilus.Data.Aggregators
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -81,8 +81,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="quote">The quote price.</param>
         public void Update(Price quote)
         {
-            Debug.NotNull(quote, nameof(quote));
-
             if (this.IsNotInitialized)
             {
                 this.Open = quote;

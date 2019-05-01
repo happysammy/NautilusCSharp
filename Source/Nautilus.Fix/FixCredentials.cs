@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents the credentials for a FIX session.

@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
@@ -27,12 +27,13 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="quoteType">The specification quote type.</param>
         /// <param name="resolution">The specification resolution.</param>
         /// <param name="period">The specification period.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If the period is not position (> 0).</exception>
         public BarSpecification(
             QuoteType quoteType,
             Resolution resolution,
             int period)
         {
-            Debug.PositiveInt32(period, nameof(period));
+            Precondition.PositiveInt32(period, nameof(period));
 
             this.QuoteType = quoteType;
             this.Resolution = resolution;

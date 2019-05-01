@@ -14,7 +14,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Network;
@@ -47,12 +46,6 @@ namespace Nautilus.Execution
                 LabelFactory.Create(nameof(CommandConsumer)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(serializer, nameof(serializer));
-            Precondition.NotNull(receiver, nameof(receiver));
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(host));
-
             this.serializer = serializer;
             this.receiver = receiver;
 
@@ -71,8 +64,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(byte[] message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 var command = this.serializer.Deserialize(message);

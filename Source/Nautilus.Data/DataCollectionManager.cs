@@ -17,7 +17,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Events;
@@ -46,7 +46,7 @@ namespace Nautilus.Data
         /// <param name="barPublisher">The bar publisher.</param>
         /// <param name="resolutionsToPersist">The bar resolutions to persist (with a period of 1).</param>
         /// <param name="barRollingWindow">The rolling window of persisted bar data (days).</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindow is not positive (> 0).</exception>
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
@@ -59,9 +59,6 @@ namespace Nautilus.Data
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(barPublisher, nameof(barPublisher));
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             this.storedContainer = container;
@@ -87,58 +84,42 @@ namespace Nautilus.Data
         /// <param name="message">The message.</param>
         protected override void Start(StartSystem message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.CreateTrimBarDataJob();
         }
 
         private void OnMessage(Subscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(CollectData<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             // Do nothing.
         }
 
         private void OnMessage(DataDelivery<BarClosed> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.barPublisher.Send(message.Data);
             this.Send(DataServiceAddress.DatabaseTaskManager, message);
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             // Not implemented.
         }
 
         private void OnMessage(DataPersisted<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             // Not implemented.
         }
 
         private void OnMessage(DataCollected<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             // Not implemented.
         }
 
         private void OnMessage(TrimBarDataJob message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var trimCommand = new TrimBarData(
                 this.resolutionsPersisting,
                 this.barRollingWindow,

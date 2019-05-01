@@ -30,10 +30,6 @@ namespace Nautilus.Common.Messaging
             IComponentryContainer container,
             IMessageStore store)
         {
-            Precondition.NotNull(actorSystem, nameof(actorSystem));
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(store, nameof(store));
-
             var messageStoreRef = new ActorEndpoint(actorSystem.ActorOf(Props.Create(() => new MessageStorer(store))));
 
             var commandBus = new ActorEndpoint(

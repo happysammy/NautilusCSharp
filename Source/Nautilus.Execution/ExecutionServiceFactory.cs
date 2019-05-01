@@ -8,11 +8,12 @@
 
 namespace Nautilus.Execution
 {
+    using System;
     using System.Collections.Generic;
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Network;
     using Address = Nautilus.Common.Messaging.Address;
 
@@ -38,6 +39,8 @@ namespace Nautilus.Execution
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         /// <returns>The services switchboard.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public static Dictionary<Address, IEndpoint> Create(
             ActorSystem actorSystem,
             IComponentryContainer container,
@@ -52,9 +55,6 @@ namespace Nautilus.Execution
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Precondition.NotNull(actorSystem, nameof(actorSystem));
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 

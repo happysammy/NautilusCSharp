@@ -15,7 +15,6 @@ namespace NautilusData
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -46,10 +45,6 @@ namespace NautilusData
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(systemController, nameof(systemController));
-
             this.systemController = systemController;
             this.fixClient = fixClient;
         }

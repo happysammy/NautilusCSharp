@@ -25,14 +25,11 @@ namespace Nautilus.Data.Messages.Commands
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public CollectData(
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
         }
 
         /// <summary>

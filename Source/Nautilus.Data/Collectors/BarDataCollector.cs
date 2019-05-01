@@ -50,10 +50,6 @@ namespace Nautilus.Data.Collectors
                 LabelFactory.Create($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(dataReader, nameof(dataReader));
-            Precondition.NotNull(collectionSchedule, nameof(collectionSchedule));
-
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;
 
@@ -67,8 +63,6 @@ namespace Nautilus.Data.Collectors
 
         private void OnMessage(CollectData<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)
             {
                 this.Log.Warning($"No csv files found for {this.dataReader.BarType}");
@@ -108,8 +102,6 @@ namespace Nautilus.Data.Collectors
 
         private void OnMessage(DataStatusResponse<ZonedDateTime> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             if (message.LastTimestampQuery.IsSuccess)
             {
                 this.lastPersistedBarTime = message.LastTimestampQuery.Value;
@@ -128,8 +120,6 @@ namespace Nautilus.Data.Collectors
 
         private void OnMessage(DataPersisted<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.lastPersistedBarTime = message.LastDataTime;
         }
     }

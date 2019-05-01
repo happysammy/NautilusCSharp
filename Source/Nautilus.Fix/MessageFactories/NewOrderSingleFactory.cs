@@ -9,7 +9,7 @@
 namespace Nautilus.Fix.MessageFactories
 {
     using System;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -36,10 +36,9 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime timeNow)
         {
-            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Debug.NotNull(order, nameof(order));
-            Debug.NotDefault(timeNow, nameof(timeNow));
+            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Precondition.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderSingle();
 

@@ -14,7 +14,7 @@ namespace Nautilus.Data.Aggregators
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -35,7 +35,6 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Initializes a new instance of the <see cref="SpreadAnalyzer"/> class.
         /// </summary>
-        /// <exception cref="ValidationException">Throws if the tick size is zero or negative.</exception>
         public SpreadAnalyzer()
         {
             this.thisBarsSpreads = new List<decimal>();
@@ -91,8 +90,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="tick">The quote.</param>
         public void Update(Tick tick)
         {
-            Debug.NotNull(tick, nameof(tick));
-
             if (!this.isInitialized)
             {
                 this.decimalPrecision = tick.Bid.DecimalPrecision;

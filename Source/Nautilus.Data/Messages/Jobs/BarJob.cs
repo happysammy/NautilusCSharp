@@ -10,7 +10,6 @@ namespace Nautilus.Data.Messages.Jobs
 {
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Quartz;
 
@@ -26,8 +25,6 @@ namespace Nautilus.Data.Messages.Jobs
         /// <param name="barSpec">The jobs bar type..</param>
         public BarJob(BarSpecification barSpec)
         {
-            Debug.NotNull(barSpec, nameof(barSpec));
-
             this.BarSpec = barSpec;
             this.Key = new JobKey(this.BarSpec.ToString(), "bar_aggregation");
         }

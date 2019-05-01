@@ -11,6 +11,7 @@ namespace Nautilus.Data.Messages.Commands
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -36,11 +37,8 @@ namespace Nautilus.Data.Messages.Commands
             ZonedDateTime timestamp)
         : base(identifier, timestamp)
         {
-            Debug.NotNull(dataType, nameof(dataType));
             Debug.NotDefault(fromDateTime, nameof(fromDateTime));
             Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.DataType = dataType;
             this.FromDateTime = fromDateTime;

@@ -15,6 +15,7 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Network;
     using NetMQ;
@@ -52,10 +53,6 @@ namespace Nautilus.Messaging
                 label,
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(label, nameof(label));
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(port));
             Precondition.NotDefault(id, nameof(id));
 
             this.topic = Encoding.UTF8.GetBytes(topic);

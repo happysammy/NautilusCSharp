@@ -9,7 +9,7 @@
 namespace Nautilus.Messaging.Network
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a valid network address.

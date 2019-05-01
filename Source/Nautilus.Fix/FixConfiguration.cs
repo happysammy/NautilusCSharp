@@ -9,7 +9,7 @@
 namespace Nautilus.Fix
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
@@ -36,7 +36,6 @@ namespace Nautilus.Fix
             bool updateInstruments)
         {
             Precondition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
-            Precondition.NotNull(credentials, nameof(credentials));
             Precondition.NotEmptyOrWhiteSpace(instrumentDataFileName, nameof(instrumentDataFileName));
 
             this.Broker = broker;

@@ -35,11 +35,6 @@ namespace Nautilus.Data.Messages.Events
             Guid id)
             : base(id, bar.Timestamp)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.NotNull(bar, nameof(bar));
-            Debug.NotNull(lastTick, nameof(lastTick));
-            Debug.NotDefault(id, nameof(id));
-
             this.BarType = barType;
             this.Bar = bar;
             this.LastTick = lastTick;

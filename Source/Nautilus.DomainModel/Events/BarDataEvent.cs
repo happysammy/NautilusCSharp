@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -30,8 +31,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="isHistorical">The event is historical flag.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value, or if the average spread is zero or negative.</exception>
         public BarDataEvent(
             BarType barType,
             Bar bar,
@@ -42,10 +41,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.NotNull(bar, nameof(bar));
-            Debug.NotNull(lastTick, nameof(lastTick));
-            Debug.PositiveDecimal(averageSpread, nameof(averageSpread));
+            Debug.NotNegativeDecimal(averageSpread, nameof(averageSpread));
 
             this.BarType = barType;
             this.Bar = bar;

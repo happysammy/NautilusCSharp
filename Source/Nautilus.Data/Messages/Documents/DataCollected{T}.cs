@@ -32,10 +32,6 @@ namespace Nautilus.Data.Messages.Documents
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(dataType, nameof(dataType));
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
-
             this.DataType = dataType;
         }
 

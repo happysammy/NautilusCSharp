@@ -14,7 +14,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -50,9 +49,6 @@ namespace Nautilus.Brokerage.Dukascopy
                 LabelFactory.Create(nameof(DukascopyFixMessageHandler)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(instrumentData, nameof(instrumentData));
-
             this.instrumentData = instrumentData;
         }
 
@@ -85,8 +81,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var instruments = new List<Instrument>();
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
                 var group = new SecurityList.NoRelatedSymGroup();
@@ -189,8 +183,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var brokerSymbolString = message.GetField(Tags.Symbol);
                 var brokerSymbol = new BrokerSymbol(brokerSymbolString);
 
@@ -208,8 +200,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var inquiryId = message.GetField(Tags.CollInquiryID);
                 var accountNumber = Convert.ToInt32(message.GetField(Tags.Account)).ToString();
 
@@ -225,8 +215,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var inquiryId = message.GetField(Tags.CollRptID);
                 var accountNumber = message.GetField(Tags.Account);
                 var cashBalance = Convert.ToDecimal(message.GetField(Tags.CashOutstanding));
@@ -260,8 +248,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 this.fixGateway?.OnRequestForPositionsAck(
                     message.Account.ToString(),
                     message.PosReqID.ToString());
@@ -276,8 +262,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 this.Log.Warning($"MarketDataRequestReject: {message.GetField(Tags.Text)}");
             });
         }
@@ -290,8 +274,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 if (!message.IsSetField(Tags.Symbol))
                 {
                     // Symbol is not set so return.
@@ -333,8 +315,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var orderId = message.ClOrdID.ToString();
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
@@ -359,8 +339,6 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
@@ -507,16 +485,12 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-
                 this.fixGateway?.OnPositionReport(message.Account.ToString());
             });
         }
 
         private static string GetField(FieldMap report, int tag)
         {
-            Debug.NotNull(report, nameof(report));
-
             return report.IsSetField(tag)
                 ? report.GetField(tag)
                 : string.Empty;

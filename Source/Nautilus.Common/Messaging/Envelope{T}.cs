@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
-    using System.Diagnostics;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -37,8 +37,8 @@ namespace Nautilus.Common.Messaging
             Guid id,
             ZonedDateTime timestamp)
         {
-            Debug.Assert(id != default, "The id cannot be default ZonedDateTime.");
-            Debug.Assert(timestamp != default, "The timestamp cannot be default ZonedDateTime.");
+            Debug.NotDefault(id, nameof(id));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Receiver = receiver;
             this.Sender = sender;
@@ -48,7 +48,7 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Gets the envelope receiver(s).
+        /// Gets the envelope receiver.
         /// </summary>
         public Address Receiver { get; }
 
@@ -85,7 +85,7 @@ namespace Nautilus.Common.Messaging
         /// <returns>The contained message of type T.</returns>
         public T Open(ZonedDateTime currentTime)
         {
-            Debug.Assert(currentTime != default, "The currentTime cannot be default ZonedDateTime.");
+            Debug.NotDefault(currentTime, nameof(currentTime));
 
             if (this.OpenedTime is null)
             {

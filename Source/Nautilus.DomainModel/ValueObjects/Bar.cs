@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using System.Text;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
@@ -31,8 +32,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="close">The close price.</param>
         /// <param name="volume">The volume.</param>
         /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public Bar(
             Price open,
             Price high,
@@ -41,11 +40,6 @@ namespace Nautilus.DomainModel.ValueObjects
             Quantity volume,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(open, nameof(open));
-            Debug.NotNull(high, nameof(high));
-            Debug.NotNull(low, nameof(low));
-            Debug.NotNull(close, nameof(close));
-            Debug.NotNull(volume, nameof(volume));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Open = open;
@@ -65,8 +59,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="close">The close price.</param>
         /// <param name="volume">The volume.</param>
         /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public Bar(
             decimal open,
             decimal high,
@@ -75,7 +67,6 @@ namespace Nautilus.DomainModel.ValueObjects
             int volume,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(volume, nameof(volume));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Open = Price.Create(open, open.GetDecimalPlaces());
@@ -142,10 +133,9 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="barBytes">The bar bytes array.</param>
         /// <returns>A <see cref="Bar"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public static Bar GetFromBytes(byte[] barBytes)
         {
-            Debug.NotNullOrEmpty(barBytes, nameof(barBytes));
+            Debug.NotEmpty(barBytes, nameof(barBytes));
 
             return GetFromString(Encoding.UTF8.GetString(barBytes));
         }
@@ -158,8 +148,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>An <see cref="int"/>.</returns>
         public int CompareTo(Bar other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return this.Timestamp.Compare(other.Timestamp);
         }
 

@@ -10,6 +10,7 @@ namespace Nautilus.Data.Orchestration
 {
     using System;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Keys;
     using NodaTime;
@@ -42,8 +43,8 @@ namespace Nautilus.Data.Orchestration
             int intervalMinutes)
         {
             Precondition.NotDefault(collectionDay, nameof(collectionDay));
-            Precondition.NotOutOfRangeInt32(collectionHour, nameof(collectionHour), 0, 23);
-            Precondition.NotOutOfRangeInt32(collectionMinute, nameof(collectionMinute), 0, 59);
+            Precondition.NotOutOfRangeInt32(collectionHour, 0, 23, nameof(collectionHour));
+            Precondition.NotOutOfRangeInt32(collectionMinute, 0, 59, nameof(collectionMinute));
             Precondition.NotNegativeInt32(intervalMinutes, nameof(intervalMinutes));
 
             this.collectionDay = collectionDay;

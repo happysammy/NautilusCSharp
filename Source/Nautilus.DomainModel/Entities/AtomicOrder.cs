@@ -36,10 +36,6 @@ namespace Nautilus.DomainModel.Entities
                   new AtomicOrderId(entry.Id.Value),
                   entry.Timestamp)
         {
-            Debug.NotNull(entry, nameof(entry));
-            Debug.NotNull(stopLoss, nameof(stopLoss));
-            Debug.NotNull(profitTarget, nameof(profitTarget));
-
             this.Entry = entry;
             this.StopLoss = stopLoss;
             this.ProfitTarget = profitTarget.HasValue

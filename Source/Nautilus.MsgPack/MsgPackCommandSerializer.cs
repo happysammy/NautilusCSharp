@@ -45,8 +45,6 @@ namespace Nautilus.MsgPack
         /// <returns>The serialized command.</returns>
         public byte[] Serialize(Command command)
         {
-            Debug.NotNull(@command, nameof(@command));
-
             switch (command)
             {
                 case OrderCommand orderCommand:

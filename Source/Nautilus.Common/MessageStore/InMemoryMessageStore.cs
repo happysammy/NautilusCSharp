@@ -44,11 +44,8 @@ namespace Nautilus.Common.MessageStore
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
         public void Store(Envelope<Command> envelope)
         {
-            Precondition.NotNull(envelope, nameof(envelope));
-
             this.commandEnvelopeList.Add(envelope);
         }
 
@@ -56,11 +53,9 @@ namespace Nautilus.Common.MessageStore
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
+
         public void Store(Envelope<Event> envelope)
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             this.eventEnvelopeList.Add(envelope);
         }
 
@@ -68,11 +63,9 @@ namespace Nautilus.Common.MessageStore
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-        /// <exception cref="ValidationException">Throws if the envelope is null.</exception>
+
         public void Store(Envelope<Document> envelope)
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             this.documentEnvelopeList.Add(envelope);
         }
     }

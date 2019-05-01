@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.Events
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -31,8 +31,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public OrderModified(
             Symbol symbol,
             OrderId orderId,
@@ -47,10 +45,6 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotNull(brokerOrderId, nameof(brokerOrderId));
-            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
             Debug.NotDefault(modifiedTime, nameof(modifiedTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));

@@ -11,6 +11,7 @@ namespace Nautilus.Data.Messages.Documents
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -34,10 +35,7 @@ namespace Nautilus.Data.Messages.Documents
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(dataType, nameof(dataType));
             Debug.NotDefault(lastDataTime, nameof(lastDataTime));
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.DataType = dataType;
             this.LastDataTime = lastDataTime;

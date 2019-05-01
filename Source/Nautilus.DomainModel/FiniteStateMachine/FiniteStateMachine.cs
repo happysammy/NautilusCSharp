@@ -12,9 +12,9 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
 
     /// <summary>
     /// Represents a simple generic finite state machine comprising of a state transition look-up
@@ -23,7 +23,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     [PerformanceOptimized]
     internal class FiniteStateMachine
     {
-        // Concrete dictionary for performance reasons.
         private readonly ReadOnlyDictionary<StateTransition, State> stateTransitionTable;
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
             Dictionary<StateTransition, State> stateTransitionTable,
             State startingState)
         {
-            Precondition.NotNullOrEmpty(stateTransitionTable, nameof(stateTransitionTable));
-            Precondition.NotNull(startingState, nameof(startingState));
+            Precondition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
             this.stateTransitionTable = new ReadOnlyDictionary<StateTransition, State>(stateTransitionTable);
             this.State = startingState;
@@ -57,8 +55,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the trigger is null.</exception>
         internal CommandResult Process(Trigger trigger)
         {
-            Debug.NotNull(trigger, nameof(trigger));
-
             var transition = new StateTransition(this.State, trigger);
 
             return this.IsValidStateTransition(transition)

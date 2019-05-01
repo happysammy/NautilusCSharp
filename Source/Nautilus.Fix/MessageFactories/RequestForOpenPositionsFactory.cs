@@ -8,7 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using NodaTime;
     using QuickFix.Fields;
     using QuickFix.FIX44;
@@ -25,7 +25,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static RequestForPositions Create(ZonedDateTime timeNow)
         {
-            Debug.NotDefault(timeNow, nameof(timeNow));
+            Precondition.NotDefault(timeNow, nameof(timeNow));
 
             var message = new RequestForPositions();
             var transactTime = timeNow.ToDateTimeUtc();

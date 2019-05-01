@@ -16,7 +16,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Fix.Interfaces;
@@ -59,11 +59,6 @@ namespace Nautilus.Fix
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(config, nameof(config));
-            Precondition.NotNull(messageHandler, nameof(messageHandler));
-            Precondition.NotNull(messageRouter, nameof(messageRouter));
-
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(
@@ -118,8 +113,6 @@ namespace Nautilus.Fix
         /// <param name="gateway">The execution gateway.</param>
         public void InitializeGateway(IFixGateway gateway)
         {
-            Precondition.NotNull(gateway, nameof(gateway));
-
             this.FixMessageHandler.InitializeGateway(gateway);
         }
 
@@ -158,8 +151,7 @@ namespace Nautilus.Fix
         /// <param name="receiver">The event receiver endpoint.</param>
         public void RegisterConnectionEventReceiver(IEndpoint receiver)
         {
-            Precondition.NotNull(receiver, nameof(receiver));
-            Debug.DoesNotContain(receiver, nameof(receiver), this.connectionEventReceivers);
+            Debug.NotIn(receiver, this.connectionEventReceivers, nameof(receiver), nameof(this.connectionEventReceivers));
 
             this.connectionEventReceivers.Add(receiver);
         }

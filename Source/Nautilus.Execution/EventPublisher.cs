@@ -44,10 +44,6 @@ namespace Nautilus.Execution
                 LabelFactory.Create(nameof(EventPublisher)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(port));
-
             this.serializer = serializer;
 
             this.publisher = new ActorEndpoint(
@@ -65,8 +61,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(Event message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.publisher.Send(this.serializer.Serialize(message));
         }
     }

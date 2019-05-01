@@ -8,9 +8,9 @@
 
 namespace Nautilus.DomainModel.Identifiers.Base
 {
-    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities.Base;
 
@@ -28,8 +28,8 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// <param name="value">The string value.</param>
         protected EntityId(string value)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(value), FailedMsg.IsNullOrWhitespace(nameof(value)));
-            Debug.Assert(value.Length <= 1024, "The string length cannot be more than 1024 characters.");
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+            Debug.NotOutOfRangeInt32(value.Length, 1,  1024, nameof(value));
 
             this.Value = value.RemoveAllWhitespace();
         }

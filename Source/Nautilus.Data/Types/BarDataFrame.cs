@@ -10,7 +10,6 @@ namespace Nautilus.Data.Types
 {
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -25,13 +24,8 @@ namespace Nautilus.Data.Types
         /// </summary>
         /// <param name="barType">The symbol bar data.</param>
         /// <param name="bars">The bars dictionary.</param>
-        /// <exception cref="ValidationException">Throws if the bar specification is the default
-        /// value, or if the bars collection is null or empty.</exception>
         public BarDataFrame(BarType barType, Bar[] bars)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.NotNullOrEmpty(bars, nameof(bars));
-
             this.BarType = barType;
             this.Bars = bars;
         }

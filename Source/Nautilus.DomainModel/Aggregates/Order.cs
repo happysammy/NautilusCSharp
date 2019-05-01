@@ -13,6 +13,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates.Base;
@@ -62,10 +63,6 @@ namespace Nautilus.DomainModel.Aggregates
             ZonedDateTime timestamp)
             : base(orderId, timestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(orderId, nameof(orderId));
-            Debug.NotNull(orderLabel, nameof(orderLabel));
-            Debug.NotNull(quantity, nameof(quantity));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
@@ -187,11 +184,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// Adds the modified order identifier to the order.
         /// </summary>
         /// <param name="modifiedOrderId">The modified order identifier.</param>
-        /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public void AddModifiedOrderId(OrderId modifiedOrderId)
         {
-            Debug.NotNull(modifiedOrderId, nameof(modifiedOrderId));
-
             this.orderIds.Add(modifiedOrderId);
         }
 
@@ -226,8 +220,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <returns>The result of the operation.</returns>
         public override CommandResult Apply(Event orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             switch (orderEvent)
             {
                 case OrderRejected @event:
@@ -268,8 +260,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="orderId">The broker order identifier.</param>
         private void UpdateBrokerOrderIds(OrderId orderId)
         {
-            Debug.NotNull(orderId, nameof(orderId));
-
             if (!this.orderIdsBroker.Contains(orderId))
             {
                 this.orderIdsBroker.Add(orderId);
@@ -283,8 +273,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="executionId">The execution identifier.</param>
         private void UpdateExecutionIds(ExecutionId executionId)
         {
-            Debug.NotNull(executionId, nameof(executionId));
-
             if (!this.executionIds.Contains(executionId))
             {
                 this.executionIds.Add(executionId);
@@ -303,8 +291,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderRejected orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.orderState
                 .Process(new Trigger(nameof(OrderRejected)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
@@ -312,8 +298,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderCancelled orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.orderState
                 .Process(new Trigger(nameof(OrderCancelled)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
@@ -321,8 +305,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderWorking orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.orderState
                 .Process(new Trigger(nameof(OrderWorking)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
@@ -331,8 +313,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderPartiallyFilled orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.orderState
                 .Process(new Trigger(nameof(OrderPartiallyFilled)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
@@ -343,8 +323,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderFilled orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.orderState
                 .Process(new Trigger(nameof(OrderFilled)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
@@ -354,16 +332,12 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderExpired orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.Process(new Trigger(nameof(OrderExpired)))
                 .OnSuccess(() => this.Events.Add(orderEvent));
         }
 
         private CommandResult When(OrderModified orderEvent)
         {
-            Debug.NotNull(orderEvent, nameof(orderEvent));
-
             return this.Process(new Trigger(nameof(OrderModified)))
                 .OnSuccess(() => this.Events.Add(orderEvent))
                 .OnSuccess(() => this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId))
@@ -372,8 +346,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void ValidateExpireTime(Option<ZonedDateTime?> expireTime)
         {
-            Debug.NotNull(expireTime, nameof(expireTime));
-
             if (expireTime.HasNoValue)
             {
                 Precondition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));

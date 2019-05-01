@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.Events
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -29,8 +29,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="expiredTime">The event order expired time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public OrderExpired(
             Symbol symbol,
             OrderId orderId,
@@ -43,8 +41,6 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(orderId, nameof(orderId));
             Debug.NotDefault(expiredTime, nameof(expiredTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));

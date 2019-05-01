@@ -17,7 +17,6 @@ namespace Nautilus.Common
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Address = Nautilus.Common.Messaging.Address;
 
@@ -48,11 +47,6 @@ namespace Nautilus.Common
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(actorSystem, nameof(actorSystem));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(switchboard, nameof(switchboard));
-
             this.actorSystem = actorSystem;
             this.actorSystemName = actorSystem.Name;
             this.components = switchboard.Addresses;

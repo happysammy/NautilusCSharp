@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -55,12 +56,6 @@ namespace Nautilus.DomainModel.Events
             : base(eventId, eventTimestamp)
         {
             Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Debug.NotNull(cashBalance, nameof(cashBalance));
-            Debug.NotNull(cashStartDay, nameof(cashStartDay));
-            Debug.NotNull(cashActivityDay, nameof(cashActivityDay));
-            Debug.NotNull(marginUsedLiquidation, nameof(marginUsedLiquidation));
-            Debug.NotNull(marginUsedMaintenance, nameof(marginUsedMaintenance));
-            Debug.NotNull(marginRatio, nameof(marginRatio));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 

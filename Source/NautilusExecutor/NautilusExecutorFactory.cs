@@ -20,8 +20,8 @@ namespace NautilusExecutor
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
     using Nautilus.Fix;
@@ -56,10 +56,6 @@ namespace NautilusExecutor
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Precondition.NotNull(fixConfig, nameof(fixConfig));
-            Precondition.NotNull(serviceAddress, nameof(serviceAddress));
-            Precondition.NotNull(commandsPort, nameof(commandsPort));
-            Precondition.NotNull(eventsPort, nameof(eventsPort));
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 

@@ -12,6 +12,7 @@ namespace Nautilus.DomainModel.Entities
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -46,11 +47,6 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime timestamp)
             : base(riskModelId, timestamp)
         {
-            Precondition.NotNull(riskModelId, nameof(riskModelId));
-            Precondition.NotNull(globalMaxRiskExposure, nameof(globalMaxRiskExposure));
-            Precondition.NotNull(globalMaxRiskPerTrade, nameof(globalMaxRiskPerTrade));
-            Precondition.NotNull(globalMaxTradesPerType, nameof(globalMaxTradesPerType));
-
             this.GlobalMaxRiskExposure = globalMaxRiskExposure;
             this.GlobalMaxRiskPerTrade = globalMaxRiskPerTrade;
             this.GlobalMaxTradesPerType = globalMaxTradesPerType;
@@ -94,8 +90,6 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="maxRiskPerTrade">The max risk per trade.</param>
         /// <param name="timestamp">The update timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the max risk per trade is null, or if
-        /// the update timestamp is the default value.</exception>
         public void UpdateGlobalMaxRiskPerTrade(Percentage maxRiskPerTrade, ZonedDateTime timestamp)
         {
             this.GlobalMaxRiskPerTrade = maxRiskPerTrade;
@@ -108,11 +102,9 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="symbol">The symbol.</param>
         /// <param name="hardLimit">The hard limits.</param>
         /// <param name="timestamp">The update timestamp.</param>
-        /// <exception cref="ValidationException">Throws either class argument is null, or if
-        /// the update timestamp is the default value.</exception>
         public void UpdatePositionSizeHardLimit(Symbol symbol, Quantity hardLimit, ZonedDateTime timestamp)
         {
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             if (this.positionSizeHardLimitsIndex.ContainsKey(symbol))
             {
@@ -132,11 +124,9 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="tradeType">The trade type.</param>
         /// <param name="riskPerTrade">The risk per trade.</param>
         /// <param name="timestamp">The update timestamp.</param>
-        /// <exception cref="ValidationException">Throws either class argument is null, or if
-        /// the update timestamp is the default value.</exception>
         public void UpdateMaxRiskPerTradeType(TradeType tradeType, Percentage riskPerTrade, ZonedDateTime timestamp)
         {
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxRiskPerTradeTypeIndex.ContainsKey(tradeType))
             {
@@ -156,11 +146,9 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="tradeType">The trade type.</param>
         /// <param name="maxTrades">The max trades.</param>
         /// <param name="timestamp">The update timestamp.</param>
-        /// <exception cref="ValidationException">Throws either class argument is null, or if
-        /// the timestamp is the default value.</exception>
         public void UpdateMaxTradesPerSymbolType(TradeType tradeType, Quantity maxTrades, ZonedDateTime timestamp)
         {
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             if (this.maxTradesPerSymbolType.ContainsKey(tradeType))
             {
@@ -179,7 +167,6 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="Option{Quantity}"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public Option<Quantity> GetHardLimitQuantity(Symbol symbol)
         {
             return this.positionSizeHardLimitsIndex.ContainsKey(symbol)
@@ -192,7 +179,6 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="tradeType">The trade type.</param>
         /// <returns>A <see cref="Percentage"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the trade type is null.</exception>
         public Percentage GetRiskPerTrade(TradeType tradeType)
         {
             return this.maxRiskPerTradeTypeIndex.ContainsKey(tradeType)

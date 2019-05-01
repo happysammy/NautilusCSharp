@@ -8,8 +8,9 @@
 
 namespace Nautilus.Messaging.Network
 {
+    using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a valid network port number.
@@ -23,9 +24,10 @@ namespace Nautilus.Messaging.Network
         /// Initializes a new instance of the <see cref="Port"/> class.
         /// </summary>
         /// <param name="portNumber">The port number.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [0, 65535].</exception>
         public Port(int portNumber)
         {
-            Precondition.NotOutOfRangeInt32(portNumber, nameof(portNumber), 0, 65535);
+            Precondition.NotOutOfRangeInt32(portNumber, 0, 65535, nameof(portNumber));
 
             this.Value = portNumber;
             this.valueString = portNumber.ToString();

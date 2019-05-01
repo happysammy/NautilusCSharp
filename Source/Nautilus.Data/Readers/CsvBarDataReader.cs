@@ -14,9 +14,9 @@ namespace Nautilus.Data.Readers
     using System.Linq;
     using CsvHelper;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
@@ -37,14 +37,11 @@ namespace Nautilus.Data.Readers
         /// <param name="barType">The symbol bar data.</param>
         /// <param name="dataProvider">The bar data provider.</param>
         /// <param name="decimals">The decimal precision for bars.</param>
-        /// <exception cref="Nautilus.Core.ValidationException">Throws if the validation fails.</exception>
         public CsvBarDataReader(
             BarType barType,
             IBarDataProvider dataProvider,
             int decimals)
         {
-            Precondition.NotNull(barType, nameof(barType));
-            Precondition.NotNull(dataProvider, nameof(dataProvider));
             Precondition.NotNegativeInt32(decimals, nameof(decimals));
 
             this.decimals = decimals;
@@ -97,8 +94,6 @@ namespace Nautilus.Data.Readers
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
-
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
             return readAllBarsQuery.IsSuccess
@@ -116,8 +111,6 @@ namespace Nautilus.Data.Readers
         [PerformanceOptimized]
         public QueryResult<BarDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
-
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
             if (readAllBarsQuery.IsFailure)
@@ -163,8 +156,6 @@ namespace Nautilus.Data.Readers
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
-
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
             if (readAllBarsQuery.IsFailure)
@@ -187,8 +178,6 @@ namespace Nautilus.Data.Readers
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public QueryResult<ZonedDateTime> GetLastBarTimestamp(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
-
             var lastBarQuery = this.GetLastBar(csvFile);
 
             return lastBarQuery.IsSuccess
@@ -198,8 +187,6 @@ namespace Nautilus.Data.Readers
 
         private QueryResult<BarDataFrame> ReadAllBarsFromCsv(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
-
             while (true)
             {
                 try
@@ -253,8 +240,6 @@ namespace Nautilus.Data.Readers
 
         private string BuildFilePathWildcard(IBarDataProvider barDataProvider)
         {
-            Debug.NotNull(barDataProvider, nameof(barDataProvider));
-
             // TODO: Temporary if to handle Dukascopy 'Hourly'.
             if (this.BarType.Specification.Resolution == Resolution.Hour)
             {

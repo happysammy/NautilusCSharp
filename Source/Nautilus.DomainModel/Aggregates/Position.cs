@@ -9,9 +9,9 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
@@ -35,8 +35,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="fromEntryOrderId">The position entry order identifier.</param>
         /// <param name="positionId">The position identifier.</param>
         /// <param name="timestamp">The position timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public Position(
             Symbol symbol,
             OrderId fromEntryOrderId,
@@ -46,11 +44,6 @@ namespace Nautilus.DomainModel.Aggregates
                   positionId,
                   timestamp)
         {
-            Precondition.NotNull(symbol, nameof(symbol));
-            Precondition.NotNull(fromEntryOrderId, nameof(fromEntryOrderId));
-            Precondition.NotNull(positionId, nameof(positionId));
-            Precondition.NotEqualTo(timestamp, nameof(timestamp), default(ZonedDateTime));
-
             this.Symbol = symbol;
             this.FromEntryOrderId = fromEntryOrderId;
             this.EntryTime = Option<ZonedDateTime?>.None();
@@ -92,11 +85,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="event">The position event.</param>
         /// <returns>A <see cref="CommandResult"/> result.</returns>
-        [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly", Justification = "Reviewed.")]
         public override CommandResult Apply(Event @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             switch (@event)
             {
                 case OrderFilled orderFilled:
@@ -112,8 +102,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderFilled @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             this.UpdatePosition(
                 @event.OrderSide,
                 @event.FilledQuantity.Value,
@@ -126,8 +114,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private CommandResult When(OrderPartiallyFilled @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             this.UpdatePosition(
                 @event.OrderSide,
                 @event.FilledQuantity.Value,
@@ -145,7 +131,6 @@ namespace Nautilus.DomainModel.Aggregates
             ZonedDateTime eventTime)
         {
             Debug.PositiveInt32(quantity, nameof(quantity));
-            Debug.NotNull(averagePrice, nameof(averagePrice));
             Debug.NotDefault(eventTime, nameof(eventTime));
 
             if (orderSide == OrderSide.BUY)

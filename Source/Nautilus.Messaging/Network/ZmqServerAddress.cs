@@ -9,7 +9,6 @@
 namespace Nautilus.Messaging.Network
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
 
     /// <summary>
     /// Represents a valid ZeroMQ server address.
@@ -24,9 +23,6 @@ namespace Nautilus.Messaging.Network
         /// <param name="port">The port.</param>
         public ZmqServerAddress(NetworkAddress host, Port port)
         {
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(port));
-
             this.Host = host;
             this.Port = port;
             this.Value = $"tcp://{host}:{port}";

@@ -13,8 +13,8 @@ namespace Nautilus.Redis
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Core;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
@@ -38,8 +38,6 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis clients manager.</param>
         public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
-
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
             this.cache = new Dictionary<Symbol, Instrument>();
@@ -79,8 +77,6 @@ namespace Nautilus.Redis
         /// <param name="symbol">The symbol to delete.</param>
         public void Delete(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentKey(symbol));
         }
 
@@ -118,7 +114,6 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
         {
-            Debug.NotNull(instrument, nameof(instrument));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var symbol = instrument.Symbol;

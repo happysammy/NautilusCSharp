@@ -46,8 +46,6 @@ namespace Nautilus.MsgPack
         /// <exception cref="InvalidOperationException">Throws if the event cannot be serialized.</exception>
         public byte[] Serialize(Event @event)
         {
-            Debug.NotNull(@event, nameof(@event));
-
             switch (@event)
             {
                 case OrderEvent orderEvent:
@@ -85,8 +83,6 @@ namespace Nautilus.MsgPack
         /// <exception cref="InvalidOperationException">Throws if the event cannot be deserialized.</exception>
         public Event Deserialize(byte[] eventBytes)
         {
-            Debug.NotNull(eventBytes, nameof(eventBytes));
-
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
 
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());

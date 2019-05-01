@@ -11,7 +11,6 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
@@ -34,9 +33,6 @@ namespace Nautilus.Data.Publishers
             LabelFactory.Create(nameof(TickPublisher)),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(publisher, nameof(publisher));
-
             this.publisher = publisher;
 
             // Event messages.
@@ -45,8 +41,6 @@ namespace Nautilus.Data.Publishers
 
         private void OnMessage(Tick message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.publisher.Publish(
                 message.Symbol.ToString().ToLower(),
                 message.ToChannelString());

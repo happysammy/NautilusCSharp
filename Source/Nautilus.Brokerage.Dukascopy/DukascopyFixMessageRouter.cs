@@ -8,10 +8,11 @@
 
 namespace Nautilus.Brokerage.Dukascopy
 {
+    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -38,6 +39,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="container">The componentry container.</param>
         /// <param name="instrumentData">The instrument data provider.</param>
         /// <param name="accountNumber">The FIX account number.</param>
+        /// <exception cref="ArgumentException">If the account number is empty or white space.</exception>
         public DukascopyFixMessageRouter(
             IComponentryContainer container,
             InstrumentDataProvider instrumentData,
@@ -47,7 +49,6 @@ namespace Nautilus.Brokerage.Dukascopy
             LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
             Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
@@ -116,8 +117,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.Execute(() =>
             {
                 var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
@@ -149,8 +148,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             this.Execute(() =>
             {
                 var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
@@ -189,8 +186,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="order">The order to submit.</param>
         public void SubmitOrder(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.Execute(() =>
             {
                 var message = NewOrderSingleFactory.Create(
@@ -211,8 +206,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            Debug.NotNull(atomicOrder, nameof(atomicOrder));
-
             this.Execute(() =>
             {
                 var brokerSymbol = this.instrumentData.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
@@ -247,9 +240,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            Debug.NotNull(order, nameof(order));
-            Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
-
             this.Execute(() =>
             {
                 var message = OrderCancelReplaceRequestFactory.Create(
@@ -273,8 +263,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
-            Debug.NotNull(order, nameof(order));
-
             this.Execute(() =>
             {
                 var message = OrderCancelRequestFactory.Create(

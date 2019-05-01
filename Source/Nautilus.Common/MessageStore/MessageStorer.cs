@@ -30,8 +30,6 @@ namespace Nautilus.Common.MessageStore
         /// <param name="store">The message store.</param>
         public MessageStorer(IMessageStore store)
         {
-            Precondition.NotNull(store, nameof(store));
-
             this.store = store;
 
             this.Receive<Envelope<Command>>(envelope => this.store.Store(envelope));
@@ -64,8 +62,6 @@ namespace Nautilus.Common.MessageStore
         private static MessagingDiagnosticsReport GetDiagnosticReport<T>(IReadOnlyCollection<Envelope<T>> envelopeList)
             where T : Message
         {
-            Debug.NotNull(envelopeList, nameof(envelopeList));
-
             var messageType = typeof(T).Name;
 
             var totalCount = envelopeList.Count;
@@ -129,8 +125,6 @@ namespace Nautilus.Common.MessageStore
 
         private static void PrintReportToConsole(MessagingDiagnosticsReport report)
         {
-            Debug.NotNull(report, nameof(report));
-
             Console.WriteLine();
             Console.WriteLine($"[{report.MessageType} Messages]");
             Console.WriteLine($"FastestDeliveryTime = {Math.Round(report.FastestDeliveryTime / 10000, 2)}ms");

@@ -9,8 +9,8 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Primitives;
-    using Nautilus.Core;
 
     /// <summary>
     /// Represents a percentage value.
@@ -55,8 +55,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Percentage"/>.</returns>
         public Percentage Add(Percentage other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return new Percentage(this.Value + other.Value);
         }
 
@@ -68,7 +66,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Percentage"/>.</returns>
         public Percentage Subtract(Percentage other)
         {
-            Debug.NotNull(other, nameof(other));
             Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Percentage(this.Value - other.Value);

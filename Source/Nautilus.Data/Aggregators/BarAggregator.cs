@@ -17,7 +17,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Enums;
@@ -32,11 +32,8 @@ namespace Nautilus.Data.Aggregators
     public sealed class BarAggregator : ActorComponentBase
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
-
         private readonly Symbol symbol;
         private readonly SpreadAnalyzer spreadAnalyzer;
-
-        // Concrete dictionary for performance reasons.
         private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
 
         private Tick? lastTick;
@@ -48,7 +45,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="container">The setup container.</param>
         /// <param name="symbol">The symbol.</param>
         /// <param name="isMarketOpen">The is market open flag.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
         public BarAggregator(
             IComponentryContainer container,
             Symbol symbol,
@@ -60,9 +56,6 @@ namespace Nautilus.Data.Aggregators
                 symbol),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(symbol, nameof(symbol));
-
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
@@ -87,8 +80,7 @@ namespace Nautilus.Data.Aggregators
         /// <exception cref="InvalidOperationException">The quote type is not recognized.</exception>
         private void OnMessage(Tick tick)
         {
-            Debug.NotNull(tick, nameof(tick));
-            Debug.EqualTo(tick.Symbol, nameof(tick.Symbol), this.symbol);
+            Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
 
             foreach (var builder in this.barBuilders)
             {
@@ -124,8 +116,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(CloseBar message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var barSpec = message.BarSpecification;
 
             if (!this.isMarketOpen)
@@ -177,8 +167,6 @@ namespace Nautilus.Data.Aggregators
         /// <exception cref="InvalidOperationException">If the resolution is for tick bars.</exception>
         private void OnMessage(Subscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var barSpec = message.DataType.Specification;
 
             if (barSpec.Resolution == Resolution.Tick)
@@ -201,8 +189,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             var barType = message.DataType.Specification;
 
             if (this.barBuilders.ContainsKey(barType))

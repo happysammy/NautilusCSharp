@@ -13,7 +13,6 @@ namespace Nautilus.Data.Integrity.Checkers
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -32,9 +31,6 @@ namespace Nautilus.Data.Integrity.Checkers
         /// <returns>A result and anomaly list of <see cref="string"/>(s).</returns>
         public static QueryResult<List<string>> CheckBars(BarType barType, Bar[] bars)
         {
-            Precondition.NotNull(barType, nameof(barType));
-            Precondition.NotNull(bars, nameof(bars));
-
             var anomalyList = new List<string>();
 
             if (bars.Length == 0)

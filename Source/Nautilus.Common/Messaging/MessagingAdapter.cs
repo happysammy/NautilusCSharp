@@ -35,10 +35,6 @@ namespace Nautilus.Common.Messaging
             IEndpoint eventBus,
             IEndpoint documentBus)
         {
-            Precondition.NotNull(commandBus, nameof(commandBus));
-            Precondition.NotNull(eventBus, nameof(eventBus));
-            Precondition.NotNull(documentBus, nameof(documentBus));
-
             this.commandBus = commandBus;
             this.eventBus = eventBus;
             this.documentBus = documentBus;
@@ -50,8 +46,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.commandBus.Send(message);
             this.eventBus.Send(message);
             this.documentBus.Send(message);
@@ -68,10 +62,6 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
-            Debug.NotNull(receiver, nameof(receiver));
-            Debug.NotNull(message, nameof(message));
-            Debug.NotNull(sender, nameof(sender));
-
             switch (message as Message)
             {
                     case Command commandMessage:

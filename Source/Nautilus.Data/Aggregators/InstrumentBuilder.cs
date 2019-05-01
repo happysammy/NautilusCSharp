@@ -10,7 +10,7 @@ namespace Nautilus.Data.Aggregators
 {
     using System.Collections.Generic;
     using System.Globalization;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -30,8 +30,6 @@ namespace Nautilus.Data.Aggregators
         /// </param>
         public InstrumentBuilder(Instrument startingInstrument)
         {
-            Precondition.NotNull(startingInstrument, nameof(startingInstrument));
-
             this.Symbol = startingInstrument.Symbol;
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
             this.QuoteCurrency = startingInstrument.QuoteCurrency;
@@ -104,8 +102,6 @@ namespace Nautilus.Data.Aggregators
         /// <returns>A <see cref="InstrumentBuilder"/>.</returns>
         public InstrumentBuilder Update(Instrument updateInstrument)
         {
-            Precondition.NotNull(updateInstrument, nameof(updateInstrument));
-
             if (this.TickValue != updateInstrument.TickValue)
             {
                 this.AddChange(

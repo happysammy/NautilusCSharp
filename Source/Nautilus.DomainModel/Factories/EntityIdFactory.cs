@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Factories
 {
     using System.Globalization;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -30,7 +30,6 @@ namespace Nautilus.DomainModel.Factories
         public static OrderId Order(ZonedDateTime time, Symbol symbol, int orderCount)
         {
             Debug.NotDefault(time, nameof(time));
-            Debug.NotNull(symbol, nameof(symbol));
             Debug.PositiveInt32(orderCount, nameof(orderCount));
 
             return new OrderId($"{GetTimeString(time)}_{symbol.Code}_{orderCount}");
@@ -44,7 +43,6 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>A <see cref="OrderId"/>.</returns>
         public static OrderId ModifiedOrder(OrderId orderId, int orderIdCount)
         {
-            Debug.NotNull(orderId, nameof(orderId));
             Debug.PositiveInt32(orderIdCount, nameof(orderIdCount));
 
             return new OrderId($"{orderId}_R{orderIdCount}");

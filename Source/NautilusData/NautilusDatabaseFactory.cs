@@ -21,8 +21,8 @@ namespace NautilusData
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
@@ -58,9 +58,8 @@ namespace NautilusData
             int barRollingWindow)
         {
             Precondition.NotEmptyOrWhiteSpace(compressionCodec, nameof(compressionCodec));
-            Precondition.NotNull(fixConfig, nameof(fixConfig));
-            Precondition.NotNullOrEmpty(symbols, nameof(symbols));
-            Precondition.NotNullOrEmpty(resolutions, nameof(resolutions));
+            Precondition.NotEmpty(symbols, nameof(symbols));
+            Precondition.NotEmpty(resolutions, nameof(resolutions));
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             var loggingAdapter = new SerilogLogger(logLevel);

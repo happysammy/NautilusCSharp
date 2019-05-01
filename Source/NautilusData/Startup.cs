@@ -18,7 +18,6 @@ namespace NautilusData
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Newtonsoft.Json.Linq;
@@ -64,8 +63,6 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            Precondition.NotNull(services, nameof(services));
-
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
             var logLevel = this.Environment.IsDevelopment()
@@ -132,16 +129,11 @@ namespace NautilusData
         /// <param name="app">The application builder.</param>
         /// <param name="appLifetime">The application lifetime.</param>
         /// <param name="env">The hosting environment.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public void Configure(
             IApplicationBuilder app,
             IApplicationLifetime appLifetime,
             IHostingEnvironment env)
         {
-            Precondition.NotNull(app, nameof(app));
-            Precondition.NotNull(appLifetime, nameof(appLifetime));
-            Precondition.NotNull(env, nameof(env));
-
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
             if (env.IsDevelopment())

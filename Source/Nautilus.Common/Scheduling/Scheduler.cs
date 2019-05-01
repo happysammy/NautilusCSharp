@@ -13,7 +13,6 @@ namespace Nautilus.Common.Scheduling
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Quartz;
     using Quartz.Impl;
@@ -36,8 +35,6 @@ namespace Nautilus.Common.Scheduling
                 LabelFactory.Create(nameof(Scheduler)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-
             var properties = new NameValueCollection
             {
                 { "quartz.threadPool.threadCount", "10" },
@@ -71,8 +68,6 @@ namespace Nautilus.Common.Scheduling
 
         private void OnMessage(CreateJob message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 this.quartzScheduler.ScheduleJob(message.JobDetail, message.Trigger);
@@ -83,8 +78,6 @@ namespace Nautilus.Common.Scheduling
 
         private void OnMessage(PauseJob message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 var paused = this.quartzScheduler.PauseJob(message.JobKey);
@@ -101,8 +94,6 @@ namespace Nautilus.Common.Scheduling
 
         private void OnMessage(ResumeJob message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 var resume = this.quartzScheduler.ResumeJob(message.JobKey);
@@ -119,8 +110,6 @@ namespace Nautilus.Common.Scheduling
 
         private void OnMessage(RemoveJob message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Execute(() =>
             {
                 var deleted = this.quartzScheduler.DeleteJob(message.JobKey);

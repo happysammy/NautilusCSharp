@@ -11,8 +11,8 @@ namespace Nautilus.Data.Keys
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -72,7 +72,6 @@ namespace Nautilus.Data.Keys
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Debug.NotNull(symbol, nameof(symbol));
             Debug.NotDefault(fromDateTime, nameof(fromDateTime));
             Debug.NotDefault(toDateTime, nameof(toDateTime));
             Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
@@ -89,8 +88,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetTicksWildcardString(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             return TicksConst +
                    $"{Separator}{symbol.Venue.ToString().ToLower()}" +
                    $"{Separator}{symbol.Code.ToLower()}" + WildcardConst;
@@ -110,7 +107,6 @@ namespace Nautilus.Data.Keys
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
         {
-            Debug.NotNull(barType, nameof(barType));
             Debug.NotDefault(fromDateTime, nameof(fromDateTime));
             Debug.NotDefault(toDateTime, nameof(toDateTime));
             Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
@@ -136,8 +132,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetBarTypeWildcardString(BarType barType)
         {
-            Debug.NotNull(barType, nameof(barType));
-
             return BarsConst +
                    $"{Separator}{barType.Symbol.Venue.ToString().ToLower()}" +
                    $"{Separator}{barType.Symbol.Code.ToLower()}" +
@@ -152,8 +146,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetInstrumentKey(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             return InstrumentsConst + Separator + symbol.ToString().ToLower();
         }
     }

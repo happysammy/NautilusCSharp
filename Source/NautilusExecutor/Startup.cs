@@ -16,7 +16,6 @@ namespace NautilusExecutor
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Messaging.Network;
@@ -37,9 +36,6 @@ namespace NautilusExecutor
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            Precondition.NotNull(configuration, nameof(configuration));
-            Precondition.NotNull(environment, nameof(environment));
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("config.json");
@@ -66,8 +62,6 @@ namespace NautilusExecutor
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            Precondition.NotNull(services, nameof(services));
-
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
             var host = this.Environment.IsDevelopment()
@@ -121,16 +115,11 @@ namespace NautilusExecutor
         /// <param name="app">The application builder.</param>
         /// <param name="appLifetime">The application lifetime.</param>
         /// <param name="env">The hosting environment.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public void Configure(
             IApplicationBuilder app,
             IApplicationLifetime appLifetime,
             IHostingEnvironment env)
         {
-            Precondition.NotNull(app, nameof(app));
-            Precondition.NotNull(appLifetime, nameof(appLifetime));
-            Precondition.NotNull(env, nameof(env));
-
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
             if (env.IsDevelopment())

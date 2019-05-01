@@ -27,15 +27,12 @@ namespace Nautilus.Data.Messages.Documents
         /// <param name="lastTimestampQuery">The last timestamp query result.</param>
         /// <param name="identifier">The identifier.</param>
         /// <param name="timestamp">The timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         public DataStatusResponse(
             QueryResult<ZonedDateTime> lastTimestampQuery,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(lastTimestampQuery, nameof(lastTimestampQuery));
-
             this.LastTimestampQuery = lastTimestampQuery;
         }
 

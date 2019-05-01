@@ -12,7 +12,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
 
@@ -39,10 +38,6 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(gateway, nameof(gateway));
-
             this.gateway = gateway;
 
             // Command messages.
@@ -54,8 +49,6 @@ namespace Nautilus.Execution
 
         private void OnMessage(CollateralInquiry message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.gateway.CollateralInquiry();
 
             this.Log.Debug($"Routing {message} => {this.gateway.Broker}");
@@ -63,22 +56,16 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.gateway.SubmitOrder(message.Order);
         }
 
         private void OnMessage(CancelOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.gateway.CancelOrder(message.Order);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
 
             this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
@@ -86,8 +73,6 @@ namespace Nautilus.Execution
 
         private void RouteOrder(AtomicOrder atomicOrder)
         {
-            Debug.NotNull(atomicOrder, nameof(atomicOrder));
-
             this.gateway.SubmitOrder(atomicOrder);
         }
     }

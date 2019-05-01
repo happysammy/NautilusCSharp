@@ -9,7 +9,7 @@
 namespace Nautilus.DomainModel.Entities
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -215,7 +215,6 @@ namespace Nautilus.DomainModel.Entities
         /// Returns the hash code of the <see cref="Instrument"/>.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
-        // ReSharper disable once NonReadonlyMemberInGetHashCode
         public override int GetHashCode() => this.Symbol.GetHashCode();
 
         /// <summary>

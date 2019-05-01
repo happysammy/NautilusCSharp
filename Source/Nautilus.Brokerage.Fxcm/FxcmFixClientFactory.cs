@@ -9,7 +9,6 @@
 namespace Nautilus.Brokerage.FXCM
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Fix;
 
     /// <summary>
@@ -31,10 +30,6 @@ namespace Nautilus.Brokerage.FXCM
             FixConfiguration config,
             InstrumentDataProvider instrumentData)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(config, nameof(config));
-
             return new FixClient(
                 container,
                 config,

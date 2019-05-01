@@ -12,7 +12,7 @@ namespace Nautilus.Common
     using System.Reflection;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Provides a means of checking dependency versions and outputting to the log at system initialization.
@@ -26,12 +26,11 @@ namespace Nautilus.Common
         /// <param name="serviceTitle">The service title string.</param>
         public static void Run(ILoggingAdapter log, string serviceTitle)
         {
-            Precondition.NotNull(log, nameof(log));
             Precondition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
             log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
             log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(NautilusService.Core, "Copyright (c) 2015-2018 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information(NautilusService.Core, "Copyright (c) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
             log.Information(NautilusService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(NautilusService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");

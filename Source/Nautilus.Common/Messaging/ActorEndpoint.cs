@@ -25,8 +25,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="actorRef">The actor address.</param>
         public ActorEndpoint(IActorRef actorRef)
         {
-            Precondition.NotNull(actorRef, nameof(actorRef));
-
             this.actorRef = actorRef;
         }
 
@@ -36,8 +34,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message to send.</param>
         public void Send(object message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.actorRef.Tell(message);
         }
 
@@ -49,8 +45,6 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Envelope<T> envelope)
             where T : Message
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             this.actorRef.Tell(envelope);
         }
     }

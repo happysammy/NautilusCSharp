@@ -13,6 +13,7 @@ namespace Nautilus.Data.Aggregators
     using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -30,8 +31,6 @@ namespace Nautilus.Data.Aggregators
         /// <param name="venue">The quote providers venue.</param>
         public QuoteProvider(Venue venue)
         {
-            Debug.NotDefault(venue, nameof(venue));
-
             this.Venue = venue;
             this.ticks = new ConcurrentDictionary<Symbol, Tick>();
             this.symbolCodes = new ConcurrentDictionary<string, Symbol>();
@@ -46,11 +45,9 @@ namespace Nautilus.Data.Aggregators
         /// Updates the quote provider with the given quote.
         /// </summary>
         /// <param name="tick">The tick.</param>
-        /// <exception cref="ValidationException">Throws if the quote is null.</exception>
         public void Update(Tick tick)
         {
-            Debug.NotNull(tick, nameof(tick));
-            Debug.EqualTo(tick.Symbol.Venue, nameof(tick.Symbol), this.Venue);
+            Debug.EqualTo(tick.Symbol.Venue, this.Venue, nameof(tick.Symbol));
 
             if (!this.ticks.ContainsKey(tick.Symbol))
             {
@@ -68,11 +65,8 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         /// <param name="symbol">The quote symbol.</param>
         /// <returns>A <see cref="Tick"/>.</returns>
-        /// <exception cref="ValidationException">Throws if the symbol is null.</exception>
         public Option<Tick> GetLastTick(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             return this.ticks.ContainsKey(symbol)
                  ? this.ticks[symbol]
                  : Option<Tick>.None();
@@ -93,15 +87,10 @@ namespace Nautilus.Data.Aggregators
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency"> The quote currency.</param>
         /// <returns>A <see cref="Option{Decimal}"/>.</returns>
-        /// <exception cref="ValidationException">Throws if either currency is the default value
-        /// (Unknown).</exception>
         public Option<decimal?> GetExchangeRate(
             CurrencyCode accountCurrency,
             CurrencyCode quoteCurrency)
         {
-            Debug.NotDefault(accountCurrency, nameof(accountCurrency));
-            Debug.NotDefault(quoteCurrency, nameof(quoteCurrency));
-
             if (accountCurrency.Equals(quoteCurrency))
             {
                 return 1;

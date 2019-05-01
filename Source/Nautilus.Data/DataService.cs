@@ -17,7 +17,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Quartz;
@@ -49,10 +48,6 @@ namespace Nautilus.Data
                 setupContainer,
                 messagingAdapter)
         {
-            Precondition.NotNull(setupContainer, nameof(setupContainer));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(gateway, nameof(gateway));
-
             this.gateway = gateway;
             this.updateInstruments = updateInstruments;
 
@@ -149,22 +144,16 @@ namespace Nautilus.Data
 
         private void OnMessage(Subscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Send(DataServiceAddress.DataCollectionManager, message);
         }
 
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Send(DataServiceAddress.DataCollectionManager, message);
         }
 
         private void OnMessage(FixSessionConnected message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Log.Information($"{message.SessionId} session is connected.");
 
             if (this.updateInstruments)
@@ -177,8 +166,6 @@ namespace Nautilus.Data
 
         private void OnMessage(FixSessionDisconnected message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
         }
     }

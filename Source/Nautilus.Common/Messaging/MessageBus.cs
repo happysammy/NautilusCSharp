@@ -35,14 +35,11 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="messageStore">The message store endpoint.</param>
-        /// <exception cref="ValidationException">Throws if any argument is null.</exception>
+
         public MessageBus(
             IComponentryContainer container,
             IEndpoint messageStore)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messageStore, nameof(messageStore));
-
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStore = messageStore;
             this.commandHandler = new CommandHandler(this.log);
@@ -66,7 +63,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="message">The message.</param>
         protected override void Unhandled(object message)
         {
-            // ReSharper disable once ConvertIfStatementToSwitchStatement (if else is clearer).
             if (message is null)
             {
                 message = "NULL";
@@ -81,8 +77,6 @@ namespace Nautilus.Common.Messaging
 
         private void OnMessage(InitializeSwitchboard message)
         {
-            Debug.NotNull(message.Switchboard, nameof(message.Switchboard));
-
             this.commandHandler.Execute(() =>
             {
                 this.switchboard = message.Switchboard;
@@ -93,8 +87,6 @@ namespace Nautilus.Common.Messaging
 
         private void LogEnvelope(Envelope<T> envelope)
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             this.commandHandler.Execute(() =>
             {
                 this.messageCount++;
@@ -106,8 +98,6 @@ namespace Nautilus.Common.Messaging
 
         private void OnReceive(Envelope<T> envelope)
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             this.commandHandler.Execute(() =>
             {
                 this.switchboard.SendToReceiver(envelope);

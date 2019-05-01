@@ -10,7 +10,7 @@ namespace Nautilus.DomainModel.Events
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -30,8 +30,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="rejectedReason">The event order rejected reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null, or if any
-        /// struct argument is the default value.</exception>
         public OrderRejected(
             Symbol symbol,
             OrderId orderId,
@@ -45,8 +43,6 @@ namespace Nautilus.DomainModel.Events
                   eventId,
                   eventTimestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(orderId, nameof(orderId));
             Debug.NotDefault(rejectedTime, nameof(rejectedTime));
             Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
             Debug.NotDefault(eventId, nameof(eventId));
