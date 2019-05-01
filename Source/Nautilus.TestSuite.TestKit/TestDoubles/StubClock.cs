@@ -44,8 +44,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public void FreezeSetTime(ZonedDateTime dateTime)
         {
-            Debug.NotDefault(dateTime, nameof(dateTime));
-
             this.isTimeFrozen = true;
             this.frozenTime = dateTime;
         }
