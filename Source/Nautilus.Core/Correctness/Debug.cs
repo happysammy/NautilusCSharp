@@ -13,30 +13,30 @@ namespace Nautilus.Core.Correctness
     using System.Diagnostics;
 
     /// <summary>
-    /// Provides various assertion checking methods which are executed in debug configuration.
-    /// If the check passes then the method does nothing. If the check fails an AssertionFailed is
-    /// raised with a message.
+    /// Provides assertion checking methods which are executed in debug configuration.
+    /// If the check passes then the method does nothing. If the check fails a type of
+    /// <see cref="ArgumentException"/> is thrown with a message.
     /// </summary>
     public static class Debug
     {
         /// <summary>
         /// The check passes if the predicate is true.
         /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="description">The predicate description.</param>
+        /// <param name="predicate">The predicate under check.</param>
+        /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the predicate is false.</exception>
         [Conditional("DEBUG")]
-        public static void True(bool predicate, string description)
+        public static void True(bool predicate, string paramName)
         {
-            Precondition.True(predicate, description);
+            Precondition.True(predicate, paramName);
         }
 
         /// <summary>
         /// The check passes if the condition is false, or both the condition and predicate are
         /// true.
         /// </summary>
-        /// <param name="condition">The condition.</param>
-        /// <param name="predicate">The predicate.</param>
+        /// <param name="condition">The condition under check.</param>
+        /// <param name="predicate">The predicate under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the condition is true and the predicate is false.</exception>
         [Conditional("DEBUG")]
@@ -48,7 +48,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the argument is not null.
         /// </summary>
-        /// <param name="argument">The argument.</param>
+        /// <param name="argument">The argument under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The arguments type.</typeparam>
         /// <exception cref="ArgumentNullException">If the argument is null.</exception>
@@ -59,9 +59,9 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="string"/> argument is not null.
+        /// The check passes if the argument is not null, empty or whitespace.
         /// </summary>
-        /// <param name="argument">The string argument.</param>
+        /// <param name="argument">The argument under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the string argument is null, empty or white space.</exception>
         [Conditional("DEBUG")]
@@ -74,7 +74,7 @@ namespace Nautilus.Core.Correctness
         /// The check passes if the struct argument is not the default value.
         /// </summary>
         /// <typeparam name="T">The argument type.</typeparam>
-        /// <param name="argument">The argument.</param>
+        /// <param name="argument">The argument under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the argument is the default value.</exception>
         [Conditional("DEBUG")]
@@ -85,11 +85,37 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> is not null, or empty.
+        /// The check passes if the argument is not equal to the notToEqual object.
         /// </summary>
-        /// <param name="collection">The collection being checked.</param>
+        /// <param name="argument">The argument under check.</param>
+        /// <param name="notToEqual">The object not to be equal to.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <typeparam name="T">The type of collection.</typeparam>
+        /// <exception cref="ArgumentException">If the argument equals notToEqual.</exception>
+        [Conditional("DEBUG")]
+        public static void NotEqualTo(object argument, object notToEqual, string paramName)
+        {
+            Precondition.NotEqualTo(argument, notToEqual, paramName);
+        }
+
+        /// <summary>
+        /// The check passes if the argument is equal to the toEqual object.
+        /// </summary>
+        /// <param name="argument">The argument under check.</param>
+        /// <param name="toEqual">The object to be equal to.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentException">If the argument does not equal toEqual.</exception>
+        [Conditional("DEBUG")]
+        public static void EqualTo(object argument, object toEqual, string paramName)
+        {
+            Precondition.EqualTo(argument, toEqual, paramName);
+        }
+
+        /// <summary>
+        /// The check passes if the <see cref="ICollection{T}"/> is not empty.
+        /// </summary>
+        /// <typeparam name="T">The collection type.</typeparam>
+        /// <param name="collection">The collection under check.</param>
+        /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
         [Conditional("DEBUG")]
         public static void NotEmpty<T>(ICollection<T> collection, string paramName)
@@ -98,26 +124,53 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> is not null, or empty.
+        /// The check passes if the <see cref="ICollection{T}"/> is empty.
         /// </summary>
-        /// <param name="dictionary">The list being checked.</param>
+        /// <typeparam name="T">The collection type.</typeparam>
+        /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <typeparam name="TK">The type of key.</typeparam>
-        /// <typeparam name="TV">The type of value.</typeparam>
+        /// <exception cref="ArgumentException">If the collection is not empty.</exception>
+        [Conditional("DEBUG")]
+        public static void Empty<T>(ICollection<T> collection, string paramName)
+        {
+            Precondition.Empty(collection, paramName);
+        }
+
+        /// <summary>
+        /// The check passes if the <see cref="Dictionary{TKey,TValue}"/> is not empty.
+        /// </summary>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
+        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
         [Conditional("DEBUG")]
-        public static void NotEmpty<TK, TV>(Dictionary<TK, TV> dictionary, string paramName)
+        public static void NotEmpty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
         {
             Precondition.NotEmpty(dictionary, paramName);
         }
 
         /// <summary>
+        /// The check passes if the <see cref="Dictionary{TKey,TValue}"/> is empty.
+        /// </summary>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
+        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
+        [Conditional("DEBUG")]
+        public static void Empty<TKey, TValue>(Dictionary<TKey, TValue> dictionary, string paramName)
+        {
+            Precondition.Empty(dictionary, paramName);
+        }
+
+        /// <summary>
         /// The check passes if the <see cref="ICollection{T}"/> contains the given element.
         /// </summary>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <param name="element">The element to contain.</param>
-        /// <param name="collection">The collection being checked.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <typeparam name="T">The collection type.</typeparam>
+        /// <param name="element">The element for the collection to contain.</param>
+        /// <param name="collection">The collection under check.</param>
+        /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
@@ -129,10 +182,10 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the <see cref="ICollection{T}"/> contains the given element.
         /// </summary>
-        /// <typeparam name="T">The type of collection.</typeparam>
-        /// <param name="element">The element to contain.</param>
-        /// <param name="collection">The collection being checked.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <typeparam name="T">The collection type.</typeparam>
+        /// <param name="element">The element for the collection not to contain.</param>
+        /// <param name="collection">The collection under check.</param>
+        /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
@@ -142,69 +195,41 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> contains the given
-        /// key.
+        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> contains the given key.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="dictionary">The dictionary.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
+        /// <param name="key">The key for the dictionary to contain.</param>
+        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
-        /// <typeparam name="T1">The type of the keys.</typeparam>
-        /// <typeparam name="T2">The type of the values.</typeparam>
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
-        public static void KeyIn<T1, T2>(T1 key, Dictionary<T1, T2> dictionary, string paramName, string dictName)
+        public static void KeyIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             Precondition.KeyIn(key, dictionary, paramName, dictName);
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> contains the given
-        /// key.
+        /// The check passes if the <see cref="IDictionary{TKey,TValue}"/> does not contain the given key.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="dictionary">The dictionary.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
+        /// <param name="key">The key for the dictionary not to contain.</param>
+        /// <param name="dictionary">The dictionary under check.</param>
+        /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
-        /// <typeparam name="T1">The type of the keys.</typeparam>
-        /// <typeparam name="T2">The type of the values.</typeparam>
-        //// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
+        /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
         [Conditional("DEBUG")]
-        public static void KeyNotIn<T1, T2>(T1 key, Dictionary<T1, T2> dictionary, string paramName, string dictName)
+        public static void KeyNotIn<TKey, TValue>(TKey key, Dictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             Precondition.KeyNotIn(key, dictionary, paramName, dictName);
         }
 
         /// <summary>
-        /// The check passes if the object is not equal to the other object.
-        /// </summary>
-        /// <param name="obj">The input object.</param>
-        /// <param name="objNotToEqual">The other object not to equal.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the objects are equal.</exception>
-        [Conditional("DEBUG")]
-        public static void NotEqualTo(object obj, object objNotToEqual, string paramName)
-        {
-            Precondition.NotEqualTo(obj, objNotToEqual, paramName);
-        }
-
-        /// <summary>
-        /// The check passes if the object is equal to the other object.
-        /// </summary>
-        /// <param name="obj">The input object.</param>
-        /// <param name="objToEqual">The other object to be equal to.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the objects are not equal.</exception>
-        [Conditional("DEBUG")]
-        public static void EqualTo(object obj, object objToEqual, string paramName)
-        {
-            Precondition.NotEqualTo(obj, objToEqual, paramName);
-        }
-
-        /// <summary>
         /// The check passes if the value is greater than zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         [Conditional("DEBUG")]
@@ -216,7 +241,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         [Conditional("DEBUG")]
@@ -228,7 +253,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         [Conditional("DEBUG")]
@@ -240,7 +265,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         [Conditional("DEBUG")]
@@ -252,7 +277,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than or equal to zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value less than zero.</exception>
         [Conditional("DEBUG")]
@@ -264,7 +289,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than or equal to zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value less than zero.</exception>
         [Conditional("DEBUG")]
@@ -276,7 +301,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than or equal to zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value less than zero.</exception>
         [Conditional("DEBUG")]
@@ -288,7 +313,7 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the value is greater than or equal to zero.
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
+        /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the value less than zero.</exception>
         [Conditional("DEBUG")]
@@ -298,13 +323,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range inclusive.
+        /// The check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="lowerBound">The range lower bound.</param>
-        /// <param name="upperBound">The range upper bound.</param>
+        /// <param name="value">The value under check.</param>
+        /// <param name="lowerBound">The range lower bound (inclusive).</param>
+        /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         public static void NotOutOfRangeInt32(
             int value,
@@ -316,13 +341,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range inclusive.
+        /// The check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="lowerBound">The range lower bound.</param>
-        /// <param name="upperBound">The range upper bound.</param>
+        /// <param name="value">The value under check.</param>
+        /// <param name="lowerBound">The range lower bound (inclusive).</param>
+        /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         public static void NotOutOfRangeInt64(
             long value,
@@ -334,13 +359,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range inclusive.
+        /// The check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="lowerBound">The range lower bound.</param>
-        /// <param name="upperBound">The range upper bound.</param>
+        /// <param name="value">The value under check.</param>
+        /// <param name="lowerBound">The range lower bound (inclusive).</param>
+        /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         public static void NotOutOfRangeDouble(
             double value,
@@ -352,13 +377,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range inclusive.
+        /// The check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
-        /// <param name="value">The value to be checked.</param>
-        /// <param name="lowerBound">The range lower bound.</param>
-        /// <param name="upperBound">The range upper bound.</param>
+        /// <param name="value">The value under check.</param>
+        /// <param name="lowerBound">The range lower bound (inclusive).</param>
+        /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
         [Conditional("DEBUG")]
         public static void NotOutOfRangeDecimal(
             decimal value,
