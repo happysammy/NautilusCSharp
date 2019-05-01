@@ -90,7 +90,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             Option<TestClass?> option = null;
 
             // Act
-            Assert.Throws<ValidationException>(() => option.Value);
+            Assert.Throws<InvalidOperationException>(() => option.Value);
         }
 
         [Fact]
