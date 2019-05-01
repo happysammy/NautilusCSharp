@@ -9,9 +9,9 @@
 namespace Nautilus.Core.Primitives
 {
     using System;
+    using System.Diagnostics;
     using System.Globalization;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// The base class for all primitive numbers based on a decimal.
@@ -43,9 +43,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator +(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value + right.Value;
         }
 
@@ -57,8 +54,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator +(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left + right.Value;
         }
 
@@ -70,8 +65,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator +(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value + right;
         }
 
@@ -83,9 +76,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator -(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value - right.Value;
         }
 
@@ -97,8 +87,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator -(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left - right.Value;
         }
 
@@ -110,8 +98,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator -(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value - right;
         }
 
@@ -123,9 +109,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator *(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value * right.Value;
         }
 
@@ -137,8 +120,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator *(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left * right.Value;
         }
 
@@ -150,8 +131,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator *(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value * right;
         }
 
@@ -163,9 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-            Debug.PositiveDecimal(right.Value, nameof(right));
+            Debug.Assert(right.Value != decimal.Zero, "The right value cannot be zero.");
 
             return left.Value / right.Value;
         }
@@ -178,8 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-            Debug.PositiveDecimal(right.Value, nameof(right));
+            Debug.Assert(right.Value != decimal.Zero, "The right value cannot be zero.");
 
             return left / right.Value;
         }
@@ -192,8 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.PositiveDecimal(right, nameof(right));
+            Debug.Assert(right != decimal.Zero, "The right value cannot be zero.");
 
             return left.Value / right;
         }
@@ -206,9 +181,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value > right.Value;
         }
 
@@ -220,8 +192,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left > right.Value;
         }
 
@@ -233,8 +203,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value > right;
         }
 
@@ -246,9 +214,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >=(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value >= right.Value;
         }
 
@@ -260,8 +225,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >=(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left >= right.Value;
         }
 
@@ -273,8 +236,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator >=(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value >= right;
         }
 
@@ -286,9 +247,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value < right.Value;
         }
 
@@ -300,8 +258,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left < right.Value;
         }
 
@@ -313,8 +269,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value < right;
         }
 
@@ -326,9 +280,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <=(DecimalNumber left, DecimalNumber right)
         {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
             return left.Value <= right.Value;
         }
 
@@ -340,8 +291,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <=(decimal left, DecimalNumber right)
         {
-            Debug.NotNull(right, nameof(right));
-
             return left <= right.Value;
         }
 
@@ -353,8 +302,6 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator <=(DecimalNumber left, decimal right)
         {
-            Debug.NotNull(left, nameof(left));
-
             return left.Value <= right;
         }
 
@@ -364,9 +311,7 @@ namespace Nautilus.Core.Primitives
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator ==(
-            [CanBeNull] DecimalNumber left,
-            [CanBeNull] DecimalNumber right)
+        public static bool operator ==(DecimalNumber left, DecimalNumber right)
         {
             if (left is null && right is null)
             {
@@ -387,9 +332,7 @@ namespace Nautilus.Core.Primitives
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator !=(
-            [CanBeNull] DecimalNumber left,
-            [CanBeNull] DecimalNumber right) => !(left == right);
+        public static bool operator !=(DecimalNumber left, DecimalNumber right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal
@@ -397,7 +340,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as DecimalNumber);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
@@ -405,10 +348,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals([CanBeNull] DecimalNumber other)
-        {
-            return other != null && this.Value.Equals(other.Value);
-        }
+        public bool Equals(DecimalNumber other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the
@@ -424,12 +364,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other number.</param>
         /// <returns>A <see cref="int"/>.</returns>
-        public int CompareTo(DecimalNumber other)
-        {
-            Debug.NotNull(other, nameof(other));
-
-            return this.Value.CompareTo(other.Value);
-        }
+        public int CompareTo(DecimalNumber other) => this.Value.CompareTo(other.Value);
 
         /// <summary>
         /// Returns a value which indicates the relative order of the <see cref="decimal"/>s

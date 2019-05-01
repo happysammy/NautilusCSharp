@@ -24,7 +24,7 @@ namespace Nautilus.Fix
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         public static string Remove(string orderId)
         {
-            Debug.NotNull(orderId, nameof(orderId));
+            Debug.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);

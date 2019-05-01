@@ -54,11 +54,11 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(gateway, nameof(gateway));
-            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(gateway, nameof(gateway));
+            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             this.gateway = gateway;
 

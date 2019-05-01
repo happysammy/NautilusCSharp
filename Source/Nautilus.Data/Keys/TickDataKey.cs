@@ -10,7 +10,6 @@ namespace Nautilus.Data.Keys
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -25,12 +24,8 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="symbol">The tick symbol.</param>
         /// <param name="dateKey">The date key the key is based on.</param>
-        /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
         public TickDataKey(Symbol symbol, DateKey dateKey)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotDefault(dateKey, nameof(dateKey));
-
             this.Symbol = symbol;
             this.DateKey = dateKey;
         }
@@ -50,10 +45,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            return other is TickDataKey key && this.Equals(key);
-        }
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="TickDataKey"/> is equal to the given
@@ -63,7 +55,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(TickDataKey other)
         {
-            // Do not add null check (causes error).
             return this.Symbol.Equals(other.Symbol) &&
                    this.DateKey.Equals(other.DateKey);
         }

@@ -20,6 +20,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Core;
     using Address = Nautilus.Common.Messaging.Address;
 
+#pragma warning disable 8618
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -64,7 +65,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 { ServiceAddress.Execution, mockEndpoint },
             };
 
-            var switchboard = new Switchboard(addresses);
+            var switchboard = Switchboard.Create(addresses);
             var initializeSwitchboard = new InitializeSwitchboard(
                 switchboard,
                 Guid.NewGuid(),

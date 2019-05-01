@@ -39,7 +39,7 @@ namespace Nautilus.Common.Messages.Commands
                 commandTimestamp)
         {
             Debug.NotNull(order, nameof(order));
-            Debug.NotNull(cancelReason, nameof(cancelReason));
+            Debug.NotEmptyOrWhiteSpace(cancelReason, nameof(cancelReason));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 

@@ -6,6 +6,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+#pragma warning disable 8618
+
 namespace Nautilus.Data.Aggregators
 {
     using System;

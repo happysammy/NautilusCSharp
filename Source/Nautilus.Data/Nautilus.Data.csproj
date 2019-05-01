@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>8</LangVersion>
         <AssemblyName>Nautilus.Data</AssemblyName>
         <RootNamespace>Nautilus.Data</RootNamespace>
+        <NullableContextOptions>enable</NullableContextOptions>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

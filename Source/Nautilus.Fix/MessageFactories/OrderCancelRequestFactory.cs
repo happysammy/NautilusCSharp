@@ -31,7 +31,7 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime transactionTime)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
             Debug.NotNull(order, nameof(order));
             Debug.NotDefault(transactionTime, nameof(transactionTime));
 

@@ -9,7 +9,6 @@
 namespace Nautilus.Core
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides safe methods for parsing strings into various value types.
@@ -24,14 +23,8 @@ namespace Nautilus.Core
         /// <param name="input">The input string.</param>
         /// <param name="alternativeValue">The alternative decimal value to be returned.</param>
         /// <returns>The converted decimal.</returns>
-        public static decimal ToDecimalOr([CanBeNull] string input, decimal alternativeValue)
+        public static decimal ToDecimalOr(this string input, decimal alternativeValue)
         {
-            Debug.NotOutOfRangeDecimal(
-                alternativeValue,
-                nameof(alternativeValue),
-                decimal.MinValue,
-                decimal.MaxValue);
-
             return decimal.TryParse(input, out var output)
                  ? output
                  : alternativeValue;

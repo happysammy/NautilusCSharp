@@ -33,8 +33,8 @@ namespace Nautilus.Fix.MessageFactories
             AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
@@ -60,7 +60,8 @@ namespace Nautilus.Fix.MessageFactories
 
             if (entry.ExpireTime.HasValue)
             {
-                // ReSharper disable once PossibleInvalidOperationException (checked above)
+                #pragma warning disable 8629
+                // ReSharper disable once PossibleInvalidOperationException
                 var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }
@@ -101,8 +102,8 @@ namespace Nautilus.Fix.MessageFactories
             AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotNull(atomicOrder, nameof(atomicOrder));
             Debug.NotDefault(timeNow, nameof(timeNow));
 

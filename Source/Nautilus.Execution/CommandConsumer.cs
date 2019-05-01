@@ -47,11 +47,11 @@ namespace Nautilus.Execution
                 LabelFactory.Create(nameof(CommandConsumer)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(serializer, nameof(serializer));
-            Precondition.NotNull(receiver, nameof(receiver));
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(host));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(serializer, nameof(serializer));
+            Validate.NotNull(receiver, nameof(receiver));
+            Validate.NotNull(host, nameof(host));
+            Validate.NotNull(port, nameof(host));
 
             this.serializer = serializer;
             this.receiver = receiver;

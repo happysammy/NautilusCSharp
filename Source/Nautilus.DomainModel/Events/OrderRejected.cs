@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotNull(symbol, nameof(symbol));
             Debug.NotNull(orderId, nameof(orderId));
             Debug.NotDefault(rejectedTime, nameof(rejectedTime));
-            Debug.NotNull(rejectedReason, nameof(rejectedReason));
+            Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 

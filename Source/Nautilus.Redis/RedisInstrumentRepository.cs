@@ -8,20 +8,16 @@
 
 namespace Nautilus.Redis
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.Core.Validation;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Newtonsoft.Json;
     using NodaTime;
@@ -42,7 +38,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis clients manager.</param>
         public RedisInstrumentRepository(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
+            Validate.NotNull(connection, nameof(connection));
 
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
@@ -177,7 +173,7 @@ namespace Nautilus.Redis
         /// <returns>The result of the query.</returns>
         public QueryResult<Instrument> Read(string key)
         {
-            Debug.NotNull(key, nameof(key));
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             if (!this.redisDatabase.KeyExists(key))
             {

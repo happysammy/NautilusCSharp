@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Precondition.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Validate.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -20,7 +20,7 @@ namespace Nautilus.Core.Validation
     /// <see cref="ArgumentException"/> with details including a message and parameter name.
     /// </summary>
     [Immutable]
-    public static class Precondition
+    public static class Validate
     {
         private const string ExMessage = "Validation Failed";
 
@@ -81,7 +81,7 @@ namespace Nautilus.Core.Validation
         /// <param name="argument">The string argument.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ValidationException">Throws if the string argument is null, empty or white space.</exception>
-        public static void NotNull(string argument, string paramName)
+        public static void NotEmptyOrWhiteSpace(string argument, string paramName)
         {
             if (string.IsNullOrWhiteSpace(argument))
             {

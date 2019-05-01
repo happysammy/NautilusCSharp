@@ -63,19 +63,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void Equals_WithNullObject_ReturnsFalse()
-        {
-            // Arrange
-            var label1 = LabelFactory.Create("Portfolio", new Symbol("AUDUSD", Venue.LMAX));
-
-            // Act
-            var result = label1.Equals(null);
-
-            // Assert
-            Assert.False(result);
-        }
-
-        [Fact]
         internal void Equals_WithObjectOfDifferentType_ReturnsFalse()
         {
             // Arrange

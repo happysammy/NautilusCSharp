@@ -35,8 +35,8 @@ namespace Nautilus.Common.Logging
             NautilusService service,
             Label component)
         {
-            Precondition.NotNull(loggingAdapter, nameof(loggingAdapter));
-            Precondition.NotNull(component, nameof(component));
+            Validate.NotNull(loggingAdapter, nameof(loggingAdapter));
+            Validate.NotNull(component, nameof(component));
 
             this.loggingAdapter = loggingAdapter;
             this.service = service;
@@ -49,7 +49,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Verbose(string message)
         {
-            Precondition.NotNull(message, nameof(message));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.loggingAdapter.Verbose(this.service, $"{this.component}: {message}");
         }
@@ -60,7 +60,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Information(string message)
         {
-            Precondition.NotNull(message, nameof(message));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.loggingAdapter.Information(this.service, $"{this.component}: {message}");
         }
@@ -71,7 +71,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Debug(string message)
         {
-            Precondition.NotNull(message, nameof(message));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.loggingAdapter.Debug(this.service, $"{this.component}: {message}");
         }
@@ -82,7 +82,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Warning(string message)
         {
-            Precondition.NotNull(message, nameof(message));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.loggingAdapter.Warning(this.service, $"{this.component}: {message}");
         }
@@ -93,7 +93,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Error(string message)
         {
-            Precondition.NotNull(message, nameof(message));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.loggingAdapter.Error(this.service, $"{this.component}: {message}");
         }
@@ -105,8 +105,8 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Error(string message, Exception ex)
         {
-            Precondition.NotNull(message, nameof(message));
-            Precondition.NotNull(ex, nameof(ex));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
+            Validate.NotNull(ex, nameof(ex));
 
             this.loggingAdapter.Error(this.service, $"{this.component}: {message}", ex);
         }
@@ -118,8 +118,8 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Fatal(string message, Exception ex)
         {
-            Precondition.NotNull(message, nameof(message));
-            Precondition.NotNull(ex, nameof(ex));
+            Validate.NotEmptyOrWhiteSpace(message, nameof(message));
+            Validate.NotNull(ex, nameof(ex));
 
             this.loggingAdapter.Fatal(this.service, $"{this.component}: {message}", ex);
         }

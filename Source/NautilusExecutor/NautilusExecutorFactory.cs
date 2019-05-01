@@ -56,12 +56,12 @@ namespace NautilusExecutor
             int commandsPerSecond,
             int newOrdersPerSecond)
         {
-            Precondition.NotNull(fixConfig, nameof(fixConfig));
-            Precondition.NotNull(serviceAddress, nameof(serviceAddress));
-            Precondition.NotNull(commandsPort, nameof(commandsPort));
-            Precondition.NotNull(eventsPort, nameof(eventsPort));
-            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Validate.NotNull(fixConfig, nameof(fixConfig));
+            Validate.NotNull(serviceAddress, nameof(serviceAddress));
+            Validate.NotNull(commandsPort, nameof(commandsPort));
+            Validate.NotNull(eventsPort, nameof(eventsPort));
+            Validate.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Validate.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var loggingAdapter = new SerilogLogger(logLevel);
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
@@ -113,7 +113,7 @@ namespace NautilusExecutor
                 newOrdersPerSecond);
 
             executionServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
-            var switchboard = new Switchboard(executionServiceAddresses);
+            var switchboard = Switchboard.Create(executionServiceAddresses);
 
             var systemController = new SystemController(
                 container,

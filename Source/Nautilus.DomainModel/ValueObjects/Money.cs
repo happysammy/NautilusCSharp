@@ -8,10 +8,10 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Primitives;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
@@ -28,9 +28,9 @@ namespace Nautilus.DomainModel.ValueObjects
         private Money(decimal amount, CurrencyCode currency)
             : base(amount)
         {
-            Debug.NotNegativeDecimal(amount, nameof(amount));
-            Debug.True(amount % 0.01m == 0, nameof(amount));
-            Debug.NotDefault(currency, nameof(currency));
+            Debug.Assert(amount >= decimal.Zero, "The amount cannot be be < 0.");
+            Debug.Assert(amount % 0.01m == 0, "The amount cannot be divisible to more than 2 decimal places.");
+            Debug.Assert(currency != default, "The currency cannot be the default value.");
 
             this.Currency = currency;
         }
@@ -46,9 +46,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator ==(
-            [CanBeNull] Money left,
-            [CanBeNull] Money right)
+        public static bool operator ==(Money left, Money right)
         {
             if (left is null && right is null)
             {
@@ -69,9 +67,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator !=(
-            [CanBeNull] Money left,
-            [CanBeNull] Money right) => !(left == right);
+        public static bool operator !=(Money left, Money right) => !(left == right);
 
         /// <summary>
         /// Returns a new <see cref="Money"/> object with a value of zero.
@@ -101,8 +97,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money Add(Money other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return new Money(this.Value + other.Value, this.Currency);
         }
 
@@ -113,9 +107,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money Subtract(Money other)
         {
-            Debug.NotNull(other, nameof(other));
-            Debug.True(other.Value <= this.Value, nameof(other));
-
             return new Money(this.Value - other.Value, this.Currency);
         }
 
@@ -126,8 +117,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money MultiplyBy(int multiplier)
         {
-            Debug.PositiveInt32(multiplier, nameof(multiplier));
-
             return new Money(this.Value * multiplier, this.Currency);
         }
 
@@ -138,7 +127,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money DivideBy(int divisor)
         {
-            Debug.PositiveInt32(divisor, nameof(divisor));
+            Debug.Assert(divisor != 0, "The divisor cannot be zero.");
 
             return new Money(this.Value / divisor, this.Currency);
         }
@@ -148,19 +137,14 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as Money);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Money"/> is equal to the given <see cref="Money"/>.
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals([CanBeNull] Money other)
-        {
-            return other != null
-                   && this.Value.Equals(other.Value)
-                   && this.Currency.Equals(other.Currency);
-        }
+        public bool Equals(Money other) => this.Value.Equals(other.Value) && this.Currency.Equals(other.Currency);
 
         /// <summary>
         /// Returns the hash code for this <see cref="DecimalNumber"/>.

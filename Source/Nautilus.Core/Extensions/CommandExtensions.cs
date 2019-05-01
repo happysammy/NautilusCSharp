@@ -225,7 +225,7 @@ namespace Nautilus.Core.Extensions
         {
             Debug.NotNull(result, nameof(result));
             Debug.NotNull(predicate, nameof(predicate));
-            Debug.NotNull(errorMessage, nameof(errorMessage));
+            Debug.NotEmptyOrWhiteSpace(errorMessage, nameof(errorMessage));
 
             if (result.IsFailure)
             {

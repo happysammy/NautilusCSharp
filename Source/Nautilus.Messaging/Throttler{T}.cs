@@ -10,13 +10,14 @@ namespace Nautilus.Messaging
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Factories;
     using NodaTime;
 
@@ -55,10 +56,8 @@ namespace Nautilus.Messaging
                 LabelFactory.Create(nameof(Throttler<T>)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(receiver, nameof(receiver));
-            Precondition.NotDefault(interval, nameof(interval));
-            Precondition.PositiveInt32(limit, nameof(limit));
+            Debug.Assert(interval != default, AssertMsg.IsDefault(nameof(interval)));
+            Debug.Assert(limit > 0, "The limit value cannot be <= 0.");
 
             this.receiver = receiver;
             this.interval = interval.ToTimeSpan();
@@ -76,8 +75,6 @@ namespace Nautilus.Messaging
 
         private void OnMessage(T message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.queue.Enqueue(message);
 
             this.totalCount++;
@@ -86,7 +83,7 @@ namespace Nautilus.Messaging
 
         private void OnMessage(TimeSpan message)
         {
-            Debug.NotNull(message, nameof(message));
+            Debug.Assert(message != default, AssertMsg.IsDefault(nameof(message)));
 
             this.vouchers = this.limit;
 
@@ -121,6 +118,9 @@ namespace Nautilus.Messaging
             while (this.vouchers > 0 & this.queue.Count > 0)
             {
                 var message = this.queue.Dequeue();
+
+                Debug.Assert(message != null, AssertMsg.IsNull(nameof(message)));
+
                 this.receiver.Send(message);
                 this.vouchers--;
 

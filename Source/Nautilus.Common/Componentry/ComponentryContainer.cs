@@ -29,9 +29,9 @@ namespace Nautilus.Common.Componentry
             IGuidFactory guidFactory,
             ILoggerFactory loggerFactory)
         {
-            Precondition.NotNull(clock, nameof(clock));
-            Precondition.NotNull(guidFactory, nameof(guidFactory));
-            Precondition.NotNull(loggerFactory, nameof(loggerFactory));
+            Validate.NotNull(clock, nameof(clock));
+            Validate.NotNull(guidFactory, nameof(guidFactory));
+            Validate.NotNull(loggerFactory, nameof(loggerFactory));
 
             this.Clock = clock;
             this.GuidFactory = guidFactory;

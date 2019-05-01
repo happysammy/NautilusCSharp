@@ -8,10 +8,10 @@
 
 namespace Nautilus.Core.CQS
 {
+    using System.Diagnostics;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS.Base;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents the result of a command operation. May contain a result message.
@@ -29,7 +29,7 @@ namespace Nautilus.Core.CQS
         private CommandResult(bool isFailure, string message)
             : base(isFailure, message)
         {
-            Debug.NotNull(message, nameof(message));
+            Debug.Assert(!string.IsNullOrWhiteSpace(message), AssertMsg.IsNullOrWhitespace(nameof(message)));
         }
 
         /// <summary>
@@ -48,8 +48,6 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Ok(string message)
         {
-            Debug.NotNull(message, nameof(message));
-
             return new CommandResult(false, message);
         }
 
@@ -60,8 +58,6 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Fail(string errorMessage)
         {
-            Debug.NotNull(errorMessage, nameof(errorMessage));
-
             return new CommandResult(true, errorMessage);
         }
 
@@ -73,7 +69,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult FirstFailureOrSuccess(params CommandResult[] results)
         {
-            Debug.NotNullOrEmpty(results, nameof(results));
+            Debug.Assert(results.Length > 0, "The results array cannot be empty.");
 
             return results.FirstOrDefault(c => c.IsFailure) ?? Ok();
         }
@@ -86,7 +82,7 @@ namespace Nautilus.Core.CQS
         /// <returns>A <see cref="CommandResult"/>.</returns>
         public static CommandResult Combine(params CommandResult[] results)
         {
-            Debug.NotNullOrEmpty(results, nameof(results));
+            Debug.Assert(results.Length > 0, "The results array cannot be empty.");
 
             var failedResults = results
                 .Where(x => x.IsFailure)
@@ -99,7 +95,7 @@ namespace Nautilus.Core.CQS
 
         private static string CombineErrorMessages(CommandResult[] failedResults)
         {
-            Debug.NotNullOrEmpty(failedResults, nameof(failedResults));
+            Debug.Assert(failedResults.Length > 0, "The results array cannot be empty.");
 
             return string.Join("; ", failedResults.Select(x => x.Message));
         }

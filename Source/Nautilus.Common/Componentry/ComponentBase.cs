@@ -35,8 +35,8 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer container)
         {
-            Precondition.NotNull(component, nameof(component));
-            Precondition.NotNull(container, nameof(container));
+            Validate.NotNull(component, nameof(component));
+            Validate.NotNull(container, nameof(container));
 
             this.clock = container.Clock;
             this.StartTime = this.clock.TimeNow();

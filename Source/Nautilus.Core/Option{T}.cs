@@ -10,7 +10,6 @@ namespace Nautilus.Core
 {
     using System;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents an optional reference type which wraps a potentially null value of type T.
@@ -25,7 +24,7 @@ namespace Nautilus.Core
         /// Initializes a new instance of the <see cref="Option{T}"/> struct.
         /// </summary>
         /// <param name="value">The value.</param>
-        private Option([CanBeNull] T value)
+        private Option(T value)
         {
             this.value = value;
         }
@@ -50,10 +49,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static implicit operator Option<T>([CanBeNull] T value)
-        {
-            return new Option<T>(value);
-        }
+        public static implicit operator Option<T>(T value) => new Option<T>(value);
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Option{T}"/> is equal to the
@@ -62,13 +58,7 @@ namespace Nautilus.Core
         /// <param name="option">The <see cref="Option{T}"/> (cannot be null).</param>
         /// <param name="value">The value (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Option<T> option, T value)
-        {
-            Debug.NotNull(option, nameof(option));
-            Debug.NotNull(value, nameof(value));
-
-            return option.HasValue && option.value.Equals(value);
-        }
+        public static bool operator ==(Option<T> option, T value) => option.value != null && option.value.Equals(value);
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Option{T}"/> is not equal to the
@@ -77,13 +67,7 @@ namespace Nautilus.Core
         /// <param name="option">The <see cref="Option{T}"/> (cannot be null).</param>
         /// <param name="value">The value (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(Option<T> option, T value)
-        {
-            Debug.NotNull(option, nameof(option));
-            Debug.NotNull(value, nameof(value));
-
-            return !(option == value);
-        }
+        public static bool operator !=(Option<T> option, T value) => !(option == value);
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Option{T}"/> is equal to the
@@ -92,13 +76,7 @@ namespace Nautilus.Core
         /// <param name="left">The left <see cref="Option{T}"/> (cannot be null).</param>
         /// <param name="right">The right <see cref="Option{T}"/> (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Option<T> left, Option<T> right)
-        {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
-            return left.Equals(right);
-        }
+        public static bool operator ==(Option<T> left, Option<T> right) => left.Equals(right);
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Option{T}"/> is not equal to the
@@ -107,31 +85,20 @@ namespace Nautilus.Core
         /// <param name="left">The left <see cref="Option{T}"/> (cannot be null).</param>
         /// <param name="right">The right <see cref="Option{T}"/> (cannot be null).</param>
         /// <returns>True if the <see cref="Option{T}"/>(s) are not equal; otherwise returns false.</returns>
-        public static bool operator !=(Option<T> left, Option<T> right)
-        {
-            Debug.NotNull(left, nameof(left));
-            Debug.NotNull(right, nameof(right));
-
-            return !(left == right);
-        }
+        public static bool operator !=(Option<T> left, Option<T> right) => !(left == right);
 
         /// <summary>
         /// Gets a <see cref="Option{T}"/> with no value.
         /// </summary>
         /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static Option<T> None() => default(Option<T>);
+        public static Option<T> None() => default;
 
         /// <summary>
         /// Gets the given object wrapped in an <see cref="Option{T}"/>.
         /// </summary>
         /// <param name="obj">The object (cannot be null).</param>
         /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static Option<T> Some(T obj)
-        {
-            Debug.NotNull(obj, nameof(obj));
-
-            return new Option<T>(obj);
-        }
+        public static Option<T> Some(T obj) => new Option<T>(obj);
 
         /// <summary>
         /// Returns a result which indicates whether the specified object is equal to the current object.
@@ -139,21 +106,14 @@ namespace Nautilus.Core
         /// <param name="obj">The other object.</param>
         /// <returns>True if the other <see cref="Option{T}"/> is equal to this <see cref="Option{T}"/>
         /// otherwise returns false.</returns>
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (obj is T o)
             {
                 obj = new Option<T>(o);
             }
 
-            if (!(obj is Option<T>))
-            {
-                return false;
-            }
-
-            var other = (Option<T>)obj;
-
-            return this.Equals(other);
+            return obj is Option<T> option && this.Equals(option);
         }
 
         /// <summary>
@@ -165,12 +125,12 @@ namespace Nautilus.Core
         /// otherwise returns false.</returns>
         public bool Equals(Option<T> other)
         {
-            if (this.HasNoValue && other.HasNoValue)
+            if (this.value is null && other.value is null)
             {
                 return true;
             }
 
-            if (this.HasNoValue || other.HasNoValue)
+            if (this.value is null || other.value is null)
             {
                 return false;
             }
@@ -182,12 +142,7 @@ namespace Nautilus.Core
         /// Returns the hash code of the wrapped object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode()
-        {
-            return this.HasValue
-                ? Hash.GetCode(this.value)
-                : 0;
-        }
+        public override int GetHashCode() => Hash.GetCode(this.value);
 
         /// <summary>
         /// Returns a string representation of the wrapped value.
@@ -195,14 +150,17 @@ namespace Nautilus.Core
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return this.HasValue
+            return this.value != null
                 ? this.value.ToString()
                 : "NONE";
         }
 
         private T GetValue()
         {
-            Debug.NotNull(this.value, nameof(this.value));
+            if (this.value is null)
+            {
+                throw new InvalidOperationException("Cannot get value (the value is null).");
+            }
 
             return this.value;
         }

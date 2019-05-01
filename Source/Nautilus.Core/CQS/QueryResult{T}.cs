@@ -9,42 +9,44 @@
 namespace Nautilus.Core.CQS
 {
     using System;
+    using System.Diagnostics;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.CQS.Base;
-    using Nautilus.Core.Validation;
 
     /// <summary>
-    /// Represents the result of a query operation. The type may contain a result message.
+    /// Represents the result of a query operation. May contain a result message.
     /// </summary>
     /// <typeparam name="T">The query type.</typeparam>
     [Immutable]
     public sealed class QueryResult<T> : Result
     {
+        #pragma warning disable 8618
+        // Can only be accessed through Value property which checks has value.
         private readonly T value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryResult{T}"/> class.
         /// </summary>
-        /// <param name="isFailure">The is failure flag.</param>
-        /// <param name="value">The query value (cannot be null if successful).</param>
         /// <param name="error">The query error (cannot be null or white space).</param>
-        private QueryResult(
-            bool isFailure,
-            [CanBeNull] T value,
-            string error)
-            : base(isFailure, error)
+        private QueryResult(string error)
+            : base(true, error)
         {
-            if (!isFailure)
-            {
-                Debug.NotNull(value, nameof(value));
-                Debug.NotNull(error, nameof(error));
-            }
+            Debug.Assert(!string.IsNullOrWhiteSpace(error), AssertMsg.IsNullOrWhitespace(nameof(error)));
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryResult{T}"/> class.
+        /// </summary>
+        /// <param name="value">The query value.</param>
+        private QueryResult(T value)
+            : base(false, "No result message")
+        {
             this.value = value;
         }
 
         /// <summary>
-        /// Gets the value (value cannot be null).
+        /// Gets the value of the query.
         /// </summary>
         /// <returns>The query value.</returns>
         /// <exception cref="InvalidOperationException">If there is no value for a query failure.
@@ -56,27 +58,24 @@ namespace Nautilus.Core.CQS
         /// <summary>
         /// Create a success <see cref="QueryResult{T}"/> with the given value.
         /// </summary>
-        /// <param name="value">The query value (cannot be null).</param>
+        /// <param name="value">The query value.</param>
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Ok(T value)
         {
-            Debug.NotNull(value, nameof(value));
-
-            return new QueryResult<T>(false, value, "No result message");
+            return new QueryResult<T>(value);
         }
 
         /// <summary>
         /// Create a success <see cref="QueryResult{T}"/> with the given value and message.
         /// </summary>
-        /// <param name="value">The query value (cannot be null).</param>
+        /// <param name="value">The query value.</param>
         /// <param name="message">The query message (cannot be null, empty or white space).</param>
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Ok(T value, string message)
         {
-            Debug.NotNull(value, nameof(value));
-            Debug.NotNull(message, nameof(message));
+            Debug.Assert(!string.IsNullOrWhiteSpace(message), AssertMsg.IsNullOrWhitespace(nameof(message)));
 
-            return new QueryResult<T>(false, value, message);
+            return new QueryResult<T>(value);
         }
 
         /// <summary>
@@ -86,9 +85,9 @@ namespace Nautilus.Core.CQS
         /// <returns>The query result of T.</returns>
         public static QueryResult<T> Fail(string error)
         {
-            Debug.NotNull(error, nameof(error));
+            Debug.Assert(!string.IsNullOrWhiteSpace(error), AssertMsg.IsNullOrWhitespace(nameof(error)));
 
-            return new QueryResult<T>(true, default, error);
+            return new QueryResult<T>(error);
         }
     }
 }

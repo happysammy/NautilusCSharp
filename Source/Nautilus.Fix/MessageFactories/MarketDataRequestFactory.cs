@@ -27,7 +27,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static MarketDataRequest Create(string symbol, int marketDepth, ZonedDateTime timeNow)
         {
-            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotEmptyOrWhiteSpace(symbol, nameof(symbol));
             Debug.NotNegativeInt32(marketDepth, nameof(marketDepth));
             Debug.NotDefault(timeNow, nameof(timeNow));
 

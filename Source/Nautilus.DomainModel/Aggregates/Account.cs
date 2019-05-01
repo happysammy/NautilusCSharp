@@ -48,11 +48,11 @@ namespace Nautilus.DomainModel.Aggregates
                 accountId,
                 timestamp)
         {
-            Precondition.NotNull(accountId, nameof(accountId));
-            Precondition.NotNull(username, nameof(username));
-            Precondition.NotNull(password, nameof(password));
-            Precondition.NotDefault(currency, nameof(currency));
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Validate.NotNull(accountId, nameof(accountId));
+            Validate.NotEmptyOrWhiteSpace(username, nameof(username));
+            Validate.NotEmptyOrWhiteSpace(password, nameof(password));
+            Validate.NotDefault(currency, nameof(currency));
+            Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;
             this.AccountNumber = accountNumber;
@@ -64,13 +64,14 @@ namespace Nautilus.DomainModel.Aggregates
             this.CashActivityDay = Money.Zero(this.Currency);
             this.MarginUsedMaintenance = Money.Zero(this.Currency);
             this.MarginUsedLiquidation = Money.Zero(this.Currency);
+            this.MarginCallStatus = string.Empty;
             this.LastUpdated = timestamp;
         }
 
         /// <summary>
         /// Gets the account identifier.
         /// </summary>
-        public new AccountId Id => base.Id as AccountId;
+        public new AccountId Id => (AccountId)base.Id;
 
         /// <summary>
         /// Gets the accounts broker name.

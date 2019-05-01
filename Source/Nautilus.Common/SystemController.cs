@@ -48,10 +48,10 @@ namespace Nautilus.Common
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(actorSystem, nameof(actorSystem));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(switchboard, nameof(switchboard));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(actorSystem, nameof(actorSystem));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(switchboard, nameof(switchboard));
 
             this.actorSystem = actorSystem;
             this.actorSystemName = actorSystem.Name;

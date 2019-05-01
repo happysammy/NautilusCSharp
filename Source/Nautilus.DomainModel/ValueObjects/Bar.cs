@@ -124,7 +124,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Bar"/>.</returns>
         public static Bar GetFromString(string barString)
         {
-            Debug.NotNull(barString, nameof(barString));
+            Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
 
             var values = barString.Split(',');
             var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();

@@ -452,19 +452,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         }
 
         [Fact]
-        internal void Equals_NullObject_ReturnsFalse()
-        {
-            // Arrange
-            var order = new StubOrderBuilder().BuildStopMarketOrder();
-
-            // Act
-            var result = order.Equals(null);
-
-            // Assert
-            Assert.False(result);
-        }
-
-        [Fact]
         internal void Equals_ObjectSomeOtherType_ReturnsFalse()
         {
             // Arrange

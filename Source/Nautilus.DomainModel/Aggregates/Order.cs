@@ -86,7 +86,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders identifier.
         /// </summary>
-        public new OrderId Id => base.Id as OrderId;
+        public new OrderId Id => (OrderId)base.Id;
 
         /// <summary>
         /// Gets the orders symbol.
@@ -377,14 +377,15 @@ namespace Nautilus.DomainModel.Aggregates
 
             if (expireTime.HasNoValue)
             {
-                Precondition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+                Validate.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
             }
             else
             {
-                // ReSharper disable once PossibleInvalidOperationException
+                #pragma warning disable 8629
+                // ReSharper disable once PossibleInvalidOperationException (already checked above).
                 var expireTimeValue = (ZonedDateTime)expireTime.Value;
-                Precondition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
-                Precondition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+                Validate.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Validate.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
         }
 

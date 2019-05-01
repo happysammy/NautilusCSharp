@@ -59,7 +59,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             };
 
             this.messageBusRef.Tell(new InitializeSwitchboard(
-                new Switchboard(addresses),
+                Switchboard.Create(addresses),
                 Guid.NewGuid(),
                 setupContainer.Clock.TimeNow()));
         }

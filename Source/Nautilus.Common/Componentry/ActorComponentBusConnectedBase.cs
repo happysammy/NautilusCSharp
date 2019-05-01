@@ -8,13 +8,12 @@
 
 namespace Nautilus.Common.Componentry
 {
+    using System.Diagnostics;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -42,10 +41,6 @@ namespace Nautilus.Common.Componentry
                 component,
                 container)
         {
-            Precondition.NotNull(component, nameof(component));
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-
             this.messagingAdapter = messagingAdapter;
             this.address = new Address(this.GetType().Name);
         }
@@ -59,8 +54,6 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(Address receiver, T message)
             where T : Message
         {
-            Debug.NotNull(message, nameof(message));
-
             this.messagingAdapter.Send(receiver, message, this.address);
         }
 
@@ -73,8 +66,7 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(ReadOnlyList<Address> receivers, T message)
             where T : Message
         {
-            Debug.NotNullOrEmpty(receivers, nameof(receivers));
-            Debug.NotNull(message, nameof(message));
+            Debug.Assert(receivers.Count > 0, "The receivers list cannot be empty.");
 
             foreach (var receiver in receivers)
             {

@@ -9,14 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.EntitiesTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Redis;
-    using Nautilus.TestSuite.TestKit.TestDoubles;
-    using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

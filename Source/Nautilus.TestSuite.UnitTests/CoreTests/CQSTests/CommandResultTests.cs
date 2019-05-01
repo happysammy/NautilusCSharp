@@ -8,10 +8,8 @@
 
 namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -56,16 +54,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             Assert.True(result.IsFailure);
             Assert.False(result.IsSuccess);
             Assert.Equal("error message", result.Message);
-        }
-
-        [Fact]
-        public void Fail_WithNoErrorMessage_Throws()
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => ((Action)(() => { CommandResult.Fail(null); })).Invoke());
-            Assert.Throws<ValidationException>(() => ((Action)(() => { CommandResult.Fail(string.Empty); })).Invoke());
         }
 
         [Fact]

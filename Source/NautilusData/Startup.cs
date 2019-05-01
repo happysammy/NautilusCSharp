@@ -29,7 +29,7 @@ namespace NautilusData
     /// </summary>
     public class Startup
     {
-        private NautilusDatabase dataSystem;
+        private NautilusDatabase? dataSystem;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -38,9 +38,6 @@ namespace NautilusData
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            Precondition.NotNull(configuration, nameof(configuration));
-            Precondition.NotNull(environment, nameof(environment));
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("config.json");
@@ -67,7 +64,7 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            Precondition.NotNull(services, nameof(services));
+            Validate.NotNull(services, nameof(services));
 
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
@@ -80,7 +77,7 @@ namespace NautilusData
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
             var configFile = (string)config[ConfigSection.Fix44]["config"];
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
@@ -141,9 +138,9 @@ namespace NautilusData
             IApplicationLifetime appLifetime,
             IHostingEnvironment env)
         {
-            Precondition.NotNull(app, nameof(app));
-            Precondition.NotNull(appLifetime, nameof(appLifetime));
-            Precondition.NotNull(env, nameof(env));
+            Validate.NotNull(app, nameof(app));
+            Validate.NotNull(appLifetime, nameof(appLifetime));
+            Validate.NotNull(env, nameof(env));
 
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
@@ -155,7 +152,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataSystem.Shutdown();
+            this.dataSystem?.Shutdown();
         }
     }
 }

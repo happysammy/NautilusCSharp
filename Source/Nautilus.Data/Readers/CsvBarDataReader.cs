@@ -43,9 +43,9 @@ namespace Nautilus.Data.Readers
             IBarDataProvider dataProvider,
             int decimals)
         {
-            Precondition.NotNull(barType, nameof(barType));
-            Precondition.NotNull(dataProvider, nameof(dataProvider));
-            Precondition.NotNegativeInt32(decimals, nameof(decimals));
+            Validate.NotNull(barType, nameof(barType));
+            Validate.NotNull(dataProvider, nameof(dataProvider));
+            Validate.NotNegativeInt32(decimals, nameof(decimals));
 
             this.decimals = decimals;
 
@@ -97,7 +97,7 @@ namespace Nautilus.Data.Readers
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetAllBars(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
+            Validate.NotNull(csvFile, nameof(csvFile));
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
@@ -116,7 +116,7 @@ namespace Nautilus.Data.Readers
         [PerformanceOptimized]
         public QueryResult<BarDataFrame> GetBars(FileInfo csvFile, ZonedDateTime fromDateTime)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
+            Validate.NotNull(csvFile, nameof(csvFile));
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
@@ -163,7 +163,7 @@ namespace Nautilus.Data.Readers
         /// <returns>A query result potentially containing a <see cref="BarDataFrame"/>.</returns>
         public QueryResult<BarDataFrame> GetLastBar(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
+            Validate.NotNull(csvFile, nameof(csvFile));
 
             var readAllBarsQuery = this.ReadAllBarsFromCsv(csvFile);
 
@@ -187,7 +187,7 @@ namespace Nautilus.Data.Readers
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public QueryResult<ZonedDateTime> GetLastBarTimestamp(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
+            Validate.NotNull(csvFile, nameof(csvFile));
 
             var lastBarQuery = this.GetLastBar(csvFile);
 
@@ -198,7 +198,7 @@ namespace Nautilus.Data.Readers
 
         private QueryResult<BarDataFrame> ReadAllBarsFromCsv(FileInfo csvFile)
         {
-            Precondition.NotNull(csvFile, nameof(csvFile));
+            Validate.NotNull(csvFile, nameof(csvFile));
 
             while (true)
             {

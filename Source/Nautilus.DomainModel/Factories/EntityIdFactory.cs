@@ -58,7 +58,7 @@ namespace Nautilus.DomainModel.Factories
         /// <returns>A <see cref="AccountId"/>.</returns>
         public static AccountId Account(Brokerage broker, string accountNumber)
         {
-            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             return new AccountId($"{broker}-{accountNumber}");
         }

@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public Label(string value)
             : base(value)
         {
-            Debug.NotNull(value, nameof(value));
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
         }
     }
 }

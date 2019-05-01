@@ -30,29 +30,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void Equals_WithNullObject_ReturnsFalse()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result1 = bar.Equals(null);
-
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse (point of test)
-            var result2 = bar == null;
-
-            // Assert
-            Assert.False(result1);
-            Assert.False(result2);
-        }
-
-        [Fact]
         internal void Equals_WithEqualObject_ReturnsTrue()
         {
             // Arrange

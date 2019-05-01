@@ -31,9 +31,9 @@ namespace Nautilus.Brokerage.FXCM
             FixConfiguration config,
             InstrumentDataProvider instrumentData)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(config, nameof(config));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(config, nameof(config));
 
             return new FixClient(
                 container,

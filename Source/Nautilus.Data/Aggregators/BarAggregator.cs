@@ -39,7 +39,7 @@ namespace Nautilus.Data.Aggregators
         // Concrete dictionary for performance reasons.
         private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
 
-        private Tick lastTick;
+        private Tick? lastTick;
         private bool isMarketOpen;
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace Nautilus.Data.Aggregators
                 symbol),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(symbol, nameof(symbol));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(symbol, nameof(symbol));
 
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();
@@ -144,7 +144,7 @@ namespace Nautilus.Data.Aggregators
                 var builder = this.barBuilders[barSpec];
 
                 // No ticks have been received by the builder.
-                if (builder.IsNotInitialized)
+                if (builder.IsNotInitialized || this.lastTick is null)
                 {
                     return;
                 }

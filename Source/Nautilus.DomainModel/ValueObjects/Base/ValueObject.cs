@@ -27,9 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(
-            [CanBeNull] ValueObject<T> left,
-            [CanBeNull] ValueObject<T> right)
+        public static bool operator ==(ValueObject<T> left, ValueObject<T> right)
         {
             if (left is null && right is null)
             {
@@ -50,9 +48,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(
-            [CanBeNull] ValueObject<T> left,
-            [CanBeNull] ValueObject<T> right) => !(left == right);
+        public static bool operator !=(ValueObject<T> left,  ValueObject<T> right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValueObject{T}"/> is equal
@@ -60,7 +56,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as T);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValueObject{T}"/> is equal
@@ -70,7 +66,7 @@ namespace Nautilus.DomainModel.ValueObjects.Base
         /// <returns>A <see cref="bool"/>.</returns>
         [PerformanceOptimized]
         [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery", Justification = "Performance optimization.")]
-        public bool Equals([CanBeNull] T other)
+        public bool Equals(T other)
         {
             if (other is null)
             {

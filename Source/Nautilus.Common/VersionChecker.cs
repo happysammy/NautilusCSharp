@@ -26,8 +26,8 @@ namespace Nautilus.Common
         /// <param name="serviceTitle">The service title string.</param>
         public static void Run(ILoggingAdapter log, string serviceTitle)
         {
-            Precondition.NotNull(log, nameof(log));
-            Precondition.NotNull(serviceTitle, nameof(serviceTitle));
+            Validate.NotNull(log, nameof(log));
+            Validate.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
             log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
             log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");

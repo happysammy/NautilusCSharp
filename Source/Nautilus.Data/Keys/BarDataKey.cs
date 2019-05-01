@@ -9,8 +9,8 @@
 namespace Nautilus.Data.Keys
 {
     using System;
+    using System.Diagnostics;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -25,12 +25,9 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="barType">The bar specification the key is based on.</param>
         /// <param name="dateKey">The date key the key is based on.</param>
-        /// <exception cref="ValidationException">Throws if the bar period != 1.</exception>
         public BarDataKey(BarType barType, DateKey dateKey)
         {
-            Debug.NotNull(barType, nameof(barType));
-            Debug.NotDefault(dateKey, nameof(dateKey));
-            Debug.EqualTo(1, nameof(barType.Specification.Period), barType.Specification.Period);
+            Debug.Assert(barType.Specification.Period == 1, "The bar type period must be 1.");
 
             this.Type = barType;
             this.DateKey = dateKey;
@@ -51,10 +48,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            return other is BarDataKey key && this.Equals(key);
-        }
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="BarDataKey"/> is equal to the given
@@ -62,12 +56,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other <see cref="BarDataKey"/>.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(BarDataKey other)
-        {
-            // Do not add null check (causes error).
-            return this.Type.Equals(other.Type) &&
-                   this.DateKey.Equals(other.DateKey);
-        }
+        public bool Equals(BarDataKey other) => this.Type.Equals(other.Type) && this.DateKey.Equals(other.DateKey);
 
         /// <summary>
         /// Returns the hash code of the <see cref="BarDataKey"/>.

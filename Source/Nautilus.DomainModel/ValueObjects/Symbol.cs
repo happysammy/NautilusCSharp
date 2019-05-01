@@ -27,7 +27,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public Symbol(string code, Venue venue)
             : base($"{code}.{venue}")
         {
-            Debug.NotNull(code, nameof(code));
+            Debug.NotEmptyOrWhiteSpace(code, nameof(code));
 
             this.Code = code.ToUpper();
             this.Venue = venue;

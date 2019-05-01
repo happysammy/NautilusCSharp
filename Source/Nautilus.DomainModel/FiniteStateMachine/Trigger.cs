@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         internal Trigger(string trigger)
         {
-            Debug.NotNull(trigger, nameof(trigger));
+            Debug.NotEmptyOrWhiteSpace(trigger, nameof(trigger));
 
             this.Value = trigger;
         }

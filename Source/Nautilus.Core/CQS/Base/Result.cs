@@ -12,7 +12,7 @@ namespace Nautilus.Core.CQS.Base
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The base class for all result types.
+    /// The base class for all <see cref="Result"/> types.
     /// </summary>
     [Immutable]
     public abstract class Result
@@ -24,7 +24,7 @@ namespace Nautilus.Core.CQS.Base
         /// <param name="message">The message string.</param>
         protected Result(bool isFailure, string message)
         {
-            Debug.NotNull(message, nameof(message));
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.IsFailure = isFailure;
             this.Message = message;

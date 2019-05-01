@@ -10,11 +10,11 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.
@@ -28,10 +28,8 @@ namespace Nautilus.Common.Messaging
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <param name="addresses">The system addresses.</param>
-        public Switchboard(Dictionary<Address, IEndpoint> addresses)
+        private Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
-            Debug.NotNullOrEmpty(addresses, nameof(addresses));
-
             this.addresses = new ReadOnlyDictionary<Address, IEndpoint>(addresses);
             this.Addresses = new ReadOnlyList<Address>(addresses.Keys);
         }
@@ -42,6 +40,27 @@ namespace Nautilus.Common.Messaging
         public ReadOnlyList<Address> Addresses { get; }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Switchboard"/> class.
+        /// </summary>
+        /// <returns>The empty switchboard.</returns>
+        public static Switchboard Empty()
+        {
+            return new Switchboard(new Dictionary<Address, IEndpoint>());
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Switchboard"/> class.
+        /// </summary>
+        /// <param name="addressDictionary">The system addresses.</param>
+        /// <returns>The switchboard.</returns>
+        public static Switchboard Create(Dictionary<Address, IEndpoint> addressDictionary)
+        {
+            Debug.Assert(addressDictionary.Count == 0, "The addresses dictionary cannot be empty.");
+
+            return new Switchboard(addressDictionary);
+        }
+
+        /// <summary>
         /// Sends the given envelope to its receiver address.
         /// </summary>
         /// <param name="envelope">The envelope to send.</param>
@@ -50,8 +69,6 @@ namespace Nautilus.Common.Messaging
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             if (!this.addresses.ContainsKey(envelope.Receiver))
             {
                 throw new InvalidOperationException("Cannot send message (envelope receiver address unknown).");

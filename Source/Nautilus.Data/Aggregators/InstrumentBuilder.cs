@@ -30,7 +30,7 @@ namespace Nautilus.Data.Aggregators
         /// </param>
         public InstrumentBuilder(Instrument startingInstrument)
         {
-            Precondition.NotNull(startingInstrument, nameof(startingInstrument));
+            Validate.NotNull(startingInstrument, nameof(startingInstrument));
 
             this.Symbol = startingInstrument.Symbol;
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
@@ -104,7 +104,7 @@ namespace Nautilus.Data.Aggregators
         /// <returns>A <see cref="InstrumentBuilder"/>.</returns>
         public InstrumentBuilder Update(Instrument updateInstrument)
         {
-            Precondition.NotNull(updateInstrument, nameof(updateInstrument));
+            Validate.NotNull(updateInstrument, nameof(updateInstrument));
 
             if (this.TickValue != updateInstrument.TickValue)
             {
@@ -266,9 +266,9 @@ namespace Nautilus.Data.Aggregators
             string oldValue,
             string newValue)
         {
-            Debug.NotNull(property, nameof(property));
-            Debug.NotNull(oldValue, nameof(oldValue));
-            Debug.NotNull(newValue, nameof(newValue));
+            Debug.NotEmptyOrWhiteSpace(property, nameof(property));
+            Debug.NotEmptyOrWhiteSpace(oldValue, nameof(oldValue));
+            Debug.NotEmptyOrWhiteSpace(newValue, nameof(newValue));
 
             this.Changes.Add($", {property} updated from {oldValue} to {newValue}");
         }

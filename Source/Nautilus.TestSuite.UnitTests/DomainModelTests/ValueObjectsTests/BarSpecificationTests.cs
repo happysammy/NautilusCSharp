@@ -28,26 +28,6 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void Equals_WithNullObject_ReturnsFalse()
-        {
-            // Arrange
-            var barType = new BarSpecification(
-                QuoteType.Bid,
-                Resolution.Minute,
-                1);
-
-            // Act
-            var result1 = barType.Equals(null);
-
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var result2 = barType == null;
-
-            // Assert
-            Assert.False(result1);
-            Assert.False(result2);
-        }
-
-        [Fact]
         internal void Equals_WithEqualObject_ReturnsTrue()
         {
             // Arrange

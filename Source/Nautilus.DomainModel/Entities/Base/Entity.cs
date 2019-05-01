@@ -8,9 +8,9 @@
 
 namespace Nautilus.DomainModel.Entities.Base
 {
+    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
 
@@ -31,8 +31,7 @@ namespace Nautilus.DomainModel.Entities.Base
             EntityId<T> identifier,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(timestamp != default, "The timestamp cannot be the default value.");
 
             this.Id = identifier;
             this.Timestamp = timestamp;
@@ -53,17 +52,14 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as T);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.
         /// </summary>
         /// <param name="other">The other entity.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals([CanBeNull] T other)
-        {
-            return other != null && this.Id.Equals(other.Id);
-        }
+        public bool Equals(T other) => this.Id.Equals(other.Id);
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

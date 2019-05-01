@@ -45,9 +45,9 @@ namespace Nautilus.Execution
                 LabelFactory.Create(nameof(EventPublisher)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(host, nameof(host));
-            Precondition.NotNull(port, nameof(port));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(host, nameof(host));
+            Validate.NotNull(port, nameof(port));
 
             this.serializer = serializer;
 

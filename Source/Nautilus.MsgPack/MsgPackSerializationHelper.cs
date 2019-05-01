@@ -30,7 +30,7 @@ namespace Nautilus.MsgPack
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
         internal static Symbol GetSymbol(string symbolString)
         {
-            Debug.NotNull(symbolString, nameof(symbolString));
+            Debug.NotEmptyOrWhiteSpace(symbolString, nameof(symbolString));
 
             var splitSymbol = symbolString.Split('.');
             return new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
@@ -43,7 +43,7 @@ namespace Nautilus.MsgPack
         /// <returns>The optional price.</returns>
         internal static Option<Price> GetPrice(string priceString)
         {
-            Debug.NotNull(priceString, nameof(priceString));
+            Debug.NotEmptyOrWhiteSpace(priceString, nameof(priceString));
 
             if (priceString == None)
             {
@@ -77,7 +77,7 @@ namespace Nautilus.MsgPack
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
         internal static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
         {
-            Debug.NotNull(expireTimeString, nameof(expireTimeString));
+            Debug.NotEmptyOrWhiteSpace(expireTimeString, nameof(expireTimeString));
 
             return expireTimeString == None
                 ? Option<ZonedDateTime?>.None()

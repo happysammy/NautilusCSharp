@@ -6,6 +6,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
+#pragma warning disable 8618
+
 namespace Nautilus.Data.Aggregators
 {
     using Nautilus.Core.Validation;
@@ -22,7 +24,7 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         public BarBuilder()
         {
-            // Empty initially.
+            this.IsInitialized = false;
         }
 
         /// <summary>
@@ -31,12 +33,11 @@ namespace Nautilus.Data.Aggregators
         /// <param name="open">The open price for the bar.</param>
         public BarBuilder(Price open)
         {
-            Debug.NotNull(open, nameof(open));
-
             this.Open = open;
             this.High = open;
             this.Low = open;
             this.Close = open;
+            this.IsInitialized = true;
         }
 
         /// <summary>
@@ -67,12 +68,12 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Gets a value indicating whether the bar builder is initialized.
         /// </summary>
-        public bool IsInitialized => !this.IsNotInitialized;
+        public bool IsInitialized { get; }
 
         /// <summary>
         /// Gets a value indicating whether the bar builder is NOT initialized.
         /// </summary>
-        public bool IsNotInitialized => this.Open is null;
+        public bool IsNotInitialized => !this.IsInitialized;
 
         /// <summary>
         /// Updates the bar builder with the given quote price.

@@ -9,7 +9,6 @@
 namespace Nautilus.Core
 {
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides standardized hash code generation.
@@ -29,7 +28,10 @@ namespace Nautilus.Core
         /// <returns>The hash code <see cref="int"/>.</returns>
         public static int GetCode<T>(T value)
         {
-            Debug.NotNull(value, nameof(value));
+            if (value is null)
+            {
+                return 0;
+            }
 
             return (Initializer * Multiplier) + value.GetHashCode();
         }
@@ -44,14 +46,27 @@ namespace Nautilus.Core
         /// <returns>The hash code <see cref="int"/>.</returns>
         public static int GetCode<T1, T2>(T1 value1, T2 value2)
         {
-            Debug.NotNull(value1, nameof(value1));
-            Debug.NotNull(value2, nameof(value2));
-
             unchecked
             {
                 var hash = Initializer;
-                hash = (hash * Multiplier) + value1.GetHashCode();
-                hash = (hash * Multiplier) + value2.GetHashCode();
+
+                if (value1 is null)
+                {
+                    // Do nothing
+                }
+                else
+                {
+                    hash += (hash * Multiplier) + value1.GetHashCode();
+                }
+
+                if (value2 is null)
+                {
+                    // Do nothing
+                }
+                else
+                {
+                    hash += (hash * Multiplier) + value2.GetHashCode();
+                }
 
                 return hash;
             }

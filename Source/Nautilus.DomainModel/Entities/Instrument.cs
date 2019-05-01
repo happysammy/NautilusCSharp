@@ -71,23 +71,23 @@ namespace Nautilus.DomainModel.Entities
             : base(instrumentId, timestamp)
         {
             // Keep validation logic here.
-            Precondition.NotNull(symbol, nameof(symbol));
-            Precondition.NotNull(instrumentId, nameof(instrumentId));
-            Precondition.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Precondition.NotNegativeInt32(tickDecimals, nameof(tickDecimals));
-            Precondition.PositiveDecimal(tickSize, nameof(tickSize));
-            Precondition.PositiveDecimal(tickValue, nameof(tickValue));
-            Precondition.NotNegativeDecimal(targetDirectSpread, nameof(targetDirectSpread));
-            Precondition.PositiveInt32(roundLotSize, nameof(roundLotSize));
-            Precondition.PositiveInt32(contractSize, nameof(contractSize));
-            Precondition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
-            Precondition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
-            Precondition.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
-            Precondition.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
-            Precondition.PositiveInt32(minTradeSize, nameof(minTradeSize));
-            Precondition.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
-            Precondition.NotNegativeDecimal(marginRequirement, nameof(marginRequirement));
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Validate.NotNull(symbol, nameof(symbol));
+            Validate.NotNull(instrumentId, nameof(instrumentId));
+            Validate.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Validate.NotNegativeInt32(tickDecimals, nameof(tickDecimals));
+            Validate.PositiveDecimal(tickSize, nameof(tickSize));
+            Validate.PositiveDecimal(tickValue, nameof(tickValue));
+            Validate.NotNegativeDecimal(targetDirectSpread, nameof(targetDirectSpread));
+            Validate.PositiveInt32(roundLotSize, nameof(roundLotSize));
+            Validate.PositiveInt32(contractSize, nameof(contractSize));
+            Validate.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
+            Validate.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
+            Validate.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
+            Validate.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
+            Validate.PositiveInt32(minTradeSize, nameof(minTradeSize));
+            Validate.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
+            Validate.NotNegativeDecimal(marginRequirement, nameof(marginRequirement));
+            Validate.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.BrokerSymbol = brokerSymbol;

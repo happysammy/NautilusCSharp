@@ -28,7 +28,7 @@ namespace NautilusExecutor
     /// </summary>
     public class Startup
     {
-        private NautilusExecutor executionSystem;
+        private NautilusExecutor? executionSystem;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -37,8 +37,8 @@ namespace NautilusExecutor
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            Precondition.NotNull(configuration, nameof(configuration));
-            Precondition.NotNull(environment, nameof(environment));
+            Validate.NotNull(configuration, nameof(configuration));
+            Validate.NotNull(environment, nameof(environment));
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -66,7 +66,7 @@ namespace NautilusExecutor
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            Precondition.NotNull(services, nameof(services));
+            Validate.NotNull(services, nameof(services));
 
             var config = JObject.Parse(File.ReadAllText("config.json"));
 
@@ -127,9 +127,9 @@ namespace NautilusExecutor
             IApplicationLifetime appLifetime,
             IHostingEnvironment env)
         {
-            Precondition.NotNull(app, nameof(app));
-            Precondition.NotNull(appLifetime, nameof(appLifetime));
-            Precondition.NotNull(env, nameof(env));
+            Validate.NotNull(app, nameof(app));
+            Validate.NotNull(appLifetime, nameof(appLifetime));
+            Validate.NotNull(env, nameof(env));
 
             appLifetime.ApplicationStopping.Register(this.OnShutdown);
 
@@ -141,7 +141,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionSystem.Shutdown();
+            this.executionSystem?.Shutdown();
         }
     }
 }

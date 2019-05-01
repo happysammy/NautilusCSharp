@@ -9,11 +9,11 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
+    using System.Diagnostics;
     using System.Text;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
@@ -37,10 +37,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Price ask,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(bid, nameof(bid));
-            Debug.NotNull(ask, nameof(ask));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
 
             this.Symbol = symbol;
             this.Bid = bid;
@@ -61,14 +58,11 @@ namespace Nautilus.DomainModel.ValueObjects
             decimal ask,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-            Debug.NotNull(bid, nameof(bid));
-            Debug.NotNull(ask, nameof(ask));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
 
             this.Symbol = symbol;
             this.Bid = Price.Create(bid, bid.GetDecimalPlaces());
-            this.Ask = Price.Create(bid, bid.GetDecimalPlaces());
+            this.Ask = Price.Create(ask, ask.GetDecimalPlaces());
             this.Timestamp = timestamp;
         }
 
@@ -99,7 +93,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Tick"/>.</returns>
         public static Tick GetFromString(string tickString)
         {
-            Debug.NotNull(tickString, nameof(tickString));
+            Debug.Assert(!string.IsNullOrWhiteSpace(tickString) != default, AssertMsg.IsDefault(nameof(tickString)));
 
             var values = tickString.Split(',');
             var header = values[0].Split('.');
@@ -118,12 +112,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="tickBytes">The tick bytes array.</param>
         /// <returns>A <see cref="Tick"/>.</returns>
-        public static Tick GetFromBytes(byte[] tickBytes)
-        {
-            Debug.NotNullOrEmpty(tickBytes, nameof(tickBytes));
-
-            return GetFromString(Encoding.UTF8.GetString(tickBytes));
-        }
+        public static Tick GetFromBytes(byte[] tickBytes) => GetFromString(Encoding.UTF8.GetString(tickBytes));
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
@@ -131,12 +120,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="other">The other tick to compare.</param>
         /// <returns>An <see cref="int"/>.</returns>
-        public int CompareTo(Tick other)
-        {
-            Debug.NotNull(other, nameof(other));
-
-            return this.Timestamp.Compare(other.Timestamp);
-        }
+        public int CompareTo(Tick other) => this.Timestamp.Compare(other.Timestamp);
 
         /// <summary>
         /// Returns a string representation of the <see cref="Tick"/>.
@@ -154,10 +138,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
         /// </summary>
         /// <returns>A <see cref="byte"/> array.</returns>
-        public byte[] ToUtf8Bytes()
-        {
-            return Encoding.UTF8.GetBytes(this.ToString());
-        }
+        public byte[] ToUtf8Bytes() => Encoding.UTF8.GetBytes(this.ToString());
 
         /// <summary>
         /// Returns an array of objects to be included in equality checks.

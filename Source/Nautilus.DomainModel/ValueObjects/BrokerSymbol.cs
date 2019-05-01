@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public BrokerSymbol(string symbol)
             : base(symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotEmptyOrWhiteSpace(symbol, nameof(symbol));
         }
     }
 }

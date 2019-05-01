@@ -10,7 +10,6 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Validation;
 
     /// <summary>
@@ -28,7 +27,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="logger">The logger.</param>
         public CommandHandler(ILogger logger)
         {
-            Precondition.NotNull(logger, nameof(logger));
+            Validate.NotNull(logger, nameof(logger));
 
             this.log = logger;
         }

@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Messaging
 {
     using System;
+    using System.Diagnostics;
     using Nautilus.Core;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
@@ -37,10 +37,8 @@ namespace Nautilus.Common.Messaging
             Guid id,
             ZonedDateTime timestamp)
         {
-            Debug.NotNull(receiver, nameof(receiver));
-            Debug.NotNull(message, nameof(message));
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(id != default, "The id cannot be default ZonedDateTime.");
+            Debug.Assert(timestamp != default, "The timestamp cannot be default ZonedDateTime.");
 
             this.Receiver = receiver;
             this.Sender = sender;
@@ -72,12 +70,12 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelopes opened time.
         /// </summary>
-        public Option<ZonedDateTime?> OpenedTime { get; private set; }
+        public ZonedDateTime? OpenedTime { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the envelope has been opened.
         /// </summary>
-        public bool IsOpened => this.OpenedTime.HasValue;
+        public bool IsOpened => this.OpenedTime != null;
 
         /// <summary>
         /// Opens the envelope and returns the contained message (records the opened time if not
@@ -87,9 +85,9 @@ namespace Nautilus.Common.Messaging
         /// <returns>The contained message of type T.</returns>
         public T Open(ZonedDateTime currentTime)
         {
-            Debug.NotDefault(currentTime, nameof(currentTime));
+            Debug.Assert(currentTime != default, "The currentTime cannot be default ZonedDateTime.");
 
-            if (this.OpenedTime.HasNoValue)
+            if (this.OpenedTime is null)
             {
                 this.OpenedTime = currentTime;
             }

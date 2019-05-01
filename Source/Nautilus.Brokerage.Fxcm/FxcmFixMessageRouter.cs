@@ -30,7 +30,7 @@ namespace Nautilus.Brokerage.FXCM
         private readonly InstrumentDataProvider instrumentData;
         private readonly string accountNumber;
 
-        private Session fixSession;
+        private Session? fixSession;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
@@ -47,9 +47,9 @@ namespace Nautilus.Brokerage.FXCM
             LabelFactory.Create(nameof(FxcmFixMessageRouter)),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(instrumentData, nameof(instrumentData));
-            Precondition.NotNull(accountNumber, nameof(accountNumber));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(instrumentData, nameof(instrumentData));
+            Validate.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
             this.accountNumber = accountNumber;
@@ -61,7 +61,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="session">The FIX session.</param>
         public void ConnectSession(Session session)
         {
-            Precondition.NotNull(session, nameof(session));
+            Validate.NotNull(session, nameof(session));
 
             this.fixSession = session;
         }
@@ -75,7 +75,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Debug($"CollateralInquiry + SubscribeCollateralReports...");
             });
@@ -90,7 +90,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Debug($"TradingSessionStatusRequest...");
             });
@@ -105,7 +105,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Debug($"RequestForOpenPositions + SubscribePositionReports...");
             });
@@ -125,7 +125,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
 
-                this.fixSession.Send(SecurityListRequestFactory.Create(
+                this.fixSession?.Send(SecurityListRequestFactory.Create(
                     fxcmSymbol.Value,
                     this.TimeNow()));
 
@@ -140,7 +140,7 @@ namespace Nautilus.Brokerage.FXCM
         {
             this.Execute(() =>
             {
-                this.fixSession.Send(SecurityListRequestFactory.Create(this.TimeNow()));
+                this.fixSession?.Send(SecurityListRequestFactory.Create(this.TimeNow()));
 
                 this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
             });
@@ -158,7 +158,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
-                this.fixSession.Send(MarketDataRequestFactory.Create(
+                this.fixSession?.Send(MarketDataRequestFactory.Create(
                     brokerSymbol,
                     0,
                     this.TimeNow()));
@@ -176,7 +176,7 @@ namespace Nautilus.Brokerage.FXCM
             {
                 foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
                 {
-                    this.fixSession.Send(MarketDataRequestFactory.Create(
+                    this.fixSession?.Send(MarketDataRequestFactory.Create(
                         brokerSymbol,
                         0,
                         this.TimeNow()));
@@ -202,7 +202,7 @@ namespace Nautilus.Brokerage.FXCM
                     order,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information($"Submitting Order => {Brokerage.FXCM}");
             });
@@ -227,7 +227,7 @@ namespace Nautilus.Brokerage.FXCM
                         this.accountNumber,
                         atomicOrder,
                         this.TimeNow());
-                    this.fixSession.Send(message);
+                    this.fixSession?.Send(message);
                 }
                 else
                 {
@@ -236,7 +236,7 @@ namespace Nautilus.Brokerage.FXCM
                         this.accountNumber,
                         atomicOrder,
                         this.TimeNow());
-                    this.fixSession.Send(message);
+                    this.fixSession?.Send(message);
                 }
 
                 this.Log.Information($"Submitting ELS Order => {Brokerage.FXCM}");
@@ -261,7 +261,7 @@ namespace Nautilus.Brokerage.FXCM
                     modifiedPrice.Value,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderReplaceRequest: " +
@@ -285,7 +285,7 @@ namespace Nautilus.Brokerage.FXCM
                     order,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderCancelRequestFactory: " +

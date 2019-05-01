@@ -27,7 +27,7 @@ namespace Nautilus.Redis
         /// <param name="subscriber">The Redis subscriber.</param>
         public RedisChannelPublisher(ISubscriber subscriber)
         {
-            Precondition.NotNull(subscriber, nameof(subscriber));
+            Validate.NotNull(subscriber, nameof(subscriber));
 
             this.subscriber = subscriber;
             this.channelCache = new List<string>();
@@ -40,8 +40,8 @@ namespace Nautilus.Redis
         /// <param name="message">The message content.</param>
         public void Publish(string channel, string message)
         {
-            Debug.NotNull(channel, nameof(channel));
-            Debug.NotNull(message, nameof(message));
+            Debug.NotEmptyOrWhiteSpace(channel, nameof(channel));
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
 
             if (!this.channelCache.Contains(channel))
             {

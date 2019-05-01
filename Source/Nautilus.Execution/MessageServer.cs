@@ -53,13 +53,13 @@ namespace Nautilus.Execution
                 container,
                 messagingAdapter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messagingAdapter, nameof(messagingAdapter));
-            Precondition.NotNull(commandSerializer, nameof(commandSerializer));
-            Precondition.NotNull(eventSerializer, nameof(eventSerializer));
-            Precondition.NotNull(serverAddress, nameof(serverAddress));
-            Precondition.NotNull(commandsPort, nameof(commandsPort));
-            Precondition.NotNull(eventsPort, nameof(eventsPort));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messagingAdapter, nameof(messagingAdapter));
+            Validate.NotNull(commandSerializer, nameof(commandSerializer));
+            Validate.NotNull(eventSerializer, nameof(eventSerializer));
+            Validate.NotNull(serverAddress, nameof(serverAddress));
+            Validate.NotNull(commandsPort, nameof(commandsPort));
+            Validate.NotNull(eventsPort, nameof(eventsPort));
 
             this.commandConsumer = new ActorEndpoint(
                 Context.ActorOf(Props.Create(

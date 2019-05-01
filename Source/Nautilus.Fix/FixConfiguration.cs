@@ -35,9 +35,9 @@ namespace Nautilus.Fix
             bool sendAccountTag,
             bool updateInstruments)
         {
-            Precondition.NotNull(configPath, nameof(configPath));
-            Precondition.NotNull(credentials, nameof(credentials));
-            Precondition.NotNull(instrumentDataFileName, nameof(instrumentDataFileName));
+            Validate.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
+            Validate.NotNull(credentials, nameof(credentials));
+            Validate.NotEmptyOrWhiteSpace(instrumentDataFileName, nameof(instrumentDataFileName));
 
             this.Broker = broker;
             this.ConfigPath = configPath;

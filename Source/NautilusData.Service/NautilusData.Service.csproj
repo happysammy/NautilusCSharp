@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <RootNamespace>NautilusDB.Service</RootNamespace>
+        <LangVersion>8</LangVersion>
+        <NullableContextOptions>enable</NullableContextOptions>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,7 +12,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusDB.Service.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusData.Service.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />

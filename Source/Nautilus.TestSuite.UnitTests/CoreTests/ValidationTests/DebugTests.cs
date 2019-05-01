@@ -67,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ValidationException>(() => Debug.NotNull(value, nameof(value)));
+            Assert.Throws<ValidationException>(() => Debug.NotEmptyOrWhiteSpace(value, nameof(value)));
         }
 
         [Fact]
@@ -78,19 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
 
             // Act
             // Assert
-            Debug.NotNull(obj, nameof(obj));
-        }
-
-        [Fact]
-        internal void NotNullTee_WithNullObject_Throws()
-        {
-            // Arrange
-            object obj = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.NotNull(obj, nameof(obj)));
+            Debug.NotEmptyOrWhiteSpace(obj, nameof(obj));
         }
 
         [Fact]
@@ -149,18 +137,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void Empty_WhenCollectionNull_Throws()
-        {
-            // Arrange
-            List<string> collection = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.Empty(collection, nameof(collection)));
-        }
-
-        [Fact]
         internal void NotNullOrEmpty_WhenCollectionNotEmpty_DoesNothing()
         {
             // Arrange
@@ -172,18 +148,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
         }
 
         [Fact]
-        internal void NotNullOrEmpty_WhenCollectionNull_Throws()
-        {
-            // Arrange
-            List<string> collection = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
         internal void NotNullOrEmpty_WhenCollectionEmpty_Throws()
         {
             // Arrange
@@ -192,18 +156,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Act
             // Assert
             Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(collection, nameof(collection)));
-        }
-
-        [Fact]
-        internal void NotNullOrEmpty_WhenDictionaryNull_Throws()
-        {
-            // Arrange
-            Dictionary<string, int> dictionary = null;
-
-            // Act
-            // Assert - Ignore expression is always null warning (the point of the test is to catch this condition).
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ValidationException>(() => Debug.NotNullOrEmpty(dictionary, nameof(dictionary)));
         }
 
         [Fact]
@@ -715,7 +667,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ValidationTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotOutOfRangeInt64(value, nameof(value), 0, 3);
+            Validate.NotOutOfRangeInt64(value, nameof(value), 0, 3);
         }
 
         [Theory]

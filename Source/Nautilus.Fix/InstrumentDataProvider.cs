@@ -56,7 +56,7 @@ namespace Nautilus.Fix
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public QueryResult<string> GetNautilusSymbol(string brokerSymbol)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
 
             return this.symbolIndex.ContainsKey(brokerSymbol)
                  ? QueryResult<string>.Ok(this.symbolIndex[brokerSymbol])
@@ -71,7 +71,7 @@ namespace Nautilus.Fix
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public QueryResult<string> GetBrokerSymbol(string nautilusSymbol)
         {
-            Debug.NotNull(nautilusSymbol, nameof(nautilusSymbol));
+            Debug.NotEmptyOrWhiteSpace(nautilusSymbol, nameof(nautilusSymbol));
 
             return this.symbolIndex.ContainsValue(nautilusSymbol)
                  ? QueryResult<string>.Ok(this.symbolIndex.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
@@ -116,7 +116,7 @@ namespace Nautilus.Fix
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public QueryResult<decimal> GetTickValue(string brokerSymbol)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
 
             return this.tickValueIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.tickValueIndex[brokerSymbol])
@@ -131,7 +131,7 @@ namespace Nautilus.Fix
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public QueryResult<decimal> GetTargetDirectSpread(string brokerSymbol)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
 
             return this.targetSpreadIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.targetSpreadIndex[brokerSymbol])
@@ -146,7 +146,7 @@ namespace Nautilus.Fix
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
         public QueryResult<decimal> GetMarginRequirement(string brokerSymbol)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
 
             return this.marginRequirementIndex.ContainsKey(brokerSymbol)
                 ? QueryResult<decimal>.Ok(this.marginRequirementIndex[brokerSymbol])

@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public TradeType(string tradeType)
             : base(tradeType)
         {
-            Debug.NotNull(tradeType, nameof(tradeType));
+            Debug.NotEmptyOrWhiteSpace(tradeType, nameof(tradeType));
         }
     }
 }

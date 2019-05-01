@@ -110,7 +110,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="timeInForce">The time in force.</param>
         /// <returns>A <see cref="TimeInForce"/>.</returns>
-        public static QuickFix.Fields.TimeInForce GetFixTimeInForce(TimeInForce timeInForce)
+        public static QuickFix.Fields.TimeInForce? GetFixTimeInForce(TimeInForce timeInForce)
         {
             return TimeInForceIndex.ContainsKey(timeInForce) ? TimeInForceIndex[timeInForce] : null;
         }
@@ -227,34 +227,25 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="orderType">The order type.</param>
         /// <returns>The <see cref="OrdType"/>.</returns>
-        public static OrdType GetFixOrderType(OrderType orderType)
+        public static OrdType? GetFixOrderType(OrderType orderType)
         {
-            if (orderType == OrderType.MARKET)
+            switch (orderType)
             {
-                return new OrdType(OrdType.MARKET);
+                case OrderType.MARKET:
+                    return new OrdType(OrdType.MARKET);
+                case OrderType.STOP_MARKET:
+                    return new OrdType(OrdType.STOP);
+                case OrderType.STOP_LIMIT:
+                    return new OrdType(OrdType.STOP_LIMIT);
+                case OrderType.LIMIT:
+                    return new OrdType(OrdType.LIMIT);
+                case OrderType.MIT:
+                    return new OrdType(OrdType.MARKET_IF_TOUCHED);
+                case OrderType.UNKNOWN:
+                    return null;
+                default:
+                    return null;
             }
-
-            if (orderType == OrderType.STOP_MARKET)
-            {
-                return new OrdType(OrdType.STOP);
-            }
-
-            if (orderType == OrderType.STOP_LIMIT)
-            {
-                return new OrdType(OrdType.STOP_LIMIT);
-            }
-
-            if (orderType == OrderType.LIMIT)
-            {
-                return new OrdType(OrdType.LIMIT);
-            }
-
-            if (orderType == OrderType.MIT)
-            {
-                return new OrdType(OrdType.MARKET_IF_TOUCHED);
-            }
-
-            return null;
         }
 
         /// <summary>

@@ -54,10 +54,10 @@ namespace Nautilus.Data
             int barRollingWindow,
             bool updateInstruments)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(publisherFactory, nameof(publisherFactory));
-            Precondition.NotNull(barRepository, nameof(barRepository));
-            Precondition.NotNull(symbols, nameof(symbols));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(publisherFactory, nameof(publisherFactory));
+            Validate.NotNull(barRepository, nameof(barRepository));
+            Validate.NotNull(symbols, nameof(symbols));
 
             var tickPublisher = new ActorEndpoint(
                 actorSystem.ActorOf(Props.Create(

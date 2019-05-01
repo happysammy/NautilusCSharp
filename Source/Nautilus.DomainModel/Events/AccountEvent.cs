@@ -55,7 +55,7 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(eventId, eventTimestamp)
         {
-            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotNull(cashBalance, nameof(cashBalance));
             Debug.NotNull(cashStartDay, nameof(cashStartDay));
             Debug.NotNull(cashActivityDay, nameof(cashActivityDay));

@@ -30,7 +30,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void True(bool predicate, string paramName)
         {
-            Precondition.True(predicate, paramName);
+            Validate.True(predicate, paramName);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void TrueIf(bool condition, bool predicate, string paramName)
         {
-            Precondition.TrueIf(condition, predicate, paramName);
+            Validate.TrueIf(condition, predicate, paramName);
         }
 
         /// <summary>
@@ -59,20 +59,20 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void NotNull<T>(T argument, string paramName)
         {
-            Precondition.NotNull(argument, paramName);
+            Validate.NotNull(argument, paramName);
         }
 
         /// <summary>
-        /// The validation passes if the <see cref="string"/> argument is not null.
+        /// The validation passes if the <see cref="string"/> argument is not null, empty or whitespace.
         /// </summary>
         /// <param name="argument">The string argument.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ValidationException">Throws if the argument is null.</exception>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public static void NotNull(string argument, string paramName)
+        public static void NotEmptyOrWhiteSpace(string argument, string paramName)
         {
-            Precondition.NotNull(argument, paramName);
+            Validate.NotEmptyOrWhiteSpace(argument, paramName);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Nautilus.Core.Validation
         public static void NotDefault<T>(T argument, string paramName)
             where T : struct
         {
-            Precondition.NotDefault(argument, paramName);
+            Validate.NotDefault(argument, paramName);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void NotNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Precondition.NotNullOrEmpty(collection, paramName);
+            Validate.NotNullOrEmpty(collection, paramName);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Precondition.Empty(collection, paramName);
+            Validate.Empty(collection, paramName);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Nautilus.Core.Validation
             string paramName,
             IReadOnlyCollection<T> collection)
         {
-            Precondition.Contains(element, paramName, collection);
+            Validate.Contains(element, paramName, collection);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Nautilus.Core.Validation
             string paramName,
             IReadOnlyCollection<T> collection)
         {
-            Precondition.DoesNotContain(element, paramName, collection);
+            Validate.DoesNotContain(element, paramName, collection);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Nautilus.Core.Validation
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
         {
-            Precondition.ContainsKey(key, paramName, dictionary);
+            Validate.ContainsKey(key, paramName, dictionary);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Nautilus.Core.Validation
             string paramName,
             IReadOnlyDictionary<T1, T2> dictionary)
         {
-            Precondition.DoesNotContainKey(key, paramName, dictionary);
+            Validate.DoesNotContainKey(key, paramName, dictionary);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void NotEqualTo(object obj, string paramName, object objNotToEqual)
         {
-            Precondition.NotEqualTo(obj, paramName, objNotToEqual);
+            Validate.NotEqualTo(obj, paramName, objNotToEqual);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Nautilus.Core.Validation
         [DebuggerStepThrough]
         public static void EqualTo(object obj, string paramName, object objToEqual)
         {
-            Precondition.EqualTo(obj, paramName, objToEqual);
+            Validate.EqualTo(obj, paramName, objToEqual);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Nautilus.Core.Validation
             int value,
             string paramName)
         {
-            Precondition.PositiveInt32(value, paramName);
+            Validate.PositiveInt32(value, paramName);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace Nautilus.Core.Validation
             int value,
             string paramName)
         {
-            Precondition.NotNegativeInt32(value, paramName);
+            Validate.NotNegativeInt32(value, paramName);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Nautilus.Core.Validation
             long value,
             string paramName)
         {
-            Precondition.PositiveInt64(value, paramName);
+            Validate.PositiveInt64(value, paramName);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Nautilus.Core.Validation
             long value,
             string paramName)
         {
-            Precondition.NotNegativeInt64(value, paramName);
+            Validate.NotNegativeInt64(value, paramName);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Nautilus.Core.Validation
             double value,
             string paramName)
         {
-            Precondition.PositiveDouble(value, paramName);
+            Validate.PositiveDouble(value, paramName);
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace Nautilus.Core.Validation
             double value,
             string paramName)
         {
-            Precondition.NotNegativeDouble(value, paramName);
+            Validate.NotNegativeDouble(value, paramName);
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace Nautilus.Core.Validation
             decimal value,
             string paramName)
         {
-            Precondition.PositiveDecimal(value, paramName);
+            Validate.PositiveDecimal(value, paramName);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace Nautilus.Core.Validation
             decimal value,
             string paramName)
         {
-            Precondition.NotNegativeDecimal(value, paramName);
+            Validate.NotNegativeDecimal(value, paramName);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nautilus.Core.Validation
             int upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Precondition.NotOutOfRangeInt32(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeInt32(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Nautilus.Core.Validation
             long upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Precondition.NotOutOfRangeInt64(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeInt64(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace Nautilus.Core.Validation
             double upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Precondition.NotOutOfRangeDouble(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeDouble(value, paramName, lowerBound, upperBound, endPoints);
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace Nautilus.Core.Validation
             decimal upperBound,
             RangeEndPoints endPoints = RangeEndPoints.Inclusive)
         {
-            Precondition.NotOutOfRangeDecimal(value, paramName, lowerBound, upperBound, endPoints);
+            Validate.NotOutOfRangeDecimal(value, paramName, lowerBound, upperBound, endPoints);
         }
     }
 }

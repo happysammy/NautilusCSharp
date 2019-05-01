@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.CQS;
-    using Nautilus.Core.Validation;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -52,15 +51,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
         }
 
         [Fact]
-        public void ActionInvoked_WithGenericNoValue_Throws()
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => ((Action)(() => { QueryResult<TestClass>.Ok(null); })).Invoke());
-        }
-
-        [Fact]
         public void Fail_GenericWithValueInputs_ReturnsExpectedResult()
         {
             // Arrange
@@ -83,16 +73,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CQSTests
             // Assert
             Assert.True(result.IsFailure);
             Assert.Throws<InvalidOperationException>(() => ((Action)(() => { TestClass testClass = result.Value; })).Invoke());
-        }
-
-        [Fact]
-        public void Fail_AllTypesWithNoErrorMessage_Throws()
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ValidationException>(() => ((Action)(() => { QueryResult<TestClass>.Fail(null); })).Invoke());
-            Assert.Throws<ValidationException>(() => ((Action)(() => { QueryResult<TestClass>.Fail(string.Empty); })).Invoke());
         }
 
         // Only instantiated within this class for testing purposes.

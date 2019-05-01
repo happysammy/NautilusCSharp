@@ -43,8 +43,8 @@ namespace Nautilus.Fix
         private readonly bool sendAccountTag;
         private readonly List<IEndpoint> connectionEventReceivers;
 
-        private SocketInitiator initiator;
-        private Session session;
+        private SocketInitiator? initiator;
+        private Session? session;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
@@ -59,10 +59,10 @@ namespace Nautilus.Fix
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(config, nameof(config));
-            Precondition.NotNull(messageHandler, nameof(messageHandler));
-            Precondition.NotNull(messageRouter, nameof(messageRouter));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(config, nameof(config));
+            Validate.NotNull(messageHandler, nameof(messageHandler));
+            Validate.NotNull(messageRouter, nameof(messageRouter));
 
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -110,7 +110,7 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsFixConnected => this.session.IsLoggedOn;
+        public bool IsFixConnected => this.session != null && this.session.IsLoggedOn;
 
         /// <summary>
         /// The initializes the execution gateway.
@@ -118,7 +118,7 @@ namespace Nautilus.Fix
         /// <param name="gateway">The execution gateway.</param>
         public void InitializeGateway(IFixGateway gateway)
         {
-            Precondition.NotNull(gateway, nameof(gateway));
+            Validate.NotNull(gateway, nameof(gateway));
 
             this.FixMessageHandler.InitializeGateway(gateway);
         }
@@ -158,7 +158,7 @@ namespace Nautilus.Fix
         /// <param name="receiver">The event receiver endpoint.</param>
         public void RegisterConnectionEventReceiver(IEndpoint receiver)
         {
-            Precondition.NotNull(receiver, nameof(receiver));
+            Validate.NotNull(receiver, nameof(receiver));
             Debug.DoesNotContain(receiver, nameof(receiver), this.connectionEventReceivers);
 
             this.connectionEventReceivers.Add(receiver);
@@ -189,11 +189,8 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(this.initiator, nameof(this.initiator));
-
-                this.initiator.Stop();
-
                 this.Log.Debug("Stopping initiator... ");
+                this.initiator?.Stop();
             });
         }
 
@@ -205,7 +202,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
+                Validate.NotNull(sessionId, nameof(sessionId));
 
                 this.Log.Debug("Creating session...");
                 this.session = Session.LookupSession(sessionId);
@@ -222,7 +219,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
+                Validate.NotNull(sessionId, nameof(sessionId));
 
                 foreach (var receiver in this.connectionEventReceivers)
                 {
@@ -245,7 +242,7 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
+                Validate.NotNull(sessionId, nameof(sessionId));
 
                 foreach (var receiver in this.connectionEventReceivers)
                 {
@@ -278,8 +275,8 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-                Precondition.NotNull(sessionId, nameof(sessionId));
+                Validate.NotNull(message, nameof(message));
+                Validate.NotNull(sessionId, nameof(sessionId));
 
                 if (message is Logon)
                 {
@@ -305,8 +302,8 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-                Precondition.NotNull(sessionId, nameof(sessionId));
+                Validate.NotNull(message, nameof(message));
+                Validate.NotNull(sessionId, nameof(sessionId));
 
                 try
                 {

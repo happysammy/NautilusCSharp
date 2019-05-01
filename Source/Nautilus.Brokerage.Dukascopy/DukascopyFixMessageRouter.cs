@@ -30,7 +30,7 @@ namespace Nautilus.Brokerage.Dukascopy
         private readonly InstrumentDataProvider instrumentData;
         private readonly string accountNumber;
 
-        private Session fixSession;
+        private Session? fixSession;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DukascopyFixMessageRouter"/> class.
@@ -47,8 +47,8 @@ namespace Nautilus.Brokerage.Dukascopy
             LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
             container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(accountNumber, nameof(accountNumber));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.instrumentData = instrumentData;
             this.accountNumber = accountNumber;
@@ -60,8 +60,6 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <param name="session">The FIX session.</param>
         public void ConnectSession(Session session)
         {
-            Precondition.NotNull(session, nameof(session));
-
             this.fixSession = session;
         }
 
@@ -74,7 +72,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.DUKASCOPY);
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information($"CollateralInquiry + SubscribeCollateralReports...");
             });
@@ -89,7 +87,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information($"TradingSessionStatusRequest...");
             });
@@ -104,7 +102,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information($"RequestForOpenPositions + SubscribePositionReports...");
             });
@@ -124,7 +122,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
 
-                this.fixSession.Send(SecurityListRequestFactory.Create(
+                this.fixSession?.Send(SecurityListRequestFactory.Create(
                     fxcmSymbol.Value,
                     this.TimeNow()));
 
@@ -139,7 +137,7 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             this.Execute(() =>
             {
-                this.fixSession.Send(SecurityListRequestFactory.Create(this.TimeNow()));
+                this.fixSession?.Send(SecurityListRequestFactory.Create(this.TimeNow()));
 
                 this.Log.Information($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
             });
@@ -157,7 +155,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
-                this.fixSession.Send(MarketDataRequestFactory.Create(
+                this.fixSession?.Send(MarketDataRequestFactory.Create(
                     brokerSymbol,
                     1,
                     this.TimeNow()));
@@ -175,7 +173,7 @@ namespace Nautilus.Brokerage.Dukascopy
             {
                 foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
                 {
-                    this.fixSession.Send(MarketDataRequestFactory.Create(
+                    this.fixSession?.Send(MarketDataRequestFactory.Create(
                         brokerSymbol,
                         1,
                         this.TimeNow()));
@@ -201,7 +199,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     order,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information($"Submitting Order => {Brokerage.DUKASCOPY}");
             });
@@ -226,7 +224,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         this.accountNumber,
                         atomicOrder,
                         this.TimeNow());
-                    this.fixSession.Send(message);
+                    this.fixSession?.Send(message);
                 }
                 else
                 {
@@ -235,7 +233,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         this.accountNumber,
                         atomicOrder,
                         this.TimeNow());
-                    this.fixSession.Send(message);
+                    this.fixSession?.Send(message);
                 }
 
                 this.Log.Information($"Submitting ELS Order => {Brokerage.DUKASCOPY}");
@@ -260,7 +258,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     modifiedPrice.Value,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderReplaceRequest: " +
@@ -284,7 +282,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     order,
                     this.TimeNow());
 
-                this.fixSession.Send(message);
+                this.fixSession?.Send(message);
 
                 this.Log.Information(
                     $"{order.Symbol} Submitting OrderCancelRequestFactory: " +

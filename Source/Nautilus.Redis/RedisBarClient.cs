@@ -37,7 +37,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The redis connection multiplexer.</param>
         public RedisBarClient(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
+            Validate.NotNull(connection, nameof(connection));
 
             this.redisServer = connection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort);
             this.redisDatabase = connection.GetDatabase();
@@ -285,7 +285,7 @@ namespace Nautilus.Redis
 
             var barsArray = barKeysQuery
                 .Value
-                .SelectMany(key => this.redisDatabase.ListRange(key, 0, -1))
+                .SelectMany(key => this.redisDatabase.ListRange(key))
                 .Select(value => value.ToString())
                 .Select(Bar.GetFromString)
                 .ToArray();
@@ -318,7 +318,7 @@ namespace Nautilus.Redis
             var barKeysQuery = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
 
             var barsArray = barKeysQuery
-                .Select(key => this.redisDatabase.ListRange(key, 0, -1))
+                .Select(key => this.redisDatabase.ListRange(key))
                 .Select(value => value.ToString())
                 .Select(Bar.GetFromString)
                 .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
@@ -376,14 +376,14 @@ namespace Nautilus.Redis
         /// <returns>The query result list of bars.</returns>
         public QueryResult<List<Bar>> GetBarsByDay(string key)
         {
-            Debug.NotNull(key, nameof(key));
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             if (!this.KeyExists(key))
             {
                 return QueryResult<List<Bar>>.Fail($"No market data found for {key}.");
             }
 
-            var values = this.redisDatabase.ListRange(key, 0, -1);
+            var values = this.redisDatabase.ListRange(key);
             var barStrings = new string[values.Count()];
             foreach (var element in values)
             {
@@ -400,7 +400,7 @@ namespace Nautilus.Redis
         /// <returns>The result of the operation.</returns>
         public CommandResult Delete(string key)
         {
-            Debug.NotNull(key, nameof(key));
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             if (!this.KeyExists(key))
             {

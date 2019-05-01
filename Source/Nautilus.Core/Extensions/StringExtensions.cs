@@ -26,7 +26,7 @@ namespace Nautilus.Core.Extensions
         /// <returns>A string with no remaining white space.</returns>
         public static string RemoveAllWhitespace(this string input)
         {
-            Debug.NotNull(input, nameof(input));
+            Debug.NotEmptyOrWhiteSpace(input, nameof(input));
 
             return new string(input.ToCharArray()
                 .Where(c => !char.IsWhiteSpace(c))
@@ -39,7 +39,7 @@ namespace Nautilus.Core.Extensions
         /// <param name="enumerationString">The enumeration string.</param>
         /// <typeparam name="T">The enumerator type.</typeparam>
         /// <returns>An enumerator type.</returns>
-        public static T ToEnum<T>([CanBeNull] this string enumerationString)
+        public static T ToEnum<T>(this string enumerationString)
             where T : struct
         {
             if (string.IsNullOrWhiteSpace(enumerationString))

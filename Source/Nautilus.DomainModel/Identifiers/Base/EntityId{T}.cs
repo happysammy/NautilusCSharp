@@ -8,10 +8,10 @@
 
 namespace Nautilus.DomainModel.Identifiers.Base
 {
+    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using Nautilus.DomainModel.Entities.Base;
 
     /// <summary>
@@ -28,8 +28,8 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// <param name="value">The string value.</param>
         protected EntityId(string value)
         {
-            Debug.NotNull(value, nameof(value));
-            Debug.True(value.Length <= 100, nameof(value));
+            Debug.Assert(!string.IsNullOrWhiteSpace(value), AssertMsg.IsNullOrWhitespace(nameof(value)));
+            Debug.Assert(value.Length <= 1024, "The string length cannot be more than 1024 characters.");
 
             this.Value = value.RemoveAllWhitespace();
         }
@@ -39,15 +39,13 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// </summary>
         public string Value { get; }
 
-                /// <summary>
+        /// <summary>
         /// Returns a value indicating whether the <see cref="EntityId{T}"/>(s) are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(
-            [CanBeNull] EntityId<T> left,
-            [CanBeNull] EntityId<T> right)
+        public static bool operator ==(EntityId<T> left, EntityId<T> right)
         {
             if (left is null || right is null)
             {
@@ -63,9 +61,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(
-            [CanBeNull] EntityId<T> left,
-            [CanBeNull] EntityId<T> right) => !(left == right);
+        public static bool operator !=(EntityId<T> left, EntityId<T> right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="EntityId{T}"/> is equal
@@ -73,7 +69,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as EntityId<T>);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="EntityId{T}"/> is equal
@@ -81,7 +77,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals([CanBeNull] EntityId<T> other) => other != null && this.Value == other.Value;
+        public bool Equals(EntityId<T> other) => this.Value == other.Value;
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

@@ -28,7 +28,7 @@ namespace NautilusData.Service
         /// <param name="setupContainer">The setup container.</param>
         public NautilusDataService(IComponentryContainer setupContainer)
         {
-            Precondition.NotNull(setupContainer, nameof(setupContainer));
+            Validate.NotNull(setupContainer, nameof(setupContainer));
 
             this.clock = setupContainer.Clock;
             this.guidFactory = setupContainer.GuidFactory;

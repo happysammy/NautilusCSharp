@@ -35,8 +35,8 @@ namespace Nautilus.Data.Publishers
                 LabelFactory.Create(nameof(BarPublisher)),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(publisher, nameof(publisher));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(publisher, nameof(publisher));
 
             this.publisher = publisher;
 

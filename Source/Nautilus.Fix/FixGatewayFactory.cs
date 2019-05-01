@@ -28,8 +28,8 @@ namespace Nautilus.Fix
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(fixClient, nameof(fixClient));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(fixClient, nameof(fixClient));
 
             var gateway = new FixGateway(
                 container,

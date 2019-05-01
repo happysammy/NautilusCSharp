@@ -35,7 +35,7 @@ namespace Nautilus.Fix.MessageFactories
             decimal modifiedPrice,
             ZonedDateTime transactionTime)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
             Debug.NotNull(order, nameof(order));
             Debug.NotNull(modifiedPrice, nameof(modifiedPrice));
             Debug.NotDefault(transactionTime, nameof(transactionTime));

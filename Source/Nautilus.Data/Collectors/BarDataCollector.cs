@@ -51,9 +51,9 @@ namespace Nautilus.Data.Collectors
                 LabelFactory.Create($"{nameof(BarDataCollector)}-{dataReader.BarType}"),
                 container)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(dataReader, nameof(dataReader));
-            Precondition.NotNull(collectionSchedule, nameof(collectionSchedule));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(dataReader, nameof(dataReader));
+            Validate.NotNull(collectionSchedule, nameof(collectionSchedule));
 
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;

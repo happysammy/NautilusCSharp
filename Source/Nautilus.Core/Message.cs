@@ -9,8 +9,8 @@
 namespace Nautilus.Core
 {
     using System;
+    using System.Diagnostics;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
@@ -24,11 +24,10 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         protected Message(Guid id, ZonedDateTime timestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(id != default, AssertMsg.IsDefault(nameof(id)));
+            Debug.Assert(timestamp != default, AssertMsg.IsDefault(nameof(timestamp)));
 
             this.Id = id;
             this.Timestamp = timestamp;
@@ -50,9 +49,7 @@ namespace Nautilus.Core
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(
-            [CanBeNull] Message left,
-            [CanBeNull] Message right)
+        public static bool operator ==(Message left, Message right)
         {
             if (left is null && right is null)
             {
@@ -73,7 +70,7 @@ namespace Nautilus.Core
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=([CanBeNull] Message left, [CanBeNull] Message right) => !(left == right);
+        public static bool operator !=(Message left, Message right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Message"/> is equal
@@ -81,7 +78,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as Message);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Message"/> is equal
@@ -89,7 +86,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals([CanBeNull] Message other) => other != null && this.Id == other.Id;
+        public bool Equals(Message other) => this.Id == other.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.

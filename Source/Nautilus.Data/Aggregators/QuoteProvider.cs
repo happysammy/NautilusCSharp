@@ -129,8 +129,8 @@ namespace Nautilus.Data.Aggregators
             string accountCurrency,
             string quoteCurrency)
         {
-            Debug.NotNull(accountCurrency, nameof(accountCurrency));
-            Debug.NotNull(quoteCurrency, nameof(quoteCurrency));
+            Debug.NotEmptyOrWhiteSpace(accountCurrency, nameof(accountCurrency));
+            Debug.NotEmptyOrWhiteSpace(quoteCurrency, nameof(quoteCurrency));
 
             var conversionRateAccountToUsd = decimal.Zero;
             var exchangeRateFromUsd = decimal.Zero;
@@ -158,7 +158,7 @@ namespace Nautilus.Data.Aggregators
 
         private Price GetLastBid(string symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
+            Debug.NotEmptyOrWhiteSpace(symbol, nameof(symbol));
 
             return this.ticks[this.symbolCodes[symbol]].Bid;
         }

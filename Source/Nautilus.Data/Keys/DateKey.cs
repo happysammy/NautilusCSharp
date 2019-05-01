@@ -9,9 +9,9 @@
 namespace Nautilus.Data.Keys
 {
     using System;
+    using System.Diagnostics;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
     using NodaTime;
 
     /// <summary>
@@ -28,9 +28,9 @@ namespace Nautilus.Data.Keys
         /// <param name="day">The date key day.</param>
         public DateKey(int year, int month, int day)
         {
-            Debug.PositiveInt32(year, nameof(year));
-            Debug.PositiveInt32(month, nameof(month));
-            Debug.PositiveInt32(day, nameof(day));
+            Debug.Assert(year > 0, "The value of year must be > 0.");
+            Debug.Assert(month > 0, "The value of month must be > 0.");
+            Debug.Assert(day > 0, "The value of day must be > 0.");
 
             this.Year = year;
             this.Month = month;
@@ -47,7 +47,7 @@ namespace Nautilus.Data.Keys
         public DateKey(ZonedDateTime timestamp)
             : this(timestamp.Year, timestamp.Month, timestamp.Day)
         {
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.Assert(timestamp != default, "The timestamp cannot be the default value.");
         }
 
         /// <summary>
@@ -77,8 +77,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public int CompareTo(DateKey other)
         {
-            Debug.NotDefault(other, nameof(other));
-
             return this.StartOfDay.Compare(other.StartOfDay);
         }
 
@@ -87,10 +85,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals([CanBeNull] object other)
-        {
-            return other is DateKey key && this.Equals(key);
-        }
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DateKey"/> is equal to the given <see cref="DateKey"/>.
@@ -99,7 +94,6 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(DateKey other)
         {
-            // Do not add null check (causes error??).
             return this.Year.Equals(other.Year) &&
                    this.Month.Equals(other.Month) &&
                    this.Day.Equals(other.Day);

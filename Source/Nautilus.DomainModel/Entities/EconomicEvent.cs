@@ -42,7 +42,7 @@ namespace Nautilus.DomainModel.Entities
             decimal previous)
         {
             Debug.NotDefault(time, nameof(title));
-            Debug.NotNull(title, nameof(title));
+            Debug.NotEmptyOrWhiteSpace(title, nameof(title));
             Debug.NotDefault(country, nameof(country));
             Debug.NotDefault(currency, nameof(currency));
             Debug.NotDefault(impact, nameof(impact));

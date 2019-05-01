@@ -41,12 +41,13 @@ namespace Nautilus.Common.Messaging
             IComponentryContainer container,
             IEndpoint messageStore)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(messageStore, nameof(messageStore));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(messageStore, nameof(messageStore));
 
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStore = messageStore;
             this.commandHandler = new CommandHandler(this.log);
+            this.switchboard = Switchboard.Empty();
 
             this.Receive<InitializeSwitchboard>(this.OnMessage);
             this.Receive<Envelope<T>>(this.OnReceive);

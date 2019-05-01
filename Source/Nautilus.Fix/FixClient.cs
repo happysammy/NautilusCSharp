@@ -46,11 +46,11 @@ namespace Nautilus.Fix
             messageHandler,
             messageRouter)
         {
-            Precondition.NotNull(container, nameof(container));
-            Precondition.NotNull(config, nameof(config));
-            Precondition.NotNull(messageHandler, nameof(messageHandler));
-            Precondition.NotNull(messageRouter, nameof(messageRouter));
-            Precondition.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
+            Validate.NotNull(container, nameof(container));
+            Validate.NotNull(config, nameof(config));
+            Validate.NotNull(messageHandler, nameof(messageHandler));
+            Validate.NotNull(messageRouter, nameof(messageRouter));
+            Validate.NotNull(instrumentDataProvider, nameof(instrumentDataProvider));
 
             this.instrumentDataProvider = instrumentDataProvider;
         }

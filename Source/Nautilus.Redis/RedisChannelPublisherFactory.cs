@@ -25,7 +25,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The Redis client manager.</param>
         public RedisChannelPublisherFactory(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
+            Validate.NotNull(connection, nameof(connection));
 
             this.connection = connection;
         }

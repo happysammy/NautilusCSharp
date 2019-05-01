@@ -32,7 +32,7 @@ namespace Nautilus.Redis
         /// <param name="connection">The clients manager.</param>
         public RedisBarRepository(ConnectionMultiplexer connection)
         {
-            Precondition.NotNull(connection, nameof(connection));
+            Validate.NotNull(connection, nameof(connection));
 
             this.barClient = new RedisBarClient(connection);
         }

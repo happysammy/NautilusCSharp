@@ -31,7 +31,7 @@ namespace Nautilus.Common.MessageStore
         /// <param name="store">The message store.</param>
         public MessageStorer(IMessageStore store)
         {
-            Precondition.NotNull(store, nameof(store));
+            Validate.NotNull(store, nameof(store));
 
             this.store = store;
 
@@ -123,12 +123,8 @@ namespace Nautilus.Common.MessageStore
         private static int GetDeliveryTime<T>(Envelope<T> envelope)
             where T : Message
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
-            return envelope.IsOpened
-
-                // ReSharper disable once PossibleInvalidOperationException
-                ? (envelope.OpenedTime.Value - envelope.Timestamp).Value.SubsecondTicks
+            return envelope.OpenedTime != null
+                ? (envelope.OpenedTime.Value - envelope.Timestamp).SubsecondTicks
                 : 0;
         }
 

@@ -25,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            Option<TestClass> option = null;
+            Option<TestClass?> option = null;
 
             // Assert
             Assert.True(option.HasNoValue);
@@ -60,6 +60,18 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         }
 
         [Fact]
+        internal void None_WithDefaultStruct_ReturnsOptionWithNoValue()
+        {
+            // Arrange
+            // Act
+            var result = Option<DateTime>.None();
+
+            // Assert
+            Assert.True(result.HasNoValue);
+            Assert.False(result.HasValue);
+        }
+
+        [Fact]
         internal void None_WithNullableStruct_ReturnsOptionWithNoValue()
         {
             // Arrange
@@ -75,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Value_WithNoValue_Throws()
         {
             // Arrange
-            Option<TestClass> option = null;
+            Option<TestClass?> option = null;
 
             // Act
             Assert.Throws<ValidationException>(() => option.Value);
@@ -98,8 +110,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equals_OptionCreatedWithNullAndNone_ReturnsTrue()
         {
             // Arrange
-            Option<TestClass> option1 = null;
-            Option<TestClass> option2 = Option<TestClass>.None();
+            Option<TestClass?> option1 = null;
+            Option<TestClass?> option2 = Option<TestClass?>.None();
 
             // Act
             var result = option1.Equals(option2);
@@ -193,7 +205,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void GetHashCode_WithNoValue_ReturnsZero()
         {
             // Arrange
-            Option<TestClass> option = null;
+            Option<TestClass?> option = null;
 
             // Act
             var result = option.GetHashCode();
@@ -219,7 +231,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void ToString_WithNoValue_ReturnsExpectedString()
         {
             // Arrange
-            Option<TestClass> option = null;
+            Option<TestClass?> option = null;
 
             // Act
             var result = option.ToString();

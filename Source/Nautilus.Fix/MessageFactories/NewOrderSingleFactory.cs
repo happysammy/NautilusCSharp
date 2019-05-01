@@ -36,8 +36,8 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime timeNow)
         {
-            Debug.NotNull(brokerSymbol, nameof(brokerSymbol));
-            Debug.NotNull(accountNumber, nameof(accountNumber));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotNull(order, nameof(order));
             Debug.NotDefault(timeNow, nameof(timeNow));
 
@@ -54,6 +54,7 @@ namespace Nautilus.Fix.MessageFactories
 
             if (order.ExpireTime.HasValue)
             {
+                #pragma warning disable 8629
                 // ReSharper disable once PossibleInvalidOperationException (already checked above).
                 var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
                 message.SetField(new ExpireTime(expireTime));

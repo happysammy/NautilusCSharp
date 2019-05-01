@@ -26,7 +26,7 @@ namespace Nautilus.DomainModel.Identifiers
         public AtomicOrderId(string value)
             : base(value)
         {
-            Debug.NotNull(value, nameof(value));
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
         }
     }
 }

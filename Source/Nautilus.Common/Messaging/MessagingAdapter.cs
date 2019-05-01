@@ -36,9 +36,9 @@ namespace Nautilus.Common.Messaging
             IEndpoint eventBus,
             IEndpoint documentBus)
         {
-            Precondition.NotNull(commandBus, nameof(commandBus));
-            Precondition.NotNull(eventBus, nameof(eventBus));
-            Precondition.NotNull(documentBus, nameof(documentBus));
+            Validate.NotNull(commandBus, nameof(commandBus));
+            Validate.NotNull(eventBus, nameof(eventBus));
+            Validate.NotNull(documentBus, nameof(documentBus));
 
             this.commandBus = commandBus;
             this.eventBus = eventBus;

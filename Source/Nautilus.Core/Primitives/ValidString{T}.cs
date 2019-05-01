@@ -9,13 +9,13 @@
 namespace Nautilus.Core.Primitives
 {
     using System;
+    using System.Diagnostics;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Validation;
 
     /// <summary>
     /// Provides an encapsulation for a validated string. A valid string is not null, less than
-    /// or equal to 100 characters, and contains no white space.
+    /// or equal to 1024 characters, and contains no white space.
     /// </summary>
     /// <typeparam name="T">The valid string type.</typeparam>
     [Immutable]
@@ -27,8 +27,8 @@ namespace Nautilus.Core.Primitives
         /// <param name="value">The string value.</param>
         protected ValidString(string value)
         {
-            Debug.NotNull(value, nameof(value));
-            Debug.True(value.Length <= 1024, nameof(value));
+            Debug.Assert(!string.IsNullOrWhiteSpace(value), AssertMsg.IsNullOrWhitespace(nameof(value)));
+            Debug.Assert(value.Length <= 1024, "The string length cannot be more than 1024 characters.");
 
             this.Value = value.RemoveAllWhitespace();
         }
@@ -44,9 +44,7 @@ namespace Nautilus.Core.Primitives
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator ==(
-            [CanBeNull] ValidString<T> left,
-            [CanBeNull] ValidString<T> right)
+        public static bool operator ==(ValidString<T> left, ValidString<T> right)
         {
             if (left is null && right is null)
             {
@@ -67,9 +65,7 @@ namespace Nautilus.Core.Primitives
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator !=(
-            [CanBeNull] ValidString<T> left,
-            [CanBeNull] ValidString<T> right) => !(left == right);
+        public static bool operator !=(ValidString<T> left, ValidString<T> right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValidString{T}"/> is equal
@@ -77,7 +73,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals([CanBeNull] object other) => this.Equals(other as ValidString<T>);
+        public override bool Equals(object other) => other != null && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValidString{T}"/> is equal
@@ -85,10 +81,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>The result of the equality check.</returns>
-        public bool Equals([CanBeNull] ValidString<T> other)
-        {
-            return other != null && this.Value.Equals(other.Value);
-        }
+        public bool Equals(ValidString<T> other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns the hash code for this <see cref="ValidString{T}"/>.
