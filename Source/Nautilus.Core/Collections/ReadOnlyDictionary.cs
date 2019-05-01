@@ -25,7 +25,6 @@ namespace Nautilus.Core.Collections
     public sealed class ReadOnlyDictionary<TKey, TValue>
         : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
-        // Concrete dictionary for performance reasons.
         private readonly Dictionary<TKey, TValue> internalDictionary;
 
         /// <summary>
