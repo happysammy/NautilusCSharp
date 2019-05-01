@@ -60,15 +60,15 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         }
 
         [Fact]
-        internal void None_WithDefaultStruct_ReturnsOptionWithNoValue()
+        internal void None_WithDefaultStruct_ReturnsOptionWithValue()
         {
             // Arrange
             // Act
             var result = Option<DateTime>.None();
 
             // Assert
-            Assert.True(result.HasNoValue);
-            Assert.False(result.HasValue);
+            Assert.False(result.HasNoValue);
+            Assert.True(result.HasValue);
         }
 
         [Fact]

@@ -124,7 +124,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 case Resolution.Day:
                     return NodaTime.Period.FromDays(barPeriod);
 
-                default: throw new InvalidOperationException("Bar resolution not recognised.");
+                default: throw new InvalidOperationException("The bar resolution was not recognised.");
             }
         }
     }

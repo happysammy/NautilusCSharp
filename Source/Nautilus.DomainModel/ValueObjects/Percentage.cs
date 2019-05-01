@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Validation;
 
     /// <summary>
-    /// The immutable sealed <see cref="Percentage"/> class. Represents a percentage value.
+    /// Represents a percentage value.
     /// </summary>
     [Immutable]
     public sealed class Percentage : DecimalNumber
