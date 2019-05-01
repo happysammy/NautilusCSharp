@@ -91,7 +91,6 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message object.</param>
         protected override void Unhandled(object message)
         {
-            // ReSharper disable once ConvertIfStatementToSwitchStatement (if else is clearer).
             if (message is null)
             {
                 message = "NULL";
