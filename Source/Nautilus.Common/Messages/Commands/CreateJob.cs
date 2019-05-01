@@ -13,6 +13,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Scheduling;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using NodaTime;
     using Quartz;
 
@@ -40,10 +41,6 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(jobReceiver, nameof(jobReceiver));
-            Debug.NotNull(jobKey, nameof(jobKey));
-            Debug.NotNull(job, nameof(job));
-            Debug.NotNull(trigger, nameof(trigger));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 

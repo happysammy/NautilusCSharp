@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -32,9 +33,8 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
         {
-            Precondition.NotNull(switchboard, nameof(switchboard));
-            Precondition.NotDefault(commandId, nameof(commandId));
-            Precondition.NotDefault(commandTimestamp, nameof(commandTimestamp));
+            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.Switchboard = switchboard;
         }

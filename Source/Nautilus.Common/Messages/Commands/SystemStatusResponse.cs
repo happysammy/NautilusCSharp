@@ -12,6 +12,7 @@ namespace Nautilus.Common.Messages.Commands
     using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -35,7 +36,6 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(componentName, nameof(componentName));
             Debug.NotDefault(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 

@@ -11,6 +11,7 @@ namespace Nautilus.Common.Messages.Commands
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
@@ -34,7 +35,6 @@ namespace Nautilus.Common.Messages.Commands
                 commandId,
                 commandTimestamp)
         {
-            Debug.NotNull(position, nameof(position));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 

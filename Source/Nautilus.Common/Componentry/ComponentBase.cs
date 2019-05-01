@@ -11,7 +11,6 @@ namespace Nautilus.Common.Componentry
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -35,9 +34,6 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer container)
         {
-            Precondition.NotNull(component, nameof(component));
-            Precondition.NotNull(container, nameof(container));
-
             this.clock = container.Clock;
             this.StartTime = this.clock.TimeNow();
             this.Log = container.LoggerFactory.Create(serviceContext, component);

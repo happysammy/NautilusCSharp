@@ -11,6 +11,7 @@ namespace Nautilus.Common.Messages.Commands.Base
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using NodaTime;
 
@@ -32,7 +33,6 @@ namespace Nautilus.Common.Messages.Commands.Base
             ZonedDateTime commandTimestamp)
             : base(commandId, commandTimestamp)
         {
-            Debug.NotNull(order, nameof(order));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 

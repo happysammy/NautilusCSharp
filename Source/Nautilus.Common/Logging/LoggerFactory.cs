@@ -10,7 +10,6 @@ namespace Nautilus.Common.Logging
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -26,8 +25,6 @@ namespace Nautilus.Common.Logging
         /// <param name="loggingAdapter">The logging adapter.</param>
         public LoggerFactory(ILoggingAdapter loggingAdapter)
         {
-            Precondition.NotNull(loggingAdapter, nameof(loggingAdapter));
-
             this.loggingAdapter = loggingAdapter;
         }
 
@@ -39,8 +36,6 @@ namespace Nautilus.Common.Logging
         /// <returns>The logger.</returns>
         public ILogger Create(NautilusService service, Label component)
         {
-            Precondition.NotNull(component, nameof(component));
-
             return new Logger(this.loggingAdapter, service, component);
         }
     }

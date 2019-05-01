@@ -98,13 +98,13 @@ namespace Nautilus.Core.Correctness
         /// <summary>
         /// The check passes if the <see cref="ICollection{T}"/> is not null, or empty.
         /// </summary>
-        /// <param name="list">The list being checked.</param>
+        /// <param name="collection">The collection being checked.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="T">The type of list.</typeparam>
-        /// <exception cref="ArgumentException">If the list is empty.</exception>
-        public static void NotEmpty<T>(ICollection<T> list, string paramName)
+        /// <exception cref="ArgumentException">If the collection is empty.</exception>
+        public static void NotEmpty<T>(ICollection<T> collection, string paramName)
         {
-            if (list.Count == 0)
+            if (collection.Count == 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyList(paramName));
             }
@@ -117,7 +117,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <typeparam name="TK">The type of key.</typeparam>
         /// <typeparam name="TV">The type of value.</typeparam>
-        /// <exception cref="ArgumentException">If the list is empty.</exception>
+        /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
         public static void NotEmpty<TK, TV>(Dictionary<TK, TV> dictionary, string paramName)
         {
             if (dictionary.Count == 0)
@@ -131,15 +131,15 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <param name="element">The element to contain.</param>
-        /// <param name="list">The list being checked.</param>
+        /// <param name="collection">The collection being checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <param name="listName">The list name.</param>
-        /// <exception cref="ArgumentException">If the list does not contain the element.</exception>
-        public static void IsIn<T>(T element, List<T> list, string paramName, string listName)
+        /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
+        public static void IsIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
-            if (!list.Contains(element))
+            if (!collection.Contains(element))
             {
-                throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, listName));
+                throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, collectionName));
             }
         }
 
@@ -148,15 +148,15 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <typeparam name="T">The type of collection.</typeparam>
         /// <param name="element">The element to contain.</param>
-        /// <param name="list">The list being checked.</param>
+        /// <param name="collection">The collection being checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <param name="listName">The list name.</param>
-        /// <exception cref="ArgumentException">If the list does not contain the element.</exception>
-        public static void IsNotIn<T>(T element, List<T> list, string paramName, string listName)
+        /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
+        public static void IsNotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
-            if (list.Contains(element))
+            if (collection.Contains(element))
             {
-                throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, listName));
+                throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, collectionName));
             }
         }
 
@@ -233,7 +233,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the argument is not positive (> 0).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         public static void PositiveInt32(int value, string paramName)
         {
             if (value <= 0)
@@ -247,10 +247,8 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the argument is not positive (> 0).</exception>
-        public static void PositiveInt64(
-            long value,
-            string paramName)
+        /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
+        public static void PositiveInt64(long value, string paramName)
         {
             if (value <= 0)
             {
@@ -263,7 +261,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the argument is not positive (> 0).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         public static void PositiveDouble(double value, string paramName)
         {
             if (value <= 0)
@@ -277,7 +275,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the argument is not positive (> 0).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is not positive (> 0).</exception>
         public static void PositiveDecimal(decimal value, string paramName)
         {
             if (value <= decimal.Zero)
@@ -291,10 +289,8 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the argument less than zero.</exception>
-        public static void NotNegativeInt32(
-            int value,
-            string paramName)
+        /// <exception cref="ArgumentOutOfRangeException">If the value less than zero.</exception>
+        public static void NotNegativeInt32(int value, string paramName)
         {
             if (value < 0)
             {
@@ -307,10 +303,8 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the argument is less than zero.</exception>
-        public static void NotNegativeInt64(
-            long value,
-            string paramName)
+        /// <exception cref="ArgumentOutOfRangeException">If the value is less than zero.</exception>
+        public static void NotNegativeInt64(long value, string paramName)
         {
             if (value < 0)
             {
@@ -323,10 +317,8 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the argument is less than zero.</exception>
-        public static void NotNegativeDouble(
-            double value,
-            string paramName)
+        /// <exception cref="ArgumentOutOfRangeException">If the value is less than zero.</exception>
+        public static void NotNegativeDouble(double value, string paramName)
         {
             if (value < 0)
             {
@@ -339,7 +331,7 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the argument is less than zero.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is less than zero.</exception>
         public static void NotNegativeDecimal(decimal value, string paramName)
         {
             if (value < decimal.Zero)
@@ -349,14 +341,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range.
+        /// The check passes if the value is not out of the specified range inclusive.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="lowerBound">The range lower bound.</param>
         /// <param name="upperBound">The range upper bound.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the range end points is not recognized.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
         public static void NotOutOfRangeInt32(
             int value,
             int lowerBound,
@@ -370,14 +361,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range.
+        /// The check passes if the value is not out of the specified range inclusive.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="lowerBound">The range lower bound.</param>
         /// <param name="upperBound">The range upper bound.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the range end points is not recognized.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
         public static void NotOutOfRangeInt64(
             long value,
             long lowerBound,
@@ -391,14 +381,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range.
+        /// The check passes if the value is not out of the specified range inclusive.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="lowerBound">The range lower bound.</param>
         /// <param name="upperBound">The range upper bound.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the range end points is not recognized.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
         public static void NotOutOfRangeDouble(
             double value,
             double lowerBound,
@@ -412,14 +401,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range.
+        /// The check passes if the value is not out of the specified range inclusive.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <param name="lowerBound">The range lower bound.</param>
         /// <param name="upperBound">The range upper bound.</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the range end points is not recognized.</exception>
+        /// <exception cref="ArgumentException">If the value is out of the specified range inclusive.</exception>
         public static void NotOutOfRangeDecimal(
             decimal value,
             decimal lowerBound,

@@ -27,8 +27,6 @@ namespace Nautilus.Common.Messages.Events
         public MarketClosed(Guid id, ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }
 }

@@ -38,9 +38,6 @@ namespace Nautilus.Common.Componentry
             Label component,
             IComponentryContainer setupContainer)
         {
-            Precondition.NotNull(component, nameof(component));
-            Precondition.NotNull(setupContainer, nameof(setupContainer));
-
             this.clock = setupContainer.Clock;
             this.StartTime = this.clock.TimeNow();
             this.guidFactory = setupContainer.GuidFactory;
@@ -85,8 +82,6 @@ namespace Nautilus.Common.Componentry
         /// <param name="action">The action to execute.</param>
         protected void Execute(Action action)
         {
-            Debug.NotNull(action, nameof(action));
-
             this.commandHandler.Execute(action);
         }
 
@@ -130,11 +125,8 @@ namespace Nautilus.Common.Componentry
         /// Post restart method called when the actor base class is restarted.
         /// </summary>
         /// <param name="ex">The restart reason exception.</param>
-        /// <exception cref="ValidationException">Throws if the validation fails.</exception>
         protected override void PostRestart(Exception ex)
         {
-            Debug.NotNull(ex, nameof(ex));
-
             this.Log.Error($"Restarted from {ex.Message}.", ex);
         }
 
@@ -173,8 +165,6 @@ namespace Nautilus.Common.Componentry
         private void Open<T>(Envelope<T> envelope)
             where T : Message
         {
-            Debug.NotNull(envelope, nameof(envelope));
-
             var message = envelope.Open(this.clock.TimeNow());
 
             this.Self.Tell(message);

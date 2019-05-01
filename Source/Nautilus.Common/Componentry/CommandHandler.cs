@@ -10,7 +10,6 @@ namespace Nautilus.Common.Componentry
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
 
     /// <summary>
     /// A class which provides encapsulated execution of <see cref="Action"/>(s)
@@ -27,8 +26,6 @@ namespace Nautilus.Common.Componentry
         /// <param name="logger">The logger.</param>
         public CommandHandler(ILogger logger)
         {
-            Precondition.NotNull(logger, nameof(logger));
-
             this.log = logger;
         }
 
@@ -39,15 +36,9 @@ namespace Nautilus.Common.Componentry
         /// <param name="action">The action.</param>
         public void Execute(Action action)
         {
-            Debug.NotNull(action, nameof(action));
-
             try
             {
                 action.Invoke();
-            }
-            catch (ValidationException ex)
-            {
-                this.log.Error(ex.Message, ex);
             }
             catch (Exception ex)
             {
@@ -66,17 +57,11 @@ namespace Nautilus.Common.Componentry
         public void Execute<T>(Action action)
             where T : Exception
         {
-            Debug.NotNull(action, nameof(action));
-
             try
             {
                 action.Invoke();
             }
             catch (T ex)
-            {
-                this.log.Error(ex.Message, ex);
-            }
-            catch (ValidationException ex)
             {
                 this.log.Error(ex.Message, ex);
             }

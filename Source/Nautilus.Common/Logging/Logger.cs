@@ -11,7 +11,6 @@ namespace Nautilus.Common.Logging
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -29,15 +28,11 @@ namespace Nautilus.Common.Logging
         /// <param name="loggingAdapter">The logging adapter.</param>
         /// <param name="service">The service context.</param>
         /// <param name="component">The component name.</param>
-        /// <exception cref="ValidationException">Throws if any class argument is null.</exception>
         public Logger(
             ILoggingAdapter loggingAdapter,
             NautilusService service,
             Label component)
         {
-            Precondition.NotNull(loggingAdapter, nameof(loggingAdapter));
-            Precondition.NotNull(component, nameof(component));
-
             this.loggingAdapter = loggingAdapter;
             this.service = service;
             this.component = component;
@@ -49,8 +44,6 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Verbose(string message)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-
             this.loggingAdapter.Verbose(this.service, $"{this.component}: {message}");
         }
 
@@ -60,8 +53,6 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Information(string message)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-
             this.loggingAdapter.Information(this.service, $"{this.component}: {message}");
         }
 
@@ -71,8 +62,6 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Debug(string message)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-
             this.loggingAdapter.Debug(this.service, $"{this.component}: {message}");
         }
 
@@ -82,8 +71,6 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Warning(string message)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-
             this.loggingAdapter.Warning(this.service, $"{this.component}: {message}");
         }
 
@@ -93,8 +80,6 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Error(string message)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-
             this.loggingAdapter.Error(this.service, $"{this.component}: {message}");
         }
 
@@ -105,9 +90,6 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Error(string message, Exception ex)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-            Precondition.NotNull(ex, nameof(ex));
-
             this.loggingAdapter.Error(this.service, $"{this.component}: {message}", ex);
         }
 
@@ -118,9 +100,6 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Fatal(string message, Exception ex)
         {
-            Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
-            Precondition.NotNull(ex, nameof(ex));
-
             this.loggingAdapter.Fatal(this.service, $"{this.component}: {message}", ex);
         }
     }
