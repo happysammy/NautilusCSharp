@@ -149,7 +149,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
         public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            if (collection.Count == 0)
+            if (collection.Count != 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyList(paramName));
             }
@@ -181,7 +181,7 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
         public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
-            if (dictionary.Count > 0)
+            if (dictionary.Count != 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyDictionary(paramName));
             }

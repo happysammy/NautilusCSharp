@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEmptyOrWhiteSpace(value, nameof(value)));
+            Assert.Throws<ArgumentNullException>(() => Precondition.NotEmptyOrWhiteSpace(value, nameof(value)));
         }
 
         [Fact]
@@ -296,7 +296,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.EqualTo(object1, nameof(object1), object2);
+            Precondition.EqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -344,7 +344,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotEqualTo(object1, nameof(object1), object2);
+            Precondition.NotEqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -368,7 +368,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEqualTo(object1, nameof(object1), object2));
+            Assert.Throws<ArgumentException>(() => Precondition.NotEqualTo(object1, object2, nameof(object1)));
         }
 
         [Theory]
@@ -391,7 +391,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.PositiveInt32(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveInt32(value, nameof(value)));
         }
 
         [Theory]
@@ -414,7 +414,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotNegativeInt32(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeInt32(value, nameof(value)));
         }
 
         [Theory]
@@ -437,7 +437,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.PositiveInt64(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveInt64(value, nameof(value)));
         }
 
         [Theory]
@@ -460,7 +460,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotNegativeInt64(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeInt64(value, nameof(value)));
         }
 
         [Theory]
@@ -483,7 +483,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.PositiveDouble(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveDouble(value, nameof(value)));
         }
 
         [Theory]
@@ -506,7 +506,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotNegativeDouble(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeDouble(value, nameof(value)));
         }
 
         [Theory]
@@ -528,7 +528,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.PositiveDecimal(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveDecimal(value, nameof(value)));
         }
 
         [Theory]
@@ -550,7 +550,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotNegativeDecimal(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeDecimal(value, nameof(value)));
         }
 
         [Theory]
@@ -576,83 +576,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        internal void NotOutOfRangeInt32_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt32(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(0)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt32_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt32_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt32(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(-1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt32_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt32(value, 0, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt32_VariousInExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt32(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(-1)]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt32_VariousOutOfExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
         }
 
         [Theory]
@@ -678,83 +602,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        internal void NotOutOfRangeInt64_VariousInLowerExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt64(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(0)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt64_VariousOutOfLowerExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt64_VariousInUpperExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt64(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(-1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt64_VariousOutOfUpperExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt64(value, 0, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt64_VariousInExclusiveRangeValues_DoesNothing(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeInt64(value, 0, 3, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(int.MinValue)]
-        [InlineData(int.MaxValue)]
-        [InlineData(-1)]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        internal void NotOutOfRangeInt64_VariousOutOfExclusiveRangeValues_Throws(int value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
         }
 
         [Theory]
@@ -783,91 +631,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1.1)]
-        [InlineData(1.9)]
-        [InlineData(2)]
-        internal void NotOutOfRangeDouble_VariousInLowerExclusiveRangeValues_DoesNothing(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(double.PositiveInfinity)]
-        [InlineData(double.NegativeInfinity)]
-        [InlineData(double.Epsilon)]
-        [InlineData(double.MinValue)]
-        [InlineData(double.MaxValue)]
-        [InlineData(1)]
-        [InlineData(2.00000000001)]
-        internal void NotOutOfRangeDouble_VariousOutOfLowerExclusiveRangeValues_Throws(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(1.9)]
-        internal void NotOutOfRangeDouble_VariousInUpperExclusiveRangeValues_DoesNothing(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(double.PositiveInfinity)]
-        [InlineData(double.NegativeInfinity)]
-        [InlineData(double.Epsilon)]
-        [InlineData(double.MinValue)]
-        [InlineData(double.MaxValue)]
-        [InlineData(0)]
-        [InlineData(2)]
-        internal void NotOutOfRangeDouble_VariousOutOfUpperExclusiveRangeValues_Throws(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1.0000000001)]
-        [InlineData(1.9999999999)]
-        internal void NotOutOfRangeDouble_VariousInExclusiveRangeValues_DoesNothing(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(double.PositiveInfinity)]
-        [InlineData(double.NegativeInfinity)]
-        [InlineData(double.Epsilon)]
-        [InlineData(double.MinValue)]
-        [InlineData(double.MaxValue)]
-        [InlineData(0.9)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(2.1)]
-        internal void NotOutOfRangeDouble_VariousOutOfExclusiveRangeValues_Throws(double value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
         }
 
         [Theory]
@@ -891,76 +655,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1.1)]
-        [InlineData(1.999999999999999999999999999999999999)]
-        [InlineData(2)]
-        internal void NotOutOfRangeDecimal_VariousInLowerExclusiveRangeValues_DoesNothing(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2.1)]
-        internal void NotOutOfRangeDecimal_VariousOutOfLowerExclusiveRangeValues_Throws(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(1.9)]
-        internal void NotOutOfRangeDecimal_VariousInUpperExclusiveRangeValues_DoesNothing(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(0.9)]
-        [InlineData(2)]
-        internal void NotOutOfRangeDecimal_VariousOutOfUpperExclusiveRangeValues_Throws(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
-        }
-
-        [Theory]
-        [InlineData(1.000000001)]
-        [InlineData(1.999999999)]
-        internal void NotOutOfRangeDecimal_VariousInExclusiveRangeValues_DoesNothing(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(0.9)]
-        [InlineData(2)]
-        [InlineData(2.1)]
-        internal void NotOutOfRangeDecimal_VariousOutOfExclusiveRangeValues_Throws(decimal value)
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
         }
     }
 }
