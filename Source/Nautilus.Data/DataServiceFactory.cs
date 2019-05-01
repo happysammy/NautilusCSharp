@@ -12,7 +12,6 @@ namespace Nautilus.Data
     using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;

@@ -53,7 +53,6 @@ namespace Nautilus.Common.MessageStore
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-
         public void Store(Envelope<Event> envelope)
         {
             this.eventEnvelopeList.Add(envelope);
@@ -63,7 +62,6 @@ namespace Nautilus.Common.MessageStore
         /// Stores the given envelope in the store.
         /// </summary>
         /// <param name="envelope">The envelope.</param>
-
         public void Store(Envelope<Document> envelope)
         {
             this.documentEnvelopeList.Add(envelope);

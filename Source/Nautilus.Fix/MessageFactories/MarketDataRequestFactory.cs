@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using QuickFix.Fields;

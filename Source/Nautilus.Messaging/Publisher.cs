@@ -14,7 +14,6 @@ namespace Nautilus.Messaging
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Network;

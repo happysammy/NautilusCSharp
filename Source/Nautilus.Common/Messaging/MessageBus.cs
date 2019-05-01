@@ -35,7 +35,6 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="messageStore">The message store endpoint.</param>
-
         public MessageBus(
             IComponentryContainer container,
             IEndpoint messageStore)
