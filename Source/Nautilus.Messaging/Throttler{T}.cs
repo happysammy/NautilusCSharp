@@ -116,6 +116,11 @@ namespace Nautilus.Messaging
             {
                 var message = this.queue.Dequeue();
 
+                if (message == null)
+                {
+                    continue;  // Cannot send a null message.
+                }
+
                 this.receiver.Send(message);
                 this.vouchers--;
 

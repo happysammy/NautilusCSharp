@@ -154,6 +154,7 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotNull(accountEvent, nameof(accountEvent));
 
             // ReSharper disable once PossibleNullReferenceException (checked above).
+            #pragma warning disable 8602
             Debug.EqualTo(accountEvent.AccountId, this.Id, nameof(accountEvent.AccountId));
 
             this.CashBalance = accountEvent.CashBalance;

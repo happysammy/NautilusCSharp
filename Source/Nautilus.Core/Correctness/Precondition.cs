@@ -198,6 +198,11 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         public static void IsIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
+            if (element is null)
+            {
+                throw new ArgumentNullException(nameof(element));
+            }
+
             if (!collection.Contains(element))
             {
                 throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, collectionName));
@@ -215,6 +220,11 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
+            if (element is null)
+            {
+                throw new ArgumentNullException(nameof(element));
+            }
+
             if (collection.Contains(element))
             {
                 throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, collectionName));
@@ -233,6 +243,11 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
         public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (!dictionary.ContainsKey(key))
             {
                 throw new ArgumentException(FailedMsg.WasNotInDictionary(key, paramName, dictName));
@@ -251,6 +266,11 @@ namespace Nautilus.Core.Correctness
         /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
         public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (dictionary.ContainsKey(key))
             {
                 throw new ArgumentException(FailedMsg.WasInDictionary(key, paramName, dictName));
