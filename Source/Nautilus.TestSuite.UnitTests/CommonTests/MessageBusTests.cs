@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         }
 
         [Fact]
-        internal void GivenNullObjectMessage_Handles()
+        internal void GivenEmptyStringMessage_Handles()
         {
             // Arrange
 

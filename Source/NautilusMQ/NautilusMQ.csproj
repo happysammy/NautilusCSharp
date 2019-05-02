@@ -7,19 +7,19 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusMQ.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU' ">
+        <DocumentationFile>bin\Release\netcoreapp2.1\NautilusMQ.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.DomainModel.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     </ItemGroup>
 
     <ItemGroup>
