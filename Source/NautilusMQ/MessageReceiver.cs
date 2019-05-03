@@ -8,6 +8,8 @@
 
 namespace NautilusMQ
 {
+    using System;
+
     /// <summary>
     /// The base class for all message consumers.
     /// </summary>
@@ -20,7 +22,7 @@ namespace NautilusMQ
         /// </summary>
         public MessageReceiver()
         {
-            this.processor = new MessageProcessor(this);
+            this.processor = new MessageProcessor();
             this.Endpoint = this.processor.Endpoint;
         }
 
@@ -30,21 +32,13 @@ namespace NautilusMQ
         public Endpoint Endpoint { get; }
 
         /// <summary>
-        /// TBA.
+        /// Register the given message type with the given handler.
         /// </summary>
-        /// <param name="message">The received message.</param>
-        public void OnMessage(object message)
+        /// <typeparam name="T">The message type.</typeparam>
+        /// <param name="handler">The handler.</param>
+        protected void RegisterHandler<T>(Action<object> handler)
         {
-            // Handle unknown object.
-        }
-
-        /// <summary>
-        /// TBA.
-        /// </summary>
-        /// <param name="message">The unhandled message.</param>
-        protected void Unhandled(object message)
-        {
-            // Handle unknown object.
+            this.processor.RegisterHandler<T>(handler);
         }
     }
 }

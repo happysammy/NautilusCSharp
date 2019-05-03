@@ -71,6 +71,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nauti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ", "NautilusMQ\NautilusMQ.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ.TestSuite.UnitTests", "NautilusMQ.TestSuite.UnitTests\NautilusMQ.TestSuite.UnitTests.csproj", "{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ.TestSuite.TestKit", "NautilusMQ.TestSuite.TestKit\NautilusMQ.TestSuite.TestKit.csproj", "{CD005C5C-469E-4B8B-B8ED-74E117F87EC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +158,14 @@ Global
 		{F5058BCF-C19A-4A04-962D-2B37F248FDA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5058BCF-C19A-4A04-962D-2B37F248FDA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5058BCF-C19A-4A04-962D-2B37F248FDA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD005C5C-469E-4B8B-B8ED-74E117F87EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD005C5C-469E-4B8B-B8ED-74E117F87EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD005C5C-469E-4B8B-B8ED-74E117F87EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD005C5C-469E-4B8B-B8ED-74E117F87EC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5C57208C-5B4D-4413-A632-0159D379BC34} = {33E9E1BA-15F1-4786-9038-90EC96E2C6F2}

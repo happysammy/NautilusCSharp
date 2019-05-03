@@ -44,6 +44,17 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Gets the components logger.
+        /// </summary>
+        protected ILogger Log { get; }
+
+        /// <summary>
+        /// Gets the time the component was last started or reset.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        protected ZonedDateTime StartTime { get; }
+
+        /// <summary>
         /// Starts the component.
         /// </summary>
         public virtual void Start()
@@ -56,17 +67,6 @@ namespace Nautilus.Common.Componentry
         public virtual void Stop()
         {
         }
-
-        /// <summary>
-        /// Gets the components logger.
-        /// </summary>
-        protected ILogger Log { get; }
-
-        /// <summary>
-        /// Gets the time the component was last started or reset.
-        /// </summary>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        protected ZonedDateTime StartTime { get; }
 
         /// <summary>
         /// Returns the current time of the system clock.

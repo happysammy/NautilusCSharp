@@ -36,8 +36,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var setupFactory = new StubComponentryContainerFactory();
             this.logger = setupFactory.LoggingAdapter;
             var container = setupFactory.Create();
-
-            var messagingAdapter = new MockMessagingServiceFactory().MessagingAdapter;
+            var messagingAdapter = new MockMessagingServiceFactory(container).MessagingAdapter;
 
             this.controller = new BarAggregationController(
                 container,

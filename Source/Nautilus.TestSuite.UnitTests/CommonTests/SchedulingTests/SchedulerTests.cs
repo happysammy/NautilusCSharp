@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ;
+    using NautilusMQ.TestSuite.TestKit;
     using Quartz;
     using Xunit;
     using Xunit.Abstractions;

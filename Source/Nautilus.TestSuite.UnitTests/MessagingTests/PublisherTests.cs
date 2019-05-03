@@ -18,6 +18,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ;
+    using NautilusMQ.TestSuite.TestKit;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;

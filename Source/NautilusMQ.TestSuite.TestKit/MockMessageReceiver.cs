@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.TestKit.TestDoubles
+namespace NautilusMQ.TestSuite.TestKit
 {
     using System.Collections.Generic;
     using NautilusMQ;
@@ -17,6 +17,15 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     public class MockMessageReceiver : MessageReceiver
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="MockMessageReceiver"/> class.
+        /// </summary>
+        public MockMessageReceiver()
+        {
+            this.RegisterHandler<object>(this.OnMessage);
+            this.RegisterHandler<string>(this.OnMessage);
+        }
+
+        /// <summary>
         /// Gets the list of received messages.
         /// </summary>
         public List<object> Messages { get; } = new List<object>();
@@ -25,7 +34,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// Add the message to the received messages list.
         /// </summary>
         /// <param name="message">The received message.</param>
-        private new void OnMessage(object message)
+        public void OnMessage(object message)
         {
             this.Messages.Add(message);
         }

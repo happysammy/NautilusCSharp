@@ -191,6 +191,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(subscribeMessage);
             this.barAggregator.Endpoint.Send(tick1);
             this.barAggregator.Endpoint.Send(closeBarMessage1);
+
             // this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
             this.barAggregator.Endpoint.Send(tick2);
 

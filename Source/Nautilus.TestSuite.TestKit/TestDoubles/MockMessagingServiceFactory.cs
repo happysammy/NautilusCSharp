@@ -24,11 +24,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessagingServiceFactory
     {
-        public IMessagingAdapter MessagingAdapter { get; private set; }
-
-        public InMemoryMessageStore InMemoryMessageStore { get; private set; }
-
-        public void Create(IComponentryContainer container)
+        public MockMessagingServiceFactory(IComponentryContainer container)
         {
             var messageWarehouse = new InMemoryMessageStore();
             var messageStorer = new MessageStorer(container, messageWarehouse);
@@ -60,7 +56,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             messagingAdapter.Send(initializeSwitchboard);
 
             this.MessagingAdapter = messagingAdapter;
-            this.InMemoryMessageStore = messageWarehouse;
         }
+
+        public IMessagingAdapter MessagingAdapter { get; }
     }
 }
