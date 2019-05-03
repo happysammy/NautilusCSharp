@@ -31,7 +31,7 @@ namespace Nautilus.Data.Collectors
     {
         private readonly IBarDataReader dataReader;
         private readonly DataCollectionSchedule collectionSchedule;
-        private Option<ZonedDateTime?> lastPersistedBarTime;
+        private OptionVal<ZonedDateTime> lastPersistedBarTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarDataCollector"/> class.

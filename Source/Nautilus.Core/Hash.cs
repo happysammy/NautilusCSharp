@@ -13,7 +13,6 @@ namespace Nautilus.Core
     /// <summary>
     /// Provides standardized hash code generation.
     /// </summary>
-    [Immutable]
     [PerformanceOptimized]
     public static class Hash
     {
@@ -28,12 +27,10 @@ namespace Nautilus.Core
         /// <returns>The hash code <see cref="int"/>.</returns>
         public static int GetCode<T>(T value)
         {
-            if (value is null)
+            unchecked
             {
-                return 0;
+                return (Initializer * Multiplier) + (value is null ? 0 : value.GetHashCode());
             }
-
-            return (Initializer * Multiplier) + value.GetHashCode();
         }
 
         /// <summary>
@@ -49,24 +46,8 @@ namespace Nautilus.Core
             unchecked
             {
                 var hash = Initializer;
-
-                if (value1 is null)
-                {
-                    // Do nothing
-                }
-                else
-                {
-                    hash += (hash * Multiplier) + value1.GetHashCode();
-                }
-
-                if (value2 is null)
-                {
-                    // Do nothing
-                }
-                else
-                {
-                    hash += (hash * Multiplier) + value2.GetHashCode();
-                }
+                hash = (hash * Multiplier) + (value1 is null ? 0 : value1.GetHashCode());
+                hash = (hash * Multiplier) + (value2 is null ? 0 : value2.GetHashCode());
 
                 return hash;
             }

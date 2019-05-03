@@ -31,7 +31,7 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="symbol">The symbol.</param>
         /// <returns>The last tick.</returns>
-        Option<Tick> GetLastTick(Symbol symbol);
+        OptionRef<Tick> GetLastTick(Symbol symbol);
 
         /// <summary>
         /// Returns an immutable collection of the symbols held by the quote provider.
@@ -45,7 +45,7 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency">The quote currency.</param>
-        /// <returns>A <see cref="Option{Decimal}"/>.</returns>
-        Option<decimal?> GetExchangeRate(CurrencyCode accountCurrency, CurrencyCode quoteCurrency);
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        OptionVal<decimal> GetExchangeRate(CurrencyCode accountCurrency, CurrencyCode quoteCurrency);
     }
 }

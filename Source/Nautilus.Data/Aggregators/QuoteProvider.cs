@@ -65,11 +65,11 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         /// <param name="symbol">The quote symbol.</param>
         /// <returns>A <see cref="Tick"/>.</returns>
-        public Option<Tick> GetLastTick(Symbol symbol)
+        public OptionRef<Tick> GetLastTick(Symbol symbol)
         {
             return this.ticks.ContainsKey(symbol)
                  ? this.ticks[symbol]
-                 : Option<Tick>.None();
+                 : OptionRef<Tick>.None();
         }
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency"> The quote currency.</param>
-        /// <returns>A <see cref="Option{Decimal}"/>.</returns>
-        public Option<decimal?> GetExchangeRate(
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        public OptionVal<decimal> GetExchangeRate(
             CurrencyCode accountCurrency,
             CurrencyCode quoteCurrency)
         {
@@ -110,7 +110,7 @@ namespace Nautilus.Data.Aggregators
 
             return exchangeRate > 0
                  ? exchangeRate
-                 : Option<decimal?>.None();
+                 : OptionVal<decimal>.None();
         }
 
         private decimal ExchangeRateFromUsd(

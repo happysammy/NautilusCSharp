@@ -53,16 +53,12 @@ namespace Nautilus.Fix.MessageFactories
 
             if (order.ExpireTime.HasValue)
             {
-                #pragma warning disable 8629
-                // ReSharper disable once PossibleInvalidOperationException (already checked above).
-                var expireTime = order.ExpireTime.Value.Value.ToDateTimeUtc();
+                var expireTime = order.ExpireTime.Value.ToDateTimeUtc();
                 message.SetField(new ExpireTime(expireTime));
             }
 
             message.SetField(new OrderQty(order.Quantity.Value));
 
-            // Set the order price depending on order type.
-            // ReSharper disable once SwitchStatementMissingSomeCases (becomes redundant case labels).
             switch (order.Type)
             {
                 case OrderType.MARKET:
@@ -78,6 +74,8 @@ namespace Nautilus.Fix.MessageFactories
                     message.SetField(new StopPx(order.Price.Value.Value));
                     break;
 
+                case OrderType.UNKNOWN:
+                    throw new InvalidOperationException("OrderType not recognized.");
                 default: throw new InvalidOperationException("OrderType not recognized.");
             }
 

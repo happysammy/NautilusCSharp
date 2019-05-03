@@ -166,12 +166,12 @@ namespace Nautilus.DomainModel.Entities
         /// Returns the risk models hard limit quantity for the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="Option{Quantity}"/>.</returns>
-        public Option<Quantity> GetHardLimitQuantity(Symbol symbol)
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        public OptionRef<Quantity> GetHardLimitQuantity(Symbol symbol)
         {
             return this.positionSizeHardLimitsIndex.ContainsKey(symbol)
                 ? this.positionSizeHardLimitsIndex[symbol]
-                : Option<Quantity>.None();
+                : OptionRef<Quantity>.None();
         }
 
         /// <summary>

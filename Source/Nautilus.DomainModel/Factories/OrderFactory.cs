@@ -45,9 +45,9 @@ namespace Nautilus.DomainModel.Factories
                 orderSide,
                 OrderType.MARKET,
                 quantity,
-                Option<Price>.None(),
+                OptionRef<Price>.None(),
                 TimeInForce.DAY,
-                Option<ZonedDateTime?>.None(),
+                OptionVal<ZonedDateTime>.None(),
                 timestamp);
         }
 
@@ -70,9 +70,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            Option<Price> price,
+            OptionRef<Price> price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -107,9 +107,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            Option<Price> price,
+            OptionRef<Price> price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -144,9 +144,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            Option<Price> price,
+            OptionRef<Price> price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -181,9 +181,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            Option<Price> price,
+            OptionRef<Price> price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(

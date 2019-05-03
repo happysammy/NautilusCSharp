@@ -59,9 +59,7 @@ namespace Nautilus.Fix.MessageFactories
 
             if (entry.ExpireTime.HasValue)
             {
-                #pragma warning disable 8629
-                // ReSharper disable once PossibleInvalidOperationException
-                var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
+                var expireTime = entry.ExpireTime.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }
 
@@ -126,8 +124,7 @@ namespace Nautilus.Fix.MessageFactories
 
             if (entry.ExpireTime.HasValue)
             {
-                // ReSharper disable once PossibleInvalidOperationException (already checked above).
-                var expireTime = entry.ExpireTime.Value.Value.ToDateTimeUtc();
+                var expireTime = entry.ExpireTime.Value.ToDateTimeUtc();
                 order1.SetField(new ExpireTime(expireTime));
             }
 

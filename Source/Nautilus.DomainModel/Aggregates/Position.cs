@@ -46,8 +46,8 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.Symbol = symbol;
             this.FromEntryOrderId = fromEntryOrderId;
-            this.EntryTime = Option<ZonedDateTime?>.None();
-            this.AverageEntryPrice = Option<Price>.None();
+            this.EntryTime = OptionVal<ZonedDateTime>.None();
+            this.AverageEntryPrice = OptionRef<Price>.None();
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the positions entry time (optional).
         /// </summary>
-        public Option<ZonedDateTime?> EntryTime { get; private set; }
+        public OptionVal<ZonedDateTime> EntryTime { get; private set; }
 
         /// <summary>
         /// Gets the positions average entry price (optional).
         /// </summary>
-        public Option<Price> AverageEntryPrice { get; private set; }
+        public OptionRef<Price> AverageEntryPrice { get; private set; }
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to this position.
@@ -144,7 +144,7 @@ namespace Nautilus.DomainModel.Aggregates
 
             if (this.EntryTime.HasNoValue)
             {
-                this.EntryTime = Option<ZonedDateTime?>.Some(eventTime);
+                this.EntryTime = OptionVal<ZonedDateTime>.Some(eventTime);
             }
 
             this.AverageEntryPrice = averagePrice;

@@ -69,12 +69,12 @@ namespace Nautilus.Data.Orchestration
         /// <summary>
         /// Gets the schedules duration of collection intervals.
         /// </summary>
-        public Option<Duration?> IntervalDuration { get; }
+        public OptionVal<Duration> IntervalDuration { get; }
 
         /// <summary>
         /// Gets the schedules last collected date and time (optional).
         /// </summary>
-        public Option<ZonedDateTime?> LastCollectedTime { get; private set; }
+        public OptionVal<ZonedDateTime> LastCollectedTime { get; private set; }
 
         /// <summary>
         /// Gets the schedules next major collection date time.
@@ -171,10 +171,7 @@ namespace Nautilus.Data.Orchestration
             Debug.NotDefault(timeNow, nameof(timeNow));
 
             var intervalDuration = this.IntervalDuration.HasValue
-
-                // ReSharper disable once PossibleInvalidOperationException (already checked for null above).
-                #pragma warning disable 8629
-                ? this.IntervalDuration.Value.Value
+                ? this.IntervalDuration.Value
                 : Duration.Zero;
 
             var nextIntervalTime = this.previousScheduledTime + intervalDuration;

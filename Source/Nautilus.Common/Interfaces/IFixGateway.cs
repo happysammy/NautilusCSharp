@@ -298,7 +298,7 @@ namespace Nautilus.Common.Interfaces
             int quantity,
             decimal price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp);
 
         /// <summary>

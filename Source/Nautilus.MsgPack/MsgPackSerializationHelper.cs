@@ -41,13 +41,13 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="priceString">The price string.</param>
         /// <returns>The optional price.</returns>
-        internal static Option<Price> GetPrice(string priceString)
+        internal static OptionRef<Price> GetPrice(string priceString)
         {
             Debug.NotEmptyOrWhiteSpace(priceString, nameof(priceString));
 
             if (priceString == None)
             {
-                return Option<Price>.None();
+                return OptionRef<Price>.None();
             }
 
             var priceDecimal = Convert.ToDecimal(priceString);
@@ -61,7 +61,7 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="price">The price.</param>
         /// <returns>The optional price.</returns>
-        internal static string GetPriceString(Option<Price> price)
+        internal static string GetPriceString(OptionRef<Price> price)
         {
             Debug.NotNull(price, nameof(price));
 
@@ -75,13 +75,13 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="expireTimeString">The expire time string.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static Option<ZonedDateTime?> GetExpireTime(string expireTimeString)
+        internal static OptionVal<ZonedDateTime> GetExpireTime(string expireTimeString)
         {
             Debug.NotEmptyOrWhiteSpace(expireTimeString, nameof(expireTimeString));
 
             return expireTimeString == None
-                ? Option<ZonedDateTime?>.None()
-                : Option<ZonedDateTime?>.Some(expireTimeString.ToZonedDateTimeFromIso());
+                ? OptionVal<ZonedDateTime>.None()
+                : OptionVal<ZonedDateTime>.Some(expireTimeString.ToZonedDateTimeFromIso());
         }
 
         /// <summary>
@@ -89,10 +89,8 @@ namespace Nautilus.MsgPack
         /// </summary>
         /// <param name="expireTime">The optional expire time.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static string GetExpireTimeString(Option<ZonedDateTime?> expireTime)
+        internal static string GetExpireTimeString(OptionVal<ZonedDateTime> expireTime)
         {
-            Debug.NotNull(expireTime, nameof(expireTime));
-
             return expireTime.HasNoValue
                 ? None
                 : expireTime.Value.ToIsoString();

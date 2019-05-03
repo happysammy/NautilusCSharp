@@ -36,7 +36,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private TimeInForce TimeInForce { get; set; } = TimeInForce.DAY;
 
-        private Option<ZonedDateTime?> ExpireTime { get; set; } = Option<ZonedDateTime?>.None();
+        private OptionVal<ZonedDateTime> ExpireTime { get; set; } = OptionVal<ZonedDateTime>.None();
 
         private ZonedDateTime Timestamp { get; set; } = StubZonedDateTime.UnixEpoch();
 

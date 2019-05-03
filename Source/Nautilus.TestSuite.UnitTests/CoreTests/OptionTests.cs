@@ -20,25 +20,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     public class OptionTests
     {
         [Fact]
-        internal void Create_WithNull_HasNoValue()
-        {
-            // Arrange
-            // Act
-            Option<TestClass?> option = null;
-
-            // Assert
-            Assert.True(option.HasNoValue);
-            Assert.False(option.HasValue);
-        }
-
-        [Fact]
         internal void Create_WithImplicitOperator_HasValue()
         {
             // Arrange
             var instance = new TestClass();
 
             // Act
-            Option<TestClass> option = instance;
+            OptionRef<TestClass> option = instance;
 
             // Assert
             Assert.True(option.HasValue);
@@ -51,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            var result = Option<TestClass>.None();
+            var result = OptionRef<TestClass>.None();
 
             // Assert
             Assert.True(result.HasNoValue);
@@ -63,19 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            var result = Option<DateTime>.None();
-
-            // Assert
-            Assert.False(result.HasNoValue);
-            Assert.True(result.HasValue);
-        }
-
-        [Fact]
-        internal void None_WithNullableStruct_ReturnsOptionWithNoValue()
-        {
-            // Arrange
-            // Act
-            var result = Option<DateTime?>.None();
+            var result = OptionVal<DateTime>.None();
 
             // Assert
             Assert.True(result.HasNoValue);
@@ -83,13 +59,15 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         }
 
         [Fact]
-        internal void Value_WithNoValue_Throws()
+        internal void None_WithNullableStruct_ReturnsOptionWithNoValue()
         {
             // Arrange
-            Option<TestClass?> option = null;
-
             // Act
-            Assert.Throws<InvalidOperationException>(() => option.Value);
+            var result = OptionVal<DateTime>.None();
+
+            // Assert
+            Assert.True(result.HasNoValue);
+            Assert.False(result.HasValue);
         }
 
         [Fact]
@@ -99,18 +77,18 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var time = new DateTime(2000, 1, 1);
 
             // Act
-            var result = Option<DateTime>.Some(time);
+            var result = OptionVal<DateTime>.Some(time);
 
             // Assert
             Assert.Equal(time, result.Value);
         }
 
         [Fact]
-        internal void Equals_OptionCreatedWithNullAndNone_ReturnsTrue()
+        internal void Equals_OptionCreatedWithNone_ReturnsTrue()
         {
             // Arrange
-            Option<TestClass?> option1 = null;
-            Option<TestClass?> option2 = Option<TestClass?>.None();
+            OptionRef<TestClass> option1 = OptionRef<TestClass>.None();
+            OptionRef<TestClass> option2 = OptionRef<TestClass>.None();
 
             // Act
             var result = option1.Equals(option2);
@@ -123,8 +101,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equals_WhenOneOptionNull_ReturnsFalse()
         {
             // Arrange
-            var option1 = Option<TestClass>.Some(new TestClass());
-            var option2 = Option<TestClass>.None();
+            var option1 = OptionRef<TestClass>.Some(new TestClass());
+            var option2 = OptionRef<TestClass>.None();
 
             // Act
             var result = option1.Equals(option2);
@@ -140,8 +118,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var dateTime1 = new DateTime(2000, 1, 1);
             var dateTime2 = new DateTime(2000, 1, 1);
 
-            var option1 = Option<DateTime>.Some(dateTime1);
-            var option2 = Option<DateTime>.Some(dateTime2);
+            var option1 = OptionVal<DateTime>.Some(dateTime1);
+            var option2 = OptionVal<DateTime>.Some(dateTime2);
 
             // Act
             var result1 = option1.Equals((object)option2);
@@ -167,8 +145,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var dateTime1 = new DateTime(2000, 1, 1);
             var dateTime2 = new DateTime(2000, 1, 2);
 
-            var option1 = Option<DateTime>.Some(dateTime1);
-            var option2 = Option<DateTime>.Some(dateTime2);
+            var option1 = OptionVal<DateTime>.Some(dateTime1);
+            var option2 = OptionVal<DateTime>.Some(dateTime2);
 
             // Act
             var result1 = option1.Equals((object)option2);
@@ -191,7 +169,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equals_WithString_ReturnsFalse()
         {
             // Arrange
-            var option = Option<TestClass>.Some(new TestClass());
+            var option = OptionRef<TestClass>.Some(new TestClass());
 
             // Act
             var result = option.Equals("string");
@@ -204,7 +182,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void GetHashCode_WithNoValue_ReturnsZero()
         {
             // Arrange
-            Option<TestClass?> option = null;
+            var option = OptionRef<TestClass>.None();
 
             // Act
             var result = option.GetHashCode();
@@ -217,7 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void GetHashCode_WithValue_ReturnsExpectedInt()
         {
             // Arrange
-            var option = Option<TestClass>.Some(new TestClass());
+            var option = OptionRef<TestClass>.Some(new TestClass());
 
             // Act
             var result = option.GetHashCode();
@@ -230,7 +208,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void ToString_WithNoValue_ReturnsExpectedString()
         {
             // Arrange
-            Option<TestClass?> option = null;
+            var option = OptionRef<TestClass>.None();
 
             // Act
             var result = option.ToString();
@@ -243,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void ToString_WithValue_ReturnsValueObjectsToString()
         {
             // Arrange
-            Option<TestClass> option = new TestClass();
+            OptionRef<TestClass> option = new TestClass();
 
             // Act
             var result = option.ToString();

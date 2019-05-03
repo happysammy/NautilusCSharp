@@ -125,6 +125,6 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events margin call status.
         /// </summary>
-        public Option<string> MarginCallStatus { get; }
+        public OptionRef<string> MarginCallStatus { get; }
     }
 }

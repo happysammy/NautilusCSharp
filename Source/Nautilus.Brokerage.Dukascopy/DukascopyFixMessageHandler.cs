@@ -13,6 +13,7 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -400,8 +401,8 @@ namespace Nautilus.Brokerage.Dukascopy
                 if (orderStatus == OrdStatus.NEW.ToString())
                 {
                     var expireTime = message.IsSetField(Tags.ExpireTime)
-                                       ? (ZonedDateTime?)FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime))
-                                       : null;
+                                       ? OptionVal<ZonedDateTime>.Some(FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime)))
+                                       : OptionVal<ZonedDateTime>.None();
 
                     this.fixGateway?.OnOrderWorking(
                         symbol,

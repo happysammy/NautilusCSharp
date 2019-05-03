@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------------------------
-// <copyright file="Option{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="OptionRef{T}.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,114 +16,115 @@ namespace Nautilus.Core
     /// </summary>
     /// <typeparam name="T">The option object type.</typeparam>
     [Immutable]
-    public struct Option<T> : IEquatable<Option<T>>
+    public struct OptionRef<T> : IEquatable<OptionRef<T>>
+        where T : class
     {
         private readonly T value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Option{T}"/> struct.
+        /// Initializes a new instance of the <see cref="OptionRef{T}"/> struct.
         /// </summary>
         /// <param name="value">The value.</param>
-        private Option(T value)
+        private OptionRef(T value)
         {
             this.value = value;
         }
 
         /// <summary>
-        /// Gets the value of the <see cref="Option{T}"/> (value cannot be null).
+        /// Gets the value of the <see cref="OptionRef{T}"/> (value cannot be null).
         /// </summary>
         public T Value => this.GetValue();
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="Option{T}"/> has a value.
+        /// Gets a value indicating whether the <see cref="OptionRef{T}"/> has a value.
         /// </summary>
         public bool HasValue => this.value != null;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="Option{T}"/> has NO value.
+        /// Gets a value indicating whether the <see cref="OptionRef{T}"/> has NO value.
         /// </summary>
-        public bool HasNoValue => !this.HasValue;
+        public bool HasNoValue => this.value is null;
 
         /// <summary>
-        /// Returns a new <see cref="Option{T}"/> with the given value T.
+        /// Returns a new <see cref="OptionRef{T}"/> with the given value T.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static implicit operator Option<T>(T value) => new Option<T>(value);
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        public static implicit operator OptionRef<T>(T value) => new OptionRef<T>(value);
 
         /// <summary>
-        /// Returns a result indicating whether the left <see cref="Option{T}"/> is equal to the
+        /// Returns a result indicating whether the left <see cref="OptionRef{T}"/> is equal to the
         /// right T.
         /// </summary>
-        /// <param name="option">The <see cref="Option{T}"/> (cannot be null).</param>
+        /// <param name="option">The <see cref="OptionRef{T}"/> (cannot be null).</param>
         /// <param name="value">The value (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Option<T> option, T value) => option.value != null && option.value.Equals(value);
+        public static bool operator ==(OptionRef<T> option, T value) => option.value != null && option.value.Equals(value);
 
         /// <summary>
-        /// Returns a result indicating whether the left <see cref="Option{T}"/> is not equal to the
+        /// Returns a result indicating whether the left <see cref="OptionRef{T}"/> is not equal to the
         /// right T.
         /// </summary>
-        /// <param name="option">The <see cref="Option{T}"/> (cannot be null).</param>
+        /// <param name="option">The <see cref="OptionRef{T}"/> (cannot be null).</param>
         /// <param name="value">The value (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator !=(Option<T> option, T value) => !(option == value);
+        public static bool operator !=(OptionRef<T> option, T value) => !(option == value);
 
         /// <summary>
-        /// Returns a result indicating whether the left <see cref="Option{T}"/> is equal to the
-        /// right <see cref="Option{T}"/>.
+        /// Returns a result indicating whether the left <see cref="OptionRef{T}"/> is equal to the
+        /// right <see cref="OptionRef{T}"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="Option{T}"/> (cannot be null).</param>
-        /// <param name="right">The right <see cref="Option{T}"/> (cannot be null).</param>
+        /// <param name="left">The left <see cref="OptionRef{T}"/> (cannot be null).</param>
+        /// <param name="right">The right <see cref="OptionRef{T}"/> (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(Option<T> left, Option<T> right) => left.Equals(right);
+        public static bool operator ==(OptionRef<T> left, OptionRef<T> right) => left.Equals(right);
 
         /// <summary>
-        /// Returns a result indicating whether the left <see cref="Option{T}"/> is not equal to the
-        /// right <see cref="Option{T}"/>.
+        /// Returns a result indicating whether the left <see cref="OptionRef{T}"/> is not equal to the
+        /// right <see cref="OptionRef{T}"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="Option{T}"/> (cannot be null).</param>
-        /// <param name="right">The right <see cref="Option{T}"/> (cannot be null).</param>
-        /// <returns>True if the <see cref="Option{T}"/>(s) are not equal; otherwise returns false.</returns>
-        public static bool operator !=(Option<T> left, Option<T> right) => !(left == right);
+        /// <param name="left">The left <see cref="OptionRef{T}"/> (cannot be null).</param>
+        /// <param name="right">The right <see cref="OptionRef{T}"/> (cannot be null).</param>
+        /// <returns>True if the <see cref="OptionRef{T}"/>(s) are not equal; otherwise returns false.</returns>
+        public static bool operator !=(OptionRef<T> left, OptionRef<T> right) => !(left == right);
 
         /// <summary>
-        /// Gets a <see cref="Option{T}"/> with no value.
+        /// Gets a <see cref="OptionRef{T}"/> with no value.
         /// </summary>
-        /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static Option<T> None() => default;
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        public static OptionRef<T> None() => default;
 
         /// <summary>
-        /// Gets the given object wrapped in an <see cref="Option{T}"/>.
+        /// Gets the given object wrapped in an <see cref="OptionRef{T}"/>.
         /// </summary>
         /// <param name="obj">The object (cannot be null).</param>
-        /// <returns>A <see cref="Option{T}"/>.</returns>
-        public static Option<T> Some(T obj) => new Option<T>(obj);
+        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        public static OptionRef<T> Some(T obj) => new OptionRef<T>(obj);
 
         /// <summary>
         /// Returns a result which indicates whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="obj">The other object.</param>
-        /// <returns>True if the other <see cref="Option{T}"/> is equal to this <see cref="Option{T}"/>
+        /// <returns>True if the other <see cref="OptionRef{T}"/> is equal to this <see cref="OptionRef{T}"/>
         /// otherwise returns false.</returns>
         public override bool Equals(object obj)
         {
             if (obj is T o)
             {
-                obj = new Option<T>(o);
+                obj = new OptionRef<T>(o);
             }
 
-            return obj is Option<T> option && this.Equals(option);
+            return obj is OptionRef<T> option && this.Equals(option);
         }
 
         /// <summary>
-        /// Returns a result indicating whether the specified <see cref="Option{T}"/>
-        /// is equal to the current <see cref="Option{T}"/>.
+        /// Returns a result indicating whether the specified <see cref="OptionRef{T}"/>
+        /// is equal to the current <see cref="OptionRef{T}"/>.
         /// </summary>
         /// <param name="other">The other object (cannot be null).</param>
-        /// <returns>True if the other <see cref="Option{T}"/> is equal to this <see cref="Option{T}"/>
+        /// <returns>True if the other <see cref="OptionRef{T}"/> is equal to this <see cref="OptionRef{T}"/>
         /// otherwise returns false.</returns>
-        public bool Equals(Option<T> other)
+        public bool Equals(OptionRef<T> other)
         {
             if (this.value is null && other.value is null)
             {

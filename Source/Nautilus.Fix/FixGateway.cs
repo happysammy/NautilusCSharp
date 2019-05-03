@@ -634,7 +634,7 @@ namespace Nautilus.Fix
             int quantity,
             decimal price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>

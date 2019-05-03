@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Entities
         public AtomicOrder(
             Order entry,
             Order stopLoss,
-            Option<Order> profitTarget)
+            OptionRef<Order> profitTarget)
             : base(
                   new AtomicOrderId(entry.Id.Value),
                   entry.Timestamp)
@@ -39,8 +39,8 @@ namespace Nautilus.DomainModel.Entities
             this.Entry = entry;
             this.StopLoss = stopLoss;
             this.ProfitTarget = profitTarget.HasValue
-                ? Option<Order>.Some(profitTarget.Value)
-                : Option<Order>.None();
+                ? OptionRef<Order>.Some(profitTarget.Value)
+                : OptionRef<Order>.None();
         }
 
         /// <summary>
@@ -61,6 +61,6 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public Option<Order> ProfitTarget { get; }
+        public OptionRef<Order> ProfitTarget { get; }
     }
 }

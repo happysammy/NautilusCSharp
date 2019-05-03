@@ -57,9 +57,9 @@ namespace Nautilus.DomainModel.Aggregates
             OrderSide orderSide,
             OrderType orderType,
             Quantity quantity,
-            Option<Price> price,
+            OptionRef<Price> price,
             TimeInForce timeInForce,
-            Option<ZonedDateTime?> expireTime,
+            OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime timestamp)
             : base(orderId, timestamp)
         {
@@ -102,16 +102,16 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        public Option<OrderId> IdBroker => this.orderIdsBroker.Count > 0
+        public OptionRef<OrderId> IdBroker => this.orderIdsBroker.Count > 0
             ? this.orderIdsBroker.Last()
-            : Option<OrderId>.None();
+            : OptionRef<OrderId>.None();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public Option<ExecutionId> ExecutionId => this.executionIds.Count > 0
+        public OptionRef<ExecutionId> ExecutionId => this.executionIds.Count > 0
             ? this.executionIds.Last()
-            : Option<ExecutionId>.None();
+            : OptionRef<ExecutionId>.None();
 
         /// <summary>
         /// Gets the orders label.
@@ -141,12 +141,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders price.
         /// </summary>
-        public Option<Price> Price { get; private set; }
+        public OptionRef<Price> Price { get; private set; }
 
         /// <summary>
         /// Gets the orders average fill price (optional, may be unfilled).
         /// </summary>
-        public Option<Price> AveragePrice { get; private set; }
+        public OptionRef<Price> AveragePrice { get; private set; }
 
         /// <summary>
         /// Gets the orders slippage.
@@ -161,7 +161,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders expire time (optional).
         /// </summary>
-        public Option<ZonedDateTime?> ExpireTime { get; }
+        public OptionVal<ZonedDateTime> ExpireTime { get; }
 
         /// <summary>
         /// Gets the orders last event time.
@@ -344,7 +344,7 @@ namespace Nautilus.DomainModel.Aggregates
                 .OnSuccess(() => { this.Price = orderEvent.ModifiedPrice; });
         }
 
-        private void ValidateExpireTime(Option<ZonedDateTime?> expireTime)
+        private void ValidateExpireTime(OptionVal<ZonedDateTime> expireTime)
         {
             if (expireTime.HasNoValue)
             {
@@ -352,9 +352,7 @@ namespace Nautilus.DomainModel.Aggregates
             }
             else
             {
-                #pragma warning disable 8629
-                // ReSharper disable once PossibleInvalidOperationException (already checked above).
-                var expireTimeValue = (ZonedDateTime)expireTime.Value;
+                var expireTimeValue = expireTime.Value;
                 Precondition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
                 Precondition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
