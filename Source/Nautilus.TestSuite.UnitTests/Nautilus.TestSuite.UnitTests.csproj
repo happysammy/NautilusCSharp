@@ -40,7 +40,7 @@
         <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
         <ProjectReference Include="..\NautilusData.Service\NautilusData.Service.csproj" />
         <ProjectReference Include="..\NautilusData\NautilusData.csproj" />
-        <ProjectReference Include="..\NautilusMQ.TestSuite.TestKit\NautilusMQ.TestSuite.TestKit.csproj" />
+        <ProjectReference Include="..\NautilusMQ.UnitTests\NautilusMQ.UnitTests.csproj" />
     </ItemGroup>
 
     <ItemGroup>

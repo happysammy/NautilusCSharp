@@ -2,8 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
-
         <IsPackable>false</IsPackable>
+        <LangVersion>8</LangVersion>
+        <NullableContextOptions>enable</NullableContextOptions>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,7 +14,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NautilusMQ\NautilusMQ.csproj" />
+        <ProjectReference Include="..\NautilusMQ\NautilusMQ.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
 </Project>
