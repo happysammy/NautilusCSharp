@@ -8,12 +8,12 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using System.Diagnostics;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -66,7 +66,7 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(ReadOnlyList<Address> receivers, T message)
             where T : Message
         {
-            Debug.Assert(receivers.Count > 0, "The receivers list cannot be empty.");
+            Debug.NotEmpty(receivers, nameof(receivers));
 
             foreach (var receiver in receivers)
             {

@@ -9,8 +9,8 @@
 namespace Nautilus.Data.Keys
 {
     using System;
-    using System.Diagnostics;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace Nautilus.Data.Keys
         /// <param name="dateKey">The date key the key is based on.</param>
         public BarDataKey(BarType barType, DateKey dateKey)
         {
-            Debug.Assert(barType.Specification.Period == 1, "The bar type period must be 1.");
+            Precondition.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
 
             this.Type = barType;
             this.DateKey = dateKey;

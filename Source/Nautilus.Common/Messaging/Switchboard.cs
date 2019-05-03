@@ -10,11 +10,11 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.
@@ -55,7 +55,7 @@ namespace Nautilus.Common.Messaging
         /// <returns>The switchboard.</returns>
         public static Switchboard Create(Dictionary<Address, IEndpoint> addressDictionary)
         {
-            Debug.Assert(addressDictionary.Count == 0, "The addresses dictionary cannot be empty.");
+            Precondition.NotEmpty(addressDictionary, nameof(addressDictionary));
 
             return new Switchboard(addressDictionary);
         }
@@ -69,10 +69,7 @@ namespace Nautilus.Common.Messaging
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
-            if (!this.addresses.ContainsKey(envelope.Receiver))
-            {
-                throw new InvalidOperationException("Cannot send message (envelope receiver address unknown).");
-            }
+            Debug.KeyIn(envelope.Receiver, this.addresses, nameof(envelope.Receiver), nameof(this.addresses));
 
             this.addresses[envelope.Receiver].Send(envelope);
         }

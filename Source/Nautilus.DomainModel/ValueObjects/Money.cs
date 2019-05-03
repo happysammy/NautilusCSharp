@@ -8,9 +8,9 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
-    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Primitives;
     using Nautilus.DomainModel.Enums;
 
@@ -28,9 +28,9 @@ namespace Nautilus.DomainModel.ValueObjects
         private Money(decimal amount, CurrencyCode currency)
             : base(amount)
         {
-            Debug.Assert(amount >= decimal.Zero, "The amount cannot be be < 0.");
-            Debug.Assert(amount % 0.01m == 0, "The amount cannot be divisible to more than 2 decimal places.");
-            Debug.Assert(currency != default, "The currency cannot be the default value.");
+            Precondition.NotNegativeDecimal(amount, nameof(amount));
+            Precondition.True(amount % 0.01m == 0, nameof(amount));
+            Precondition.NotDefault(currency, nameof(currency));
 
             this.Currency = currency;
         }
@@ -127,7 +127,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money DivideBy(int divisor)
         {
-            Debug.Assert(divisor != 0, "The divisor cannot be zero.");
+            Precondition.PositiveInt32(divisor, nameof(divisor));
 
             return new Money(this.Value / divisor, this.Currency);
         }

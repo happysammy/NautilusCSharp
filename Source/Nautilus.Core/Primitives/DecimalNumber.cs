@@ -9,9 +9,9 @@
 namespace Nautilus.Core.Primitives
 {
     using System;
-    using System.Diagnostics;
     using System.Globalization;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// The base class for all primitive numbers based on a decimal.
@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, DecimalNumber right)
         {
-            Debug.Assert(right.Value != decimal.Zero, "The right value cannot be zero.");
+            Precondition.PositiveDecimal(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(decimal left, DecimalNumber right)
         {
-            Debug.Assert(right.Value != decimal.Zero, "The right value cannot be zero.");
+            Precondition.PositiveDecimal(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, decimal right)
         {
-            Debug.Assert(right != decimal.Zero, "The right value cannot be zero.");
+            Precondition.PositiveDecimal(right, nameof(right));
 
             return left.Value / right;
         }
@@ -340,7 +340,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is DecimalNumber && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal to the

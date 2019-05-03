@@ -9,9 +9,9 @@
 namespace Nautilus.Core.Primitives
 {
     using System;
-    using System.Diagnostics;
     using System.Globalization;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// The base class for all primitive numbers based on an integer.
@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(IntegerNumber left, IntegerNumber right)
         {
-            Debug.Assert(right.Value != 0, "The right value cannot be zero.");
+            Precondition.PositiveInt32(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(int left, IntegerNumber right)
         {
-            Debug.Assert(right.Value != 0, "The right value cannot be zero.");
+            Precondition.PositiveInt32(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(IntegerNumber left, int right)
         {
-            Debug.Assert(right != 0, "The right value cannot be zero.");
+            Precondition.PositiveInt32(right, nameof(right));
 
             return left.Value / right;
         }
@@ -340,7 +340,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is FloatingPointNumber && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the

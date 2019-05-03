@@ -97,14 +97,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void MultiplyBy_Zero_Throws()
+        internal void DivideBy_Zero_Throws()
         {
             // Arrange
             var money = Money.Create(1000, CurrencyCode.AUD);
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => money.DivideBy(0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => money.DivideBy(0));
         }
 
         [Theory]

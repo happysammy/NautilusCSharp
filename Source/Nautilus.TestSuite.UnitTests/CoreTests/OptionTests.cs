@@ -87,8 +87,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equals_OptionCreatedWithNone_ReturnsTrue()
         {
             // Arrange
-            OptionRef<TestClass> option1 = OptionRef<TestClass>.None();
-            OptionRef<TestClass> option2 = OptionRef<TestClass>.None();
+            var option1 = OptionRef<TestClass>.None();
+            var option2 = OptionRef<TestClass>.None();
 
             // Act
             var result = option1.Equals(option2);
@@ -188,7 +188,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var result = option.GetHashCode();
 
             // Assert
-            Assert.Equal(0, result);
+            Assert.Equal(493, result);
         }
 
         [Fact]

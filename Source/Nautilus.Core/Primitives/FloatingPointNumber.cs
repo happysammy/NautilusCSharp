@@ -9,9 +9,9 @@
 namespace Nautilus.Core.Primitives
 {
     using System;
-    using System.Diagnostics;
     using System.Globalization;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// The base class for all primitive numbers based on a double-precision floating-point number.
@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(FloatingPointNumber left, FloatingPointNumber right)
         {
-            Debug.Assert(right.Value > 0.0, "The right value cannot be zero.");
+            Precondition.PositiveDouble(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(double left, FloatingPointNumber right)
         {
-            Debug.Assert(right.Value > 0.0, "The right value cannot be zero.");
+            Precondition.PositiveDouble(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(FloatingPointNumber left, double right)
         {
-            Debug.Assert(right > 0.0, "The right value cannot be zero.");
+            Precondition.PositiveDouble(right, nameof(right));
 
             return left.Value / right;
         }
@@ -340,7 +340,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is FloatingPointNumber && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="FloatingPointNumber"/> is equal to the

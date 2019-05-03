@@ -65,7 +65,10 @@ namespace Nautilus.Core.Primitives
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
-        public static bool operator !=(ValidString<T> left, ValidString<T> right) => !(left == right);
+        public static bool operator !=(ValidString<T> left, ValidString<T> right)
+        {
+            return !(left == right);
+        }
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValidString{T}"/> is equal
@@ -73,7 +76,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is ValidString<T> && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValidString{T}"/> is equal

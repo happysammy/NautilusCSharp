@@ -9,8 +9,8 @@
 namespace Nautilus.Data.Keys
 {
     using System;
-    using System.Diagnostics;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using NodaTime;
 
@@ -28,9 +28,9 @@ namespace Nautilus.Data.Keys
         /// <param name="day">The date key day.</param>
         public DateKey(int year, int month, int day)
         {
-            Debug.Assert(year > 0, "The value of year must be > 0.");
-            Debug.Assert(month > 0, "The value of month must be > 0.");
-            Debug.Assert(day > 0, "The value of day must be > 0.");
+            Debug.PositiveInt32(year, nameof(year));
+            Debug.PositiveInt32(month, nameof(month));
+            Debug.PositiveInt32(day, nameof(day));
 
             this.Year = year;
             this.Month = month;
@@ -47,7 +47,7 @@ namespace Nautilus.Data.Keys
         public DateKey(ZonedDateTime timestamp)
             : this(timestamp.Year, timestamp.Month, timestamp.Day)
         {
-            Debug.Assert(timestamp != default, "The timestamp cannot be the default value.");
+            Debug.NotDefault(timestamp, nameof(timestamp));
         }
 
         /// <summary>

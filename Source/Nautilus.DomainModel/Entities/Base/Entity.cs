@@ -8,9 +8,9 @@
 
 namespace Nautilus.DomainModel.Entities.Base
 {
-    using System.Diagnostics;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
 
@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Entities.Base
             EntityId<T> identifier,
             ZonedDateTime timestamp)
         {
-            Debug.Assert(timestamp != default, "The timestamp cannot be the default value.");
+            Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Id = identifier;
             this.Timestamp = timestamp;
@@ -52,7 +52,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is Entity<T> && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this entity is equal to the given entity.

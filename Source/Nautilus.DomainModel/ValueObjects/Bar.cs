@@ -117,14 +117,14 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
 
             var values = barString.Split(',');
-            var decimals = SafeConvert.ToDecimalOr(values[0], 0m).GetDecimalPlaces();
+            var decimals = values[0].ToDecimalOr(0m).GetDecimalPlaces();
 
             return new Bar(
-                Price.Create(SafeConvert.ToDecimalOr(values[0], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[1], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[2], 0m), decimals),
-                Price.Create(SafeConvert.ToDecimalOr(values[3], 0m), decimals),
-                Quantity.Create(Convert.ToInt32(SafeConvert.ToDecimalOr(values[4], 0m))),
+                Price.Create(values[0].ToDecimalOr(0m), decimals),
+                Price.Create(values[1].ToDecimalOr(0m), decimals),
+                Price.Create(values[2].ToDecimalOr(0m), decimals),
+                Price.Create(values[3].ToDecimalOr(0m), decimals),
+                Quantity.Create(Convert.ToInt32(values[4].ToDecimalOr(0m))),
                 values[5].ToZonedDateTimeFromIso());
         }
 
