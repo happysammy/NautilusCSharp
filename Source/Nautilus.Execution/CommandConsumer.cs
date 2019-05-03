@@ -57,20 +57,6 @@ namespace Nautilus.Execution
                         Guid.NewGuid()).Endpoint;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-        }
-
         private void OnMessage(byte[] message)
         {
             this.Execute(() =>

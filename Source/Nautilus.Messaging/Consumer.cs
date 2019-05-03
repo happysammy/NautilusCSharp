@@ -72,7 +72,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Executes on component start.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Execute(() =>
             {
@@ -87,7 +87,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Executes on component stop.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.Execute(() =>
             {

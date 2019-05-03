@@ -56,7 +56,7 @@ namespace Nautilus.Common
         /// <summary>
         /// Starts the system.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             var start = new StartSystem(this.NewGuid(), this.TimeNow());
 
@@ -69,7 +69,7 @@ namespace Nautilus.Common
         /// <summary>
         /// Shuts down the system.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             var shutdown = new ShutdownSystem(this.NewGuid(), this.TimeNow());
 

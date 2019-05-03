@@ -67,16 +67,9 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
         /// Actions to be performed when the component is stopping.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.commandConsumer.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()));
             this.eventPublisher.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()));

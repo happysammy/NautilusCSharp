@@ -36,20 +36,6 @@ namespace Nautilus.Data.Publishers
             this.publisher = publisher;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-        }
-
         private void OnMessage(Tick message)
         {
             this.publisher.Publish(

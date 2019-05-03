@@ -94,7 +94,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// To be run on component start.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Connect();
         }
@@ -102,7 +102,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// To be run on component stop.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.Disconnect();
         }

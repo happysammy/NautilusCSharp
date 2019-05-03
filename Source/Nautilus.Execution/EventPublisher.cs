@@ -54,20 +54,6 @@ namespace Nautilus.Execution
                 Guid.NewGuid()).Endpoint;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-        }
-
         private void OnMessage(Event message)
         {
             this.publisher.Send(this.serializer.Serialize(message));

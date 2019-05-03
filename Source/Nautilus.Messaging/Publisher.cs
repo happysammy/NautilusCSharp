@@ -69,7 +69,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Actions to be performed when starting the <see cref="Consumer"/>.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Execute(() =>
             {
@@ -83,7 +83,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Actions to be performed when stopping the <see cref="Consumer"/>.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.Execute(() =>
             {

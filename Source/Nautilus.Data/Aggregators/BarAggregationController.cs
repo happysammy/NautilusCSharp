@@ -73,18 +73,11 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)

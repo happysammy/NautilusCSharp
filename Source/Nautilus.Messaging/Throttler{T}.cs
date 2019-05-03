@@ -68,20 +68,6 @@ namespace Nautilus.Messaging
             this.totalCount = 0;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-        }
-
         private void OnMessage(T message)
         {
             this.queue.Enqueue(message);

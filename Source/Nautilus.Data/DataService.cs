@@ -55,19 +55,12 @@ namespace Nautilus.Data
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
         }
 
         private void CreateConnectFixJob()

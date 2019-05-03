@@ -45,7 +45,7 @@ namespace Nautilus.Common.Scheduling
         /// <summary>
         /// TBA.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.quartzScheduler.Start();
         }
@@ -53,7 +53,7 @@ namespace Nautilus.Common.Scheduling
         /// <summary>
         /// TBA.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.quartzScheduler.Shutdown();
         }

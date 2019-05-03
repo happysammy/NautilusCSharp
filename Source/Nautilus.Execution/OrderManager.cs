@@ -49,22 +49,6 @@ namespace Nautilus.Execution
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-            // Do nothing.
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-            // To be run on component stop.
-        }
-
         private void OnMessage(SubmitOrder message)
         {
             var orderToSubmit = message.Order;

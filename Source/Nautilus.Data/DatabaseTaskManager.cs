@@ -54,16 +54,9 @@ namespace Nautilus.Data
         }
 
         /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
         /// Actions to be performed prior to stopping the <see cref="DatabaseTaskManager"/>.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.barRepository.SnapshotDatabase();
         }

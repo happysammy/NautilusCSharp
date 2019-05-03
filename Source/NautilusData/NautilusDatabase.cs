@@ -52,7 +52,7 @@ namespace NautilusData
         /// <summary>
         /// Starts the system.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.fixClient.Connect();
 
@@ -95,9 +95,10 @@ namespace NautilusData
         /// <summary>
         /// Shuts down the system.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.fixClient.Disconnect();
+
             // this.systemController.Shutdown();
         }
     }

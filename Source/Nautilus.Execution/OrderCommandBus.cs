@@ -41,20 +41,6 @@ namespace Nautilus.Execution
             this.gateway = gateway;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-        }
-
         private void OnMessage(CollateralInquiry message)
         {
             this.gateway.CollateralInquiry();

@@ -50,16 +50,9 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Runs pre-start of the receive actor.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.log.Debug($"{typeof(T).Name}Bus initializing...");
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
         }
 
         private void OnMessage(InitializeSwitchboard message)

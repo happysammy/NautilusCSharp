@@ -51,22 +51,6 @@ namespace Nautilus.Data.Collectors
             this.collectionSchedule = collectionSchedule;
         }
 
-        /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-            // Do nothing.
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
-            // To be run on component stop.
-        }
-
         private void OnMessage(CollectData<BarType> message)
         {
             if (this.dataReader.GetAllCsvFilesOrdered().IsFailure)

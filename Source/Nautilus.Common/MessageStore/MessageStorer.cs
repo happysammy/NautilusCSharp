@@ -41,16 +41,9 @@ namespace Nautilus.Common.MessageStore
         }
 
         /// <summary>
-        /// Executed on component start.
-        /// </summary>
-        protected override void OnStart()
-        {
-        }
-
-        /// <summary>
         /// Runs when the component stops.
         /// </summary>
-        protected override void OnStop()
+        public new void Stop()
         {
             // Allow the system to shutdown first.
             Task.Delay(1000).Wait();

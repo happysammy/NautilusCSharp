@@ -44,6 +44,20 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
+        /// Starts the component.
+        /// </summary>
+        public virtual void Start()
+        {
+        }
+
+        /// <summary>
+        /// Stops the component.
+        /// </summary>
+        public virtual void Stop()
+        {
+        }
+
+        /// <summary>
         /// Gets the components logger.
         /// </summary>
         protected ILogger Log { get; }
@@ -77,24 +91,14 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute(action);
         }
 
-        /// <summary>
-        /// TBA.
-        /// </summary>
-        protected abstract void OnStart();
-
-        /// <summary>
-        /// TBA.
-        /// </summary>
-        protected abstract void OnStop();
-
         private void OnMessage(StartSystem message)
         {
-            this.OnStart();
+            this.Start();
         }
 
         private void OnMessage(ShutdownSystem message)
         {
-            this.OnStop();
+            this.Stop();
         }
     }
 }

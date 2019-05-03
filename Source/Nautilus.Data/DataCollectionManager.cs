@@ -71,16 +71,9 @@ namespace Nautilus.Data
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.CreateTrimBarDataJob();
-        }
-
-        /// <summary>
-        /// Executed on component stop.
-        /// </summary>
-        protected override void OnStop()
-        {
         }
 
         private void OnMessage(Subscribe<BarType> message)

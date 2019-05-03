@@ -84,7 +84,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        protected override void OnStart()
+        public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
@@ -95,7 +95,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Actions to be performed after the actor base is stopped.
         /// </summary>
-        protected override void OnStop()
+        public override void Stop()
         {
             this.Execute(() =>
             {
