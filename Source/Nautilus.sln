@@ -71,7 +71,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nauti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ", "NautilusMQ\NautilusMQ.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ.UnitTests", "NautilusMQ.UnitTests\NautilusMQ.UnitTests.csproj", "{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ.Tests", "NautilusMQ.Tests\NautilusMQ.Tests.csproj", "{AA6DC0CF-AF0F-4A21-BB6D-0E1CBB5E674C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,6 +5,7 @@
         <IsPackable>false</IsPackable>
         <LangVersion>8</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
+        <RootNamespace>NautilusMQ.UnitTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

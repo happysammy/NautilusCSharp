@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.TestSuite.UnitTests
+namespace NautilusMQ.UnitTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
