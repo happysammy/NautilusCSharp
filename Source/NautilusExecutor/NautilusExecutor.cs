@@ -56,7 +56,7 @@ namespace NautilusExecutor
                 // Wait for connection.
             }
 
-            // this.systemController.Start();
+            this.systemController.Stop();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NautilusExecutor
         {
             this.fixClient.Disconnect();
 
-            // this.systemController.Shutdown();
+            this.systemController.Stop();
         }
     }
 }
