@@ -21,7 +21,7 @@ namespace Nautilus.Common.Scheduling
     /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
     /// and Remove messages.
     /// </summary>
-    public sealed class Scheduler : ActorComponentBase
+    public sealed class Scheduler : ComponentBase
     {
         private readonly IScheduler quartzScheduler;
 
@@ -40,30 +40,22 @@ namespace Nautilus.Common.Scheduling
                 { "quartz.threadPool.threadCount", "10" },
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
-
-            // Command messages.
-            this.Receive<CreateJob>(this.OnMessage);
-            this.Receive<RemoveJob>(this.OnMessage);
-            this.Receive<PauseJob>(this.OnMessage);
-            this.Receive<ResumeJob>(this.OnMessage);
         }
 
         /// <summary>
-        /// Runs pre-start of the actor component start.
+        /// TBA.
         /// </summary>
-        protected override void PreStart()
+        protected override void OnStart()
         {
-            base.PreStart();
             this.quartzScheduler.Start();
         }
 
         /// <summary>
-        /// Runs post-stop of the actor component stopping.
+        /// TBA.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.quartzScheduler.Shutdown();
-            base.PostStop();
         }
 
         private void OnMessage(CreateJob message)

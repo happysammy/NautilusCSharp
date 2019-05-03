@@ -12,20 +12,20 @@ namespace Nautilus.Messaging
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Network;
+    using NautilusMQ;
     using NetMQ;
     using NetMQ.Sockets;
 
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public class Consumer : ActorComponentBase
+    public class Consumer : ComponentBase
     {
         private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
         private readonly IEndpoint receiver;
@@ -67,31 +67,27 @@ namespace Nautilus.Messaging
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
-
-            this.Receive<byte[]>(this.OnMessage);
         }
 
         /// <summary>
-        /// Actions to be performed when starting the <see cref="Consumer"/>.
+        /// Executes on component start.
         /// </summary>
-        protected override void PreStart()
+        protected override void OnStart()
         {
             this.Execute(() =>
             {
-                base.PreStart();
-
                 this.socket.Bind(this.serverAddress.Value);
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
-                this.StartConsuming().PipeTo(this.Self);
+                this.StartConsuming();
             });
         }
 
         /// <summary>
-        /// Actions to be performed when stopping the <see cref="Consumer"/>.
+        /// Executes on component stop.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.Execute(() =>
             {
@@ -109,7 +105,7 @@ namespace Nautilus.Messaging
             this.receiver.Send(message);
             this.Log.Debug($"Consumed message[{this.cycles}].");
 
-            this.StartConsuming().PipeTo(this.Self);
+            this.StartConsuming();
         }
 
         private Task<byte[]> StartConsuming()

@@ -120,7 +120,7 @@ namespace NautilusData
                 resolutions,
                 barRollingWindow);
 
-            this.dataSystem.Start();
+            // this.dataSystem.Start();
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataSystem?.Shutdown();
+            // this.dataSystem?.Shutdown();
         }
     }
 }

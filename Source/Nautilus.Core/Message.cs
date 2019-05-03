@@ -78,7 +78,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is Message && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Message"/> is equal

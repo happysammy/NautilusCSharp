@@ -9,8 +9,8 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides an interface for message stores.

@@ -6,13 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messaging
+namespace NautilusMQ
 {
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Primitives;
 
     /// <summary>
     /// Represents a components messaging address within the system.
     /// </summary>
+    [Immutable]
     public class Address : ValidString<Address>
     {
         /// <summary>

@@ -8,8 +8,8 @@
 
 namespace Nautilus.Data
 {
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides data service component messaging addresses.

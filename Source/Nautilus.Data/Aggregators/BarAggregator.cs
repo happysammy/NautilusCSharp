@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregators
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -29,7 +28,7 @@ namespace Nautilus.Data.Aggregators
     /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class BarAggregator : ActorComponentBase
+    public sealed class BarAggregator : ComponentBase
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
         private readonly Symbol symbol;
@@ -61,16 +60,22 @@ namespace Nautilus.Data.Aggregators
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
             this.isMarketOpen = isMarketOpen;
+        }
 
-            // Command messages.
-            this.Receive<CloseBar>(this.OnMessage);
-            this.Receive<Subscribe<BarType>>(this.OnMessage);
-            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+            // Do nothing.
+        }
 
-            // Event messages.
-            this.Receive<MarketOpened>(this.OnMessage);
-            this.Receive<MarketClosed>(this.OnMessage);
-            this.Receive<Tick>(this.OnMessage);
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
+            // To be run on component stop.
         }
 
         /// <summary>
@@ -149,7 +154,8 @@ namespace Nautilus.Data.Aggregators
                     this.lastTick,
                     this.spreadAnalyzer.AverageSpread,
                     this.NewGuid());
-                Context.Parent.Tell(barClosed);
+
+                // Context.Parent.Tell(barClosed);
 
                 // Create and initialize new builder.
                 this.barBuilders[barSpec] = new BarBuilder(bar.Close);

@@ -289,5 +289,19 @@ namespace Nautilus.Brokerage.FXCM
                 // TODO
             });
         }
+
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Actions to be performed when the component is stopping.
+        /// </summary>
+        protected override void OnStop()
+        {
+        }
     }
 }

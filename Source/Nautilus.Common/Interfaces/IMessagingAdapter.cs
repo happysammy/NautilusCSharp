@@ -8,8 +8,8 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using NautilusMQ;
 
     /// <summary>
     /// An adapter to facilitate components sending messages to other components via the messaging

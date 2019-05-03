@@ -10,15 +10,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
-    using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NautilusMQ;
     using Quartz;
     using Xunit;
     using Xunit.Abstractions;
@@ -26,13 +24,13 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class SchedulerTests : TestKit
+    public class SchedulerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly IEndpoint scheduler;
-        private readonly MockLoggingAdapter logger;
         private readonly IZonedClock clock;
-        private readonly IEndpoint testActor;
+        private readonly MockLoggingAdapter logger;
+        private readonly IEndpoint testReceiver;
+        private readonly IEndpoint scheduler;
 
         public SchedulerTests(ITestOutputHelper output)
         {
@@ -41,13 +39,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             var setupFactory = new StubComponentryContainerFactory();
             var setupContainer = setupFactory.Create();
-            this.logger = setupFactory.LoggingAdapter;
             this.clock = setupContainer.Clock;
-            this.testActor = new ActorEndpoint(this.TestActor);
-
-            this.scheduler = new ActorEndpoint(
-                this.Sys.ActorOf(Props.Create(
-                    () => new Scheduler(setupContainer))));
+            this.logger = setupFactory.LoggingAdapter;
+            this.testReceiver = new MockMessageReceiver().Endpoint;
+            this.scheduler = new Scheduler(setupContainer).Endpoint;
         }
 
         [Fact]
@@ -66,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
                 .Build();
 
             var createJob = new CreateJob(
-                this.testActor,
+                this.testReceiver,
                 new TestJob(),
                 jobKey,
                 trigger,
@@ -96,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
                 .Build();
 
             var createJob = new CreateJob(
-                this.testActor,
+                this.testReceiver,
                 new TestJob(),
                 jobKey,
                 trigger,
@@ -107,8 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
             this.scheduler.Send(createJob);
 
             // Assert
-            LogDumper.Dump(this.logger, this.output);
-            this.ExpectMsg<TestJob>();
+            // Assert inside scheduler.
         }
 
         [Fact]
@@ -127,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
                 .Build();
 
             var createJob = new CreateJob(
-                this.testActor,
+                this.testReceiver,
                 new TestJob(),
                 jobKey,
                 trigger,
@@ -169,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
                 .Build();
 
             var createJob = new CreateJob(
-                this.testActor,
+                this.testReceiver,
                 new TestJob(),
                 jobKey,
                 trigger,

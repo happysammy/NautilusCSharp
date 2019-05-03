@@ -9,7 +9,6 @@
 namespace Nautilus.Execution
 {
     using System;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -21,13 +20,14 @@ namespace Nautilus.Execution
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
+    using NautilusMQ;
     using NodaTime;
     using Quartz;
 
     /// <summary>
     /// The service context which handles all execution related operations.
     /// </summary>
-    public sealed class ExecutionService : ActorComponentBusConnectedBase
+    public sealed class ExecutionService : ComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;
         private readonly IEndpoint commandThrottler;
@@ -61,49 +61,30 @@ namespace Nautilus.Execution
 
             this.gateway = gateway;
 
-            this.tradeCommandBus = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new OrderCommandBus(
-                        container,
-                        messagingAdapter,
-                        gateway))));
+            this.tradeCommandBus = new OrderCommandBus(
+                container,
+                messagingAdapter,
+                gateway).Endpoint;
 
-            this.commandThrottler = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new Throttler<Command>(
-                        container,
-                        NautilusService.Execution,
-                        this.tradeCommandBus,
-                        Duration.FromSeconds(1),
-                        commandsPerSecond))));
+            this.commandThrottler = new Throttler<Command>(
+                container,
+                NautilusService.Execution,
+                this.tradeCommandBus,
+                Duration.FromSeconds(1),
+                commandsPerSecond).Endpoint;
 
-            this.newOrderThrottler = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new Throttler<SubmitOrder>(
-                        container,
-                        NautilusService.Execution,
-                        this.commandThrottler,
-                        Duration.FromSeconds(1),
-                        newOrdersPerSecond))));
-
-            // Command messages.
-            this.Receive<ConnectFixJob>(this.OnMessage);
-            this.Receive<DisconnectFixJob>(this.OnMessage);
-            this.Receive<CollateralInquiry>(this.OnMessage);
-            this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<ModifyOrder>(this.OnMessage);
-            this.Receive<CancelOrder>(this.OnMessage);
-
-            // Event messages.
-            this.Receive<FixSessionConnected>(this.OnMessage);
-            this.Receive<FixSessionDisconnected>(this.OnMessage);
+            this.newOrderThrottler = new Throttler<SubmitOrder>(
+                container,
+                NautilusService.Execution,
+                this.commandThrottler,
+                Duration.FromSeconds(1),
+                newOrdersPerSecond).Endpoint;
         }
 
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected override void Start(StartSystem message)
+        protected override void OnStart()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
@@ -114,14 +95,13 @@ namespace Nautilus.Execution
         /// <summary>
         /// Actions to be performed after the actor base is stopped.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.Execute(() =>
             {
-                this.tradeCommandBus.Send(PoisonPill.Instance);
-                this.newOrderThrottler.Send(PoisonPill.Instance);
-                this.commandThrottler.Send(PoisonPill.Instance);
-                base.PostStop();
+// this.tradeCommandBus.Send(PoisonPill.Instance);
+//                this.newOrderThrottler.Send(PoisonPill.Instance);
+//                this.commandThrottler.Send(PoisonPill.Instance);
             });
         }
 
@@ -142,7 +122,7 @@ namespace Nautilus.Execution
                     .Build();
 
                 var createJob = new CreateJob(
-                    new ActorEndpoint(this.Self),
+                    this.Endpoint,
                     new ConnectFixJob(),
                     jobKey,
                     trigger,
@@ -171,7 +151,7 @@ namespace Nautilus.Execution
                     .Build();
 
                 var createJob = new CreateJob(
-                    new ActorEndpoint(this.Self),
+                    this.Endpoint,
                     new DisconnectFixJob(),
                     jobKey,
                     trigger,

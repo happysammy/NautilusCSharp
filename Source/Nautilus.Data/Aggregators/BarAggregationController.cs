@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregators
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -27,6 +26,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using NodaTime;
     using Quartz;
 
@@ -35,7 +35,7 @@ namespace Nautilus.Data.Aggregators
     /// events from ingested <see cref="Tick"/>s based on bar jobs created from subscriptions.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class BarAggregationController : ActorComponentBusConnectedBase
+    public sealed class BarAggregationController : ComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
         private readonly Dictionary<Symbol, IEndpoint> barAggregators;
@@ -68,27 +68,23 @@ namespace Nautilus.Data.Aggregators
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
-
-            // Command messages.
-            this.Receive<Subscribe<BarType>>(this.OnMessage);
-            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
-            this.Receive<BarJob>(this.OnMessage);
-            this.Receive<MarketStatusJob>(this.OnMessage);
-
-            // Event messages.
-            this.Receive<Tick>(this.OnMessage);
-            this.Receive<BarClosed>(this.OnMessage);
         }
 
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected override void Start(StartSystem message)
+        protected override void OnStart()
         {
             this.Log.Information($"Started at {this.StartTime}.");
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
@@ -153,7 +149,7 @@ namespace Nautilus.Data.Aggregators
                 .Build();
 
             var createJob = new CreateJob(
-                new ActorEndpoint(this.Self),
+                this.Endpoint,
                 new MarketStatusJob(true),
                 jobKey,
                 trigger,
@@ -179,7 +175,7 @@ namespace Nautilus.Data.Aggregators
                 .Build();
 
             var createJob = new CreateJob(
-                new ActorEndpoint(this.Self),
+                this.Endpoint,
                 new MarketStatusJob(false),
                 jobKey,
                 trigger,
@@ -202,8 +198,7 @@ namespace Nautilus.Data.Aggregators
 
         /// <summary>
         /// Handles the message by creating a <see cref="BarAggregator"/> for the symbol if none
-        /// exists, then forwarding the message there. Bar jobs and then registered with the
-        /// <see cref="Akka.Actor.IScheduler"/>.
+        /// exists, then forwarding the message there. Bar jobs and then registered with the scheduler"/>.
         /// </summary>
         /// <param name="message">The received message.</param>
         private void OnMessage(Subscribe<BarType> message)
@@ -213,11 +208,10 @@ namespace Nautilus.Data.Aggregators
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
-                var barAggregator = new ActorEndpoint(
-                    Context.ActorOf(Props.Create(() => new BarAggregator(
+                var barAggregator = new BarAggregator(
                         this.storedContainer,
                         symbol,
-                        this.isMarketOpen))));
+                        this.isMarketOpen).Endpoint;
 
                 this.barAggregators.Add(message.DataType.Symbol, barAggregator);
             }
@@ -244,7 +238,7 @@ namespace Nautilus.Data.Aggregators
                 var barJob = new BarJob(barSpec);
 
                 var createJob = new CreateJob(
-                    new ActorEndpoint(this.Self),
+                    this.Endpoint,
                     barJob,
                     barJob.Key,
                     this.triggers[duration],

@@ -10,11 +10,11 @@ namespace Nautilus.Common.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
+    using NautilusMQ;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.

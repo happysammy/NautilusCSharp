@@ -26,7 +26,7 @@ namespace Nautilus.Execution
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class OrderManager : ActorComponentBusConnectedBase
+    public class OrderManager : ComponentBusConnectedBase
     {
         private readonly List<Order> orders;
         private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
@@ -47,14 +47,22 @@ namespace Nautilus.Execution
         {
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
+        }
 
-            // Command messages.
-            this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<CancelOrder>(this.OnMessage);
-            this.Receive<ModifyOrder>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+            // Do nothing.
+        }
 
-            // Event messages.
-            this.Receive<Event>(this.OnMessage);
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
+            // To be run on component stop.
         }
 
         private void OnMessage(SubmitOrder message)

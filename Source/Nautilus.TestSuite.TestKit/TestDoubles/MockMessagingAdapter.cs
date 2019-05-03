@@ -9,34 +9,33 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Collections;
-    using Address = Nautilus.Common.Messaging.Address;
+    using NautilusMQ;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessagingAdapter : IMessagingAdapter
     {
-        private readonly IActorRef testActorRef;
+        private readonly IEndpoint testEndpoint;
 
-        public MockMessagingAdapter(IActorRef testActorRef)
+        public MockMessagingAdapter(IEndpoint testEndpoint)
         {
-            this.testActorRef = testActorRef;
+            this.testEndpoint = testEndpoint;
         }
 
         public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
-            this.testActorRef.Tell(message);
+            this.testEndpoint.Send(message);
         }
 
         public void Send<T>(ReadOnlyList<Address> receivers, T message, Address sender)
             where T : Message
         {
-            this.testActorRef.Tell(message);
+            this.testEndpoint.Send(message);
         }
     }
 }

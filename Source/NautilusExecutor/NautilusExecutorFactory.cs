@@ -9,7 +9,6 @@
 namespace NautilusExecutor
 {
     using System;
-    using Akka.Actor;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -63,7 +62,6 @@ namespace NautilusExecutor
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
-            var actorSystem = ActorSystem.Create(nameof(NautilusExecutor));
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
@@ -71,14 +69,9 @@ namespace NautilusExecutor
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
-            var messagingAdapter = MessagingServiceFactory.Create(
-                actorSystem,
-                container,
-                new FakeMessageStore());
+            var messagingAdapter = MessagingServiceFactory.Create(container, new FakeMessageStore());
 
-            var scheduler = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new Scheduler(container))));
+            var scheduler = new Scheduler(container);
 
             var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
             var instrumentData = new InstrumentDataProvider(venue, fixConfig.InstrumentDataFileName);
@@ -95,7 +88,6 @@ namespace NautilusExecutor
                 fixClient);
 
             var executionServiceAddresses = ExecutionServiceFactory.Create(
-                actorSystem,
                 container,
                 messagingAdapter,
                 fixClient,
@@ -108,12 +100,11 @@ namespace NautilusExecutor
                 commandsPerSecond,
                 newOrdersPerSecond);
 
-            executionServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
+            executionServiceAddresses.Add(ServiceAddress.Scheduler, scheduler.Endpoint);
             var switchboard = Switchboard.Create(executionServiceAddresses);
 
             var systemController = new SystemController(
                 container,
-                actorSystem,
                 messagingAdapter,
                 switchboard);
 

@@ -52,7 +52,7 @@ namespace NautilusData
         /// <summary>
         /// Starts the system.
         /// </summary>
-        public void Start()
+        protected override void OnStart()
         {
             this.fixClient.Connect();
 
@@ -62,7 +62,7 @@ namespace NautilusData
                 // Wait for connection.
             }
 
-            this.systemController.Start();
+            // this.systemController.();
 
             var barSpecs = new List<BarSpecification>
             {
@@ -95,10 +95,10 @@ namespace NautilusData
         /// <summary>
         /// Shuts down the system.
         /// </summary>
-        public void Shutdown()
+        protected override void OnStop()
         {
             this.fixClient.Disconnect();
-            this.systemController.Shutdown();
+            // this.systemController.Shutdown();
         }
     }
 }

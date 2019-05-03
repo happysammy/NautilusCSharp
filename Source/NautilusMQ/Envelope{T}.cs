@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messaging
+namespace NautilusMQ
 {
     using System;
     using Nautilus.Core;
@@ -70,12 +70,12 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the envelopes opened time.
         /// </summary>
-        public ZonedDateTime? OpenedTime { get; private set; }
+        public OptionVal<ZonedDateTime> OpenedTime { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the envelope has been opened.
         /// </summary>
-        public bool IsOpened => this.OpenedTime != null;
+        public bool IsOpened => this.OpenedTime.HasValue;
 
         /// <summary>
         /// Opens the envelope and returns the contained message (records the opened time if not
@@ -87,7 +87,7 @@ namespace Nautilus.Common.Messaging
         {
             Debug.NotDefault(currentTime, nameof(currentTime));
 
-            if (this.OpenedTime is null)
+            if (this.OpenedTime.HasNoValue)
             {
                 this.OpenedTime = currentTime;
             }

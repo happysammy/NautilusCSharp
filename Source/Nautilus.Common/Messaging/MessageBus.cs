@@ -8,23 +8,23 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
 
     /// <summary>
     /// Represents a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
-    public sealed class MessageBus<T> : ReceiveActor
+    public sealed class MessageBus<T> : ComponentBase
         where T : Message
     {
         private readonly ILogger log;
-        private readonly IEndpoint messageStore;
+        private readonly IEndpoint messageStorer;
         private readonly CommandHandler commandHandler;
 
         private Switchboard switchboard;
@@ -34,44 +34,32 @@ namespace Nautilus.Common.Messaging
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="messageStore">The message store endpoint.</param>
-        public MessageBus(
-            IComponentryContainer container,
-            IEndpoint messageStore)
+        /// <param name="messageStorer">The message storer endpoint.</param>
+        public MessageBus(IComponentryContainer container, IEndpoint messageStorer)
+        : base(
+            NautilusService.Messaging,
+            new Label("MessageBus"),
+            container)
         {
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
-            this.messageStore = messageStore;
+            this.messageStorer = messageStorer;
             this.commandHandler = new CommandHandler(this.log);
             this.switchboard = Switchboard.Empty();
-
-            this.Receive<InitializeSwitchboard>(this.OnMessage);
-            this.Receive<Envelope<T>>(this.OnReceive);
         }
 
         /// <summary>
         /// Runs pre-start of the receive actor.
         /// </summary>
-        protected override void PreStart()
+        protected override void OnStart()
         {
             this.log.Debug($"{typeof(T).Name}Bus initializing...");
         }
 
         /// <summary>
-        /// Logs unhandled messages.
+        /// Executed on component stop.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected override void Unhandled(object message)
+        protected override void OnStop()
         {
-            if (message is null)
-            {
-                message = "NULL";
-            }
-            else if (message.Equals(string.Empty))
-            {
-                message = "EMPTY_STRING";
-            }
-
-            this.log.Warning($"Unhandled message {message}.");
         }
 
         private void OnMessage(InitializeSwitchboard message)
@@ -84,24 +72,23 @@ namespace Nautilus.Common.Messaging
             });
         }
 
+        private void OnMessage(Envelope<T> envelope)
+        {
+            this.commandHandler.Execute(() =>
+            {
+                this.switchboard.SendToReceiver(envelope);
+                this.LogEnvelope(envelope);
+            });
+        }
+
         private void LogEnvelope(Envelope<T> envelope)
         {
             this.commandHandler.Execute(() =>
             {
                 this.messageCount++;
-                this.messageStore.Send(envelope);
+                this.messageStorer.Send(envelope);
 
                 this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
-            });
-        }
-
-        private void OnReceive(Envelope<T> envelope)
-        {
-            this.commandHandler.Execute(() =>
-            {
-                this.switchboard.SendToReceiver(envelope);
-
-                this.LogEnvelope(envelope);
             });
         }
     }

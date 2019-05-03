@@ -9,9 +9,9 @@
 namespace Nautilus.Common.Scheduling
 {
     using System.Threading.Tasks;
-    using Akka.Util.Internal;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
+    using NautilusMQ;
     using Quartz;
 
     /// <summary>
@@ -31,8 +31,11 @@ namespace Nautilus.Common.Scheduling
         /// <returns>The job builder.</returns>
         public static JobBuilder CreateBuilderWithData(IEndpoint receiver, IScheduledJob message)
         {
-            var jdm = new JobDataMap();
-            jdm.AddAndReturn(MessageKey, message).Add(NautilusKey, receiver);
+            var jdm = new JobDataMap
+            {
+                { MessageKey, message },
+                { NautilusKey, receiver },
+            };
 
             return JobBuilder.Create<Job>().UsingJobData(jdm);
         }

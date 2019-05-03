@@ -11,15 +11,13 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Akka.Actor;
-    using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NautilusMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -27,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class PublisherTests : TestKit
+    public class PublisherTests
     {
         private const string TestTopic = "test_topic";
 
@@ -35,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
-        private readonly IEndpoint testEndpoint;
+        private readonly IEndpoint testReceiver;
 
         public PublisherTests(ITestOutputHelper output)
         {
@@ -45,8 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-
-            this.testEndpoint = new ActorEndpoint(this.TestActor);
+            this.testReceiver = new MockMessageReceiver().Endpoint;
         }
 
         [Fact]
@@ -60,16 +57,16 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
 
             var bytes = Encoding.UTF8.GetBytes("1234");
 
-            var publisher = this.Sys.ActorOf(Props.Create(() => new Publisher(
+            var publisher = new Publisher(
                 this.setupContainer,
                 new Label("EventPublisher"),
                 TestTopic,
                 this.localHost,
                 new Port(55504),
-                Guid.NewGuid())));
+                Guid.NewGuid());
 
             // Act
-            publisher.Tell(bytes);
+            publisher.Endpoint.Send(bytes);
             this.output.WriteLine("Waiting for published messages...");
 
             // var message = subscriber.ReceiveFrameBytes();
@@ -81,10 +78,10 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert.Equal(bytes, message);
 
             // Tear Down
-            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            subscriber.Unsubscribe(TestTopic);
-            subscriber.Disconnect(TestAddress);
-            subscriber.Dispose();
+//            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
+//            subscriber.Unsubscribe(TestTopic);
+//            subscriber.Disconnect(TestAddress);
+//            subscriber.Dispose();
         }
     }
 }

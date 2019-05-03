@@ -8,7 +8,6 @@
 
 namespace Nautilus.Execution
 {
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,12 +17,13 @@ namespace Nautilus.Execution
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging.Network;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class MessageServer : ActorComponentBusConnectedBase
+    public class MessageServer : ComponentBusConnectedBase
     {
         private readonly IEndpoint commandConsumer;
         private readonly IEndpoint eventPublisher;
@@ -52,41 +52,34 @@ namespace Nautilus.Execution
                 container,
                 messagingAdapter)
         {
-            this.commandConsumer = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new CommandConsumer(
-                        container,
-                        commandSerializer,
-                        new ActorEndpoint(Context.Self),
-                        serverAddress,
-                        commandsPort))));
+            this.commandConsumer = new CommandConsumer(
+                container,
+                commandSerializer,
+                this.Endpoint,
+                serverAddress,
+                commandsPort).Endpoint;
 
-            this.eventPublisher = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new EventPublisher(
-                        container,
-                        eventSerializer,
-                        serverAddress,
-                        eventsPort))));
+            this.eventPublisher = new EventPublisher(
+                container,
+                eventSerializer,
+                serverAddress,
+                eventsPort).Endpoint;
+        }
 
-            // Command messages.
-            this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<CancelOrder>(this.OnMessage);
-            this.Receive<ModifyOrder>(this.OnMessage);
-            this.Receive<CollateralInquiry>(this.OnMessage);
-
-            // Event messages.
-            this.Receive<Event>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
         }
 
         /// <summary>
         /// Actions to be performed when the component is stopping.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.commandConsumer.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()));
             this.eventPublisher.Send(new ShutdownSystem(this.NewGuid(), this.TimeNow()));
-            base.PostStop();
         }
 
         private void OnMessage(SubmitOrder message)

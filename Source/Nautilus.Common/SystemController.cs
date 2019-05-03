@@ -10,7 +10,6 @@ namespace Nautilus.Common
 {
     using System;
     using System.Threading.Tasks;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,27 +17,23 @@ namespace Nautilus.Common
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Factories;
-    using Address = Nautilus.Common.Messaging.Address;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides a means of controlling services within the system.
     /// </summary>
     public class SystemController : ComponentBusConnectedBase
     {
-        private readonly ActorSystem actorSystem;
-        private readonly string actorSystemName;
         private readonly ReadOnlyList<Address> components;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemController"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="actorSystem">The systems actor system.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="switchboard">The switchboard.</param>
         public SystemController(
             IComponentryContainer container,
-            ActorSystem actorSystem,
             MessagingAdapter messagingAdapter,
             Switchboard switchboard)
             : base(
@@ -47,8 +42,6 @@ namespace Nautilus.Common
                 container,
                 messagingAdapter)
         {
-            this.actorSystem = actorSystem;
-            this.actorSystemName = actorSystem.Name;
             this.components = switchboard.Addresses;
 
             var initializeSwitchboard =
@@ -61,9 +54,9 @@ namespace Nautilus.Common
         }
 
         /// <summary>
-        /// Starts the <see cref="Nautilus"/> system.
+        /// Starts the system.
         /// </summary>
-        public void Start()
+        protected override void OnStart()
         {
             var start = new StartSystem(this.NewGuid(), this.TimeNow());
 
@@ -74,9 +67,9 @@ namespace Nautilus.Common
         }
 
         /// <summary>
-        /// Shuts down the <see cref="Nautilus"/> system.
+        /// Shuts down the system.
         /// </summary>
-        public void Shutdown()
+        protected override void OnStop()
         {
             var shutdown = new ShutdownSystem(this.NewGuid(), this.TimeNow());
 
@@ -85,17 +78,14 @@ namespace Nautilus.Common
                 this.Send(component, shutdown);
             }
 
-            // Allow actor components to shutdown.
             Task.Delay(1000).Wait();
             this.ShutdownActorSystem();
         }
 
         private void ShutdownActorSystem()
         {
-            this.Log.Information($"{this.actorSystemName} actor system shutting down...");
-            this.actorSystem.Terminate();
-            this.Log.Information($"{this.actorSystemName} actor system terminated.");
-            this.actorSystem?.Dispose();
+            this.Log.Information($"System shutting down...");
+            this.Log.Information($"System terminated.");
             GC.SuppressFinalize(this);
         }
     }

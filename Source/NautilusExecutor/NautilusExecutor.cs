@@ -47,7 +47,7 @@ namespace NautilusExecutor
         /// <summary>
         /// Starts the system.
         /// </summary>
-        public void Start()
+        protected override void OnStart()
         {
             this.fixClient.Connect();
 
@@ -56,16 +56,17 @@ namespace NautilusExecutor
                 // Wait for connection.
             }
 
-            this.systemController.Start();
+            // this.systemController.Start();
         }
 
         /// <summary>
         /// Shuts down the system.
         /// </summary>
-        public void Shutdown()
+        protected override void OnStop()
         {
             this.fixClient.Disconnect();
-            this.systemController.Shutdown();
+
+            // this.systemController.Shutdown();
         }
     }
 }

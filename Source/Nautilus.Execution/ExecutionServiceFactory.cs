@@ -10,12 +10,11 @@ namespace Nautilus.Execution
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Network;
-    using Address = Nautilus.Common.Messaging.Address;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.
@@ -23,10 +22,9 @@ namespace Nautilus.Execution
     public static class ExecutionServiceFactory
     {
         /// <summary>
-        /// Creates a new <see cref="ExecutionService"/> and returns its <see cref="Akka.Actor.IActorRef"/>
+        /// Creates a new <see cref="ExecutionService"/> and returns an address book of endpoints.
         /// actor address.
         /// </summary>
-        /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="client">The FIX client.</param>
@@ -42,7 +40,6 @@ namespace Nautilus.Execution
         /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public static Dictionary<Address, IEndpoint> Create(
-            ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient client,
@@ -58,40 +55,32 @@ namespace Nautilus.Execution
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
-            var messageServer = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new MessageServer(
-                        container,
-                        messagingAdapter,
-                        commandSerializer,
-                        eventSerializer,
-                        serviceAddress,
-                        commandsPort,
-                        eventsPort))));
+            var messageServer = new MessageServer(
+                container,
+                messagingAdapter,
+                commandSerializer,
+                eventSerializer,
+                serviceAddress,
+                commandsPort,
+                eventsPort);
 
-            var orderManager = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new OrderManager(
-                        container,
-                        messagingAdapter))));
+            var orderManager = new OrderManager(container, messagingAdapter);
 
-            var executionService = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new ExecutionService(
-                        container,
-                        messagingAdapter,
-                        gateway,
-                        commandsPerSecond,
-                        newOrdersPerSecond))));
+            var executionService = new ExecutionService(
+                container,
+                messagingAdapter,
+                gateway,
+                commandsPerSecond,
+                newOrdersPerSecond);
 
-            gateway.RegisterEventReceiver(orderManager);
-            client.RegisterConnectionEventReceiver(executionService);
+            gateway.RegisterEventReceiver(orderManager.Endpoint);
+            client.RegisterConnectionEventReceiver(executionService.Endpoint);
 
             return new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Execution, executionService },
-                { ExecutionServiceAddress.MessageServer, messageServer },
-                { ExecutionServiceAddress.OrderManager, orderManager },
+                { ServiceAddress.Execution, executionService.Endpoint },
+                { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
+                { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
             };
         }
     }

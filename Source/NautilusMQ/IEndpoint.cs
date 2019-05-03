@@ -6,9 +6,8 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Interfaces
+namespace NautilusMQ
 {
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
 
     /// <summary>
@@ -17,13 +16,13 @@ namespace Nautilus.Common.Interfaces
     public interface IEndpoint
     {
         /// <summary>
-        /// Sends the given message directly to the endpoint.
+        /// Sends the given message to the endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
         void Send(object message);
 
         /// <summary>
-        /// Sends the given envelope to the endpoint via the messaging service.
+        /// Sends the given envelope to the endpoint.
         /// </summary>
         /// <param name="envelope">The envelope to send.</param>
         /// <typeparam name="T">The envelope message type.</typeparam>

@@ -9,13 +9,13 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using NodaTime;
 
     /// <summary>

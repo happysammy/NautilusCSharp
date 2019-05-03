@@ -12,35 +12,45 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Akka.Actor;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
 
     /// <summary>
     /// Sends received messages to the <see cref="InMemoryMessageStore"/>.
     /// </summary>
-    public sealed class MessageStorer : ReceiveActor
+    public sealed class MessageStorer : ComponentBase
     {
         private readonly IMessageStore store;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageStorer"/> class.
         /// </summary>
+        /// <param name="container">The componentry container.</param>
         /// <param name="store">The message store.</param>
-        public MessageStorer(IMessageStore store)
+        public MessageStorer(IComponentryContainer container, IMessageStore store)
+        : base(
+            NautilusService.Messaging,
+            new Label(nameof(MessageStorer)),
+            container)
         {
             this.store = store;
-
-            this.Receive<Envelope<Command>>(envelope => this.store.Store(envelope));
-            this.Receive<Envelope<Event>>(envelope => this.store.Store(envelope));
-            this.Receive<Envelope<Document>>(envelope => this.store.Store(envelope));
         }
 
         /// <summary>
-        /// Runs when the inherited <see cref="ReceiveActor"/> stops.
+        /// Executed on component start.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Runs when the component stops.
+        /// </summary>
+        protected override void OnStop()
         {
             // Allow the system to shutdown first.
             Task.Delay(1000).Wait();
@@ -118,7 +128,7 @@ namespace Nautilus.Common.MessageStore
         private static int GetDeliveryTime<T>(Envelope<T> envelope)
             where T : Message
         {
-            return envelope.OpenedTime != null
+            return envelope.IsOpened
                 ? (envelope.OpenedTime.Value - envelope.Timestamp).SubsecondTicks
                 : 0;
         }
@@ -132,6 +142,33 @@ namespace Nautilus.Common.MessageStore
             Console.WriteLine($"SlowestDeliveryTime = {Math.Round(report.SlowestDeliveryTime / 10000, 2)}ms");
             Console.WriteLine($"TotalCount = {report.TotalCount}");
             Console.WriteLine($"IsUnopenedCount = {report.IsUnopenedCount}");
+        }
+
+        /// <summary>
+        /// Store the given command envelope.
+        /// </summary>
+        /// <param name="envelope">The envelope.</param>
+        private void OnMessage(Envelope<Command> envelope)
+        {
+            this.store.Store(envelope);
+        }
+
+        /// <summary>
+        /// Store the given event envelope.
+        /// </summary>
+        /// <param name="envelope">The envelope.</param>
+        private void OnMessage(Envelope<Event> envelope)
+        {
+            this.store.Store(envelope);
+        }
+
+        /// <summary>
+        /// Store the given document envelope.
+        /// </summary>
+        /// <param name="envelope">The envelope.</param>
+        private void OnMessage(Envelope<Document> envelope)
+        {
+            this.store.Store(envelope);
         }
     }
 }

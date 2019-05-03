@@ -18,7 +18,7 @@ namespace Nautilus.Data.Publishers
     /// <summary>
     /// Provides a generic publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher : ActorComponentBase
+    public sealed class TickPublisher : ComponentBase
     {
         private readonly IChannelPublisher publisher;
 
@@ -34,9 +34,20 @@ namespace Nautilus.Data.Publishers
             container)
         {
             this.publisher = publisher;
+        }
 
-            // Event messages.
-            this.Receive<Tick>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(Tick message)

@@ -9,19 +9,18 @@
 namespace Nautilus.Execution
 {
     using System;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Network;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides a command consumer for the messaging server.
     /// </summary>
-    public class CommandConsumer : ActorComponentBase
+    public class CommandConsumer : ComponentBase
     {
         private readonly ICommandSerializer serializer;
         private readonly IEndpoint consumer;
@@ -49,17 +48,27 @@ namespace Nautilus.Execution
             this.serializer = serializer;
             this.receiver = receiver;
 
-            this.consumer = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new Consumer(
+            this.consumer = new Consumer(
                         container,
-                        new ActorEndpoint(Context.Self),
+                        this.Endpoint,
                         LabelFactory.Create("RouterSocket"),
                         host,
                         port,
-                        Guid.NewGuid()))));
+                        Guid.NewGuid()).Endpoint;
+        }
 
-            this.Receive<byte[]>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(byte[] message)

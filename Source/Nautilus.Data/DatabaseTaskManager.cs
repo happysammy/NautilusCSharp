@@ -10,7 +10,6 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -24,12 +23,13 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using NodaTime;
 
     /// <summary>
     /// The component manages the queue of job messages being sent to the database.
     /// </summary>
-    public class DatabaseTaskManager : ActorComponentBase
+    public class DatabaseTaskManager : ComponentBase
     {
         private readonly IBarRepository barRepository;
         private readonly IInstrumentRepository instrumentRepository;
@@ -51,25 +51,21 @@ namespace Nautilus.Data
         {
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
+        }
 
-            // Command messages.
-            this.Receive<TrimBarData>(this.OnMessage);
-            this.Receive<DataStatusRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
-            this.Receive<QueryRequest<BarType>>(msg => this.OnMessage(msg, this.Sender));
-
-            // Document messages.
-            this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
-            this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.Receive<DataDelivery<IReadOnlyCollection<Instrument>>>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
         }
 
         /// <summary>
         /// Actions to be performed prior to stopping the <see cref="DatabaseTaskManager"/>.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.barRepository.SnapshotDatabase();
-            base.PostStop();
         }
 
         private void OnMessage(TrimBarData message)
@@ -83,21 +79,21 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(DataStatusRequest<BarType> message, IActorRef sender)
+        private void OnMessage(DataStatusRequest<BarType> message, IEndpoint sender)
         {
             var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
 
-            sender.Tell(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
+            sender.Send(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
         }
 
-        private void OnMessage(QueryRequest<BarType> message, IActorRef sender)
+        private void OnMessage(QueryRequest<BarType> message, IEndpoint sender)
         {
             var barDataQuery = this.barRepository.Find(
                 message.DataType,
                 message.FromDateTime,
                 message.ToDateTime);
 
-            sender.Tell(
+            sender.Send(
                 new QueryResponse<BarDataFrame>(
                     barDataQuery,
                     this.NewGuid(),
@@ -130,11 +126,11 @@ namespace Nautilus.Data
                 {
                     if (query != default)
                     {
-                        this.Sender.Tell(new DataPersisted<BarType>(
-                            barType,
-                            query,
-                            this.NewGuid(),
-                            this.TimeNow()));
+// this.Sender.Tell(new DataPersisted<BarType>(
+//                            barType,
+//                            query,
+//                            this.NewGuid(),
+//                            this.TimeNow()));
                     }
                 });
         }

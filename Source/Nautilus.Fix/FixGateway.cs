@@ -13,7 +13,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -25,6 +24,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using NodaTime;
 
     /// <summary>
@@ -89,6 +89,22 @@ namespace Nautilus.Fix
         public void Disconnect()
         {
             this.fixClient.Disconnect();
+        }
+
+        /// <summary>
+        /// To be run on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+            this.Connect();
+        }
+
+        /// <summary>
+        /// To be run on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
+            this.Disconnect();
         }
 
         /// <summary>

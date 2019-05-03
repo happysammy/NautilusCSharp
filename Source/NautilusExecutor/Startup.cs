@@ -106,7 +106,7 @@ namespace NautilusExecutor
                 commandsPerSecond,
                 newOrdersPerSecond);
 
-            this.executionSystem.Start();
+            // this.executionSystem.Endpoint.Send(new StartSystem(this.));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionSystem?.Shutdown();
+            // .executionSystem?.Shutdown();
         }
     }
 }

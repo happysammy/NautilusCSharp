@@ -11,16 +11,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
-    using Akka.Event;
+    using System.Threading.Tasks.Dataflow;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Address = Nautilus.Common.Messaging.Address;
+    using NautilusMQ;
 
-#pragma warning disable 8618
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -30,32 +28,20 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public InMemoryMessageStore InMemoryMessageStore { get; private set; }
 
-        public void Create(
-            ActorSystem actorSystem,
-            IComponentryContainer container)
+        public void Create(IComponentryContainer container)
         {
             var messageWarehouse = new InMemoryMessageStore();
-            var messageStore = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageStorer(messageWarehouse))));
+            var messageStorer = new MessageStorer(container, messageWarehouse);
+            var commandBus = new MessageBus<Command>(container, messageStorer.Endpoint);
+            var eventBus = new MessageBus<Event>(container, messageStorer.Endpoint);
+            var documentBus = new MessageBus<Document>(container, messageStorer.Endpoint);
 
-            var commandBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
-                container,
-                messageStore))));
+            var messagingAdapter = new MessagingAdapter(
+                commandBus.Endpoint,
+                eventBus.Endpoint,
+                documentBus.Endpoint);
 
-            var eventBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Event>(
-                container,
-                messageStore))));
-
-            var serviceBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Document>(
-                container,
-                messageStore))));
-
-            var messagingAdapter = new MessagingAdapter(commandBus, eventBus, serviceBus);
-
-            var mockEndpoint = new ActorEndpoint(new StandardOutLogger());
+            var mockEndpoint = new Endpoint(new ActionBlock<object>(n => n.ToString()));
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Alpha, mockEndpoint },

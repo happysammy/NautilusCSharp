@@ -10,8 +10,8 @@ namespace Nautilus.Common.MessageStore
 {
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using NautilusMQ;
 
     /// <summary>
     /// Represents an in-memory message store.

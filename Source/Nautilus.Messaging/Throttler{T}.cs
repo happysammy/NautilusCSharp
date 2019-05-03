@@ -11,13 +11,13 @@ namespace Nautilus.Messaging
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Factories;
+    using NautilusMQ;
     using NodaTime;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Nautilus.Messaging
     /// </summary>
     /// <typeparam name="T">The message type to throttle.</typeparam>
     [PerformanceOptimized]
-    public sealed class Throttler<T> : ActorComponentBase
+    public sealed class Throttler<T> : ComponentBase
     {
         private readonly IEndpoint receiver;
         private readonly TimeSpan interval;
@@ -66,10 +66,20 @@ namespace Nautilus.Messaging
             this.isIdle = true;
             this.vouchers = limit;
             this.totalCount = 0;
+        }
 
-            // Setup message handling.
-            this.Receive<T>(this.OnMessage);
-            this.Receive<TimeSpan>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(T message)
@@ -92,8 +102,7 @@ namespace Nautilus.Messaging
                 return;
             }
 
-            this.RunTimer().PipeTo(this.Self);
-
+            // this.RunTimer().PipeTo(this.Endpoint);
             if (this.isIdle)
             {
                 this.isIdle = false;
@@ -107,7 +116,7 @@ namespace Nautilus.Messaging
         {
             if (this.isIdle)
             {
-                this.RunTimer().PipeTo(this.Self);
+                // this.RunTimer().PipeTo(this.Self);
                 this.isIdle = false;
                 this.Log.Debug("Is Active.");
             }

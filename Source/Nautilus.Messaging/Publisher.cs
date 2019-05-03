@@ -23,7 +23,7 @@ namespace Nautilus.Messaging
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public class Publisher : ActorComponentBase
+    public class Publisher : ComponentBase
     {
         private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
         private readonly byte[] topic;
@@ -64,18 +64,15 @@ namespace Nautilus.Messaging
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
-
-            this.Receive<byte[]>(this.OnMessage);
         }
 
         /// <summary>
         /// Actions to be performed when starting the <see cref="Consumer"/>.
         /// </summary>
-        protected override void PreStart()
+        protected override void OnStart()
         {
             this.Execute(() =>
             {
-                base.PreStart();
                 this.socket.Bind(this.serverAddress.Value);
                 this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
 
@@ -86,7 +83,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Actions to be performed when stopping the <see cref="Consumer"/>.
         /// </summary>
-        protected override void PostStop()
+        protected override void OnStop()
         {
             this.Execute(() =>
             {

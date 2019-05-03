@@ -11,13 +11,15 @@ namespace Nautilus.Common.Componentry
     using System;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using NodaTime;
 
     /// <summary>
     /// The base class for all system components.
     /// </summary>
-    public abstract class ComponentBase
+    public abstract class ComponentBase : MessageReceiver
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
@@ -73,6 +75,26 @@ namespace Nautilus.Common.Componentry
         protected void Execute(Action action)
         {
             this.commandHandler.Execute(action);
+        }
+
+        /// <summary>
+        /// TBA.
+        /// </summary>
+        protected abstract void OnStart();
+
+        /// <summary>
+        /// TBA.
+        /// </summary>
+        protected abstract void OnStop();
+
+        private void OnMessage(StartSystem message)
+        {
+            this.OnStart();
+        }
+
+        private void OnMessage(ShutdownSystem message)
+        {
+            this.OnStop();
         }
     }
 }

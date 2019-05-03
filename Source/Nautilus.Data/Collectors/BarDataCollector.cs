@@ -8,18 +8,15 @@
 
 namespace Nautilus.Data.Collectors
 {
-    using System;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Orchestration;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -27,7 +24,7 @@ namespace Nautilus.Data.Collectors
     /// <summary>
     /// Represents a market data collector.
     /// </summary>
-    public class BarDataCollector : ActorComponentBase
+    public class BarDataCollector : ComponentBase
     {
         private readonly IBarDataReader dataReader;
         private readonly DataCollectionSchedule collectionSchedule;
@@ -52,13 +49,22 @@ namespace Nautilus.Data.Collectors
         {
             this.dataReader = dataReader;
             this.collectionSchedule = collectionSchedule;
+        }
 
-            // Command messages.
-            this.Receive<CollectData<BarType>>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+            // Do nothing.
+        }
 
-            // Document messages.
-            this.Receive<DataStatusResponse<ZonedDateTime>>(this.OnMessage);
-            this.Receive<DataPersisted<BarType>>(this.OnMessage);
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
+            // To be run on component stop.
         }
 
         private void OnMessage(CollectData<BarType> message)
@@ -67,8 +73,7 @@ namespace Nautilus.Data.Collectors
             {
                 this.Log.Warning($"No csv files found for {this.dataReader.BarType}");
 
-                Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
-
+                // Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
                 return;
             }
 
@@ -79,13 +84,12 @@ namespace Nautilus.Data.Collectors
 
                 if (csvQuery.IsSuccess)
                 {
-                    Context.Parent.Tell(
-                        new DataDelivery<BarDataFrame>(
-                            csvQuery.Value,
-                            Guid.NewGuid(),
-                            this.TimeNow()),
-                        this.Self);
-
+// Context.Parent.Tell(
+//                        new DataDelivery<BarDataFrame>(
+//                            csvQuery.Value,
+//                            Guid.NewGuid(),
+//                            this.TimeNow()),
+//                        this.Self);
                     this.collectionSchedule.UpdateLastCollectedTime(this.TimeNow());
 
                     this.Log.Debug($"Updated last collected time to {this.collectionSchedule.LastCollectedTime.Value.ToIsoString()}");
@@ -97,7 +101,7 @@ namespace Nautilus.Data.Collectors
                 }
             }
 
-            Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
+            // Context.Parent.Tell(new DataCollected<BarType>(this.dataReader.BarType, Guid.NewGuid(), this.TimeNow()), this.Self);
         }
 
         private void OnMessage(DataStatusResponse<ZonedDateTime> message)

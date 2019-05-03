@@ -10,7 +10,6 @@ namespace NautilusData
 {
     using System;
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -66,7 +65,6 @@ namespace NautilusData
             loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusData)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
 
-            var actorSystem = ActorSystem.Create(nameof(NautilusData));
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
@@ -74,14 +72,8 @@ namespace NautilusData
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
-            var messagingAdapter = MessagingServiceFactory.Create(
-                actorSystem,
-                container,
-                new FakeMessageStore());
-
-            var scheduler = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new Scheduler(container))));
+            var messagingAdapter = MessagingServiceFactory.Create(container, new FakeMessageStore());
+            var scheduler = new Scheduler(container);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var barRepository = new RedisBarRepository(redisConnection);
@@ -103,7 +95,6 @@ namespace NautilusData
                 fixClient);
 
             var dataServiceAddresses = DataServiceFactory.Create(
-                actorSystem,
                 container,
                 messagingAdapter,
                 fixClient,
@@ -116,12 +107,11 @@ namespace NautilusData
                 barRollingWindow,
                 fixConfig.UpdateInstruments);
 
-            dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler);
+            dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler.Endpoint);
             var switchboard = Switchboard.Create(dataServiceAddresses);
 
             var systemController = new SystemController(
                 container,
-                actorSystem,
                 messagingAdapter,
                 switchboard);
 

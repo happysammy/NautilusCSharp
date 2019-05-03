@@ -18,7 +18,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a trade command bus for the execution service.
     /// </summary>
-    public sealed class OrderCommandBus : ActorComponentBusConnectedBase
+    public sealed class OrderCommandBus : ComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;
 
@@ -39,12 +39,20 @@ namespace Nautilus.Execution
             messagingAdapter)
         {
             this.gateway = gateway;
+        }
 
-            // Command messages.
-            this.Receive<CollateralInquiry>(this.OnMessage);
-            this.Receive<SubmitOrder>(this.OnMessage);
-            this.Receive<CancelOrder>(this.OnMessage);
-            this.Receive<ModifyOrder>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(CollateralInquiry message)

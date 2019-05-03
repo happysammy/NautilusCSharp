@@ -26,12 +26,13 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
     using Quartz;
 
     /// <summary>
     /// The manager class which orchestrates data collection operations.
     /// </summary>
-    public class DataCollectionManager : ActorComponentBusConnectedBase
+    public class DataCollectionManager : ComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IEndpoint barPublisher;
@@ -65,26 +66,21 @@ namespace Nautilus.Data
             this.barPublisher = barPublisher;
             this.resolutionsPersisting = new ReadOnlyList<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;
-
-            // Command messages.
-            this.Receive<Subscribe<BarType>>(this.OnMessage);
-            this.Receive<CollectData<BarType>>(this.OnMessage);
-            this.Receive<TrimBarDataJob>(this.OnMessage);
-
-            // Document messages.
-            this.Receive<DataDelivery<BarClosed>>(this.OnMessage);
-            this.Receive<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.Receive<DataPersisted<BarType>>(this.OnMessage);
-            this.Receive<DataCollected<BarType>>(this.OnMessage);
         }
 
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected override void Start(StartSystem message)
+        protected override void OnStart()
         {
             this.CreateTrimBarDataJob();
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -145,7 +141,7 @@ namespace Nautilus.Data
                 .Build();
 
             var createJob = new CreateJob(
-                new ActorEndpoint(this.Self),
+                this.Endpoint,
                 new TrimBarDataJob(),
                 jobKey,
                 trigger,

@@ -9,20 +9,19 @@
 namespace Nautilus.Execution
 {
     using System;
-    using Akka.Actor;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Network;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.
     /// </summary>
-    public class EventPublisher : ActorComponentBase
+    public class EventPublisher : ComponentBase
     {
         private readonly IEventSerializer serializer;
         private readonly IEndpoint publisher;
@@ -46,17 +45,27 @@ namespace Nautilus.Execution
         {
             this.serializer = serializer;
 
-            this.publisher = new ActorEndpoint(
-                Context.ActorOf(Props.Create(
-                    () => new Publisher(
-                        container,
-                        LabelFactory.Create("EventPublisher"),
-                        "nautilus_execution_events",
-                        host,
-                        port,
-                        Guid.NewGuid()))));
+            this.publisher = new Publisher(
+                container,
+                LabelFactory.Create("EventPublisher"),
+                "nautilus_execution_events",
+                host,
+                port,
+                Guid.NewGuid()).Endpoint;
+        }
 
-            this.Receive<Event>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(Event message)

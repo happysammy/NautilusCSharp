@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Akka.Util.Internal;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
@@ -29,7 +28,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public void WriteStashToOutput(ITestOutputHelper output)
         {
-            this.GetLogStashTextAsStringList().ForEach(output.WriteLine);
+            foreach (var message in this.GetLogStashTextAsStringList())
+            {
+                output.WriteLine(message);
+            }
         }
 
         public bool Contains(string text)

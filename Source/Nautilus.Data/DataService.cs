@@ -25,7 +25,7 @@ namespace Nautilus.Data
     /// The main macro object which contains the <see cref="DataService"/> and presents its API.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class DataService : ActorComponentBusConnectedBase
+    public sealed class DataService : ComponentBusConnectedBase
     {
         private readonly IFixGateway gateway;
         private readonly bool updateInstruments;
@@ -50,28 +50,24 @@ namespace Nautilus.Data
         {
             this.gateway = gateway;
             this.updateInstruments = updateInstruments;
-
-            // Command messages.
-            this.Receive<ConnectFixJob>(this.OnMessage);
-            this.Receive<DisconnectFixJob>(this.OnMessage);
-            this.Receive<Subscribe<BarType>>(this.OnMessage);
-            this.Receive<Unsubscribe<BarType>>(this.OnMessage);
-
-            // Event messages.
-            this.Receive<FixSessionConnected>(this.OnMessage);
-            this.Receive<FixSessionDisconnected>(this.OnMessage);
         }
 
         /// <summary>
         /// Start method called when the <see cref="StartSystem"/> message is received.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected override void Start(StartSystem message)
+        protected override void OnStart()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void CreateConnectFixJob()
@@ -91,7 +87,7 @@ namespace Nautilus.Data
                     .Build();
 
                 var createJob = new CreateJob(
-                    new ActorEndpoint(this.Self),
+                    this.Endpoint,
                     new ConnectFixJob(),
                     jobKey,
                     trigger,
@@ -120,7 +116,7 @@ namespace Nautilus.Data
                     .Build();
 
                 var createJob = new CreateJob(
-                    new ActorEndpoint(this.Self),
+                    this.Endpoint,
                     new DisconnectFixJob(),
                     jobKey,
                     trigger,

@@ -11,8 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
-    using Akka.Actor;
-    using Akka.TestKit.Xunit2;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
@@ -24,11 +22,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class BarAggregationControllerTests : TestKit
+    public class BarAggregationControllerTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
-        private readonly IActorRef controllerRef;
+        private readonly BarAggregationController controller;
 
         public BarAggregationControllerTests(ITestOutputHelper output)
         {
@@ -39,13 +37,11 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.logger = setupFactory.LoggingAdapter;
             var container = setupFactory.Create();
 
-            var messagingAdapter = new MockMessagingAdapter(this.TestActor);
+            var messagingAdapter = new MockMessagingServiceFactory().MessagingAdapter;
 
-            var props = Props.Create(() => new BarAggregationController(
+            this.controller = new BarAggregationController(
                 container,
-                messagingAdapter));
-
-            this.controllerRef = this.ActorOfAsTestActorRef<BarAggregator>(props, this.TestActor);
+                messagingAdapter);
         }
 
         [Fact]
@@ -67,8 +63,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe1);
-            this.controllerRef.Tell(subscribe2);
+            this.controller.Endpoint.Send(subscribe1);
+            this.controller.Endpoint.Send(subscribe2);
 
             // LogDumper.Dump(this.logger, this.output);
             // Assert
@@ -107,10 +103,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe1);
-            this.controllerRef.Tell(subscribe2);
-            this.controllerRef.Tell(subscribe3);
-            this.controllerRef.Tell(subscribe4);
+            this.controller.Endpoint.Send(subscribe1);
+            this.controller.Endpoint.Send(subscribe2);
+            this.controller.Endpoint.Send(subscribe3);
+            this.controller.Endpoint.Send(subscribe4);
 
             // LogDumper.Dump(this.logger, this.output);
             // Assert
@@ -140,10 +136,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe1);
-            this.controllerRef.Tell(subscribe2);
+            this.controller.Endpoint.Send(subscribe1);
+            this.controller.Endpoint.Send(subscribe2);
             Thread.Sleep(2000);
-            this.controllerRef.Tell(unsubscribe);
+            this.controller.Endpoint.Send(unsubscribe);
 
             // LogDumper.Dump(this.logger, this.output);
             // Assert
@@ -187,12 +183,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.controllerRef.Tell(subscribe1);
-            this.controllerRef.Tell(subscribe2);
-            this.controllerRef.Tell(subscribe3);
-            this.controllerRef.Tell(subscribe4);
+            this.controller.Endpoint.Send(subscribe1);
+            this.controller.Endpoint.Send(subscribe2);
+            this.controller.Endpoint.Send(subscribe3);
+            this.controller.Endpoint.Send(subscribe4);
             Thread.Sleep(5000);
-            this.controllerRef.Tell(unsubscribe);
+            this.controller.Endpoint.Send(unsubscribe);
 
             // LogDumper.Dump(this.logger, this.output);
             // Assert

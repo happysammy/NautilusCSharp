@@ -10,16 +10,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
-    using Akka.TestKit.Xunit2;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Events;
     using Nautilus.Execution;
     using Nautilus.Messaging.Network;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NautilusMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -27,7 +25,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class EventPublisherTests : TestKit
+    public class EventPublisherTests
     {
         private const string ExecutionEvents = "nautilus_execution_events";
 
@@ -35,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly IEndpoint testEndpoint;
+        private readonly IEndpoint testReceiver;
 
         public EventPublisherTests(ITestOutputHelper output)
         {
@@ -45,8 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-
-            this.testEndpoint = new ActorEndpoint(this.TestActor);
+            this.testReceiver = new MockMessageReceiver().Endpoint;
         }
 
         [Fact]
@@ -68,14 +65,14 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var publisher = this.Sys.ActorOf(Props.Create(() => new EventPublisher(
+            var publisher = new EventPublisher(
                 this.setupContainer,
                 new MsgPackEventSerializer(),
                 this.localHost,
-                new Port(56601))));
+                new Port(56601));
 
             // Act
-            publisher.Tell(rejected);
+            publisher.Endpoint.Send(rejected);
             this.output.WriteLine("Waiting for published events...");
 
             // var message = subscriber.ReceiveFrameBytes();
@@ -88,10 +85,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             // Assert.Equal(rejected, @event);
 
             // Tear Down
-            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-            subscriber.Unsubscribe(ExecutionEvents);
-            subscriber.Disconnect(TestAddress);
-            subscriber.Dispose();
+//            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
+//            subscriber.Unsubscribe(ExecutionEvents);
+//            subscriber.Disconnect(TestAddress);
+//            subscriber.Dispose();
         }
     }
 }

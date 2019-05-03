@@ -8,12 +8,12 @@
 
 namespace Nautilus.Common.Componentry
 {
+    using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.ValueObjects;
+    using NautilusMQ;
 
     /// <summary>
     /// The base class for all components which are connected to the messaging service.
@@ -62,7 +62,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="receivers">The message receivers.</param>
         /// <param name="message">The message to send.</param>
         /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(ReadOnlyList<Address> receivers, T message)
+        protected void Send<T>(IEnumerable<Address> receivers, T message)
             where T : Message
         {
             foreach (var receiver in receivers)

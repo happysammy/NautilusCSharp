@@ -9,14 +9,13 @@
 namespace Nautilus.Data
 {
     using System.Collections.Generic;
-    using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
-    using Address = Nautilus.Common.Messaging.Address;
+    using NautilusMQ;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="DataService"/>.
@@ -24,9 +23,8 @@ namespace Nautilus.Data
     public static class DataServiceFactory
     {
         /// <summary>
-        /// Builds the database and returns an <see cref="Akka.Actor.IActorRef"/> address to the <see cref="DatabaseTaskManager"/>.
+        /// Builds the database and returns an address book endpoints.
         /// </summary>
-        /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="client">The FIX client.</param>
@@ -40,7 +38,6 @@ namespace Nautilus.Data
         /// <param name="updateInstruments">The option flag to update instruments.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
         public static Dictionary<Address, IEndpoint> Create(
-            ActorSystem actorSystem,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient client,
@@ -53,57 +50,42 @@ namespace Nautilus.Data
             int barRollingWindow,
             bool updateInstruments)
         {
-            var tickPublisher = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new TickPublisher(container, publisherFactory.Create()))));
+            var tickPublisher = new TickPublisher(container, publisherFactory.Create());
+            var barPublisher = new BarPublisher(container, publisherFactory.Create());
 
-            var barPublisher = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new BarPublisher(container, publisherFactory.Create()))));
+            var databaseTaskActor = new DatabaseTaskManager(
+                container,
+                barRepository,
+                instrumentRepository);
 
-            var databaseTaskActor = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new DatabaseTaskManager(
-                    container,
-                    barRepository,
-                    instrumentRepository))));
+            var dataCollectionActor = new DataCollectionManager(
+                container,
+                messagingAdapter,
+                barPublisher.Endpoint,
+                resolutions,
+                barRollingWindow);
 
-            var dataCollectionActor = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new DataCollectionManager(
-                    container,
-                    messagingAdapter,
-                    barPublisher,
-                    resolutions,
-                    barRollingWindow))));
+            var barAggregationController = new BarAggregationController(container, messagingAdapter);
 
-            var barAggregationController = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                () => new BarAggregationController(
-                    container,
-                    messagingAdapter))));
+            var dataService = new DataService(
+                container,
+                messagingAdapter,
+                gateway,
+                updateInstruments);
 
-            var dataService = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(
-                    () => new DataService(
-                        container,
-                        messagingAdapter,
-                        gateway,
-                        updateInstruments))));
-
-            gateway.RegisterTickReceiver(tickPublisher);
-            gateway.RegisterTickReceiver(barAggregationController);
+            gateway.RegisterTickReceiver(tickPublisher.Endpoint);
+            gateway.RegisterTickReceiver(barAggregationController.Endpoint);
             gateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
-            client.RegisterConnectionEventReceiver(dataService);
+            client.RegisterConnectionEventReceiver(dataService.Endpoint);
 
             return new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Data, dataService },
-                { DataServiceAddress.DatabaseTaskManager, databaseTaskActor },
-                { DataServiceAddress.DataCollectionManager, dataCollectionActor },
-                { DataServiceAddress.BarAggregationController, barAggregationController },
-                { DataServiceAddress.TickPublisher, tickPublisher },
-                { DataServiceAddress.BarPublisher, barPublisher },
+                { ServiceAddress.Data, dataService.Endpoint },
+                { DataServiceAddress.DatabaseTaskManager, databaseTaskActor.Endpoint },
+                { DataServiceAddress.DataCollectionManager, dataCollectionActor.Endpoint },
+                { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
+                { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
             };
         }
     }

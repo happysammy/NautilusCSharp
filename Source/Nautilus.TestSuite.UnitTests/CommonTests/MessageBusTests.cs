@@ -11,18 +11,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Akka.Actor;
-    using Akka.Event;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.TestSuite.TestKit;
-    using Nautilus.TestSuite.TestKit.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NautilusMQ;
     using Xunit;
     using Xunit.Abstractions;
-    using Address = Nautilus.Common.Messaging.Address;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -31,37 +27,33 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly IActorRef messageBusRef;
+        private readonly IEndpoint messageBus;
 
         public MessageBusTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            var setupContainer = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
+            var containerFactory = new StubComponentryContainerFactory();
+            var container = containerFactory.Create();
+            var messageWarehouse = new InMemoryMessageStore();
+            var messageStorer = new MessageStorer(container, messageWarehouse);
+            this.mockLoggingAdapter = containerFactory.LoggingAdapter;
+            this.messageBus = new MessageBus<Command>(container, messageStorer.Endpoint).Endpoint;
 
-            var testActorSystem = ActorSystem.Create(nameof(MessageBusTests));
-
-            this.messageBusRef = testActorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
-                setupContainer,
-                new ActorEndpoint(new StandardOutLogger()))));
-
-            var mockEndpoint = new ActorEndpoint(new StandardOutLogger());
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Alpha, mockEndpoint },
-                { ServiceAddress.Data, mockEndpoint },
-                { ServiceAddress.Execution, mockEndpoint },
-                { ServiceAddress.Portfolio, mockEndpoint },
-                { ServiceAddress.Risk, mockEndpoint },
+                { ServiceAddress.Alpha, messageStorer.Endpoint },
+                { ServiceAddress.Data, messageStorer.Endpoint },
+                { ServiceAddress.Execution, messageStorer.Endpoint },
+                { ServiceAddress.Portfolio, messageStorer.Endpoint },
+                { ServiceAddress.Risk, messageStorer.Endpoint },
             };
 
-            this.messageBusRef.Tell(new InitializeSwitchboard(
+            this.messageBus.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 Guid.NewGuid(),
-                setupContainer.Clock.TimeNow()));
+                containerFactory.Clock.TimeNow()));
         }
 
         [Fact]
@@ -70,16 +62,10 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
 
             // Act
-            this.messageBusRef.Tell(string.Empty);
+            this.messageBus.Send(string.Empty);
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-
-            CustomAssert.EventuallyContains(
-                "CommandBus: Unhandled message EMPTY_STRING.",
-                this.mockLoggingAdapter,
-                EventuallyContains.TimeoutMilliseconds,
-                EventuallyContains.PollIntervalMilliseconds);
+            // Assert something...
         }
     }
 }

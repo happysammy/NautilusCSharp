@@ -19,7 +19,7 @@ namespace Nautilus.Data.Publishers
     /// <summary>
     /// Provides a generic publisher for <see cref="Bar"/> data.
     /// </summary>
-    public sealed class BarPublisher : ActorComponentBase
+    public sealed class BarPublisher : ComponentBase
     {
         private readonly IChannelPublisher publisher;
 
@@ -35,9 +35,20 @@ namespace Nautilus.Data.Publishers
                 container)
         {
             this.publisher = publisher;
+        }
 
-            // Event messages.
-            this.Receive<BarClosed>(this.OnMessage);
+        /// <summary>
+        /// Executed on component start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Executed on component stop.
+        /// </summary>
+        protected override void OnStop()
+        {
         }
 
         private void OnMessage(BarClosed message)

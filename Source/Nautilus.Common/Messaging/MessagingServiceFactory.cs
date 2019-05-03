@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using Akka.Actor;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.MessageStore;
     using Nautilus.Core;
@@ -21,33 +20,21 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Creates a new message service and returns its <see cref="IMessagingAdapter"/> interface.
         /// </summary>
-        /// <param name="actorSystem">The actor system.</param>
         /// <param name="container">The container.</param>
         /// <param name="store">The message store.</param>
         /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
-        public static MessagingAdapter Create(
-            ActorSystem actorSystem,
-            IComponentryContainer container,
-            IMessageStore store)
+        public static MessagingAdapter Create(IComponentryContainer container, IMessageStore store)
         {
-            var messageStoreRef = new ActorEndpoint(actorSystem.ActorOf(Props.Create(() => new MessageStorer(store))));
+            var messageStorer = new MessageStorer(container, store);
 
-            var commandBus = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Command>(
-                container,
-                messageStoreRef))));
+            var commandBus = new MessageBus<Command>(container, messageStorer.Endpoint);
+            var eventBus = new MessageBus<Event>(container, messageStorer.Endpoint);
+            var documentBus = new MessageBus<Document>(container, messageStorer.Endpoint);
 
-            var eventBusRef = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Event>(
-                container,
-                messageStoreRef))));
-
-            var serviceBusRef = new ActorEndpoint(
-                actorSystem.ActorOf(Props.Create(() => new MessageBus<Document>(
-                container,
-                messageStoreRef))));
-
-            return new MessagingAdapter(commandBus, eventBusRef, serviceBusRef);
+            return new MessagingAdapter(
+                commandBus.Endpoint,
+                eventBus.Endpoint,
+                documentBus.Endpoint);
         }
     }
 }
