@@ -6,11 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.UnitTests
+namespace NautilusMQ.Tests
 {
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
-    using NautilusMQ.TestSuite.TestKit;
     using Xunit;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -19,16 +20,31 @@ namespace NautilusMQ.UnitTests
     public class MessageProcessorTests
     {
         [Fact]
+        internal void RegisterHandler_WhenHandlerTypeAlreadyRegistered_Throws()
+        {
+            // Arrange
+            var receiver = new List<object>();
+            var processor = new MessageProcessor();
+            processor.RegisterHandler<string>(receiver.Add);
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => processor.RegisterHandler<string>(receiver.Add));
+        }
+
+        [Fact]
         internal void RegisterHandler_WithValidHandlerMethod_Registers()
         {
             // Arrange
-            var testReceiver = new MockMessageReceiver();
+            var receiver = new List<object>();
             var processor = new MessageProcessor();
 
             // Act
-            processor.RegisterHandler<string>(testReceiver.OnMessage);
+            processor.RegisterHandler<string>(receiver.Add);
 
             // Assert
+            Assert.Contains(typeof(string), processor.HandlerTypes);
         }
 
         [Fact]
@@ -51,8 +67,7 @@ namespace NautilusMQ.UnitTests
         {
             // Arrange
             var testReceiver = new MockMessageReceiver();
-            var processor = new MessageProcessor();
-            processor.RegisterHandler<string>(testReceiver.OnMessage);
+            testReceiver.RegisterHandler<string>(testReceiver.OnMessage);
 
             // Act
             testReceiver.Endpoint.Send("HI");
@@ -60,6 +75,8 @@ namespace NautilusMQ.UnitTests
             Thread.Sleep(300);
 
             // Assert
+            Assert.Contains(typeof(object), testReceiver.HandlerTypes);
+            Assert.Contains(typeof(string), testReceiver.HandlerTypes);
             Assert.Contains("HI", testReceiver.Messages);
         }
     }

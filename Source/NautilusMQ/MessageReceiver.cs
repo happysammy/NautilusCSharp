@@ -9,9 +9,10 @@
 namespace NautilusMQ
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
-    /// The base class for all message consumers.
+    /// The abstract base class for all message consumers.
     /// </summary>
     public abstract class MessageReceiver
     {
@@ -20,7 +21,7 @@ namespace NautilusMQ
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReceiver"/> class.
         /// </summary>
-        public MessageReceiver()
+        protected MessageReceiver()
         {
             this.processor = new MessageProcessor();
             this.Endpoint = this.processor.Endpoint;
@@ -30,6 +31,11 @@ namespace NautilusMQ
         /// Gets the consumers end point.
         /// </summary>
         public Endpoint Endpoint { get; }
+
+        /// <summary>
+        /// Gets the message handler types.
+        /// </summary>
+        public IEnumerable<Type> HandlerTypes => this.processor.HandlerTypes;
 
         /// <summary>
         /// Register the given message type with the given handler.

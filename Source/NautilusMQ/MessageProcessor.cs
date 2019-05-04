@@ -10,6 +10,7 @@ namespace NautilusMQ
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks.Dataflow;
 
     /// <summary>
@@ -20,12 +21,15 @@ namespace NautilusMQ
         private readonly Dictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
         private readonly ActionBlock<object> queue;
 
+        private Action<object> messageHandler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
         public MessageProcessor()
         {
-            this.queue = new ActionBlock<object>(this.HandleMessage);
+            this.messageHandler = this.CompileHandlerExpression();
+            this.queue = new ActionBlock<object>(msg => this.messageHandler.Invoke(msg));
             this.Endpoint = new Endpoint(this.queue);
         }
 
@@ -33,6 +37,12 @@ namespace NautilusMQ
         /// Gets the message processors end point.
         /// </summary>
         public Endpoint Endpoint { get; }
+
+        /// <summary>
+        /// Gets the list of messages types which can be handled.
+        /// </summary>
+        /// <returns>The list.</returns>
+        public IEnumerable<Type> HandlerTypes => this.handlers.Keys.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -51,7 +61,14 @@ namespace NautilusMQ
         /// <param name="handler">The handler.</param>
         public void RegisterHandler<T>(Action<object> handler)
         {
+            var type = typeof(T);
+            if (this.handlers.ContainsKey(type))
+            {
+                throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
+            }
+
             this.handlers.Add(typeof(T), handler);
+            this.messageHandler = this.CompileHandlerExpression();
         }
 
         /// <summary>
@@ -77,6 +94,17 @@ namespace NautilusMQ
             {
                 this.Unhandled(message);
             }
+        }
+
+        private Action<object> CompileHandlerExpression()
+        {
+            var anyObject = typeof(object);
+            if (!this.handlers.ContainsKey(anyObject))
+            {
+                this.handlers.Add(anyObject, this.Unhandled);
+            }
+
+            return this.handlers[typeof(object)].Invoke;
         }
     }
 }

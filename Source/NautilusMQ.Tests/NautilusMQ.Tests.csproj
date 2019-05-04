@@ -5,7 +5,20 @@
         <IsPackable>false</IsPackable>
         <LangVersion>8</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
-        <RootNamespace>NautilusMQ.UnitTests</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusMQ.Tests.xml</DocumentationFile>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusMQ.Tests.xml</DocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
