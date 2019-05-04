@@ -96,6 +96,7 @@ namespace NautilusMQ.Tests
             // Arrange
             var receiver = new MockMessageReceiver();
             receiver.RegisterHandler<string>(receiver.OnMessage);
+            receiver.RegisterHandler<int>(receiver.OnMessage);
 
             // Act
             receiver.Endpoint.Send("test");
@@ -106,6 +107,7 @@ namespace NautilusMQ.Tests
             Assert.Contains(typeof(object), receiver.HandlerTypes);
             Assert.Contains(typeof(string), receiver.HandlerTypes);
             Assert.Contains("test", receiver.Messages);
+            Assert.DoesNotContain("test", receiver.UnhandledMessages);
         }
 
         [Fact]

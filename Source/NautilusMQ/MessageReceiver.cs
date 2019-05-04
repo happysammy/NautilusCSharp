@@ -37,6 +37,11 @@ namespace NautilusMQ
         public IEnumerable<Type> HandlerTypes => this.processor.HandlerTypes;
 
         /// <summary>
+        /// Gets the unhandled messages.
+        /// </summary>
+        public IEnumerable<object> UnhandledMessages => this.processor.UnhandledMessages;
+
+        /// <summary>
         /// Register the given message type with the given handler.
         /// </summary>
         /// <typeparam name="TMessage">The message type.</typeparam>
