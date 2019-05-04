@@ -80,22 +80,6 @@ namespace NautilusMQ
             this.UnhandledMessages.Add(message);
         }
 
-        /// <summary>
-        /// Handle the given message.
-        /// </summary>
-        /// <param name="message">The message to handle.</param>
-        private void HandleMessage(object message)
-        {
-            try
-            {
-                this.handlers[message.GetType()](message);
-            }
-            catch (KeyNotFoundException)
-            {
-                this.Unhandled(message);
-            }
-        }
-
         private Action<object> CompileHandlerExpression()
         {
             var anyObject = typeof(object);
