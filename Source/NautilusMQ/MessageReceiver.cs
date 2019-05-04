@@ -24,13 +24,12 @@ namespace NautilusMQ
         protected MessageReceiver()
         {
             this.processor = new MessageProcessor();
-            this.Endpoint = this.processor.Endpoint;
         }
 
         /// <summary>
         /// Gets the consumers end point.
         /// </summary>
-        public Endpoint Endpoint { get; }
+        public Endpoint Endpoint => this.processor.Endpoint;
 
         /// <summary>
         /// Gets the message handler types.

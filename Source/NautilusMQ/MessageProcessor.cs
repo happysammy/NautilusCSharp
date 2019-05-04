@@ -44,8 +44,8 @@ namespace NautilusMQ
                     }
                 });
 
-            this.Endpoint = new Endpoint(this.processor);
             this.RegisterUnhandled(this.Unhandled);
+            this.Endpoint = new Endpoint(this.processor);
         }
 
         /// <summary>

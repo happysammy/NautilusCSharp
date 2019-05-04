@@ -37,14 +37,14 @@ namespace NautilusMQ
         internal Func<object, Task> Handler { get; }
 
         /// <summary>
-        /// Create the subscription.
+        /// Create the subscription with the given handler.
         /// </summary>
         /// <param name="handler">The handler.</param>
-        /// <typeparam name="TMessage">The message type.</typeparam>
+        /// <typeparam name="TMessage">The handler message type.</typeparam>
         /// <returns>The subscription.</returns>
         public static Subscription Create<TMessage>(Action<TMessage> handler)
         {
-            return Subscribe<TMessage>(
+            return BuildSubscription<TMessage>(
                 message =>
                 {
                     handler(message);
@@ -52,7 +52,7 @@ namespace NautilusMQ
                 });
         }
 
-        private static Subscription Subscribe<TMessage>(Func<TMessage, Task> handlerAction)
+        private static Subscription BuildSubscription<TMessage>(Func<TMessage, Task> handlerAction)
         {
             async Task ActionWithCheck(object message)
             {

@@ -25,9 +25,9 @@ namespace NautilusMQ
         /// <summary>
         /// Initializes a new instance of the <see cref="Envelope{T}"/> class.
         /// </summary>
-        /// <param name="receiver">The envelope receivers.</param>
+        /// <param name="receiver">The envelope receiver.</param>
         /// <param name="sender">The envelope sender.</param>
-        /// <param name="message">The envelopes message.</param>
+        /// <param name="message">The message payload.</param>
         /// <param name="id">The envelopes identifier.</param>
         /// <param name="timestamp">The envelopes timestamp.</param>
         public Envelope(

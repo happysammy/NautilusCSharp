@@ -9,7 +9,6 @@
 namespace NautilusMQ
 {
     using System;
-    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a task to send a single message.
@@ -23,9 +22,6 @@ namespace NautilusMQ
         /// <param name="onSendComplete">The on send complete action.</param>
         public SendMessageTask(object payload, Action<bool> onSendComplete)
         {
-            Debug.NotNull(payload, nameof(payload));
-            Debug.NotNull(onSendComplete, nameof(onSendComplete));
-
             this.Payload = payload;
             this.OnSendComplete = onSendComplete;
         }

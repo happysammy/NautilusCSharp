@@ -31,7 +31,7 @@ namespace NautilusMQ
         }
 
         /// <summary>
-        /// Send the given message to the <see cref="Endpoint"/> for processing.
+        /// Send the given message to the endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
         public void Send(object message)
@@ -40,7 +40,7 @@ namespace NautilusMQ
         }
 
         /// <summary>
-        /// Sends the given envelope to the actor endpoint.
+        /// Sends the given envelope to the endpoint.
         /// </summary>
         /// <param name="envelope">The envelope to send.</param>
         /// <typeparam name="T">The envelope message type.</typeparam>
