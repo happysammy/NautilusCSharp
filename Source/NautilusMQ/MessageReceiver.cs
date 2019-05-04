@@ -40,11 +40,11 @@ namespace NautilusMQ
         /// <summary>
         /// Register the given message type with the given handler.
         /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
+        /// <typeparam name="TMessage">The message type.</typeparam>
         /// <param name="handler">The handler.</param>
-        public void RegisterHandler<T>(Action<object> handler)
+        public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
-            this.processor.RegisterHandler<T>(handler);
+            this.processor.RegisterHandler(handler);
         }
 
         /// <summary>

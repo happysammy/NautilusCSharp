@@ -13,12 +13,21 @@ namespace NautilusMQ.Tests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using Xunit;
+    using Xunit.Abstractions;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MessageProcessorTests
     {
+        private readonly ITestOutputHelper output;
+
+        public MessageProcessorTests(ITestOutputHelper output)
+        {
+            // Fixture Setup
+            this.output = output;
+        }
+
         [Fact]
         internal void RegisterHandler_WhenHandlerTypeAlreadyRegistered_Throws()
         {
@@ -124,6 +133,11 @@ namespace NautilusMQ.Tests
             Thread.Sleep(300);
 
             // Assert
+            foreach (var message in receiver.Messages)
+            {
+                this.output.WriteLine(message.ToString());
+            }
+
             Assert.True(receiver.Messages[0].Equals("1"));
             Assert.True(receiver.Messages[1].Equals(1));
             Assert.True(receiver.Messages[2].Equals("2"));

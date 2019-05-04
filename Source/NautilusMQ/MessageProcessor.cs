@@ -10,6 +10,7 @@ namespace NautilusMQ
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks.Dataflow;
 
@@ -18,16 +19,32 @@ namespace NautilusMQ
     /// </summary>
     public class MessageProcessor
     {
-        private readonly BroadcastBlock<object> buffer = new BroadcastBlock<object>(message => message);
-        private readonly Dictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
-        private readonly List<IDisposable> registrations = new List<IDisposable>();
+        private readonly ActionBlock<SendMessageTask> processor;
+        private readonly Dictionary<Type, Subscription> subscriptions = new Dictionary<Type, Subscription>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
         public MessageProcessor()
         {
-            this.Endpoint = new Endpoint(this.buffer);
+            this.processor = new ActionBlock<SendMessageTask>(
+                async task =>
+                {
+                    foreach (var subscription in this.subscriptions.Values)
+                    {
+                        try
+                        {
+                            Trace.TraceInformation($"Executing subscription '{subscription.Id}' handler.");
+                            await subscription.Handler.Invoke(task.Payload);
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.TraceError($"There was a problem executing subscription '{subscription.Id}' handler. Exception message: {ex.Message}");
+                        }
+                    }
+                });
+
+            this.Endpoint = new Endpoint(this.processor);
             this.RegisterUnhandled(this.Unhandled);
         }
 
@@ -40,7 +57,7 @@ namespace NautilusMQ
         /// Gets the list of messages types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.handlers.Keys.ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.subscriptions.Keys.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -50,18 +67,17 @@ namespace NautilusMQ
         /// <summary>
         /// Register the given message type with the gin handler.
         /// </summary>ve
-        /// <typeparam name="T">The message type.</typeparam>
+        /// <typeparam name="TMessage">The message type.</typeparam>
         /// <param name="handler">The handler.</param>
-        public void RegisterHandler<T>(Action<object> handler)
+        public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
-            var type = typeof(T);
-            if (this.handlers.ContainsKey(type))
+            var type = typeof(TMessage);
+            if (this.subscriptions.ContainsKey(type))
             {
                 throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
             }
 
-            this.handlers.Add(typeof(T), handler);
-            this.Register<T>();
+            this.subscriptions.Add(typeof(TMessage), Subscription.Create(handler));
         }
 
         /// <summary>
@@ -71,35 +87,12 @@ namespace NautilusMQ
         public void RegisterUnhandled(Action<object> handler)
         {
             var anyObject = typeof(object);
-            if (this.handlers.ContainsKey(anyObject))
+            if (this.subscriptions.ContainsKey(anyObject))
             {
-                this.handlers.Remove(anyObject);
+                this.subscriptions.Remove(anyObject);
             }
 
-            this.handlers.Add(anyObject, handler);
-
-            var sink = new ActionBlock<object>(
-                this.handlers[anyObject]);
-
-            var registration = this.buffer.LinkTo(
-                sink,
-                new DataflowLinkOptions { PropagateCompletion = true });
-
-            this.registrations.Add(registration);
-        }
-
-        private void Register<T>()
-        {
-            var type = typeof(T);
-            var sink = new ActionBlock<object>(
-                this.handlers[type]);
-
-            var registration = this.buffer.LinkTo(
-                sink,
-                new DataflowLinkOptions { PropagateCompletion = true },
-                message => message is T);
-
-            this.registrations.Add(registration);
+            this.subscriptions.Add(anyObject, Subscription.Create(handler));
         }
 
         /// <summary>

@@ -29,5 +29,14 @@ namespace NautilusMQ.Tests
         {
             this.Messages.Add(message);
         }
+
+        /// <summary>
+        /// Add the message to the received messages list.
+        /// </summary>
+        /// <param name="message">The received message.</param>
+        public void OnMessage(int message)
+        {
+            this.Messages.Add(message);
+        }
     }
 }
