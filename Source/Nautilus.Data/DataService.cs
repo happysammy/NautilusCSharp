@@ -50,6 +50,13 @@ namespace Nautilus.Data
         {
             this.gateway = gateway;
             this.updateInstruments = updateInstruments;
+
+            this.RegisterHandler<ConnectFixJob>(this.OnMessage);
+            this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
+            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
+            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+            this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
         }
 
         /// <summary>
@@ -131,16 +138,6 @@ namespace Nautilus.Data
             this.gateway.Disconnect();
         }
 
-        private void OnMessage(Subscribe<BarType> message)
-        {
-            this.Send(DataServiceAddress.DataCollectionManager, message);
-        }
-
-        private void OnMessage(Unsubscribe<BarType> message)
-        {
-            this.Send(DataServiceAddress.DataCollectionManager, message);
-        }
-
         private void OnMessage(FixSessionConnected message)
         {
             this.Log.Information($"{message.SessionId} session is connected.");
@@ -156,6 +153,16 @@ namespace Nautilus.Data
         private void OnMessage(FixSessionDisconnected message)
         {
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
+        }
+
+        private void OnMessage(Subscribe<BarType> message)
+        {
+            this.Send(DataServiceAddress.DataCollectionManager, message);
+        }
+
+        private void OnMessage(Unsubscribe<BarType> message)
+        {
+            this.Send(DataServiceAddress.DataCollectionManager, message);
         }
     }
 }

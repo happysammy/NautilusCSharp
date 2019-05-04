@@ -40,6 +40,11 @@ namespace Nautilus.Common.Scheduling
                 { "quartz.threadPool.threadCount", "10" },
             };
             this.quartzScheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
+
+            this.RegisterHandler<CreateJob>(this.OnMessage);
+            this.RegisterHandler<PauseJob>(this.OnMessage);
+            this.RegisterHandler<ResumeJob>(this.OnMessage);
+            this.RegisterHandler<RemoveJob>(this.OnMessage);
         }
 
         /// <summary>

@@ -64,6 +64,8 @@ namespace Nautilus.Messaging
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            this.RegisterHandler<byte[]>(this.OnMessage);
         }
 
         /// <summary>

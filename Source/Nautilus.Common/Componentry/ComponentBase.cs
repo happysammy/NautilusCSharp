@@ -41,6 +41,9 @@ namespace Nautilus.Common.Componentry
             this.Log = container.LoggerFactory.Create(serviceContext, component);
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
+
+            this.RegisterHandler<StartSystem>(this.OnMessage);
+            this.RegisterHandler<ShutdownSystem>(this.OnMessage);
         }
 
         /// <summary>

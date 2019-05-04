@@ -34,6 +34,8 @@ namespace Nautilus.Data.Publishers
             container)
         {
             this.publisher = publisher;
+
+            this.RegisterHandler<Tick>(this.OnMessage);
         }
 
         private void OnMessage(Tick message)

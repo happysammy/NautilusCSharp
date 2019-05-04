@@ -35,6 +35,8 @@ namespace Nautilus.Data.Publishers
                 container)
         {
             this.publisher = publisher;
+
+            this.RegisterHandler<BarClosed>(this.OnMessage);
         }
 
         private void OnMessage(BarClosed message)

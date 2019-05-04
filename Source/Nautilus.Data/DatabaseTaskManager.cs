@@ -51,6 +51,8 @@ namespace Nautilus.Data
         {
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
+
+            this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
         /// <summary>

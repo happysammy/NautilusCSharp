@@ -45,6 +45,9 @@ namespace Nautilus.Common.Messaging
             this.messageStorer = messageStorer;
             this.commandHandler = new CommandHandler(this.log);
             this.switchboard = Switchboard.Empty();
+
+            this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
+            this.RegisterHandler<Envelope<T>>(this.OnMessage);
         }
 
         /// <summary>

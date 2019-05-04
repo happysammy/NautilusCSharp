@@ -66,6 +66,9 @@ namespace Nautilus.Messaging
             this.isIdle = true;
             this.vouchers = limit;
             this.totalCount = 0;
+
+            this.RegisterHandler<T>(this.OnMessage);
+            this.RegisterHandler<TimeSpan>(this.OnMessage);
         }
 
         private void OnMessage(T message)

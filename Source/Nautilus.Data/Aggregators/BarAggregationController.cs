@@ -68,6 +68,13 @@ namespace Nautilus.Data.Aggregators
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
+
+            this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<BarJob>(this.OnMessage);
+            this.RegisterHandler<MarketStatusJob>(this.OnMessage);
+            this.RegisterHandler<BarClosed>(this.OnMessage);
         }
 
         /// <summary>

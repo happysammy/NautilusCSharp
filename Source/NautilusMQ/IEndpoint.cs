@@ -11,7 +11,7 @@ namespace NautilusMQ
     using Nautilus.Core;
 
     /// <summary>
-    /// Provides a generic messaging endpoint abstraction.
+    /// Provides a generic messaging endpoint.
     /// </summary>
     public interface IEndpoint
     {

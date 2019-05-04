@@ -60,6 +60,13 @@ namespace Nautilus.Data.Aggregators
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
             this.isMarketOpen = isMarketOpen;
+
+            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<CloseBar>(this.OnMessage);
+            this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<MarketOpened>(this.OnMessage);
+            this.RegisterHandler<MarketClosed>(this.OnMessage);
         }
 
         /// <summary>
