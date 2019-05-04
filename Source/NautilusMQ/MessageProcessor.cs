@@ -29,7 +29,7 @@ namespace NautilusMQ
         public MessageProcessor()
         {
             this.messageHandler = this.CompileHandlerExpression();
-            this.queue = new ActionBlock<object>(msg => this.messageHandler.Invoke(msg));
+            this.queue = new ActionBlock<object>(this.messageHandler.Invoke);
             this.Endpoint = new Endpoint(this.queue);
         }
 
