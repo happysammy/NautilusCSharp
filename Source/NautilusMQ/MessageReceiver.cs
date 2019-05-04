@@ -42,9 +42,18 @@ namespace NautilusMQ
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
         /// <param name="handler">The handler.</param>
-        protected void RegisterHandler<T>(Action<object> handler)
+        public void RegisterHandler<T>(Action<object> handler)
         {
             this.processor.RegisterHandler<T>(handler);
+        }
+
+        /// <summary>
+        /// Register the given handler to receive unhandled messaged.
+        /// </summary>ve
+        /// <param name="handler">The handler.</param>
+        public void RegisterUnhandled(Action<object> handler)
+        {
+            this.processor.RegisterUnhandled(handler);
         }
     }
 }

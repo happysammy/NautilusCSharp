@@ -8,7 +8,6 @@
 
 namespace NautilusMQ.Tests
 {
-    using System;
     using System.Collections.Generic;
     using NautilusMQ;
 
@@ -21,16 +20,6 @@ namespace NautilusMQ.Tests
         /// Gets the list of received messages.
         /// </summary>
         public List<object> Messages { get; } = new List<object>();
-
-        /// <summary>
-        /// Register the given message type with the given handler.
-        /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="handler">The handler.</param>
-        public new void RegisterHandler<T>(Action<object> handler)
-        {
-            base.RegisterHandler<T>(handler);
-        }
 
         /// <summary>
         /// Add the message to the received messages list.

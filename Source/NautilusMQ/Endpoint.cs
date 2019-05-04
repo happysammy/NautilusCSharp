@@ -18,15 +18,15 @@ namespace NautilusMQ
     [Immutable]
     public class Endpoint : IEndpoint
     {
-        private readonly ActionBlock<object> actionBlock;
+        private readonly ITargetBlock<object> target;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Endpoint"/> class.
         /// </summary>
-        /// <param name="actionBlock">The data flow action block for the end point.</param>
-        public Endpoint(ActionBlock<object> actionBlock)
+        /// <param name="target">The data flow target block for the end point.</param>
+        public Endpoint(ITargetBlock<object> target)
         {
-            this.actionBlock = actionBlock;
+            this.target = target;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace NautilusMQ
         /// <param name="message">The message to send.</param>
         public void Send(object message)
         {
-            this.actionBlock.Post(message);
+            this.target.Post(message);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace NautilusMQ
         public void Send<T>(Envelope<T> envelope)
             where T : Message
         {
-            this.actionBlock.Post(envelope);
+            this.target.Post(envelope);
         }
     }
 }

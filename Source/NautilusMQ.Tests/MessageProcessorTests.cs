@@ -54,30 +54,84 @@ namespace NautilusMQ.Tests
             var processor = new MessageProcessor();
 
             // Act
-            processor.Endpoint.Send("HI");
+            processor.Endpoint.Send("test");
 
             Thread.Sleep(300);
 
             // Assert
-            Assert.Contains("HI", processor.UnhandledMessages);
+            Assert.Contains(typeof(object), processor.HandlerTypes);
+            Assert.Contains("test", processor.UnhandledMessages);
         }
 
         [Fact]
-        internal void CanReceiveMessage()
+        internal void CanReceiveSingleMessage()
         {
             // Arrange
-            var testReceiver = new MockMessageReceiver();
-            testReceiver.RegisterHandler<string>(testReceiver.OnMessage);
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<string>(receiver.OnMessage);
 
             // Act
-            testReceiver.Endpoint.Send("HI");
+            receiver.Endpoint.Send("test");
 
             Thread.Sleep(300);
 
             // Assert
-            Assert.Contains(typeof(object), testReceiver.HandlerTypes);
-            Assert.Contains(typeof(string), testReceiver.HandlerTypes);
-            Assert.Contains("HI", testReceiver.Messages);
+            Assert.Contains(typeof(object), receiver.HandlerTypes);
+            Assert.Contains(typeof(string), receiver.HandlerTypes);
+            Assert.Contains("test", receiver.Messages);
+        }
+
+        [Fact]
+        internal void CanReceiveDifferentMessageTypes()
+        {
+            // Arrange
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<string>(receiver.OnMessage);
+            receiver.RegisterHandler<int>(receiver.OnMessage);
+
+            // Act
+            receiver.Endpoint.Send("test");
+            receiver.Endpoint.Send(2);
+
+            Thread.Sleep(300);
+
+            // Assert
+            Assert.Contains(typeof(object), receiver.HandlerTypes);
+            Assert.Contains(typeof(string), receiver.HandlerTypes);
+            Assert.Contains(typeof(int), receiver.HandlerTypes);
+            Assert.True(receiver.Messages[0].Equals("test"));
+            Assert.True(receiver.Messages[1].Equals(2));
+        }
+
+        [Fact]
+        internal void GivenManyMessages_WhenDifferentTypes_ReceivesInCorrectOrder()
+        {
+            // Arrange
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<string>(receiver.OnMessage);
+            receiver.RegisterHandler<int>(receiver.OnMessage);
+
+            // Act
+            receiver.Endpoint.Send("1");
+            receiver.Endpoint.Send(1);
+            receiver.Endpoint.Send("2");
+            receiver.Endpoint.Send(2);
+            receiver.Endpoint.Send("3");
+            receiver.Endpoint.Send(3);
+            receiver.Endpoint.Send("4");
+            receiver.Endpoint.Send(4);
+
+            Thread.Sleep(300);
+
+            // Assert
+            Assert.True(receiver.Messages[0].Equals("1"));
+            Assert.True(receiver.Messages[1].Equals(1));
+            Assert.True(receiver.Messages[2].Equals("2"));
+            Assert.True(receiver.Messages[3].Equals(2));
+            Assert.True(receiver.Messages[4].Equals("3"));
+            Assert.True(receiver.Messages[5].Equals(3));
+            Assert.True(receiver.Messages[6].Equals("4"));
+            Assert.True(receiver.Messages[7].Equals(4));
         }
     }
 }

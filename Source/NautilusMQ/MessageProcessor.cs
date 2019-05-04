@@ -18,19 +18,17 @@ namespace NautilusMQ
     /// </summary>
     public class MessageProcessor
     {
+        private readonly BroadcastBlock<object> buffer = new BroadcastBlock<object>(message => message);
         private readonly Dictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
-        private readonly ActionBlock<object> queue;
-
-        private Action<object> messageHandler;
+        private readonly List<IDisposable> registrations = new List<IDisposable>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
         public MessageProcessor()
         {
-            this.messageHandler = this.CompileHandlerExpression();
-            this.queue = new ActionBlock<object>(this.messageHandler.Invoke);
-            this.Endpoint = new Endpoint(this.queue);
+            this.Endpoint = new Endpoint(this.buffer);
+            this.RegisterUnhandled(this.Unhandled);
         }
 
         /// <summary>
@@ -50,13 +48,8 @@ namespace NautilusMQ
         public List<object> UnhandledMessages { get; } = new List<object>();
 
         /// <summary>
-        /// Gets the current message input count.
-        /// </summary>
-        public int InputCount => this.queue.InputCount;
-
-        /// <summary>
-        /// Register the given message type with the given handler.
-        /// </summary>
+        /// Register the given message type with the gin handler.
+        /// </summary>ve
         /// <typeparam name="T">The message type.</typeparam>
         /// <param name="handler">The handler.</param>
         public void RegisterHandler<T>(Action<object> handler)
@@ -68,7 +61,45 @@ namespace NautilusMQ
             }
 
             this.handlers.Add(typeof(T), handler);
-            this.messageHandler = this.CompileHandlerExpression();
+            this.Register<T>();
+        }
+
+        /// <summary>
+        /// Register the given handler to receive unhandled messaged.
+        /// </summary>ve
+        /// <param name="handler">The handler.</param>
+        public void RegisterUnhandled(Action<object> handler)
+        {
+            var anyObject = typeof(object);
+            if (this.handlers.ContainsKey(anyObject))
+            {
+                this.handlers.Remove(anyObject);
+            }
+
+            this.handlers.Add(anyObject, handler);
+
+            var sink = new ActionBlock<object>(
+                this.handlers[anyObject]);
+
+            var registration = this.buffer.LinkTo(
+                sink,
+                new DataflowLinkOptions { PropagateCompletion = true });
+
+            this.registrations.Add(registration);
+        }
+
+        private void Register<T>()
+        {
+            var type = typeof(T);
+            var sink = new ActionBlock<object>(
+                this.handlers[type]);
+
+            var registration = this.buffer.LinkTo(
+                sink,
+                new DataflowLinkOptions { PropagateCompletion = true },
+                message => message is T);
+
+            this.registrations.Add(registration);
         }
 
         /// <summary>
@@ -78,17 +109,6 @@ namespace NautilusMQ
         private void Unhandled(object message)
         {
             this.UnhandledMessages.Add(message);
-        }
-
-        private Action<object> CompileHandlerExpression()
-        {
-            var anyObject = typeof(object);
-            if (!this.handlers.ContainsKey(anyObject))
-            {
-                this.handlers.Add(anyObject, this.Unhandled);
-            }
-
-            return this.handlers[typeof(object)].Invoke;
         }
     }
 }

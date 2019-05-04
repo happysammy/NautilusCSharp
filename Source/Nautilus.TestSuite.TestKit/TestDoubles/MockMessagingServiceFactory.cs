@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 eventBus.Endpoint,
                 documentBus.Endpoint);
 
-            var mockEndpoint = new Endpoint(new ActionBlock<object>(n => n.ToString()));
+            var mockEndpoint = new Endpoint(new BufferBlock<object>());
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Alpha, mockEndpoint },
