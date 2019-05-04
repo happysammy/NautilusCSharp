@@ -20,7 +20,9 @@ namespace NautilusMQ
     public class MessageProcessor
     {
         private readonly ActionBlock<SendMessageTask> processor;
-        private readonly Dictionary<Type, Subscription> subscriptions = new Dictionary<Type, Subscription>();
+        private readonly Dictionary<Type, Subscription> handlers = new Dictionary<Type, Subscription>();
+
+        private Subscription[] subscriptions = { };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
@@ -30,16 +32,16 @@ namespace NautilusMQ
             this.processor = new ActionBlock<SendMessageTask>(
                 async task =>
                 {
-                    foreach (var subscription in this.subscriptions.Values)
+                    for (var i = 0; i < this.subscriptions.Length; i++)
                     {
                         try
                         {
-                            Trace.TraceInformation($"Executing subscription '{subscription.Id}' handler.");
-                            await subscription.Handler.Invoke(task.Payload);
+                            Trace.TraceInformation($"Executing subscription '{this.subscriptions[i].Id}' handler.");
+                            await this.subscriptions[i].Handler.Invoke(task.Payload);
                         }
                         catch (Exception ex)
                         {
-                            Trace.TraceError($"There was a problem executing subscription '{subscription.Id}' handler. Exception message: {ex.Message}");
+                            Trace.TraceError($"There was a problem executing subscription '{this.subscriptions[i].Id}' handler. Exception message: {ex.Message}");
                         }
                     }
                 });
@@ -57,7 +59,7 @@ namespace NautilusMQ
         /// Gets the list of messages types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.subscriptions.Keys.ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.handlers.Keys.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -72,12 +74,13 @@ namespace NautilusMQ
         public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             var type = typeof(TMessage);
-            if (this.subscriptions.ContainsKey(type))
+            if (this.handlers.ContainsKey(type))
             {
                 throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
             }
 
-            this.subscriptions.Add(typeof(TMessage), Subscription.Create(handler));
+            this.handlers.Add(typeof(TMessage), Subscription.Create(handler));
+            this.subscriptions = this.handlers.Values.ToArray();
         }
 
         /// <summary>
@@ -87,12 +90,13 @@ namespace NautilusMQ
         public void RegisterUnhandled(Action<object> handler)
         {
             var anyObject = typeof(object);
-            if (this.subscriptions.ContainsKey(anyObject))
+            if (this.handlers.ContainsKey(anyObject))
             {
-                this.subscriptions.Remove(anyObject);
+                this.handlers.Remove(anyObject);
             }
 
-            this.subscriptions.Add(anyObject, Subscription.Create(handler));
+            this.handlers.Add(anyObject, Subscription.Create(handler));
+            this.subscriptions = this.handlers.Values.ToArray();
         }
 
         /// <summary>
