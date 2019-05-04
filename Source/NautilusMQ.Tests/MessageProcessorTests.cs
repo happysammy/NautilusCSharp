@@ -65,11 +65,29 @@ namespace NautilusMQ.Tests
             // Act
             processor.Endpoint.Send("test");
 
-            Thread.Sleep(300);
+            Thread.Sleep(100);
 
             // Assert
             Assert.Contains(typeof(object), processor.HandlerTypes);
             Assert.Contains("test", processor.UnhandledMessages);
+        }
+
+        [Fact]
+        internal void RegisterUnhandled_ThenStoresInNewUnhandledMessages()
+        {
+            // Arrange
+            var receiver = new List<object>();
+            var processor = new MessageProcessor();
+            processor.RegisterUnhandled(receiver.Add);
+
+            // Act
+            processor.Endpoint.Send(1);
+
+            Thread.Sleep(100);
+
+            // Assert
+            Assert.Contains(typeof(object), processor.HandlerTypes);
+            Assert.Contains(1, receiver);
         }
 
         [Fact]
@@ -82,7 +100,7 @@ namespace NautilusMQ.Tests
             // Act
             receiver.Endpoint.Send("test");
 
-            Thread.Sleep(300);
+            Thread.Sleep(100);
 
             // Assert
             Assert.Contains(typeof(object), receiver.HandlerTypes);
@@ -102,7 +120,7 @@ namespace NautilusMQ.Tests
             receiver.Endpoint.Send("test");
             receiver.Endpoint.Send(2);
 
-            Thread.Sleep(300);
+            Thread.Sleep(100);
 
             // Assert
             Assert.Contains(typeof(object), receiver.HandlerTypes);
@@ -130,13 +148,7 @@ namespace NautilusMQ.Tests
             receiver.Endpoint.Send("4");
             receiver.Endpoint.Send(4);
 
-            Thread.Sleep(300);
-
-            // Assert
-            foreach (var message in receiver.Messages)
-            {
-                this.output.WriteLine(message.ToString());
-            }
+            Thread.Sleep(100);
 
             Assert.True(receiver.Messages[0].Equals("1"));
             Assert.True(receiver.Messages[1].Equals(1));
