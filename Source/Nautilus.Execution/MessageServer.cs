@@ -16,7 +16,7 @@ namespace Nautilus.Execution
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Messaging.Network;
+    using Nautilus.Network.Network;
     using NautilusMQ;
 
     /// <summary>

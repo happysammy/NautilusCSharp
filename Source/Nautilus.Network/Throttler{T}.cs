@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Network
 {
     using System;
     using System.Collections.Generic;

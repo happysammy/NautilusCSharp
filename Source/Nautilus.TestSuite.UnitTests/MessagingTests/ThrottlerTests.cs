@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using System.Threading.Tasks;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging;
+    using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ.Tests;

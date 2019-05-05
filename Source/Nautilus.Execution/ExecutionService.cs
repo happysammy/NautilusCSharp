@@ -19,7 +19,7 @@ namespace Nautilus.Execution
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Messaging;
+    using Nautilus.Network;
     using NautilusMQ;
     using NodaTime;
     using Quartz;

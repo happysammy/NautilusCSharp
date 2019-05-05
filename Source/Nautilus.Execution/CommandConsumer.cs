@@ -13,8 +13,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Factories;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Network;
+    using Nautilus.Network;
+    using Nautilus.Network.Network;
     using NautilusMQ;
 
     /// <summary>

@@ -67,7 +67,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.Integrat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor.Service", "NautilusExecutor.Service\NautilusExecutor.Service.csproj", "{B5CA4594-2F7E-47B9-A1EC-E5640076D252}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nautilus.Messaging\Nautilus.Messaging.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusMQ", "NautilusMQ\NautilusMQ.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
 EndProject

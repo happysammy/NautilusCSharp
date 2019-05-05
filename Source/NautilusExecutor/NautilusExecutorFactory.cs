@@ -24,7 +24,7 @@ namespace NautilusExecutor
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
     using Nautilus.Fix;
-    using Nautilus.Messaging.Network;
+    using Nautilus.Network.Network;
     using Nautilus.MsgPack;
     using Nautilus.Serilog;
     using NodaTime;

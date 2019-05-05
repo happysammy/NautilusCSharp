@@ -13,8 +13,8 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Network;
+    using Nautilus.Network;
+    using Nautilus.Network.Network;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ;
     using NautilusMQ.Tests;

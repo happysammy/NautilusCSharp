@@ -39,7 +39,7 @@ namespace NautilusMQ
                 await this.handle(message);
             });
 
-            this.Endpoint = new Endpoint(this.processor);
+            this.Endpoint = new Endpoint(this.processor.Post);
         }
 
         /// <summary>

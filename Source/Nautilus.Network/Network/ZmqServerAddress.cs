@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging.Network
+namespace Nautilus.Network.Network
 {
     using Nautilus.Core.Annotations;
 
