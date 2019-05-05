@@ -8,7 +8,6 @@
 
 namespace NautilusMQ
 {
-    using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -19,13 +18,13 @@ namespace NautilusMQ
     [Immutable]
     public class Endpoint : IEndpoint
     {
-        private readonly ITargetBlock<SendMessageTask> target;
+        private readonly ITargetBlock<object> target;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Endpoint"/> class.
         /// </summary>
         /// <param name="target">The data flow target block for the end point.</param>
-        public Endpoint(ITargetBlock<SendMessageTask> target)
+        public Endpoint(ITargetBlock<object> target)
         {
             this.target = target;
         }
@@ -36,7 +35,7 @@ namespace NautilusMQ
         /// <param name="message">The message to send.</param>
         public void Send(object message)
         {
-            this.target.Post(new SendMessageTask(message, result => new TaskCompletionSource<bool>().SetResult(result)));
+            this.target.Post(message);
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace NautilusMQ
         public void Send<T>(Envelope<T> envelope)
             where T : Message
         {
-            this.target.Post(new SendMessageTask(envelope, result => new TaskCompletionSource<bool>().SetResult(result)));
+            this.target.Post(envelope);
         }
     }
 }

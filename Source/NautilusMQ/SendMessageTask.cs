@@ -23,6 +23,7 @@ namespace NautilusMQ
         public SendMessageTask(object payload, Action<bool> onSendComplete)
         {
             this.Payload = payload;
+            this.IsSendComplete = false;
             this.OnSendComplete = onSendComplete;
         }
 
@@ -30,6 +31,11 @@ namespace NautilusMQ
         /// Gets the tasks payload.
         /// </summary>
         public object Payload { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the sending is complete.
+        /// </summary>
+        public bool IsSendComplete { get; }
 
         /// <summary>
         /// Gets the tasks on send complete action.

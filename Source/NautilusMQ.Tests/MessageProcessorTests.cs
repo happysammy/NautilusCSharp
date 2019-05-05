@@ -65,10 +65,9 @@ namespace NautilusMQ.Tests
             // Act
             processor.Endpoint.Send("test");
 
-            Thread.Sleep(100);
+            Thread.Sleep(300);
 
             // Assert
-            Assert.Contains(typeof(object), processor.HandlerTypes);
             Assert.Contains("test", processor.UnhandledMessages);
         }
 
@@ -86,28 +85,27 @@ namespace NautilusMQ.Tests
             Thread.Sleep(100);
 
             // Assert
-            Assert.Contains(typeof(object), processor.HandlerTypes);
             Assert.Contains(1, receiver);
+            Assert.DoesNotContain(1, processor.UnhandledMessages);
         }
 
         [Fact]
         internal void CanReceiveSingleMessage()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
-            receiver.RegisterHandler<string>(receiver.OnMessage);
-            receiver.RegisterHandler<int>(receiver.OnMessage);
+            var receiver = new List<object>();
+            var processor = new MessageProcessor();
+            processor.RegisterHandler<string>(receiver.Add);
 
             // Act
-            receiver.Endpoint.Send("test");
+            processor.Endpoint.Send("test");
 
             Thread.Sleep(100);
 
             // Assert
-            Assert.Contains(typeof(object), receiver.HandlerTypes);
-            Assert.Contains(typeof(string), receiver.HandlerTypes);
-            Assert.Contains("test", receiver.Messages);
-            Assert.DoesNotContain("test", receiver.UnhandledMessages);
+            Assert.Contains(typeof(string), processor.HandlerTypes);
+            Assert.Contains("test", receiver);
+            Assert.DoesNotContain("test", processor.UnhandledMessages);
         }
 
         [Fact]
@@ -125,7 +123,6 @@ namespace NautilusMQ.Tests
             Thread.Sleep(100);
 
             // Assert
-            Assert.Contains(typeof(object), receiver.HandlerTypes);
             Assert.Contains(typeof(string), receiver.HandlerTypes);
             Assert.Contains(typeof(int), receiver.HandlerTypes);
             Assert.True(receiver.Messages[0].Equals("test"));

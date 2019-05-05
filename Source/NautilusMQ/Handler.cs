@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Subscription.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Handler.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -14,16 +14,16 @@ namespace NautilusMQ
     /// <summary>
     /// Represents a subscription.
     /// </summary>
-    internal sealed class Subscription
+    internal sealed class Handler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Subscription"/> class.
+        /// Initializes a new instance of the <see cref="NautilusMQ.Handler"/> class.
         /// </summary>
-        /// <param name="handler">The handler.</param>
-        private Subscription(Func<object, Task> handler)
+        /// <param name="handle">The delegate handle.</param>
+        private Handler(Func<object, Task> handle)
         {
             this.Id = Guid.NewGuid();
-            this.Handler = handler;
+            this.Handle = handle;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace NautilusMQ
         /// <summary>
         /// Gets the handler identifier.
         /// </summary>
-        internal Func<object, Task> Handler { get; }
+        internal Func<object, Task> Handle { get; }
 
         /// <summary>
         /// Create the subscription with the given handler.
@@ -42,17 +42,17 @@ namespace NautilusMQ
         /// <param name="handler">The handler.</param>
         /// <typeparam name="TMessage">The handler message type.</typeparam>
         /// <returns>The subscription.</returns>
-        public static Subscription Create<TMessage>(Action<TMessage> handler)
+        public static Handler Create<TMessage>(Action<TMessage> handler)
         {
-            return BuildSubscription<TMessage>(
+            return BuildHandler<TMessage>(
                 message =>
                 {
                     handler(message);
-                    return Task.FromResult(false);
+                    return Task.CompletedTask;
                 });
         }
 
-        private static Subscription BuildSubscription<TMessage>(Func<TMessage, Task> handlerAction)
+        private static Handler BuildHandler<TMessage>(Func<TMessage, Task> handlerAction)
         {
             async Task ActionWithCheck(object message)
             {
@@ -62,7 +62,7 @@ namespace NautilusMQ
                 }
             }
 
-            return new Subscription(ActionWithCheck);
+            return new Handler(ActionWithCheck);
         }
     }
 }
