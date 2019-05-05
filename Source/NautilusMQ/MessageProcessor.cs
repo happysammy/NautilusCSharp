@@ -120,6 +120,7 @@ namespace NautilusMQ
                 expressions.Add(call);
             }
 
+            Expression.Block(expressions);
             Expression<Func<object, Task>> unhandledExpression = msg => this.unhandled(msg);
             var unhandledCall = Expression.Call(
                 unhandledExpression,

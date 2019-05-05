@@ -20,7 +20,7 @@ namespace NautilusMQ
         /// Initializes a new instance of the <see cref="NautilusMQ.Handler"/> class.
         /// </summary>
         /// <param name="handle">The delegate handle.</param>
-        private Handler(Func<object, Task> handle)
+        private Handler(Func<object, Task<bool>> handle)
         {
             this.Id = Guid.NewGuid();
             this.Handle = handle;
@@ -34,7 +34,7 @@ namespace NautilusMQ
         /// <summary>
         /// Gets the handler identifier.
         /// </summary>
-        internal Func<object, Task> Handle { get; }
+        internal Func<object, Task<bool>> Handle { get; }
 
         /// <summary>
         /// Create the subscription with the given handler.
@@ -48,18 +48,21 @@ namespace NautilusMQ
                 message =>
                 {
                     handler(message);
-                    return Task.CompletedTask;
+                    return Task.FromResult(true);
                 });
         }
 
-        private static Handler BuildHandler<TMessage>(Func<TMessage, Task> handlerAction)
+        private static Handler BuildHandler<TMessage>(Func<TMessage, Task<bool>> handlerAction)
         {
-            async Task ActionWithCheck(object message)
+            async Task<bool> ActionWithCheck(object message)
             {
                 if (message is TMessage typedMessage)
                 {
                     await handlerAction(typedMessage);
+                    return true;
                 }
+
+                return false;
             }
 
             return new Handler(ActionWithCheck);
