@@ -9,63 +9,44 @@
 namespace NautilusMQ
 {
     using System;
-    using System.Threading.Tasks;
+    using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents a subscription.
+    /// Provides a handler for a type of message.
     /// </summary>
+    [Immutable]
     internal sealed class Handler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NautilusMQ.Handler"/> class.
+        /// Initializes a new instance of the <see cref="Handler"/> class.
         /// </summary>
+        /// <param name="type">The message type.</param>
         /// <param name="handle">The delegate handle.</param>
-        private Handler(Func<object, Task<bool>> handle)
+        private Handler(Type type, Action<object> handle)
         {
-            this.Id = Guid.NewGuid();
+            this.Type = type;
             this.Handle = handle;
         }
 
         /// <summary>
-        /// Gets the subscription identifier.
+        /// Gets the handlers type.
         /// </summary>
-        internal Guid Id { get; }
+        internal Type Type { get; }
 
         /// <summary>
-        /// Gets the handler identifier.
+        /// Gets the handlers delegate.
         /// </summary>
-        internal Func<object, Task<bool>> Handle { get; }
+        internal Action<object> Handle { get; }
 
         /// <summary>
-        /// Create the subscription with the given handler.
+        /// Creates a new handler from the given delegate.
         /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <typeparam name="TMessage">The handler message type.</typeparam>
-        /// <returns>The subscription.</returns>
-        public static Handler Create<TMessage>(Action<TMessage> handler)
+        /// <param name="handle">The delegate handle.</param>
+        /// <typeparam name="TMessage">The message type.</typeparam>
+        /// <returns>The created handler.</returns>
+        internal static Handler Create<TMessage>(Action<TMessage> handle)
         {
-            return BuildHandler<TMessage>(
-                message =>
-                {
-                    handler(message);
-                    return Task.FromResult(true);
-                });
-        }
-
-        private static Handler BuildHandler<TMessage>(Func<TMessage, Task<bool>> handlerAction)
-        {
-            async Task<bool> ActionWithCheck(object message)
-            {
-                if (message is TMessage typedMessage)
-                {
-                    await handlerAction(typedMessage);
-                    return true;
-                }
-
-                return false;
-            }
-
-            return new Handler(ActionWithCheck);
+            return new Handler(typeof(TMessage), handle as Action<object>);
         }
     }
 }

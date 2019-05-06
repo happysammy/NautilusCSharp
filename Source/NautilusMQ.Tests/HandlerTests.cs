@@ -34,24 +34,24 @@ namespace NautilusMQ.Tests
             var handler = Handler.Create<string>(receiver.Add);
 
             // Act
-            var result = handler.Handle("test");
+            handler.Handle("test");
 
             // Assert
-            Assert.True(result.Result);
+            Assert.Equal(typeof(string), handler.Type);
         }
 
         [Fact]
         internal void Handle_WhenIncorrectMessageType_ReturnsFalse()
         {
             // Arrange
-            var receiver = new List<int>();
-            var handler = Handler.Create<int>(receiver.Add);
+            var receiver = new List<object>();
+            var handler = Handler.Create<object>(receiver.Add);
 
             // Act
-            var result = handler.Handle("test");
+            handler.Handle(1);
 
             // Assert
-            Assert.False(result.Result);
+            Assert.Equal(typeof(int), handler.Type);
         }
     }
 }

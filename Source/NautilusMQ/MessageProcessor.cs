@@ -11,9 +11,9 @@ namespace NautilusMQ
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
+    using NautilusMQ.Internal;
 
     /// <summary>
     /// Provides an asynchronous message processor.
@@ -21,9 +21,9 @@ namespace NautilusMQ
     public class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
-        private readonly Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
+        private readonly List<KeyValuePair<Type, Handler>> handlers = new List<KeyValuePair<Type, Handler>>();
 
-        private Func<object, Task> unhandled;
+        private Action<object> handleAny;
         private Func<object, Task> handle;
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace NautilusMQ
         /// </summary>
         public MessageProcessor()
         {
-            this.unhandled = this.Unhandled;
-            this.handle = this.CompileHandlerTree();
+            this.handleAny = this.Unhandled;
+            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToList(), this.handleAny);
 
             this.processor = new ActionBlock<object>(async message =>
             {
@@ -56,7 +56,7 @@ namespace NautilusMQ
         /// Gets the list of messages types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.handlers.Keys.ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.handlers.Select(h => h.Key).ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -71,102 +71,41 @@ namespace NautilusMQ
         public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             var type = typeof(TMessage);
-            if (this.handlers.ContainsKey(type))
+            if (this.handlers.Select(h => h.Key).ToList().Contains(type))
             {
                 throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
             }
 
-            this.handlers.Add(type, Handler.Create(handler));
-            this.handle = this.CompileHandlerTree();
+            this.handlers.Add(new KeyValuePair<Type, Handler>(type, Handler.Create(handler)));
+            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToArray(), this.handleAny);
         }
 
         /// <summary>
-        /// Register the given handler to receive unhandled messaged.
+        /// Register the given handler to receive any objects.
+        /// </summary>
+        /// <param name="handler">The handler delegate.</param>
+        public void RegisterHandleAny(Action<object> handler)
+        {
+            this.handleAny = Handler.Create(handler).Handle;
+            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToArray(), this.handleAny);
+        }
+
+        /// <summary>
+        /// Register the given handler to receive unhandled messages.
         /// </summary>ve
         /// <param name="handler">The handler.</param>
         public void RegisterUnhandled(Action<object> handler)
         {
-            this.unhandled = Handler.Create(handler).Handle;
-            this.handle = this.CompileHandlerTree();
+            this.RegisterHandleAny(handler);
         }
 
         /// <summary>
         /// Handles unhandled messages.
         /// </summary>
         /// <param name="message">The unhandled message.</param>
-        private Task Unhandled(object message)
+        private void Unhandled(object message)
         {
             this.UnhandledMessages.Add(message);
-            return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// Compiles the message handling delegate from the handlers dictionary.
-        /// </summary>
-        /// <returns>The created delegate.</returns>
-        private Func<object, Task> CompileHandlerTree()
-        {
-            var message = Expression.Parameter(typeof(object), "message");
-
-            var expressions = new List<Expression>();
-            foreach (var handler in this.handlers.Values)
-            {
-                Expression<Func<object, Task>> handleExpression = msg => handler.Handle(msg);
-                var call = Expression.Call(
-                    handleExpression,
-                    typeof(Func<object, Task>).GetMethod(nameof(Func<object, Task>.Invoke)),
-                    message);
-
-                expressions.Add(call);
-            }
-
-            Expression.Block(expressions);
-            Expression<Func<object, Task>> unhandledExpression = msg => this.unhandled(msg);
-            var unhandledCall = Expression.Call(
-                unhandledExpression,
-                typeof(Func<object, Task>).GetMethod(nameof(Func<object, Task>.Invoke)),
-                message);
-            expressions.Add(unhandledCall);
-
-            var body = Expression.Block(typeof(Task), expressions.ToArray());
-            var tree = Expression.Lambda<Func<object, Task>>(body, message);
-
-            return tree.Compile();
-        }
-
-// /// <summary>
-//        /// Compiles the message handling delegate from the handlers dictionary.
-//        /// </summary>
-//        /// <returns>The created delegate.</returns>
-//        private Action<object> CompileHandlerTree()
-//        {
-//            var message = Expression.Parameter(typeof(object), "message");
-//            var messageType = Expression.Parameter(typeof(Type), "message.Type");
-//
-//            var cases = new List<SwitchCase>();
-//            foreach (var (type, handler) in this.handlers)
-//            {
-//                var typeConstant = Expression.Constant(type);
-//
-//                Expression<Action<object>> handleExpression = msg => handler.Handle(msg);
-//                var call = Expression.Call(
-//                    handleExpression,
-//                    typeof(Action<object>).GetMethod(nameof(Action<object>.Invoke)),
-//                    message);
-//
-//                cases.Add(Expression.SwitchCase(call, typeConstant));
-//            }
-//
-//            Expression<Action<object>> unhandledExpression = msg => this.unhandled(msg);
-//            var defaultBody = Expression.Call(
-//                unhandledExpression,
-//                typeof(Action<object>).GetMethod(nameof(Action<object>.Invoke)),
-//                message);
-//
-//            var body = Expression.Switch(message, defaultBody, cases.ToArray());
-//            var tree = Expression.Lambda<Action<object>>(body, message);
-//
-//            return tree.Compile();
-//        }
     }
 }
