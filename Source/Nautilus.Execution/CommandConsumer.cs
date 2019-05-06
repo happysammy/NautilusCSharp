@@ -14,7 +14,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Network;
-    using Nautilus.Network.Network;
     using NautilusMQ;
 
     /// <summary>

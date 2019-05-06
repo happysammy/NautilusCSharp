@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
-    using Nautilus.Network.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ;

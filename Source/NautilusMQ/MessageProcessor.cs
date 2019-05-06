@@ -11,6 +11,7 @@ namespace NautilusMQ
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
     using NautilusMQ.Internal;
@@ -21,7 +22,9 @@ namespace NautilusMQ
     public class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
-        private readonly List<KeyValuePair<Type, Handler>> handlers = new List<KeyValuePair<Type, Handler>>();
+        private readonly List<Type> handlerTypes = new List<Type>();
+        private readonly Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
+        private readonly CancellationToken cancel = new CancellationToken(false);
 
         private Action<object> handleAny;
         private Func<object, Task> handle;
@@ -34,10 +37,9 @@ namespace NautilusMQ
             this.handleAny = this.Unhandled;
             this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToList(), this.handleAny);
 
-            this.processor = new ActionBlock<object>(async message =>
-            {
-                await this.handle(message);
-            });
+            this.processor = new ActionBlock<object>(
+                async message => { await this.handle(message); },
+                new ExecutionDataflowBlockOptions { CancellationToken = this.cancel });
 
             this.Endpoint = new Endpoint(this.processor.Post);
         }
@@ -53,10 +55,10 @@ namespace NautilusMQ
         public int InputCount => this.processor.InputCount;
 
         /// <summary>
-        /// Gets the list of messages types which can be handled.
+        /// Gets the types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.handlers.Select(h => h.Key).ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.handlerTypes;
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -71,12 +73,13 @@ namespace NautilusMQ
         public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             var type = typeof(TMessage);
-            if (this.handlers.Select(h => h.Key).ToList().Contains(type))
+            if (this.handlers.ContainsKey(type))
             {
                 throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
             }
 
-            this.handlers.Add(new KeyValuePair<Type, Handler>(type, Handler.Create(handler)));
+            this.handlerTypes.Add(type);
+            this.handlers[type] = Handler.Create(handler);
             this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToArray(), this.handleAny);
         }
 

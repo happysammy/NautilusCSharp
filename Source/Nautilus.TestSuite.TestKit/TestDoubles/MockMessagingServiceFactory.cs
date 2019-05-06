@@ -11,13 +11,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks.Dataflow;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using NautilusMQ;
+    using NautilusMQ.Tests;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -37,14 +37,14 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 eventBus.Endpoint,
                 documentBus.Endpoint);
 
-            var mockEndpoint = new Endpoint(new BufferBlock<object>().Post);
+            var receiver = new MockMessageReceiver();
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Alpha, mockEndpoint },
-                { ServiceAddress.Data, mockEndpoint },
-                { ServiceAddress.Portfolio, mockEndpoint },
-                { ServiceAddress.Risk, mockEndpoint },
-                { ServiceAddress.Execution, mockEndpoint },
+                { ServiceAddress.Alpha, receiver.Endpoint },
+                { ServiceAddress.Data, receiver.Endpoint },
+                { ServiceAddress.Portfolio, receiver.Endpoint },
+                { ServiceAddress.Risk, receiver.Endpoint },
+                { ServiceAddress.Execution, receiver.Endpoint },
             };
 
             var switchboard = Switchboard.Create(addresses);

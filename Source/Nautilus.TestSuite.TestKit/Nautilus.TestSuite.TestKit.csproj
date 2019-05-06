@@ -32,6 +32,7 @@
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
         <ProjectReference Include="..\NautilusData\NautilusData.csproj" />
+        <ProjectReference Include="..\NautilusMQ.Tests\NautilusMQ.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>

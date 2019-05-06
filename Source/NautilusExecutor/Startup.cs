@@ -18,7 +18,7 @@ namespace NautilusExecutor
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
-    using Nautilus.Network.Network;
+    using Nautilus.Network;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
 

@@ -17,7 +17,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Network.Network;
+    using Nautilus.Network;
     using NautilusMQ;
     using NetMQ;
     using NetMQ.Sockets;

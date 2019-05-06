@@ -13,7 +13,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
-    using Nautilus.Network.Network;
+    using Nautilus.Network;
     using NautilusMQ;
 
     /// <summary>
