@@ -340,7 +340,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other is FloatingPointNumber && this.Equals(other);
+        public override bool Equals(object other) => other is IntegerNumber number && this.Equals(number);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="IntegerNumber"/> is equal to the

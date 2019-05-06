@@ -75,7 +75,7 @@ namespace Nautilus.Core.Primitives
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>The result of the equality check.</returns>
-        public override bool Equals(object other) => other is ValidString<T> && this.Equals(other);
+        public override bool Equals(object other) => other is ValidString<T> valid && this.Equals(valid);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="ValidString{T}"/> is equal

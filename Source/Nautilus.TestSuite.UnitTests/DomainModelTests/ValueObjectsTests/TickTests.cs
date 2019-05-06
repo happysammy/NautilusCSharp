@@ -33,7 +33,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal("AUDUSD", tick.Symbol.Code);
@@ -49,8 +49,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void CompareTo_VariousPrices_ReturnsExpectedResult(int millisecondsOffset, int expected)
         {
             // Arrange
-            var tick1 = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
-            var tick2 = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
+            var tick1 = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
+            var tick2 = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsOffset));
 
             // Act
             var result = tick1.CompareTo(tick2);
@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var tick = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Assert
             Assert.Equal("AUDUSD.FXCM,1.00000,1.00000,1970-01-01T00:00:00.000Z", tick.ToString());
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToUtf8Bytes_WithValidBar_ReturnsExpectedBar()
         {
             // Arrange
-            var tick = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = tick.ToUtf8Bytes();
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void GetFromString_WithValidString_ReturnsExpectedBar()
         {
             // Arrange
-            var tick = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Act
             var tickString = tick.ToString();
@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void GetFromBytes_WithValidBytesArray_ReturnsExpectedBar()
         {
             // Arrange
-            var tick = new Tick(this.symbol, 1.00000m, 5, StubZonedDateTime.UnixEpoch());
+            var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());
 
             // Act
             var tickBytes = tick.ToUtf8Bytes();
