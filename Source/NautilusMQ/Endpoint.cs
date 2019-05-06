@@ -9,7 +9,6 @@
 namespace NautilusMQ
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -36,17 +35,6 @@ namespace NautilusMQ
         public void Send(object message)
         {
             this.target.Invoke(message);
-        }
-
-        /// <summary>
-        /// Sends the given envelope to the endpoint.
-        /// </summary>
-        /// <param name="envelope">The envelope to send.</param>
-        /// <typeparam name="T">The envelope message type.</typeparam>
-        public void Send<T>(Envelope<T> envelope)
-            where T : Message
-        {
-            this.target.Invoke(envelope);
         }
     }
 }

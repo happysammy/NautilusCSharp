@@ -8,8 +8,6 @@
 
 namespace NautilusMQ
 {
-    using Nautilus.Core;
-
     /// <summary>
     /// Provides a generic messaging endpoint.
     /// </summary>
@@ -20,13 +18,5 @@ namespace NautilusMQ
         /// </summary>
         /// <param name="message">The message to send.</param>
         void Send(object message);
-
-        /// <summary>
-        /// Sends the given envelope to the endpoint.
-        /// </summary>
-        /// <param name="envelope">The envelope to send.</param>
-        /// <typeparam name="T">The envelope message type.</typeparam>
-        void Send<T>(Envelope<T> envelope)
-            where T : Message;
     }
 }
