@@ -23,20 +23,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             Test = 1,
         }
 
-        [Theory]
-        [InlineData("A", "A")]
-        [InlineData("123 123 1adc \n 222", "1231231adc222")]
-        [InlineData("  123 123 1adc \n 222   ", "1231231adc222")]
-        internal void RemoveWhiteSpace_WithVariousInputs_ReturnsStringWithNoWhiteSpace(string input, string expected)
-        {
-            // Arrange
-            // Act
-            var s = input.RemoveAllWhitespace();
-
-            // Assert
-            Assert.Equal(expected, s);
-        }
-
         [Fact]
         internal void ToEnum_WhenWhiteSpaceString_ReturnsDefaultEnum()
         {

@@ -11,7 +11,6 @@ namespace Nautilus.Core.Primitives
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// Provides an encapsulation for a validated string. A valid string is not null, less than
@@ -30,7 +29,7 @@ namespace Nautilus.Core.Primitives
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
             Debug.NotOutOfRangeInt32(value.Length, 1, 1024, nameof(value));
 
-            this.Value = value.RemoveAllWhitespace();
+            this.Value = value;
         }
 
         /// <summary>

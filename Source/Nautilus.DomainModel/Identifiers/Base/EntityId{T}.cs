@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
             Debug.NotOutOfRangeInt32(value.Length, 1,  1024, nameof(value));
 
-            this.Value = value.RemoveAllWhitespace();
+            this.Value = value;
         }
 
         /// <summary>

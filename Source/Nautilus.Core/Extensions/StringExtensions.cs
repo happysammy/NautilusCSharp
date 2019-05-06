@@ -9,9 +9,7 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
-    using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.
@@ -19,20 +17,6 @@ namespace Nautilus.Core.Extensions
     [Immutable]
     public static class StringExtensions
     {
-        /// <summary>
-        /// Returns a string with all whitespace from the given string removed.
-        /// </summary>
-        /// <param name="input">The input string (cannot be null or white space).</param>
-        /// <returns>A string with no remaining white space.</returns>
-        public static string RemoveAllWhitespace(this string input)
-        {
-            Debug.NotEmptyOrWhiteSpace(input, nameof(input));
-
-            return new string(input.ToCharArray()
-                .Where(c => !char.IsWhiteSpace(c))
-                .ToArray());
-        }
-
         /// <summary>
         /// Returns an enumerator of the given type (parsed from the given string).
         /// </summary>
