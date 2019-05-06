@@ -16,7 +16,7 @@ namespace NautilusMQ
     /// Represents a messaging endpoint.
     /// </summary>
     [Immutable]
-    public class Endpoint : IEndpoint
+    public sealed class Endpoint : IEndpoint
     {
         private readonly Func<object, bool> target;
 

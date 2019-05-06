@@ -46,21 +46,25 @@ namespace NautilusMQ.Internal
                 }
             }
 
-
-            Expression<Func<object, Task>> unhandledExpression = msg => unhandled(msg);
-            var unhandledCall = Expression.Call(
-                unhandledExpression,
-                typeof(Func<object, Task>).GetMethod(nameof(Func<object, Task>.Invoke)),
-                message);
-            expressions.Add(unhandledCall);
-
+// Expression<Func<object, Task>> unhandledExpression = msg => unhandled(msg);
+//            var unhandledCall = Expression.Call(
+//                unhandledExpression,
+//                typeof(Func<object, Task>).GetMethod(nameof(Func<object, Task>.Invoke)),
+//                message);
+//            expressions.Add(unhandledCall);
             var body = Expression.Block(typeof(Task), mainBodyExpressions.ToArray());
             var tree = Expression.Lambda<Func<object, Task>>(body, message);
 
             return tree.Compile();
         }
 
-        private static Expression ValueTypeHandling(Handler handler, LabelTarget returnTarget)
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
+        /// <param name="returnTarget">The return target.</param>
+        /// <returns>The created expression.</returns>
+        internal static Expression ValueTypeHandling(Handler handler, LabelTarget returnTarget)
         {
             var message = Expression.Parameter(handler.Type, "message");
             var castedVariable = Expression.Variable(handler.Type);
@@ -80,11 +84,17 @@ namespace NautilusMQ.Internal
                 Expression.Return(returnTarget, Expression.Constant(false)));
         }
 
-        private static Expression ReferenceTypeHandling(Handler handler, LabelTarget returnTarget)
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
+        /// <param name="returnTarget">The return target.</param>
+        /// <returns>The created expression.</returns>
+        internal static Expression ReferenceTypeHandling(Handler handler, LabelTarget returnTarget)
         {
             var message = Expression.Parameter(handler.Type, "message");
             var castedVariable = Expression.Variable(handler.Type);
-            var tryCast = Expression.Assign(castedVariable, Expression.TypeAs(message, handler.Type));
+            var tryCast = Expression.Assign(castedVariable, Expression.Convert(message, handler.Type));
 
             var ifTrueBlock = new List<Expression>();
             Expression<Action<object>> handlingExpression = msg => handler.Handle(msg);
@@ -95,7 +105,7 @@ namespace NautilusMQ.Internal
             ifTrueBlock.Add(Expression.Return(returnTarget, Expression.Constant(true)));
 
             return Expression.IfThenElse(
-                Expression.TypeIs(tryCast, handler.Type),
+                Expression.TypeIs(message, handler.Type),
                 Expression.Block(ifTrueBlock),
                 Expression.Return(returnTarget, Expression.Constant(false)));
         }

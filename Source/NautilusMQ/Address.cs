@@ -15,7 +15,7 @@ namespace NautilusMQ
     /// Represents a components messaging address within the system.
     /// </summary>
     [Immutable]
-    public class Address : ValidString<Address>
+    public sealed class Address : ValidString<Address>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class.

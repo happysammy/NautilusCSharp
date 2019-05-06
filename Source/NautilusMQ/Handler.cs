@@ -46,7 +46,12 @@ namespace NautilusMQ
         /// <returns>The created handler.</returns>
         internal static Handler Create<TMessage>(Action<TMessage> handle)
         {
-            return new Handler(typeof(TMessage), handle as Action<object>);
+            void ActionDelegate(object message)
+            {
+                handle.Invoke((TMessage)message);
+            }
+
+            return new Handler(typeof(TMessage), ActionDelegate);
         }
     }
 }
