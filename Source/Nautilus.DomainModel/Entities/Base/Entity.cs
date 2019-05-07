@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// </summary>
         /// <param name="other">The other entity.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(T other) => this.Id.Equals(other.Id);
+        public bool Equals(Entity<T> other) => this.Id.Equals(other.Id);
 
         /// <summary>
         /// Returns the hash code of the wrapped object.

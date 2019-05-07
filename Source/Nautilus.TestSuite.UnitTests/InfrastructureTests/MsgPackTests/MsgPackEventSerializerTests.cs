@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(submitted);
-            var unpacked = serializer.Deserialize(packed) as OrderSubmitted;
+            var unpacked = (OrderSubmitted)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(submitted, unpacked);
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(accepted);
-            var unpacked = serializer.Deserialize(packed) as OrderAccepted;
+            var unpacked = (OrderAccepted)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(accepted, unpacked);
@@ -95,7 +95,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(rejected);
-            var unpacked = serializer.Deserialize(packed) as OrderRejected;
+            var unpacked = (OrderRejected)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(rejected, unpacked);
@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(working);
-            var unpacked = serializer.Deserialize(packed) as OrderWorking;
+            var unpacked = (OrderWorking)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(working, unpacked);
@@ -158,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(working);
-            var unpacked = serializer.Deserialize(packed) as OrderWorking;
+            var unpacked = (OrderWorking)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(working, unpacked);
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(cancelled);
-            var unpacked = serializer.Deserialize(packed) as OrderCancelled;
+            var unpacked = (OrderCancelled)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(cancelled, unpacked);
@@ -204,7 +204,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(cancelReject);
-            var unpacked = serializer.Deserialize(packed) as OrderCancelReject;
+            var unpacked = (OrderCancelReject)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
@@ -228,7 +228,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(modified);
-            var unpacked = serializer.Deserialize(packed) as OrderModified;
+            var unpacked = (OrderModified)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(modified, unpacked);
@@ -250,7 +250,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(expired);
-            var unpacked = serializer.Deserialize(packed) as OrderExpired;
+            var unpacked = (OrderExpired)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(expired, unpacked);
@@ -280,7 +280,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(partiallyFilled);
-            var unpacked = serializer.Deserialize(packed) as OrderPartiallyFilled;
+            var unpacked = (OrderPartiallyFilled)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
@@ -309,7 +309,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(filled);
-            var unpacked = serializer.Deserialize(packed) as OrderFilled;
+            var unpacked = (OrderFilled)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(filled, unpacked);
@@ -338,7 +338,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Act
             var packed = serializer.Serialize(accountEvent);
-            var unpacked = serializer.Deserialize(packed) as AccountEvent;
+            var unpacked = (AccountEvent)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(accountEvent, unpacked);

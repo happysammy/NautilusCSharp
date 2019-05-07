@@ -64,7 +64,7 @@ namespace Nautilus.Core
         /// <param name="option">The <see cref="OptionVal{T}"/> (cannot be null).</param>
         /// <param name="value">The value (cannot be null).</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public static bool operator ==(OptionVal<T> option, T value) => option.value != null & option.value.Equals(value);
+        public static bool operator ==(OptionVal<T> option, T value) => option.value.Equals(value);
 
         /// <summary>
         /// Returns a result indicating whether the left <see cref="OptionVal{T}"/> is not equal to the
