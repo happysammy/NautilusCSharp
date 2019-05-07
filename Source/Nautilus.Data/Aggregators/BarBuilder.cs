@@ -6,8 +6,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-#pragma warning disable 8618
-
 namespace Nautilus.Data.Aggregators
 {
     using Nautilus.Core.Correctness;
@@ -22,14 +20,6 @@ namespace Nautilus.Data.Aggregators
         /// <summary>
         /// Initializes a new instance of the <see cref="BarBuilder"/> class.
         /// </summary>
-        public BarBuilder()
-        {
-            this.IsInitialized = false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BarBuilder"/> class.
-        /// </summary>
         /// <param name="open">The open price for the bar.</param>
         public BarBuilder(Price open)
         {
@@ -37,13 +27,13 @@ namespace Nautilus.Data.Aggregators
             this.High = open;
             this.Low = open;
             this.Close = open;
-            this.IsInitialized = true;
+            this.Volume += 1;
         }
 
         /// <summary>
         /// Gets the bar builders open price.
         /// </summary>
-        public Price Open { get; private set; }
+        public Price Open { get; }
 
         /// <summary>
         /// Gets the bar builders high price.
@@ -66,29 +56,11 @@ namespace Nautilus.Data.Aggregators
         public int Volume { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the bar builder is initialized.
-        /// </summary>
-        public bool IsInitialized { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the bar builder is NOT initialized.
-        /// </summary>
-        public bool IsNotInitialized => !this.IsInitialized;
-
-        /// <summary>
         /// Updates the bar builder with the given quote price.
         /// </summary>
         /// <param name="quote">The quote price.</param>
         public void Update(Price quote)
         {
-            if (this.IsNotInitialized)
-            {
-                this.Open = quote;
-                this.High = quote;
-                this.Low = quote;
-                this.Close = quote;
-            }
-
             if (quote > this.High)
             {
                 this.High = quote;

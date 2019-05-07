@@ -26,11 +26,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var quote = Price.Create(1.00000m, 5);
 
-            var barBuilder = new BarBuilder();
+            var barBuilder = new BarBuilder(quote);
 
             // Act
-            barBuilder.Update(quote);
-
             var bar = barBuilder.Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
@@ -52,10 +50,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var quote3 = Price.Create(0.99950m, 5);
             var quote4 = Price.Create(0.99950m, 5);
 
-            var barBuilder = new BarBuilder();
+            var barBuilder = new BarBuilder(quote1);
 
             // Act
-            barBuilder.Update(quote1);
             barBuilder.Update(quote2);
             barBuilder.Update(quote3);
             barBuilder.Update(quote4);
@@ -81,10 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var quote3 = Price.Create(1.00090m, 5);
             var quote4 = Price.Create(0.99800m, 5);
 
-            var barBuilder = new BarBuilder();
+            var barBuilder = new BarBuilder(quote1);
 
             // Act
-            barBuilder.Update(quote1);
             barBuilder.Update(quote2);
             barBuilder.Update(quote3);
             barBuilder.Update(quote4);
@@ -110,10 +106,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var quote3 = Price.Create(1.00000m, 5);
             var quote4 = Price.Create(1.00000m, 5);
 
-            var barBuilder = new BarBuilder();
+            var barBuilder = new BarBuilder(quote1);
 
             // Act
-            barBuilder.Update(quote1);
             barBuilder.Update(quote2);
             barBuilder.Update(quote3);
             barBuilder.Update(quote4);

@@ -31,9 +31,10 @@ namespace Nautilus.Data.Aggregators
     public sealed class BarAggregator : ComponentBase
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
+
         private readonly Symbol symbol;
         private readonly SpreadAnalyzer spreadAnalyzer;
-        private readonly Dictionary<BarSpecification, BarBuilder> barBuilders;
+        private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
 
         private Tick? lastTick;
         private bool isMarketOpen;
@@ -57,7 +58,7 @@ namespace Nautilus.Data.Aggregators
         {
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();
-            this.barBuilders = new Dictionary<BarSpecification, BarBuilder>();
+            this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
 
             this.isMarketOpen = isMarketOpen;
 
@@ -74,35 +75,50 @@ namespace Nautilus.Data.Aggregators
         /// </summary>
         /// <param name="tick">The received tick.</param>
         /// <exception cref="InvalidOperationException">The quote type is not recognized.</exception>
+        [PerformanceOptimized]
         private void OnMessage(Tick tick)
         {
             Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
 
-            foreach (var builder in this.barBuilders)
+            foreach (var (barSpec, builder) in this.barBuilders)
             {
-                switch (builder.Key.QuoteType)
+                var quote = this.GetUpdateQuote(barSpec.QuoteType, tick);
+
+                if (builder is null)
                 {
-                    case QuoteType.Bid:
-                        builder.Value.Update(tick.Bid);
-                        break;
-
-                    case QuoteType.Ask:
-                        builder.Value.Update(tick.Ask);
-                        break;
-
-                    case QuoteType.Mid:
-                        var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
-                        builder.Value.Update(
-                            Price.Create(
-                                Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
-                                decimalsPlusOne));
-                        break;
-                    default: throw new InvalidOperationException("QuoteType not recognized.");
+                    this.barBuilders[barSpec] = new BarBuilder(quote);
+                }
+                else
+                {
+                    builder.Update(quote);
                 }
             }
 
             this.spreadAnalyzer.Update(tick);
             this.lastTick = tick;
+        }
+
+        private Price GetUpdateQuote(QuoteType quoteType, Tick tick)
+        {
+            switch (quoteType)
+            {
+                case QuoteType.Bid:
+                    return tick.Bid;
+
+                case QuoteType.Ask:
+                    return tick.Ask;
+
+                case QuoteType.Mid:
+                    var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
+                    return Price.Create(
+                        Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
+                        decimalsPlusOne);
+
+                case QuoteType.Last:
+                    throw new InvalidOperationException("Cannot update with QuoteType.Last.");
+                default:
+                    throw new InvalidOperationException($"QuoteType {quoteType} not recognized.");
+            }
         }
 
         /// <summary>
@@ -113,6 +129,12 @@ namespace Nautilus.Data.Aggregators
         private void OnMessage(CloseBar message)
         {
             var barSpec = message.BarSpecification;
+
+            if (!this.barBuilders.ContainsKey(barSpec))
+            {
+                this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
+                return;
+            }
 
             if (!this.isMarketOpen)
             {
@@ -125,36 +147,29 @@ namespace Nautilus.Data.Aggregators
                 this.spreadAnalyzer.OnBarUpdate(message.CloseTime);
             }
 
-            if (this.barBuilders.ContainsKey(message.BarSpecification))
+            var builder = this.barBuilders[barSpec];
+
+            // No ticks have been received for the builder.
+            if (this.lastTick is null || builder is null)
             {
-                var builder = this.barBuilders[barSpec];
-
-                // No ticks have been received by the builder.
-                if (builder.IsNotInitialized || this.lastTick is null)
-                {
-                    return;
-                }
-
-                // Close the bar and send to parent.
-                var barType = new BarType(this.symbol, barSpec);
-                var bar = builder.Build(message.CloseTime);
-
-                var barClosed = new BarClosed(
-                    barType,
-                    bar,
-                    this.lastTick,
-                    this.spreadAnalyzer.AverageSpread,
-                    this.NewGuid());
-
-                // Context.Parent.Tell(barClosed);
-
-                // Create and initialize new builder.
-                this.barBuilders[barSpec] = new BarBuilder(bar.Close);
-
                 return;
             }
 
-            this.Log.Warning($"Does not contain the bar specification {message.BarSpecification}");
+            // Close the bar and send to parent.
+            var barType = new BarType(this.symbol, barSpec);
+            var bar = builder.Build(message.CloseTime);
+
+            var barClosed = new BarClosed(
+                barType,
+                bar,
+                this.lastTick,
+                this.spreadAnalyzer.AverageSpread,
+                this.NewGuid());
+
+            // Context.Parent.Tell(barClosed);
+
+            // Create and initialize new builder.
+            this.barBuilders[barSpec] = new BarBuilder(bar.Close);
         }
 
         /// <summary>
@@ -174,7 +189,7 @@ namespace Nautilus.Data.Aggregators
 
             if (!this.barBuilders.ContainsKey(barSpec))
             {
-                this.barBuilders.Add(barSpec, new BarBuilder());
+                this.barBuilders.Add(barSpec, null);
 
                 this.Log.Debug($"Added {barSpec} bars.");
             }
@@ -208,7 +223,7 @@ namespace Nautilus.Data.Aggregators
             // Purge bar builders.
             foreach (var barSpec in this.barBuilders.Keys)
             {
-                this.barBuilders[barSpec] = new BarBuilder();
+                this.barBuilders[barSpec] = null;
             }
         }
     }
