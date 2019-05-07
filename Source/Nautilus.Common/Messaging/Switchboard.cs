@@ -12,7 +12,6 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using NautilusMQ;
 
@@ -22,7 +21,7 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public sealed class Switchboard
     {
-        private readonly ReadOnlyDictionary<Address, IEndpoint> addresses;
+        private readonly Dictionary<Address, IEndpoint> addresses;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
@@ -30,14 +29,13 @@ namespace Nautilus.Common.Messaging
         /// <param name="addresses">The system addresses.</param>
         private Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
-            this.addresses = new ReadOnlyDictionary<Address, IEndpoint>(addresses);
-            this.Addresses = new ReadOnlyList<Address>(addresses.Keys);
+            this.addresses = addresses;
         }
 
         /// <summary>
         /// Gets the switchboards registered addresses.
         /// </summary>
-        public ReadOnlyList<Address> Addresses { get; }
+        public IEnumerable<Address> Addresses => this.addresses.Keys;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.

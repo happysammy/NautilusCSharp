@@ -9,13 +9,13 @@
 namespace Nautilus.Common
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Factories;
     using NautilusMQ;
 
@@ -24,7 +24,7 @@ namespace Nautilus.Common
     /// </summary>
     public class SystemController : ComponentBusConnectedBase
     {
-        private readonly ReadOnlyList<Address> components;
+        private readonly IEnumerable<Address> components;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemController"/> class.
