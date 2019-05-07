@@ -70,6 +70,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.Quantity = quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = price;
+            this.AveragePrice = OptionRef<Price>.None();
+            this.Slippage = OptionVal<decimal>.None();
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
             this.orderIds.Add(this.Id);
@@ -149,7 +151,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders slippage.
         /// </summary>
-        public decimal Slippage => this.CalculateSlippage();
+        public OptionVal<decimal> Slippage { get; private set; }
 
         /// <summary>
         /// Gets the orders time in force.
@@ -176,7 +178,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets a value indicating whether the order status is complete.
         /// </summary>
-        public bool IsComplete => this.IsCompleteResult();
+        public bool IsComplete { get; private set; }
 
         /// <summary>
         /// Adds the modified order identifier to the order.
@@ -281,17 +283,18 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderRejected orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderRejected)));
+            this.IsComplete = true;
         }
 
         private void When(OrderCancelled orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderCancelled)));
+            this.IsComplete = true;
         }
 
         private void When(OrderWorking orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderWorking)));
-            this.Events.Add(orderEvent);
             this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
         }
 
@@ -301,18 +304,23 @@ namespace Nautilus.DomainModel.Aggregates
             this.UpdateExecutionIds(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
+            this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());
         }
 
         private void When(OrderFilled orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderFilled)));
+            this.UpdateExecutionIds(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
+            this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());
+            this.IsComplete = true;
         }
 
         private void When(OrderExpired orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderExpired)));
+            this.IsComplete = true;
         }
 
         private void When(OrderModified orderEvent)
@@ -346,14 +354,6 @@ namespace Nautilus.DomainModel.Aggregates
             return this.Side == OrderSide.BUY
                 ? this.AveragePrice.Value - this.Price.Value
                 : this.Price.Value - this.AveragePrice.Value;
-        }
-
-        private bool IsCompleteResult()
-        {
-            return this.Status == OrderStatus.Cancelled
-                || this.Status == OrderStatus.Expired
-                || this.Status == OrderStatus.Filled
-                || this.Status == OrderStatus.Rejected;
         }
 
         private static class OrderStateMachine

@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000, 1), order.Price);
             Assert.True(order.AveragePrice.HasNoValue);
-            Assert.Equal(decimal.Zero, order.Slippage);
+            Assert.True(order.Slippage.HasNoValue);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new ReadOnlyList<OrderId>(new OrderId("some_orderId")), order.GetOrderIdList());
@@ -195,10 +195,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Act
             order.Apply(message1);
             order.Apply(message2);
-            var result = order.Status;
 
             // Assert
-            Assert.Equal(OrderStatus.Filled, result);
+            Assert.Equal(OrderStatus.Filled, order.Status);
         }
 
         [Fact]
@@ -342,10 +341,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
-            var result = order.Slippage;
+            var result = order.Slippage.HasValue;
 
             // Assert
-            Assert.Equal(decimal.Zero, result);
+            Assert.False(result);
         }
 
         [Theory]

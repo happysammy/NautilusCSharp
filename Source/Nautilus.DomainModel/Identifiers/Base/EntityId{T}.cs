@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Identifiers.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities.Base;
 
     /// <summary>
@@ -69,7 +68,7 @@ namespace Nautilus.DomainModel.Identifiers.Base
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is EntityId<T> entityId && this.Equals(entityId);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="EntityId{T}"/> is equal
