@@ -7,17 +7,21 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp2.1\NautilusMQ.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Messaging.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU' ">
-        <DocumentationFile>bin\Release\netcoreapp2.1\NautilusMQ.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\netcoreapp2.1\Nautilus.Messaging.xml</DocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+    </ItemGroup>
+    
     <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
         <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
@@ -26,9 +30,5 @@
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-    </ItemGroup>
-
+    
 </Project>
