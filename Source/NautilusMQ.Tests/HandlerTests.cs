@@ -11,6 +11,7 @@ namespace NautilusMQ.Tests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using NautilusMQ.Internal;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -27,45 +28,50 @@ namespace NautilusMQ.Tests
         }
 
         [Fact]
-        internal void Handle_WhenCorrectMessageReferenceType_Handles()
+        internal void Handle_WhenCorrectMessageReferenceType_ReturnsTrue()
         {
             // Arrange
             var receiver = new List<string>();
             var handler = Handler.Create<string>(receiver.Add);
 
             // Act
-            handler.Handle("test");
+            var result = handler.Handle("test");
 
             // Assert
             Assert.Equal(typeof(string), handler.Type);
+            Assert.True(result);
             Assert.Contains("test", receiver);
         }
 
         [Fact]
-        internal void Handle_WhenCorrectMessageValueType_Handles()
+        internal void Handle_WhenCorrectMessageValueType_ReturnsTrue()
         {
             // Arrange
             var receiver = new List<int>();
             var handler = Handler.Create<int>(receiver.Add);
 
             // Act
-            handler.Handle(1);
+            var result = handler.Handle(1);
 
             // Assert
             Assert.Equal(typeof(int), handler.Type);
+            Assert.True(result);
             Assert.Contains(1, receiver);
         }
 
         [Fact]
-        internal void Handle_WhenIncorrectMessageType_Throws()
+        internal void Handle_WhenIncorrectMessageType_ReturnsFalse()
         {
             // Arrange
             var receiver = new List<int>();
             var handler = Handler.Create<int>(receiver.Add);
 
             // Act
+            var result = handler.Handle("not an Int32");
+
             // Assert
-            Assert.Throws<InvalidCastException>(() => handler.Handle("not an Int32"));
+            Assert.Equal(typeof(int), handler.Type);
+            Assert.False(result);
         }
     }
 }

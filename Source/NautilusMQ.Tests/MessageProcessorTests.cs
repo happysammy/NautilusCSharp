@@ -29,6 +29,19 @@ namespace NautilusMQ.Tests
         }
 
         [Fact]
+        internal void RegisterHandler_WhenGivenObjectType_Throws()
+        {
+            // Arrange
+            var receiver = new List<object>();
+            var processor = new MessageProcessor();
+
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => processor.RegisterHandler<object>(receiver.Add));
+        }
+
+        [Fact]
         internal void RegisterHandler_WhenHandlerTypeAlreadyRegistered_Throws()
         {
             // Arrange
@@ -57,22 +70,7 @@ namespace NautilusMQ.Tests
         }
 
         [Fact]
-        internal void GivenMessage_WhenNoHandlersRegistered_ThenStoresInUnhandledMessages()
-        {
-            // Arrange
-            var processor = new MessageProcessor();
-
-            // Act
-            processor.Endpoint.Send("test");
-
-            Thread.Sleep(300);
-
-            // Assert
-            Assert.Contains("test", processor.UnhandledMessages);
-        }
-
-        [Fact]
-        internal void RegisterUnhandled_ThenStoresInNewUnhandledMessages()
+        internal void RegisterUnhandled_ThenStoresInReceiver()
         {
             // Arrange
             var receiver = new List<object>();
@@ -90,6 +88,41 @@ namespace NautilusMQ.Tests
         }
 
         [Fact]
+        internal void RegisterHandleAny_ThenStoresInReceiver()
+        {
+            // Arrange
+            var receiver = new List<object>();
+            var processor = new MessageProcessor();
+            processor.RegisterHandleAny(receiver.Add);
+
+            // Act
+            processor.Endpoint.Send(1);
+
+            Thread.Sleep(100);
+
+            // Assert
+            Assert.Single(processor.HandlerTypes);
+            Assert.Contains(typeof(object), processor.HandlerTypes);
+            Assert.Contains(1, receiver);
+            Assert.DoesNotContain(1, processor.UnhandledMessages);
+        }
+
+        [Fact]
+        internal void GivenMessage_WhenNoHandlersRegistered_ThenStoresInUnhandledMessages()
+        {
+            // Arrange
+            var processor = new MessageProcessor();
+
+            // Act
+            processor.Endpoint.Send("test");
+
+            Thread.Sleep(300);
+
+            // Assert
+            Assert.Contains("test", processor.UnhandledMessages);
+        }
+
+        [Fact]
         internal void CanReceiveSingleMessage()
         {
             // Arrange
@@ -103,6 +136,7 @@ namespace NautilusMQ.Tests
             Thread.Sleep(100);
 
             // Assert
+            Assert.Single(processor.HandlerTypes);
             Assert.Contains(typeof(string), processor.HandlerTypes);
             Assert.Contains("test", receiver);
             Assert.DoesNotContain("test", processor.UnhandledMessages);
@@ -127,6 +161,7 @@ namespace NautilusMQ.Tests
             Assert.Contains(typeof(int), receiver.HandlerTypes);
             Assert.True(receiver.Messages[0].Equals("test"));
             Assert.True(receiver.Messages[1].Equals(2));
+            Assert.Equal(2, receiver.Messages.Count);
         }
 
         [Fact]
@@ -157,6 +192,26 @@ namespace NautilusMQ.Tests
             Assert.True(receiver.Messages[5].Equals(3));
             Assert.True(receiver.Messages[6].Equals("4"));
             Assert.True(receiver.Messages[7].Equals(4));
+            Assert.Equal(8, receiver.Messages.Count);
+        }
+
+        [Fact]
+        internal void GivenManyMessages_WithWorkDelay_ProcessesSynchronously()
+        {
+            // Arrange
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
+
+            // Act
+            receiver.Endpoint.Send("1");
+            receiver.Endpoint.Send("2");
+            receiver.Endpoint.Send("3");
+            receiver.Endpoint.Send("4");
+
+            Thread.Sleep(100);
+
+            Assert.Contains("1", receiver.Messages);
+            Assert.Single(receiver.Messages);
         }
     }
 }

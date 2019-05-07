@@ -9,6 +9,7 @@
 namespace NautilusMQ.Tests
 {
     using System.Collections.Generic;
+    using System.Threading;
     using NautilusMQ;
 
     /// <summary>
@@ -16,6 +17,17 @@ namespace NautilusMQ.Tests
     /// </summary>
     public class MockMessageReceiver : MessageReceiver
     {
+        private readonly int workDelayMilliseconds;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockMessageReceiver"/> class.
+        /// </summary>
+        /// <param name="workDelayMilliseconds">The work delay for the receiver.</param>
+        public MockMessageReceiver(int workDelayMilliseconds = 1000)
+        {
+            this.workDelayMilliseconds = workDelayMilliseconds;
+        }
+
         /// <summary>
         /// Gets the list of received messages.
         /// </summary>
@@ -37,6 +49,16 @@ namespace NautilusMQ.Tests
         public void OnMessage(int message)
         {
             this.Messages.Add(message);
+        }
+
+        /// <summary>
+        /// Add the message to the received messages list.
+        /// </summary>
+        /// <param name="message">The received message.</param>
+        public void OnMessageWithWorkDelay(object message)
+        {
+            this.Messages.Add(message);
+            Thread.Sleep(1000);
         }
     }
 }

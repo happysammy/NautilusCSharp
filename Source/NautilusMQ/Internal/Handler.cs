@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace NautilusMQ.Internal
 {
     using System;
     using Nautilus.Core.Annotations;
@@ -22,7 +22,7 @@ namespace NautilusMQ
         /// </summary>
         /// <param name="type">The message type.</param>
         /// <param name="handle">The delegate handle.</param>
-        private Handler(Type type, Action<object> handle)
+        private Handler(Type type, Func<object, bool> handle)
         {
             this.Type = type;
             this.Handle = handle;
@@ -36,7 +36,7 @@ namespace NautilusMQ
         /// <summary>
         /// Gets the handlers delegate.
         /// </summary>
-        internal Action<object> Handle { get; }
+        internal Func<object, bool> Handle { get; }
 
         /// <summary>
         /// Creates a new handler from the given delegate.
@@ -46,9 +46,15 @@ namespace NautilusMQ
         /// <returns>The created handler.</returns>
         internal static Handler Create<TMessage>(Action<TMessage> handle)
         {
-            void ActionDelegate(object message)
+            bool ActionDelegate(object message)
             {
-                handle.Invoke((TMessage)message);
+                if (message is TMessage typedMessage)
+                {
+                    handle.Invoke(typedMessage);
+                    return true;
+                }
+
+                return false;
             }
 
             return new Handler(typeof(TMessage), ActionDelegate);

@@ -24,21 +24,24 @@ namespace NautilusMQ
         private readonly ActionBlock<object> processor;
         private readonly CancellationToken cancel = new CancellationToken(false);
         private readonly List<Type> handlerTypes = new List<Type>();
-        private readonly Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
+        private readonly Dictionary<Type, Handler> registeredHandlers = new Dictionary<Type, Handler>();
 
         private Action<object> handleAny;
-        private Func<object, Task> handle;
+        private Handler[] handlers = { };
+        private int handlersLength = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
         public MessageProcessor()
         {
-            this.handleAny = this.Unhandled;
-            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToList(), this.handleAny);
+            this.handleAny = this.AddToUnhandledMessages;
 
             this.processor = new ActionBlock<object>(
-                async message => { await this.handle(message); },
+                async message =>
+                {
+                    await this.HandleMessage(message);
+                },
                 new ExecutionDataflowBlockOptions { CancellationToken = this.cancel });
 
             this.Endpoint = new Endpoint(this.processor.Post);
@@ -73,14 +76,22 @@ namespace NautilusMQ
         public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             var type = typeof(TMessage);
-            if (this.handlers.ContainsKey(type))
+
+            if (type == typeof(object))
             {
-                throw new ArgumentException($"The internal handlers already contain a handler for {type} type messages.");
+                throw new ArgumentException($"Cannot register handler for Object type " +
+                                            $"(use .RegisterHandleAny or .RegisterUnhandled).");
+            }
+
+            if (this.registeredHandlers.ContainsKey(type))
+            {
+                throw new ArgumentException($"Cannot register handler " +
+                                            $"(the internal handlers already contain a handler for {type} type messages).");
             }
 
             this.handlerTypes.Add(type);
-            this.handlers[type] = Handler.Create(handler);
-            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToArray(), this.handleAny);
+            this.registeredHandlers[type] = Handler.Create(handler);
+            this.BuildHandlers();
         }
 
         /// <summary>
@@ -89,8 +100,9 @@ namespace NautilusMQ
         /// <param name="handler">The handler delegate.</param>
         public void RegisterHandleAny(Action<object> handler)
         {
-            this.handleAny = Handler.Create(handler).Handle;
-            this.handle = ExpressionBuilder.Build(this.handlers.Select(h => h.Value).ToArray(), this.handleAny);
+            this.handlerTypes.Add(typeof(object));
+            this.handleAny = handler;
+            this.BuildHandlers();
         }
 
         /// <summary>
@@ -102,11 +114,45 @@ namespace NautilusMQ
             this.RegisterHandleAny(handler);
         }
 
+        private void BuildHandlers()
+        {
+            this.handlers = this.registeredHandlers.Values.ToArray();
+            this.handlersLength = this.handlers.Length;
+        }
+
+        /// <summary>
+        /// Handle the given message.
+        /// </summary>
+        /// <param name="message">The message to handle.</param>
+        /// <returns>The completed task.</returns>
+        private Task HandleMessage(object message)
+        {
+            for (var i = 0; i < this.handlersLength; i++)
+            {
+                if (this.handlers[i].Handle(message))
+                {
+                    return Task.CompletedTask;
+                }
+            }
+
+            return this.Unhandled(message);
+        }
+
         /// <summary>
         /// Handles unhandled messages.
         /// </summary>
         /// <param name="message">The unhandled message.</param>
-        private void Unhandled(object message)
+        private Task Unhandled(object message)
+        {
+            this.handleAny(message);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// The default handle any delegate which adds the given messages to the list of unhandled messages.
+        /// </summary>
+        /// <param name="message">The unhandled message.</param>
+        private void AddToUnhandledMessages(object message)
         {
             this.UnhandledMessages.Add(message);
         }
