@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -54,21 +53,6 @@ namespace Nautilus.Common.Componentry
             where T : Message
         {
             this.messagingAdapter.Send(receiver, message, this.address);
-        }
-
-        /// <summary>
-        /// Sends the given messages to the given list of system services via the messaging system.
-        /// </summary>
-        /// <param name="receivers">The message receivers.</param>
-        /// <param name="message">The message to send.</param>
-        /// <typeparam name="T">The message type.</typeparam>
-        protected void Send<T>(IEnumerable<Address> receivers, T message)
-            where T : Message
-        {
-            foreach (var receiver in receivers)
-            {
-                this.Send(receiver, message);
-            }
         }
     }
 }
