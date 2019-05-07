@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
             var setupContainer = setupFactory.Create();
             this.clock = setupContainer.Clock;
             this.logger = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessageReceiver().Endpoint;
+            this.testReceiver = new MockMessagingAgent().Endpoint;
             this.scheduler = new Scheduler(setupContainer).Endpoint;
         }
 

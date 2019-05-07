@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MockMessageReceiver.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockMessagingAgent.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -13,17 +13,17 @@ namespace NautilusMQ.Tests
     using NautilusMQ;
 
     /// <summary>
-    /// Provides a mock message receiver for testing.
+    /// Provides a mock messaging agent for testing.
     /// </summary>
-    public class MockMessageReceiver : MessageReceiver
+    public class MockMessagingAgent : MessagingAgent
     {
         private readonly int workDelayMilliseconds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockMessageReceiver"/> class.
+        /// Initializes a new instance of the <see cref="MockMessagingAgent"/> class.
         /// </summary>
         /// <param name="workDelayMilliseconds">The work delay for the receiver.</param>
-        public MockMessageReceiver(int workDelayMilliseconds = 1000)
+        public MockMessagingAgent(int workDelayMilliseconds = 1000)
         {
             this.workDelayMilliseconds = workDelayMilliseconds;
         }
@@ -58,7 +58,7 @@ namespace NautilusMQ.Tests
         public void OnMessageWithWorkDelay(object message)
         {
             this.Messages.Add(message);
-            Thread.Sleep(1000);
+            Thread.Sleep(this.workDelayMilliseconds);
         }
     }
 }

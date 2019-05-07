@@ -19,7 +19,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all system components.
     /// </summary>
-    public abstract class ComponentBase : MessageReceiver
+    public abstract class ComponentBase : MessagingAgent
     {
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;

@@ -148,7 +148,7 @@ namespace NautilusMQ.Tests
         internal void GivenMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             receiver.RegisterHandler<string>(receiver.OnMessage);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
@@ -171,7 +171,7 @@ namespace NautilusMQ.Tests
         internal void GivenManyMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             receiver.RegisterHandler<string>(receiver.OnMessage);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
@@ -203,7 +203,7 @@ namespace NautilusMQ.Tests
         internal void GivenMessagesOfDifferentTypes_WithWorkDelay_ProcessesSynchronously()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
@@ -223,7 +223,7 @@ namespace NautilusMQ.Tests
         internal void GivenManyMessages_WithWorkDelay_ProcessesSynchronously()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
 
             // Act
@@ -243,7 +243,7 @@ namespace NautilusMQ.Tests
         internal void MessagingPerformanceTest()
         {
             // Arrange
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             receiver.RegisterHandler<int>(receiver.OnMessage);
 
             var stopwatch = new Stopwatch();

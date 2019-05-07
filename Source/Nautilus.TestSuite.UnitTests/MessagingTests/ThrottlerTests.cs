@@ -28,7 +28,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly MockMessageReceiver testReceiver;
+        private readonly MockMessagingAgent testReceiver;
 
         public ThrottlerTests(ITestOutputHelper output)
         {
@@ -38,7 +38,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessageReceiver();
+            this.testReceiver = new MockMessagingAgent();
         }
 
         [Fact]

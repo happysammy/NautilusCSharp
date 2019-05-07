@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 eventBus.Endpoint,
                 documentBus.Endpoint);
 
-            var receiver = new MockMessageReceiver();
+            var receiver = new MockMessagingAgent();
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Alpha, receiver.Endpoint },

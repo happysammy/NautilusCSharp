@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessageReceiver.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MessagingAgent.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -13,22 +13,22 @@ namespace NautilusMQ
     using NautilusMQ.Internal;
 
     /// <summary>
-    /// The abstract base class for all message consumers.
+    /// The abstract base class for all messaging agents.
     /// </summary>
-    public abstract class MessageReceiver
+    public abstract class MessagingAgent
     {
         private readonly MessageProcessor processor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageReceiver"/> class.
+        /// Initializes a new instance of the <see cref="MessagingAgent"/> class.
         /// </summary>
-        protected MessageReceiver()
+        protected MessagingAgent()
         {
             this.processor = new MessageProcessor();
         }
 
         /// <summary>
-        /// Gets the consumers end point.
+        /// Gets the agents end point.
         /// </summary>
         public Endpoint Endpoint => this.processor.Endpoint;
 
@@ -73,6 +73,15 @@ namespace NautilusMQ
         public void RegisterUnhandled(Action<object> handler)
         {
             this.processor.RegisterUnhandled(handler);
+        }
+
+        /// <summary>
+        /// Send the given message to this agents endpoint.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        protected void SendToSend(object message)
+        {
+            this.Endpoint.Send(message);
         }
     }
 }
