@@ -26,7 +26,7 @@ namespace Nautilus.Network
     /// </summary>
     public class Consumer : ComponentBase
     {
-        private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
+        private readonly byte[] ok = Encoding.UTF8.GetBytes(nameof(ok).ToUpper());
         private readonly IEndpoint receiver;
         private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
@@ -81,7 +81,7 @@ namespace Nautilus.Network
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
-                this.StartConsuming();
+                Task.Factory.StartNew(this.StartConsuming).Start();
             });
         }
 
@@ -106,10 +106,10 @@ namespace Nautilus.Network
             this.receiver.Send(message);
             this.Log.Debug($"Consumed message[{this.cycles}].");
 
-            this.StartConsuming();
+            Task.Factory.StartNew(this.StartConsuming).Start();
         }
 
-        private Task<byte[]> StartConsuming()
+        private void StartConsuming()
         {
             var identity = this.socket.ReceiveFrameBytes();
             var delimiter = this.socket.ReceiveFrameBytes();
@@ -120,7 +120,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(response);
             this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
 
-            return Task.FromResult(data);
+            this.Endpoint.Send(data);
         }
     }
 }
