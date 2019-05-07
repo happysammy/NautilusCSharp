@@ -19,8 +19,7 @@ namespace Nautilus.Core
     public struct OptionVal<T> : IEquatable<object>
         where T : struct
     {
-        #pragma warning disable SA1125 // UseShorthandForNullableTypes
-        private readonly Nullable<T> value;
+        private readonly T? value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OptionVal{T}"/> struct.
@@ -55,7 +54,7 @@ namespace Nautilus.Core
         /// Returns a new <see cref="OptionVal{T}"/> with the given value T.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        /// <returns>A <see cref="OptionVal{T}"/>.</returns>
         public static implicit operator OptionVal<T>(T value) => new OptionVal<T>(value);
 
         /// <summary>
@@ -91,13 +90,13 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="left">The left <see cref="OptionVal{T}"/> (cannot be null).</param>
         /// <param name="right">The right <see cref="OptionVal{T}"/> (cannot be null).</param>
-        /// <returns>True if the <see cref="OptionRef{T}"/>(s) are not equal; otherwise returns false.</returns>
+        /// <returns>True if the <see cref="OptionVal{T}"/>(s) are not equal; otherwise returns false.</returns>
         public static bool operator !=(OptionVal<T> left, OptionVal<T> right) => !(left == right);
 
         /// <summary>
         /// Gets a <see cref="OptionVal{T}"/> with no value.
         /// </summary>
-        /// <returns>A <see cref="OptionRef{T}"/>.</returns>
+        /// <returns>A <see cref="OptionVal{T}"/>.</returns>
         public static OptionVal<T> None() => default;
 
         /// <summary>
