@@ -12,6 +12,7 @@ namespace NautilusMQ.Tests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+    using NautilusMQ.Internal;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -116,14 +117,15 @@ namespace NautilusMQ.Tests
             // Act
             processor.Endpoint.Send("test");
 
-            Thread.Sleep(300);
+            Thread.Sleep(100);
 
             // Assert
             Assert.Contains("test", processor.UnhandledMessages);
+            Assert.Equal(0, processor.InputCount);
         }
 
         [Fact]
-        internal void CanReceiveSingleMessage()
+        internal void GivenMessage_WhenHandlerRegistered_ThenStoresInReceiver()
         {
             // Arrange
             var receiver = new List<object>();
@@ -140,10 +142,11 @@ namespace NautilusMQ.Tests
             Assert.Contains(typeof(string), processor.HandlerTypes);
             Assert.Contains("test", receiver);
             Assert.DoesNotContain("test", processor.UnhandledMessages);
+            Assert.Equal(0, processor.InputCount);
         }
 
         [Fact]
-        internal void CanReceiveDifferentMessageTypes()
+        internal void GivenMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
             var receiver = new MockMessageReceiver();
@@ -162,10 +165,11 @@ namespace NautilusMQ.Tests
             Assert.True(receiver.Messages[0].Equals("test"));
             Assert.True(receiver.Messages[1].Equals(2));
             Assert.Equal(2, receiver.Messages.Count);
+            Assert.Equal(0, receiver.InputCount);
         }
 
         [Fact]
-        internal void GivenManyMessages_WhenDifferentTypes_ReceivesInCorrectOrder()
+        internal void GivenManyMessagesOfDifferentTypes_WhenHandlersRegistered_ThenStoresInReceiver()
         {
             // Arrange
             var receiver = new MockMessageReceiver();
@@ -193,6 +197,27 @@ namespace NautilusMQ.Tests
             Assert.True(receiver.Messages[6].Equals("4"));
             Assert.True(receiver.Messages[7].Equals(4));
             Assert.Equal(8, receiver.Messages.Count);
+            Assert.Equal(0, receiver.InputCount);
+        }
+
+        [Fact]
+        internal void GivenMessagesOfDifferentTypes_WithWorkDelay_ProcessesSynchronously()
+        {
+            // Arrange
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<string>(receiver.OnMessageWithWorkDelay);
+            receiver.RegisterHandler<int>(receiver.OnMessage);
+
+            // Act
+            receiver.Endpoint.Send("test");
+            receiver.Endpoint.Send(2);
+
+            Thread.Sleep(100);
+
+            // Assert
+            Assert.Contains("test", receiver.Messages);
+            Assert.Single(receiver.Messages);
+            Assert.Equal(1, receiver.InputCount);
         }
 
         [Fact]
@@ -212,6 +237,7 @@ namespace NautilusMQ.Tests
 
             Assert.Contains("1", receiver.Messages);
             Assert.Single(receiver.Messages);
+            Assert.Equal(3, receiver.InputCount);
         }
     }
 }

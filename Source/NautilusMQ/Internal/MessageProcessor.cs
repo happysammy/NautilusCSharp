@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace NautilusMQ.Internal
 {
     using System;
     using System.Collections.Generic;
@@ -14,12 +14,11 @@ namespace NautilusMQ
     using System.Threading;
     using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
-    using NautilusMQ.Internal;
 
     /// <summary>
     /// Provides an asynchronous message processor.
     /// </summary>
-    public class MessageProcessor
+    internal class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
         private readonly CancellationToken cancel = new CancellationToken(false);
@@ -33,7 +32,7 @@ namespace NautilusMQ
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.
         /// </summary>
-        public MessageProcessor()
+        internal MessageProcessor()
         {
             this.handleAny = this.AddToUnhandledMessages;
 

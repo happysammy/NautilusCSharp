@@ -10,6 +10,7 @@ namespace NautilusMQ
 {
     using System;
     using System.Collections.Generic;
+    using NautilusMQ.Internal;
 
     /// <summary>
     /// The abstract base class for all message consumers.
@@ -32,6 +33,11 @@ namespace NautilusMQ
         public Endpoint Endpoint => this.processor.Endpoint;
 
         /// <summary>
+        /// Gets the message input count for the processor.
+        /// </summary>
+        public int InputCount => this.processor.InputCount;
+
+        /// <summary>
         /// Gets the message handler types.
         /// </summary>
         public IEnumerable<Type> HandlerTypes => this.processor.HandlerTypes;
@@ -49,6 +55,15 @@ namespace NautilusMQ
         public void RegisterHandler<TMessage>(Action<TMessage> handler)
         {
             this.processor.RegisterHandler(handler);
+        }
+
+        /// <summary>
+        /// Register the given handler to receive any message type.
+        /// </summary>ve
+        /// <param name="handler">The handler.</param>
+        public void RegisterHandleAny(Action<object> handler)
+        {
+            this.processor.RegisterHandleAny(handler);
         }
 
         /// <summary>
