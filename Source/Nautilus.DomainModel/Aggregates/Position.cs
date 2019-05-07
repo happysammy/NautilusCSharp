@@ -12,7 +12,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -84,44 +83,39 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to this position.
         /// </summary>
         /// <param name="event">The position event.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public override CommandResult Apply(Event @event)
+        public override void Apply(Event @event)
         {
+            this.Events.Add(@event);
+
             switch (@event)
             {
                 case OrderFilled orderFilled:
-                    return this.When(orderFilled);
-
+                    this.When(orderFilled);
+                    break;
                 case OrderPartiallyFilled orderPartiallyFilled:
-                    return this.When(orderPartiallyFilled);
-
-                default: return CommandResult.Fail(
-                    $"The event is not recognized by the position {this}");
+                    this.When(orderPartiallyFilled);
+                    break;
+                default: throw new InvalidOperationException(
+                    $"The event {@event} is not recognized by the position {this}");
             }
         }
 
-        private CommandResult When(OrderFilled @event)
+        private void When(OrderFilled @event)
         {
             this.UpdatePosition(
                 @event.OrderSide,
                 @event.FilledQuantity.Value,
                 @event.AveragePrice,
                 @event.ExecutionTime);
-            this.Events.Add(@event);
-
-            return CommandResult.Ok();
         }
 
-        private CommandResult When(OrderPartiallyFilled @event)
+        private void When(OrderPartiallyFilled @event)
         {
             this.UpdatePosition(
                 @event.OrderSide,
                 @event.FilledQuantity.Value,
                 @event.AveragePrice,
                 @event.ExecutionTime);
-            this.Events.Add(@event);
-
-            return CommandResult.Ok();
         }
 
         private void UpdatePosition(

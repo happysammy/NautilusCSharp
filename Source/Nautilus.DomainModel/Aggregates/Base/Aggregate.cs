@@ -12,7 +12,6 @@ namespace Nautilus.DomainModel.Aggregates.Base
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities.Base;
     using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
@@ -36,7 +35,6 @@ namespace Nautilus.DomainModel.Aggregates.Base
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(identifier, nameof(identifier));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Events = new List<Event>();
@@ -57,7 +55,6 @@ namespace Nautilus.DomainModel.Aggregates.Base
         /// Applies the given <see cref="Event"/> to the aggregate.
         /// </summary>
         /// <param name="event">The event.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public abstract CommandResult Apply(Event @event);
+        public abstract void Apply(Event @event);
     }
 }

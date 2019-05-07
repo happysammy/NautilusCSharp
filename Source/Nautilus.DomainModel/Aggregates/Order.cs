@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Aggregates
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Core;
@@ -217,33 +218,34 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
         /// </summary>
         /// <param name="orderEvent">The order event.</param>
-        /// <returns>The result of the operation.</returns>
-        public override CommandResult Apply(Event orderEvent)
+        public override void Apply(Event orderEvent)
         {
+            this.Events.Add(orderEvent);
+
             switch (orderEvent)
             {
                 case OrderRejected @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderCancelled @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderWorking @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderPartiallyFilled @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderFilled @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderExpired @event:
-                    return this.When(@event);
-
+                    this.When(@event);
+                    break;
                 case OrderModified @event:
-                    return this.When(@event);
-
-                default: return CommandResult.Fail($"The event is not recognized by the order {this}");
+                    this.When(@event);
+                    break;
+                default: throw new InvalidOperationException($"The {orderEvent} is not recognized by the order {this}");
             }
         }
 
@@ -279,69 +281,48 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        /// <summary>
-        /// Processes the trigger with the orders finite state machine.
-        /// </summary>
-        /// <param name="trigger">The trigger.</param>
-        /// <returns>The result of the trigger process.</returns>
-        private CommandResult Process(Trigger trigger)
+        private void When(OrderRejected orderEvent)
         {
-            return this.orderState.Process(trigger);
+            this.orderState.Process(new Trigger(nameof(OrderRejected)));
         }
 
-        private CommandResult When(OrderRejected orderEvent)
+        private void When(OrderCancelled orderEvent)
         {
-            return this.orderState
-                .Process(new Trigger(nameof(OrderRejected)))
-                .OnSuccess(() => this.Events.Add(orderEvent));
+            this.orderState.Process(new Trigger(nameof(OrderCancelled)));
         }
 
-        private CommandResult When(OrderCancelled orderEvent)
+        private void When(OrderWorking orderEvent)
         {
-            return this.orderState
-                .Process(new Trigger(nameof(OrderCancelled)))
-                .OnSuccess(() => this.Events.Add(orderEvent));
+            this.orderState.Process(new Trigger(nameof(OrderWorking)));
+            this.Events.Add(orderEvent);
+            this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
         }
 
-        private CommandResult When(OrderWorking orderEvent)
+        private void When(OrderPartiallyFilled orderEvent)
         {
-            return this.orderState
-                .Process(new Trigger(nameof(OrderWorking)))
-                .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker));
+            this.orderState.Process(new Trigger(nameof(OrderPartiallyFilled)));
+            this.UpdateExecutionIds(orderEvent.ExecutionId);
+            this.FilledQuantity = orderEvent.FilledQuantity;
+            this.AveragePrice = orderEvent.AveragePrice;
         }
 
-        private CommandResult When(OrderPartiallyFilled orderEvent)
+        private void When(OrderFilled orderEvent)
         {
-            return this.orderState
-                .Process(new Trigger(nameof(OrderPartiallyFilled)))
-                .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateExecutionIds(orderEvent.ExecutionId))
-                .OnSuccess(() => { this.FilledQuantity = orderEvent.FilledQuantity; })
-                .OnSuccess(() => { this.AveragePrice = orderEvent.AveragePrice; });
+            this.orderState.Process(new Trigger(nameof(OrderFilled)));
+            this.FilledQuantity = orderEvent.FilledQuantity;
+            this.AveragePrice = orderEvent.AveragePrice;
         }
 
-        private CommandResult When(OrderFilled orderEvent)
+        private void When(OrderExpired orderEvent)
         {
-            return this.orderState
-                .Process(new Trigger(nameof(OrderFilled)))
-                .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => { this.FilledQuantity = orderEvent.FilledQuantity; })
-                .OnSuccess(() => { this.AveragePrice = orderEvent.AveragePrice; });
+            this.orderState.Process(new Trigger(nameof(OrderExpired)));
         }
 
-        private CommandResult When(OrderExpired orderEvent)
+        private void When(OrderModified orderEvent)
         {
-            return this.Process(new Trigger(nameof(OrderExpired)))
-                .OnSuccess(() => this.Events.Add(orderEvent));
-        }
-
-        private CommandResult When(OrderModified orderEvent)
-        {
-            return this.Process(new Trigger(nameof(OrderModified)))
-                .OnSuccess(() => this.Events.Add(orderEvent))
-                .OnSuccess(() => this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId))
-                .OnSuccess(() => { this.Price = orderEvent.ModifiedPrice; });
+            this.orderState.Process(new Trigger(nameof(OrderModified)));
+            this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
+            this.Price = orderEvent.ModifiedPrice;
         }
 
         private void ValidateExpireTime(OptionVal<ZonedDateTime> expireTime)

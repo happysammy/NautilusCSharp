@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.Aggregates
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -146,8 +145,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given event to the brokerage account.
         /// </summary>
         /// <param name="event">The event.</param>
-        /// <returns>A <see cref="CommandResult"/> result.</returns>
-        public override CommandResult Apply(Event @event)
+        public override void Apply(Event @event)
         {
             Debug.True(@event is AccountEvent, nameof(@event));
             var accountEvent = @event as AccountEvent;
@@ -167,8 +165,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.LastUpdated = accountEvent.Timestamp;
 
             this.Events.Add(@event);
-
-            return CommandResult.Ok();
         }
 
         /// <summary>
