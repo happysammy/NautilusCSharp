@@ -164,9 +164,6 @@ namespace Nautilus.Core.Extensions
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> Map<T, TK>(this QueryResult<T> result, Func<T, TK> func)
         {
-            Debug.NotNull(result, nameof(result));
-            Debug.NotNull(func, nameof(func));
-
             return result.IsFailure
                  ? QueryResult<TK>.Fail(result.Message)
                  : QueryResult<TK>.Ok(func(result.Value));

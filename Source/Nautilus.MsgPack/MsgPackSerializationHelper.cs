@@ -63,8 +63,6 @@ namespace Nautilus.MsgPack
         /// <returns>The optional price.</returns>
         internal static string GetPriceString(OptionRef<Price> price)
         {
-            Debug.NotNull(price, nameof(price));
-
             return price.HasValue
                 ? None
                 : price.ToString();

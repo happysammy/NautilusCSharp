@@ -110,8 +110,6 @@ namespace Nautilus.Network
 
         private void OnMessage(byte[] message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.socket.SendFrame(Combine(this.topic, this.delimiter, message));
 
             this.cycles++;

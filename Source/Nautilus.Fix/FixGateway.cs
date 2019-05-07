@@ -660,7 +660,6 @@ namespace Nautilus.Fix
                 Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
                 Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
                 Precondition.PositiveDecimal(price, nameof(price));
-                Precondition.NotNull(expireTime, nameof(expireTime));
                 Precondition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderWorking = new OrderWorking(

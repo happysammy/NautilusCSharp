@@ -52,8 +52,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity Add(Quantity other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return new Quantity(this.Value + other.Value);
         }
 
@@ -66,7 +64,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Quantity"/>.</returns>
         public Quantity Subtract(Quantity other)
         {
-            Debug.NotNull(other, nameof(other));
             Debug.True(other.Value <= this.Value, nameof(other));
 
             return new Quantity(this.Value - other.Value);

@@ -59,8 +59,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Add(Price other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return new Price(this.Value + other.Value, this.DecimalPrecision);
         }
 
@@ -73,8 +71,6 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="Price"/>.</returns>
         public Price Subtract(Price other)
         {
-            Debug.NotNull(other, nameof(other));
-
             return new Price(this.Value - other.Value, this.DecimalPrecision);
         }
 

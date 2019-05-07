@@ -154,8 +154,6 @@ namespace Nautilus.Redis
         /// <returns>The result of the query.</returns>
         public QueryResult<Instrument> FindInCache(Symbol symbol)
         {
-            Debug.NotNull(symbol, nameof(symbol));
-
             return this.cache.ContainsKey(symbol)
                 ? QueryResult<Instrument>.Ok(this.cache[symbol])
                 : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol}");

@@ -101,8 +101,6 @@ namespace Nautilus.Network
 
         private void OnMessage(byte[] message)
         {
-            Debug.NotNull(message, nameof(message));
-
             this.receiver.Send(message);
             this.Log.Debug($"Consumed message[{this.cycles}].");
 

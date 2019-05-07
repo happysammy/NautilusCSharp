@@ -121,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Receives the next 100 messages.
             for (var j = 0; j < 10; j++)
             {
-                // this.ExpectMsg<string>();
+                var x = this.testReceiver.Messages;
             }
 
             LogDumper.Dump(this.mockLoggingAdapter, this.output);

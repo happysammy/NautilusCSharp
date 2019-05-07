@@ -28,8 +28,8 @@ namespace Nautilus.Common.Messages.Commands
         public StartSystem(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotNull(identifier, nameof(identifier));
-            Debug.NotNull(timestamp, nameof(timestamp));
+            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }
 }

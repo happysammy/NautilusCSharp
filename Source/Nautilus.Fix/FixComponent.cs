@@ -195,8 +195,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
-
                 this.Log.Debug("Creating session...");
                 this.session = Session.LookupSession(sessionId);
                 this.FixMessageRouter.ConnectSession(this.session);
@@ -212,8 +210,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
-
                 foreach (var receiver in this.connectionEventReceivers)
                 {
                     receiver.Send(new FixSessionConnected(
@@ -235,8 +231,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(sessionId, nameof(sessionId));
-
                 foreach (var receiver in this.connectionEventReceivers)
                 {
                     receiver.Send(new FixSessionDisconnected(
@@ -268,9 +262,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-                Precondition.NotNull(sessionId, nameof(sessionId));
-
                 if (message is Logon)
                 {
                     message.SetField(new Username(this.config.Credentials.Username));
@@ -295,9 +286,6 @@ namespace Nautilus.Fix
         {
             this.commandHandler.Execute(() =>
             {
-                Precondition.NotNull(message, nameof(message));
-                Precondition.NotNull(sessionId, nameof(sessionId));
-
                 try
                 {
                     this.Crack(message, sessionId);

@@ -32,6 +32,8 @@ namespace Nautilus.Execution
         private readonly IFixGateway gateway;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
+
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly IEndpoint tradeCommandBus;
 
         /// <summary>
