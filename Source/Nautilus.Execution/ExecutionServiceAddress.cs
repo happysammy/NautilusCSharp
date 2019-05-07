@@ -9,7 +9,7 @@
 namespace Nautilus.Execution
 {
     using Nautilus.Core.Annotations;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides execution service component messaging addresses.

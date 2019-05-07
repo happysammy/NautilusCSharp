@@ -13,8 +13,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging;
     using Nautilus.Network;
-    using NautilusMQ;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="ExecutionService"/>.

@@ -8,4 +8,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("NautilusMQ.Tests")]
+[assembly:InternalsVisibleTo("Nautilus.TestSuite.UnitTests")]

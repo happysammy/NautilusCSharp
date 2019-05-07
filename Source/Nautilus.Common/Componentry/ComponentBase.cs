@@ -13,7 +13,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>

@@ -17,7 +17,7 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Sends received messages to the <see cref="InMemoryMessageStore"/>.

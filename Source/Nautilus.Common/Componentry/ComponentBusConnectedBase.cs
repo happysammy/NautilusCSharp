@@ -12,7 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// The base class for all components which are connected to the messaging service.

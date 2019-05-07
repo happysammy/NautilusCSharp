@@ -6,14 +6,15 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.Tests
+namespace Nautilus.TestSuite.UnitTests.MessagingTests
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
-    using NautilusMQ.Internal;
+    using Nautilus.Messaging.Internal;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
 

@@ -24,7 +24,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>

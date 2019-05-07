@@ -6,11 +6,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace Nautilus.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using NautilusMQ.Internal;
+    using Nautilus.Messaging.Internal;
 
     /// <summary>
     /// The abstract base class for all messaging agents.

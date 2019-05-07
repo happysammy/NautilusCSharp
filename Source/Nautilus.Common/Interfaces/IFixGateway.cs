@@ -15,7 +15,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>

@@ -6,11 +6,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.Tests
+namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Threading;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a mock messaging agent for testing.

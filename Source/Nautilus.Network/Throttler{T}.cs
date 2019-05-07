@@ -17,7 +17,7 @@ namespace Nautilus.Network
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Factories;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>

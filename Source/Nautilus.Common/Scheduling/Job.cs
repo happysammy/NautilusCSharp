@@ -11,7 +11,7 @@ namespace Nautilus.Common.Scheduling
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using Quartz;
 
     /// <summary>

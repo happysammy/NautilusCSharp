@@ -20,7 +20,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.Fix.Interfaces;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;

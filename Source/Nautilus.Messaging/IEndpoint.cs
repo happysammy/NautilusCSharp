@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace Nautilus.Messaging
 {
     /// <summary>
     /// Provides a generic messaging endpoint.

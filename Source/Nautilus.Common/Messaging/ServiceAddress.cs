@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messaging
 {
     using Nautilus.Core.Annotations;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides system service messaging addresses.

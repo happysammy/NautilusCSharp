@@ -6,18 +6,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.MessagingTests
+namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NautilusMQ;
-    using NautilusMQ.Tests;
     using NetMQ;
     using NetMQ.Sockets;
     using Xunit;

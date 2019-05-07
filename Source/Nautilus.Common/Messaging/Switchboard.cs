@@ -13,7 +13,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.

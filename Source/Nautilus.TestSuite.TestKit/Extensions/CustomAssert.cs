@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.TestKit.Extensions
     using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Core;
+    using Nautilus.Messaging;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NautilusMQ;
     using NodaTime;
     using Xunit;
 

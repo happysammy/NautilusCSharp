@@ -23,7 +23,7 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
 
     /// <summary>

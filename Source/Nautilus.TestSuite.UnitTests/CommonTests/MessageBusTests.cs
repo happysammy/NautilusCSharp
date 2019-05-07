@@ -15,8 +15,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.Messaging;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NautilusMQ;
     using Xunit;
     using Xunit.Abstractions;
 

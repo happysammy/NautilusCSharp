@@ -13,8 +13,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
     using Nautilus.Network;
-    using NautilusMQ;
 
     /// <summary>
     /// Provides a command consumer for the messaging server.

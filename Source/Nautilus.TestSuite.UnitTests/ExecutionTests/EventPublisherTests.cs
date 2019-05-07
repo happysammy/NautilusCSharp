@@ -13,12 +13,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Events;
     using Nautilus.Execution;
+    using Nautilus.Messaging;
     using Nautilus.MsgPack;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NautilusMQ;
-    using NautilusMQ.Tests;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;

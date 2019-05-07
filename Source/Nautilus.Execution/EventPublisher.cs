@@ -14,8 +14,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
     using Nautilus.Network;
-    using NautilusMQ;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.MessagingTests
+namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
@@ -15,7 +15,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NautilusMQ.Tests;
     using NodaTime;
     using Xunit;
     using Xunit.Abstractions;

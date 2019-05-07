@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace Nautilus.Messaging
 {
     using System;
     using Nautilus.Core;

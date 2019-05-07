@@ -17,7 +17,7 @@ namespace Nautilus.Common
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Factories;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a means of controlling services within the system.

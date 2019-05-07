@@ -26,7 +26,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
     using NodaTime;
     using Quartz;
 

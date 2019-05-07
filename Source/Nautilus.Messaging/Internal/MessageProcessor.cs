@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.Internal
+namespace Nautilus.Messaging.Internal
 {
     using System;
     using System.Collections.Generic;

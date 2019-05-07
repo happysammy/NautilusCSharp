@@ -6,11 +6,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ.Tests
+namespace Nautilus.TestSuite.UnitTests.MessagingTests
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using NautilusMQ.Internal;
+    using Nautilus.Messaging.Internal;
     using Xunit;
     using Xunit.Abstractions;
 

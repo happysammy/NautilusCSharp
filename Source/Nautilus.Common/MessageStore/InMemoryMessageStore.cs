@@ -11,7 +11,7 @@ namespace Nautilus.Common.MessageStore
     using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Represents an in-memory message store.

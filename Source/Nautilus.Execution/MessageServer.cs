@@ -16,8 +16,8 @@ namespace Nautilus.Execution
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Factories;
+    using Nautilus.Messaging;
     using Nautilus.Network;
-    using NautilusMQ;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.

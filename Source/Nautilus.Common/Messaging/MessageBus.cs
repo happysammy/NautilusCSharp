@@ -14,7 +14,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Represents a generic message bus.

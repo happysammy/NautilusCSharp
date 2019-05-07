@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusMQ
+namespace Nautilus.Messaging
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Primitives;

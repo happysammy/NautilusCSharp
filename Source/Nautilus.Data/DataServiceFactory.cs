@@ -15,7 +15,7 @@ namespace Nautilus.Data
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
-    using NautilusMQ;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="DataService"/>.
