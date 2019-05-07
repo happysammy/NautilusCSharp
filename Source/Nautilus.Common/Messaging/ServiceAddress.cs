@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public static class ServiceAddress
     {
-        private const string Service = "Service";
+        private const string Service = nameof(Service);
 
         /// <summary>
         /// Gets the <see cref="Scheduler"/> messaging address.
