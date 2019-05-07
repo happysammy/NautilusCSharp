@@ -11,7 +11,6 @@ namespace Nautilus.Common.Configuration
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Nautilus.Core.Collections;
 
     /// <summary>
     /// Provides a configuration file reader.
@@ -23,7 +22,7 @@ namespace Nautilus.Common.Configuration
         /// </summary>
         /// <param name="fileName">The configuration filename.</param>
         /// <returns>A read-only dictionary of key value pairs.</returns>
-        public static ReadOnlyDictionary<string, string> LoadConfig(string fileName)
+        public static IReadOnlyDictionary<string, string> LoadConfig(string fileName)
         {
             var dic = new Dictionary<string, string>();
 
@@ -48,7 +47,7 @@ namespace Nautilus.Common.Configuration
                 }
             }
 
-            return new ReadOnlyDictionary<string, string>(dic);
+            return new Dictionary<string, string>(dic);
         }
     }
 }

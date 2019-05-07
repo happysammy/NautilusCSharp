@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Aggregates
     using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates.Base;
@@ -193,25 +192,25 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a read-only list of the orders.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<OrderId> GetOrderIdList() => new ReadOnlyList<OrderId>(this.orderIds);
+        public IEnumerable<OrderId> GetOrderIdList() => this.orderIds;
 
         /// <summary>
         /// Returns a read-only list of broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<OrderId> GetBrokerOrderIdList() => new ReadOnlyList<OrderId>(this.orderIdsBroker);
+        public IEnumerable<OrderId> GetBrokerOrderIdList() => this.orderIdsBroker;
 
         /// <summary>
         /// Returns a read-only list of execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<ExecutionId> GetExecutionIdList() => new ReadOnlyList<ExecutionId>(this.executionIds);
+        public IEnumerable<ExecutionId> GetExecutionIdList() => this.executionIds;
 
         /// <summary>
         /// Returns an immutable collection of the order events.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public ReadOnlyList<Event> GetEvents() => new ReadOnlyList<Event>(this.Events);
+        public IEnumerable<Event> GetEvents() => this.Events;
 
         /// <summary>
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.

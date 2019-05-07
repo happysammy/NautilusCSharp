@@ -9,9 +9,9 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
@@ -76,14 +76,14 @@ namespace Nautilus.Fix
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        public IReadOnlyCollection<Symbol> GetAllSymbols() =>
+        public IEnumerable<Symbol> GetAllSymbols() =>
             this.instrumentDataProvider.GetAllSymbols();
 
         /// <summary>
         /// Returns a read-only dictionary of symbol to price decimal precisions.
         /// </summary>
         /// <returns>The tick precision index.</returns>
-        public ReadOnlyDictionary<string, int> GetPricePrecisionIndex() =>
+        public ImmutableDictionary<string, int> GetPricePrecisionIndex() =>
             this.instrumentDataProvider.GetPriceDecimalPrecisionIndex();
 
         /// <summary>

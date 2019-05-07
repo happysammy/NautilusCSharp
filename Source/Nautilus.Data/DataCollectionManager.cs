@@ -16,7 +16,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
@@ -36,7 +35,7 @@ namespace Nautilus.Data
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IEndpoint barPublisher;
-        private readonly ReadOnlyList<Resolution> resolutionsPersisting;
+        private readonly List<Resolution> resolutionsPersisting;
         private readonly int barRollingWindow;
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace Nautilus.Data
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IEndpoint barPublisher,
-            IReadOnlyList<Resolution> resolutionsToPersist,
+            IEnumerable<Resolution> resolutionsToPersist,
             int barRollingWindow)
             : base(
                 NautilusService.Data,
@@ -64,7 +63,7 @@ namespace Nautilus.Data
 
             this.storedContainer = container;
             this.barPublisher = barPublisher;
-            this.resolutionsPersisting = new ReadOnlyList<Resolution>(resolutionsToPersist);
+            this.resolutionsPersisting = new List<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;
         }
 

@@ -26,7 +26,7 @@ namespace Nautilus.Messaging.Internal
 
         private Action<object> handleAny;
         private Handler[] handlers = { };
-        private int handlersLength = 0;
+        private int handlersLength;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageProcessor"/> class.

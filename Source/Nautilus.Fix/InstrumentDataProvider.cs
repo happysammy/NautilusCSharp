@@ -9,10 +9,10 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
     using CsvHelper;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Enums;
@@ -24,11 +24,11 @@ namespace Nautilus.Fix
     public class InstrumentDataProvider
     {
         private readonly Venue venue;
-        private readonly ReadOnlyDictionary<string, string> symbolIndex;
-        private readonly ReadOnlyDictionary<string, int> priceDecimalPrecisionIndex;
-        private readonly ReadOnlyDictionary<string, decimal> tickValueIndex;
-        private readonly ReadOnlyDictionary<string, decimal> targetSpreadIndex;
-        private readonly ReadOnlyDictionary<string, decimal> marginRequirementIndex;
+        private readonly ImmutableDictionary<string, string> symbolIndex;
+        private readonly ImmutableDictionary<string, int> priceDecimalPrecisionIndex;
+        private readonly ImmutableDictionary<string, decimal> tickValueIndex;
+        private readonly ImmutableDictionary<string, decimal> targetSpreadIndex;
+        private readonly ImmutableDictionary<string, decimal> marginRequirementIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentDataProvider"/> class.
@@ -38,7 +38,7 @@ namespace Nautilus.Fix
         public InstrumentDataProvider(Venue venue, string csvDataFileName)
         {
             this.venue = venue;
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
             var csvDataFilePath = Path.GetFullPath(Path.Combine(assemblyDirectory, csvDataFileName));
 
             this.symbolIndex = LoadData<string, string>(csvDataFilePath, 0, 1);
@@ -82,31 +82,27 @@ namespace Nautilus.Fix
         /// Gets all Nautilus symbols, loaded from the brokerage instrument data CSV file.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
-        public ReadOnlyList<Symbol> GetAllSymbols()
+        public IEnumerable<Symbol> GetAllSymbols()
         {
-            var symbols = this.symbolIndex.Values
+            return this.symbolIndex.Values
                 .Select(symbol => new Symbol(symbol, this.venue))
                 .ToList();
-
-            return new ReadOnlyList<Symbol>(symbols);
         }
 
         /// <summary>
         /// Gets all broker symbols, loaded from the brokerage instrument data CSV file.
         /// </summary>
         /// <returns>The list of broker symbols.</returns>
-        public ReadOnlyList<string> GetAllBrokerSymbols()
+        public IEnumerable<string> GetAllBrokerSymbols()
         {
-            var brokerSymbols = this.symbolIndex.Keys.ToList();
-
-            return new ReadOnlyList<string>(brokerSymbols);
+            return this.symbolIndex.Keys.ToList();
         }
 
         /// <summary>
         /// Gets the price decimal precision index (key is Nautilus symbol), loaded from the brokerage instrument data CSV file.
         /// </summary>
         /// <returns>The tick decimals index.</returns>
-        public ReadOnlyDictionary<string, int> GetPriceDecimalPrecisionIndex() => this.priceDecimalPrecisionIndex;
+        public ImmutableDictionary<string, int> GetPriceDecimalPrecisionIndex() => this.priceDecimalPrecisionIndex;
 
         /// <summary>
         /// Gets tick value of the given symbol, loaded from the brokerage instrument data CSV file
@@ -153,7 +149,7 @@ namespace Nautilus.Fix
                 : QueryResult<decimal>.Fail($"Cannot get margin requirement (index did not contain the given broker symbol {brokerSymbol}).");
         }
 
-        private static ReadOnlyDictionary<TKey, TValue> LoadData<TKey, TValue>(
+        private static ImmutableDictionary<TKey, TValue> LoadData<TKey, TValue>(
             string csvDataFilePath,
             int keyColumn,
             int valueColumn)
@@ -173,7 +169,7 @@ namespace Nautilus.Fix
                 }
             }
 
-            return new ReadOnlyDictionary<TKey, TValue>(data);
+            return data.ToImmutableDictionary();
         }
     }
 }

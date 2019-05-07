@@ -9,9 +9,9 @@
 namespace Nautilus.Data.Types
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -27,9 +27,9 @@ namespace Nautilus.Data.Types
         /// Initializes a new instance of the <see cref="EconomicEventFrame"/> class.
         /// </summary>
         /// <param name="events">The list of economic events.</param>
-        public EconomicEventFrame(List<EconomicEvent> events)
+        public EconomicEventFrame(IEnumerable<EconomicEvent> events)
         {
-            this.Events = new ReadOnlyList<EconomicEvent>(events);
+            this.Events = events.ToImmutableList();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Nautilus.Data.Types
         /// <summary>
         /// Gets the economic event frames list of events.
         /// </summary>
-        public ReadOnlyList<EconomicEvent> Events { get; }
+        public ImmutableList<EconomicEvent> Events { get; }
 
         /// <summary>
         /// Gets the economic event frames first event time.

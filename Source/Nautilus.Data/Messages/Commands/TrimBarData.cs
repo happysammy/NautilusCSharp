@@ -9,9 +9,9 @@
 namespace Nautilus.Data.Messages.Commands
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -31,7 +31,7 @@ namespace Nautilus.Data.Messages.Commands
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public TrimBarData(
-            ReadOnlyList<Resolution> resolutions,
+            List<Resolution> resolutions,
             int rollingWindow,
             Guid id,
             ZonedDateTime timestamp)
@@ -46,7 +46,7 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Gets the resolutions for the bar data trimming operation.
         /// </summary>
-        public ReadOnlyList<Resolution> Resolutions { get; }
+        public IReadOnlyList<Resolution> Resolutions { get; }
 
         /// <summary>
         /// Gets the rolling window size for the bar data trimming operation.

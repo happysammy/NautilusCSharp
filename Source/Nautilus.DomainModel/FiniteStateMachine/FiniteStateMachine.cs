@@ -11,7 +11,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System;
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
@@ -23,7 +22,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     [PerformanceOptimized]
     internal class FiniteStateMachine
     {
-        private readonly ReadOnlyDictionary<StateTransition, State> stateTransitionTable;
+        private readonly Dictionary<StateTransition, State> stateTransitionTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FiniteStateMachine"/> class.
@@ -38,7 +37,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         {
             Precondition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
-            this.stateTransitionTable = new ReadOnlyDictionary<StateTransition, State>(stateTransitionTable);
+            this.stateTransitionTable = new Dictionary<StateTransition, State>(stateTransitionTable);
             this.State = startingState;
         }
 

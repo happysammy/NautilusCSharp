@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.Core.Collections;
     using Nautilus.Messaging;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -27,12 +26,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         }
 
         public void Send<T>(Address receiver, T message, Address sender)
-            where T : Message
-        {
-            this.testEndpoint.Send(message);
-        }
-
-        public void Send<T>(ReadOnlyList<Address> receivers, T message, Address sender)
             where T : Message
         {
             this.testEndpoint.Send(message);

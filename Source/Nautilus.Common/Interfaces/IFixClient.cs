@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Core.Collections;
+    using System.Collections.Immutable;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -58,13 +58,13 @@ namespace Nautilus.Common.Interfaces
         /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
         /// </summary>
         /// <returns>The list of symbols.</returns>
-        IReadOnlyCollection<Symbol> GetAllSymbols();
+        IEnumerable<Symbol> GetAllSymbols();
 
         /// <summary>
         /// Returns a read-only dictionary of symbol to price decimal precisions.
         /// </summary>
         /// <returns>The tick precision index.</returns>
-        ReadOnlyDictionary<string, int> GetPricePrecisionIndex();
+        ImmutableDictionary<string, int> GetPricePrecisionIndex();
 
         /// <summary>
         /// Subscribes to market data for the given symbol.

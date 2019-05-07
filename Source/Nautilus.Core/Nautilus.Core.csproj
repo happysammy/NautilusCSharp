@@ -27,4 +27,8 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Collections\RollingList{T}.cs" />
+    </ItemGroup>
+
 </Project>

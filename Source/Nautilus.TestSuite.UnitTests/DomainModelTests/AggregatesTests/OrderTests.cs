@@ -10,8 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Collections;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.True(order.Slippage.HasNoValue);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
-            Assert.Equal(new ReadOnlyList<OrderId>(new OrderId("some_orderId")), order.GetOrderIdList());
+            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
