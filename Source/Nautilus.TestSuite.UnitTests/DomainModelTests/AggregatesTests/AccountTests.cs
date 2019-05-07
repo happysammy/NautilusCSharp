@@ -125,6 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Act
             account.Apply(message);
+
             var result = account.FreeEquity;
 
             // Assert

@@ -147,14 +147,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="event">The event.</param>
         public override void Apply(Event @event)
         {
-            Debug.True(@event is AccountEvent, nameof(@event));
-            var accountEvent = @event as AccountEvent;
-            Debug.NotNull(accountEvent, nameof(accountEvent));
+            if (!(@event is AccountEvent accountEvent))
+            {
+                return; // Not an account event.
+            }
 
-            // ReSharper disable once PossibleNullReferenceException (checked above).
-            #pragma warning disable 8602
-            Debug.EqualTo(accountEvent.AccountId, this.Id, nameof(accountEvent.AccountId));
-
+            this.Events.Add(@event);
             this.CashBalance = accountEvent.CashBalance;
             this.CashStartDay = accountEvent.CashStartDay;
             this.CashActivityDay = accountEvent.CashActivityDay;
@@ -163,8 +161,6 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginUsedLiquidation = accountEvent.MarginUsedLiquidation;
             this.MarginCallStatus = accountEvent.MarginCallStatus.Value;
             this.LastUpdated = accountEvent.Timestamp;
-
-            this.Events.Add(@event);
         }
 
         /// <summary>

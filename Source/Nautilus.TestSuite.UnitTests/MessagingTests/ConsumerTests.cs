@@ -14,6 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NautilusMQ;
     using NautilusMQ.Tests;
@@ -64,11 +65,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             requester.SendFrame("MSG");
 
             // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-//            this.ExpectMsg<byte[]>();
-//            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            requester.Disconnect(TestAddress);
-//            requester.Dispose();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
@@ -94,15 +93,14 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
 
             // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-//            this.ExpectMsg<byte[]>();
-//            Assert.Equal("OK", response1);
-//            Assert.Equal("OK", response2);
-//
-//            // Tear Down
-//            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            requester.Disconnect(TestAddress);
-//            requester.Dispose();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Equal("OK", response1);
+            Assert.Equal("OK", response2);
+
+            // Tear Down
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
+            consumer.Stop();
         }
 
         [Fact]
@@ -124,14 +122,10 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Act
             requester.SendFrame("MSG");
 
-// consumer.Tell(PoisonPill.Instance);
-//
-//            // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-//            this.ExpectNoMsg();
-//            consumer.GracefulStop(TimeSpan.FromMilliseconds(300));
-//            requester.Disconnect(TestAddress);
-//            requester.Dispose();
+            // Assert
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
@@ -158,11 +152,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             }
 
             // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-//            this.ExpectMsg<byte[]>();
-//            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            requester.Disconnect(TestAddress);
-//            requester.Dispose();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            requester.Disconnect(TestAddress);
+            requester.Dispose();
         }
 
         [Fact]
@@ -193,15 +185,13 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             }
 
             // Assert
-//            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-//            this.ExpectMsg<byte[]>();
-//
-//            // Tear Down
-//            consumer.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            requester1.Disconnect(TestAddress);
-//            requester2.Disconnect(TestAddress);
-//            requester1.Dispose();
-//            requester2.Dispose();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Tear Down
+            requester1.Disconnect(TestAddress);
+            requester2.Disconnect(TestAddress);
+            requester1.Dispose();
+            requester2.Dispose();
         }
     }
 }

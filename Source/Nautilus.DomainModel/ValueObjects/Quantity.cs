@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.ValueObjects
     using Nautilus.Core.Primitives;
 
     /// <summary>
-    /// Represents a none-negative quantity.
+    /// Represents a non-negative quantity.
     /// </summary>
     [Immutable]
     public sealed class Quantity : IntegerNumber

@@ -15,7 +15,6 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Collections;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
@@ -26,14 +25,12 @@ namespace Nautilus.DomainModel.Aggregates
     using NodaTime;
 
     /// <summary>
-    /// The base class for all order types.
+    /// Represents a financial market order.
     /// </summary>
     [PerformanceOptimized]
     public sealed class Order : Aggregate<Order>
     {
         private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
-
-        // Concrete lists for performance reasons.
         private readonly List<OrderId> orderIds = new List<OrderId>();
         private readonly List<OrderId> orderIdsBroker = new List<OrderId>();
         private readonly List<ExecutionId> executionIds = new List<ExecutionId>();
@@ -98,7 +95,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public OrderId IdCurrent => this.orderIds.Last();
+        public OrderId IdCurrent => this.orderIds[this.orderIds.Count - 1];
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
