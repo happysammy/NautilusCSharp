@@ -22,7 +22,6 @@ namespace NautilusMQ.Internal
     {
         private readonly ActionBlock<object> processor;
         private readonly CancellationToken cancel = new CancellationToken(false);
-        private readonly List<Type> handlerTypes = new List<Type>();
         private readonly Dictionary<Type, Handler> registeredHandlers = new Dictionary<Type, Handler>();
 
         private Action<object> handleAny;
@@ -60,7 +59,7 @@ namespace NautilusMQ.Internal
         /// Gets the types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.handlerTypes;
+        public IEnumerable<Type> HandlerTypes => this.registeredHandlers.Keys.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -88,7 +87,6 @@ namespace NautilusMQ.Internal
                                             $"(the internal handlers already contain a handler for {type} type messages).");
             }
 
-            this.handlerTypes.Add(type);
             this.registeredHandlers[type] = Handler.Create(handler);
             this.BuildHandlers();
         }
@@ -99,7 +97,6 @@ namespace NautilusMQ.Internal
         /// <param name="handler">The handler delegate.</param>
         public void RegisterHandleAny(Action<object> handler)
         {
-            this.handlerTypes.Add(typeof(object));
             this.handleAny = handler;
             this.BuildHandlers();
         }

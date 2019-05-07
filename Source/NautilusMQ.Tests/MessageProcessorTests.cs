@@ -103,8 +103,6 @@ namespace NautilusMQ.Tests
             Thread.Sleep(100);
 
             // Assert
-            Assert.Single(processor.HandlerTypes);
-            Assert.Contains(typeof(object), processor.HandlerTypes);
             Assert.Contains(1, receiver);
             Assert.DoesNotContain(1, processor.UnhandledMessages);
         }
