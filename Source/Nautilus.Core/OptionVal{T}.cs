@@ -12,7 +12,7 @@ namespace Nautilus.Core
     using Nautilus.Core.Annotations;
 
     /// <summary>
-    /// Represents an optional reference type which wraps a potentially null value of type T.
+    /// Represents an optional value type which wraps a potentially null value of <see cref="Nullable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The option object type.</typeparam>
     [Immutable]
