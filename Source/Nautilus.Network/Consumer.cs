@@ -26,7 +26,7 @@ namespace Nautilus.Network
     /// </summary>
     public class Consumer : ComponentBase
     {
-        private readonly byte[] ok = Encoding.UTF8.GetBytes(nameof(ok).ToUpper());
+        private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
         private readonly IEndpoint receiver;
         private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
@@ -120,7 +120,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(response);
             this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
 
-            this.Endpoint.Send(data);
+            this.SendToSelf(data);
         }
     }
 }

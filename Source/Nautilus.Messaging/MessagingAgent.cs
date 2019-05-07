@@ -79,7 +79,7 @@ namespace Nautilus.Messaging
         /// Send the given message to this agents endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
-        protected void SendToSend(object message)
+        protected void SendToSelf(object message)
         {
             this.Endpoint.Send(message);
         }
