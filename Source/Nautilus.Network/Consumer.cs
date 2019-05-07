@@ -33,6 +33,7 @@ namespace Nautilus.Network
         private readonly RouterSocket socket;
         private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
 
+        private bool isConsuming;
         private int cycles;
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace Nautilus.Network
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
+                this.isConsuming = true;
                 Task.Run(this.StartConsuming, this.cts.Token);
             });
         }
@@ -97,6 +99,7 @@ namespace Nautilus.Network
             this.Execute(() =>
             {
                 this.Log.Debug($"Stopping...");
+                this.isConsuming = false;
                 this.cts.Cancel();
                 this.socket.Unbind(this.serverAddress.Value);
                 this.Log.Debug($"Unbound router socket from {this.serverAddress}");
@@ -114,20 +117,28 @@ namespace Nautilus.Network
 
         private Task StartConsuming()
         {
-            while (true)
+            while (this.isConsuming)
             {
-                var identity = this.socket.ReceiveFrameBytes();
-                var delimiter = this.socket.ReceiveFrameBytes();
-                var data = this.socket.ReceiveFrameBytes();
-
-                var response = new List<byte[]> { identity, delimiter, this.ok };
-                this.socket.SendMultipartBytes(response);
-
-                this.cycles++;
-                this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
-
-                this.SendToSelf(data);
+                this.ConsumeMessage();
             }
+
+            this.Log.Debug("Stopped consuming messages.");
+            return Task.CompletedTask;
+        }
+
+        private void ConsumeMessage()
+        {
+            var identity = this.socket.ReceiveFrameBytes();
+            var delimiter = this.socket.ReceiveFrameBytes();
+            var data = this.socket.ReceiveFrameBytes();
+
+            var response = new List<byte[]> { identity, delimiter, this.ok };
+            this.socket.SendMultipartBytes(response);
+
+            this.cycles++;
+            this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
+
+            this.SendToSelf(data);
         }
     }
 }
