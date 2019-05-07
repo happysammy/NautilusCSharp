@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
+    using System.Text;
     using System.Threading;
     using Nautilus.Messaging;
 
@@ -49,6 +50,15 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public void OnMessage(int message)
         {
             this.Messages.Add(message);
+        }
+
+        /// <summary>
+        /// Add the message to the received messages list.
+        /// </summary>
+        /// <param name="message">The received message.</param>
+        public void OnMessage(byte[] message)
+        {
+            this.Messages.Add(Encoding.UTF8.GetString(message));
         }
 
         /// <summary>

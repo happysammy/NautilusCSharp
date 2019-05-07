@@ -24,10 +24,10 @@ namespace Nautilus.Network
     /// </summary>
     public class Publisher : ComponentBase
     {
-        private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
-        private readonly byte[] topic;
         private readonly ZmqServerAddress serverAddress;
         private readonly PublisherSocket socket;
+        private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
+        private readonly byte[] topic;
         private int cycles;
 
         /// <summary>

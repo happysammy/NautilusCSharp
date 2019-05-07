@@ -21,10 +21,10 @@ namespace Nautilus.Messaging.Internal
     internal class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
-        private readonly CancellationToken cancel = new CancellationToken(false);
-        private readonly Dictionary<Type, Handler> registeredHandlers = new Dictionary<Type, Handler>();
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+        private readonly List<KeyValuePair<Type, Handler>> registeredHandlers = new List<KeyValuePair<Type, Handler>>();
 
-        private Action<object> handleAny;
+        private Action<object> unhandled;
         private Handler[] handlers = { };
         private int handlersLength;
 
@@ -33,14 +33,14 @@ namespace Nautilus.Messaging.Internal
         /// </summary>
         internal MessageProcessor()
         {
-            this.handleAny = this.AddToUnhandledMessages;
+            this.unhandled = this.AddToUnhandledMessages;
 
             this.processor = new ActionBlock<object>(
                 async message =>
                 {
                     await this.HandleMessage(message);
                 },
-                new ExecutionDataflowBlockOptions { CancellationToken = this.cancel });
+                new ExecutionDataflowBlockOptions { CancellationToken = this.cts.Token });
 
             this.Endpoint = new Endpoint(this.processor.Post);
         }
@@ -59,7 +59,7 @@ namespace Nautilus.Messaging.Internal
         /// Gets the types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.registeredHandlers.Keys.ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.registeredHandlers.Select(h => h.Key).ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the list of unhandled messages.
@@ -75,44 +75,37 @@ namespace Nautilus.Messaging.Internal
         {
             var type = typeof(TMessage);
 
-            if (type == typeof(object))
-            {
-                throw new ArgumentException($"Cannot register handler for Object type " +
-                                            $"(use .RegisterHandleAny or .RegisterUnhandled).");
-            }
-
-            if (this.registeredHandlers.ContainsKey(type))
+            if (this.registeredHandlers.Any(h => h.Key == type))
             {
                 throw new ArgumentException($"Cannot register handler " +
                                             $"(the internal handlers already contain a handler for {type} type messages).");
             }
 
-            this.registeredHandlers[type] = Handler.Create(handler);
+            this.registeredHandlers.Add(new KeyValuePair<Type, Handler>(type, Handler.Create(handler)));
+
+            if (this.registeredHandlers.Any(h => h.Key == typeof(object)))
+            {
+                // Move handle object to the end of the handlers
+                var handleObject = this.registeredHandlers.FirstOrDefault(h => h.Key == typeof(object));
+                this.registeredHandlers.Remove(handleObject);
+                this.registeredHandlers.Add(handleObject);
+            }
+
             this.BuildHandlers();
         }
 
         /// <summary>
-        /// Register the given handler to receive any objects.
-        /// </summary>
-        /// <param name="handler">The handler delegate.</param>
-        public void RegisterHandleAny(Action<object> handler)
-        {
-            this.handleAny = handler;
-            this.BuildHandlers();
-        }
-
-        /// <summary>
-        /// Register the given handler to receive unhandled messages.
+        /// Register the given delegate to receive unhandled messages.
         /// </summary>ve
-        /// <param name="handler">The handler.</param>
+        /// <param name="handler">The handler delegate.</param>
         public void RegisterUnhandled(Action<object> handler)
         {
-            this.RegisterHandleAny(handler);
+            this.unhandled = handler;
         }
 
         private void BuildHandlers()
         {
-            this.handlers = this.registeredHandlers.Values.ToArray();
+            this.handlers = this.registeredHandlers.Select(h => h.Value).ToArray();
             this.handlersLength = this.handlers.Length;
         }
 
@@ -140,7 +133,7 @@ namespace Nautilus.Messaging.Internal
         /// <param name="message">The unhandled message.</param>
         private Task Unhandled(object message)
         {
-            this.handleAny(message);
+            this.unhandled(message);
             return Task.CompletedTask;
         }
 

@@ -11,6 +11,7 @@ namespace Nautilus.Network
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -26,10 +27,12 @@ namespace Nautilus.Network
     /// </summary>
     public class Consumer : ComponentBase
     {
-        private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
+        private readonly CancellationTokenSource cts;
         private readonly IEndpoint receiver;
         private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
+        private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
+
         private int cycles;
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace Nautilus.Network
         {
             Precondition.NotDefault(id, nameof(id));
 
+            this.cts = new CancellationTokenSource();
             this.receiver = receiver;
             this.serverAddress = new ZmqServerAddress(host, port);
 
@@ -81,7 +85,7 @@ namespace Nautilus.Network
                 this.Log.Debug($"Bound router socket to {this.serverAddress}");
 
                 this.Log.Debug("Ready to consume...");
-                Task.Factory.StartNew(this.StartConsuming).Start();
+                Task.Run(this.StartConsuming, this.cts.Token);
             });
         }
 
@@ -92,10 +96,13 @@ namespace Nautilus.Network
         {
             this.Execute(() =>
             {
+                this.Log.Debug($"Stopping...");
+                this.cts.Cancel();
                 this.socket.Unbind(this.serverAddress.Value);
                 this.Log.Debug($"Unbound router socket from {this.serverAddress}");
 
                 this.socket.Dispose();
+                this.Log.Debug($"Stopped.");
             });
         }
 
@@ -103,22 +110,24 @@ namespace Nautilus.Network
         {
             this.receiver.Send(message);
             this.Log.Debug($"Consumed message[{this.cycles}].");
-
-            Task.Factory.StartNew(this.StartConsuming).Start();
         }
 
-        private void StartConsuming()
+        private Task StartConsuming()
         {
-            var identity = this.socket.ReceiveFrameBytes();
-            var delimiter = this.socket.ReceiveFrameBytes();
-            var data = this.socket.ReceiveFrameBytes();
+            while (true)
+            {
+                var identity = this.socket.ReceiveFrameBytes();
+                var delimiter = this.socket.ReceiveFrameBytes();
+                var data = this.socket.ReceiveFrameBytes();
 
-            this.cycles++;
-            var response = new List<byte[]> { identity, delimiter, this.ok };
-            this.socket.SendMultipartBytes(response);
-            this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
+                var response = new List<byte[]> { identity, delimiter, this.ok };
+                this.socket.SendMultipartBytes(response);
 
-            this.SendToSelf(data);
+                this.cycles++;
+                this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
+
+                this.SendToSelf(data);
+            }
         }
     }
 }

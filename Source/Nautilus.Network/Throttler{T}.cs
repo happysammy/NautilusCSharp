@@ -32,7 +32,6 @@ namespace Nautilus.Network
         private readonly int limit;
         private readonly Queue<T> queue;
 
-        private bool isIdle;
         private int vouchers;
         private int totalCount;
 
@@ -63,13 +62,23 @@ namespace Nautilus.Network
             this.limit = limit;
             this.queue = new Queue<T>();
 
-            this.isIdle = true;
+            this.IsIdle = true;
             this.vouchers = limit;
             this.totalCount = 0;
 
             this.RegisterHandler<T>(this.OnMessage);
             this.RegisterHandler<TimeSpan>(this.OnMessage);
         }
+
+        /// <summary>
+        /// Gets the queue count for the throttler.
+        /// </summary>
+        public int QueueCount => this.queue.Count;
+
+        /// <summary>
+        /// Gets a value indicating whether the throttler is idle.
+        /// </summary>
+        public bool IsIdle { get; private set; }
 
         private void OnMessage(T message)
         {
@@ -85,17 +94,18 @@ namespace Nautilus.Network
 
             if (this.queue.Count <= 0)
             {
-                this.isIdle = true;
-                this.Log.Debug("Is Idle.");
+                this.IsIdle = true;
+                this.Log.Debug("Idle.");
 
                 return;
             }
 
-            // this.RunTimer().PipeTo(this.Endpoint);
-            if (this.isIdle)
+            Task.Run(this.RunTimer);
+
+            if (this.IsIdle)
             {
-                this.isIdle = false;
-                this.Log.Debug("Is Active.");
+                this.IsIdle = false;
+                this.Log.Debug("Active.");
             }
 
             this.ProcessQueue();
@@ -103,11 +113,11 @@ namespace Nautilus.Network
 
         private void ProcessQueue()
         {
-            if (this.isIdle)
+            if (this.IsIdle)
             {
-                // this.RunTimer().PipeTo(this.Self);
-                this.isIdle = false;
-                this.Log.Debug("Is Active.");
+                Task.Run(this.RunTimer);
+                this.IsIdle = false;
+                this.Log.Debug("Active.");
             }
 
             while (this.vouchers > 0 & this.queue.Count > 0)
@@ -128,15 +138,15 @@ namespace Nautilus.Network
             if (this.vouchers <= 0 & this.queue.Count > 0)
             {
                 // At message limit.
-                this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queueing_count={this.queue.Count}).");
+                this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");
             }
         }
 
-        private Task<TimeSpan> RunTimer()
+        private void RunTimer()
         {
             Task.Delay(this.interval).Wait();
 
-            return Task.FromResult(this.interval);
+            this.SendToSelf(this.interval);
         }
     }
 }

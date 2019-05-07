@@ -11,12 +11,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using System.Threading;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -63,6 +65,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new Port(55504),
                 Guid.NewGuid());
+            publisher.Start();
+            Thread.Sleep(100);
 
             // Act
             publisher.Endpoint.Send(bytes);
@@ -73,14 +77,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
-            // Assert.Equal(topic, Encoding.UTF8.GetBytes(TestTopic));
             // Assert.Equal(bytes, message);
 
             // Tear Down
-//            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            subscriber.Unsubscribe(TestTopic);
-//            subscriber.Disconnect(TestAddress);
-//            subscriber.Dispose();
+            subscriber.Unsubscribe(TestTopic);
+            subscriber.Disconnect(TestAddress);
+            subscriber.Dispose();
+            publisher.Stop();
         }
     }
 }

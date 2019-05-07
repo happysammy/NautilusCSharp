@@ -58,15 +58,6 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
-        /// Register the given handler to receive any message type.
-        /// </summary>ve
-        /// <param name="handler">The handler.</param>
-        public void RegisterHandleAny(Action<object> handler)
-        {
-            this.processor.RegisterHandleAny(handler);
-        }
-
-        /// <summary>
         /// Register the given handler to receive unhandled messaged.
         /// </summary>ve
         /// <param name="handler">The handler.</param>

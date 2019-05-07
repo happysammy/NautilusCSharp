@@ -11,9 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using System.Threading;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -28,20 +28,21 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     public class ConsumerTests
     {
         private readonly ITestOutputHelper output;
-        private readonly IComponentryContainer setupContainer;
+        private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockMessagingAgent testReceiver;
         private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
-        private readonly IEndpoint testReceiver;
 
         public ConsumerTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
 
-            var setupFactory = new StubComponentryContainerFactory();
-            this.setupContainer = setupFactory.Create();
-            this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessagingAgent().Endpoint;
+            var containerFactory = new StubComponentryContainerFactory();
+            this.container = containerFactory.Create();
+            this.mockLoggingAdapter = containerFactory.LoggingAdapter;
+            this.testReceiver = new MockMessagingAgent();
+            this.testReceiver.RegisterHandler<byte[]>(this.testReceiver.OnMessage);
         }
 
         [Fact]
@@ -53,20 +54,28 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(TestAddress);
 
             var consumer = new Consumer(
-                this.setupContainer,
-                this.testReceiver,
+                this.container,
+                this.testReceiver.Endpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5555),
                 Guid.NewGuid());
 
+            consumer.Start();
+
             // Act
             requester.SendFrame("MSG");
 
+            Thread.Sleep(100);
+
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Contains("MSG", this.testReceiver.Messages);
+
+            // Tear Down
             requester.Disconnect(TestAddress);
             requester.Dispose();
+            consumer.Stop();
         }
 
         [Fact]
@@ -78,12 +87,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(TestAddress);
 
             var consumer = new Consumer(
-                this.setupContainer,
-                this.testReceiver,
+                this.container,
+                this.testReceiver.Endpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5556),
                 Guid.NewGuid());
+
+            consumer.Start();
 
             // Act
             requester.SendFrame("MSG-1");
@@ -91,8 +102,12 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.SendFrame("MSG-2");
             var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
 
+            Thread.Sleep(100);
+
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Contains("MSG-1", this.testReceiver.Messages);
+            Assert.Contains("MSG-2", this.testReceiver.Messages);
             Assert.Equal("OK", response1);
             Assert.Equal("OK", response2);
 
@@ -111,18 +126,29 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(TestAddress);
 
             var consumer = new Consumer(
-                this.setupContainer,
-                this.testReceiver,
+                this.container,
+                this.testReceiver.Endpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5557),
                 Guid.NewGuid());
 
-            // Act
+            consumer.Start();
             requester.SendFrame("MSG");
+            requester.ReceiveFrameBytes();
+            Thread.Sleep(100);
+
+            // Act
+            consumer.Stop();
+
+            requester.SendFrame("AFTER-STOPPED");
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Contains("MSG", this.testReceiver.Messages);
+            Assert.DoesNotContain("AFTER-STOPPED", this.testReceiver.Messages);
+
+            // Tear Down
             requester.Disconnect(TestAddress);
             requester.Dispose();
         }
@@ -136,12 +162,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.Connect(TestAddress);
 
             var consumer = new Consumer(
-                this.setupContainer,
-                this.testReceiver,
+                this.container,
+                this.testReceiver.Endpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5558),
                 Guid.NewGuid());
+
+            consumer.Start();
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -150,10 +178,18 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 requester.ReceiveFrameBytes();
             }
 
+            Thread.Sleep(100);
+
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Equal(1000, this.testReceiver.Messages.Count);
+            Assert.Equal("MSG-999", this.testReceiver.Messages[this.testReceiver.Messages.Count - 1]);
+            Assert.Equal("MSG-998", this.testReceiver.Messages[this.testReceiver.Messages.Count - 2]);
+
+            // Tear Down
             requester.Disconnect(TestAddress);
             requester.Dispose();
+            consumer.Stop();
         }
 
         [Fact]
@@ -167,12 +203,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester2.Connect(TestAddress);
 
             var consumer = new Consumer(
-                this.setupContainer,
-                this.testReceiver,
+                this.container,
+                this.testReceiver.Endpoint,
                 new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5559),
                 Guid.NewGuid());
+
+            consumer.Start();
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -183,14 +221,22 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 requester2.ReceiveFrameBytes();
             }
 
+            Thread.Sleep(100);
+
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Equal(2000, this.testReceiver.Messages.Count);
+            Assert.Equal("MSG-999 from 2", this.testReceiver.Messages[this.testReceiver.Messages.Count - 1]);
+            Assert.Equal("MSG-999 from 1", this.testReceiver.Messages[this.testReceiver.Messages.Count - 2]);
+            Assert.Equal("MSG-998 from 2", this.testReceiver.Messages[this.testReceiver.Messages.Count - 3]);
+            Assert.Equal("MSG-998 from 1", this.testReceiver.Messages[this.testReceiver.Messages.Count - 4]);
 
             // Tear Down
             requester1.Disconnect(TestAddress);
             requester2.Disconnect(TestAddress);
             requester1.Dispose();
             requester2.Dispose();
+            consumer.Stop();
         }
     }
 }

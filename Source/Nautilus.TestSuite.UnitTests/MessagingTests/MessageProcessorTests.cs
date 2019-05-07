@@ -32,19 +32,6 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
         }
 
         [Fact]
-        internal void RegisterHandler_WhenGivenObjectType_Throws()
-        {
-            // Arrange
-            var receiver = new List<object>();
-            var processor = new MessageProcessor();
-
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => processor.RegisterHandler<object>(receiver.Add));
-        }
-
-        [Fact]
         internal void RegisterHandler_WhenHandlerTypeAlreadyRegistered_Throws()
         {
             // Arrange
@@ -96,7 +83,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Arrange
             var receiver = new List<object>();
             var processor = new MessageProcessor();
-            processor.RegisterHandleAny(receiver.Add);
+            processor.RegisterHandler<object>(receiver.Add);
 
             // Act
             processor.Endpoint.Send(1);
