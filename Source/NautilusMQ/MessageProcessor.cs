@@ -22,9 +22,9 @@ namespace NautilusMQ
     public class MessageProcessor
     {
         private readonly ActionBlock<object> processor;
+        private readonly CancellationToken cancel = new CancellationToken(false);
         private readonly List<Type> handlerTypes = new List<Type>();
         private readonly Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
-        private readonly CancellationToken cancel = new CancellationToken(false);
 
         private Action<object> handleAny;
         private Func<object, Task> handle;
