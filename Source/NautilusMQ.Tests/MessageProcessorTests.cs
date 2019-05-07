@@ -10,6 +10,7 @@ namespace NautilusMQ.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using NautilusMQ.Internal;
@@ -238,6 +239,35 @@ namespace NautilusMQ.Tests
             Assert.Contains("1", receiver.Messages);
             Assert.Single(receiver.Messages);
             Assert.Equal(3, receiver.InputCount);
+        }
+
+        [Fact]
+        internal void MessagingPerformanceTest()
+        {
+            // Arrange
+            var receiver = new MockMessageReceiver();
+            receiver.RegisterHandler<int>(receiver.OnMessage);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            // Act
+            for (var i = 0; i < 1000000; i++)
+            {
+                receiver.Endpoint.Send(i);
+                receiver.Endpoint.Send(i);
+            }
+
+            while (receiver.Messages.Count < 2000000)
+            {
+                // Wait.
+            }
+
+            stopwatch.Stop();
+
+            this.output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
+            this.output.WriteLine(receiver.Messages.Count.ToString());
+            Assert.Equal(0, receiver.InputCount);
         }
     }
 }
