@@ -17,6 +17,8 @@ namespace Nautilus.Common.Messaging
     [PerformanceOptimized]
     public static class ServiceAddress
     {
+        private const string Service = "Service";
+
         /// <summary>
         /// Gets the <see cref="Scheduler"/> messaging address.
         /// </summary>
@@ -25,26 +27,26 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the alpha service messaging address.
         /// </summary>
-        public static Address Alpha { get; } = new Address("AlphaService");
+        public static Address Alpha { get; } = new Address(nameof(Alpha) + Service);
 
         /// <summary>
         /// Gets the data service messaging address.
         /// </summary>
-        public static Address Data { get; } = new Address("DataService");
+        public static Address Data { get; } = new Address(nameof(Data) + Service);
 
         /// <summary>
         /// Gets the risk service messaging address.
         /// </summary>
-        public static Address Risk { get; } = new Address("RiskService");
+        public static Address Risk { get; } = new Address(nameof(Risk) + Service);
 
         /// <summary>
         /// Gets the portfolio service messaging address.
         /// </summary>
-        public static Address Portfolio { get; } = new Address("PortfolioService");
+        public static Address Portfolio { get; } = new Address(nameof(Portfolio) + Service);
 
         /// <summary>
         /// Gets the execution service messaging address.
         /// </summary>
-        public static Address Execution { get; } = new Address("ExecutionService");
+        public static Address Execution { get; } = new Address(nameof(Execution) + Service);
     }
 }
