@@ -118,7 +118,7 @@ namespace Nautilus.DomainModel.ValueObjects
             var values = barString.Split(',');
 
             return new Bar(
-                Price.Create(Convert.ToDecimal(values[0])),
+                Price.Create(Convert.ToDecimal(values[0].ToString())),
                 Price.Create(Convert.ToDecimal(values[1])),
                 Price.Create(Convert.ToDecimal(values[2])),
                 Price.Create(Convert.ToDecimal(values[3])),

@@ -21,32 +21,10 @@ namespace Nautilus.Data.Wranglers
     public static class BarWrangler
     {
         /// <summary>
-        /// Parses the given bar string array and returns a list of <see cref="Bar"/>(s).
-        /// </summary>
-        /// <param name="barsStrings">The bar strings.</param>
-        /// <returns>The list of parsed bars.</returns>
-        public static List<Bar> ParseBars(string[] barsStrings)
-        {
-            var barData = new List<Bar>();
-            for (var i = 0; i < barsStrings.Length; i++)
-            {
-                if (barsStrings[i] is null)
-                {
-                    continue;
-                }
-
-                barData.Add(Bar.GetFromString(barsStrings[i]));
-            }
-
-            return barData;
-        }
-
-        /// <summary>
         /// Organizes the given bars array into a dictionary of bar lists indexed by a date key.
         /// </summary>
         /// <param name="bars">The bars array.</param>
         /// <returns>The organized dictionary.</returns>
-        [PerformanceOptimized]
         public static Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
         {
             var barsDictionary = new Dictionary<DateKey, List<Bar>>();

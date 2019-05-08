@@ -85,7 +85,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is DateKey dateKey && this.Equals(dateKey);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DateKey"/> is equal to the given <see cref="DateKey"/>.
@@ -94,9 +94,9 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(DateKey other)
         {
-            return this.Year.Equals(other.Year) &&
-                   this.Month.Equals(other.Month) &&
-                   this.Day.Equals(other.Day);
+            return this.Year == other.Year &&
+                   this.Month == other.Month &&
+                   this.Day == other.Day;
         }
 
         /// <summary>

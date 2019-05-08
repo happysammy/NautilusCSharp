@@ -8,9 +8,9 @@
 
 namespace Nautilus.Redis
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -48,6 +48,8 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="bool"/>.</returns>
         public bool KeyExists(string key)
         {
+            Debug.NotEmptyOrWhiteSpace(key, nameof(key));
+
             return this.redisDatabase.KeyExists(key);
         }
 
@@ -92,16 +94,14 @@ namespace Nautilus.Redis
         {
             var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType)).ToArray();
 
-            if (!allKeys.Any())
+            if (allKeys.Length == 0)
             {
                 return 0;
             }
 
             return allKeys
-                .Select(key => Encoding.Default.GetString(key))
-                .ToList()
-                .Select(this.GetBarsByDay)
-                .Sum(k => k.Value.Count);
+                .Select(key => this.GetBarsByDay(key))
+                .Sum(bars => bars.Value.Length);
         }
 
         /// <summary>
@@ -110,18 +110,16 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allBarTypeKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).ToArray();
 
-            if (!allBarTypeKeys.Any())
+            if (allKeys.Length == 0)
             {
                 return 0;
             }
 
-            return allBarTypeKeys
-                .Select(key => Encoding.UTF8.GetString(key))
-                .ToList()
-                .Select(this.GetBarsByDay)
-                .Sum(k => k.Value.Count);
+            return allKeys
+                .Select(key => this.GetBarsByDay(key))
+                .Sum(bars => bars.Value.Length);
         }
 
         /// <summary>
@@ -136,15 +134,14 @@ namespace Nautilus.Redis
                 return QueryResult<List<string>>.Fail($"No market data found for {barType}.");
             }
 
-            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
 
-            var keysCollection = allKeysBytes
-                .Select(key => Encoding.UTF8.GetString(key))
+            var keyStrings = allKeys
+                .Select(key => key.ToString())
                 .ToList();
+            keyStrings.Sort();
 
-            keysCollection.Sort();
-
-            return QueryResult<List<string>>.Ok(keysCollection);
+            return QueryResult<List<string>>.Ok(keyStrings);
         }
 
         /// <summary>
@@ -152,12 +149,13 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="resolution">The bar resolution keys.</param>
         /// <returns>The result of the query.</returns>
+        [PerformanceOptimized]
         public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(Resolution resolution)
         {
             var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardString());
 
             var keysCollection = allKeysBytes
-                .Select(key => Encoding.UTF8.GetString(key))
+                .Select(key => key.ToString())
                 .ToList();
 
             var keysOfResolution = new Dictionary<string, List<string>>();
@@ -195,11 +193,8 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public CommandResult AddBar(BarType barType, Bar bar)
         {
-            var dateKey = new DateKey(bar.Timestamp);
-            var key = new BarDataKey(barType, dateKey);
-            var keyString = key.ToString();
-
-            this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
+            var key = new BarDataKey(barType, new DateKey(bar.Timestamp)).ToString();
+            this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
 
             return CommandResult.Ok($"Added 1 bar to {barType}.");
         }
@@ -217,19 +212,18 @@ namespace Nautilus.Redis
             Debug.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
             Debug.NotEmpty(bars, nameof(bars));
 
-            var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
             var barsAddedCounter = 0;
+            var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
 
             foreach (var (dateKey, value) in barsIndex)
             {
-                var key = new BarDataKey(barType, dateKey);
-                var keyString = key.ToString();
+                var key = new BarDataKey(barType, dateKey).ToString();
 
                 if (!this.KeyExists(key))
                 {
                     foreach (var bar in value)
                     {
-                        this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
                         barsAddedCounter++;
                     }
 
@@ -237,13 +231,13 @@ namespace Nautilus.Redis
                 }
 
                 // The key should exist in Redis because it was just checked by KeyExists().
-                var persistedBars = this.GetBarsByDay(keyString).Value;
+                var persistedBars = this.GetBarsByDay(key).Value;
 
                 foreach (var bar in value)
                 {
                     if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
                     {
-                        this.redisDatabase.ListRightPush(keyString, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
                         barsAddedCounter++;
                     }
                 }
@@ -301,10 +295,10 @@ namespace Nautilus.Redis
                 return QueryResult<BarDataFrame>.Fail($"No market data found for {barType}.");
             }
 
-            var barKeysQuery = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
+            var barKeys = KeyProvider.GetBarsKeyStrings(barType, fromDateTime, toDateTime);
 
-            var barsArray = barKeysQuery
-                .Select(key => this.redisDatabase.ListRange(key))
+            var barsArray = barKeys
+                .SelectMany(key => this.redisDatabase.ListRange(key))
                 .Select(value => value.ToString())
                 .Select(Bar.GetFromString)
                 .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
@@ -335,18 +329,18 @@ namespace Nautilus.Redis
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             var key = new BarDataKey(barType, new DateKey(timestamp));
-            var persistedBarsQuery = this.GetBarsByDay(key.ToString());
+            var persistedBars = this.GetBarsByDay(key.ToString());
 
-            if (persistedBarsQuery.IsFailure)
+            if (persistedBars.IsFailure)
             {
-                return QueryResult<Bar>.Fail(persistedBarsQuery.Message);
+                return QueryResult<Bar>.Fail(persistedBars.Message);
             }
 
-            for (var i = 0; i < persistedBarsQuery.Value.Count; i++)
+            for (var i = 0; i < persistedBars.Value.Length; i++)
             {
-                if (persistedBarsQuery.Value[i].Timestamp.Equals(timestamp))
+                if (persistedBars.Value[i].Timestamp.Equals(timestamp))
                 {
-                    return QueryResult<Bar>.Ok(persistedBarsQuery.Value[i]);
+                    return QueryResult<Bar>.Ok(persistedBars.Value[i]);
                 }
             }
 
@@ -359,23 +353,18 @@ namespace Nautilus.Redis
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The query result list of bars.</returns>
-        public QueryResult<List<Bar>> GetBarsByDay(string key)
+        public QueryResult<Bar[]> GetBarsByDay(string key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
 
             if (!this.KeyExists(key))
             {
-                return QueryResult<List<Bar>>.Fail($"No market data found for {key}.");
+                return QueryResult<Bar[]>.Fail($"No market data found for {key}.");
             }
 
             var values = this.redisDatabase.ListRange(key);
-            var barStrings = new string[values.Count()];
-            foreach (var element in values)
-            {
-                barStrings.Append(element.ToString());
-            }
 
-            return QueryResult<List<Bar>>.Ok(BarWrangler.ParseBars(barStrings));
+            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.GetFromString(b)));
         }
 
         /// <summary>

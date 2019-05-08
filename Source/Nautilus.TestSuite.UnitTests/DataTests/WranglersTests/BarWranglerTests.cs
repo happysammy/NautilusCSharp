@@ -8,10 +8,8 @@
 
 namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
 {
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Data.Wranglers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -19,27 +17,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.WranglersTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class BarWranglerTests
     {
-        [Fact]
-        internal void ParseBars()
-        {
-            // Arrange
-            var bar = StubBarData.Create();
-
-            var expectedBarList = new List<Bar> { bar, bar, bar };
-            var barStringArray = new List<string>
-            {
-                bar.ToString(),
-                bar.ToString(),
-                bar.ToString(),
-            }.ToArray();
-
-            // Act
-            var result = BarWrangler.ParseBars(barStringArray);
-
-            // Assert
-            Assert.Equal(expectedBarList, result);
-        }
-
         [Theory]
         [InlineData(0, 1, 2)]
         [InlineData(1, 1, 2)]

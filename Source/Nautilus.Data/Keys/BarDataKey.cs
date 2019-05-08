@@ -48,7 +48,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is BarDataKey dataKey && this.Equals(dataKey);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="BarDataKey"/> is equal to the given
