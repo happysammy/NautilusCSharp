@@ -30,6 +30,11 @@ namespace Nautilus.Data.Wranglers
             var barData = new List<Bar>();
             for (var i = 0; i < barsStrings.Length; i++)
             {
+                if (barsStrings[i] is null)
+                {
+                    continue;
+                }
+
                 barData.Add(Bar.GetFromString(barsStrings[i]));
             }
 

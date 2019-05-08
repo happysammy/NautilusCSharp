@@ -174,6 +174,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsSuccess);
+
             Assert.Equal(1, this.client.BarsCount(barType));
             Assert.Equal(1, this.client.KeysCount(barType));
             Assert.Equal(1, this.client.AllBarsCount());

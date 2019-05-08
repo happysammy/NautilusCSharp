@@ -42,10 +42,9 @@ namespace Nautilus.Redis
         }
 
         /// <summary>
-        /// Returns a result indicating whether a <see cref="Redis"/> Key exists for the given
-        /// <see cref="BarDataKey"/>.
+        /// Returns a result indicating whether a given key exists.
         /// </summary>
-        /// <param name="key">The <see cref="BarDataKey"/>.</param>
+        /// <param name="key">The key.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public bool KeyExists(string key)
         {
@@ -77,7 +76,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barType">The bar specification.</param>
+        /// <param name="barType">The bar type.</param>
         /// <returns>A <see cref="long"/>.</returns>
         public long KeysCount(BarType barType)
         {
@@ -87,7 +86,7 @@ namespace Nautilus.Redis
         /// <summary>
         /// Returns a count of all bars held within <see cref="Redis"/> of the given <see cref="BarSpecification"/>.
         /// </summary>
-        /// <param name="barType">The bar specification.</param>
+        /// <param name="barType">The bar type.</param>
         /// <returns>A <see cref="long"/>.</returns>
         public long BarsCount(BarType barType)
         {
