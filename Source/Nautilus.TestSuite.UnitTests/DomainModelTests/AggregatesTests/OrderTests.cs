@@ -454,8 +454,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
-            // Act - ignore warning, this is why the test returns false!
-            // ReSharper disable once SuspiciousTypeConversion.Global
+            // Act
+            // ReSharper disable once SuspiciousTypeConversion.Global (this is why the test returns false)
             var result = order.Equals(string.Empty);
 
             // Assert

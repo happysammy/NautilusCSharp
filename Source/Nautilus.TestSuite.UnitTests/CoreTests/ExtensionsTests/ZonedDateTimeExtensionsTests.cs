@@ -50,8 +50,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
             // Arrange
             var nullableZonedDateTime = (ZonedDateTime?)null;
 
-            // Act - Ignore expression is always null warning as this is the point of the test.
-            // ReSharper disable once ExpressionIsAlwaysNull
+            // Act
+            // ReSharper disable once ExpressionIsAlwaysNull (this is the point of the test)
             var result = nullableZonedDateTime.ToIsoString();
 
             // Assert

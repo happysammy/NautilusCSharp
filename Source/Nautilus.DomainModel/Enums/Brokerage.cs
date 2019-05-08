@@ -8,9 +8,12 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The brokerage enumeration.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Matches Python enums.")]
     public enum Brokerage
     {
         /// <summary>
@@ -21,25 +24,21 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// The FXCM brokerage.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         FXCM,
 
         /// <summary>
         /// The Dukascopy brokerage.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         DUKASCOPY,
 
         /// <summary>
         /// The Interactive Brokers brokerage.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         IB,
 
         /// <summary>
         /// The LMAX exchange.
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         LMAX,
     }
 }
