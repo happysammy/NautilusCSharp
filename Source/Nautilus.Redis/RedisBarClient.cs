@@ -90,7 +90,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long BarsCount(BarType barType)
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType));
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.GetBarTypeWildcardString(barType)).ToArray();
 
             if (!allKeys.Any())
             {
@@ -110,7 +110,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allBarTypeKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard);
+            var allBarTypeKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).ToArray();
 
             if (!allBarTypeKeys.Any())
             {
