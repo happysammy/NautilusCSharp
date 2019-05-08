@@ -40,6 +40,10 @@ namespace Nautilus.Common.Componentry
             {
                 action.Invoke();
             }
+            catch (ArgumentException ex)
+            {
+                this.log.Error(ex.Message, ex);
+            }
             catch (Exception ex)
             {
                 this.log.Fatal(ex.Message, ex);

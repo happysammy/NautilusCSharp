@@ -238,6 +238,7 @@ namespace Nautilus.Fix
         /// <param name="ask">The tick best ask price.</param>
         /// <param name="timestamp">The tick timestamp.</param>
         [SystemBoundary]
+        [PerformanceOptimized]
         public void OnTick(
             string symbolCode,
             Venue venue,
@@ -253,13 +254,13 @@ namespace Nautilus.Fix
 
                 var tick = new Tick(
                     new Symbol(symbolCode, venue),
-                    Price.Create(bid, bid.GetDecimalPlaces()),
-                    Price.Create(ask, ask.GetDecimalPlaces()),
+                    Price.Create(bid),
+                    Price.Create(ask),
                     timestamp);
 
-                foreach (var receiver in this.tickReceivers)
+                for (var i = 0; i < this.tickReceivers.Count; i++)
                 {
-                    receiver.Send(tick);
+                    this.tickReceivers[i].Send(tick);
                 }
             });
         }

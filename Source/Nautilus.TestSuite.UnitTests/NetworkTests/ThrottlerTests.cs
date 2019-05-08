@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 throttler.Endpoint.Send($"Message-{i + 1}");
             }
 
-            Task.Delay(10).Wait();
+            Task.Delay(50).Wait();
 
             // Should receives only the first 10 messages.
             var count1 = this.testReceiver.Messages.Count;
@@ -99,13 +99,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 throttler.Endpoint.Send($"Message-{i + 1}");
             }
 
-            Task.Delay(100).Wait();
+            Task.Delay(50).Wait();
 
             // Should receive only the first 10 messages.
             var count1 = this.testReceiver.Messages.Count;
 
             // Wait for the throttle duration interval.
-            Task.Delay(100).Wait();
+            Task.Delay(150).Wait();
 
             // Should receive the next message
             var count2 = this.testReceiver.Messages.Count;
