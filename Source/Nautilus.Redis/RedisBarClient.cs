@@ -17,7 +17,6 @@ namespace Nautilus.Redis
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Keys;
     using Nautilus.Data.Types;
-    using Nautilus.Data.Wranglers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -213,7 +212,7 @@ namespace Nautilus.Redis
             Debug.NotEmpty(bars, nameof(bars));
 
             var barsAddedCounter = 0;
-            var barsIndex = BarWrangler.OrganizeBarsByDay(bars);
+            var barsIndex = this.OrganizeBarsByDay(bars);
 
             foreach (var (dateKey, value) in barsIndex)
             {
@@ -365,6 +364,29 @@ namespace Nautilus.Redis
             var values = this.redisDatabase.ListRange(key);
 
             return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.GetFromString(b)));
+        }
+
+        /// <summary>
+        /// Organizes the given bars array into a dictionary of bar lists indexed by a date key.
+        /// </summary>
+        /// <param name="bars">The bars array.</param>
+        /// <returns>The organized dictionary.</returns>
+        public Dictionary<DateKey, List<Bar>> OrganizeBarsByDay(Bar[] bars)
+        {
+            var barsDictionary = new Dictionary<DateKey, List<Bar>>();
+            for (var i = 0; i < bars.Length; i++)
+            {
+                var dateKey = new DateKey(bars[i].Timestamp);
+
+                if (!barsDictionary.ContainsKey(dateKey))
+                {
+                    barsDictionary.Add(dateKey, new List<Bar>());
+                }
+
+                barsDictionary[dateKey].Add(bars[i]);
+            }
+
+            return barsDictionary;
         }
 
         /// <summary>

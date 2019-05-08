@@ -481,5 +481,29 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             Assert.Single(result.Keys);
             Assert.Equal(6, result["dukascopy:audusd"].Count);
         }
+
+        [Theory]
+        [InlineData(0, 1, 2)]
+        [InlineData(1, 1, 2)]
+        [InlineData(1, 2, 3)]
+        internal void OrganizeBarsByDay(
+            int offset1,
+            int offset2,
+            int expectedCount)
+        {
+            // Arrange
+            var bar1 = StubBarData.Create();
+            var bar2 = StubBarData.Create(1);
+            var bar3 = StubBarData.Create(Duration.FromDays(offset1));
+            var bar4 = StubBarData.Create(Duration.FromDays(offset2));
+
+            var barList = new[] { bar1, bar2, bar3, bar4 };
+
+            // Act
+            var result = this.client.OrganizeBarsByDay(barList);
+
+            // Assert
+            Assert.Equal(expectedCount, result.Keys.Count);
+        }
     }
 }
