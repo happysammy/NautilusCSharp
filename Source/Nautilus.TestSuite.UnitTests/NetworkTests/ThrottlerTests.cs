@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var count1 = this.testReceiver.Messages.Count;
 
             // Wait for the throttle duration interval.
-            Task.Delay(100).Wait();
+            Task.Delay(120).Wait();
 
             // Should receive the next 10 messages.
             var count2 = this.testReceiver.Messages.Count;

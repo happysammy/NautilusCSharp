@@ -29,8 +29,6 @@ namespace Nautilus.DomainModel.ValueObjects
             : base(value)
         {
             Debug.PositiveDecimal(value, nameof(value));
-            Debug.NotNegativeInt32(decimalPrecision, nameof(decimalPrecision));
-            Debug.True(value.GetDecimalPlaces() <= decimalPrecision, nameof(decimalPrecision));
 
             this.DecimalPrecision = decimalPrecision;
         }
@@ -44,10 +42,23 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a new <see cref="Price"/> with the given value and decimal places.
         /// </summary>
         /// <param name="value">The price value.</param>
+        /// <returns>A <see cref="Price"/>.</returns>
+        public static Price Create(decimal value)
+        {
+            return new Price(value, value.GetDecimalPlaces());
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Price"/> with the given value and decimal places.
+        /// </summary>
+        /// <param name="value">The price value.</param>
         /// <param name="decimalPrecision">The price decimal precision.</param>
         /// <returns>A <see cref="Price"/>.</returns>
         public static Price Create(decimal value, int decimalPrecision)
         {
+            Debug.NotNegativeInt32(decimalPrecision, nameof(decimalPrecision));
+            Debug.True(value.GetDecimalPlaces() <= decimalPrecision, nameof(decimalPrecision));
+
             return new Price(value, decimalPrecision);
         }
 

@@ -20,11 +20,32 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         [Theory]
         [InlineData(0.1, 1, 0.1)]
         [InlineData(0.001, 3, 0.001)]
-        [InlineData(1, 1, 1)]
-        [InlineData(100, 1, 100)]
+        [InlineData(1, 0, 1)]
+        [InlineData(100, 0, 100)]
         [InlineData(500.5, 1, 500.5)]
         [InlineData(424242, 0, 424242)]
-        internal void Create_VariousValuesWithDecimals_ReturnsExpectedValue(
+        internal void Create_VariousValues_ReturnsExpectedValue(
+            decimal value,
+            int decimalPrecision,
+            decimal expected)
+        {
+            // Arrange
+            // Act
+            var result = Price.Create(value);
+
+            // Assert
+            Assert.Equal(expected, result.Value);
+            Assert.Equal(decimalPrecision, result.DecimalPrecision);
+        }
+
+        [Theory]
+        [InlineData(0.1, 1, 0.1)]
+        [InlineData(0.001, 3, 0.001)]
+        [InlineData(1, 0, 1)]
+        [InlineData(100, 0, 100)]
+        [InlineData(500.5, 1, 500.5)]
+        [InlineData(424242, 0, 424242)]
+        internal void Create_VariousValuesWithDecimalPrecision_ReturnsExpectedValue(
             decimal value,
             int decimals,
             decimal expected)
