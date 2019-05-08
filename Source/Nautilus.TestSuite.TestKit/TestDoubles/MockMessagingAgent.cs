@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Collections.Generic;
     using System.Text;
-    using System.Threading;
+    using System.Threading.Tasks;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -68,7 +68,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public void OnMessageWithWorkDelay(object message)
         {
             this.Messages.Add(message);
-            Thread.Sleep(this.workDelayMilliseconds);
+            Task.Delay(this.workDelayMilliseconds).Wait();
         }
     }
 }

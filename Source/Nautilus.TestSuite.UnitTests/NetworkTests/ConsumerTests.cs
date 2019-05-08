@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Threading;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Act
             requester.SendFrame("MSG");
 
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
@@ -102,7 +102,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.SendFrame("MSG-2");
             var response2 = Encoding.UTF8.GetString(requester.ReceiveFrameBytes());
 
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
@@ -136,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             consumer.Start();
             requester.SendFrame("MSG");
             requester.ReceiveFrameBytes();
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Act
             consumer.Stop();
@@ -178,7 +178,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 requester.ReceiveFrameBytes();
             }
 
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
@@ -221,7 +221,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 requester2.ReceiveFrameBytes();
             }
 
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);

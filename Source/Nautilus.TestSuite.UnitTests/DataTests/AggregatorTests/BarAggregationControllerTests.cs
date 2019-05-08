@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
+    using System.Threading.Tasks;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregators;
     using Nautilus.DomainModel.Enums;
@@ -137,7 +137,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Act
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
-            Thread.Sleep(2000);
+            Task.Delay(2000).Wait();
             this.controller.Endpoint.Send(unsubscribe);
 
             // LogDumper.Dump(this.logger, this.output);
@@ -186,7 +186,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe2);
             this.controller.Endpoint.Send(subscribe3);
             this.controller.Endpoint.Send(subscribe4);
-            Thread.Sleep(5000);
+            Task.Delay(5000).Wait();
             this.controller.Endpoint.Send(unsubscribe);
 
             // LogDumper.Dump(this.logger, this.output);

@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var count1 = this.testReceiver.Messages.Count;
 
             // Wait for the throttle duration interval.
-            Task.Delay(120).Wait();
+            Task.Delay(100).Wait();
 
             // Should receive the next 10 messages.
             var count2 = this.testReceiver.Messages.Count;
@@ -105,7 +105,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var count1 = this.testReceiver.Messages.Count;
 
             // Wait for the throttle duration interval.
-            Task.Delay(150).Wait();
+            Task.Delay(100).Wait();
 
             // Should receive the next message
             var count2 = this.testReceiver.Messages.Count;
@@ -116,7 +116,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             }
 
             // Wait for the throttle duration interval.
-            Task.Delay(150).Wait();
+            Task.Delay(100).Wait();
 
             // Receives the next 100 messages.
             var count3 = this.testReceiver.Messages.Count;
@@ -125,8 +125,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Equal(10, count1);
             Assert.Equal(11, count2);
-            Assert.Equal(40, count3);
-            Assert.Equal(41, throttler.QueueCount);
+            Assert.Equal(30, count3);
+            Assert.Equal(51, throttler.QueueCount);
             Assert.False(throttler.IsIdle);
         }
     }

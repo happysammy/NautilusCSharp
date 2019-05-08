@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Threading;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
@@ -65,7 +65,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new Port(55504),
                 Guid.NewGuid());
             publisher.Start();
-            Thread.Sleep(100);
+            Task.Delay(100).Wait();
 
             // Act
             publisher.Endpoint.Send(bytes);
