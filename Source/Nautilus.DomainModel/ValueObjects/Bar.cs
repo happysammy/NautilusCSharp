@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using System.Text;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -117,14 +116,13 @@ namespace Nautilus.DomainModel.ValueObjects
             Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
 
             var values = barString.Split(',');
-            var decimals = values[0].ToDecimalOr(0m).GetDecimalPlaces();
 
             return new Bar(
-                Price.Create(values[0].ToDecimalOr(0m), decimals),
-                Price.Create(values[1].ToDecimalOr(0m), decimals),
-                Price.Create(values[2].ToDecimalOr(0m), decimals),
-                Price.Create(values[3].ToDecimalOr(0m), decimals),
-                Quantity.Create(Convert.ToInt32(values[4].ToDecimalOr(0m))),
+                Price.Create(Convert.ToDecimal(values[0])),
+                Price.Create(Convert.ToDecimal(values[1])),
+                Price.Create(Convert.ToDecimal(values[2])),
+                Price.Create(Convert.ToDecimal(values[3])),
+                Quantity.Create(Convert.ToInt32(Convert.ToDecimal(values[4]))),
                 values[5].ToZonedDateTimeFromIso());
         }
 

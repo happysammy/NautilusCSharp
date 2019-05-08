@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
     using System.Text;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -98,8 +97,8 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new Tick(
                 new Symbol(code, exchange.ToEnum<Venue>()),
-                values[1].ToDecimalOr(decimal.Zero),
-                values[2].ToDecimalOr(decimal.Zero),
+                Convert.ToDecimal(values[1]),
+                Convert.ToDecimal(values[2]),
                 values[3].ToZonedDateTimeFromIso());
         }
 

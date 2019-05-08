@@ -52,6 +52,8 @@ namespace Nautilus.Data
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
 
+            this.RegisterHandler<DataDelivery<BarClosed>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 

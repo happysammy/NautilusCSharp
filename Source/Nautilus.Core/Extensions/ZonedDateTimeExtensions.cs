@@ -11,7 +11,6 @@ namespace Nautilus.Core.Extensions
     using System;
     using System.Globalization;
     using System.Text;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using NodaTime.Text;
@@ -19,7 +18,6 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>
-    [Immutable]
     public static class ZonedDateTimeExtensions
     {
         private const string IsoStringParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";
