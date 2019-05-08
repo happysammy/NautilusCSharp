@@ -22,8 +22,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Xunit;
     using Xunit.Abstractions;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PublisherTests
     {
@@ -50,9 +48,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_publish_bytes()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:55504";
-            var subscriber = new SubscriberSocket(TestAddress);
-            subscriber.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:55504";
+            var subscriber = new SubscriberSocket(testAddress);
+            subscriber.Connect(testAddress);
             subscriber.Subscribe(TestTopic);
 
             var bytes = Encoding.UTF8.GetBytes("1234");
@@ -80,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Tear Down
             subscriber.Unsubscribe(TestTopic);
-            subscriber.Disconnect(TestAddress);
+            subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
         }

@@ -14,10 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
     using Nautilus.Core.Correctness;
     using Xunit;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PreconditionTests
     {
         [Fact]
@@ -116,6 +113,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
         internal void Empty_WhenCollectionEmpty_DoesNothing()
         {
             // Arrange
+            // ReSharper disable once CollectionNeverUpdated.Local (this is the point of the test)
             var collection = new List<string>();
 
             // Act
@@ -149,6 +147,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
         internal void NotEmpty_WhenCollectionEmpty_Throws()
         {
             // Arrange
+            // ReSharper disable once CollectionNeverUpdated.Local (this is the point of the test)
             var collection = new List<string>();
 
             // Act

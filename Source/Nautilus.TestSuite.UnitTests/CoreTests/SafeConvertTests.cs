@@ -12,8 +12,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using Nautilus.Core;
     using Xunit;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class SafeConvertTests
     {
@@ -37,7 +35,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            var result = SafeConvert.ToDecimalOr(toBeParsed, 0m);
+            var result = toBeParsed.ToDecimalOr(0m);
 
             // Assert
             Assert.Equal(expectedResult, result);
@@ -64,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             // Act
-            var result = SafeConvert.ToDecimalOr(toBeParsed, alternativeValue);
+            var result = toBeParsed.ToDecimalOr(alternativeValue);
 
             // Assert
             Assert.Equal(expectedResult, result);

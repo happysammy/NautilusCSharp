@@ -16,11 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "PossibleUnintendedReferenceComparison", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("ReSharper", "EqualExpressionComparison", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MessageTests
     {
         [Fact]

@@ -12,8 +12,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
     using Nautilus.Core.Extensions;
     using Xunit;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class DecimalExtensionsTests
     {
