@@ -47,32 +47,25 @@ namespace Nautilus.Execution
         {
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
+
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<Event>(this.OnMessage);
         }
 
         private void OnMessage(SubmitOrder message)
         {
-            var orderToSubmit = message.Order;
-            var orderToAdd = new Order(
-                orderToSubmit.Symbol,
-                orderToSubmit.Id,
-                orderToSubmit.Label,
-                orderToSubmit.Side,
-                orderToSubmit.Type,
-                orderToSubmit.Quantity,
-                orderToSubmit.Price,
-                orderToSubmit.TimeInForce,
-                orderToSubmit.ExpireTime,
-                orderToSubmit.Timestamp);
-
-            this.orders.Add(orderToAdd);
-            this.Log.Debug($"Order {orderToAdd.Id} added to order list.");
+            var order = message.Order;
+            this.orders.Add(order);
+            this.Log.Debug($"Order {order.Id} added to order list.");
 
             this.Send(ServiceAddress.Execution, message);
 
-            if (orderToSubmit.Price.HasValue && !this.modifyCache.ContainsKey(orderToSubmit.Id))
+            if (order.Price.HasValue && !this.modifyCache.ContainsKey(order.Id))
             {
                 // Buffer modification cache preemptively.
-                this.modifyCache.Add(orderToSubmit.Id, new List<ModifyOrder>());
+                this.modifyCache.Add(order.Id, new List<ModifyOrder>());
             }
         }
 

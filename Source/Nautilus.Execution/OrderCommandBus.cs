@@ -39,6 +39,12 @@ namespace Nautilus.Execution
             messagingAdapter)
         {
             this.gateway = gateway;
+
+            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<AtomicOrder>(this.RouteOrder);
         }
 
         private void OnMessage(CollateralInquiry message)

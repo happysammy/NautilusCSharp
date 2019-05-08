@@ -51,6 +51,8 @@ namespace Nautilus.Execution
                 host,
                 port,
                 Guid.NewGuid()).Endpoint;
+
+            this.RegisterHandler<Event>(this.OnMessage);
         }
 
         private void OnMessage(Event message)

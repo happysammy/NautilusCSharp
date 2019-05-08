@@ -48,7 +48,7 @@ namespace Nautilus.Messaging
         public IEnumerable<object> UnhandledMessages => this.processor.UnhandledMessages;
 
         /// <summary>
-        /// Register the given message type with the given handler.
+        /// Register the message type with the given handler.
         /// </summary>
         /// <typeparam name="TMessage">The message type.</typeparam>
         /// <param name="handler">The handler.</param>

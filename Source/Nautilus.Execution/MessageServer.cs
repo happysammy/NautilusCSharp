@@ -64,6 +64,12 @@ namespace Nautilus.Execution
                 eventSerializer,
                 serverAddress,
                 eventsPort).Endpoint;
+
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
+            this.RegisterHandler<Event>(this.OnMessage);
         }
 
         /// <summary>

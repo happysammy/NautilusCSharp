@@ -81,6 +81,15 @@ namespace Nautilus.Execution
                 this.commandThrottler,
                 Duration.FromSeconds(1),
                 newOrdersPerSecond).Endpoint;
+
+            this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<CancelOrder>(this.OnMessage);
+            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
+            this.RegisterHandler<FixSessionConnected>(this.OnMessage);
+            this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
+            this.RegisterHandler<ConnectFixJob>(this.OnMessage);
+            this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
         }
 
         /// <summary>
