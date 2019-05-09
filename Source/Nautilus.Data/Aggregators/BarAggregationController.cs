@@ -78,7 +78,7 @@ namespace Nautilus.Data.Aggregators
         }
 
         /// <summary>
-        /// Start method called when the <see cref="StartSystem"/> message is received.
+        /// Start method called when the <see cref="SystemStart"/> message is received.
         /// </summary>
         public override void Start()
         {

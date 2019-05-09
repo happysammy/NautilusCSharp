@@ -58,7 +58,7 @@ namespace Nautilus.Common
         /// </summary>
         public override void Start()
         {
-            var start = new StartSystem(this.NewGuid(), this.TimeNow());
+            var start = new SystemStart(this.NewGuid(), this.TimeNow());
 
             foreach (var component in this.components)
             {
@@ -71,7 +71,7 @@ namespace Nautilus.Common
         /// </summary>
         public override void Stop()
         {
-            var shutdown = new ShutdownSystem(this.NewGuid(), this.TimeNow());
+            var shutdown = new SystemShutdown(this.NewGuid(), this.TimeNow());
 
             foreach (var component in this.components)
             {

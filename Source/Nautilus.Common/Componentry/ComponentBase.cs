@@ -42,8 +42,8 @@ namespace Nautilus.Common.Componentry
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
 
-            this.RegisterHandler<StartSystem>(this.OnMessage);
-            this.RegisterHandler<ShutdownSystem>(this.OnMessage);
+            this.RegisterHandler<SystemStart>(this.OnMessage);
+            this.RegisterHandler<SystemShutdown>(this.OnMessage);
         }
 
         /// <summary>
@@ -105,12 +105,12 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute<T>(action);
         }
 
-        private void OnMessage(StartSystem message)
+        private void OnMessage(SystemStart message)
         {
             this.Start();
         }
 
-        private void OnMessage(ShutdownSystem message)
+        private void OnMessage(SystemShutdown message)
         {
             this.Stop();
         }
