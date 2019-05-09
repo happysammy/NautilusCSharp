@@ -24,7 +24,7 @@ namespace Nautilus.Common.Configuration
         /// <returns>A read-only dictionary of key value pairs.</returns>
         public static IReadOnlyDictionary<string, string> LoadConfig(string fileName)
         {
-            var dic = new Dictionary<string, string>();
+            var dictionary = new Dictionary<string, string>();
 
             if (!File.Exists(fileName))
             {
@@ -39,15 +39,15 @@ namespace Nautilus.Common.Configuration
                     continue;
                 }
 
-                var skey = setting.Substring(0, index);
-                var svalue = setting.Substring(index + 1);
-                if (!dic.ContainsKey(skey))
+                var key = setting.Substring(0, index);
+                var value = setting.Substring(index + 1);
+                if (!dictionary.ContainsKey(key))
                 {
-                    dic.Add(skey, svalue);
+                    dictionary.Add(key, value);
                 }
             }
 
-            return new Dictionary<string, string>(dic);
+            return new Dictionary<string, string>(dictionary);
         }
     }
 }

@@ -19,11 +19,6 @@ namespace Nautilus.Common.Configuration
         public static string Logging => "logging";
 
         /// <summary>
-        /// Gets the Service Stack configuration section string.
-        /// </summary>
-        public static string ServiceStack => "serviceStack";
-
-        /// <summary>
         /// Gets the FIX configuration section string.
         /// </summary>
         public static string Fix44 => "fix44";
