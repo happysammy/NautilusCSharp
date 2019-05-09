@@ -48,13 +48,11 @@ namespace NautilusData
         /// <summary>
         /// Gets the ASP.NET Core configuration.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the ASP.NET Core hosting environment.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public IHostingEnvironment Environment { get; }
 
         /// <summary>

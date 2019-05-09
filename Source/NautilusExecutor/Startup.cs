@@ -47,13 +47,11 @@ namespace NautilusExecutor
         /// <summary>
         /// Gets the ASP.NET Core configuration.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the ASP.NET Core hosting environment.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public IHostingEnvironment Environment { get; }
 
         /// <summary>
@@ -79,7 +77,7 @@ namespace NautilusExecutor
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
             var configFile = (string)config[ConfigSection.Fix44]["config"];
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
             var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
 
             var fixSettings = ConfigReader.LoadConfig(configPath);
