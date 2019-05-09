@@ -63,7 +63,7 @@ namespace Nautilus.Common.Messaging
         public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
-            switch (message as Message)
+            switch (message)
             {
                     case Command commandMessage:
                         var commandEnvelope = new Envelope<Command>(
@@ -74,7 +74,6 @@ namespace Nautilus.Common.Messaging
                             message.Timestamp);
                         this.commandBus.Send(commandEnvelope);
                         break;
-
                     case Event eventMessage:
                         var eventEnvelope = new Envelope<Event>(
                             receiver,
@@ -84,7 +83,6 @@ namespace Nautilus.Common.Messaging
                             message.Timestamp);
                         this.eventBus.Send(eventEnvelope);
                         break;
-
                     case Document serviceMessage:
                         var serviceEnvelope = new Envelope<Document>(
                             receiver,
@@ -94,7 +92,6 @@ namespace Nautilus.Common.Messaging
                             message.Timestamp);
                         this.documentBus.Send(serviceEnvelope);
                         break;
-
                     default: throw new InvalidOperationException(
                         $"Cannot send message ({message.GetType()} message type is not supported).");
             }

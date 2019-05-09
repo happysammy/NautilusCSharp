@@ -65,6 +65,14 @@ namespace Nautilus.Data
             this.barPublisher = barPublisher;
             this.resolutionsPersisting = new List<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;
+
+            this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<CollectData<BarType>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<BarClosed>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
+            this.RegisterHandler<DataPersisted<BarType>>(this.OnMessage);
+            this.RegisterHandler<DataCollected<BarType>>(this.OnMessage);
+            this.RegisterHandler<TrimBarDataJob>(this.OnMessage);
         }
 
         /// <summary>

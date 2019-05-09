@@ -55,8 +55,6 @@ namespace NautilusExecutor
             {
                 // Wait for connection.
             }
-
-            this.systemController.Stop();
         }
 
         /// <summary>

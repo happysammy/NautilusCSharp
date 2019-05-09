@@ -112,19 +112,14 @@ namespace Nautilus.DomainModel.ValueObjects
             {
                 case Resolution.Tick:
                     return NodaTime.Period.Zero;
-
                 case Resolution.Second:
                     return NodaTime.Period.FromSeconds(barPeriod);
-
                 case Resolution.Minute:
                     return NodaTime.Period.FromMinutes(barPeriod);
-
                 case Resolution.Hour:
                     return NodaTime.Period.FromHours(barPeriod);
-
                 case Resolution.Day:
                     return NodaTime.Period.FromDays(barPeriod);
-
                 default: throw new InvalidOperationException("The bar resolution was not recognised.");
             }
         }

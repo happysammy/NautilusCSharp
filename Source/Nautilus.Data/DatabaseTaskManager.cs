@@ -54,6 +54,7 @@ namespace Nautilus.Data
 
             this.RegisterHandler<DataDelivery<BarClosed>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<IEnumerable<Instrument>>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -132,7 +133,7 @@ namespace Nautilus.Data
                 });
         }
 
-        private void OnMessage(DataDelivery<IReadOnlyCollection<Instrument>> message)
+        private void OnMessage(DataDelivery<IEnumerable<Instrument>> message)
         {
             foreach (var instrument in message.Data)
             {

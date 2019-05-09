@@ -40,16 +40,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             {
                 case Resolution.Second:
                     return "Second";
-
                 case Resolution.Minute:
                     return "Min";
-
                 case Resolution.Hour:
                     return "Hour";
-
                 case Resolution.Day:
                     return "Day";
-
                 default:
                     throw new ArgumentOutOfRangeException(nameof(resolution), resolution, null);
             }

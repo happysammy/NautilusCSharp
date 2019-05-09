@@ -49,7 +49,6 @@ namespace Nautilus.MsgPack
             {
                 case OrderCommand orderCommand:
                     return this.SerializeOrderCommand(orderCommand);
-
                 case CollateralInquiry collateralInquiry:
                     var package = new MessagePackObjectDictionary
                     {
@@ -58,7 +57,6 @@ namespace Nautilus.MsgPack
                         { new MessagePackObject(Key.CommandTimestamp), collateralInquiry.Timestamp.ToIsoString() },
                     };
                     return MsgPackSerializer.Serialize(package.Freeze());
-
                 default: throw new InvalidOperationException(
                     "Cannot serialize the command (unrecognized command).");
             }
@@ -80,10 +78,8 @@ namespace Nautilus.MsgPack
             {
                 case OrderCommand:
                     return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
-
                 case CollateralInquiry:
                     return new CollateralInquiry(commandId, commandTimestamp);
-
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the command (unrecognized command).");
             }
@@ -104,17 +100,14 @@ namespace Nautilus.MsgPack
                 case SubmitOrder command:
                     package.Add(new MessagePackObject(Key.OrderCommand), SubmitOrder);
                     break;
-
                 case CancelOrder command:
                     package.Add(new MessagePackObject(Key.OrderCommand), CancelOrder);
                     package.Add(new MessagePackObject(Key.CancelReason), command.Reason);
                     break;
-
                 case ModifyOrder command:
                     package.Add(new MessagePackObject(Key.OrderCommand), ModifyOrder);
                     package.Add(new MessagePackObject(Key.ModifiedPrice), command.ModifiedPrice.ToString());
                     break;
-
                 default: throw new InvalidOperationException(
                     "Cannot serialize the order command (unrecognized order command).");
             }
@@ -137,21 +130,18 @@ namespace Nautilus.MsgPack
                         order,
                         commandId,
                         commandTimestamp);
-
                 case CancelOrder:
                     return new CancelOrder(
                         order,
                         unpacked[Key.CancelReason].ToString(),
                         commandId,
                         commandTimestamp);
-
                 case ModifyOrder:
                     return new ModifyOrder(
                         order,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         commandId,
                         commandTimestamp);
-
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the order command (unrecognized order command).");
             }

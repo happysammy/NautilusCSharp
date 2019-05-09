@@ -104,16 +104,13 @@ namespace Nautilus.Data.Aggregators
             {
                 case QuoteType.Bid:
                     return tick.Bid;
-
                 case QuoteType.Ask:
                     return tick.Ask;
-
                 case QuoteType.Mid:
                     var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
                     return Price.Create(
                         Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
                         decimalsPlusOne);
-
                 case QuoteType.Last:
                     throw new InvalidOperationException("Cannot update with QuoteType.Last.");
                 default:

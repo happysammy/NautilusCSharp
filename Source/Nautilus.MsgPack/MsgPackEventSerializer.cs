@@ -50,7 +50,6 @@ namespace Nautilus.MsgPack
             {
                 case OrderEvent orderEvent:
                     return SerializeOrderEvent(orderEvent);
-
                 case AccountEvent accountEvent:
                     return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
                     {
@@ -69,7 +68,6 @@ namespace Nautilus.MsgPack
                         { new MessagePackObject(Key.EventId), accountEvent.Id.ToString() },
                         { new MessagePackObject(Key.EventTimestamp), accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
-
                 default: throw new InvalidOperationException(
                     "Cannot serialize the event (unrecognized event).");
             }
@@ -95,7 +93,6 @@ namespace Nautilus.MsgPack
                         eventId,
                         eventTimestamp,
                         unpacked);
-
                 case AccountEvent:
                     var currency = unpacked[Key.Currency].ToString().ToEnum<CurrencyCode>();
                     return new AccountEvent(
@@ -112,7 +109,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.MarginCallStatus].ToString(),
                         eventId,
                         eventTimestamp);
-
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the event (unrecognized byte[] pattern).");
             }
@@ -135,18 +131,15 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderSubmitted);
                     package.Add(new MessagePackObject(Key.SubmittedTime), @event.SubmittedTime.ToIsoString());
                     break;
-
                 case OrderAccepted @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderAccepted);
                     package.Add(new MessagePackObject(Key.AcceptedTime), @event.AcceptedTime.ToIsoString());
                     break;
-
                 case OrderRejected @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderRejected);
                     package.Add(new MessagePackObject(Key.RejectedTime), @event.RejectedTime.ToIsoString());
                     package.Add(new MessagePackObject(Key.RejectedReason), @event.RejectedReason);
                     break;
-
                 case OrderWorking @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderWorking);
                     package.Add(new MessagePackObject(Key.OrderIdBroker), @event.OrderIdBroker.ToString());
@@ -159,31 +152,26 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(@event.ExpireTime));
                     package.Add(new MessagePackObject(Key.WorkingTime), @event.WorkingTime.ToIsoString());
                     break;
-
                 case OrderCancelled @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderCancelled);
                     package.Add(new MessagePackObject(Key.CancelledTime), @event.CancelledTime.ToIsoString());
                     break;
-
                 case OrderCancelReject @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderCancelReject);
                     package.Add(new MessagePackObject(Key.RejectedTime), @event.RejectedTime.ToIsoString());
                     package.Add(new MessagePackObject(Key.RejectedResponse), @event.RejectedResponseTo);
                     package.Add(new MessagePackObject(Key.RejectedReason), @event.RejectedReason);
                     break;
-
                 case OrderModified @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderModified);
                     package.Add(new MessagePackObject(Key.OrderIdBroker), @event.BrokerOrderId.ToString());
                     package.Add(new MessagePackObject(Key.ModifiedPrice), @event.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(new MessagePackObject(Key.ModifiedTime), @event.ModifiedTime.ToIsoString());
                     break;
-
                 case OrderExpired @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderExpired);
                     package.Add(new MessagePackObject(Key.ExpiredTime), @event.ExpiredTime.ToIsoString());
                     break;
-
                 case OrderPartiallyFilled @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderPartiallyFilled);
                     package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
@@ -194,7 +182,6 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
                     package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
-
                 case OrderFilled @event:
                     package.Add(new MessagePackObject(Key.OrderEvent), OrderFilled);
                     package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
@@ -204,7 +191,6 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
                     package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
-
                 default: throw new InvalidOperationException(
                     "Cannot serialize the order event (unrecognized order event).");
             }
@@ -229,7 +215,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.SubmittedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderAccepted:
                     return new OrderAccepted(
                         symbol,
@@ -237,7 +222,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.AcceptedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderRejected:
                     return new OrderRejected(
                         symbol,
@@ -246,7 +230,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
-
                 case OrderWorking:
                     return new OrderWorking(
                         symbol,
@@ -262,7 +245,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderCancelled:
                     return new OrderCancelled(
                         symbol,
@@ -270,7 +252,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderCancelReject:
                     return new OrderCancelReject(
                         symbol,
@@ -280,7 +261,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
-
                 case OrderModified:
                     return new OrderModified(
                         symbol,
@@ -290,7 +270,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderExpired:
                     return new OrderExpired(
                         symbol,
@@ -298,7 +277,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ExpiredTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderPartiallyFilled:
                     return new OrderPartiallyFilled(
                         symbol,
@@ -312,7 +290,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 case OrderFilled:
                     return new OrderFilled(
                         symbol,
@@ -325,7 +302,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-
                 default: throw new InvalidOperationException(
                     "Cannot deserialize the order event (unrecognized bytes pattern).");
             }

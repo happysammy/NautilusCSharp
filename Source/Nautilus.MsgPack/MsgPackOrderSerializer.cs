@@ -65,10 +65,6 @@ namespace Nautilus.MsgPack
 
             switch (orderType)
             {
-                case OrderType.UNKNOWN:
-                    throw new InvalidOperationException(
-                        "Cannot deserialize order (the type is unknown).");
-
                 case OrderType.MARKET:
                     return OrderFactory.Market(
                         symbol,
@@ -77,7 +73,6 @@ namespace Nautilus.MsgPack
                         side,
                         quantity,
                         timestamp);
-
                 case OrderType.LIMIT:
                     return OrderFactory.Limit(
                         symbol,
@@ -89,7 +84,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
-
                 case OrderType.STOP_LIMIT:
                     return OrderFactory.StopLimit(
                         symbol,
@@ -101,7 +95,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
-
                 case OrderType.STOP_MARKET:
                     return OrderFactory.StopMarket(
                         symbol,
@@ -113,7 +106,6 @@ namespace Nautilus.MsgPack
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
-
                 case OrderType.MIT:
                     return OrderFactory.MarketIfTouched(
                         symbol,
@@ -125,7 +117,9 @@ namespace Nautilus.MsgPack
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
-
+                case OrderType.UNKNOWN:
+                    throw new InvalidOperationException(
+                        "Cannot deserialize order (the type is UNKNOWN).");
                 default:
                     throw new InvalidOperationException(
                         "Cannot deserialize order (the order type is not recognized).");

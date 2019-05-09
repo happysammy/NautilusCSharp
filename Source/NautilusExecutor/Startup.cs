@@ -106,7 +106,7 @@ namespace NautilusExecutor
                 commandsPerSecond,
                 newOrdersPerSecond);
 
-            // this.executionSystem.Endpoint.Send(new StartSystem(this.));
+            this.executionSystem?.Start();
         }
 
         /// <summary>

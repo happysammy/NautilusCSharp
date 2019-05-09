@@ -136,14 +136,12 @@ namespace NautilusData
                         messagingAdapter,
                         configuration,
                         instrumentData);
-
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
                         messagingAdapter,
                         configuration,
                         instrumentData);
-
                 default:
                     throw new InvalidOperationException($"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
             }
