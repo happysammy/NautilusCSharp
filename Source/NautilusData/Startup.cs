@@ -28,7 +28,7 @@ namespace NautilusData
     /// </summary>
     public class Startup
     {
-        private NautilusDatabase? dataSystem;
+        private NautilusData? dataSystem;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -111,7 +111,7 @@ namespace NautilusData
                 Resolution.Hour,
             }.ToList().AsReadOnly();
 
-            this.dataSystem = NautilusDatabaseFactory.Create(
+            this.dataSystem = NautilusDataFactory.Create(
                 logLevel,
                 isCompression,
                 compressionCodec,

@@ -130,7 +130,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            // .executionSystem?.Shutdown();
+            this.executionSystem?.Stop();
         }
     }
 }

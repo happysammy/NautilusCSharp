@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="NautilusDatabaseFactory.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NautilusDataFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -32,12 +32,12 @@ namespace NautilusData
     using StackExchange.Redis;
 
     /// <summary>
-    /// Provides a factory for creating a <see cref="NautilusDatabase"/> system.
+    /// Provides a factory for creating a <see cref="NautilusData"/> system.
     /// </summary>
-    public static class NautilusDatabaseFactory
+    public static class NautilusDataFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="NautilusDatabase"/> system.
+        /// Creates and returns a new <see cref="NautilusData"/> system.
         /// </summary>
         /// <param name="logLevel">The log level threshold.</param>
         /// <param name="isCompression">The is data compression on boolean flag.</param>
@@ -47,7 +47,7 @@ namespace NautilusData
         /// <param name="resolutions">The resolutions to persist.</param>
         /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
         /// <returns>The <see cref="Nautilus"/> system.</returns>
-        public static NautilusDatabase Create(
+        public static NautilusData Create(
             LogEventLevel logLevel,
             bool isCompression,
             string compressionCodec,
@@ -115,7 +115,7 @@ namespace NautilusData
                 messagingAdapter,
                 switchboard);
 
-            return new NautilusDatabase(
+            return new NautilusData(
                 container,
                 messagingAdapter,
                 systemController,

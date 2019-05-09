@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="NautilusDatabase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="NautilusData.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -22,26 +22,26 @@ namespace NautilusData
     /// <summary>
     /// Contains the Nautilus Database system.
     /// </summary>
-    public sealed class NautilusDatabase : ComponentBusConnectedBase
+    public sealed class NautilusData : ComponentBusConnectedBase
     {
         private readonly SystemController systemController;
         private readonly IFixClient fixClient;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NautilusDatabase"/> class.
+        /// Initializes a new instance of the <see cref="NautilusData"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="systemController">The system controller.</param>
         /// <param name="fixClient">The FIX client.</param>
-        public NautilusDatabase(
+        public NautilusData(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             SystemController systemController,
             IFixClient fixClient)
             : base(
                 NautilusService.Core,
-                LabelFactory.Create(nameof(NautilusDatabase)),
+                LabelFactory.Create(nameof(NautilusData)),
                 container,
                 messagingAdapter)
         {
@@ -98,7 +98,7 @@ namespace NautilusData
         {
             this.fixClient.Disconnect();
 
-            // this.systemController.Shutdown();
+            this.systemController.Stop();
         }
     }
 }
