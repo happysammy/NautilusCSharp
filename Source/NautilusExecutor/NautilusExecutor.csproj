@@ -37,10 +37,10 @@
         <Content Include="hosting.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\Configuration\DUKAFIX44.xml">
+        <Content Include="DUKAFIX44.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\Configuration\FIXFXCM10.xml">
+        <Content Include="FIXFXCM10.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="..\Configuration\fix_duka1.cfg">
