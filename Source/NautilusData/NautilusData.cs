@@ -62,7 +62,7 @@ namespace NautilusData
                 // Wait for connection.
             }
 
-            // this.systemController.();
+            this.systemController.Start();
             var barSpecs = new List<BarSpecification>
             {
                 new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
