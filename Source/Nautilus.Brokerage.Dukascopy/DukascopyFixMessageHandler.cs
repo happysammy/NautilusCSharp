@@ -87,7 +87,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var groupCount = Convert.ToInt32(message.NoRelatedSym.ToString());
                 var group = new SecurityList.NoRelatedSymGroup();
 
-                for (int i = 1; i <= groupCount; i++)
+                for (var i = 1; i <= groupCount; i++)
                 {
                     message.GetGroup(i, group);
 
