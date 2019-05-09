@@ -13,8 +13,8 @@ namespace Nautilus.Core.Primitives
     using Nautilus.Core.Correctness;
 
     /// <summary>
-    /// Provides an encapsulation for a validated string. A valid string is not null, less than
-    /// or equal to 1024 characters, and contains no white space.
+    /// Provides an encapsulation for a validated string. A valid string is not null, empty or
+    /// contains all white space.
     /// </summary>
     /// <typeparam name="T">The valid string type.</typeparam>
     [Immutable]
@@ -27,7 +27,6 @@ namespace Nautilus.Core.Primitives
         protected ValidString(string value)
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
-            Debug.NotOutOfRangeInt32(value.Length, 1, 1024, nameof(value));
 
             this.Value = value;
         }
@@ -89,7 +88,7 @@ namespace Nautilus.Core.Primitives
         /// Returns the hash code for this <see cref="ValidString{T}"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Value);
+        public override int GetHashCode() => this.Value.GetHashCode();
 
         /// <summary>
         /// Returns a string representation of the <see cref="ValidString{T}"></see>.
