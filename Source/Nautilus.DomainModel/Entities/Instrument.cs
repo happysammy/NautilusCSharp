@@ -50,7 +50,7 @@ namespace Nautilus.DomainModel.Entities
             Symbol symbol,
             InstrumentId instrumentId,
             BrokerSymbol brokerSymbol,
-            CurrencyCode quoteCurrency,
+            Currency quoteCurrency,
             SecurityType securityType,
             int tickDecimals,
             decimal tickSize,
@@ -120,7 +120,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the instruments quote currency.
         /// </summary>
-        public CurrencyCode QuoteCurrency { get; }
+        public Currency QuoteCurrency { get; }
 
         /// <summary>
         /// Gets the instruments security type.

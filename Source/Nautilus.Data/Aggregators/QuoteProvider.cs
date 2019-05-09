@@ -88,8 +88,8 @@ namespace Nautilus.Data.Aggregators
         /// <param name="quoteCurrency"> The quote currency.</param>
         /// <returns>A <see cref="OptionRef{T}"/>.</returns>
         public OptionVal<decimal> GetExchangeRate(
-            CurrencyCode accountCurrency,
-            CurrencyCode quoteCurrency)
+            Currency accountCurrency,
+            Currency quoteCurrency)
         {
             if (accountCurrency.Equals(quoteCurrency))
             {
@@ -136,7 +136,7 @@ namespace Nautilus.Data.Aggregators
             {
                 exchangeRateFromUsd = conversionRateAccountToUsd / this.GetLastBid(quoteCurrency + "USD");
             }
-            else if (this.symbolCodes.ContainsKey(CurrencyCode.USD + quoteCurrency))
+            else if (this.symbolCodes.ContainsKey(Currency.USD + quoteCurrency))
             {
                 exchangeRateFromUsd = conversionRateAccountToUsd / (1 / this.GetLastBid("USD" + quoteCurrency));
             }

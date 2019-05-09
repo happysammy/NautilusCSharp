@@ -35,7 +35,7 @@ namespace Nautilus.Data.Types
         /// <summary>
         /// Gets the economic event frames currency symbols.
         /// </summary>
-        public IReadOnlyCollection<CurrencyCode> CurrencySymbols =>
+        public IReadOnlyCollection<Currency> CurrencySymbols =>
             this.Events.Select(e => e.Currency)
                 .Distinct()
                 .ToList()

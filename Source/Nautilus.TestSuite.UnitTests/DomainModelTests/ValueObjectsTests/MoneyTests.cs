@@ -22,11 +22,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var result = Money.Zero(CurrencyCode.AUD);
+            var result = Money.Zero(Currency.AUD);
 
             // Assert
             Assert.Equal(0, result.Value);
-            Assert.Equal(CurrencyCode.AUD, result.Currency);
+            Assert.Equal(Currency.AUD, result.Currency);
         }
 
         [Theory]
@@ -37,7 +37,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var result = Money.Create(value, CurrencyCode.AUD);
+            var result = Money.Create(value, Currency.AUD);
 
             // Assert
             Assert.Equal(value, result.Value);
@@ -51,8 +51,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Add_VariousPrices_ReturnsExpectedResults(decimal value1, decimal value2, decimal expected)
         {
             // Arrange
-            var money1 = Money.Create(value1, CurrencyCode.AUD);
-            var money2 = Money.Create(value2, CurrencyCode.AUD);
+            var money1 = Money.Create(value1, Currency.AUD);
+            var money2 = Money.Create(value2, Currency.AUD);
 
             // Act
             var result = money1.Add(money2);
@@ -69,8 +69,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Subtract_VariousValues_ReturnsExpectedAmounts(decimal value1, decimal value2, decimal expected)
         {
             // Arrange
-            var money1 = Money.Create(value1, CurrencyCode.AUD);
-            var money2 = Money.Create(value2, CurrencyCode.AUD);
+            var money1 = Money.Create(value1, Currency.AUD);
+            var money2 = Money.Create(value2, Currency.AUD);
 
             // Act
             var result = money1.Subtract(money2);
@@ -85,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void MultiplyBy_VariousAmounts_ReturnsExpectedResult(int multiple, int expected)
         {
             // Arrange
-            var money = Money.Create(1000, CurrencyCode.AUD);
+            var money = Money.Create(1000, Currency.AUD);
 
             // Act
             var result = money.MultiplyBy(multiple);
@@ -98,7 +98,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void DivideBy_Zero_Throws()
         {
             // Arrange
-            var money = Money.Create(1000, CurrencyCode.AUD);
+            var money = Money.Create(1000, Currency.AUD);
 
             // Act
             // Assert
@@ -111,7 +111,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void DivideBy_VariousAmounts_ReturnsExpectedResult(int divisor, int expected)
         {
             // Arrange
-            var money = Money.Create(1000, CurrencyCode.AUD);
+            var money = Money.Create(1000, Currency.AUD);
 
             // Act
             var result = money.DivideBy(divisor);
@@ -127,8 +127,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void CompareTo_VariousValues_ReturnsExpectedResult(int value1, int value2, int expected)
         {
             // Arrange
-            var money1 = Money.Create(value1, CurrencyCode.AUD);
-            var money2 = Money.Create(value2, CurrencyCode.AUD);
+            var money1 = Money.Create(value1, Currency.AUD);
+            var money2 = Money.Create(value2, Currency.AUD);
 
             // Act
             var result = money1.CompareTo(money2);
@@ -141,7 +141,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToString_UnknownSymbol()
         {
             // Arrange
-            var money = Money.Zero(CurrencyCode.AUD);
+            var money = Money.Zero(Currency.AUD);
 
             // Act
             var result = money.ToString();
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var result = Money.Create(amount, CurrencyCode.AUD);
+            var result = Money.Create(amount, Currency.AUD);
 
             // Assert
             Assert.Equal(expected, result.ToString());
@@ -171,8 +171,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var money1 = Money.Zero(CurrencyCode.AUD);
-            var money2 = Money.Zero(CurrencyCode.AUD);
+            var money1 = Money.Zero(Currency.AUD);
+            var money2 = Money.Zero(Currency.AUD);
 
             var result1 = money1.Equals(money2);
             var result2 = money1 == money2;
@@ -194,8 +194,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var money1 = Money.Create(value1, CurrencyCode.AUD);
-            var money2 = Money.Create(value2, CurrencyCode.AUD);
+            var money1 = Money.Create(value1, Currency.AUD);
+            var money2 = Money.Create(value2, Currency.AUD);
 
             var result1 = money1.Equals(money2);
             var result2 = money1 == money2;
@@ -210,7 +210,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         {
             // Arrange
             // Act
-            var result = Money.Create(1, CurrencyCode.AUD);
+            var result = Money.Create(1, Currency.AUD);
 
             // Assert
             Assert.Equal(1043347453, result.GetHashCode());

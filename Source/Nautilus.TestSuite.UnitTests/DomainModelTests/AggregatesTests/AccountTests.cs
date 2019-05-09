@@ -23,12 +23,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
     public class AccountTests
     {
         private readonly IZonedClock clock;
-        private readonly CurrencyCode currency;
+        private readonly Currency currency;
 
         public AccountTests()
         {
             this.clock = new StubClock();
-            this.currency = CurrencyCode.AUD;
+            this.currency = Currency.AUD;
         }
 
         [Fact]
@@ -103,14 +103,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 "123456789",
                 "some username",
                 "some password",
-                CurrencyCode.USD,
+                Currency.USD,
                 this.clock.TimeNow());
 
             var message = new AccountEvent(
                 EntityIdFactory.Account(Brokerage.FXCM, "123456789"),
                 Brokerage.FXCM,
                 "123456789",
-                CurrencyCode.USD,
+                Currency.USD,
                 Money.Create(150000m, this.currency),
                 Money.Create(150000m, this.currency),
                 Money.Zero(this.currency),

@@ -26,6 +26,7 @@ namespace Nautilus.Brokerage.FXCM
     using QuickFix;
     using QuickFix.Fields;
     using QuickFix.FIX44;
+    using Currency = Nautilus.DomainModel.Enums.Currency;
     using Symbol = Nautilus.DomainModel.ValueObjects.Symbol;
 
     /// <summary>
@@ -109,7 +110,7 @@ namespace Nautilus.Brokerage.FXCM
                     var symbol = new Symbol(symbolQuery.Value, Venue.FXCM);
 
                     var symbolId = new InstrumentId(symbol.ToString());
-                    var quoteCurrency = group.GetField(15).ToEnum<CurrencyCode>();
+                    var quoteCurrency = group.GetField(15).ToEnum<Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
                     var tickDecimals = Convert.ToInt32(group.GetField(9001));

@@ -94,7 +94,7 @@ namespace Nautilus.MsgPack
                         eventTimestamp,
                         unpacked);
                 case AccountEvent:
-                    var currency = unpacked[Key.Currency].ToString().ToEnum<CurrencyCode>();
+                    var currency = unpacked[Key.Currency].ToString().ToEnum<Currency>();
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
                         unpacked[Key.Broker].ToString().ToEnum<Brokerage>(),

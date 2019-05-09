@@ -60,7 +60,7 @@ namespace Nautilus.Data.Aggregators
 
         private BrokerSymbol BrokerSymbol { get; }
 
-        private CurrencyCode QuoteCurrency { get; }
+        private Currency QuoteCurrency { get; }
 
         private SecurityType SecurityType { get; }
 

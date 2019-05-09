@@ -68,7 +68,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Gets the brokerage account currency.
         /// </summary>
-        public CurrencyCode AccountCurrency => CurrencyCode.AUD;
+        public Currency AccountCurrency => Currency.AUD;
 
         /// <summary>
         /// Gets a value indicating whether the brokerage gateways broker client is connected.

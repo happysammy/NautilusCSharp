@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Aggregates
             string accountNumber,
             string username,
             string password,
-            CurrencyCode currency,
+            Currency currency,
             ZonedDateTime timestamp)
             : base(
                 accountId,
@@ -94,7 +94,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the accounts base currency.
         /// </summary>
-        public CurrencyCode Currency { get; }
+        public Currency Currency { get; }
 
         /// <summary>
         /// Gets the accounts cash balance.

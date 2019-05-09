@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.Entities
             ZonedDateTime time,
             string title,
             Country country,
-            CurrencyCode currency,
+            Currency currency,
             NewsImpact impact,
             decimal actual,
             decimal consensus,
@@ -78,7 +78,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the economic news events currency effected.
         /// </summary>
-        public CurrencyCode Currency { get; }
+        public Currency Currency { get; }
 
         /// <summary>
         /// Gets the economic news events expected impact on the market.

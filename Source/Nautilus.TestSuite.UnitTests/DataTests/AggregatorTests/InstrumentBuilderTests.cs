@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 new Symbol("SPX500", Venue.FXCM),
                 new InstrumentId("NONE"),
                 new BrokerSymbol("NONE"),
-                CurrencyCode.CAD,
+                Currency.CAD,
                 SecurityType.Bond,
                 2,
                 0.01m,

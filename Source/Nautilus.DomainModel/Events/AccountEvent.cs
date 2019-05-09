@@ -43,7 +43,7 @@ namespace Nautilus.DomainModel.Events
             AccountId accountId,
             Brokerage broker,
             string accountNumber,
-            CurrencyCode currency,
+            Currency currency,
             Money cashBalance,
             Money cashStartDay,
             Money cashActivityDay,
@@ -90,7 +90,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events account currency.
         /// </summary>
-        public CurrencyCode Currency { get; }
+        public Currency Currency { get; }
 
         /// <summary>
         /// Gets the events cash balance.

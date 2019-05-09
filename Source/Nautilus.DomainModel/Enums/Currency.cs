@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="CurrencyCode.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Currency.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -11,10 +11,10 @@ namespace Nautilus.DomainModel.Enums
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// ISO 4217 currency code.
+    /// Represents an ISO 4217 currency code.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
-    public enum CurrencyCode
+    public enum Currency
     {
         /// <summary>
         /// Unknown currency code.

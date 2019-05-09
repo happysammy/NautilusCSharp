@@ -46,6 +46,6 @@ namespace Nautilus.Common.Interfaces
         /// <param name="accountCurrency">The account currency.</param>
         /// <param name="quoteCurrency">The quote currency.</param>
         /// <returns>A <see cref="OptionRef{T}"/>.</returns>
-        OptionVal<decimal> GetExchangeRate(CurrencyCode accountCurrency, CurrencyCode quoteCurrency);
+        OptionVal<decimal> GetExchangeRate(Currency accountCurrency, Currency quoteCurrency);
     }
 }

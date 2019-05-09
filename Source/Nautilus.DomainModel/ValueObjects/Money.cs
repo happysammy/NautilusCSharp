@@ -25,7 +25,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="amount">The amount.</param>
         /// <param name="currency">The currency.</param>
-        private Money(decimal amount, CurrencyCode currency)
+        private Money(decimal amount, Currency currency)
             : base(amount)
         {
             Debug.NotNegativeDecimal(amount, nameof(amount));
@@ -38,7 +38,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the currency.
         /// </summary>
-        public CurrencyCode Currency { get; }
+        public Currency Currency { get; }
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Money"/> objects are equal.
@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// </summary>
         /// <param name="currency">The currency.</param>
         /// <returns>A new <see cref="Money"/> object.</returns>
-        public static Money Zero(CurrencyCode currency)
+        public static Money Zero(Currency currency)
         {
             return new Money(decimal.Zero, currency);
         }
@@ -85,7 +85,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <param name="amount">The amount.</param>
         /// <param name="currency">The currency.</param>
         /// <returns>A new <see cref="Money"/> object.</returns>
-        public static Money Create(decimal amount, CurrencyCode currency)
+        public static Money Create(decimal amount, Currency currency)
         {
             return new Money(amount, currency);
         }
