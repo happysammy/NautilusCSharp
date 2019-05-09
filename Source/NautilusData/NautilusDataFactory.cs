@@ -142,8 +142,18 @@ namespace NautilusData
                         messagingAdapter,
                         configuration,
                         instrumentData);
+                case Brokerage.Simulation:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                case Brokerage.IB:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                case Brokerage.LMAX:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
                 default:
-                    throw new InvalidOperationException($"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
             }
         }
     }
