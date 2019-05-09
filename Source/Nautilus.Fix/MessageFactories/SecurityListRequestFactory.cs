@@ -25,10 +25,9 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static SecurityListRequest Create(ZonedDateTime timeNow)
         {
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new SecurityListRequest();
-
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.ALL_SECURITIES));
             message.SetField(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_PLUS_UPDATES));
@@ -44,10 +43,9 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static SecurityListRequest Create(string symbol, ZonedDateTime timeNow)
         {
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new SecurityListRequest();
-
             message.SetField(new SecurityReqID($"SLR_{timeNow.TickOfDay}"));
             message.SetField(new SecurityListRequestType(SecurityListRequestType.SYMBOL));
             message.SetField(new Symbol(symbol));

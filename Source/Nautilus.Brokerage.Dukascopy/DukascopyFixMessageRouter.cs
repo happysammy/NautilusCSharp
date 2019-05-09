@@ -69,10 +69,9 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </summary>
         public void CollateralInquiry()
         {
-            var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.DUKASCOPY);
-            this.fixSession?.Send(message);
+            var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
 
-            this.Log.Information($"CollateralInquiry + SubscribeCollateralReports...");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -81,9 +80,8 @@ namespace Nautilus.Brokerage.Dukascopy
         public void TradingSessionStatus()
         {
             var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
-            this.fixSession?.Send(message);
 
-            this.Log.Information($"TradingSessionStatusRequest...");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -92,9 +90,8 @@ namespace Nautilus.Brokerage.Dukascopy
         public void RequestAllPositions()
         {
             var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
-            this.fixSession?.Send(message);
 
-            this.Log.Information($"RequestForOpenPositions + SubscribePositionReports...");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -106,11 +103,11 @@ namespace Nautilus.Brokerage.Dukascopy
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
-            this.fixSession?.Send(SecurityListRequestFactory.Create(
+            var message = SecurityListRequestFactory.Create(
                 fxcmSymbol.Value,
-                this.TimeNow()));
+                this.TimeNow());
 
-            this.Log.Information($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -118,9 +115,9 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.fixSession?.Send(SecurityListRequestFactory.Create(this.TimeNow()));
+            var message = SecurityListRequestFactory.Create(this.TimeNow());
 
-            this.Log.Information($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -130,12 +127,13 @@ namespace Nautilus.Brokerage.Dukascopy
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
             var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
-            this.fixSession?.Send(MarketDataRequestFactory.Create(
-                brokerSymbol,
-                1,
-                this.TimeNow()));
 
-            this.Log.Information($"MarketDataRequest + SubscribeUpdates ({symbol})...");
+            var message = MarketDataRequestFactory.Create(
+                brokerSymbol,
+                0,
+                this.TimeNow());
+
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -145,12 +143,12 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
             {
-                this.fixSession?.Send(MarketDataRequestFactory.Create(
+                var message = MarketDataRequestFactory.Create(
                     brokerSymbol,
-                    1,
-                    this.TimeNow()));
+                    0,
+                    this.TimeNow());
 
-                this.Log.Information($"MarketDataRequest + SubscribeUpdates ({brokerSymbol})...");
+                this.SendFixMessage(message);
             }
         }
 
@@ -166,9 +164,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 order,
                 this.TimeNow());
 
-            this.fixSession?.Send(message);
-
-            this.Log.Information($"Submitting Order => {Brokerage.DUKASCOPY}");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -186,7 +182,8 @@ namespace Nautilus.Brokerage.Dukascopy
                     this.accountNumber,
                     atomicOrder,
                     this.TimeNow());
-                this.fixSession?.Send(message);
+
+                this.SendFixMessage(message);
             }
             else
             {
@@ -195,10 +192,9 @@ namespace Nautilus.Brokerage.Dukascopy
                     this.accountNumber,
                     atomicOrder,
                     this.TimeNow());
-                this.fixSession?.Send(message);
-            }
 
-            this.Log.Information($"Submitting ELS Order => {Brokerage.DUKASCOPY}");
+                this.SendFixMessage(message);
+            }
         }
 
         /// <summary>
@@ -214,12 +210,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 modifiedPrice.Value,
                 this.TimeNow());
 
-            this.fixSession?.Send(message);
-
-            this.Log.Information(
-                $"{order.Symbol} Submitting OrderReplaceRequest: " +
-                $"(ClOrdId={order.Id}, " +
-                $"OrderId={order.IdBroker}) => {Brokerage.DUKASCOPY}");
+            this.SendFixMessage(message);
         }
 
         /// <summary>
@@ -233,11 +224,19 @@ namespace Nautilus.Brokerage.Dukascopy
                 order,
                 this.TimeNow());
 
-            this.fixSession?.Send(message);
+            this.SendFixMessage(message);
+        }
 
-            this.Log.Information(
-                $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
-                $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Brokerage.DUKASCOPY}");
+        private void SendFixMessage(Message message)
+        {
+            if (this.fixSession is null)
+            {
+                this.Log.Error($"Cannot send {message} (the FIX session is null).");
+                return;
+            }
+
+            this.fixSession.Send(message);
+            this.Log.Information($"Sent FIX message to {this.fixSession} => {message}");
         }
     }
 }
