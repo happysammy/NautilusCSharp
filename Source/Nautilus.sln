@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{EBD80DF0-D452-49F0-9BA4-925265E959F7}"
 ProjectSection(SolutionItems) = preProject
+    instruments_dukascopy.csv = Configuration\instruments_dukascopy.csv
+    instruments_fxcm.csv = Configuration\instruments_fxcm.csv
 	fix_fxcm1.cfg = Configuration\fix_fxcm1.cfg
 	fix_fxcm2.cfg = Configuration\fix_fxcm2.cfg
 	fix_fxcm3.cfg = Configuration\fix_fxcm3.cfg
