@@ -31,7 +31,7 @@ namespace NautilusData
         public static void Main(string[] args)
         {
             var logger = new SerilogLogger(LogEventLevel.Information);
-            logger.Information(NautilusService.AspCoreHost, "Building ASP.NET Core Web Host...");
+            logger.Debug(NautilusService.AspCoreHost, "Building ASP.NET Core Web Host...");
 
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

@@ -62,7 +62,7 @@ namespace NautilusData
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusData)} builder...");
+            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusData)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
 
             var clock = new Clock(DateTimeZone.Utc);

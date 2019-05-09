@@ -59,7 +59,7 @@ namespace NautilusExecutor
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             var loggingAdapter = new SerilogLogger(logLevel);
-            loggingAdapter.Information(NautilusService.Data, $"Starting {nameof(NautilusExecutor)} builder...");
+            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusExecutor)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);
