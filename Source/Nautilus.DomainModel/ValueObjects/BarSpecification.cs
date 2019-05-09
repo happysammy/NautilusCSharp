@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.ValueObjects
             Resolution resolution,
             int period)
         {
-            Precondition.PositiveInt32(period, nameof(period));
+            Debug.PositiveInt32(period, nameof(period));
 
             this.QuoteType = quoteType;
             this.Resolution = resolution;

@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(IntegerNumber left, IntegerNumber right)
         {
-            Precondition.PositiveInt32(right.Value, nameof(right.Value));
+            Debug.PositiveInt32(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(int left, IntegerNumber right)
         {
-            Precondition.PositiveInt32(right.Value, nameof(right.Value));
+            Debug.PositiveInt32(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="int"/>.</returns>
         public static int operator /(IntegerNumber left, int right)
         {
-            Precondition.PositiveInt32(right, nameof(right));
+            Debug.PositiveInt32(right, nameof(right));
 
             return left.Value / right;
         }

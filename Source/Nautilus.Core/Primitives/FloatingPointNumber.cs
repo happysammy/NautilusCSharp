@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(FloatingPointNumber left, FloatingPointNumber right)
         {
-            Precondition.PositiveDouble(right.Value, nameof(right.Value));
+            Debug.PositiveDouble(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(double left, FloatingPointNumber right)
         {
-            Precondition.PositiveDouble(right.Value, nameof(right.Value));
+            Debug.PositiveDouble(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="double"/>.</returns>
         public static double operator /(FloatingPointNumber left, double right)
         {
-            Precondition.PositiveDouble(right, nameof(right));
+            Debug.PositiveDouble(right, nameof(right));
 
             return left.Value / right;
         }

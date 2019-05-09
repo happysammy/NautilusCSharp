@@ -127,7 +127,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A new <see cref="Money"/> object.</returns>
         public Money DivideBy(int divisor)
         {
-            Precondition.PositiveInt32(divisor, nameof(divisor));
+            Debug.PositiveInt32(divisor, nameof(divisor));
 
             return new Money(this.Value / divisor, this.Currency);
         }

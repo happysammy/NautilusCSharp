@@ -142,7 +142,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, DecimalNumber right)
         {
-            Precondition.PositiveDecimal(right.Value, nameof(right.Value));
+            Debug.PositiveDecimal(right.Value, nameof(right.Value));
 
             return left.Value / right.Value;
         }
@@ -155,7 +155,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(decimal left, DecimalNumber right)
         {
-            Precondition.PositiveDecimal(right.Value, nameof(right.Value));
+            Debug.PositiveDecimal(right.Value, nameof(right.Value));
 
             return left / right.Value;
         }
@@ -168,7 +168,7 @@ namespace Nautilus.Core.Primitives
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal operator /(DecimalNumber left, decimal right)
         {
-            Precondition.PositiveDecimal(right, nameof(right));
+            Debug.PositiveDecimal(right, nameof(right));
 
             return left.Value / right;
         }
