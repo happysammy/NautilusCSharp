@@ -9,19 +9,119 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Primitives;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class IntegerNumberTests
     {
         [Fact]
-        internal void Unit_Test_One()
+        internal void Value_WithValidValueGiven_ReturnsExpectedValue()
         {
             // Arrange
+            var number = new TestInteger(1);
 
             // Act
+            var result = number.Value;
 
             // Assert
+            Assert.Equal(1, result);
+        }
+
+        [Fact]
+        internal void ArithmeticOperators_ReturnExpectedValues()
+        {
+            // Arrange
+            var number0 = new TestInteger(0);
+            var number1 = new TestInteger(1);
+
+            // Act
+            // Assert
+            Assert.Equal(1, number0 + number1);
+            Assert.Equal(1, number0 + 1);
+            Assert.Equal(0, 0 + number0);
+            Assert.Equal(0, number1 - number1);
+            Assert.Equal(-1, number0 - 1);
+            Assert.Equal(0, 1 - number1);
+            Assert.Equal(0, number0 * number1);
+            Assert.Equal(0, number0 * 1);
+            Assert.Equal(0, 1 * number0);
+            Assert.Equal(1, number1 * number1);
+            Assert.Equal(2, number1 * 2);
+            Assert.Equal(1, 1 / number1);
+            Assert.Equal(0, number0 / number1);
+            Assert.Equal(0, number0 / 1);
+            Assert.Equal(2, 4 / 2);
+        }
+
+        [Fact]
+        internal void EqualityOperators_ReturnExpectedValues()
+        {
+            // Arrange
+            var number0 = new TestInteger(0);
+            var number1 = new TestInteger(1);
+            var number2 = new TestInteger(1);
+
+            // Act
+            // Assert
+            Assert.True(number1 == number2);
+            Assert.True(number1 == 1);
+            Assert.True(1 == number1);
+            Assert.True(number1.Equals(number1));
+            Assert.False(number1.Equals(number0));
+
+            Assert.False(number1 != number2);
+            Assert.False(number1 != 1);
+            Assert.False(1 != number1);
+
+            Assert.True(number1 > number0);
+            Assert.False(number1 > 1);
+            Assert.True(number1 >= number0);
+            Assert.True(number1 >= 1);
+
+            Assert.True(number0 < number1);
+            Assert.False(number1 < 1);
+            Assert.True(number0 <= number1);
+            Assert.True(number1 <= 1);
+        }
+
+        [Fact]
+        internal void CompareTo_WithVariousValues_ReturnExpectedValues()
+        {
+            // Arrange
+            var number0 = new TestInteger(0);
+            var number1 = new TestInteger(1);
+
+            // Act
+            // Assert
+            Assert.Equal(-1, number0.CompareTo(number1));
+            Assert.Equal(0, number1.CompareTo(number1));
+            Assert.Equal(1, number1.CompareTo(number0));
+            Assert.Equal(-1, number0.CompareTo(1));
+            Assert.Equal(0, number1.CompareTo(1));
+            Assert.Equal(1, number1.CompareTo(0));
+        }
+
+        [Fact]
+        internal void GetHashCode_WithVariousValues_ReturnExpectedValues()
+        {
+            // Arrange
+            var number0 = new TestInteger(0);
+            var number1 = new TestInteger(1);
+
+            // Act
+            // Assert
+            Assert.Equal(0, number0.GetHashCode());
+            Assert.Equal(0.GetHashCode(), number0.GetHashCode());
+            Assert.Equal(1.GetHashCode(), number1.GetHashCode());
+        }
+
+        private class TestInteger : IntegerNumber
+        {
+            public TestInteger(int value)
+                : base(value)
+            {
+            }
         }
     }
 }

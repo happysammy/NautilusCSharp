@@ -306,7 +306,7 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are equal.
+        /// Returns a value indicating whether the numbers are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
@@ -327,12 +327,50 @@ namespace Nautilus.Core.Primitives
         }
 
         /// <summary>
+        /// Returns a value indicating whether the numbers are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator ==(decimal left, DecimalNumber right)
+        {
+            return !(right is null) && left.Equals(right.Value);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the numbers are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator ==(DecimalNumber left, decimal right)
+        {
+            return !(left is null) && left.Value.Equals(right);
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the <see cref="DecimalNumber"/>s are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>The result of the equality check.</returns>
         public static bool operator !=(DecimalNumber left, DecimalNumber right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether the numbers are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator !=(decimal left, DecimalNumber right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether the numbers are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>The result of the equality check.</returns>
+        public static bool operator !=(DecimalNumber left, decimal right) => !(left == right);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="DecimalNumber"/> is equal
@@ -378,7 +416,7 @@ namespace Nautilus.Core.Primitives
         /// Returns the hash code for this <see cref="DecimalNumber"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Value);
+        public override int GetHashCode() => this.Value.GetHashCode();
 
         /// <summary>
         /// Returns a string representation of the <see cref="DecimalNumber"></see>.

@@ -40,6 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
 
             // Assert
             Assert.Equal("68656c6c6f20776f726c64", result);
+            Assert.Equal("hello world", Encoding.UTF8.GetString(Hex.FromHexString(result)));
         }
     }
 }

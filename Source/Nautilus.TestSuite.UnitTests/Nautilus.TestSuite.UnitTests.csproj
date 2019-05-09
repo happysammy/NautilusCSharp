@@ -2,20 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+        <IsPackable>false</IsPackable>
         <LangVersion>8</LangVersion>
         <NullableContextOptions>enable</NullableContextOptions>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsAsErrors />
         <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.TestSuite.UnitTests.xml</DocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
