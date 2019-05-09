@@ -21,7 +21,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
             // Act
 
-
             // Assert
         }
     }
