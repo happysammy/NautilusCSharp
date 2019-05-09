@@ -67,8 +67,6 @@ namespace NautilusData
                 ? LogEventLevel.Information
                 : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
-            var isCompression = (bool)config[ConfigSection.Database]["compression"];
-            var compressionCodec = (string)config[ConfigSection.Database]["compressionCodec"];
             var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
 
             var configFile = (string)config[ConfigSection.Fix44]["config"];
@@ -111,8 +109,6 @@ namespace NautilusData
 
             this.dataSystem = NautilusDataFactory.Create(
                 logLevel,
-                isCompression,
-                compressionCodec,
                 fixConfig,
                 symbols,
                 resolutions,

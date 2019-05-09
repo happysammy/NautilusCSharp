@@ -40,8 +40,6 @@ namespace NautilusData
         /// Creates and returns a new <see cref="NautilusData"/> system.
         /// </summary>
         /// <param name="logLevel">The log level threshold.</param>
-        /// <param name="isCompression">The is data compression on boolean flag.</param>
-        /// <param name="compressionCodec">The data compression codec.</param>
         /// <param name="fixConfig">The FIX configuration.</param>
         /// <param name="symbols">The symbols to collect.</param>
         /// <param name="resolutions">The resolutions to persist.</param>
@@ -49,14 +47,11 @@ namespace NautilusData
         /// <returns>The <see cref="Nautilus"/> system.</returns>
         public static NautilusData Create(
             LogEventLevel logLevel,
-            bool isCompression,
-            string compressionCodec,
             FixConfiguration fixConfig,
             IReadOnlyList<string> symbols,
             IReadOnlyList<Resolution> resolutions,
             int barRollingWindow)
         {
-            Precondition.NotEmptyOrWhiteSpace(compressionCodec, nameof(compressionCodec));
             Precondition.NotEmpty(symbols, nameof(symbols));
             Precondition.NotEmpty(resolutions, nameof(resolutions));
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
