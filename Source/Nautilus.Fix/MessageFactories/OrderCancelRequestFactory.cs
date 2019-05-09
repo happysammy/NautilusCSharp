@@ -31,8 +31,8 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime transactionTime)
         {
-            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Precondition.NotDefault(transactionTime, nameof(transactionTime));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotDefault(transactionTime, nameof(transactionTime));
 
             var message = new OrderCancelRequest();
 

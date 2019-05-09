@@ -25,7 +25,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <returns>The FIX message.</returns>
         public static RequestForPositions Create(ZonedDateTime timeNow)
         {
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new RequestForPositions();
             var transactTime = timeNow.ToDateTimeUtc();

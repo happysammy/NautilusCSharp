@@ -33,9 +33,9 @@ namespace Nautilus.Fix.MessageFactories
             AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
-            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderList();
             message.SetField(new ListID(timeNow.TickOfDay.ToString()));
@@ -99,9 +99,9 @@ namespace Nautilus.Fix.MessageFactories
             AtomicOrder atomicOrder,
             ZonedDateTime timeNow)
         {
-            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderList();
             message.SetField(new ListID(timeNow.TickOfDay.ToString()));

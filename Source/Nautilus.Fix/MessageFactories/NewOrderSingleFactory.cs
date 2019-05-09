@@ -36,9 +36,9 @@ namespace Nautilus.Fix.MessageFactories
             Order order,
             ZonedDateTime timeNow)
         {
-            Precondition.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
-            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Precondition.NotDefault(timeNow, nameof(timeNow));
+            Debug.NotEmptyOrWhiteSpace(brokerSymbol, nameof(brokerSymbol));
+            Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Debug.NotDefault(timeNow, nameof(timeNow));
 
             var message = new NewOrderSingle();
 
@@ -62,6 +62,7 @@ namespace Nautilus.Fix.MessageFactories
             switch (order.Type)
             {
                 case OrderType.MARKET:
+                    // Do nothing.
                     break;
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:

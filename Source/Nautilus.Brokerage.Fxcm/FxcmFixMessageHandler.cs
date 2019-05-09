@@ -300,11 +300,28 @@ namespace Nautilus.Brokerage.FXCM
                 message.GetGroup(2, group);
                 var ask = group.GetField(Tags.MDEntryPx);
 
+                var bidDecimal = decimal.Zero;
+                var askDecimal = decimal.Zero;
+
+                try
+                {
+                    bidDecimal = Convert.ToDecimal(bid);
+                    askDecimal = Convert.ToDecimal(ask);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FormatException || ex is OverflowException)
+                    {
+                        this.Log.Error("Could not parse decimal.");
+                        return;
+                    }
+                }
+
                 this.fixGateway?.OnTick(
                     symbol,
                     Venue.FXCM,
-                    Convert.ToDecimal(bid),
-                    Convert.ToDecimal(ask),
+                    bidDecimal,
+                    askDecimal,
                     timestamp);
             });
         }

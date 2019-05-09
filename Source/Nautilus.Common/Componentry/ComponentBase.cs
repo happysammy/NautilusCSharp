@@ -94,6 +94,17 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute(action);
         }
 
+        /// <summary>
+        /// Passes the given <see cref="Action"/> to the <see cref="commandHandler"/> for execution.
+        /// </summary>
+        /// <typeparam name="T">The exception type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        protected void Execute<T>(Action action)
+            where T : Exception
+        {
+            this.commandHandler.Execute<T>(action);
+        }
+
         private void OnMessage(StartSystem message)
         {
             this.Start();
