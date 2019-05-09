@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Entities
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Represents a collection of orders being an entry, stop-loss and profit target (optional) to
+    /// Represents a collection of orders being an entry, stop-loss and optional take-profit to
     /// be managed together.
     /// </summary>
     [Immutable]
@@ -27,19 +27,19 @@ namespace Nautilus.DomainModel.Entities
         /// </summary>
         /// <param name="entry">The entry order.</param>
         /// <param name="stopLoss">The stop-loss order.</param>
-        /// <param name="profitTarget">The profit target order.</param>
+        /// <param name="takeProfit">The take-profit order.</param>
         public AtomicOrder(
             Order entry,
             Order stopLoss,
-            OptionRef<Order> profitTarget)
+            OptionRef<Order> takeProfit)
             : base(
                   new AtomicOrderId(entry.Id.Value),
                   entry.Timestamp)
         {
             this.Entry = entry;
             this.StopLoss = stopLoss;
-            this.ProfitTarget = profitTarget.HasValue
-                ? OptionRef<Order>.Some(profitTarget.Value)
+            this.TakeProfit = takeProfit.HasValue
+                ? OptionRef<Order>.Some(takeProfit.Value)
                 : OptionRef<Order>.None();
         }
 
@@ -61,6 +61,6 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public OptionRef<Order> ProfitTarget { get; }
+        public OptionRef<Order> TakeProfit { get; }
     }
 }

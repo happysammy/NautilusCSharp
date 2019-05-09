@@ -17,8 +17,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class StubOrderBuilder
     {
@@ -128,7 +126,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this;
         }
 
-        public StubOrderBuilder ProfitTargetOrder(string orderId)
+        public StubOrderBuilder TakeProfitOrder(string orderId)
         {
             this.Symbol = new Symbol("AUDUSD", Venue.FXCM);
             this.OrderId = new OrderId(orderId);

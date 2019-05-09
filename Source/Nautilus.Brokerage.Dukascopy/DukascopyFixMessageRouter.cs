@@ -175,9 +175,9 @@ namespace Nautilus.Brokerage.Dukascopy
         {
             var brokerSymbol = this.instrumentData.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
 
-            if (atomicOrder.ProfitTarget.HasValue)
+            if (atomicOrder.TakeProfit.HasValue)
             {
-                var message = NewOrderListEntryFactory.CreateWithStopLossAndProfitTarget(
+                var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
                     brokerSymbol,
                     this.accountNumber,
                     atomicOrder,

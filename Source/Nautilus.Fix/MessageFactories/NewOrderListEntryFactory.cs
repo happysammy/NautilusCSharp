@@ -93,7 +93,7 @@ namespace Nautilus.Fix.MessageFactories
         /// <param name="atomicOrder">The atomic order.</param>
         /// <param name="timeNow">The time now.</param>
         /// <returns>The FIX message.</returns>
-        public static NewOrderList CreateWithStopLossAndProfitTarget(
+        public static NewOrderList CreateWithStopLossAndTakeProfit(
             string brokerSymbol,
             string accountNumber,
             AtomicOrder atomicOrder,
@@ -147,19 +147,19 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new StopPx(stopLoss.Price.Value.Value));
             message.AddGroup(order2);
 
-            var profitTarget = atomicOrder.ProfitTarget;
+            var takeProfit = atomicOrder.TakeProfit;
             var order3 = new NewOrderList.NoOrdersGroup();
-            order3.SetField(new ClOrdID(profitTarget.Value.Id.ToString()));
+            order3.SetField(new ClOrdID(takeProfit.Value.Id.ToString()));
             order3.SetField(new ListSeqNo(2));
-            order3.SetField(new SecondaryClOrdID(profitTarget.Value.Label.ToString()));
+            order3.SetField(new SecondaryClOrdID(takeProfit.Value.Label.ToString()));
             order3.SetField(new ClOrdLinkID("2"));
             order3.SetField(new Account(accountNumber));
             order3.SetField(new Symbol(brokerSymbol));
-            order3.SetField(FixMessageHelper.GetFixOrderSide(profitTarget.Value.Side));
+            order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.Value.Side));
             order3.SetField(new OrdType(OrdType.LIMIT));
-            order3.SetField(FixMessageHelper.GetFixTimeInForce(profitTarget.Value.TimeInForce));
-            order3.SetField(new OrderQty(profitTarget.Value.Quantity.Value));
-            order3.SetField(new Price(profitTarget.Value.Price.Value.Value));
+            order3.SetField(FixMessageHelper.GetFixTimeInForce(takeProfit.Value.TimeInForce));
+            order3.SetField(new OrderQty(takeProfit.Value.Quantity.Value));
+            order3.SetField(new Price(takeProfit.Value.Price.Value.Value));
             message.AddGroup(order3);
 
             return message;
