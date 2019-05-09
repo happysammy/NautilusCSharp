@@ -72,60 +72,54 @@ namespace Nautilus.Data
 
         private void CreateConnectFixJob()
         {
-            this.Execute(() =>
-            {
-                var schedule = CronScheduleBuilder
-                    .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
-                    .InTimeZone(TimeZoneInfo.Utc)
-                    .WithMisfireHandlingInstructionFireAndProceed();
+            var schedule = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-                var jobKey = new JobKey("connect_fix", "fix44");
-                var trigger = TriggerBuilder
-                    .Create()
-                    .WithIdentity(jobKey.Name, jobKey.Group)
-                    .WithSchedule(schedule)
-                    .Build();
+            var jobKey = new JobKey("connect_fix", "fix44");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
 
-                var createJob = new CreateJob(
-                    this.Endpoint,
-                    new ConnectFixJob(),
-                    jobKey,
-                    trigger,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new ConnectFixJob(),
+                jobKey,
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Send(ServiceAddress.Scheduler, createJob);
-                this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
-            });
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
         }
 
         private void CreateDisconnectFixJob()
         {
-            this.Execute(() =>
-            {
-                var schedule = CronScheduleBuilder
-                    .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-                    .InTimeZone(TimeZoneInfo.Utc)
-                    .WithMisfireHandlingInstructionFireAndProceed();
+            var schedule = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-                var jobKey = new JobKey("disconnect_fix", "fix44");
-                var trigger = TriggerBuilder
-                    .Create()
-                    .WithIdentity(jobKey.Name, jobKey.Group)
-                    .WithSchedule(schedule)
-                    .Build();
+            var jobKey = new JobKey("disconnect_fix", "fix44");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
 
-                var createJob = new CreateJob(
-                    this.Endpoint,
-                    new DisconnectFixJob(),
-                    jobKey,
-                    trigger,
-                    this.NewGuid(),
-                    this.TimeNow());
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new DisconnectFixJob(),
+                jobKey,
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
 
-                this.Send(ServiceAddress.Scheduler, createJob);
-                this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
-            });
+            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
         }
 
         private void OnMessage(ConnectFixJob message)

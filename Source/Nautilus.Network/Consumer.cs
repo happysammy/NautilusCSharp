@@ -80,15 +80,12 @@ namespace Nautilus.Network
         /// </summary>
         public override void Start()
         {
-            this.Execute(() =>
-            {
-                this.socket.Bind(this.serverAddress.Value);
-                this.Log.Debug($"Bound router socket to {this.serverAddress}");
+            this.socket.Bind(this.serverAddress.Value);
+            this.Log.Debug($"Bound router socket to {this.serverAddress}");
+            this.Log.Debug("Ready to consume...");
 
-                this.Log.Debug("Ready to consume...");
-                this.isConsuming = true;
-                Task.Run(this.StartConsuming, this.cts.Token);
-            });
+            this.isConsuming = true;
+            Task.Run(this.StartConsuming, this.cts.Token);
         }
 
         /// <summary>
@@ -96,17 +93,14 @@ namespace Nautilus.Network
         /// </summary>
         public override void Stop()
         {
-            this.Execute(() =>
-            {
-                this.Log.Debug($"Stopping...");
-                this.isConsuming = false;
-                this.cts.Cancel();
-                this.socket.Unbind(this.serverAddress.Value);
-                this.Log.Debug($"Unbound router socket from {this.serverAddress}");
+            this.Log.Debug($"Stopping...");
+            this.isConsuming = false;
+            this.cts.Cancel();
+            this.socket.Unbind(this.serverAddress.Value);
+            this.Log.Debug($"Unbound router socket from {this.serverAddress}");
 
-                this.socket.Dispose();
-                this.Log.Debug($"Stopped.");
-            });
+            this.socket.Dispose();
+            this.Log.Debug($"Stopped.");
         }
 
         private void OnMessage(byte[] message)

@@ -60,13 +60,10 @@ namespace Nautilus.Execution
 
         private void OnMessage(byte[] message)
         {
-            this.Execute(() =>
-            {
-                var command = this.serializer.Deserialize(message);
-                this.Log.Debug($"Received {command}.");
+            var command = this.serializer.Deserialize(message);
+            this.Log.Debug($"Received {command}.");
 
-                this.receiver.Send(command);
-            });
+            this.receiver.Send(command);
         }
     }
 }

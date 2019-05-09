@@ -69,14 +69,10 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void CollateralInquiry()
         {
-            this.Execute(() =>
-            {
-                var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
+            var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
+            this.fixSession?.Send(message);
 
-                this.fixSession?.Send(message);
-
-                this.Log.Debug($"CollateralInquiry + SubscribeCollateralReports...");
-            });
+            this.Log.Debug($"CollateralInquiry + SubscribeCollateralReports...");
         }
 
         /// <summary>
@@ -84,14 +80,10 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void TradingSessionStatus()
         {
-            this.Execute(() =>
-            {
-                var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
+            var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
+            this.fixSession?.Send(message);
 
-                this.fixSession?.Send(message);
-
-                this.Log.Debug($"TradingSessionStatusRequest...");
-            });
+            this.Log.Debug($"TradingSessionStatusRequest...");
         }
 
         /// <summary>
@@ -99,14 +91,10 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void RequestAllPositions()
         {
-            this.Execute(() =>
-            {
-                var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
+            var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
+            this.fixSession?.Send(message);
 
-                this.fixSession?.Send(message);
-
-                this.Log.Debug($"RequestForOpenPositions + SubscribePositionReports...");
-            });
+            this.Log.Debug($"RequestForOpenPositions + SubscribePositionReports...");
         }
 
         /// <summary>
@@ -117,16 +105,12 @@ namespace Nautilus.Brokerage.FXCM
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            this.Execute(() =>
-            {
-                var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
+            var fxcmSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code);
+            this.fixSession?.Send(SecurityListRequestFactory.Create(
+                fxcmSymbol.Value,
+                this.TimeNow()));
 
-                this.fixSession?.Send(SecurityListRequestFactory.Create(
-                    fxcmSymbol.Value,
-                    this.TimeNow()));
-
-                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
-            });
+            this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates ({symbol})...");
         }
 
         /// <summary>
@@ -134,12 +118,9 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void UpdateInstrumentsSubscribeAll()
         {
-            this.Execute(() =>
-            {
-                this.fixSession?.Send(SecurityListRequestFactory.Create(this.TimeNow()));
+            this.fixSession?.Send(SecurityListRequestFactory.Create(this.TimeNow()));
 
-                this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
-            });
+            this.Log.Debug($"SecurityStatusRequest + SubscribeUpdates (ALL)...");
         }
 
         /// <summary>
@@ -148,17 +129,14 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            this.Execute(() =>
-            {
-                var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
+            var brokerSymbol = this.instrumentData.GetBrokerSymbol(symbol.Code).Value;
 
-                this.fixSession?.Send(MarketDataRequestFactory.Create(
-                    brokerSymbol,
-                    0,
-                    this.TimeNow()));
+            this.fixSession?.Send(MarketDataRequestFactory.Create(
+                brokerSymbol,
+                0,
+                this.TimeNow()));
 
-                this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({symbol})...");
-            });
+            this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({symbol})...");
         }
 
         /// <summary>
@@ -166,18 +144,15 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void MarketDataRequestSubscribeAll()
         {
-            this.Execute(() =>
+            foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
             {
-                foreach (var brokerSymbol in this.instrumentData.GetAllBrokerSymbols())
-                {
-                    this.fixSession?.Send(MarketDataRequestFactory.Create(
-                        brokerSymbol,
-                        0,
-                        this.TimeNow()));
+                this.fixSession?.Send(MarketDataRequestFactory.Create(
+                    brokerSymbol,
+                    0,
+                    this.TimeNow()));
 
-                    this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({brokerSymbol})...");
-                }
-            });
+                this.Log.Debug($"MarketDataRequest + SubscribeUpdates ({brokerSymbol})...");
+            }
         }
 
         /// <summary>
@@ -186,18 +161,15 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="order">The order to submit.</param>
         public void SubmitOrder(Order order)
         {
-            this.Execute(() =>
-            {
-                var message = NewOrderSingleFactory.Create(
-                    this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
-                    this.accountNumber,
-                    order,
-                    this.TimeNow());
+            var message = NewOrderSingleFactory.Create(
+                this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.accountNumber,
+                order,
+                this.TimeNow());
 
-                this.fixSession?.Send(message);
+            this.fixSession?.Send(message);
 
-                this.Log.Information($"Submitting Order => {Brokerage.FXCM}");
-            });
+            this.Log.Information($"Submitting Order => {Brokerage.FXCM}");
         }
 
         /// <summary>
@@ -206,31 +178,28 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            this.Execute(() =>
+            var brokerSymbol = this.instrumentData.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+
+            if (atomicOrder.ProfitTarget.HasValue)
             {
-                var brokerSymbol = this.instrumentData.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+                var message = NewOrderListEntryFactory.CreateWithStopLossAndProfitTarget(
+                    brokerSymbol,
+                    this.accountNumber,
+                    atomicOrder,
+                    this.TimeNow());
+                this.fixSession?.Send(message);
+            }
+            else
+            {
+                var message = NewOrderListEntryFactory.CreateWithStopLoss(
+                    brokerSymbol,
+                    this.accountNumber,
+                    atomicOrder,
+                    this.TimeNow());
+                this.fixSession?.Send(message);
+            }
 
-                if (atomicOrder.ProfitTarget.HasValue)
-                {
-                    var message = NewOrderListEntryFactory.CreateWithStopLossAndProfitTarget(
-                        brokerSymbol,
-                        this.accountNumber,
-                        atomicOrder,
-                        this.TimeNow());
-                    this.fixSession?.Send(message);
-                }
-                else
-                {
-                    var message = NewOrderListEntryFactory.CreateWithStopLoss(
-                        brokerSymbol,
-                        this.accountNumber,
-                        atomicOrder,
-                        this.TimeNow());
-                    this.fixSession?.Send(message);
-                }
-
-                this.Log.Information($"Submitting ELS Order => {Brokerage.FXCM}");
-            });
+            this.Log.Information($"Submitting ELS Order => {Brokerage.FXCM}");
         }
 
         /// <summary>
@@ -240,21 +209,18 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
-            this.Execute(() =>
-            {
-                var message = OrderCancelReplaceRequestFactory.Create(
-                    this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
-                    order,
-                    modifiedPrice.Value,
-                    this.TimeNow());
+            var message = OrderCancelReplaceRequestFactory.Create(
+                this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
+                order,
+                modifiedPrice.Value,
+                this.TimeNow());
 
-                this.fixSession?.Send(message);
+            this.fixSession?.Send(message);
 
-                this.Log.Information(
-                    $"{order.Symbol} Submitting OrderReplaceRequest: " +
-                    $"(ClOrdId={order.Id}, " +
-                    $"OrderId={order.IdBroker}) => {Brokerage.FXCM}");
-            });
+            this.Log.Information(
+                $"{order.Symbol} Submitting OrderReplaceRequest: " +
+                $"(ClOrdId={order.Id}, " +
+                $"OrderId={order.IdBroker}) => {Brokerage.FXCM}");
         }
 
         /// <summary>
@@ -263,19 +229,16 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
-            this.Execute(() =>
-            {
-                var message = OrderCancelRequestFactory.Create(
-                    this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
-                    order,
-                    this.TimeNow());
+            var message = OrderCancelRequestFactory.Create(
+                this.instrumentData.GetBrokerSymbol(order.Symbol.Code).Value,
+                order,
+                this.TimeNow());
 
-                this.fixSession?.Send(message);
+            this.fixSession?.Send(message);
 
-                this.Log.Information(
-                    $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
-                    $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Brokerage.FXCM}");
-            });
+            this.Log.Information(
+                $"{order.Symbol} Submitting OrderCancelRequestFactory: " +
+                $"(ClOrdId={order.Id}, OrderId={order.IdBroker}) => {Brokerage.FXCM}");
         }
 
         /// <summary>
@@ -284,10 +247,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="command">The close position command.</param>
         public void ClosePosition(Position command)
         {
-            this.Execute(() =>
-            {
-                // TODO
-            });
+            // TODO
         }
     }
 }

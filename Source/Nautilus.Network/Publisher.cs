@@ -72,13 +72,9 @@ namespace Nautilus.Network
         /// </summary>
         public override void Start()
         {
-            this.Execute(() =>
-            {
-                this.socket.Bind(this.serverAddress.Value);
-                this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
-
-                this.Log.Debug("Ready to publish...");
-            });
+            this.socket.Bind(this.serverAddress.Value);
+            this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
+            this.Log.Debug("Ready to publish...");
         }
 
         /// <summary>
@@ -86,13 +82,10 @@ namespace Nautilus.Network
         /// </summary>
         public override void Stop()
         {
-            this.Execute(() =>
-            {
-                this.socket.Unbind(this.serverAddress.Value);
-                this.Log.Debug($"Unbound publisher socket from {this.serverAddress}");
+            this.socket.Unbind(this.serverAddress.Value);
+            this.Log.Debug($"Unbound publisher socket from {this.serverAddress}");
 
-                this.socket.Dispose();
-            });
+            this.socket.Dispose();
         }
 
         private static byte[] Combine(params byte[][] arrays)
