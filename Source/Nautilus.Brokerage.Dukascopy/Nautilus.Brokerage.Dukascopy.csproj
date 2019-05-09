@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\instruments_dukascopy.csv">
+        <Content Include="..\Configuration\instruments_dukascopy.csv">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

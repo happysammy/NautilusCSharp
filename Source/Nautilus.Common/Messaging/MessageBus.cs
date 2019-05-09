@@ -55,37 +55,28 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         public override void Start()
         {
-            this.log.Debug($"{typeof(T).Name}Bus initializing...");
+            this.log.Debug($"Initializing...");
         }
 
         private void OnMessage(InitializeSwitchboard message)
         {
-            this.commandHandler.Execute(() =>
-            {
-                this.switchboard = message.Switchboard;
+            this.switchboard = message.Switchboard;
 
-                this.log.Information($"{this.switchboard.GetType().Name} initialized.");
-            });
+            this.log.Information($"Initialized.");
         }
 
         private void OnMessage(Envelope<T> envelope)
         {
-            this.commandHandler.Execute(() =>
-            {
-                this.switchboard.SendToReceiver(envelope);
-                this.LogEnvelope(envelope);
-            });
+            this.switchboard.SendToReceiver(envelope);
+            this.LogEnvelope(envelope);
         }
 
         private void LogEnvelope(Envelope<T> envelope)
         {
-            this.commandHandler.Execute(() =>
-            {
-                this.messageCount++;
-                this.messageStorer.Send(envelope);
+            this.messageCount++;
+            this.messageStorer.Send(envelope);
 
-                this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
-            });
+            this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }
     }
 }

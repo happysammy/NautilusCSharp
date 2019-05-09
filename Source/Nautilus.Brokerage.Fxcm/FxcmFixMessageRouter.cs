@@ -236,7 +236,7 @@ namespace Nautilus.Brokerage.FXCM
             }
 
             this.fixSession.Send(message);
-            this.Log.Information($"{this.fixSession} => {message}");
+            this.Log.Information($"Sent => {message}");
         }
     }
 }
