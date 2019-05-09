@@ -181,7 +181,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = quantity.GetHashCode();
 
             // Assert
-            Assert.Equal(100493, result);
+            Assert.Equal(100000, result);
         }
     }
 }

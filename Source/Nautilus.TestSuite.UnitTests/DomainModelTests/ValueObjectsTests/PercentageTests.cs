@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = Percentage.Create(1);
 
             // Assert
-            Assert.Equal(1072693741, result.GetHashCode());
+            Assert.Equal(1072693248, result.GetHashCode());
         }
     }
 }

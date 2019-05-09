@@ -67,8 +67,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
             Assert.True(number1 == number2);
             Assert.True(number1 == 1);
             Assert.True(1 == number1);
+
             Assert.True(number1.Equals(number1));
             Assert.False(number1.Equals(number0));
+            Assert.True(number1.Equals(1));
+            Assert.False(number1.Equals(0));
 
             Assert.False(number1 != number2);
             Assert.False(number1 != 1);
@@ -76,13 +79,19 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
             Assert.True(number1 > number0);
             Assert.False(number1 > 1);
+            Assert.False(1 > number1);
+
             Assert.True(number1 >= number0);
             Assert.True(number1 >= 1);
+            Assert.True(1 >= number1);
 
             Assert.True(number0 < number1);
             Assert.False(number1 < 1);
+            Assert.False(1 < number1);
+
             Assert.True(number0 <= number1);
             Assert.True(number1 <= 1);
+            Assert.True(1 <= number1);
         }
 
         [Fact]
