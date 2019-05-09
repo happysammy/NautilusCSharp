@@ -79,13 +79,12 @@ namespace Nautilus.Common
             }
 
             Task.Delay(1000).Wait();
-            this.ShutdownActorSystem();
+            this.ShutdownSystem();
         }
 
-        private void ShutdownActorSystem()
+        private void ShutdownSystem()
         {
             this.Log.Information($"System shutting down...");
-            this.Log.Information($"System terminated.");
             GC.SuppressFinalize(this);
         }
     }

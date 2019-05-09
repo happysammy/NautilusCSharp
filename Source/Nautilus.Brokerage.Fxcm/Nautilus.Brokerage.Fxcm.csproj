@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\brokerage_fxcm_instruments.csv">
+        <Content Include="..\instruments_fxcm.csv">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
