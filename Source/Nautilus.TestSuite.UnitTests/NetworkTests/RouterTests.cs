@@ -46,9 +46,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_message()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5555";
-            var requester = new RequestSocket(TestAddress);
-            requester.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5555";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.Contains("MSG", this.testReceiver.Messages);
 
             // Tear Down
-            requester.Disconnect(TestAddress);
+            requester.Disconnect(testAddress);
             requester.Dispose();
             consumer.Stop();
         }
@@ -78,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_multiple_messages()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5556";
-            var requester = new RequestSocket(TestAddress);
-            requester.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5556";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.Equal("OK", response2);
 
             // Tear Down
-            requester.Disconnect(TestAddress);
+            requester.Disconnect(testAddress);
             requester.Dispose();
             consumer.Stop();
         }
@@ -116,9 +116,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_be_stopped()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5557";
-            var requester = new RequestSocket(TestAddress);
-            requester.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5557";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
@@ -143,7 +143,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.DoesNotContain("AFTER-STOPPED", this.testReceiver.Messages);
 
             // Tear Down
-            requester.Disconnect(TestAddress);
+            requester.Disconnect(testAddress);
             requester.Dispose();
         }
 
@@ -151,9 +151,9 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_in_order()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5558";
-            var requester = new RequestSocket(TestAddress);
-            requester.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5558";
+            var requester = new RequestSocket(testAddress);
+            requester.Connect(testAddress);
 
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
@@ -180,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.Equal("MSG-998", this.testReceiver.Messages[this.testReceiver.Messages.Count - 2]);
 
             // Tear Down
-            requester.Disconnect(TestAddress);
+            requester.Disconnect(testAddress);
             requester.Dispose();
             consumer.Stop();
         }
@@ -189,11 +189,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_receive_one_thousand_messages_from_multiple_request_sockets()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:5559";
-            var requester1 = new RequestSocket(TestAddress);
-            var requester2 = new RequestSocket(TestAddress);
-            requester1.Connect(TestAddress);
-            requester2.Connect(TestAddress);
+            const string testAddress = "tcp://127.0.0.1:5559";
+            var requester1 = new RequestSocket(testAddress);
+            var requester2 = new RequestSocket(testAddress);
+            requester1.Connect(testAddress);
+            requester2.Connect(testAddress);
 
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
@@ -224,8 +224,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.Equal("MSG-998 from 1", this.testReceiver.Messages[this.testReceiver.Messages.Count - 4]);
 
             // Tear Down
-            requester1.Disconnect(TestAddress);
-            requester2.Disconnect(TestAddress);
+            requester1.Disconnect(testAddress);
+            requester2.Disconnect(testAddress);
             requester1.Dispose();
             requester2.Dispose();
             consumer.Stop();

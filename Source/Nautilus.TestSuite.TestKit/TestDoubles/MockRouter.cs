@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="MockConsumer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="MockRouter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Network;
 
     /// <summary>
-    /// Provides a mock consumer for testing.
+    /// Provides a mock router for testing.
     /// </summary>
     public class MockRouter : Router
     {

@@ -22,7 +22,6 @@ namespace Nautilus.Network
     /// </summary>
     public class Publisher : ComponentBase
     {
-        private readonly ZmqServerAddress serverAddress;
         private readonly PublisherSocket socket;
         private readonly byte[] topic;
         private int cycles;
@@ -45,8 +44,6 @@ namespace Nautilus.Network
         {
             Precondition.NotDefault(id, nameof(id));
 
-            this.topic = Encoding.UTF8.GetBytes(topic);
-            this.serverAddress = new ZmqServerAddress(host, port);
             this.socket = new PublisherSocket()
             {
                 Options =
@@ -55,17 +52,24 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+            this.topic = Encoding.UTF8.GetBytes(topic);
+            this.ServerAddress = new ZmqServerAddress(host, port);
 
             this.RegisterHandler<byte[]>(this.Publish);
         }
+
+        /// <summary>
+        /// Gets the server address for the publisher.
+        /// </summary>
+        public ZmqServerAddress ServerAddress { get; }
 
         /// <summary>
         /// Actions to be performed when starting the <see cref="Router"/>.
         /// </summary>
         public override void Start()
         {
-            this.socket.Bind(this.serverAddress.Value);
-            this.Log.Debug($"Bound publisher socket to {this.serverAddress}");
+            this.socket.Bind(this.ServerAddress.Value);
+            this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
             this.Log.Debug("Ready to publish...");
         }
 
@@ -74,8 +78,8 @@ namespace Nautilus.Network
         /// </summary>
         public override void Stop()
         {
-            this.socket.Unbind(this.serverAddress.Value);
-            this.Log.Debug($"Unbound publisher socket from {this.serverAddress}");
+            this.socket.Unbind(this.ServerAddress.Value);
+            this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");
 
             this.socket.Dispose();
         }
@@ -86,7 +90,9 @@ namespace Nautilus.Network
         /// <param name="message">The message to send.</param>
         protected void Publish(byte[] message)
         {
-            this.socket.SendMoreFrame(this.topic).SendFrame(message);
+            this.socket
+                .SendMoreFrame(this.topic)
+                .SendFrame(message);
 
             this.cycles++;
             this.Log.Debug($"Published message[{this.cycles}].");

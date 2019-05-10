@@ -45,7 +45,25 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_publish_bytes()
+        internal void InitializedPublisher_HasCorrectServerAddress()
+        {
+            // Arrange
+            var publisher = new Publisher(
+                this.setupContainer,
+                TestTopic,
+                this.localHost,
+                new Port(55504),
+                Guid.NewGuid());
+
+            // Act
+            var result = publisher.ServerAddress;
+
+            // Assert
+            Assert.Equal("tcp://127.0.0.1:55504", publisher.ServerAddress.Value);
+        }
+
+        [Fact]
+        internal void GivenMessageToPublish_WhenMessageValid_PublishesToSubscriber()
         {
             // Arrange
             const string testAddress = "tcp://localhost:55504";
@@ -62,20 +80,18 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new Port(55504),
                 Guid.NewGuid());
             publisher.Start();
+
             Task.Delay(100).Wait();
 
             // Act
             publisher.Endpoint.Send(bytes);
-            this.output.WriteLine("Waiting for published messages...");
 
+            // TODO: Make this work
             // var topic = subscriber.ReceiveFrameBytes();
             // var msg = subscriber.ReceiveFrameBytes();
             Task.Delay(100).Wait();
 
             // Assert
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
-
-            // TODO
             // Assert.Equal(bytes, msg);
 
             // Tear Down
@@ -83,6 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }
