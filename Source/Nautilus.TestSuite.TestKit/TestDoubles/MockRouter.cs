@@ -16,19 +16,19 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock consumer for testing.
     /// </summary>
-    public class MockConsumer : Consumer
+    public class MockRouter : Router
     {
         private readonly IEndpoint receiver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockConsumer"/> class.
+        /// Initializes a new instance of the <see cref="MockRouter"/> class.
         /// </summary>
         /// <param name="receiver">The test receiver.</param>
         /// <param name="container">The container.</param>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
         /// <param name="id">The identifier.</param>
-        public MockConsumer(
+        public MockRouter(
             IEndpoint receiver,
             IComponentryContainer container,
             NetworkAddress host,

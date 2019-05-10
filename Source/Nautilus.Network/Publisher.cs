@@ -9,7 +9,6 @@
 namespace Nautilus.Network
 {
     using System;
-    using System.Linq;
     using System.Text;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -25,7 +24,6 @@ namespace Nautilus.Network
     {
         private readonly ZmqServerAddress serverAddress;
         private readonly PublisherSocket socket;
-        private readonly byte[] delimiter = Encoding.UTF8.GetBytes(" ");
         private readonly byte[] topic;
         private int cycles;
 
@@ -62,7 +60,7 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Actions to be performed when starting the <see cref="Consumer"/>.
+        /// Actions to be performed when starting the <see cref="Router"/>.
         /// </summary>
         public override void Start()
         {
@@ -72,7 +70,7 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Actions to be performed when stopping the <see cref="Consumer"/>.
+        /// Actions to be performed when stopping the <see cref="Router"/>.
         /// </summary>
         public override void Stop()
         {
@@ -88,23 +86,10 @@ namespace Nautilus.Network
         /// <param name="message">The message to send.</param>
         protected void Publish(byte[] message)
         {
-            this.socket.SendFrame(Combine(this.topic, this.delimiter, message));
+            this.socket.SendMoreFrame(this.topic).SendFrame(message);
 
             this.cycles++;
             this.Log.Debug($"Published message[{this.cycles}].");
-        }
-
-        private static byte[] Combine(params byte[][] arrays)
-        {
-            var combined = new byte[arrays.Sum(a => a.Length)];
-            var offset = 0;
-            foreach (var array in arrays)
-            {
-                Buffer.BlockCopy(array, 0, combined, offset, array.Length);
-                offset += array.Length;
-            }
-
-            return combined;
         }
     }
 }

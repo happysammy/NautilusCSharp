@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Aggregates;
 
     /// <summary>
-    /// Provides an interface for order serializers.
+    /// Provides a serializer for orders.
     /// </summary>
     public interface IOrderSerializer
     {

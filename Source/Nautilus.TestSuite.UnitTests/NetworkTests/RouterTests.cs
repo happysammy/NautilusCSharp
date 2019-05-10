@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ConsumerTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="RouterTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class ConsumerTests
+    public class RouterTests
     {
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer container;
@@ -30,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly MockMessagingAgent testReceiver;
         private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
 
-        public ConsumerTests(ITestOutputHelper output)
+        public RouterTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new MockConsumer(
+            var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new MockConsumer(
+            var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new MockConsumer(
+            var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
@@ -155,7 +155,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new MockConsumer(
+            var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
@@ -195,7 +195,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester1.Connect(TestAddress);
             requester2.Connect(TestAddress);
 
-            var consumer = new MockConsumer(
+            var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,

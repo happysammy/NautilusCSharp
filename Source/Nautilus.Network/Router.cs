@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Consumer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Router.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,7 +9,6 @@
 namespace Nautilus.Network
 {
     using System;
-    using System.Collections.Generic;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,9 +20,9 @@ namespace Nautilus.Network
     using NetMQ.Sockets;
 
     /// <summary>
-    /// Provides a messaging consumer.
+    /// Provides a messaging router.
     /// </summary>
-    public class Consumer : ComponentBase
+    public class Router : ComponentBase
     {
         private readonly CancellationTokenSource cts;
         private readonly ZmqServerAddress serverAddress;
@@ -34,13 +33,13 @@ namespace Nautilus.Network
         private int cycles;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Consumer"/> class.
+        /// Initializes a new instance of the <see cref="Router"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        protected Consumer(
+        protected Router(
             IComponentryContainer container,
             NetworkAddress host,
             Port port,
@@ -107,7 +106,7 @@ namespace Nautilus.Network
             var delimiter = this.socket.ReceiveFrameBytes();
             var data = this.socket.ReceiveFrameBytes();
 
-            var response = new List<byte[]> { identity, delimiter, this.ok };
+            var response = new[] { identity, delimiter, this.ok };
             this.socket.SendMultipartBytes(response);
 
             this.cycles++;

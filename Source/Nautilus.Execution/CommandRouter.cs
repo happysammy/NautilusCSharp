@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="CommandConsumer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CommandRouter.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -16,20 +16,20 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a command consumer for the messaging server.
     /// </summary>
-    public class CommandConsumer : Consumer
+    public class CommandRouter : Router
     {
         private readonly ICommandSerializer serializer;
         private readonly IEndpoint receiver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandConsumer"/> class.
+        /// Initializes a new instance of the <see cref="CommandRouter"/> class.
         /// </summary>
         /// <param name="container">The component setup container.</param>
         /// <param name="serializer">The command serializer.</param>
         /// <param name="receiver">The receiver endpoint.</param>
         /// <param name="host">The consumers host address.</param>
         /// <param name="port">The consumers port.</param>
-        public CommandConsumer(
+        public CommandRouter(
             IComponentryContainer container,
             ICommandSerializer serializer,
             IEndpoint receiver,

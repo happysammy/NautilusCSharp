@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -47,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_publish_bytes()
         {
             // Arrange
-            const string testAddress = "tcp://127.0.0.1:55504";
+            const string testAddress = "tcp://localhost:55504";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe(TestTopic);
@@ -67,14 +68,15 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             publisher.Endpoint.Send(bytes);
             this.output.WriteLine("Waiting for published messages...");
 
-            // TODO
-            // var message = subscriber.ReceiveFrameBytes();
+            // var topic = subscriber.ReceiveFrameBytes();
+            // var msg = subscriber.ReceiveFrameBytes();
+            Task.Delay(100).Wait();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
             // TODO
-            // Assert.Equal(bytes, message);
+            // Assert.Equal(bytes, msg);
 
             // Tear Down
             subscriber.Unsubscribe(TestTopic);

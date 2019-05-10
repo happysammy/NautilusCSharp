@@ -50,7 +50,7 @@ namespace Nautilus.Execution
                 container,
                 messagingAdapter)
         {
-            this.commandConsumer = new CommandConsumer(
+            this.commandConsumer = new CommandRouter(
                 container,
                 commandSerializer,
                 this.Endpoint,

@@ -116,7 +116,7 @@ namespace Nautilus.Network
                 this.Log.Debug("Active.");
             }
 
-            while (this.vouchers > 0 & this.queue.Count > 0)
+            while (this.vouchers > 0 && this.queue.Count > 0)
             {
                 var message = this.queue.Dequeue();
 
@@ -131,7 +131,7 @@ namespace Nautilus.Network
                 this.Log.Debug($"Sent message {message} (total_count={this.totalCount}).");
             }
 
-            if (this.vouchers <= 0 & this.queue.Count > 0)
+            if (this.vouchers <= 0 && this.queue.Count > 0)
             {
                 // At message limit.
                 this.Log.Debug($"At message limit of {this.limit} per {this.interval} (queued_count={this.queue.Count}).");

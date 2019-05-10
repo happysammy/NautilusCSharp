@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var commandConsumer = new CommandConsumer(
+            var commandConsumer = new CommandRouter(
                 this.setupContainer,
                 new MsgPackCommandSerializer(),
                 this.testReceiver,
