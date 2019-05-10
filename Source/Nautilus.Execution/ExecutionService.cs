@@ -104,7 +104,7 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Actions to be performed after the actor base is stopped.
+        /// Actions to be performed when the component is stopped.
         /// </summary>
         public override void Stop()
         {

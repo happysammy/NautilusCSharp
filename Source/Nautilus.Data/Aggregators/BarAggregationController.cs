@@ -199,6 +199,8 @@ namespace Nautilus.Data.Aggregators
         /// <param name="message">The received message.</param>
         private void OnMessage(Subscribe<BarType> message)
         {
+            this.Log.Debug($"Received {message}");
+
             var symbol = message.DataType.Symbol;
             var barSpec = message.DataType.Specification;
 
@@ -323,7 +325,7 @@ namespace Nautilus.Data.Aggregators
             }
 
             // Log for debug purposes.
-            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            // this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         /// <summary>

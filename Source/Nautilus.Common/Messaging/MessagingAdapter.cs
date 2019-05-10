@@ -28,9 +28,9 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagingAdapter"/> class.
         /// </summary>
-        /// <param name="commandBus">The command bus actor address.</param>
-        /// <param name="eventBus">The event bus actor address.</param>
-        /// <param name="documentBus">The document bus actor address.</param>
+        /// <param name="commandBus">The command bus endpoint.</param>
+        /// <param name="eventBus">The event bus endpoint.</param>
+        /// <param name="documentBus">The document bus endpoint.</param>
         public MessagingAdapter(
             IEndpoint commandBus,
             IEndpoint eventBus,

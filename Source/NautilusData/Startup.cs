@@ -90,22 +90,19 @@ namespace NautilusData
 
             var symbolsJArray = (JArray)config[ConfigSection.Symbols];
             var symbolsList = new List<string>();
-            foreach (var ccy in symbolsJArray)
+            foreach (var symbol in symbolsJArray)
             {
-                symbolsList.Add(ccy.ToString());
+                symbolsList.Add(symbol.ToString());
             }
 
-            var symbols = symbolsList
-                .Distinct()
-                .ToList()
-                .AsReadOnly();
+            var symbols = symbolsList.Distinct().ToArray();
 
             var resolutions = new List<Resolution>
             {
                 Resolution.Second,
                 Resolution.Minute,
                 Resolution.Hour,
-            }.ToList().AsReadOnly();
+            };
 
             this.dataSystem = NautilusDataFactory.Create(
                 logLevel,

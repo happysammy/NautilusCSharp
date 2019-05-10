@@ -51,7 +51,7 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Runs pre-start of the receive actor.
+        /// Runs when starting the component.
         /// </summary>
         public override void Start()
         {

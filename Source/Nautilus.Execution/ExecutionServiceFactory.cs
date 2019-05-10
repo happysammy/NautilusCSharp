@@ -23,7 +23,6 @@ namespace Nautilus.Execution
     {
         /// <summary>
         /// Creates a new <see cref="ExecutionService"/> and returns an address book of endpoints.
-        /// actor address.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>

@@ -151,6 +151,8 @@ namespace Nautilus.Data
 
         private void OnMessage(Subscribe<BarType> message)
         {
+            this.Log.Debug($"Received {message}");
+
             this.Send(DataServiceAddress.DataCollectionManager, message);
         }
 

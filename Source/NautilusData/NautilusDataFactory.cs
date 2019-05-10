@@ -48,8 +48,8 @@ namespace NautilusData
         public static NautilusData Create(
             LogEventLevel logLevel,
             FixConfiguration fixConfig,
-            IReadOnlyList<string> symbols,
-            IReadOnlyList<Resolution> resolutions,
+            IReadOnlyCollection<string> symbols,
+            IReadOnlyCollection<Resolution> resolutions,
             int barRollingWindow)
         {
             Precondition.NotEmpty(symbols, nameof(symbols));

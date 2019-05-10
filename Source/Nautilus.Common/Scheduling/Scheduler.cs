@@ -18,7 +18,7 @@ namespace Nautilus.Common.Scheduling
     using Quartz.Impl;
 
     /// <summary>
-    /// Provides a system scheduling actor with an internal quartz scheduler which processes Add
+    /// Provides a system scheduling component with an internal quartz scheduler which processes Add
     /// and Remove messages.
     /// </summary>
     public sealed class Scheduler : ComponentBase

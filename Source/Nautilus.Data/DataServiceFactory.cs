@@ -45,20 +45,20 @@ namespace Nautilus.Data
             IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
-            IReadOnlyList<string> symbols,
-            IReadOnlyList<Resolution> resolutions,
+            IReadOnlyCollection<string> symbols,
+            IReadOnlyCollection<Resolution> resolutions,
             int barRollingWindow,
             bool updateInstruments)
         {
             var tickPublisher = new TickPublisher(container, publisherFactory.Create());
             var barPublisher = new BarPublisher(container, publisherFactory.Create());
 
-            var databaseTaskActor = new DatabaseTaskManager(
+            var databaseTaskManager = new DatabaseTaskManager(
                 container,
                 barRepository,
                 instrumentRepository);
 
-            var dataCollectionActor = new DataCollectionManager(
+            var dataCollectionManager = new DataCollectionManager(
                 container,
                 messagingAdapter,
                 barPublisher.Endpoint,
@@ -81,8 +81,8 @@ namespace Nautilus.Data
             return new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Data, dataService.Endpoint },
-                { DataServiceAddress.DatabaseTaskManager, databaseTaskActor.Endpoint },
-                { DataServiceAddress.DataCollectionManager, dataCollectionActor.Endpoint },
+                { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
+                { DataServiceAddress.DataCollectionManager, dataCollectionManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
