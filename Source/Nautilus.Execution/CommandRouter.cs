@@ -34,7 +34,7 @@ namespace Nautilus.Execution
             ICommandSerializer serializer,
             IEndpoint receiver,
             NetworkAddress host,
-            Port port)
+            NetworkPort port)
             : base(
                 container,
                 host,

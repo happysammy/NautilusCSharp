@@ -50,8 +50,8 @@ namespace NautilusExecutor
             LogEventLevel logLevel,
             FixConfiguration fixConfig,
             NetworkAddress serviceAddress,
-            Port commandsPort,
-            Port eventsPort,
+            NetworkPort commandsPort,
+            NetworkPort eventsPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {

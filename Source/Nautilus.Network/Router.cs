@@ -42,7 +42,7 @@ namespace Nautilus.Network
         protected Router(
             IComponentryContainer container,
             NetworkAddress host,
-            Port port,
+            NetworkPort port,
             Guid id)
             : base(NautilusService.Network, container)
         {

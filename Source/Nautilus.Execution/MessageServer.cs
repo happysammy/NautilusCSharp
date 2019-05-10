@@ -43,8 +43,8 @@ namespace Nautilus.Execution
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
             NetworkAddress serverAddress,
-            Port commandsPort,
-            Port eventsPort)
+            NetworkPort commandsPort,
+            NetworkPort eventsPort)
             : base(
                 NautilusService.Messaging,
                 container,

@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
-                new Port(5555),
+                new NetworkPort(5555),
                 Guid.NewGuid());
 
             consumer.Start();
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
-                new Port(5556),
+                new NetworkPort(5556),
                 Guid.NewGuid());
 
             consumer.Start();
@@ -124,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
-                new Port(5557),
+                new NetworkPort(5557),
                 Guid.NewGuid());
 
             consumer.Start();
@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
-                new Port(5558),
+                new NetworkPort(5558),
                 Guid.NewGuid());
 
             consumer.Start();
@@ -199,7 +199,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
-                new Port(5559),
+                new NetworkPort(5559),
                 Guid.NewGuid());
 
             consumer.Start();

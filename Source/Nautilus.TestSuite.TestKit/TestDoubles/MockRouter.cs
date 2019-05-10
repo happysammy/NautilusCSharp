@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             IEndpoint receiver,
             IComponentryContainer container,
             NetworkAddress host,
-            Port port,
+            NetworkPort port,
             Guid id)
             : base(
                 container,

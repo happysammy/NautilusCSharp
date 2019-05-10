@@ -46,8 +46,8 @@ namespace Nautilus.Execution
             ICommandSerializer commandSerializer,
             IEventSerializer eventSerializer,
             NetworkAddress serviceAddress,
-            Port commandsPort,
-            Port eventsPort,
+            NetworkPort commandsPort,
+            NetworkPort eventsPort,
             int commandsPerSecond,
             int newOrdersPerSecond)
         {

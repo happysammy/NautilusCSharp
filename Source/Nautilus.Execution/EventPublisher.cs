@@ -31,7 +31,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             IEventSerializer serializer,
             NetworkAddress host,
-            Port port)
+            NetworkPort port)
             : base(
                 container,
                 "nautilus_execution_events",

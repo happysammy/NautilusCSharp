@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.setupContainer,
                 TestTopic,
                 this.localHost,
-                new Port(55504),
+                new NetworkPort(55504),
                 Guid.NewGuid());
 
             // Act
@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.setupContainer,
                 TestTopic,
                 this.localHost,
-                new Port(55504),
+                new NetworkPort(55504),
                 Guid.NewGuid());
             publisher.Start();
 

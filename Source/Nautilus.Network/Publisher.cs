@@ -38,7 +38,7 @@ namespace Nautilus.Network
             IComponentryContainer container,
             string topic,
             NetworkAddress host,
-            Port port,
+            NetworkPort port,
             Guid id)
             : base(NautilusService.Messaging, container)
         {
