@@ -11,7 +11,7 @@ namespace NautilusExecutor.Service
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a REST API for the <see cref="NautilusExecutor"/> system.
@@ -33,7 +33,7 @@ namespace NautilusExecutor.Service
             this.guidFactory = setupContainer.GuidFactory;
             this.logger = setupContainer.LoggerFactory.Create(
                 NautilusService.Execution,
-                LabelFactory.Create(nameof(NautilusExecutorService)));
+                new Label(nameof(NautilusExecutorService)));
         }
 
         /// <summary>

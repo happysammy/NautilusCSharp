@@ -18,7 +18,7 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
     using Nautilus.Messaging;
     using NodaTime;
@@ -62,9 +62,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.Create(
-                NautilusService.FIX,
-                LabelFactory.Create(nameof(FixClient)));
+            this.logger = container.LoggerFactory.Create(NautilusService.FIX, new Label(nameof(FixClient)));
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
             this.Account = config.Credentials.Account;

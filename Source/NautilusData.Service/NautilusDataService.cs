@@ -10,7 +10,7 @@ namespace NautilusData.Service
 {
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides a REST API for the <see cref="NautilusData"/> system.
@@ -31,7 +31,7 @@ namespace NautilusData.Service
             this.guidFactory = setupContainer.GuidFactory;
             this.logger = setupContainer.LoggerFactory.Create(
                 NautilusService.Data,
-                LabelFactory.Create(nameof(NautilusDataService)));
+                new Label(nameof(NautilusDataService)));
         }
 
         /// <summary>

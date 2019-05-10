@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
 
@@ -24,13 +24,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             var message1 = new SystemStatusResponse(
-                LabelFactory.Create("SomeComponent1"),
+                new Label("SomeComponent1"),
                 Status.Running,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new SystemStatusResponse(
-                LabelFactory.Create("SomeComponent2"),
+                new Label("SomeComponent2"),
                 Status.Running,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -66,7 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             // Arrange
             var guid = Guid.NewGuid();
             var message = new SystemStatusResponse(
-                LabelFactory.Create("CommandBus"),
+                new Label("CommandBus"),
                 Status.Running,
                 guid,
                 StubZonedDateTime.UnixEpoch());
