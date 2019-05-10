@@ -16,7 +16,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Fix.Interfaces;
@@ -44,10 +43,7 @@ namespace Nautilus.Brokerage.Dukascopy
             IComponentryContainer container,
             InstrumentDataProvider instrumentData,
             string accountNumber)
-        : base(
-            NautilusService.FIX,
-            LabelFactory.Create(nameof(DukascopyFixMessageRouter)),
-            container)
+        : base(NautilusService.FIX, container)
         {
             Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 

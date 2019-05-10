@@ -57,7 +57,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var publisher = new Publisher(
                 this.setupContainer,
-                new Label("EventPublisher"),
                 TestTopic,
                 this.localHost,
                 new Port(55504),

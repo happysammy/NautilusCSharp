@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -53,8 +52,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var consumer = new Consumer(
                 this.container,
-                this.testReceiver.Endpoint,
-                new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5555),
                 Guid.NewGuid());
@@ -86,8 +83,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var consumer = new Consumer(
                 this.container,
-                this.testReceiver.Endpoint,
-                new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5556),
                 Guid.NewGuid());
@@ -125,8 +120,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var consumer = new Consumer(
                 this.container,
-                this.testReceiver.Endpoint,
-                new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5557),
                 Guid.NewGuid());
@@ -161,8 +154,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var consumer = new Consumer(
                 this.container,
-                this.testReceiver.Endpoint,
-                new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5558),
                 Guid.NewGuid());
@@ -202,8 +193,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             var consumer = new Consumer(
                 this.container,
-                this.testReceiver.Endpoint,
-                new Label("CommandConsumer"),
                 this.localHost,
                 new Port(5559),
                 Guid.NewGuid());

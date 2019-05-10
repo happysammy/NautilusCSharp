@@ -16,7 +16,6 @@ namespace NautilusData
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -41,7 +40,6 @@ namespace NautilusData
             IFixClient fixClient)
             : base(
                 NautilusService.Core,
-                LabelFactory.Create(nameof(NautilusData)),
                 container,
                 messagingAdapter)
         {

@@ -13,7 +13,6 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Events;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -29,10 +28,7 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The setup container.</param>
         /// <param name="publisher">The bar publisher.</param>
         public BarPublisher(IComponentryContainer container, IChannelPublisher publisher)
-            : base(
-                NautilusService.Data,
-                LabelFactory.Create(nameof(BarPublisher)),
-                container)
+            : base(NautilusService.Data, container)
         {
             this.publisher = publisher;
 

@@ -16,7 +16,6 @@ namespace Nautilus.Common.MessageStore
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -32,10 +31,7 @@ namespace Nautilus.Common.MessageStore
         /// <param name="container">The componentry container.</param>
         /// <param name="store">The message store.</param>
         public MessageStorer(IComponentryContainer container, IMessageStore store)
-        : base(
-            NautilusService.Messaging,
-            new Label(nameof(MessageStorer)),
-            container)
+        : base(NautilusService.Messaging, container)
         {
             this.store = store;
         }

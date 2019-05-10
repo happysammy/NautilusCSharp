@@ -12,7 +12,6 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -28,10 +27,7 @@ namespace Nautilus.Data.Publishers
         /// <param name="container">The setup container.</param>
         /// <param name="publisher">The tick publisher.</param>
         public TickPublisher(IComponentryContainer container, IChannelPublisher publisher)
-        : base(
-            NautilusService.Data,
-            LabelFactory.Create(nameof(TickPublisher)),
-            container)
+        : base(NautilusService.Data, container)
         {
             this.publisher = publisher;
 

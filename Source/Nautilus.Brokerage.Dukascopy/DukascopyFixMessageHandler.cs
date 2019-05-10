@@ -17,7 +17,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
@@ -46,10 +45,7 @@ namespace Nautilus.Brokerage.Dukascopy
         public DukascopyFixMessageHandler(
             IComponentryContainer container,
             InstrumentDataProvider instrumentData)
-            : base(
-                NautilusService.FIX,
-                LabelFactory.Create(nameof(DukascopyFixMessageHandler)),
-                container)
+            : base(NautilusService.FIX, container)
         {
             this.instrumentData = instrumentData;
         }

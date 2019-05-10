@@ -50,7 +50,6 @@ namespace Nautilus.Fix
             IFixClient fixClient)
             : base(
                 NautilusService.FIX,
-                new Label(nameof(FixGateway)),
                 container,
                 messagingAdapter)
         {
@@ -335,7 +334,7 @@ namespace Nautilus.Fix
                     $"SecurityListReceived: " +
                     $"(SecurityResponseId={responseId}) result={result}");
 
-                var dataDelivery = new DataDelivery<IReadOnlyCollection<Instrument>>(
+                var dataDelivery = new DataDelivery<IEnumerable<Instrument>>(
                     instruments,
                     this.NewGuid(),
                     this.TimeNow());

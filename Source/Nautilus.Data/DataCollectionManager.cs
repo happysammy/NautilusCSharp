@@ -23,7 +23,6 @@ namespace Nautilus.Data
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Quartz;
@@ -33,7 +32,6 @@ namespace Nautilus.Data
     /// </summary>
     public class DataCollectionManager : ComponentBusConnectedBase
     {
-        private readonly IComponentryContainer storedContainer;
         private readonly IEndpoint barPublisher;
         private readonly List<Resolution> resolutionsPersisting;
         private readonly int barRollingWindow;
@@ -55,13 +53,11 @@ namespace Nautilus.Data
             int barRollingWindow)
             : base(
                 NautilusService.Data,
-                LabelFactory.Create(nameof(DataCollectionManager)),
                 container,
                 messagingAdapter)
         {
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
-            this.storedContainer = container;
             this.barPublisher = barPublisher;
             this.resolutionsPersisting = new List<Resolution>(resolutionsToPersist);
             this.barRollingWindow = barRollingWindow;

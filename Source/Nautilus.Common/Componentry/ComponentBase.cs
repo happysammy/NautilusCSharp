@@ -29,22 +29,25 @@ namespace Nautilus.Common.Componentry
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
         /// <param name="serviceContext">The components service context.</param>
-        /// <param name="component">The components label.</param>
         /// <param name="container">The components componentry container.</param>
-        protected ComponentBase(
-            NautilusService serviceContext,
-            Label component,
-            IComponentryContainer container)
+        protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
         {
+            this.Name = new Label(this.GetType().Name);
             this.clock = container.Clock;
-            this.StartTime = this.clock.TimeNow();
-            this.Log = container.LoggerFactory.Create(serviceContext, component);
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
+            this.Log = container.LoggerFactory.Create(serviceContext, this.Name);
+            this.StartTime = this.clock.TimeNow();
 
             this.RegisterHandler<SystemStart>(this.OnMessage);
             this.RegisterHandler<SystemShutdown>(this.OnMessage);
         }
+
+        /// <summary>
+        /// Gets the components name label.
+        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
+        protected Label Name { get; }
 
         /// <summary>
         /// Gets the components logger.

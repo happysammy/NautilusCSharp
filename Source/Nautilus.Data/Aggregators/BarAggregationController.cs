@@ -24,7 +24,6 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -56,7 +55,6 @@ namespace Nautilus.Data.Aggregators
             IMessagingAdapter messagingAdapter)
             : base(
             NautilusService.Data,
-            LabelFactory.Create(nameof(BarAggregationController)),
             container,
             messagingAdapter)
         {

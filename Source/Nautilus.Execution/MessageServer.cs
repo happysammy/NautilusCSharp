@@ -15,7 +15,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Network;
 
@@ -48,7 +47,6 @@ namespace Nautilus.Execution
             Port eventsPort)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Create(nameof(MessageServer)),
                 container,
                 messagingAdapter)
         {

@@ -9,21 +9,16 @@
 namespace Nautilus.Execution
 {
     using System;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.DomainModel.Factories;
-    using Nautilus.Messaging;
     using Nautilus.Network;
 
     /// <summary>
     /// Provides an event publisher for the messaging server.
     /// </summary>
-    public class EventPublisher : ComponentBase
+    public class EventPublisher : Publisher
     {
         private readonly IEventSerializer serializer;
-        private readonly IEndpoint publisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -38,26 +33,20 @@ namespace Nautilus.Execution
             NetworkAddress host,
             Port port)
             : base(
-                NautilusService.Messaging,
-                LabelFactory.Create(nameof(EventPublisher)),
-                container)
-        {
-            this.serializer = serializer;
-
-            this.publisher = new Publisher(
                 container,
-                LabelFactory.Create("EventPublisher"),
                 "nautilus_execution_events",
                 host,
                 port,
-                Guid.NewGuid()).Endpoint;
+                Guid.NewGuid())
+        {
+            this.serializer = serializer;
 
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
         private void OnMessage(Event message)
         {
-            this.publisher.Send(this.serializer.Serialize(message));
+            this.Publish(this.serializer.Serialize(message));
         }
     }
 }

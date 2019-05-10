@@ -16,7 +16,6 @@ namespace Nautilus.Common
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -38,7 +37,6 @@ namespace Nautilus.Common
             Switchboard switchboard)
             : base(
                 NautilusService.Core,
-                LabelFactory.Create(nameof(SystemController)),
                 container,
                 messagingAdapter)
         {

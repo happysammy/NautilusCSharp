@@ -9,20 +9,16 @@
 namespace Nautilus.Execution
 {
     using System;
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Network;
 
     /// <summary>
     /// Provides a command consumer for the messaging server.
     /// </summary>
-    public class CommandConsumer : ComponentBase
+    public class CommandConsumer : Consumer
     {
         private readonly ICommandSerializer serializer;
-        private readonly IEndpoint consumer;
         private readonly IEndpoint receiver;
 
         /// <summary>
@@ -40,20 +36,13 @@ namespace Nautilus.Execution
             NetworkAddress host,
             Port port)
             : base(
-                NautilusService.Messaging,
-                LabelFactory.Create(nameof(CommandConsumer)),
-                container)
+                container,
+                host,
+                port,
+                Guid.NewGuid())
         {
             this.serializer = serializer;
             this.receiver = receiver;
-
-            this.consumer = new Consumer(
-                        container,
-                        this.Endpoint,
-                        LabelFactory.Create("RouterSocket"),
-                        host,
-                        port,
-                        Guid.NewGuid()).Endpoint;
 
             this.RegisterHandler<byte[]>(this.OnMessage);
         }

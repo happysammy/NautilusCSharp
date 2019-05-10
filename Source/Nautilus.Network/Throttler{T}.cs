@@ -16,7 +16,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using NodaTime;
 
@@ -49,10 +48,7 @@ namespace Nautilus.Network
             IEndpoint receiver,
             Duration interval,
             int limit)
-            : base(
-                serviceContext,
-                LabelFactory.Create(nameof(Throttler<T>)),
-                container)
+            : base(serviceContext, container)
         {
             Precondition.NotDefault(interval, nameof(interval));
             Precondition.PositiveInt32(limit, nameof(limit));

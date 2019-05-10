@@ -20,7 +20,6 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -49,12 +48,7 @@ namespace Nautilus.Data.Aggregators
             IComponentryContainer container,
             Symbol symbol,
             bool isMarketOpen)
-            : base(
-            NautilusService.Data,
-            LabelFactory.Create(
-                nameof(BarAggregator),
-                symbol),
-            container)
+            : base(NautilusService.Data, container)
         {
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();

@@ -25,7 +25,6 @@ namespace Nautilus.Common.Messaging
     {
         private readonly ILogger log;
         private readonly IEndpoint messageStorer;
-        private readonly CommandHandler commandHandler;
 
         private Switchboard switchboard;
         private int messageCount;
@@ -36,14 +35,10 @@ namespace Nautilus.Common.Messaging
         /// <param name="container">The container.</param>
         /// <param name="messageStorer">The message storer endpoint.</param>
         public MessageBus(IComponentryContainer container, IEndpoint messageStorer)
-        : base(
-            NautilusService.Messaging,
-            new Label("MessageBus"),
-            container)
+        : base(NautilusService.Messaging, container)
         {
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStorer = messageStorer;
-            this.commandHandler = new CommandHandler(this.log);
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);

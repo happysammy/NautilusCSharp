@@ -17,7 +17,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Quartz;
 
@@ -44,7 +43,6 @@ namespace Nautilus.Data
             bool updateInstruments)
             : base(
                 NautilusService.Data,
-                LabelFactory.Create(nameof(DataService)),
                 setupContainer,
                 messagingAdapter)
         {

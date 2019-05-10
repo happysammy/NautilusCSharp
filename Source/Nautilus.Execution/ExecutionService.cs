@@ -18,7 +18,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using NodaTime;
@@ -54,7 +53,6 @@ namespace Nautilus.Execution
             int newOrdersPerSecond)
             : base(
             NautilusService.Execution,
-            LabelFactory.Create(nameof(ExecutionService)),
             container,
             messagingAdapter)
         {

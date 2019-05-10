@@ -11,7 +11,6 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -26,18 +25,13 @@ namespace Nautilus.Common.Componentry
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
         /// </summary>
         /// <param name="serviceContext">The service context.</param>
-        /// <param name="component">The component label.</param>
         /// <param name="container">The container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         protected ComponentBusConnectedBase(
             NautilusService serviceContext,
-            Label component,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
-            : base(
-                serviceContext,
-                component,
-                container)
+            : base(serviceContext, container)
         {
             this.messagingAdapter = messagingAdapter;
             this.address = new Address(this.GetType().Name);

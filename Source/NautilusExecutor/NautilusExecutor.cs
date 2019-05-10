@@ -12,7 +12,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// Contains the Nautilus Executor system.
@@ -36,7 +35,6 @@ namespace NautilusExecutor
             IFixClient fixClient)
             : base(
                 NautilusService.Core,
-                LabelFactory.Create(nameof(NautilusExecutor)),
                 container,
                 messagingAdapter)
         {

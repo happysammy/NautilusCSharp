@@ -17,8 +17,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -28,7 +26,6 @@ namespace Nautilus.Network
     public class Consumer : ComponentBase
     {
         private readonly CancellationTokenSource cts;
-        private readonly IEndpoint receiver;
         private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
         private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
@@ -40,39 +37,29 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="Consumer"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="receiver">The receiver endpoint.</param>
-        /// <param name="label">The consumer label.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
         public Consumer(
             IComponentryContainer container,
-            IEndpoint receiver,
-            Label label,
             NetworkAddress host,
             Port port,
             Guid id)
-            : base(
-                NautilusService.Messaging,
-                label,
-                container)
+            : base(NautilusService.Network, container)
         {
             Precondition.NotDefault(id, nameof(id));
 
             this.cts = new CancellationTokenSource();
-            this.receiver = receiver;
             this.serverAddress = new ZmqServerAddress(host, port);
 
             this.socket = new RouterSocket()
             {
                 Options =
                 {
-                    Linger = TimeSpan.FromMilliseconds(1000),
+                    Linger = TimeSpan.FromSeconds(1),
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
-
-            this.RegisterHandler<byte[]>(this.OnMessage);
         }
 
         /// <summary>
@@ -101,12 +88,6 @@ namespace Nautilus.Network
 
             this.socket.Dispose();
             this.Log.Debug($"Stopped.");
-        }
-
-        private void OnMessage(byte[] message)
-        {
-            this.receiver.Send(message);
-            this.Log.Debug($"Consumed message[{this.cycles}].");
         }
 
         private Task StartConsuming()

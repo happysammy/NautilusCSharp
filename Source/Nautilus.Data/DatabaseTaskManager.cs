@@ -21,7 +21,6 @@ namespace Nautilus.Data
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -44,10 +43,7 @@ namespace Nautilus.Data
             IComponentryContainer container,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository)
-            : base(
-                NautilusService.Data,
-                LabelFactory.Create(nameof(DatabaseTaskManager)),
-                container)
+            : base(NautilusService.Data, container)
         {
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;

@@ -19,7 +19,6 @@ namespace Nautilus.Execution
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
-    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
 
     /// <summary>
@@ -41,7 +40,6 @@ namespace Nautilus.Execution
             IMessagingAdapter messagingAdapter)
             : base(
                 NautilusService.Messaging,
-                LabelFactory.Create(nameof(MessageServer)),
                 container,
                 messagingAdapter)
         {

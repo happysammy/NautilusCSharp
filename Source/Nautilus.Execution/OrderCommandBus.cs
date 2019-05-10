@@ -13,7 +13,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Factories;
 
     /// <summary>
     /// Provides a trade command bus for the execution service.
@@ -34,7 +33,6 @@ namespace Nautilus.Execution
             IFixGateway gateway)
             : base(
             NautilusService.Execution,
-            LabelFactory.Create(nameof(OrderCommandBus)),
             container,
             messagingAdapter)
         {

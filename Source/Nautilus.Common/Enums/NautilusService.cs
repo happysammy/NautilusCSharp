@@ -39,6 +39,11 @@ namespace Nautilus.Common.Enums
         Messaging,
 
         /// <summary>
+        /// The network service context.
+        /// </summary>
+        Network,
+
+        /// <summary>
         /// The alpha service context.
         /// </summary>
         Alpha,

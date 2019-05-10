@@ -13,7 +13,6 @@ namespace Nautilus.Common.Scheduling
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.DomainModel.Factories;
     using Quartz;
     using Quartz.Impl;
 
@@ -30,10 +29,7 @@ namespace Nautilus.Common.Scheduling
         /// </summary>
         /// <param name="container">The setup container.</param>
         public Scheduler(IComponentryContainer container)
-            : base(
-                NautilusService.Scheduling,
-                LabelFactory.Create(nameof(Scheduler)),
-                container)
+            : base(NautilusService.Scheduling, container)
         {
             var properties = new NameValueCollection
             {

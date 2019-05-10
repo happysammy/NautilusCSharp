@@ -15,7 +15,6 @@ namespace Nautilus.Network
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.ValueObjects;
     using NetMQ;
     using NetMQ.Sockets;
 
@@ -34,22 +33,17 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="label">The publisher label.</param>
         /// <param name="topic">The publishers topic.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
         public Publisher(
             IComponentryContainer container,
-            Label label,
             string topic,
             NetworkAddress host,
             Port port,
             Guid id)
-            : base(
-                NautilusService.Messaging,
-                label,
-                container)
+            : base(NautilusService.Messaging, container)
         {
             Precondition.NotDefault(id, nameof(id));
 
@@ -59,12 +53,12 @@ namespace Nautilus.Network
             {
                 Options =
                 {
-                    Linger = TimeSpan.FromMilliseconds(1000),
+                    Linger = TimeSpan.FromSeconds(1),
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
 
-            this.RegisterHandler<byte[]>(this.OnMessage);
+            this.RegisterHandler<byte[]>(this.Publish);
         }
 
         /// <summary>
@@ -88,6 +82,18 @@ namespace Nautilus.Network
             this.socket.Dispose();
         }
 
+        /// <summary>
+        /// Sends the given message onto the socket.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        protected void Publish(byte[] message)
+        {
+            this.socket.SendFrame(Combine(this.topic, this.delimiter, message));
+
+            this.cycles++;
+            this.Log.Debug($"Published message[{this.cycles}].");
+        }
+
         private static byte[] Combine(params byte[][] arrays)
         {
             var combined = new byte[arrays.Sum(a => a.Length)];
@@ -99,14 +105,6 @@ namespace Nautilus.Network
             }
 
             return combined;
-        }
-
-        private void OnMessage(byte[] message)
-        {
-            this.socket.SendFrame(Combine(this.topic, this.delimiter, message));
-
-            this.cycles++;
-            this.Log.Debug($"Published message[{this.cycles}].");
         }
     }
 }
