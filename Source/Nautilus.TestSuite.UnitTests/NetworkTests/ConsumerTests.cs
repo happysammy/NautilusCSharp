@@ -50,7 +50,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new Consumer(
+            var consumer = new MockConsumer(
+                this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
                 new Port(5555),
@@ -81,7 +82,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new Consumer(
+            var consumer = new MockConsumer(
+                this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
                 new Port(5556),
@@ -118,7 +120,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new Consumer(
+            var consumer = new MockConsumer(
+                this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
                 new Port(5557),
@@ -152,7 +155,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var requester = new RequestSocket(TestAddress);
             requester.Connect(TestAddress);
 
-            var consumer = new Consumer(
+            var consumer = new MockConsumer(
+                this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
                 new Port(5558),
@@ -191,7 +195,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester1.Connect(TestAddress);
             requester2.Connect(TestAddress);
 
-            var consumer = new Consumer(
+            var consumer = new MockConsumer(
+                this.testReceiver.Endpoint,
                 this.container,
                 this.localHost,
                 new Port(5559),
