@@ -65,8 +65,8 @@ namespace Nautilus.Core.Extensions
         /// Invokes the given action for a successful <see cref="CommandResult"/>, then returns the
         /// <see cref="CommandResult"/>.
         /// </summary>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="action">The action to invoke (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="action">The action to invoke.</param>
         /// <returns>The result.</returns>
         public static CommandResult OnSuccess(this CommandResult result, Action action)
         {
@@ -82,8 +82,8 @@ namespace Nautilus.Core.Extensions
         /// Returns the result of calling the given function for a successful
         /// <see cref="CommandResult"/>>.
         /// </summary>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="func">The function to call (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="func">The function to call.</param>
         /// <returns>The commands result.</returns>
         public static CommandResult OnSuccess(this CommandResult result, Func<CommandResult> func)
         {
@@ -95,8 +95,8 @@ namespace Nautilus.Core.Extensions
         /// <summary>
         /// Returns the result of invoking the given action for a failed <see cref="CommandResult"/>.
         /// </summary>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="action">The action to invoke (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="action">The action to invoke.</param>
         /// <returns>The commands result.</returns>
         public static CommandResult OnFailure(this CommandResult result, Action action)
         {
@@ -112,8 +112,8 @@ namespace Nautilus.Core.Extensions
         /// Returns the result of invoking the given action string for a failed
         /// <see cref="CommandResult"/>.
         /// </summary>
-        /// <param name="result">The result to evaluated (cannot be null).</param>
-        /// <param name="action">The action to invoke (cannot be null).</param>
+        /// <param name="result">The result to evaluated.</param>
+        /// <param name="action">The action to invoke.</param>
         /// <returns>The commands result.</returns>
         public static CommandResult OnFailure(this CommandResult result, Action<string> action)
         {
@@ -128,8 +128,8 @@ namespace Nautilus.Core.Extensions
         /// <summary>
         /// Calls the given function on either a success or failure result result.
         /// </summary>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="func">The function.</param>
         /// <typeparam name="T">The type.</typeparam>
         /// <returns>The command result of the given function.</returns>
         public static T OnBoth<T>(this CommandResult result, Func<CommandResult, T> func)
@@ -142,8 +142,8 @@ namespace Nautilus.Core.Extensions
         /// <see cref="QueryResult{T}"/>.
         /// </summary>
         /// <typeparam name="T">The query type.</typeparam>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="func">The function to return (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="func">The function to return.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnSuccess<T>(this CommandResult result, Func<T> func)
         {
@@ -156,8 +156,8 @@ namespace Nautilus.Core.Extensions
         /// On success returns the given function, otherwise returns a failed <see cref="QueryResult{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="func">The function to return (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="func">The function to return.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnSuccess<T>(this CommandResult result, Func<QueryResult<T>> func)
         {
@@ -170,8 +170,8 @@ namespace Nautilus.Core.Extensions
         /// On success returns a success <see cref="QueryResult{T}"/> with the given function.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="func">The function to return (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="func">The function to return.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> Map<T>(this CommandResult result, Func<T> func)
         {
@@ -184,9 +184,9 @@ namespace Nautilus.Core.Extensions
         /// Ensures a failed <see cref="CommandResult"/> result is returned on error, otherwise
         /// returns ok.
         /// </summary>
-        /// <param name="result">The result to evaluate (cannot be null).</param>
-        /// <param name="predicate">The predicate to evaluate (cannot be null).</param>
-        /// <param name="errorMessage">The error message string (cannot be null).</param>
+        /// <param name="result">The result to evaluate.</param>
+        /// <param name="predicate">The predicate to evaluate.</param>
+        /// <param name="errorMessage">The error message string.</param>
         /// <returns>The commands result.</returns>
         public static CommandResult Ensure(this CommandResult result, Func<bool> predicate, string errorMessage)
         {

@@ -61,8 +61,8 @@ namespace Nautilus.Core
         /// Returns a result indicating whether the left <see cref="OptionVal{T}"/> is equal to the
         /// right T.
         /// </summary>
-        /// <param name="option">The <see cref="OptionVal{T}"/> (cannot be null).</param>
-        /// <param name="value">The value (cannot be null).</param>
+        /// <param name="option">The <see cref="OptionVal{T}"/>.</param>
+        /// <param name="value">The value.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(OptionVal<T> option, T value) => option.value.Equals(value);
 
@@ -70,8 +70,8 @@ namespace Nautilus.Core
         /// Returns a result indicating whether the left <see cref="OptionVal{T}"/> is not equal to the
         /// right T.
         /// </summary>
-        /// <param name="option">The <see cref="OptionVal{T}"/> (cannot be null).</param>
-        /// <param name="value">The value (cannot be null).</param>
+        /// <param name="option">The <see cref="OptionVal{T}"/>.</param>
+        /// <param name="value">The value.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator !=(OptionVal<T> option, T value) => !(option == value);
 
@@ -79,8 +79,8 @@ namespace Nautilus.Core
         /// Returns a result indicating whether the left <see cref="OptionVal{T}"/> is equal to the
         /// right <see cref="OptionRef{T}"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="OptionVal{T}"/> (cannot be null).</param>
-        /// <param name="right">The right <see cref="OptionVal{T}"/> (cannot be null).</param>
+        /// <param name="left">The left <see cref="OptionVal{T}"/>.</param>
+        /// <param name="right">The right <see cref="OptionVal{T}"/>.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(OptionVal<T> left, OptionVal<T> right) => left.Equals(right);
 
@@ -88,8 +88,8 @@ namespace Nautilus.Core
         /// Returns a result indicating whether the left <see cref="OptionVal{T}"/> is not equal to the
         /// right <see cref="OptionRef{T}"/>.
         /// </summary>
-        /// <param name="left">The left <see cref="OptionVal{T}"/> (cannot be null).</param>
-        /// <param name="right">The right <see cref="OptionVal{T}"/> (cannot be null).</param>
+        /// <param name="left">The left <see cref="OptionVal{T}"/>.</param>
+        /// <param name="right">The right <see cref="OptionVal{T}"/>.</param>
         /// <returns>True if the <see cref="OptionVal{T}"/>(s) are not equal; otherwise returns false.</returns>
         public static bool operator !=(OptionVal<T> left, OptionVal<T> right) => !(left == right);
 
@@ -102,7 +102,7 @@ namespace Nautilus.Core
         /// <summary>
         /// Gets the given object wrapped in an <see cref="OptionVal{T}"/>.
         /// </summary>
-        /// <param name="value">The value (cannot be null).</param>
+        /// <param name="value">The value.</param>
         /// <returns>A <see cref="OptionVal{T}"/>.</returns>
         public static OptionVal<T> Some(T value) => new OptionVal<T>(value);
 

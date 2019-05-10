@@ -25,8 +25,8 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
         /// <typeparam name="TK">The K type.</typeparam>
-        /// <param name="queryResult">The result (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="queryResult">The result.</param>
+        /// <param name="func">The function.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, TK> func)
         {
@@ -40,8 +40,8 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
         /// <typeparam name="TK">The K type.</typeparam>
-        /// <param name="queryResult">The result (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="queryResult">The result.</param>
+        /// <param name="func">The function.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<T, QueryResult<TK>> func)
         {
@@ -55,8 +55,8 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
         /// <typeparam name="TK">The K type.</typeparam>
-        /// <param name="queryResult">The result (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="queryResult">The result.</param>
+        /// <param name="func">The function.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> OnSuccess<T, TK>(this QueryResult<T> queryResult, Func<QueryResult<TK>> func)
         {
@@ -69,8 +69,8 @@ namespace Nautilus.Core.Extensions
         /// On success performs the given action, then returns the result.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="action">The action (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnSuccess<T>(this QueryResult<T> result, Action<T> action)
         {
@@ -86,8 +86,8 @@ namespace Nautilus.Core.Extensions
         /// On failure performs the given action, then returns the result.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="action">The action (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnFailure<T>(this QueryResult<T> result, Action action)
         {
@@ -103,8 +103,8 @@ namespace Nautilus.Core.Extensions
         /// On failure performs the given action, then returns the result.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="action">The action (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="action">The action.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> OnFailure<T>(this QueryResult<T> result, Action<string> action)
         {
@@ -121,8 +121,8 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
         /// <typeparam name="TK">The K type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="func">The function.</param>
         /// <returns>The queries result.</returns>
         public static TK OnBoth<T, TK>(this QueryResult<T> result, Func<QueryResult<T>, TK> func)
         {
@@ -133,9 +133,9 @@ namespace Nautilus.Core.Extensions
         /// Evaluates the result and predicate.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="predicate">The predicate (cannot be null).</param>
-        /// <param name="errorMessage">The error message (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="errorMessage">The error message.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<T> Ensure<T>(this QueryResult<T> result, Func<T, bool> predicate, string errorMessage)
         {
@@ -159,8 +159,8 @@ namespace Nautilus.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The T type.</typeparam>
         /// <typeparam name="TK">The K type.</typeparam>
-        /// <param name="result">The result (cannot be null).</param>
-        /// <param name="func">The function (cannot be null).</param>
+        /// <param name="result">The result.</param>
+        /// <param name="func">The function.</param>
         /// <returns>The queries result.</returns>
         public static QueryResult<TK> Map<T, TK>(this QueryResult<T> result, Func<T, TK> func)
         {
