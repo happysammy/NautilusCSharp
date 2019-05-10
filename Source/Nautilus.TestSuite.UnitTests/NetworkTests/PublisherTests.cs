@@ -13,11 +13,11 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -68,11 +68,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             publisher.Endpoint.Send(bytes);
             this.output.WriteLine("Waiting for published messages...");
 
+            // TODO
             // var message = subscriber.ReceiveFrameBytes();
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
+            // TODO
             // Assert.Equal(bytes, message);
 
             // Tear Down

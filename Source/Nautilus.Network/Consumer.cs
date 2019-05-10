@@ -40,7 +40,7 @@ namespace Nautilus.Network
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        public Consumer(
+        protected Consumer(
             IComponentryContainer container,
             NetworkAddress host,
             Port port,

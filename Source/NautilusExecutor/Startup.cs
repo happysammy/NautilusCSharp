@@ -66,8 +66,8 @@ namespace NautilusExecutor
                 ? NetworkAddress.LocalHost()
                 : new NetworkAddress((string)config[ConfigSection.Execution]["host"]);
 
-            var commandsPort = new Port((int)config[ConfigSection.Execution]["commandsPort"]);
-            var eventsPort = new Port((int)config[ConfigSection.Execution]["eventsPort"]);
+            var commandsPort = new Port((ushort)config[ConfigSection.Execution]["commandsPort"]);
+            var eventsPort = new Port((ushort)config[ConfigSection.Execution]["eventsPort"]);
 
             var commandsPerSecond = (int)config[ConfigSection.Execution]["commandsPerSecond"];
             var newOrdersPerSecond = (int)config[ConfigSection.Execution]["newOrdersPerSecond"];
