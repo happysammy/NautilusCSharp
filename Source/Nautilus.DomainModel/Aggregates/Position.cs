@@ -190,41 +190,31 @@ namespace Nautilus.DomainModel.Aggregates
         {
             switch (@event)
             {
-                case OrderFilled orderFilled:
-                    this.When(orderFilled);
+                case OrderPartiallyFilled partiallyFilled:
+                    this.UpdatePosition(
+                        partiallyFilled.OrderId,
+                        partiallyFilled.ExecutionId,
+                        partiallyFilled.ExecutionTicket,
+                        partiallyFilled.OrderSide,
+                        partiallyFilled.FilledQuantity.Value,
+                        partiallyFilled.AveragePrice,
+                        partiallyFilled.ExecutionTime);
                     break;
-                case OrderPartiallyFilled orderPartiallyFilled:
-                    this.When(orderPartiallyFilled);
+                case OrderFilled filled:
+                    this.UpdatePosition(
+                        filled.OrderId,
+                        filled.ExecutionId,
+                        filled.ExecutionTicket,
+                        filled.OrderSide,
+                        filled.FilledQuantity.Value,
+                        filled.AveragePrice,
+                        filled.ExecutionTime);
                     break;
                 default: throw new InvalidOperationException(
                     $"The event {@event} is not recognized by the position {this}");
             }
 
             this.Events.Add(@event);
-        }
-
-        private void When(OrderFilled @event)
-        {
-            this.UpdatePosition(
-                @event.OrderId,
-                @event.ExecutionId,
-                @event.ExecutionTicket,
-                @event.OrderSide,
-                @event.FilledQuantity.Value,
-                @event.AveragePrice,
-                @event.ExecutionTime);
-        }
-
-        private void When(OrderPartiallyFilled @event)
-        {
-            this.UpdatePosition(
-                @event.OrderId,
-                @event.ExecutionId,
-                @event.ExecutionTicket,
-                @event.OrderSide,
-                @event.FilledQuantity.Value,
-                @event.AveragePrice,
-                @event.ExecutionTime);
         }
 
         private void UpdatePosition(
