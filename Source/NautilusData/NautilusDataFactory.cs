@@ -94,7 +94,6 @@ namespace NautilusData
                 messagingAdapter,
                 fixClient,
                 fixGateway,
-                new RedisChannelPublisherFactory(redisConnection),
                 barRepository,
                 instrumentRepository,
                 symbols,

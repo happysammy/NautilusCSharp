@@ -31,7 +31,6 @@ namespace Nautilus.Data
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="client">The FIX client.</param>
         /// <param name="gateway">The FIX gateway.</param>
-        /// <param name="publisherFactory">The channel publisher factory.</param>
         /// <param name="barRepository">The bar repository.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
@@ -44,7 +43,6 @@ namespace Nautilus.Data
             IMessagingAdapter messagingAdapter,
             IFixClient client,
             IFixGateway gateway,
-            IChannelPublisherFactory publisherFactory,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
             IReadOnlyCollection<string> symbols,
@@ -52,7 +50,7 @@ namespace Nautilus.Data
             int barRollingWindow,
             bool updateInstruments)
         {
-            var tickPublisher = new TickPublisher(container, publisherFactory.Create());
+            var tickPublisher = new TickPublisher(container, NetworkAddress.LocalHost(), new NetworkPort(60000));
             var barPublisher = new BarPublisher(container, NetworkAddress.LocalHost(), new NetworkPort(60000));
 
             var databaseTaskManager = new DatabaseTaskManager(

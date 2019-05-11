@@ -16,7 +16,7 @@ namespace Nautilus.Data.Publishers
     using Nautilus.Network;
 
     /// <summary>
-    /// Provides a generic publisher for <see cref="Bar"/> data.
+    /// Provides a publisher for <see cref="Bar"/> data.
     /// </summary>
     public class BarPublisher : Publisher
     {

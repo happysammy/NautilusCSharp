@@ -8,37 +8,41 @@
 
 namespace Nautilus.Data.Publishers
 {
-    using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
+    using System;
+    using System.Text;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Network;
 
     /// <summary>
-    /// Provides a generic publisher for <see cref="Tick"/> data.
+    /// Provides a publisher for <see cref="Tick"/> data.
     /// </summary>
-    public sealed class TickPublisher : ComponentBase
+    public sealed class TickPublisher : Publisher
     {
-        private readonly IChannelPublisher publisher;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="publisher">The tick publisher.</param>
-        public TickPublisher(IComponentryContainer container, IChannelPublisher publisher)
-        : base(NautilusService.Data, container)
+        /// <param name="host">The host address.</param>
+        /// <param name="port">The port.</param>
+        public TickPublisher(
+            IComponentryContainer container,
+            NetworkAddress host,
+            NetworkPort port)
+            : base(
+                container,
+                host,
+                port,
+                Guid.NewGuid())
         {
-            this.publisher = publisher;
-
             this.RegisterHandler<Tick>(this.OnMessage);
         }
 
-        private void OnMessage(Tick message)
+        private void OnMessage(Tick tick)
         {
-            this.publisher.Publish(
-                message.Symbol.ToString().ToLower(),
-                message.ToString());
+            this.Publish(
+                Encoding.UTF8.GetBytes(tick.Symbol.Value),
+                Encoding.UTF8.GetBytes(tick.ToString()));
         }
     }
 }
