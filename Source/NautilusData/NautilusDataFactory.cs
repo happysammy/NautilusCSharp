@@ -117,8 +117,8 @@ namespace NautilusData
         }
 
         private static IFixClient GetFixClient(
-            ComponentryContainer container,
-            MessagingAdapter messagingAdapter,
+            IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             FixConfiguration configuration,
             InstrumentDataProvider instrumentData)
         {

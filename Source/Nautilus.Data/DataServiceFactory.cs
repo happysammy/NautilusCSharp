@@ -27,7 +27,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Builds the database and returns an address book endpoints.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="client">The FIX client.</param>
         /// <param name="gateway">The FIX gateway.</param>
