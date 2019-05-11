@@ -125,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void BarFactory_FromString_ReturnsExpectedBar()
+        internal void Create_WithValidString_ReturnsExpectedBar()
         {
             // Arrange
             var bar = new Bar(

@@ -8,29 +8,32 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
-    /// The quote type used to construct a trade bar.
+    /// Represents a price quote type.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum QuoteType
     {
         /// <summary>
         /// The bid price quote type.
         /// </summary>
-        Bid = 0,
+        BID = 0,
 
         /// <summary>
         /// The ask price quote type.
         /// </summary>
-        Ask = 1,
+        ASK = 1,
 
         /// <summary>
         /// The mid price quote type.
         /// </summary>
-        Mid = 2,
+        MID = 2,
 
         /// <summary>
         /// The last price quote type.
         /// </summary>
-        Last = 3,
+        LAST = 3,
     }
 }

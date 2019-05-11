@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// The venue an instrument is traded on.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Enums can be capitalized.")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Venue
     {
         /// <summary>

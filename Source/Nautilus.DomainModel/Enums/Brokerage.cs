@@ -13,7 +13,7 @@ namespace Nautilus.DomainModel.Enums
     /// <summary>
     /// The brokerage enumeration.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Matches Python enums.")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Brokerage
     {
         /// <summary>

@@ -89,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void GetFromString_WithValidString_ReturnsExpectedBar()
+        internal void Create_WithValidString_ReturnsExpectedTick()
         {
             // Arrange
             var tick = new Tick(this.symbol, 1.00000m, 1.00000m, StubZonedDateTime.UnixEpoch());

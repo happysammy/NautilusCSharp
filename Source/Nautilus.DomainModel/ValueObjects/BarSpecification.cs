@@ -24,28 +24,28 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
         /// </summary>
-        /// <param name="quoteType">The specification quote type.</param>
-        /// <param name="resolution">The specification resolution.</param>
         /// <param name="period">The specification period.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the period is not position (> 0).</exception>
+        /// <param name="resolution">The specification resolution.</param>
+        /// <param name="quoteType">The specification quote type.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If the period is not positive (> 0).</exception>
         public BarSpecification(
-            QuoteType quoteType,
+            int period,
             Resolution resolution,
-            int period)
+            QuoteType quoteType)
         {
             Debug.PositiveInt32(period, nameof(period));
 
-            this.QuoteType = quoteType;
-            this.Resolution = resolution;
             this.Period = period;
+            this.Resolution = resolution;
+            this.QuoteType = quoteType;
             this.TimePeriod = this.GetTimePeriod(period);
             this.Duration = this.TimePeriod.ToDuration();
         }
 
         /// <summary>
-        /// Gets the bar specifications quote type.
+        /// Gets the bars specifications period.
         /// </summary>
-        public QuoteType QuoteType { get; }
+        public int Period { get;  }
 
         /// <summary>
         /// Gets the bars specifications resolution.
@@ -53,9 +53,9 @@ namespace Nautilus.DomainModel.ValueObjects
         public Resolution Resolution { get; }
 
         /// <summary>
-        /// Gets the bars specifications period.
+        /// Gets the bar specifications quote type.
         /// </summary>
-        public int Period { get;  }
+        public QuoteType QuoteType { get; }
 
         /// <summary>
         /// Gets the bars specifications time period.
@@ -70,7 +70,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets a value indicating whether this bars time period is one day.
         /// </summary>
-        public bool IsOneDayBar => this.Resolution == Resolution.Day && this.Period == 1;
+        public bool IsOneDayBar => this.Resolution == Resolution.DAY && this.Period == 1;
 
         /// <summary>
         /// Returns the hash code of the <see cref="BarSpecification"/>.
@@ -110,15 +110,15 @@ namespace Nautilus.DomainModel.ValueObjects
 
             switch (this.Resolution)
             {
-                case Resolution.Tick:
+                case Resolution.TICK:
                     return NodaTime.Period.Zero;
-                case Resolution.Second:
+                case Resolution.SECOND:
                     return NodaTime.Period.FromSeconds(barPeriod);
-                case Resolution.Minute:
+                case Resolution.MINUTE:
                     return NodaTime.Period.FromMinutes(barPeriod);
-                case Resolution.Hour:
+                case Resolution.HOUR:
                     return NodaTime.Period.FromHours(barPeriod);
-                case Resolution.Day:
+                case Resolution.DAY:
                     return NodaTime.Period.FromDays(barPeriod);
                 default: throw new InvalidOperationException("The bar resolution was not recognised.");
             }

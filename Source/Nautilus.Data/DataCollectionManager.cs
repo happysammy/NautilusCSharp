@@ -22,7 +22,6 @@ namespace Nautilus.Data
     using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.Data.Types;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using Quartz;
@@ -33,7 +32,7 @@ namespace Nautilus.Data
     public class DataCollectionManager : ComponentBusConnectedBase
     {
         private readonly IEndpoint barPublisher;
-        private readonly List<Resolution> resolutionsPersisting;
+        private readonly IEnumerable<BarSpecification> barSpecifications;
         private readonly int barRollingWindow;
 
         /// <summary>
@@ -42,14 +41,14 @@ namespace Nautilus.Data
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="barPublisher">The bar publisher.</param>
-        /// <param name="resolutionsToPersist">The bar resolutions to persist (with a period of 1).</param>
+        /// <param name="barSpecifications">The bar specifications to collect and persist.</param>
         /// <param name="barRollingWindow">The rolling window of persisted bar data (days).</param>
         /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindow is not positive (> 0).</exception>
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IEndpoint barPublisher,
-            IEnumerable<Resolution> resolutionsToPersist,
+            IEnumerable<BarSpecification> barSpecifications,
             int barRollingWindow)
             : base(
                 NautilusService.Data,
@@ -59,7 +58,7 @@ namespace Nautilus.Data
             Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
 
             this.barPublisher = barPublisher;
-            this.resolutionsPersisting = new List<Resolution>(resolutionsToPersist);
+            this.barSpecifications = barSpecifications;
             this.barRollingWindow = barRollingWindow;
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
@@ -113,7 +112,7 @@ namespace Nautilus.Data
         private void OnMessage(TrimBarDataJob message)
         {
             var trimCommand = new TrimBarData(
-                this.resolutionsPersisting,
+                this.barSpecifications,
                 this.barRollingWindow,
                 this.NewGuid(),
                 this.TimeNow());

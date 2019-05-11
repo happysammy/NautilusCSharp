@@ -22,9 +22,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("AUDUSD", Venue.DUKASCOPY),
                 new BarSpecification(
-                    QuoteType.Ask,
-                    Resolution.Minute,
-                    1));
+                    1,
+                    Resolution.MINUTE,
+                    QuoteType.ASK));
         }
 
         public static BarType GBPUSD()
@@ -32,9 +32,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("GBPUSD", Venue.DUKASCOPY),
                 new BarSpecification(
-                    QuoteType.Bid,
-                    Resolution.Minute,
-                    1));
+                    1,
+                    Resolution.MINUTE,
+                    QuoteType.BID));
         }
 
         public static BarType GBPUSD_Second()
@@ -42,9 +42,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("GBPUSD", Venue.DUKASCOPY),
                 new BarSpecification(
-                    QuoteType.Mid,
-                    Resolution.Second,
-                    1));
+                    1,
+                    Resolution.SECOND,
+                    QuoteType.MID));
         }
 
         public static BarType USDJPY()
@@ -52,9 +52,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("USDJPY", Venue.DUKASCOPY),
                 new BarSpecification(
-                    QuoteType.Bid,
-                    Resolution.Minute,
-                    1));
+                    1,
+                    Resolution.MINUTE,
+                    QuoteType.BID));
         }
 
         public static BarType CADHKD()
@@ -62,9 +62,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return new BarType(
                 new Symbol("CADHKD", Venue.DUKASCOPY),
                 new BarSpecification(
-                    QuoteType.Bid,
-                    Resolution.Minute,
-                    1));
+                    1,
+                    Resolution.MINUTE,
+                    QuoteType.BID));
         }
     }
 }

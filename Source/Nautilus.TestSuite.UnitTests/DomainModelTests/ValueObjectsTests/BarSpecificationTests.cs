@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Xunit;
     using Xunit.Abstractions;
@@ -29,19 +30,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void Equals_WithEqualObject_ReturnsTrue()
         {
             // Arrange
-            var barType1 = new BarSpecification(
-                QuoteType.Bid,
-                Resolution.Minute,
-                1);
-
-            var barType2 = new BarSpecification(
-                QuoteType.Bid,
-                Resolution.Minute,
-                1);
+            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec2 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
 
             // Act
-            var result1 = barType1.Equals(barType2);
-            var result2 = barType1 == barType2;
+            var result1 = barSpec1.Equals(barSpec2);
+            var result2 = barSpec1 == barSpec2;
 
             // Assert
             Assert.True(result1);
@@ -49,16 +43,29 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
+        internal void Equals_WithUnequalObject_ReturnsTrue()
+        {
+            // Arrange
+            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec2 = new BarSpecification(1, Resolution.HOUR, QuoteType.ASK);
+
+            // Act
+            var result1 = barSpec1.Equals(barSpec2);
+            var result2 = barSpec1 == barSpec2;
+
+            // Assert
+            Assert.False(result1);
+            Assert.False(result2);
+        }
+
+        [Fact]
         internal void GetHashCode_ReturnsExpectedInt32()
         {
             // Arrange
-            var barType = new BarSpecification(
-                QuoteType.Bid,
-                Resolution.Minute,
-                1);
+            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
 
             // Act
-            var result = barType.GetHashCode();
+            var result = barSpec.GetHashCode();
 
             // Assert
             Assert.NotEqual(0, result);
@@ -68,16 +75,32 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         internal void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var barType = new BarSpecification(
-                QuoteType.Bid,
-                Resolution.Minute,
-                1);
+            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
 
             // Act
-            var result = barType.ToString();
+            var result = barSpec.ToString();
 
             // Assert
             Assert.Equal("1-MINUTE[BID]", result);
+        }
+
+        [Fact]
+        internal void Create_WithValidString_ReturnsExpectedBarSpec()
+        {
+            // Arrange
+            var barSpec1 = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barSpec2 = new BarSpecification(1, Resolution.HOUR, QuoteType.MID);
+
+            var string1 = barSpec1.ToString();
+            var string2 = barSpec2.ToString();
+
+            // Act
+            var result1 = BarSpecificationFactory.Create(string1);
+            var result2 = BarSpecificationFactory.Create(string2);
+
+            // Assert
+            Assert.Equal(barSpec1, result1);
+            Assert.Equal(barSpec2, result2);
         }
     }
 }

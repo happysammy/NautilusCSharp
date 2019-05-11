@@ -96,16 +96,16 @@ namespace Nautilus.Data.Aggregators
         {
             switch (quoteType)
             {
-                case QuoteType.Bid:
+                case QuoteType.BID:
                     return tick.Bid;
-                case QuoteType.Ask:
+                case QuoteType.ASK:
                     return tick.Ask;
-                case QuoteType.Mid:
+                case QuoteType.MID:
                     var decimalsPlusOne = tick.Bid.DecimalPrecision + 1;
                     return Price.Create(
                         Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
                         decimalsPlusOne);
-                case QuoteType.Last:
+                case QuoteType.LAST:
                     throw new InvalidOperationException("Cannot update with QuoteType.Last.");
                 default:
                     throw new InvalidOperationException($"QuoteType {quoteType} not recognized.");
@@ -170,7 +170,7 @@ namespace Nautilus.Data.Aggregators
         {
             var barSpec = message.DataType.Specification;
 
-            if (barSpec.Resolution == Resolution.Tick)
+            if (barSpec.Resolution == Resolution.TICK)
             {
                 // TODO
                 throw new InvalidOperationException("Tick bars not yet supported.");

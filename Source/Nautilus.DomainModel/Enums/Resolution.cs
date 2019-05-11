@@ -8,34 +8,37 @@
 
 namespace Nautilus.DomainModel.Enums
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents the granularity of a time resolution.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum Resolution
     {
         /// <summary>
         /// The tick resolution.
         /// </summary>
-        Tick = 0,
+        TICK = 0,
 
         /// <summary>
         /// The second resolution.
         /// </summary>
-        Second = 1,
+        SECOND = 1,
 
         /// <summary>
         /// The minute resolution.
         /// </summary>
-        Minute = 2,
+        MINUTE = 2,
 
         /// <summary>
         /// The hourly resolution.
         /// </summary>
-        Hour = 3,
+        HOUR = 3,
 
         /// <summary>
         /// The daily resolution.
         /// </summary>
-        Day = 4,
+        DAY = 4,
     }
 }

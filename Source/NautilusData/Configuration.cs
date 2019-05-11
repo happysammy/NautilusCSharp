@@ -15,6 +15,8 @@ namespace NautilusData
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Network;
     using Newtonsoft.Json.Linq;
@@ -66,21 +68,16 @@ namespace NautilusData
                 Convert.ToBoolean(fixSettings["UpdateInstruments"]));
 
             // Data Settings
-            var symbolsJArray = (JArray)configJson[ConfigSection.Data]["symbols"];
-            var symbolsList = new List<string>();
-            foreach (var symbol in symbolsJArray)
-            {
-                symbolsList.Add(symbol.ToString());
-            }
+            var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
+            this.Symbols = symbols
+                .Select(s => s.ToString())
+                .Distinct();
 
-            this.Symbols = symbolsList.Distinct();
-
-            this.BarResolutions = new List<Resolution>
-            {
-                Resolution.Second,
-                Resolution.Minute,
-                Resolution.Hour,
-            };
+            var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"];
+            this.BarSpecifications = barSpecs
+                .Select(bs => bs.ToString())
+                .Distinct()
+                .Select(BarSpecificationFactory.Create);
 
             this.BarRollingWindowDays = (int)configJson[ConfigSection.Data]["barDataRollingWindowDays"];
         }
@@ -123,7 +120,7 @@ namespace NautilusData
         /// <summary>
         /// Gets the configuration bar specifications.
         /// </summary>
-        public IEnumerable<Resolution> BarResolutions { get; }
+        public IEnumerable<BarSpecification> BarSpecifications { get; }
 
         /// <summary>
         /// Gets the database bar rolling window days for trimming.

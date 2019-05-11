@@ -10,10 +10,12 @@ namespace Nautilus.Data.Messages.Commands
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,12 +28,12 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="TrimBarData"/> class.
         /// </summary>
-        /// <param name="resolutions">The bar data resolutions to trim.</param>
+        /// <param name="barSpecifications">The bar specifications to trim.</param>
         /// <param name="rollingWindow">The bar data rolling window size to trim to.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public TrimBarData(
-            List<Resolution> resolutions,
+            IEnumerable<BarSpecification> barSpecifications,
             int rollingWindow,
             Guid id,
             ZonedDateTime timestamp)
@@ -39,14 +41,14 @@ namespace Nautilus.Data.Messages.Commands
         {
             Debug.PositiveInt32(rollingWindow, nameof(rollingWindow));
 
-            this.Resolutions = resolutions;
+            this.Resolutions = barSpecifications.Select(b => b.Resolution).Distinct();
             this.RollingWindowSize = rollingWindow;
         }
 
         /// <summary>
         /// Gets the resolutions for the bar data trimming operation.
         /// </summary>
-        public IReadOnlyList<Resolution> Resolutions { get; }
+        public IEnumerable<Resolution> Resolutions { get; }
 
         /// <summary>
         /// Gets the rolling window size for the bar data trimming operation.

@@ -8,7 +8,6 @@
 
 namespace NautilusData
 {
-    using System.Collections.Generic;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -61,32 +60,33 @@ namespace NautilusData
             }
 
             this.systemController.Start();
-            var barSpecs = new List<BarSpecification>
-            {
-                new BarSpecification(QuoteType.Bid, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Second, 1),
-                new BarSpecification(QuoteType.Bid, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Minute, 1),
-                new BarSpecification(QuoteType.Bid, Resolution.Hour, 1),
-                new BarSpecification(QuoteType.Ask, Resolution.Hour, 1),
-                new BarSpecification(QuoteType.Mid, Resolution.Hour, 1),
-            };
 
-            foreach (var symbol in this.fixClient.GetAllSymbols())
-            {
-                foreach (var barSpec in barSpecs)
-                {
-                    var barType = new BarType(symbol, barSpec);
-                    var subscribe = new Subscribe<BarType>(
-                        barType,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.Send(ServiceAddress.Data, subscribe);
-                }
-            }
+// var barSpecs = new List<BarSpecification>
+//            {
+//                new BarSpecification(QuoteType.BID, Resolution.SECOND, 1),
+//                new BarSpecification(QuoteType.ASK, Resolution.SECOND, 1),
+//                new BarSpecification(QuoteType.MID, Resolution.SECOND, 1),
+//                new BarSpecification(QuoteType.BID, Resolution.MINUTE, 1),
+//                new BarSpecification(QuoteType.ASK, Resolution.MINUTE, 1),
+//                new BarSpecification(QuoteType.MID, Resolution.MINUTE, 1),
+//                new BarSpecification(QuoteType.BID, Resolution.HOUR, 1),
+//                new BarSpecification(QuoteType.ASK, Resolution.HOUR, 1),
+//                new BarSpecification(QuoteType.MID, Resolution.HOUR, 1),
+//            };
+//
+//            foreach (var symbol in this.fixClient.GetAllSymbols())
+//            {
+//                foreach (var barSpec in barSpecs)
+//                {
+//                    var barType = new BarType(symbol, barSpec);
+//                    var subscribe = new Subscribe<BarType>(
+//                        barType,
+//                        this.NewGuid(),
+//                        this.TimeNow());
+//
+//                    this.Send(ServiceAddress.Data, subscribe);
+//                }
+//            }
         }
 
         /// <summary>

@@ -84,7 +84,7 @@ namespace NautilusData
                 barRepository,
                 instrumentRepository,
                 config.Symbols,
-                config.BarResolutions,
+                config.BarSpecifications,
                 config.BarRollingWindowDays,
                 config.FixConfiguration.UpdateInstruments);
 

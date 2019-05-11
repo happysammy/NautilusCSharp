@@ -14,7 +14,7 @@ namespace Nautilus.Data
     using Nautilus.Data.Aggregators;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Publishers;
-    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
@@ -34,7 +34,7 @@ namespace Nautilus.Data
         /// <param name="barRepository">The bar repository.</param>
         /// <param name="instrumentRepository">The instrument repository.</param>
         /// <param name="symbols">The symbols to initially subscribe to.</param>
-        /// <param name="resolutions">The bar resolutions to persist (with a period of 1).</param>
+        /// <param name="barSpecifications">The bar specifications to collect and persist.</param>
         /// <param name="barRollingWindow">The rolling window size of bar data to be maintained.</param>
         /// <param name="updateInstruments">The option flag to update instruments.</param>
         /// <returns>The endpoint addresses for the data service.</returns>
@@ -46,7 +46,7 @@ namespace Nautilus.Data
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
             IEnumerable<string> symbols,
-            IEnumerable<Resolution> resolutions,
+            IEnumerable<BarSpecification> barSpecifications,
             int barRollingWindow,
             bool updateInstruments)
         {
@@ -62,7 +62,7 @@ namespace Nautilus.Data
                 container,
                 messagingAdapter,
                 barPublisher.Endpoint,
-                resolutions,
+                barSpecifications,
                 barRollingWindow);
 
             var barAggregationController = new BarAggregationController(container, messagingAdapter);

@@ -94,19 +94,19 @@ namespace Nautilus.Data.Aggregators
 
             switch (barSpec.Resolution)
             {
-                case Resolution.Second:
+                case Resolution.SECOND:
                     scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
                     break;
-                case Resolution.Minute:
+                case Resolution.MINUTE:
                     scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
                     break;
-                case Resolution.Hour:
+                case Resolution.HOUR:
                     scheduleBuilder.WithIntervalInHours(barSpec.Period);
                     break;
-                case Resolution.Day:
+                case Resolution.DAY:
                     scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
                     break;
-                case Resolution.Tick:
+                case Resolution.TICK:
                     throw new InvalidOperationException("Cannot schedule tick bars.");
                 default: throw new InvalidOperationException("Bar resolution not recognised.");
             }
@@ -338,19 +338,19 @@ namespace Nautilus.Data.Aggregators
             {
                 // TODO: Change this logic.
                 var closeBar1 = new CloseBar(
-                    new BarSpecification(QuoteType.Bid, job.BarSpec.Resolution, 1),
+                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.BID),
                     closeTime,
                     this.NewGuid(),
                     this.TimeNow());
 
                 var closeBar2 = new CloseBar(
-                    new BarSpecification(QuoteType.Ask, job.BarSpec.Resolution, 1),
+                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.ASK),
                     closeTime,
                     this.NewGuid(),
                     this.TimeNow());
 
                 var closeBar3 = new CloseBar(
-                    new BarSpecification(QuoteType.Mid, job.BarSpec.Resolution, 1),
+                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.MID),
                     closeTime,
                     this.NewGuid(),
                     this.TimeNow());
