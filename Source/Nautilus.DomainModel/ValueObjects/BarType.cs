@@ -46,19 +46,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
-            return $"{this.Symbol}-{this.Specification.Period}-{this.Specification.Resolution}[{this.Specification.QuoteType}]";
-        }
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="BarType"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public string ToChannelString()
-        {
-            return $"{this.Symbol.ToString().ToLower()}" +
-                   $"-{this.Specification.Period}" +
-                   $"-{this.Specification.Resolution.ToString().ToLower()}" +
-                   $"[{this.Specification.QuoteType.ToString().ToLower()}]";
+            return $"{this.Symbol}-{this.Specification}";
         }
 
         /// <summary>

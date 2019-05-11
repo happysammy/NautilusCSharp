@@ -153,8 +153,6 @@ namespace Nautilus.Data.Aggregators
             var barClosed = new BarClosed(
                 barType,
                 bar,
-                this.lastTick,
-                this.spreadAnalyzer.AverageSpread,
                 this.NewGuid());
 
             // Context.Parent.Tell(barClosed);

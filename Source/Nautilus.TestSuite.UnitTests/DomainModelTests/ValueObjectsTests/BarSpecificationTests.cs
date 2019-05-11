@@ -77,7 +77,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
             var result = barType.ToString();
 
             // Assert
-            Assert.Equal("1-Minute[Bid]", result);
+            Assert.Equal("1-MINUTE[BID]", result);
         }
     }
 }

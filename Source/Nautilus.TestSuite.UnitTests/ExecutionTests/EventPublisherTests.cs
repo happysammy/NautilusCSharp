@@ -67,7 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 this.setupContainer,
                 new MsgPackEventSerializer(),
                 this.localHost,
-                new NetworkPort(56601));
+                new NetworkPort(56601),
+                ExecutionEvents);
 
             // Act
             publisher.Endpoint.Send(rejected);

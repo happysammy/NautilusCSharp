@@ -24,21 +24,15 @@ namespace Nautilus.Data.Messages.Events
         /// </summary>
         /// <param name="barType">The message bar type.</param>
         /// <param name="bar">The message bar.</param>
-        /// <param name="lastTick">The message last tick.</param>
-        /// <param name="averageSpread">The message average spread.</param>
         /// <param name="id">The message identifier.</param>
         public BarClosed(
             BarType barType,
             Bar bar,
-            Tick lastTick,
-            decimal averageSpread,
             Guid id)
             : base(id, bar.Timestamp)
         {
             this.BarType = barType;
             this.Bar = bar;
-            this.LastTick = lastTick;
-            this.AverageSpread = averageSpread;
         }
 
         /// <summary>
@@ -50,15 +44,5 @@ namespace Nautilus.Data.Messages.Events
         /// Gets the events bar.
         /// </summary>
         public Bar Bar { get; }
-
-        /// <summary>
-        /// Gets the events last tick at bar close.
-        /// </summary>
-        public Tick LastTick { get; }
-
-        /// <summary>
-        /// Gets the events average spread.
-        /// </summary>
-        public decimal AverageSpread { get; }
     }
 }

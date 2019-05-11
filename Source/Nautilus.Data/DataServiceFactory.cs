@@ -17,6 +17,7 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.Enums;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Network;
 
     /// <summary>
     /// Provides a factory for creating the <see cref="DataService"/>.
@@ -52,7 +53,7 @@ namespace Nautilus.Data
             bool updateInstruments)
         {
             var tickPublisher = new TickPublisher(container, publisherFactory.Create());
-            var barPublisher = new BarPublisher(container, publisherFactory.Create());
+            var barPublisher = new BarPublisher(container, NetworkAddress.LocalHost(), new NetworkPort(60000));
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,

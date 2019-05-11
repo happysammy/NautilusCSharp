@@ -9,6 +9,7 @@
 namespace Nautilus.Execution
 {
     using System;
+    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Network;
@@ -19,6 +20,7 @@ namespace Nautilus.Execution
     public class EventPublisher : Publisher
     {
         private readonly IEventSerializer serializer;
+        private readonly byte[] topic;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -27,26 +29,28 @@ namespace Nautilus.Execution
         /// <param name="serializer">The event serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
+        /// <param name="topic">The publishing topic.</param>
         public EventPublisher(
             IComponentryContainer container,
             IEventSerializer serializer,
             NetworkAddress host,
-            NetworkPort port)
+            NetworkPort port,
+            string topic)
             : base(
                 container,
-                "nautilus_execution_events",
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.serializer = serializer;
+            this.topic = Encoding.UTF8.GetBytes(topic);
 
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
         private void OnMessage(Event message)
         {
-            this.Publish(this.serializer.Serialize(message));
+            this.Publish(this.topic, this.serializer.Serialize(message));
         }
     }
 }

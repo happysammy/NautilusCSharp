@@ -22,7 +22,7 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging router.
     /// </summary>
-    public class Router : ComponentBase
+    public abstract class Router : ComponentBase
     {
         private readonly CancellationTokenSource cts;
         private readonly ZmqServerAddress serverAddress;

@@ -20,27 +20,24 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public class Publisher : ComponentBase
+    public abstract class Publisher : ComponentBase
     {
         private readonly PublisherSocket socket;
-        private readonly byte[] topic;
         private int cycles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
-        /// <param name="topic">The publishers topic.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>
-        public Publisher(
+        protected Publisher(
             IComponentryContainer container,
-            string topic,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
-            : base(NautilusService.Messaging, container)
+            : base(NautilusService.Network, container)
         {
             Precondition.NotDefault(id, nameof(id));
 
@@ -52,10 +49,8 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
-            this.topic = Encoding.UTF8.GetBytes(topic);
-            this.ServerAddress = new ZmqServerAddress(host, port);
 
-            this.RegisterHandler<byte[]>(this.Publish);
+            this.ServerAddress = new ZmqServerAddress(host, port);
         }
 
         /// <summary>
@@ -87,11 +82,12 @@ namespace Nautilus.Network
         /// <summary>
         /// Sends the given message onto the socket.
         /// </summary>
-        /// <param name="message">The message to send.</param>
-        protected void Publish(byte[] message)
+        /// <param name="topic">The messages topic.</param>
+        /// <param name="message">The message to publish.</param>
+        protected void Publish(byte[] topic, byte[] message)
         {
             this.socket
-                .SendMoreFrame(this.topic)
+                .SendMoreFrame(topic)
                 .SendFrame(message);
 
             this.cycles++;

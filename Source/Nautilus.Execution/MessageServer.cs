@@ -61,7 +61,8 @@ namespace Nautilus.Execution
                 container,
                 eventSerializer,
                 serverAddress,
-                eventsPort).Endpoint;
+                eventsPort,
+                "NAUTILUS_EVENTS").Endpoint;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);

@@ -46,12 +46,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void InitializedPublisher_HasCorrectServerAddress()
         {
             // Arrange
-            var publisher = new Publisher(
+            var publisher = new MockPublisher(
                 this.setupContainer,
-                TestTopic,
                 this.localHost,
-                new NetworkPort(55504),
-                Guid.NewGuid());
+                new NetworkPort(55504));
 
             // Act
             var result = publisher.ServerAddress;
@@ -67,12 +65,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             const string message = "1234,1234";
             var bytes = Encoding.UTF8.GetBytes(message);
 
-            var publisher = new Publisher(
+            var publisher = new MockPublisher(
                 this.setupContainer,
-                TestTopic,
                 this.localHost,
-                new NetworkPort(55504),
-                Guid.NewGuid());
+                new NetworkPort(55504));
             publisher.Start();
 
             const string testAddress = "tcp://localhost:55504";
@@ -82,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(100).Wait();
 
             // Act
-            publisher.Endpoint.Send(bytes);
+            publisher.Endpoint.Send((TestTopic, bytes));
 
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
