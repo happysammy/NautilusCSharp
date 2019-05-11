@@ -119,7 +119,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the last event applied to the position.
         /// </summary>
-        public Event LastEvent => this.Events.Last();
+        public OptionRef<Event> LastEvent { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the position is entered.
@@ -215,6 +215,7 @@ namespace Nautilus.DomainModel.Aggregates
             }
 
             this.Events.Add(@event);
+            this.LastEvent = @event;
         }
 
         private void UpdatePosition(
@@ -232,6 +233,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.orderIds.Add(orderId);
             this.executionIds.Add(executionId);
             this.executionTickets.Add(executionTicket);
+            this.LastOrderId = orderId;
 
             // Entry logic
             if (this.IsEntered is false)
