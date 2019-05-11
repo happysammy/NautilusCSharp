@@ -178,7 +178,7 @@ namespace Nautilus.Data.Orchestration
 
             while (nextIntervalTime.IsLessThanOrEqualTo(timeNow))
             {
-                nextIntervalTime = nextIntervalTime + intervalDuration;
+                nextIntervalTime += intervalDuration;
             }
 
             return nextIntervalTime;
