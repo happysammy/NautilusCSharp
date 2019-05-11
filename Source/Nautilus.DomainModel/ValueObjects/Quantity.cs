@@ -18,6 +18,8 @@ namespace Nautilus.DomainModel.ValueObjects
     [Immutable]
     public sealed class Quantity : IntegerNumber
     {
+        private static readonly Quantity ZeroQuantity = new Quantity(0);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Quantity"/> class.
         /// </summary>
@@ -32,7 +34,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a new <see cref="Quantity"/> with zero value.
         /// </summary>
         /// <returns>A <see cref="Quantity"/>.</returns>
-        public static Quantity Zero() => new Quantity(0);
+        public static Quantity Zero() => ZeroQuantity;
 
         /// <summary>
         /// Returns a new <see cref="Quantity"/> with the given amount.
