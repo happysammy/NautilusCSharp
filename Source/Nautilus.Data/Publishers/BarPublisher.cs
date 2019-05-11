@@ -43,7 +43,7 @@ namespace Nautilus.Data.Publishers
         {
             this.Publish(
                 Encoding.UTF8.GetBytes(message.BarType.ToString()),
-                message.Bar.ToUtf8Bytes());
+                Encoding.UTF8.GetBytes(message.Bar.ToString()));
         }
     }
 }

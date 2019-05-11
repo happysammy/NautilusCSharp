@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Text;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -107,38 +106,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a valid <see cref="Bar"/> from this <see cref="string"/>.
-        /// </summary>
-        /// <param name="barString">The bar string.</param>
-        /// <returns>A <see cref="Bar"/>.</returns>
-        public static Bar GetFromString(string barString)
-        {
-            Debug.NotEmptyOrWhiteSpace(barString, nameof(barString));
-
-            var values = barString.Split(',');
-
-            return new Bar(
-                Price.Create(Convert.ToDecimal(values[0].ToString())),
-                Price.Create(Convert.ToDecimal(values[1])),
-                Price.Create(Convert.ToDecimal(values[2])),
-                Price.Create(Convert.ToDecimal(values[3])),
-                Quantity.Create(Convert.ToInt32(Convert.ToDecimal(values[4]))),
-                values[5].ToZonedDateTimeFromIso());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="Bar"/> from this <see cref="byte"/> array.
-        /// </summary>
-        /// <param name="barBytes">The bar bytes array.</param>
-        /// <returns>A <see cref="Bar"/>.</returns>
-        public static Bar GetFromBytes(byte[] barBytes)
-        {
-            Debug.NotEmpty(barBytes, nameof(barBytes));
-
-            return GetFromString(Encoding.UTF8.GetString(barBytes));
-        }
-
-        /// <summary>
         /// Returns a result indicating whether the left <see cref="Bar"/> is less than, equal
         /// to or greater than the right <see cref="Bar"/>.
         /// </summary>
@@ -161,37 +128,6 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Close + "," +
                    this.Volume + "," +
                    this.Timestamp.ToIsoString();
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="string"/> of values from this <see cref="Bar"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public string ValuesToString()
-        {
-            return this.Open + "," +
-                   this.High + "," +
-                   this.Low + "," +
-                   this.Close + "," +
-                   this.Volume;
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
-        /// </summary>
-        /// <returns>A <see cref="byte"/> array.</returns>
-        public byte[] ToUtf8Bytes()
-        {
-            return Encoding.UTF8.GetBytes(this.ToString());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="byte"/> array of values from this <see cref="Bar"/>.
-        /// </summary>
-        /// <returns>A <see cref="byte"/> array.</returns>
-        public byte[] ValuesToUtf8Bytes()
-        {
-            return Encoding.UTF8.GetBytes(this.ValuesToString());
         }
 
         /// <summary>

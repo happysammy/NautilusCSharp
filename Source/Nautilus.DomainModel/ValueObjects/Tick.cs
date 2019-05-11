@@ -82,34 +82,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a valid <see cref="Tick"/> from this <see cref="string"/>.
-        /// </summary>
-        /// <param name="tickString">The tick string.</param>
-        /// <returns>A <see cref="Tick"/>.</returns>
-        public static Tick GetFromString(string tickString)
-        {
-            Debug.NotEmptyOrWhiteSpace(tickString, nameof(tickString));
-
-            var values = tickString.Split(',');
-            var header = values[0].Split('.');
-            var code = header[0];
-            var exchange = header[1];
-
-            return new Tick(
-                new Symbol(code, exchange.ToEnum<Venue>()),
-                Convert.ToDecimal(values[1]),
-                Convert.ToDecimal(values[2]),
-                values[3].ToZonedDateTimeFromIso());
-        }
-
-        /// <summary>
-        /// Returns a valid <see cref="Tick"/> from this <see cref="byte"/> array.
-        /// </summary>
-        /// <param name="tickBytes">The tick bytes array.</param>
-        /// <returns>A <see cref="Tick"/>.</returns>
-        public static Tick GetFromBytes(byte[] tickBytes) => GetFromString(Encoding.UTF8.GetString(tickBytes));
-
-        /// <summary>
         /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
         /// to or greater than the right <see cref="Tick"/>.
         /// </summary>
@@ -121,19 +93,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.Symbol},{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
-
-        /// <summary>
-        /// Returns a string representation of the <see cref="Tick"/>.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public string ToChannelString() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
-
-        /// <summary>
-        /// Returns a valid <see cref="byte"/> array from this <see cref="Bar"/>.
-        /// </summary>
-        /// <returns>A <see cref="byte"/> array.</returns>
-        public byte[] ToUtf8Bytes() => Encoding.UTF8.GetBytes(this.ToString());
+        public override string ToString() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
 
         /// <summary>
         /// Returns an array of objects to be included in equality checks.

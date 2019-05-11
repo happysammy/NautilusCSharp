@@ -9,7 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -125,66 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
         }
 
         [Fact]
-        internal void ConvertToBytes_WithValidBar_ReturnsExpectedBar()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result = bar.ToUtf8Bytes();
-
-            // Assert
-            Assert.Equal(typeof(byte[]), result.GetType());
-            Assert.Equal(bar, Bar.GetFromBytes(result));
-        }
-
-        [Fact]
-        internal void ConvertValuesToString_WithValidBar_ReturnsExpectedBar()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result = bar.ValuesToString();
-
-            // Assert
-            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000", result);
-        }
-
-        [Fact]
-        internal void ConvertValuesToBytes_WithValidBar_ReturnsExpectedBar()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var result = bar.ValuesToUtf8Bytes();
-
-            // Assert
-            Assert.Equal(typeof(byte[]), result.GetType());
-            Assert.Equal("0.80000,0.80010,0.79990,0.80001,1000000", Encoding.UTF8.GetString(result));
-        }
-
-        [Fact]
-        internal void GetFromString_WithValidString_ReturnsExpectedBar()
+        internal void BarFactory_FromString_ReturnsExpectedBar()
         {
             // Arrange
             var bar = new Bar(
@@ -197,27 +138,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 
             // Act
             var barString = bar.ToString();
-            var result = Bar.GetFromString(barString);
-
-            // Assert
-            Assert.Equal(bar, result);
-        }
-
-        [Fact]
-        internal void GetFromBytes_WithValidBytesArray_ReturnsExpectedBar()
-        {
-            // Arrange
-            var bar = new Bar(
-                Price.Create(0.80000m, 5),
-                Price.Create(0.80010m, 5),
-                Price.Create(0.79990m, 5),
-                Price.Create(0.80001m, 5),
-                Quantity.Create(1000000),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var barBytes = bar.ToUtf8Bytes();
-            var result = Bar.GetFromBytes(barBytes);
+            var result = BarFactory.Create(barString);
 
             // Assert
             Assert.Equal(bar, result);

@@ -366,7 +366,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("No market data found for AUDUSD.DUKASCOPY-1-Minute[Ask].", result.Message);
+            Assert.Equal("No market data found for AUDUSD.DUKASCOPY-1-MINUTE[ASK].", result.Message);
         }
 
         [Fact]
@@ -384,7 +384,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             // Assert
             this.output.WriteLine(result.Message);
             Assert.True(result.IsFailure);
-            Assert.Equal("No market data found for AUDUSD.DUKASCOPY-1-Minute[Ask] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z.", result.Message);
+            Assert.Equal("No market data found for AUDUSD.DUKASCOPY-1-MINUTE[ASK] in time range from 1970-01-01T00:00:00.000Z to 1970-01-01T00:02:00.000Z.", result.Message);
         }
 
         [Fact]

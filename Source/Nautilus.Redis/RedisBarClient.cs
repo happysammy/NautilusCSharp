@@ -11,6 +11,7 @@ namespace Nautilus.Redis
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
@@ -18,6 +19,7 @@ namespace Nautilus.Redis
     using Nautilus.Data.Keys;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
     using StackExchange.Redis;
@@ -193,7 +195,7 @@ namespace Nautilus.Redis
         public CommandResult AddBar(BarType barType, Bar bar)
         {
             var key = new BarDataKey(barType, new DateKey(bar.Timestamp)).ToString();
-            this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
+            this.redisDatabase.ListRightPush(key, bar.ToString());
 
             return CommandResult.Ok($"Added 1 bar to {barType}.");
         }
@@ -222,7 +224,7 @@ namespace Nautilus.Redis
                 {
                     foreach (var bar in value)
                     {
-                        this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(key, bar.ToString());
                         barsAddedCounter++;
                     }
 
@@ -236,7 +238,7 @@ namespace Nautilus.Redis
                 {
                     if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
                     {
-                        this.redisDatabase.ListRightPush(key, bar.ToUtf8Bytes());
+                        this.redisDatabase.ListRightPush(key, bar.ToString());
                         barsAddedCounter++;
                     }
                 }
@@ -267,7 +269,7 @@ namespace Nautilus.Redis
                 .Value
                 .SelectMany(key => this.redisDatabase.ListRange(key))
                 .Select(value => value.ToString())
-                .Select(Bar.GetFromString)
+                .Select(BarFactory.Create)
                 .ToArray();
 
             return QueryResult<BarDataFrame>.Ok(new BarDataFrame(barType, barsArray));
@@ -299,7 +301,7 @@ namespace Nautilus.Redis
             var barsArray = barKeys
                 .SelectMany(key => this.redisDatabase.ListRange(key))
                 .Select(value => value.ToString())
-                .Select(Bar.GetFromString)
+                .Select(BarFactory.Create)
                 .Where(bar => bar.Timestamp.IsGreaterThanOrEqualTo(fromDateTime)
                            && bar.Timestamp.IsLessThanOrEqualTo(toDateTime))
                 .ToArray();
@@ -363,7 +365,7 @@ namespace Nautilus.Redis
 
             var values = this.redisDatabase.ListRange(key);
 
-            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => Bar.GetFromString(b)));
+            return QueryResult<Bar[]>.Ok(Array.ConvertAll(values, b => BarFactory.Create(b)));
         }
 
         /// <summary>

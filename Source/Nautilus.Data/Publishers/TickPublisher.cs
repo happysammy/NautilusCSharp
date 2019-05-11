@@ -38,7 +38,7 @@ namespace Nautilus.Data.Publishers
         {
             this.publisher.Publish(
                 message.Symbol.ToString().ToLower(),
-                message.ToChannelString());
+                message.ToString());
         }
     }
 }

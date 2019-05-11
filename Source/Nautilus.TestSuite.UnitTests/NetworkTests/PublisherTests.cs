@@ -8,12 +8,10 @@
 
 namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -62,9 +60,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void GivenMessageToPublish_WhenMessageValid_PublishesToSubscriber()
         {
             // Arrange
-            const string message = "1234,1234";
-            var bytes = Encoding.UTF8.GetBytes(message);
-
             var publisher = new MockPublisher(
                 this.setupContainer,
                 this.localHost,
@@ -78,7 +73,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Task.Delay(100).Wait();
 
             // Act
-            publisher.Endpoint.Send((TestTopic, bytes));
+            const string message = "1234,1234";
+            publisher.Endpoint.Send((TestTopic, message));
 
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
