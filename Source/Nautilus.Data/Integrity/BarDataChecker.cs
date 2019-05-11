@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Integrity.Checkers
+namespace Nautilus.Data.Integrity
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -323,7 +323,7 @@ namespace Nautilus.Data.Aggregators
             }
 
             // Log for debug purposes.
-            // this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         /// <summary>

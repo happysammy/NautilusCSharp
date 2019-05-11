@@ -12,8 +12,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
-    using Nautilus.Data.Aggregators;
-    using Nautilus.DomainModel.Enums;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -27,7 +25,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.GuidFactory = new GuidFactory();
             this.LoggingAdapter = new MockLoggingAdapter();
             this.LoggerFactory = new LoggerFactory(this.LoggingAdapter);
-            this.QuoteProvider = new QuoteProvider(Venue.FXCM);
         }
 
         public StubClock Clock { get; }
@@ -37,8 +34,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public MockLoggingAdapter LoggingAdapter { get; }
 
         public ILoggerFactory LoggerFactory { get; }
-
-        public IQuoteProvider QuoteProvider { get; }
 
         public IComponentryContainer Create()
         {

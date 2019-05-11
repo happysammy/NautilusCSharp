@@ -9,7 +9,6 @@
 namespace Nautilus.Data.Types
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Entities;
@@ -20,7 +19,6 @@ namespace Nautilus.Data.Types
     /// A container for <see cref="EconomicEvent"/>s.
     /// </summary>
     [Immutable]
-    [PerformanceOptimized]
     public sealed class EconomicEventFrame
     {
         /// <summary>
@@ -29,22 +27,19 @@ namespace Nautilus.Data.Types
         /// <param name="events">The list of economic events.</param>
         public EconomicEventFrame(IEnumerable<EconomicEvent> events)
         {
-            this.Events = events.ToImmutableList();
+            this.Events = events;
+            this.CurrencySymbols = this.Events.Select(e => e.Currency).Distinct();
         }
 
         /// <summary>
         /// Gets the economic event frames currency symbols.
         /// </summary>
-        public IReadOnlyCollection<Currency> CurrencySymbols =>
-            this.Events.Select(e => e.Currency)
-                .Distinct()
-                .ToList()
-                .AsReadOnly();
+        public IEnumerable<Currency> CurrencySymbols { get; }
 
         /// <summary>
         /// Gets the economic event frames list of events.
         /// </summary>
-        public ImmutableList<EconomicEvent> Events { get; }
+        public IEnumerable<EconomicEvent> Events { get; }
 
         /// <summary>
         /// Gets the economic event frames first event time.
