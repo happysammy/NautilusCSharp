@@ -8,20 +8,12 @@
 
 namespace NautilusData
 {
-    using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.Fix;
     using Newtonsoft.Json.Linq;
-    using Serilog.Events;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -61,56 +53,10 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = JObject.Parse(File.ReadAllText("config.json"));
+            var parsed = JObject.Parse(File.ReadAllText("config.json"));
+            var config = new Configuration(parsed, this.Environment.IsDevelopment());
 
-            var logLevel = this.Environment.IsDevelopment()
-                ? LogEventLevel.Information
-                : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
-
-            var barRollingWindow = (int)config[ConfigSection.Database]["barDataRollingWindow"];
-
-            var configFile = (string)config[ConfigSection.Fix44]["config"];
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
-            var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
-
-            var fixSettings = ConfigReader.LoadConfig(configPath);
-            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
-            var credentials = new FixCredentials(
-                account: fixSettings["Account"],
-                username: fixSettings["Username"],
-                password: fixSettings["Password"]);
-
-            var fixConfig = new FixConfiguration(
-                broker,
-                configPath,
-                credentials,
-                fixSettings["InstrumentData"],
-                Convert.ToBoolean(fixSettings["SendAccountTag"]),
-                Convert.ToBoolean(fixSettings["UpdateInstruments"]));
-
-            var symbolsJArray = (JArray)config[ConfigSection.Symbols];
-            var symbolsList = new List<string>();
-            foreach (var symbol in symbolsJArray)
-            {
-                symbolsList.Add(symbol.ToString());
-            }
-
-            var symbols = symbolsList.Distinct().ToArray();
-
-            var resolutions = new List<Resolution>
-            {
-                Resolution.Second,
-                Resolution.Minute,
-                Resolution.Hour,
-            };
-
-            this.dataSystem = NautilusDataFactory.Create(
-                logLevel,
-                fixConfig,
-                symbols,
-                resolutions,
-                barRollingWindow);
-
+            this.dataSystem = NautilusDataFactory.Create(config);
             this.dataSystem.Start();
         }
 

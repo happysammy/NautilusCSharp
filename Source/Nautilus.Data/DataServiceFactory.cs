@@ -45,8 +45,8 @@ namespace Nautilus.Data
             IFixGateway gateway,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository,
-            IReadOnlyCollection<string> symbols,
-            IReadOnlyCollection<Resolution> resolutions,
+            IEnumerable<string> symbols,
+            IEnumerable<Resolution> resolutions,
             int barRollingWindow,
             bool updateInstruments)
         {

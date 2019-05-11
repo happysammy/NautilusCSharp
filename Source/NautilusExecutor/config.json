@@ -3,17 +3,17 @@
     "logLevel": "Information"
   },
 
-  "fix44": {
-    "config": "fix_fxcm2.cfg"
-  },
-
-  "execution": {
+  "network": {
     "name": "NautilusExecutor",
-    "host": "127.0.0.1",
-    "commandsPort": 5555,
-    "eventsPort": 5556,
+    "serverAddress": "127.0.0.1",
+    "commandsPort": 55555,
+    "eventsPort": 55556,
     "commandsPerSecond": 100,
     "newOrdersPerSecond": 15
+  },
+
+  "fix44": {
+    "configFile": "fix_fxcm2.cfg"
   },
 
   "symbols": [

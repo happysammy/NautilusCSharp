@@ -25,10 +25,8 @@ namespace NautilusExecutor
     using Nautilus.Execution;
     using Nautilus.Fix;
     using Nautilus.MsgPack;
-    using Nautilus.Network;
     using Nautilus.Serilog;
     using NodaTime;
-    using Serilog.Events;
 
     /// <summary>
     /// Provides a factory for creating a <see cref="NautilusExecutor"/> system.
@@ -38,27 +36,14 @@ namespace NautilusExecutor
         /// <summary>
         /// Creates and returns a new <see cref="NautilusExecutor"/> class.
         /// </summary>
-        /// <param name="logLevel">The logger log level threshold.</param>
-        /// <param name="fixConfig">The FIX configuration.</param>
-        /// <param name="serviceAddress">The services address.</param>
-        /// <param name="commandsPort">The commands port.</param>
-        /// <param name="eventsPort">The events port.</param>
-        /// <param name="commandsPerSecond">The commands per second throttle limit.</param>
-        /// <param name="newOrdersPerSecond">The new orders per second throttle limit.</param>
+        /// <param name="config">The system configuration.</param>
         /// <returns>The <see cref="NautilusExecutor"/> system.</returns>
-        public static NautilusExecutor Create(
-            LogEventLevel logLevel,
-            FixConfiguration fixConfig,
-            NetworkAddress serviceAddress,
-            NetworkPort commandsPort,
-            NetworkPort eventsPort,
-            int commandsPerSecond,
-            int newOrdersPerSecond)
+        public static NautilusExecutor Create(Configuration config)
         {
-            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Precondition.PositiveInt32(config.CommandsPerSecond, nameof(config.CommandsPerSecond));
+            Precondition.PositiveInt32(config.NewOrdersPerSecond, nameof(config.NewOrdersPerSecond));
 
-            var loggingAdapter = new SerilogLogger(logLevel);
+            var loggingAdapter = new SerilogLogger(config.LogLevel);
             loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusExecutor)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
@@ -73,13 +58,13 @@ namespace NautilusExecutor
 
             var scheduler = new Scheduler(container);
 
-            var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
-            var instrumentData = new InstrumentDataProvider(venue, fixConfig.InstrumentDataFileName);
+            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
+            var instrumentData = new InstrumentDataProvider(venue, config.FixConfiguration.InstrumentDataFileName);
 
             var fixClient = GetFixClient(
                 container,
                 messagingAdapter,
-                fixConfig,
+                config.FixConfiguration,
                 instrumentData);
 
             var fixGateway = FixGatewayFactory.Create(
@@ -94,11 +79,11 @@ namespace NautilusExecutor
                 fixGateway,
                 new MsgPackCommandSerializer(),
                 new MsgPackEventSerializer(),
-                serviceAddress,
-                commandsPort,
-                eventsPort,
-                commandsPerSecond,
-                newOrdersPerSecond);
+                config.ServerAddress,
+                config.CommandsPort,
+                config.EventsPort,
+                config.CommandsPerSecond,
+                config.NewOrdersPerSecond);
 
             executionServiceAddresses.Add(ServiceAddress.Scheduler, scheduler.Endpoint);
             var switchboard = Switchboard.Create(executionServiceAddresses);
@@ -129,16 +114,24 @@ namespace NautilusExecutor
                         messagingAdapter,
                         configuration,
                         instrumentData);
-
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
                         messagingAdapter,
                         configuration,
                         instrumentData);
-
+                case Brokerage.Simulation:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                case Brokerage.IB:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                case Brokerage.LMAX:
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client for broker {configuration.Broker}.");
                 default:
-                    throw new InvalidOperationException($"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
+                    throw new InvalidOperationException(
+                        $"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
             }
         }
     }

@@ -60,50 +60,10 @@ namespace NautilusExecutor
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = JObject.Parse(File.ReadAllText("config.json"));
+            var parsed = JObject.Parse(File.ReadAllText("config.json"));
+            var config = new Configuration(parsed, this.Environment.IsDevelopment());
 
-            var host = this.Environment.IsDevelopment()
-                ? NetworkAddress.LocalHost()
-                : new NetworkAddress((string)config[ConfigSection.Execution]["host"]);
-
-            var commandsPort = new NetworkPort((ushort)config[ConfigSection.Execution]["commandsPort"]);
-            var eventsPort = new NetworkPort((ushort)config[ConfigSection.Execution]["eventsPort"]);
-
-            var commandsPerSecond = (int)config[ConfigSection.Execution]["commandsPerSecond"];
-            var newOrdersPerSecond = (int)config[ConfigSection.Execution]["newOrdersPerSecond"];
-
-            var logLevel = this.Environment.IsDevelopment()
-                ? LogEventLevel.Debug
-                : ((string)config[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
-
-            var configFile = (string)config[ConfigSection.Fix44]["config"];
-            var assemblyDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
-            var configPath = Path.GetFullPath(Path.Combine(assemblyDirectory, configFile));
-
-            var fixSettings = ConfigReader.LoadConfig(configPath);
-            var broker = fixSettings["Brokerage"].ToEnum<Brokerage>();
-            var credentials = new FixCredentials(
-                account: fixSettings["Account"],
-                username: fixSettings["Username"],
-                password: fixSettings["Password"]);
-
-            var fixConfig = new FixConfiguration(
-                broker,
-                configPath,
-                credentials,
-                fixSettings["InstrumentData"],
-                Convert.ToBoolean(fixSettings["SendAccountTag"]),
-                Convert.ToBoolean(fixSettings["UpdateInstruments"]));
-
-            this.executionSystem = NautilusExecutorFactory.Create(
-                logLevel,
-                fixConfig,
-                host,
-                commandsPort,
-                eventsPort,
-                commandsPerSecond,
-                newOrdersPerSecond);
-
+            this.executionSystem = NautilusExecutorFactory.Create(config);
             this.executionSystem?.Start();
         }
 

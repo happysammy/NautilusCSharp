@@ -9,7 +9,6 @@
 namespace NautilusData
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -28,7 +27,6 @@ namespace NautilusData
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
-    using Serilog.Events;
     using StackExchange.Redis;
 
     /// <summary>
@@ -39,24 +37,13 @@ namespace NautilusData
         /// <summary>
         /// Creates and returns a new <see cref="NautilusData"/> system.
         /// </summary>
-        /// <param name="logLevel">The log level threshold.</param>
-        /// <param name="fixConfig">The FIX configuration.</param>
-        /// <param name="symbols">The symbols to collect.</param>
-        /// <param name="resolutions">The resolutions to persist.</param>
-        /// <param name="barRollingWindow">The length of the rolling window for bar data.</param>
+        /// <param name="config">The configuration.</param>
         /// <returns>The <see cref="Nautilus"/> system.</returns>
-        public static NautilusData Create(
-            LogEventLevel logLevel,
-            FixConfiguration fixConfig,
-            IReadOnlyCollection<string> symbols,
-            IReadOnlyCollection<Resolution> resolutions,
-            int barRollingWindow)
+        public static NautilusData Create(Configuration config)
         {
-            Precondition.NotEmpty(symbols, nameof(symbols));
-            Precondition.NotEmpty(resolutions, nameof(resolutions));
-            Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+            Precondition.PositiveInt32(config.BarRollingWindowDays, nameof(config.BarRollingWindowDays));
 
-            var loggingAdapter = new SerilogLogger(logLevel);
+            var loggingAdapter = new SerilogLogger(config.LogLevel);
             loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusData)} builder...");
             VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
 
@@ -75,13 +62,13 @@ namespace NautilusData
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
-            var venue = fixConfig.Broker.ToString().ToEnum<Venue>();
-            var instrumentData = new InstrumentDataProvider(venue, fixConfig.InstrumentDataFileName);
+            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
+            var instrumentData = new InstrumentDataProvider(venue, config.FixConfiguration.InstrumentDataFileName);
 
             var fixClient = GetFixClient(
                 container,
                 messagingAdapter,
-                fixConfig,
+                config.FixConfiguration,
                 instrumentData);
 
             var fixGateway = FixGatewayFactory.Create(
@@ -96,10 +83,10 @@ namespace NautilusData
                 fixGateway,
                 barRepository,
                 instrumentRepository,
-                symbols,
-                resolutions,
-                barRollingWindow,
-                fixConfig.UpdateInstruments);
+                config.Symbols,
+                config.BarResolutions,
+                config.BarRollingWindowDays,
+                config.FixConfiguration.UpdateInstruments);
 
             dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler.Endpoint);
             var switchboard = Switchboard.Create(dataServiceAddresses);

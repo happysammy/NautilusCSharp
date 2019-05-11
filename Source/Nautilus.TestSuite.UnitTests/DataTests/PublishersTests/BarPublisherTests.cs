@@ -50,6 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 this.localHost,
                 new NetworkPort(55511));
             publisher.Start();
+            Task.Delay(100).Wait();
 
             var barType = StubBarType.AUDUSD();
 
