@@ -66,6 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 new NetworkPort(55504));
             publisher.Start();
 
+            Task.Delay(100).Wait();
             const string testAddress = "tcp://localhost:55504";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);

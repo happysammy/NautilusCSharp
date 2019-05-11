@@ -56,7 +56,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5555),
                 Guid.NewGuid());
-
             consumer.Start();
 
             // Act
@@ -88,7 +87,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5556),
                 Guid.NewGuid());
-
             consumer.Start();
 
             // Act
@@ -126,8 +124,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5557),
                 Guid.NewGuid());
-
             consumer.Start();
+
             requester.SendFrame("MSG");
             requester.ReceiveFrameBytes();
             Task.Delay(100).Wait();
@@ -161,7 +159,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5558),
                 Guid.NewGuid());
-
             consumer.Start();
 
             // Act
@@ -201,7 +198,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5559),
                 Guid.NewGuid());
-
             consumer.Start();
 
             // Act
