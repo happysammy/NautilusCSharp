@@ -107,7 +107,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNotInCollection(object element, string paramName, string collectionName)
         {
-            return $"The {element} {paramName} was not found in the {collectionName} list.";
+            return $"The {element} {paramName} was not found in the {collectionName} collection.";
         }
 
         /// <summary>
@@ -115,11 +115,11 @@ namespace Nautilus.Core.Correctness
         /// </summary>
         /// <param name="element">The element being searched for.</param>
         /// <param name="paramName">The parameter name being checked.</param>
-        /// <param name="listName">The list being checked.</param>
+        /// <param name="collectionName">The collection being checked.</param>
         /// <returns>The string.</returns>
-        public static string WasInList(object element, string paramName, string listName)
+        public static string WasInCollection(object element, string paramName, string collectionName)
         {
-            return $"The {element} {paramName} was already in the {listName} list.";
+            return $"The {element} {paramName} was already in the {collectionName} collection.";
         }
 
         /// <summary>

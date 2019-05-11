@@ -227,7 +227,7 @@ namespace Nautilus.Core.Correctness
 
             if (collection.Contains(element))
             {
-                throw new ArgumentException(FailedMsg.WasNotInCollection(element, paramName, collectionName));
+                throw new ArgumentException(FailedMsg.WasInCollection(element, paramName, collectionName));
             }
         }
 
