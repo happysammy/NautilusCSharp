@@ -44,7 +44,7 @@ namespace Nautilus.Common.Scheduling
         }
 
         /// <summary>
-        /// TBA.
+        /// Actions to be performed on component start.
         /// </summary>
         public override void Start()
         {
@@ -52,7 +52,7 @@ namespace Nautilus.Common.Scheduling
         }
 
         /// <summary>
-        /// TBA.
+        /// Actions to be performed on component stop.
         /// </summary>
         public override void Stop()
         {

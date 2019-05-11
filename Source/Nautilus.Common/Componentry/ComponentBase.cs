@@ -61,14 +61,14 @@ namespace Nautilus.Common.Componentry
         protected ZonedDateTime StartTime { get; }
 
         /// <summary>
-        /// Starts the component.
+        /// Actions to be performed on component start.
         /// </summary>
         public virtual void Start()
         {
         }
 
         /// <summary>
-        /// Stops the component.
+        /// Actions to be performed on component stop.
         /// </summary>
         public virtual void Stop()
         {
