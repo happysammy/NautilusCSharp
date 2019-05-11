@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -30,7 +31,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
-        private readonly IEndpoint testReceiver;
 
         public PublisherTests(ITestOutputHelper output)
         {
@@ -40,7 +40,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var setupFactory = new StubComponentryContainerFactory();
             this.setupContainer = setupFactory.Create();
             this.mockLoggingAdapter = setupFactory.LoggingAdapter;
-            this.testReceiver = new MockMessagingAgent().Endpoint;
         }
 
         [Fact]
@@ -65,12 +64,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void GivenMessageToPublish_WhenMessageValid_PublishesToSubscriber()
         {
             // Arrange
-            const string testAddress = "tcp://localhost:55504";
-            var subscriber = new SubscriberSocket(testAddress);
-            subscriber.Connect(testAddress);
-            subscriber.Subscribe(TestTopic);
-
-            var bytes = Encoding.UTF8.GetBytes("1234");
+            const string message = "1234,1234";
+            var bytes = Encoding.UTF8.GetBytes(message);
 
             var publisher = new Publisher(
                 this.setupContainer,
@@ -80,18 +75,21 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 Guid.NewGuid());
             publisher.Start();
 
+            const string testAddress = "tcp://localhost:55504";
+            var subscriber = new SubscriberSocket(testAddress);
+            subscriber.Connect(testAddress);
+            subscriber.Subscribe(TestTopic);
             Task.Delay(100).Wait();
 
             // Act
             publisher.Endpoint.Send(bytes);
 
-            // TODO: Make this work
-            // var topic = subscriber.ReceiveFrameBytes();
-            // var msg = subscriber.ReceiveFrameBytes();
-            Task.Delay(100).Wait();
+            var receivedTopic = subscriber.ReceiveFrameBytes();
+            var receivedMessage = subscriber.ReceiveFrameBytes();
 
             // Assert
-            // Assert.Equal(bytes, msg);
+            Assert.Equal(TestTopic, Encoding.UTF8.GetString(receivedTopic));
+            Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
 
             // Tear Down
             subscriber.Unsubscribe(TestTopic);
