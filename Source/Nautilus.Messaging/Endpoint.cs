@@ -10,6 +10,7 @@ namespace Nautilus.Messaging
 {
     using System;
     using Nautilus.Core.Annotations;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Represents a messaging endpoint.

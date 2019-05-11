@@ -18,7 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using NodaTime;
     using Quartz;

@@ -15,7 +15,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
     /// <summary>

@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class MockMessagingAdapter : IMessagingAdapter

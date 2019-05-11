@@ -25,7 +25,7 @@ namespace Nautilus.Data.Aggregators
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
     using Quartz;
 

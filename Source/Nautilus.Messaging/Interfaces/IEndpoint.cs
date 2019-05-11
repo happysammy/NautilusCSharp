@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Messaging
+namespace Nautilus.Messaging.Interfaces
 {
     /// <summary>
     /// Provides a generic messaging endpoint.

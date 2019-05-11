@@ -14,7 +14,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// The adapter for FIX data feed client.

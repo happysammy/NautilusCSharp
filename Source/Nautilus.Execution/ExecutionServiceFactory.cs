@@ -14,6 +14,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
     /// <summary>

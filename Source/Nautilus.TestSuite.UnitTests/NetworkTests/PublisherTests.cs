@@ -13,11 +13,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;

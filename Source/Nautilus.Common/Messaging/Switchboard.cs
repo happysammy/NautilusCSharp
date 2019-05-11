@@ -14,6 +14,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Represents a messaging switchboard of all addresses within the system.

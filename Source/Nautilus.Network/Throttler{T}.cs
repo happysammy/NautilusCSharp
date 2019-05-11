@@ -16,7 +16,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>

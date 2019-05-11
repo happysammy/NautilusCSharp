@@ -25,6 +25,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>

@@ -21,7 +21,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
         <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
@@ -30,5 +30,9 @@
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+      <Folder Include="Messages" />
+    </ItemGroup>
+
 </Project>

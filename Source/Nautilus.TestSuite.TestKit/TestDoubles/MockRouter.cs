@@ -10,7 +10,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
     /// <summary>

@@ -17,6 +17,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]

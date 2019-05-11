@@ -14,6 +14,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// The immutable sealed <see cref="MessagingAdapter"/> class.

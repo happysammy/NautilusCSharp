@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Execution;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.MsgPack;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit.TestDoubles;

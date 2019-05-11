@@ -24,8 +24,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
         <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
+        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>

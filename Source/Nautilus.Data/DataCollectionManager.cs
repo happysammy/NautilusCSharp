@@ -24,7 +24,7 @@ namespace Nautilus.Data
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Quartz;
 
     /// <summary>

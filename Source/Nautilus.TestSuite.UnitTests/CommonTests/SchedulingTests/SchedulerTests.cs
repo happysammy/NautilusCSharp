@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Scheduling;
-    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Quartz;
