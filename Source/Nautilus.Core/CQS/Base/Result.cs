@@ -27,6 +27,7 @@ namespace Nautilus.Core.CQS.Base
             Debug.NotEmptyOrWhiteSpace(message, nameof(message));
 
             this.IsFailure = isFailure;
+            this.IsSuccess = !isFailure;
             this.Message = message;
         }
 
@@ -38,7 +39,7 @@ namespace Nautilus.Core.CQS.Base
         /// <summary>
         /// Gets a value indicating whether the result is a success.
         /// </summary>
-        public bool IsSuccess => !this.IsFailure;
+        public bool IsSuccess { get; }
 
         /// <summary>
         /// Gets the result message.
