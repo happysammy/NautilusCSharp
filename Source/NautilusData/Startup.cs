@@ -29,11 +29,11 @@ namespace NautilusData
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            var builder = new ConfigurationBuilder()
+            this.Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json");
+                .AddJsonFile("config.json")
+                .Build();
 
-            this.Configuration = builder.Build();
             this.Environment = environment;
         }
 

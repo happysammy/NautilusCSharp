@@ -8,19 +8,12 @@
 
 namespace NautilusExecutor
 {
-    using System;
     using System.IO;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Nautilus.Common.Configuration;
-    using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.Fix;
-    using Nautilus.Network;
     using Newtonsoft.Json.Linq;
-    using Serilog.Events;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -36,11 +29,11 @@ namespace NautilusExecutor
         /// <param name="environment">The hosting environment.</param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            var builder = new ConfigurationBuilder()
+            this.Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json");
+                .AddJsonFile("config.json")
+                .Build();
 
-            this.Configuration = builder.Build();
             this.Environment = environment;
         }
 
