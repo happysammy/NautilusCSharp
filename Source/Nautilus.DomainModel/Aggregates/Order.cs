@@ -218,8 +218,6 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="orderEvent">The order event.</param>
         public override void Apply(Event orderEvent)
         {
-            this.Events.Add(orderEvent);
-
             switch (orderEvent)
             {
                 case OrderRejected @event:
@@ -245,6 +243,8 @@ namespace Nautilus.DomainModel.Aggregates
                     break;
                 default: throw new InvalidOperationException($"The {orderEvent} is not recognized by the order {this}");
             }
+
+            this.Events.Add(orderEvent);
         }
 
         /// <summary>
@@ -263,19 +263,6 @@ namespace Nautilus.DomainModel.Aggregates
             if (!this.orderIdsBroker.Contains(orderId))
             {
                 this.orderIdsBroker.Add(orderId);
-            }
-        }
-
-        /// <summary>
-        /// Updates the execution identifier list with the given <see cref="ExecutionId"/>
-        /// (if not already present).
-        /// </summary>
-        /// <param name="executionId">The execution identifier.</param>
-        private void UpdateExecutionIds(ExecutionId executionId)
-        {
-            if (!this.executionIds.Contains(executionId))
-            {
-                this.executionIds.Add(executionId);
             }
         }
 
@@ -300,7 +287,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderPartiallyFilled orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderPartiallyFilled)));
-            this.UpdateExecutionIds(orderEvent.ExecutionId);
+            this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
             this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());
@@ -309,7 +296,7 @@ namespace Nautilus.DomainModel.Aggregates
         private void When(OrderFilled orderEvent)
         {
             this.orderState.Process(new Trigger(nameof(OrderFilled)));
-            this.UpdateExecutionIds(orderEvent.ExecutionId);
+            this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
             this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());

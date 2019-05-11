@@ -20,7 +20,7 @@ namespace Nautilus.DomainModel.Enums
         /// <summary>
         /// An undefined order side.
         /// </summary>
-        Undefined = 0,
+        UNKNOWN = 0,
 
         /// <summary>
         /// A buy order side.

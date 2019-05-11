@@ -27,15 +27,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new OrderId("NONE"),
                 new PositionId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
@@ -48,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.GLOBEX), position.Symbol);
-            Assert.Equal("NONE", position.FromEntryOrderId.ToString());
+            Assert.Equal("123456", position.FromOrderId.ToString());
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);
@@ -62,15 +61,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new OrderId("NONE"),
                 new PositionId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
@@ -80,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
@@ -92,9 +90,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(7000),
                 Price.Create(1.00000m, 5),
@@ -118,15 +116,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new OrderId("NONE"),
                 new PositionId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
@@ -136,9 +133,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(200000),
                 Price.Create(1.00000m, 5),
@@ -148,9 +145,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(50000),
                 Price.Create(1.00000m, 5),
@@ -160,9 +157,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message4 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(250000),
                 Price.Create(1.00000m, 5),
@@ -187,15 +184,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var position = new Position(
                 new Symbol("SYMBOL", Venue.GLOBEX),
-                new OrderId("NONE"),
                 new PositionId("NONE"),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.SELL,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),
@@ -205,9 +201,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(500000),
                 Price.Create(1.00000m, 5),
@@ -217,9 +213,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 position.Symbol,
-                position.FromEntryOrderId,
+                new OrderId("123456"),
                 new ExecutionId("NONE"),
-                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
                 OrderSide.BUY,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),

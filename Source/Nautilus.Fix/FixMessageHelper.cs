@@ -160,7 +160,7 @@ namespace Nautilus.Fix
                 return OrderSide.SELL;
             }
 
-            return OrderSide.Undefined;
+            return OrderSide.UNKNOWN;
         }
 
         /// <summary>

@@ -23,12 +23,20 @@ namespace Nautilus.DomainModel.Entities
         /// Initializes a new instance of the <see cref="Execution"/> class.
         /// </summary>
         /// <param name="identifier">The execution identifier.</param>
+        /// <param name="ticket">The execution ticket.</param>
         /// <param name="timestamp">The execution timestamp.</param>
         public Execution(
             ExecutionId identifier,
+            ExecutionTicket ticket,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
+            this.Ticket = ticket;
         }
+
+        /// <summary>
+        /// Gets the executions ticket.
+        /// </summary>
+        public ExecutionTicket Ticket { get; }
     }
 }

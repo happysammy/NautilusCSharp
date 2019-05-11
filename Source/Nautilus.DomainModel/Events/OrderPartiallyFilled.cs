@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Events
             Symbol symbol,
             OrderId orderId,
             ExecutionId executionId,
-            ExecutionId executionTicket,
+            ExecutionTicket executionTicket,
             OrderSide orderSide,
             Quantity filledQuantity,
             Quantity leavesQuantity,
@@ -77,7 +77,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order execution ticket.
         /// </summary>
-        public ExecutionId ExecutionTicket { get; }
+        public ExecutionTicket ExecutionTicket { get; }
 
         /// <summary>
         /// Gets the events order side.
