@@ -9,11 +9,8 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.Text;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
 
