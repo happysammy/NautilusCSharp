@@ -48,12 +48,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var publisher = new BarPublisher(
                 this.setupContainer,
                 this.localHost,
-                new NetworkPort(55506));
+                new NetworkPort(55510));
             publisher.Start();
 
             var barType = StubBarType.AUDUSD();
 
-            const string testAddress = "tcp://localhost:55506";
+            const string testAddress = "tcp://localhost:55510";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
             subscriber.Subscribe(barType.ToString());
