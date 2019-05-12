@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "SA1131", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class FloatingPointNumberTests
     {
         [Fact]

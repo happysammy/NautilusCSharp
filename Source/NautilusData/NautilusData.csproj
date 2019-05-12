@@ -31,7 +31,7 @@
         <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
-        <ProjectReference Include="..\NautilusData.Service\NautilusData.Service.csproj" />
+        <ProjectReference Include="..\NautilusData.Api\NautilusData.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>

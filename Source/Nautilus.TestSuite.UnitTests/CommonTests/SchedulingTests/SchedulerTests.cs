@@ -137,7 +137,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-//            CustomAssert.EventuallyContains(
+
+// CustomAssert.EventuallyContains(
 //                $"Scheduler: Job paused successfully (JobKey={jobKey}).",
 //                this.logger,
 //                EventuallyContains.TimeoutMilliseconds,
@@ -187,7 +188,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-//            CustomAssert.EventuallyContains(
+
+// CustomAssert.EventuallyContains(
 //                $"Scheduler: Job resumed successfully (JobKey={jobKey}).",
 //                this.logger,
 //                EventuallyContains.TimeoutMilliseconds,
@@ -209,7 +211,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.SchedulingTests
 
             // Assert
             LogDumper.Dump(this.logger, this.output);
-//            CustomAssert.EventuallyContains(
+
+// CustomAssert.EventuallyContains(
 //                "Scheduler: Job remove failed (JobKey=DEFAULT.bogus-job-key, TriggerKey=DEFAULT.bogus-trigger, Reason=JobNotFound).",
 //                this.logger,
 //                EventuallyContains.TimeoutMilliseconds,

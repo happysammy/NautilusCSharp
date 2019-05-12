@@ -28,7 +28,7 @@
         <ProjectReference Include="..\Nautilus.Network\Nautilus.Network.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
-        <ProjectReference Include="..\NautilusExecutor.Service\NautilusExecutor.Service.csproj" />
+        <ProjectReference Include="..\NautilusExecutor.Api\NautilusExecutor.Api.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="config.json">
