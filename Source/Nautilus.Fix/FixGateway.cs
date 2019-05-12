@@ -108,6 +108,15 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
+        /// Registers the receiver endpoint to receive connection events from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterConnectionEventReceiver(IEndpoint receiver)
+        {
+            this.fixClient.RegisterConnectionEventReceiver(receiver);
+        }
+
+        /// <summary>
         /// Registers the receiver endpoint to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>

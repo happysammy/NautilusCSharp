@@ -45,6 +45,12 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
+        /// Registers the receiver endpoint to receive connection events from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        void RegisterConnectionEventReceiver(IEndpoint receiver);
+
+        /// <summary>
         /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>

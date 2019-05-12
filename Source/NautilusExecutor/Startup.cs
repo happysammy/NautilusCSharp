@@ -13,6 +13,7 @@ namespace NautilusExecutor
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Execution;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -20,7 +21,7 @@ namespace NautilusExecutor
     /// </summary>
     public class Startup
     {
-        private NautilusExecutor? executionSystem;
+        private ExecutionService? executionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -56,8 +57,8 @@ namespace NautilusExecutor
             var parsed = JObject.Parse(File.ReadAllText("config.json"));
             var config = new Configuration(parsed, this.Environment.IsDevelopment());
 
-            this.executionSystem = NautilusExecutorFactory.Create(config);
-            this.executionSystem?.Start();
+            this.executionService = ExecutionServiceFactory.Create(config);
+            this.executionService?.Start();
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionSystem?.Stop();
+            this.executionService?.Stop();
         }
     }
 }

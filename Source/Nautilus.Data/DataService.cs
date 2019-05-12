@@ -21,12 +21,12 @@ namespace Nautilus.Data
     using Quartz;
 
     /// <summary>
-    /// The main macro object which contains the <see cref="DataService"/> and presents its API.
+    /// Provides a data service.
     /// </summary>
     [PerformanceOptimized]
     public sealed class DataService : ComponentBusConnectedBase
     {
-        private readonly IFixGateway gateway;
+        private readonly IFixGateway fixGateway;
         private readonly bool updateInstruments;
 
         /// <summary>
@@ -34,20 +34,27 @@ namespace Nautilus.Data
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="gateway">The FIX gateway.</param>
+        /// <param name="fixGateway">The FIX gateway.</param>
+        /// <param name="switchboard">The data service switchboard.</param>
         /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
-            IMessagingAdapter messagingAdapter,
-            IFixGateway gateway,
+            MessagingAdapter messagingAdapter,
+            IFixGateway fixGateway,
+            Switchboard switchboard,
             bool updateInstruments)
             : base(
                 NautilusService.Data,
                 setupContainer,
                 messagingAdapter)
         {
-            this.gateway = gateway;
+            this.fixGateway = fixGateway;
             this.updateInstruments = updateInstruments;
+
+            messagingAdapter.Send(new InitializeSwitchboard(
+                switchboard,
+                this.NewGuid(),
+                this.TimeNow()));
 
             this.RegisterHandler<ConnectFixJob>(this.OnMessage);
             this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
@@ -55,17 +62,30 @@ namespace Nautilus.Data
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
+
+            this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
         }
 
         /// <summary>
-        /// Start method called when the <see cref="SystemStart"/> message is received.
+        /// Actions to be performed when the component is started.
         /// </summary>
         public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
+            this.fixGateway.Connect();
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
+        }
+
+        /// <summary>
+        /// Actions to be performed when the component is stopped.
+        /// </summary>
+        public override void Stop()
+        {
+            this.Log.Information($"Stopping...");
+
+            this.fixGateway.Disconnect();
         }
 
         private void CreateConnectFixJob()
@@ -122,12 +142,12 @@ namespace Nautilus.Data
 
         private void OnMessage(ConnectFixJob message)
         {
-            this.gateway.Connect();
+            this.fixGateway.Connect();
         }
 
         private void OnMessage(DisconnectFixJob message)
         {
-            this.gateway.Disconnect();
+            this.fixGateway.Disconnect();
         }
 
         private void OnMessage(FixSessionConnected message)
@@ -136,10 +156,10 @@ namespace Nautilus.Data
 
             if (this.updateInstruments)
             {
-                this.gateway.UpdateInstrumentsSubscribeAll();
+                this.fixGateway.UpdateInstrumentsSubscribeAll();
             }
 
-            this.gateway.MarketDataSubscribeAll();
+            this.fixGateway.MarketDataSubscribeAll();
         }
 
         private void OnMessage(FixSessionDisconnected message)

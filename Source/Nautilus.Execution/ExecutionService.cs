@@ -24,11 +24,11 @@ namespace Nautilus.Execution
     using Quartz;
 
     /// <summary>
-    /// The service context which handles all execution related operations.
+    /// Provides an execution service.
     /// </summary>
     public sealed class ExecutionService : ComponentBusConnectedBase
     {
-        private readonly IFixGateway gateway;
+        private readonly IFixGateway fixGateway;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
 
@@ -40,15 +40,17 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="gateway">The execution gateway.</param>
+        /// <param name="fixGateway">The execution gateway.</param>
+        /// <param name="switchboard">The service address switchboard.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public ExecutionService(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter,
-            IFixGateway gateway,
+            MessagingAdapter messagingAdapter,
+            IFixGateway fixGateway,
+            Switchboard switchboard,
             int commandsPerSecond,
             int newOrdersPerSecond)
             : base(
@@ -59,12 +61,12 @@ namespace Nautilus.Execution
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
-            this.gateway = gateway;
+            this.fixGateway = fixGateway;
 
             this.tradeCommandBus = new OrderCommandBus(
                 container,
                 messagingAdapter,
-                gateway).Endpoint;
+                fixGateway).Endpoint;
 
             this.commandThrottler = new Throttler<Command>(
                 container,
@@ -80,6 +82,11 @@ namespace Nautilus.Execution
                 Duration.FromSeconds(1),
                 newOrdersPerSecond).Endpoint;
 
+            messagingAdapter.Send(new InitializeSwitchboard(
+                switchboard,
+                this.NewGuid(),
+                this.TimeNow()));
+
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
@@ -88,15 +95,18 @@ namespace Nautilus.Execution
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<ConnectFixJob>(this.OnMessage);
             this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
+
+            this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
         }
 
         /// <summary>
-        /// Start method called when the <see cref="SystemStart"/> message is received.
+        /// Actions to be performed when the component is started.
         /// </summary>
         public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
+            this.fixGateway.Connect();
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
         }
@@ -106,9 +116,7 @@ namespace Nautilus.Execution
         /// </summary>
         public override void Stop()
         {
-// this.tradeCommandBus.Send(PoisonPill.Instance);
-//                this.newOrderThrottler.Send(PoisonPill.Instance);
-//                this.commandThrottler.Send(PoisonPill.Instance);
+            this.fixGateway.Disconnect();
         }
 
         private void CreateConnectFixJob()
@@ -165,12 +173,12 @@ namespace Nautilus.Execution
 
         private void OnMessage(ConnectFixJob message)
         {
-            this.gateway.Connect();
+            this.fixGateway.Connect();
         }
 
         private void OnMessage(DisconnectFixJob message)
         {
-            this.gateway.Disconnect();
+            this.fixGateway.Disconnect();
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -197,9 +205,9 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            this.gateway.UpdateInstrumentsSubscribeAll();
-            this.gateway.CollateralInquiry();
-            this.gateway.TradingSessionStatus();
+            this.fixGateway.UpdateInstrumentsSubscribeAll();
+            this.fixGateway.CollateralInquiry();
+            this.fixGateway.TradingSessionStatus();
         }
 
         private void OnMessage(FixSessionDisconnected message)

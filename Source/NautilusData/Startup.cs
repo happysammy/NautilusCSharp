@@ -13,6 +13,7 @@ namespace NautilusData
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Nautilus.Data;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -20,7 +21,7 @@ namespace NautilusData
     /// </summary>
     public class Startup
     {
-        private NautilusData? dataSystem;
+        private DataService? dataService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -56,8 +57,8 @@ namespace NautilusData
             var parsed = JObject.Parse(File.ReadAllText("config.json"));
             var config = new Configuration(parsed, this.Environment.IsDevelopment());
 
-            this.dataSystem = NautilusDataFactory.Create(config);
-            this.dataSystem.Start();
+            this.dataService = DataServiceFactory.Create(config);
+            this.dataService.Start();
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataSystem?.Stop();
+            this.dataService?.Stop();
         }
     }
 }

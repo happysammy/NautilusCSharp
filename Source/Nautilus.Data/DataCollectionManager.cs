@@ -33,7 +33,7 @@ namespace Nautilus.Data
     {
         private readonly IEndpoint barPublisher;
         private readonly IEnumerable<BarSpecification> barSpecifications;
-        private readonly int barRollingWindow;
+        private readonly int barRollingWindowDays;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
@@ -42,24 +42,24 @@ namespace Nautilus.Data
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="barPublisher">The bar publisher.</param>
         /// <param name="barSpecifications">The bar specifications to collect and persist.</param>
-        /// <param name="barRollingWindow">The rolling window of persisted bar data (days).</param>
+        /// <param name="barRollingWindowDays">The rolling window of persisted bar data (days).</param>
         /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindow is not positive (> 0).</exception>
         public DataCollectionManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IEndpoint barPublisher,
             IEnumerable<BarSpecification> barSpecifications,
-            int barRollingWindow)
+            int barRollingWindowDays)
             : base(
                 NautilusService.Data,
                 container,
                 messagingAdapter)
         {
-            Precondition.PositiveInt32(barRollingWindow, nameof(barRollingWindow));
+            Precondition.PositiveInt32(barRollingWindowDays, nameof(barRollingWindowDays));
 
             this.barPublisher = barPublisher;
             this.barSpecifications = barSpecifications;
-            this.barRollingWindow = barRollingWindow;
+            this.barRollingWindowDays = barRollingWindowDays;
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<CollectData<BarType>>(this.OnMessage);
@@ -113,7 +113,7 @@ namespace Nautilus.Data
         {
             var trimCommand = new TrimBarData(
                 this.barSpecifications,
-                this.barRollingWindow,
+                this.barRollingWindowDays,
                 this.NewGuid(),
                 this.TimeNow());
 

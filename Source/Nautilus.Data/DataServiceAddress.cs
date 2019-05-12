@@ -15,31 +15,31 @@ namespace Nautilus.Data
     /// Provides data service component messaging addresses.
     /// </summary>
     [PerformanceOptimized]
-    internal static class DataServiceAddress
+    public static class DataServiceAddress
     {
         /// <summary>
         /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
         /// </summary>
-        internal static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));
+        public static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));
 
         /// <summary>
         /// Gets the <see cref="BarAggregationController"/> component messaging address.
         /// </summary>
-        internal static Address DataCollectionManager { get; } = new Address(nameof(DataCollectionManager));
+        public static Address DataCollectionManager { get; } = new Address(nameof(DataCollectionManager));
 
         /// <summary>
         /// Gets the <see cref="BarAggregationController"/> component messaging address.
         /// </summary>
-        internal static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
+        public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
 
         /// <summary>
         /// Gets the <see cref="BarPublisher"/> component messaging address.
         /// </summary>
-        internal static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
+        public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
 
         /// <summary>
         /// Gets the <see cref="TickPublisher"/> component messaging address.
         /// </summary>
-        internal static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
+        public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
     }
 }

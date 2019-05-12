@@ -1,14 +1,15 @@
-//--------------------------------------------------------------------------------------------------
-// <copyright file="NautilusDataFactory.cs" company="Nautech Systems Pty Ltd">
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="ExecutionServiceFactory.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusData
+namespace NautilusExecutor
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -19,33 +20,31 @@ namespace NautilusData
     using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.Execution;
     using Nautilus.Fix;
-    using Nautilus.Redis;
+    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
+    using Nautilus.MsgPack;
     using Nautilus.Serilog;
     using NodaTime;
-    using StackExchange.Redis;
 
     /// <summary>
-    /// Provides a factory for creating a <see cref="NautilusData"/> system.
+    /// Provides a factory for creating the <see cref="ExecutionService"/>.
     /// </summary>
-    public static class NautilusDataFactory
+    public static class ExecutionServiceFactory
     {
         /// <summary>
-        /// Creates and returns a new <see cref="NautilusData"/> system.
+        /// Creates a new <see cref="ExecutionService"/> and returns an address book of endpoints.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        /// <returns>The <see cref="Nautilus"/> system.</returns>
-        public static NautilusData Create(Configuration config)
+        /// <returns>The services switchboard.</returns>
+        public static ExecutionService Create(Configuration config)
         {
-            Precondition.PositiveInt32(config.BarRollingWindowDays, nameof(config.BarRollingWindowDays));
-
             var loggingAdapter = new SerilogLogger(config.LogLevel);
-            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusData)} builder...");
-            VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
+            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusExecutor)} builder...");
+            VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
 
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
@@ -57,13 +56,19 @@ namespace NautilusData
             var messagingAdapter = MessagingServiceFactory.Create(container, new FakeMessageStore());
             var scheduler = new Scheduler(container);
 
-            var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
-            var barRepository = new RedisBarRepository(redisConnection);
-            var instrumentRepository = new RedisInstrumentRepository(redisConnection);
-            instrumentRepository.CacheAll();
-
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var instrumentData = new InstrumentDataProvider(venue, config.FixConfiguration.InstrumentDataFileName);
+
+            var messageServer = new MessageServer(
+                container,
+                messagingAdapter,
+                new MsgPackCommandSerializer(),
+                new MsgPackEventSerializer(),
+                config.ServerAddress,
+                config.CommandsPort,
+                config.EventsPort);
+
+            var orderManager = new OrderManager(container, messagingAdapter);
 
             var fixClient = GetFixClient(
                 container,
@@ -76,31 +81,22 @@ namespace NautilusData
                 messagingAdapter,
                 fixClient);
 
-            var dataServiceAddresses = DataServiceFactory.Create(
+            fixGateway.RegisterEventReceiver(orderManager.Endpoint);
+
+            var addresses = new Dictionary<Address, IEndpoint>
+            {
+                { ServiceAddress.Scheduler, scheduler.Endpoint },
+                { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
+                { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
+            };
+
+            return new ExecutionService(
                 container,
                 messagingAdapter,
-                fixClient,
                 fixGateway,
-                barRepository,
-                instrumentRepository,
-                config.Symbols,
-                config.BarSpecifications,
-                config.BarRollingWindowDays,
-                config.FixConfiguration.UpdateInstruments);
-
-            dataServiceAddresses.Add(ServiceAddress.Scheduler, scheduler.Endpoint);
-            var switchboard = Switchboard.Create(dataServiceAddresses);
-
-            var systemController = new SystemController(
-                container,
-                messagingAdapter,
-                switchboard);
-
-            return new NautilusData(
-                container,
-                messagingAdapter,
-                systemController,
-                fixClient);
+                Switchboard.Create(addresses),
+                config.CommandsPerSecond,
+                config.NewOrdersPerSecond);
         }
 
         private static IFixClient GetFixClient(

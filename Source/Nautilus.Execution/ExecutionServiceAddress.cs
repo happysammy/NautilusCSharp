@@ -15,16 +15,16 @@ namespace Nautilus.Execution
     /// Provides execution service component messaging addresses.
     /// </summary>
     [PerformanceOptimized]
-    internal static class ExecutionServiceAddress
+    public static class ExecutionServiceAddress
     {
         /// <summary>
         /// Gets the <see cref="MessageServer"/> component messaging address.
         /// </summary>
-        internal static Address MessageServer { get; } = new Address(nameof(MessageServer));
+        public static Address MessageServer { get; } = new Address(nameof(MessageServer));
 
         /// <summary>
         /// Gets the <see cref="OrderManager"/> component messaging address.
         /// </summary>
-        internal static Address OrderManager { get; } = new Address(nameof(OrderManager));
+        public static Address OrderManager { get; } = new Address(nameof(OrderManager));
     }
 }
