@@ -51,7 +51,7 @@ namespace Nautilus.Data
         }
 
         /// <summary>
-        /// Actions to be performed prior to stopping the <see cref="DatabaseTaskManager"/>.
+        /// Actions to be performed on stopping the component.
         /// </summary>
         public override void Stop()
         {

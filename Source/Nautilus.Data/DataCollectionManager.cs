@@ -33,6 +33,8 @@ namespace Nautilus.Data
         private readonly IEnumerable<BarSpecification> barSpecifications;
         private readonly int barRollingWindowDays;
 
+        private bool isTrimJobActive;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionManager"/> class.
         /// </summary>
@@ -57,6 +59,7 @@ namespace Nautilus.Data
 
             this.barSpecifications = barSpecifications;
             this.barRollingWindowDays = barRollingWindowDays;
+            this.isTrimJobActive = false;
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<CollectData<BarType>>(this.OnMessage);
@@ -67,11 +70,17 @@ namespace Nautilus.Data
         }
 
         /// <summary>
-        /// Start method called when the <see cref="Common.Messages.Commands.Start"/> message is received.
+        /// Actions to be performed when the component is started.
         /// </summary>
         public override void Start()
         {
+            if (this.isTrimJobActive)
+            {
+                return; // No actions to perform.
+            }
+
             this.CreateTrimBarDataJob();
+            this.isTrimJobActive = true;
         }
 
         private void OnMessage(Subscribe<BarType> message)
