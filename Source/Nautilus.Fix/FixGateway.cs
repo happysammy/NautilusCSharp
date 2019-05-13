@@ -331,7 +331,7 @@ namespace Nautilus.Fix
         /// <param name="result">The result.</param>
         [SystemBoundary]
         public void OnInstrumentsUpdate(
-            IReadOnlyCollection<Instrument> instruments,
+            IEnumerable<Instrument> instruments,
             string responseId,
             string result)
         {

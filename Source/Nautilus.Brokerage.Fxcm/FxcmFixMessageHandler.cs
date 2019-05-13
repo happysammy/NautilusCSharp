@@ -310,7 +310,7 @@ namespace Nautilus.Brokerage.FXCM
                 var fxcmCode = message.GetField(9025);
                 var cancelRejectResponseTo = message.CxlRejResponseTo.ToString();
                 var cancelRejectReason = $"{message.CxlRejReason}, {message.Text.ToString().TrimEnd('.')}, FXCMCode={fxcmCode}";
-                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
+                var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.fixGateway?.OnOrderCancelReject(
                     "NULL",
@@ -346,7 +346,7 @@ namespace Nautilus.Brokerage.FXCM
                     Convert.ToDecimal(GetField(message, Tags.StopPx)),
                     Convert.ToDecimal(GetField(message, Tags.Price)));
                 var timeInForce = FixMessageHelper.GetTimeInForce(GetField(message, Tags.TimeInForce));
-                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(GetField(message, Tags.TransactTime));
+                var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
                 var orderQty = Convert.ToInt32(GetField(message, Tags.OrderQty));
 
                 var orderStatus = message.GetField(Tags.OrdStatus);
@@ -391,7 +391,7 @@ namespace Nautilus.Brokerage.FXCM
                 if (orderStatus == OrdStatus.NEW.ToString())
                 {
                     var expireTime = message.IsSetField(Tags.ExpireTime)
-                                       ? OptionVal<ZonedDateTime>.Some(FixMessageHelper.GetZonedDateTimeUtcFromExecutionReportString(message.GetField(Tags.ExpireTime)))
+                                       ? OptionVal<ZonedDateTime>.Some(FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime)))
                                        : OptionVal<ZonedDateTime>.None();
 
                     this.fixGateway?.OnOrderWorking(

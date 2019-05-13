@@ -63,7 +63,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetCancelRejectReasonString(string rejectCode)
         {
-            return CxlRejReasonStrings.ContainsKey(rejectCode) ? CxlRejReasonStrings[rejectCode] : CxlRejReasonStrings["99"];
+            return CxlRejReasonStrings.ContainsKey(rejectCode)
+                ? CxlRejReasonStrings[rejectCode]
+                : CxlRejReasonStrings["99"];
         }
 
         private static readonly Dictionary<string, string> CxlRejResponse = new Dictionary<string, string>
@@ -79,7 +81,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetCxlRejResponseTo(CxlRejResponseTo response)
         {
-            return CxlRejResponse.ContainsKey(response.ToString()) ? CxlRejResponse[response.ToString()] : string.Empty;
+            return CxlRejResponse.ContainsKey(response.ToString())
+                ? CxlRejResponse[response.ToString()]
+                : string.Empty;
         }
 
         private static readonly Dictionary<TimeInForce, QuickFix.Fields.TimeInForce> TimeInForceIndex = new Dictionary<TimeInForce, QuickFix.Fields.TimeInForce>
@@ -112,7 +116,9 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="TimeInForce"/>.</returns>
         public static QuickFix.Fields.TimeInForce? GetFixTimeInForce(TimeInForce timeInForce)
         {
-            return TimeInForceIndex.ContainsKey(timeInForce) ? TimeInForceIndex[timeInForce] : null;
+            return TimeInForceIndex.ContainsKey(timeInForce)
+                ? TimeInForceIndex[timeInForce]
+                : null;
         }
 
         /// <summary>
@@ -335,62 +341,33 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetFxcmOrderStatus(string orderStatus)
         {
-            if (orderStatus == "W")
+            switch (orderStatus)
             {
-                return "Waiting";
+                case "W":
+                    return "Waiting";
+                case "P":
+                    return "In_Process";
+                case "I":
+                    return "Dealer_Intervention";
+                case "Q":
+                    return "Requoted";
+                case "E":
+                    return "Executing";
+                case "C":
+                    return "Cancelled";
+                case "R":
+                    return "Rejected";
+                case "T":
+                    return "Expired";
+                case "F":
+                    return "Executed";
+                case "U":
+                    return "Pending_Calculated";
+                case "S":
+                    return "Pending_Cancel";
+                default:
+                    return "Unknown?";
             }
-
-            if (orderStatus == "P")
-            {
-                return "In_Process";
-            }
-
-            if (orderStatus == "I")
-            {
-                return "Dealer_Intervention";
-            }
-
-            if (orderStatus == "Q")
-            {
-                return "Requoted";
-            }
-
-            if (orderStatus == "E")
-            {
-                return "Executing";
-            }
-
-            if (orderStatus == "C")
-            {
-                return "Cancelled";
-            }
-
-            if (orderStatus == "R")
-            {
-                return "Rejected";
-            }
-
-            if (orderStatus == "T")
-            {
-                return "Expired";
-            }
-
-            if (orderStatus == "F")
-            {
-                return "Executed";
-            }
-
-            if (orderStatus == "U")
-            {
-                return "Pending_Calculated";
-            }
-
-            if (orderStatus == "S")
-            {
-                return "Pending_Cancel";
-            }
-
-            return "Unknown?";
         }
 
         /// <summary>
@@ -411,6 +388,22 @@ namespace Nautilus.Fix
             return limitPrice;
         }
 
+        /// <summary>
+        /// The get date time from market data string.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
+        public static ZonedDateTime ConvertMarketDataString(string dateTime) =>
+            MarketDataParsePattern.Parse(dateTime).Value;
+
+        /// <summary>
+        /// The get date time from execution string.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>The converted <see cref="ZonedDateTime"/>.</returns>
+        public static ZonedDateTime ConvertExecutionReportString(string dateTime) =>
+            ExecutionReportParsePattern.Parse(dateTime).Value;
+
         private static readonly ZonedDateTimePattern MarketDataParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
                 "yyyyMMddHH:mm:ss.fff",
@@ -420,21 +413,5 @@ namespace Nautilus.Fix
             ZonedDateTimePattern.CreateWithInvariantCulture(
                 "yyyyMMdd-HH:mm:ss.fff",
                 DateTimeZoneProviders.Tzdb);
-
-        /// <summary>
-        /// The get date time from market data string.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns>The <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime GetZonedDateTimeUtcFromMarketDataString(string dateTime) =>
-            MarketDataParsePattern.Parse(dateTime).Value;
-
-        /// <summary>
-        /// The get date time from execution string.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public static ZonedDateTime GetZonedDateTimeUtcFromExecutionReportString(string dateTime) =>
-            ExecutionReportParsePattern.Parse(dateTime).Value;
     }
 }

@@ -156,7 +156,7 @@ namespace Nautilus.Common.Interfaces
         /// <param name="responseId">The response identifier.</param>
         /// <param name="result">The result.</param>
         void OnInstrumentsUpdate(
-            IReadOnlyCollection<Instrument> instruments,
+            IEnumerable<Instrument> instruments,
             string responseId,
             string result);
 
