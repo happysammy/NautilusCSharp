@@ -18,14 +18,14 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command to shutdown the system.
     /// </summary>
     [Immutable]
-    public sealed class SystemShutdown : SystemCommand
+    public sealed class Stop : SystemCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SystemShutdown"/> class.
+        /// Initializes a new instance of the <see cref="Stop"/> class.
         /// </summary>
         /// <param name="messageId">The commands identifier (cannot be default).</param>
         /// <param name="messageTimestamp">The commands timestamp (cannot be default).</param>
-        public SystemShutdown(
+        public Stop(
             Guid messageId,
             ZonedDateTime messageTimestamp)
             : base(messageId, messageTimestamp)

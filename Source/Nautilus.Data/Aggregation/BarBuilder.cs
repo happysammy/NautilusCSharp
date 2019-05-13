@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Aggregators
+namespace Nautilus.Data.Aggregation
 {
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;

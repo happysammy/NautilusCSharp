@@ -15,7 +15,7 @@ namespace Nautilus.Redis
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Aggregation;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;

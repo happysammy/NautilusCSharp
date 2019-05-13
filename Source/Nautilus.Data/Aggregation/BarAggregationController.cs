@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Aggregators
+namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
@@ -76,7 +76,7 @@ namespace Nautilus.Data.Aggregators
         }
 
         /// <summary>
-        /// Start method called when the <see cref="SystemStart"/> message is received.
+        /// Start method called when the <see cref="Common.Messages.Commands.Start"/> message is received.
         /// </summary>
         public override void Start()
         {
@@ -334,7 +334,7 @@ namespace Nautilus.Data.Aggregators
         private void OnMessage(BarJob job)
         {
             var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
-            foreach (var aggregator in this.barAggregators)
+            foreach (var aggregator in this.barAggregators.Values)
             {
                 // TODO: Change this logic.
                 var closeBar1 = new CloseBar(
@@ -355,9 +355,9 @@ namespace Nautilus.Data.Aggregators
                     this.NewGuid(),
                     this.TimeNow());
 
-                aggregator.Value.Send(closeBar1);
-                aggregator.Value.Send(closeBar2);
-                aggregator.Value.Send(closeBar3);
+                aggregator.Send(closeBar1);
+                aggregator.Send(closeBar2);
+                aggregator.Send(closeBar3);
             }
         }
 

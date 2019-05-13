@@ -39,8 +39,8 @@ namespace Nautilus.Common.Componentry
             this.Log = container.LoggerFactory.Create(serviceContext, this.Name);
             this.StartTime = this.clock.TimeNow();
 
-            this.RegisterHandler<SystemStart>(this.OnMessage);
-            this.RegisterHandler<SystemShutdown>(this.OnMessage);
+            this.RegisterHandler<Start>(this.OnMessage);
+            this.RegisterHandler<Stop>(this.OnMessage);
         }
 
         /// <summary>
@@ -108,12 +108,12 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute<T>(action);
         }
 
-        private void OnMessage(SystemStart message)
+        private void OnMessage(Start message)
         {
             this.Start();
         }
 
-        private void OnMessage(SystemShutdown message)
+        private void OnMessage(Stop message)
         {
             this.Stop();
         }

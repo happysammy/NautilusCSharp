@@ -8,7 +8,7 @@
 
 #pragma warning disable 8618
 
-namespace Nautilus.Data.Aggregators
+namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;

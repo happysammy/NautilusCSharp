@@ -22,7 +22,7 @@ namespace NautilusData
     using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
-    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Aggregation;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;

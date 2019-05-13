@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Data.Aggregators;
+    using Nautilus.Data.Aggregation;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

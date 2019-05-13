@@ -76,8 +76,8 @@ namespace Nautilus.Execution
         /// </summary>
         public override void Stop()
         {
-            this.commandConsumer.Send(new SystemShutdown(this.NewGuid(), this.TimeNow()));
-            this.eventPublisher.Send(new SystemShutdown(this.NewGuid(), this.TimeNow()));
+            this.commandConsumer.Send(new Stop(this.NewGuid(), this.TimeNow()));
+            this.eventPublisher.Send(new Stop(this.NewGuid(), this.TimeNow()));
         }
 
         private void OnMessage(SubmitOrder message)
