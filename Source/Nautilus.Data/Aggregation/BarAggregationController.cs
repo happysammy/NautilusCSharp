@@ -29,8 +29,7 @@ namespace Nautilus.Data.Aggregation
     using Quartz;
 
     /// <summary>
-    /// This class is responsible for coordinating the creation of closed <see cref="Bar"/> data
-    /// events from ingested <see cref="Tick"/>s based on bar jobs created from subscriptions.
+    /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
     /// </summary>
     [PerformanceOptimized]
     public sealed class BarAggregationController : ComponentBusConnectedBase
@@ -193,11 +192,6 @@ namespace Nautilus.Data.Aggregation
                 (IsoDayOfWeek.Sunday, 21, 00));
         }
 
-        /// <summary>
-        /// Handles the message by creating a <see cref="BarAggregator"/> for the symbol if none
-        /// exists, then forwarding the message there. Bar jobs and then registered with the scheduler"/>.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         private void OnMessage(Subscribe<BarType> message)
         {
             this.Log.Debug($"Received {message}");
@@ -262,11 +256,6 @@ namespace Nautilus.Data.Aggregation
                       $"duration (count={this.triggerCounts[duration]}).");
         }
 
-        /// <summary>
-        /// Handles the message by cancelling the bar jobs with the scheduler, then
-        /// forwards the message to the <see cref="BarAggregator"/> for the relevant symbol.
-        /// </summary>
-        /// <param name="message">The received unsubscribe message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
         {
             var symbol = message.DataType.Symbol;
@@ -312,11 +301,6 @@ namespace Nautilus.Data.Aggregation
             }
         }
 
-        /// <summary>
-        /// Handles the message by forwarding the given <see cref="Tick"/> to the relevant
-        /// <see cref="BarAggregator"/>.
-        /// </summary>
-        /// <param name="tick">The received tick.</param>
         private void OnMessage(Tick tick)
         {
             if (this.barAggregators.ContainsKey(tick.Symbol))
@@ -330,11 +314,6 @@ namespace Nautilus.Data.Aggregation
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
-        /// <summary>
-        /// Handles the message by creating a <see cref="CloseBar"/> command message which is then
-        /// forwarded to the relevant <see cref="BarAggregator"/>.
-        /// </summary>
-        /// <param name="job">The received job.</param>
         private void OnMessage(BarJob job)
         {
             var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
@@ -365,11 +344,6 @@ namespace Nautilus.Data.Aggregation
             }
         }
 
-        /// <summary>
-        /// Handles the message by creating a <see cref="CloseBar"/> command message which is then
-        /// forwarded to the relevant <see cref="BarAggregator"/>.
-        /// </summary>
-        /// <param name="job">The received job.</param>
         private void OnMessage(MarketStatusJob job)
         {
             if (job.IsMarketOpen)
@@ -421,12 +395,9 @@ namespace Nautilus.Data.Aggregation
             }
         }
 
-        /// <summary>
-        /// Forwards the data delivery to the database task manager.
-        /// </summary>
-        /// <param name="data">The received bar data.</param>
         private void OnMessage((BarType, Bar) data)
         {
+            // Forward data to bar publisher.
             this.barPublisher.Send(data);
 
             var dataDelivery = new DataDelivery<(BarType, Bar)>(

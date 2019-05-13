@@ -242,11 +242,11 @@ namespace Nautilus.Core.Extensions
             Debug.NotDefault(duration, nameof(duration));
 
             var durationMs = duration.TotalMilliseconds;
-            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+            var unixMs = time.ToInstant().ToUnixTimeMilliseconds();
 
-            var flooredMilliseconds = Math.Floor(unixMilliseconds / durationMs) * durationMs;
+            var floored = Math.Floor(unixMs / durationMs) * durationMs;
 
-            return (int)(unixMilliseconds - flooredMilliseconds);
+            return (int)(unixMs - floored);
         }
 
         /// <summary>
@@ -261,11 +261,11 @@ namespace Nautilus.Core.Extensions
             Debug.NotDefault(duration, nameof(duration));
 
             var durationMs = duration.TotalMilliseconds;
-            var unixMilliseconds = time.ToInstant().ToUnixTimeMilliseconds();
+            var unixMs = time.ToInstant().ToUnixTimeMilliseconds();
 
-            var ceilingedMilliseconds = Math.Ceiling(unixMilliseconds / durationMs) * durationMs;
+            var ceiling = Math.Ceiling(unixMs / durationMs) * durationMs;
 
-            return (int)(ceilingedMilliseconds - unixMilliseconds);
+            return (int)(ceiling - unixMs);
         }
 
         /// <summary>

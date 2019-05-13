@@ -14,7 +14,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -22,19 +21,16 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
-    using NodaTime;
 
     /// <summary>
-    /// Ingests ticks and produces <see cref="Bar"/>s based on the given list of <see cref="BarSpecification"/>s.
+    /// Provides a bar aggregator for a certain symbol.
     /// </summary>
     [PerformanceOptimized]
     public sealed class BarAggregator : ComponentBase
     {
-        private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
-
         private readonly IEndpoint parent;
         private readonly Symbol symbol;
-        private readonly SpreadAnalyzer spreadAnalyzer;
+        private readonly List<BarSpecification> subscriptions;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
 
         private Tick? lastTick;
@@ -56,7 +52,7 @@ namespace Nautilus.Data.Aggregation
         {
             this.parent = parent;
             this.symbol = symbol;
-            this.spreadAnalyzer = new SpreadAnalyzer();
+            this.subscriptions = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
 
             this.isMarketOpen = isMarketOpen;
@@ -70,34 +66,11 @@ namespace Nautilus.Data.Aggregation
         }
 
         /// <summary>
-        /// On receiving the tick; updates all bar builders and records as last tick.
+        /// Gets the bar aggregators current subscriptions.
         /// </summary>
-        /// <param name="tick">The received tick.</param>
-        /// <exception cref="InvalidOperationException">The quote type is not recognized.</exception>
-        [PerformanceOptimized]
-        private void OnMessage(Tick tick)
-        {
-            Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
+        public IEnumerable<BarSpecification> Subscriptions => this.subscriptions;
 
-            foreach (var (barSpec, builder) in this.barBuilders)
-            {
-                var quote = this.GetUpdateQuote(barSpec.QuoteType, tick);
-
-                if (builder is null)
-                {
-                    this.barBuilders[barSpec] = new BarBuilder(quote);
-                }
-                else
-                {
-                    builder.Update(quote);
-                }
-            }
-
-            this.spreadAnalyzer.Update(tick);
-            this.lastTick = tick;
-        }
-
-        private Price GetUpdateQuote(QuoteType quoteType, Tick tick)
+        private static Price GetUpdateQuote(QuoteType quoteType, Tick tick)
         {
             switch (quoteType)
             {
@@ -117,11 +90,28 @@ namespace Nautilus.Data.Aggregation
             }
         }
 
-        /// <summary>
-        /// Handles the message by checking if the relevant bar builder is contained, it will close
-        /// the bar sending a closed bar event to the parent. A new bar builder is then created.
-        /// </summary>
-        /// <param name="message">The received message.</param>
+        [PerformanceOptimized]
+        private void OnMessage(Tick tick)
+        {
+            Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
+
+            foreach (var (barSpec, builder) in this.barBuilders)
+            {
+                var quote = GetUpdateQuote(barSpec.QuoteType, tick);
+
+                if (builder is null)
+                {
+                    this.barBuilders[barSpec] = new BarBuilder(quote);
+                }
+                else
+                {
+                    builder.Update(quote);
+                }
+            }
+
+            this.lastTick = tick;
+        }
+
         private void OnMessage(CloseBar message)
         {
             var barSpec = message.BarSpecification;
@@ -138,22 +128,15 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            if (barSpec.Duration == OneMinuteDuration)
-            {
-                this.spreadAnalyzer.OnBarUpdate(message.CloseTime);
-            }
-
-            var builder = this.barBuilders[barSpec];
-
-            // No ticks have been received for the builder.
-            if (this.lastTick is null || builder is null)
+            // No ticks have been received for the builders.
+            if (this.lastTick is null)
             {
                 return;
             }
 
             // Close the bar.
             var barType = new BarType(this.symbol, barSpec);
-            var bar = builder.Build(message.CloseTime);
+            var bar = this.barBuilders[barSpec].Build(message.CloseTime);
 
             this.parent.Send((barType, bar));
 
@@ -161,11 +144,6 @@ namespace Nautilus.Data.Aggregation
             this.barBuilders[barSpec] = new BarBuilder(bar.Close);
         }
 
-        /// <summary>
-        /// Handles the message by adding a new bar builder for each contained bar specifications.
-        /// </summary>
-        /// <param name="message">The received message.</param>
-        /// <exception cref="InvalidOperationException">If the resolution is for tick bars.</exception>
         private void OnMessage(Subscribe<BarType> message)
         {
             var barSpec = message.DataType.Specification;
@@ -176,28 +154,41 @@ namespace Nautilus.Data.Aggregation
                 throw new InvalidOperationException("Tick bars not yet supported.");
             }
 
-            if (!this.barBuilders.ContainsKey(barSpec))
+            if (this.subscriptions.Contains(barSpec))
             {
-                this.barBuilders.Add(barSpec, null);
-
-                this.Log.Debug($"Added {barSpec} bars.");
+                this.Log.Warning($"Already subscribed to {message.DataType} bars.");
+                return;
             }
+
+            this.subscriptions.Add(barSpec);
+
+            if (this.barBuilders.ContainsKey(barSpec))
+            {
+                return; // Already contains builder.
+            }
+
+            this.barBuilders.Add(barSpec, null);
+            this.Log.Debug($"Subscribed to {message.DataType} bars.");
         }
 
-        /// <summary>
-        /// Handles the message by removing all bar builders for the relevant bar specifications.
-        /// </summary>
-        /// <param name="message">The received message.</param>
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            var barType = message.DataType.Specification;
+            var barSpec = message.DataType.Specification;
 
-            if (this.barBuilders.ContainsKey(barType))
+            if (!this.subscriptions.Contains(barSpec))
             {
-                this.barBuilders.Remove(barType);
-
-                this.Log.Debug($"Removed {barType} bars.");
+                this.Log.Warning($"Already unsubscribed from {message.DataType} bars.");
+                return;
             }
+
+            this.subscriptions.Remove(barSpec);
+
+            if (this.barBuilders.ContainsKey(barSpec))
+            {
+                this.barBuilders.Remove(barSpec);
+            }
+
+            this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
         }
 
         private void OnMessage(MarketOpened message)
