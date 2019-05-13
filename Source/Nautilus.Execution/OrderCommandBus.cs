@@ -11,8 +11,8 @@ namespace Nautilus.Execution
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
     /// Provides a trade command bus for the execution service.

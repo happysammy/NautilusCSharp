@@ -18,6 +18,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;

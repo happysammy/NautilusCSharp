@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Commands
+namespace Nautilus.Execution.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
     /// <summary>

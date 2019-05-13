@@ -11,10 +11,10 @@ namespace Nautilus.MsgPack
     using System;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core;
     using Nautilus.Core.Extensions;
+    using Nautilus.Execution.Messages.Commands;
+    using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
     /// <summary>

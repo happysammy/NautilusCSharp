@@ -10,9 +10,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Execution.Messages.Commands;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;

@@ -13,13 +13,13 @@ namespace Nautilus.Execution
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
