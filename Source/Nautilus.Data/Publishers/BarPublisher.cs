@@ -11,7 +11,6 @@ namespace Nautilus.Data.Publishers
     using System;
     using System.Text;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
 
@@ -36,14 +35,14 @@ namespace Nautilus.Data.Publishers
                 port,
                 Guid.NewGuid())
         {
-            this.RegisterHandler<BarClosed>(this.OnMessage);
+            this.RegisterHandler<(BarType BarType, Bar Bar)>(this.OnMessage);
         }
 
-        private void OnMessage(BarClosed message)
+        private void OnMessage((BarType BarType, Bar Bar) data)
         {
             this.Publish(
-                Encoding.UTF8.GetBytes(message.BarType.ToString()),
-                Encoding.UTF8.GetBytes(message.Bar.ToString()));
+                Encoding.UTF8.GetBytes(data.BarType.ToString()),
+                Encoding.UTF8.GetBytes(data.Bar.ToString()));
         }
     }
 }

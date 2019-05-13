@@ -71,7 +71,7 @@ namespace NautilusExecutor
 
             var orderManager = new OrderManager(container, messagingAdapter);
 
-            var fixClient = GetFixClient(
+            var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
                 config.FixConfiguration,
@@ -98,7 +98,7 @@ namespace NautilusExecutor
                 config.NewOrdersPerSecond);
         }
 
-        private static IFixClient GetFixClient(
+        private static IFixClient CreateFixClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             FixConfiguration configuration,

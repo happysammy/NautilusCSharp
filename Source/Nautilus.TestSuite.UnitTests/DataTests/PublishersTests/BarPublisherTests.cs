@@ -8,12 +8,10 @@
 
 namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Publishers;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
@@ -61,17 +59,17 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             Task.Delay(100).Wait();
 
             var bar = StubBarData.Create();
-            var message = new BarClosed(barType, bar, Guid.NewGuid());
+            var data = (barType, bar);
 
             // Act
-            publisher.Endpoint.Send(message);
+            publisher.Endpoint.Send(data);
 
-            var receivedTopic = subscriber.ReceiveFrameBytes();
-            var receivedMessage = subscriber.ReceiveFrameBytes();
+            var topic = subscriber.ReceiveFrameBytes();
+            var message = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(receivedTopic));
-            Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(receivedMessage));
+            Assert.Equal(barType.ToString(), Encoding.UTF8.GetString(topic));
+            Assert.Equal(bar.ToString(), Encoding.UTF8.GetString(message));
 
             // Tear Down
             subscriber.Unsubscribe(barType.ToString());

@@ -8,8 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using System;
-    using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,11 +16,9 @@ namespace Nautilus.Data
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -48,9 +44,9 @@ namespace Nautilus.Data
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;
 
-            this.RegisterHandler<DataDelivery<BarClosed>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<(BarType, Bar)>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<IEnumerable<Instrument>>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -73,33 +69,35 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(DataStatusRequest<BarType> message, IEndpoint sender)
+        private void OnMessage(DataStatusRequest<BarType> message)
         {
             var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
+            var response = new DataStatusResponse<ZonedDateTime>(
+                lastBarTimestampQuery,
+                this.NewGuid(),
+                this.TimeNow());
 
-            sender.Send(new DataStatusResponse<ZonedDateTime>(lastBarTimestampQuery, Guid.NewGuid(), this.TimeNow()));
+            message.Sender.Send(response);
         }
 
-        private void OnMessage(QueryRequest<BarType> message, IEndpoint sender)
+        private void OnMessage(QueryRequest<BarType> message)
         {
             var barDataQuery = this.barRepository.Find(
                 message.DataType,
                 message.FromDateTime,
                 message.ToDateTime);
+            var response = new QueryResponse<BarDataFrame>(
+                barDataQuery,
+                this.NewGuid(),
+                this.TimeNow());
 
-            sender.Send(
-                new QueryResponse<BarDataFrame>(
-                    barDataQuery,
-                    this.NewGuid(),
-                    this.TimeNow()));
+            message.Sender.Send(response);
         }
 
-        private void OnMessage(DataDelivery<BarClosed> message)
+        private void OnMessage(DataDelivery<(BarType BarType, Bar Bar)> message)
         {
             this.barRepository
-                .Add(
-                    message.Data.BarType,
-                    message.Data.Bar)
+                .Add(message.Data.BarType, message.Data.Bar)
                 .OnSuccess(result => this.Log.Verbose(result.Message))
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
@@ -108,36 +106,16 @@ namespace Nautilus.Data
         {
             this.barRepository
                 .Add(message.Data)
-                .OnSuccess(result => this.SendLastBarTimestamp(message.Data.BarType))
+                .OnSuccess(result => this.Log.Debug(result.Message))
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 
-        private void SendLastBarTimestamp(BarType barType)
+        private void OnMessage(DataDelivery<Instrument> message)
         {
-            this.barRepository
-                .LastBarTimestamp(barType)
-                .OnSuccess(query =>
-                {
-                    if (query != default)
-                    {
-// this.Sender.Tell(new DataPersisted<BarType>(
-//                            barType,
-//                            query,
-//                            this.NewGuid(),
-//                            this.TimeNow()));
-                    }
-                });
-        }
-
-        private void OnMessage(DataDelivery<IEnumerable<Instrument>> message)
-        {
-            foreach (var instrument in message.Data)
-            {
-                this.instrumentRepository
-                    .Add(instrument, this.TimeNow())
-                    .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Error(result.Message));
-            }
+            this.instrumentRepository
+                .Add(message.Data, this.TimeNow())
+                .OnSuccess(result => this.Log.Information(result.Message))
+                .OnFailure(result => this.Log.Error(result.Message));
         }
     }
 }

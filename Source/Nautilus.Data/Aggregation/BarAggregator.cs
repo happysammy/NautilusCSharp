@@ -14,13 +14,14 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -31,6 +32,7 @@ namespace Nautilus.Data.Aggregation
     {
         private static readonly Duration OneMinuteDuration = Duration.FromMinutes(1);
 
+        private readonly IEndpoint parent;
         private readonly Symbol symbol;
         private readonly SpreadAnalyzer spreadAnalyzer;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
@@ -42,14 +44,17 @@ namespace Nautilus.Data.Aggregation
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
+        /// <param name="parent">The parent endpoint.</param>
         /// <param name="symbol">The symbol.</param>
         /// <param name="isMarketOpen">The is market open flag.</param>
         public BarAggregator(
             IComponentryContainer container,
+            IEndpoint parent,
             Symbol symbol,
             bool isMarketOpen)
             : base(NautilusService.Data, container)
         {
+            this.parent = parent;
             this.symbol = symbol;
             this.spreadAnalyzer = new SpreadAnalyzer();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
@@ -146,18 +151,13 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            // Close the bar and send to parent.
+            // Close the bar.
             var barType = new BarType(this.symbol, barSpec);
             var bar = builder.Build(message.CloseTime);
 
-            var barClosed = new BarClosed(
-                barType,
-                bar,
-                this.NewGuid());
+            this.parent.Send((barType, bar));
 
-            // Context.Parent.Tell(barClosed);
-
-            // Create and initialize new builder.
+            // Refresh bar builder.
             this.barBuilders[barSpec] = new BarBuilder(bar.Close);
         }
 

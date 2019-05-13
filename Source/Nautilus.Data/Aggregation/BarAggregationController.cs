@@ -21,7 +21,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -37,6 +36,7 @@ namespace Nautilus.Data.Aggregation
     public sealed class BarAggregationController : ComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
+        private readonly IEndpoint barPublisher;
         private readonly Dictionary<Symbol, IEndpoint> barAggregators;
         private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
         private readonly Dictionary<Duration, List<BarSpecification>> barTriggers;
@@ -50,15 +50,18 @@ namespace Nautilus.Data.Aggregation
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="barPublisher">The bar publisher endpoint.</param>
         public BarAggregationController(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            IEndpoint barPublisher)
             : base(
             NautilusService.Data,
             container,
             messagingAdapter)
         {
             this.storedContainer = container;
+            this.barPublisher = barPublisher;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();
             this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
             this.barTriggers = new Dictionary<Duration, List<BarSpecification>>();
@@ -72,7 +75,7 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<BarJob>(this.OnMessage);
             this.RegisterHandler<MarketStatusJob>(this.OnMessage);
-            this.RegisterHandler<BarClosed>(this.OnMessage);
+            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
         }
 
         /// <summary>
@@ -206,6 +209,7 @@ namespace Nautilus.Data.Aggregation
             {
                 var barAggregator = new BarAggregator(
                         this.storedContainer,
+                        this.Endpoint,
                         symbol,
                         this.isMarketOpen).Endpoint;
 
@@ -418,18 +422,19 @@ namespace Nautilus.Data.Aggregation
         }
 
         /// <summary>
-        /// Handles the message by creating a new event message which is then forwarded to the
-        /// list of held bar data event receivers.
+        /// Forwards the data delivery to the database task manager.
         /// </summary>
-        /// <param name="message">The received message.</param>
-        private void OnMessage(BarClosed message)
+        /// <param name="data">The received bar data.</param>
+        private void OnMessage((BarType, Bar) data)
         {
-            var barClosed = new DataDelivery<BarClosed>(
-                message,
+            this.barPublisher.Send(data);
+
+            var dataDelivery = new DataDelivery<(BarType, Bar)>(
+                data,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(DataServiceAddress.DataCollectionManager, barClosed);
+            this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
         }
     }
 }

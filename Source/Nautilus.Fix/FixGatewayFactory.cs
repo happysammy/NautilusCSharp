@@ -16,12 +16,12 @@ namespace Nautilus.Fix
     public static class FixGatewayFactory
     {
         /// <summary>
-        /// Creates and returns a new execution gateway.
+        /// Creates and returns a new FIX gateway.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
-        /// <returns>The FIX gateway.</returns>
+        /// <returns>The created FIX gateway.</returns>
         public static IFixGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,

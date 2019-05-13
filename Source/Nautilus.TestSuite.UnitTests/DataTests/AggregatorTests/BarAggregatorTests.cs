@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Messages.Commands;
@@ -25,6 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
+        private readonly MockMessagingAgent receiver;
         private readonly Symbol symbol;
         private readonly BarAggregator barAggregator;
 
@@ -37,8 +39,13 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var setupFactory = new StubComponentryContainerFactory();
             var container = setupFactory.Create();
             this.logger = setupFactory.LoggingAdapter;
+            this.receiver = new MockMessagingAgent();
 
-            this.barAggregator = new BarAggregator(container, this.symbol, false);
+            this.barAggregator = new BarAggregator(
+                container,
+                this.receiver.Endpoint,
+                this.symbol,
+                false);
         }
 
         [Fact]
@@ -53,8 +60,10 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             // Act
             this.barAggregator.Endpoint.Send(closeBarMessage);
+            Task.Delay(100).Wait();
 
             // Assert
+            // Assert.Single(this.receiver.Messages);
         }
 
         [Fact]

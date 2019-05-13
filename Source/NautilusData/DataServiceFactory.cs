@@ -84,9 +84,12 @@ namespace NautilusData
                 config.BarSpecifications,
                 config.BarRollingWindowDays);
 
-            var barAggregationController = new BarAggregationController(container, messagingAdapter);
+            var barAggregationController = new BarAggregationController(
+                container,
+                messagingAdapter,
+                barPublisher.Endpoint);
 
-            var fixClient = GetFixClient(
+            var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
                 config.FixConfiguration,
@@ -115,7 +118,7 @@ namespace NautilusData
                 config.FixConfiguration.UpdateInstruments);
         }
 
-        private static IFixClient GetFixClient(
+        private static IFixClient CreateFixClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             FixConfiguration configuration,

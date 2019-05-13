@@ -33,6 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Messages\Events" />
       <Folder Include="Providers" />
     </ItemGroup>
 

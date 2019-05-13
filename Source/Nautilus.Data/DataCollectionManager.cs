@@ -19,7 +19,6 @@ namespace Nautilus.Data
     using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Documents;
-    using Nautilus.Data.Messages.Events;
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.ValueObjects;
@@ -31,7 +30,6 @@ namespace Nautilus.Data
     /// </summary>
     public class DataCollectionManager : ComponentBusConnectedBase
     {
-        private readonly IEndpoint barPublisher;
         private readonly IEnumerable<BarSpecification> barSpecifications;
         private readonly int barRollingWindowDays;
 
@@ -57,13 +55,11 @@ namespace Nautilus.Data
         {
             Precondition.PositiveInt32(barRollingWindowDays, nameof(barRollingWindowDays));
 
-            this.barPublisher = barPublisher;
             this.barSpecifications = barSpecifications;
             this.barRollingWindowDays = barRollingWindowDays;
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<CollectData<BarType>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<BarClosed>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
             this.RegisterHandler<DataPersisted<BarType>>(this.OnMessage);
             this.RegisterHandler<DataCollected<BarType>>(this.OnMessage);
@@ -86,12 +82,6 @@ namespace Nautilus.Data
         private void OnMessage(CollectData<BarType> message)
         {
             // Do nothing.
-        }
-
-        private void OnMessage(DataDelivery<BarClosed> message)
-        {
-            this.barPublisher.Send(message.Data);
-            this.Send(DataServiceAddress.DatabaseTaskManager, message);
         }
 
         private void OnMessage(DataDelivery<BarDataFrame> message)

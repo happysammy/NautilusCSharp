@@ -11,6 +11,7 @@ namespace Nautilus.Data.Messages.Commands
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -24,20 +25,28 @@ namespace Nautilus.Data.Messages.Commands
         /// Initializes a new instance of the <see cref="DataStatusRequest{T}"/> class.
         /// </summary>
         /// <param name="dataType">The message symbol bar specification.</param>
+        /// <param name="sender">The message sender.</param>
         /// <param name="identifier">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public DataStatusRequest(
             T dataType,
+            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
             this.DataType = dataType;
+            this.Sender = sender;
         }
 
         /// <summary>
-        /// Gets the request messages data type..
+        /// Gets the status requests data type.
         /// </summary>
         public T DataType { get; }
+
+        /// <summary>
+        /// Gets the status requests requester.
+        /// </summary>
+        public IEndpoint Sender { get; }
     }
 }

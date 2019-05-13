@@ -12,6 +12,7 @@ namespace Nautilus.Data.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -27,12 +28,14 @@ namespace Nautilus.Data.Messages.Commands
         /// <param name="dataType">The query data type.</param>
         /// <param name="fromDateTime">The query from datetime.</param>
         /// <param name="toDateTime">The query to datetime.</param>
+        /// <param name="sender">The query requester.</param>
         /// <param name="identifier">The query identifier.</param>
         /// <param name="timestamp">The query timestamp.</param>
         public QueryRequest(
             T dataType,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime,
+            IEndpoint sender,
             Guid identifier,
             ZonedDateTime timestamp)
         : base(identifier, timestamp)
@@ -43,21 +46,27 @@ namespace Nautilus.Data.Messages.Commands
             this.DataType = dataType;
             this.FromDateTime = fromDateTime;
             this.ToDateTime = toDateTime;
+            this.Sender = sender;
         }
 
         /// <summary>
-        /// Gets the query messages data type.
+        /// Gets the query requests data type.
         /// </summary>
         public T DataType { get; }
 
         /// <summary>
-        /// Gets the query messages from date time.
+        /// Gets the query requests from date time.
         /// </summary>
         public ZonedDateTime FromDateTime { get; }
 
         /// <summary>
-        /// Gets the query messages to date time.
+        /// Gets the query requests to date time.
         /// </summary>
         public ZonedDateTime ToDateTime { get; }
+
+        /// <summary>
+        /// Gets the query requests sender.
+        /// </summary>
+        public IEndpoint Sender { get; }
     }
 }

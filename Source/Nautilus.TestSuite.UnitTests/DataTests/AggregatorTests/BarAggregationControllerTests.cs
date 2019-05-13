@@ -24,6 +24,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter logger;
+        private readonly MockMessagingAgent receiver;
         private readonly BarAggregationController controller;
 
         public BarAggregationControllerTests(ITestOutputHelper output)
@@ -33,12 +34,14 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var setupFactory = new StubComponentryContainerFactory();
             this.logger = setupFactory.LoggingAdapter;
+            this.receiver = new MockMessagingAgent();
             var container = setupFactory.Create();
             var messagingAdapter = new MockMessagingServiceFactory(container).MessagingAdapter;
 
             this.controller = new BarAggregationController(
                 container,
-                messagingAdapter);
+                messagingAdapter,
+                this.receiver.Endpoint);
         }
 
         [Fact]
