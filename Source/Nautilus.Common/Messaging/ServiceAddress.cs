@@ -20,9 +20,14 @@ namespace Nautilus.Common.Messaging
         private const string Service = nameof(Service);
 
         /// <summary>
-        /// Gets the <see cref="Scheduler"/> messaging address.
+        /// Gets the <see cref="DeadLetters"/> messaging address.
         /// </summary>
-        public static Address Scheduler { get; } = new Address(nameof(Scheduler));
+        public static Address DeadLetters { get; } = new Address(nameof(DeadLetters));
+
+        /// <summary>
+        /// Gets the <see cref="Scheduling"/> messaging address.
+        /// </summary>
+        public static Address Scheduling { get; } = new Address(nameof(Scheduling));
 
         /// <summary>
         /// Gets the alpha service messaging address.

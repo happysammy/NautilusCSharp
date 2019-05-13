@@ -185,7 +185,7 @@ namespace Nautilus.Redis
 //                new Symbol(symbolCode, exchange.ToEnum<Venue>()),
 //                new InstrumentId(deserializedSymbol["Value"]),
 //                new BrokerSymbol(brokerSymbol),
-//                deserialized["QuoteCurrency"].ToEnum<CurrencyCode>(),
+//                deserialized["QuoteCurrency"].ToEnum<Currency>(),
 //                deserialized["SecurityType"].ToEnum<SecurityType>(),
 //                Convert.ToInt32(deserialized["TickDecimals"]),
 //                Convert.ToDecimal(deserialized["TickSize"]),
@@ -220,7 +220,7 @@ namespace Nautilus.Redis
         {
             return this.cache.ToDictionary(
                 symbol => symbol.Key.Code,
-                symbol => symbol.Value.TickDecimals);
+                symbol => symbol.Value.TickPrecision);
         }
 
         private CommandResult Write(Instrument instrument)

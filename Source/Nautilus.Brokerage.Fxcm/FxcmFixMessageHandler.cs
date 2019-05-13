@@ -109,7 +109,7 @@ namespace Nautilus.Brokerage.FXCM
                     var quoteCurrency = group.GetField(15).ToEnum<Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
                     var roundLot = Convert.ToInt32(group.GetField(561));
-                    var tickDecimals = Convert.ToInt32(group.GetField(9001));
+                    var tickPrecision = Convert.ToInt32(group.GetField(9001));
 
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
@@ -130,9 +130,6 @@ namespace Nautilus.Brokerage.FXCM
                         continue;
                     }
 
-                    var targetDirectSpread = targetDirectSpreadQuery.Value;
-
-                    var contractSize = 1; // always 1 for FXCM
                     var minStopDistanceEntry = Convert.ToInt32(group.GetField(9092));
                     var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
                     var minStopDistance = Convert.ToInt32(group.GetField(9090));
@@ -148,12 +145,11 @@ namespace Nautilus.Brokerage.FXCM
                         brokerSymbol,
                         quoteCurrency,
                         securityType,
-                        tickDecimals,
+                        tickPrecision,
                         tickSize,
                         tickValue,
-                        targetDirectSpread,
                         roundLot,
-                        contractSize,
+                        1,  // Always 1 for FXCM
                         minStopDistanceEntry,
                         minLimitDistanceEntry,
                         minStopDistance,

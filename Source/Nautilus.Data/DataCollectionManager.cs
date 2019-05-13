@@ -142,7 +142,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduling, createJob);
             this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
     }

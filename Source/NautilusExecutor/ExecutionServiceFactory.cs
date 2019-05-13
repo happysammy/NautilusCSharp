@@ -84,7 +84,7 @@ namespace NautilusExecutor
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Scheduler, scheduler.Endpoint },
+                { ServiceAddress.Scheduling, scheduler.Endpoint },
                 { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
             }.ToImmutableDictionary();

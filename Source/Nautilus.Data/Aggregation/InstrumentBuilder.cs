@@ -34,11 +34,10 @@ namespace Nautilus.Data.Aggregation
             this.BrokerSymbol = startingInstrument.BrokerSymbol;
             this.QuoteCurrency = startingInstrument.QuoteCurrency;
             this.SecurityType = startingInstrument.SecurityType;
-            this.TickDecimals = startingInstrument.TickDecimals;
+            this.TickPrecision = startingInstrument.TickPrecision;
             this.TickSize = startingInstrument.TickSize;
             this.TickValue = startingInstrument.TickValue;
             this.RoundLotSize = startingInstrument.RoundLotSize;
-            this.TargetDirectSpread = startingInstrument.TargetDirectSpread;
             this.ContractSize = startingInstrument.ContractSize;
             this.MinStopDistanceEntry = startingInstrument.MinStopDistanceEntry;
             this.MinLimitDistanceEntry = startingInstrument.MinLimitDistanceEntry;
@@ -64,13 +63,11 @@ namespace Nautilus.Data.Aggregation
 
         private SecurityType SecurityType { get; }
 
-        private int TickDecimals { get; }
+        private int TickPrecision { get; }
 
         private decimal TickSize { get; }
 
         private decimal TickValue { get; set; }
-
-        private decimal TargetDirectSpread { get; set; }
 
         private int RoundLotSize { get; }
 
@@ -110,16 +107,6 @@ namespace Nautilus.Data.Aggregation
                     updateInstrument.TickValue.ToString(CultureInfo.InvariantCulture));
 
                 this.TickValue = updateInstrument.TickValue;
-            }
-
-            if (this.TargetDirectSpread != updateInstrument.TargetDirectSpread)
-            {
-                this.AddChange(
-                    nameof(this.TargetDirectSpread),
-                    this.TargetDirectSpread.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.TargetDirectSpread.ToString(CultureInfo.InvariantCulture));
-
-                this.TargetDirectSpread = updateInstrument.TargetDirectSpread;
             }
 
             if (this.ContractSize != updateInstrument.ContractSize)
@@ -239,10 +226,9 @@ namespace Nautilus.Data.Aggregation
                 this.BrokerSymbol,
                 this.QuoteCurrency,
                 this.SecurityType,
-                this.TickDecimals,
+                this.TickPrecision,
                 this.TickSize,
                 this.TickValue,
-                this.TargetDirectSpread,
                 this.RoundLotSize,
                 this.ContractSize,
                 this.MinStopDistanceEntry,

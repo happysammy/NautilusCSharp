@@ -152,7 +152,7 @@ namespace Nautilus.Data.Aggregation
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduling, createJob);
             this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
         }
 
@@ -178,7 +178,7 @@ namespace Nautilus.Data.Aggregation
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduling, createJob);
             this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
@@ -242,7 +242,7 @@ namespace Nautilus.Data.Aggregation
                 this.barJobs.Add(
                     barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
 
-                this.Send(ServiceAddress.Scheduler, createJob);
+                this.Send(ServiceAddress.Scheduling, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -297,7 +297,7 @@ namespace Nautilus.Data.Aggregation
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(ServiceAddress.Scheduler, removeJob);
+                this.Send(ServiceAddress.Scheduling, removeJob);
             }
         }
 
@@ -359,7 +359,7 @@ namespace Nautilus.Data.Aggregation
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(ServiceAddress.Scheduler, resumeJob);
+                    this.Send(ServiceAddress.Scheduling, resumeJob);
                 }
 
                 // Tell all bar aggregators the market is now open.
@@ -383,7 +383,7 @@ namespace Nautilus.Data.Aggregation
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(ServiceAddress.Scheduler, pause);
+                    this.Send(ServiceAddress.Scheduling, pause);
                 }
 
                 // Tell all aggregators the market is now closed.

@@ -30,10 +30,9 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
-        /// <param name="tickDecimals">The instruments tick decimal precision.</param>
+        /// <param name="tickPrecision">The instruments tick decimal precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="tickValue">The instruments tick value.</param>
-        /// <param name="targetDirectSpread">The instruments target direct spread.</param>
         /// <param name="roundLotSize">The instruments rounded lot size.</param>
         /// <param name="contractSize">The instruments contract size.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
@@ -52,10 +51,9 @@ namespace Nautilus.DomainModel.Entities
             BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
             SecurityType securityType,
-            int tickDecimals,
+            int tickPrecision,
             decimal tickSize,
             decimal tickValue,
-            decimal targetDirectSpread,
             int roundLotSize,
             int contractSize,
             int minStopDistanceEntry,
@@ -71,10 +69,9 @@ namespace Nautilus.DomainModel.Entities
             : base(instrumentId, timestamp)
         {
             // Keep validation logic here.
-            Precondition.NotNegativeInt32(tickDecimals, nameof(tickDecimals));
+            Precondition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
             Precondition.PositiveDecimal(tickSize, nameof(tickSize));
             Precondition.PositiveDecimal(tickValue, nameof(tickValue));
-            Precondition.NotNegativeDecimal(targetDirectSpread, nameof(targetDirectSpread));
             Precondition.PositiveInt32(roundLotSize, nameof(roundLotSize));
             Precondition.PositiveInt32(contractSize, nameof(contractSize));
             Precondition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
@@ -90,10 +87,9 @@ namespace Nautilus.DomainModel.Entities
             this.BrokerSymbol = brokerSymbol;
             this.QuoteCurrency = quoteCurrency;
             this.SecurityType = securityType;
-            this.TickDecimals = tickDecimals;
+            this.TickPrecision = tickPrecision;
             this.TickSize = tickSize;
             this.TickValue = tickValue;
-            this.TargetDirectSpread = targetDirectSpread;
             this.RoundLotSize = roundLotSize;
             this.ContractSize = contractSize;
             this.MinStopDistanceEntry = minStopDistanceEntry;
@@ -128,9 +124,9 @@ namespace Nautilus.DomainModel.Entities
         public SecurityType SecurityType { get; }
 
         /// <summary>
-        /// Gets the instruments tick decimals.
+        /// Gets the instruments tick decimal precision.
         /// </summary>
-        public int TickDecimals { get; }
+        public int TickPrecision { get; }
 
         /// <summary>
         /// Gets the instruments tick size.
@@ -141,11 +137,6 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the instruments tick value.
         /// </summary>
         public decimal TickValue { get; }
-
-        /// <summary>
-        /// Gets the instruments target direct spread.
-        /// </summary>
-        public decimal TargetDirectSpread { get; }
 
         /// <summary>
         /// Gets the instruments rounded lot size.

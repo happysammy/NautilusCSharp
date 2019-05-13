@@ -119,7 +119,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduling, createJob);
             this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
         }
 
@@ -145,7 +145,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduler, createJob);
+            this.Send(ServiceAddress.Scheduling, createJob);
             this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
         }
 

@@ -75,7 +75,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 2,
                 0.01m,
                 10m,
-                0,
                 1,
                 1,
                 1,
