@@ -80,10 +80,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 1,
                 1,
                 1,
-                1,
                 10,
                 10000,
-                90,
                 45,
                 45,
                 StubZonedDateTime.UnixEpoch());
@@ -94,7 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                .Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(10, instrumentBuilder.Changes.Count);
+            Assert.Equal(9, instrumentBuilder.Changes.Count);
 
             foreach (var change in instrumentBuilder.Changes)
             {

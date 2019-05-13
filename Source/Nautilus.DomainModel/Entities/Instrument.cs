@@ -34,14 +34,12 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="tickSize">The instruments tick size.</param>
         /// <param name="tickValue">The instruments tick value.</param>
         /// <param name="roundLotSize">The instruments rounded lot size.</param>
-        /// <param name="contractSize">The instruments contract size.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
         /// <param name="minLimitDistanceEntry">The instruments minimum limit distance for entry.</param>
         /// <param name="minStopDistance">The instruments minimum stop distance.</param>
         /// <param name="minLimitDistance">The instruments minimum limit distance.</param>
         /// <param name="minTradeSize">The instruments minimum trade size.</param>
         /// <param name="maxTradeSize">The instruments maximum trade size.</param>
-        /// <param name="marginRequirement">The instruments margin requirement.</param>
         /// <param name="rolloverInterestBuy">The instruments rollover interest for long positions.</param>
         /// <param name="rolloverInterestSell">The instruments rollover interest for short positions.</param>
         /// <param name="timestamp"> The instruments initialization timestamp.</param>
@@ -55,14 +53,12 @@ namespace Nautilus.DomainModel.Entities
             decimal tickSize,
             decimal tickValue,
             int roundLotSize,
-            int contractSize,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
             int minStopDistance,
             int minLimitDistance,
             int minTradeSize,
             int maxTradeSize,
-            decimal marginRequirement,
             decimal rolloverInterestBuy,
             decimal rolloverInterestSell,
             ZonedDateTime timestamp)
@@ -73,14 +69,12 @@ namespace Nautilus.DomainModel.Entities
             Precondition.PositiveDecimal(tickSize, nameof(tickSize));
             Precondition.PositiveDecimal(tickValue, nameof(tickValue));
             Precondition.PositiveInt32(roundLotSize, nameof(roundLotSize));
-            Precondition.PositiveInt32(contractSize, nameof(contractSize));
             Precondition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
             Precondition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
             Precondition.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
             Precondition.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
             Precondition.PositiveInt32(minTradeSize, nameof(minTradeSize));
             Precondition.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
-            Precondition.NotNegativeDecimal(marginRequirement, nameof(marginRequirement));
             Precondition.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
@@ -91,14 +85,12 @@ namespace Nautilus.DomainModel.Entities
             this.TickSize = tickSize;
             this.TickValue = tickValue;
             this.RoundLotSize = roundLotSize;
-            this.ContractSize = contractSize;
             this.MinStopDistanceEntry = minStopDistanceEntry;
             this.MinLimitDistanceEntry = minLimitDistanceEntry;
             this.MinStopDistance = minStopDistance;
             this.MinLimitDistance = minLimitDistance;
             this.MinTradeSize = minTradeSize;
             this.MaxTradeSize = maxTradeSize;
-            this.MarginRequirement = marginRequirement;
             this.RolloverInterestBuy = rolloverInterestBuy;
             this.RolloverInterestSell = rolloverInterestSell;
         }
@@ -144,11 +136,6 @@ namespace Nautilus.DomainModel.Entities
         public int RoundLotSize { get; }
 
         /// <summary>
-        /// Gets the instruments contract size.
-        /// </summary>
-        public int ContractSize { get; }
-
-        /// <summary>
         /// Gets the instruments minimum stop distance for entry.
         /// </summary>
         public int MinStopDistanceEntry { get; }
@@ -177,11 +164,6 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the instruments maximum trade size.
         /// </summary>
         public int MaxTradeSize { get; }
-
-        /// <summary>
-        /// Gets the instruments margin requirement.
-        /// </summary>
-        public decimal MarginRequirement { get; }
 
         /// <summary>
         /// Gets the instruments rollover interest for long positions.

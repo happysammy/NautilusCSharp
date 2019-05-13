@@ -147,14 +147,12 @@ namespace Nautilus.Brokerage.Dukascopy
                         tickSize,
                         tickValue,
                         roundLot,
-                        1, // always 1 for FXCM
                         minStopDistanceEntry,
                         minLimitDistanceEntry,
                         minStopDistance,
                         minLimitDistance,
                         minTradeSize,
                         maxTradeSize,
-                        this.instrumentData.GetMarginRequirement(brokerSymbolString).Value,
                         rolloverInterestBuy,
                         rolloverInterestSell,
                         this.TimeNow());

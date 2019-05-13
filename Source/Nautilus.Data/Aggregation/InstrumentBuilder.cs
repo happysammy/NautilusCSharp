@@ -38,14 +38,12 @@ namespace Nautilus.Data.Aggregation
             this.TickSize = startingInstrument.TickSize;
             this.TickValue = startingInstrument.TickValue;
             this.RoundLotSize = startingInstrument.RoundLotSize;
-            this.ContractSize = startingInstrument.ContractSize;
             this.MinStopDistanceEntry = startingInstrument.MinStopDistanceEntry;
             this.MinLimitDistanceEntry = startingInstrument.MinLimitDistanceEntry;
             this.MinStopDistance = startingInstrument.MinStopDistance;
             this.MinLimitDistance = startingInstrument.MinLimitDistance;
             this.MinTradeSize = startingInstrument.MinTradeSize;
             this.MaxTradeSize = startingInstrument.MaxTradeSize;
-            this.MarginRequirement = startingInstrument.MarginRequirement;
             this.RolloverInterestBuy = startingInstrument.RolloverInterestBuy;
             this.RolloverInterestSell = startingInstrument.RolloverInterestSell;
         }
@@ -71,8 +69,6 @@ namespace Nautilus.Data.Aggregation
 
         private int RoundLotSize { get; }
 
-        private int ContractSize { get; set; }
-
         private int MinStopDistanceEntry { get; set; }
 
         private int MinLimitDistanceEntry { get; set; }
@@ -84,8 +80,6 @@ namespace Nautilus.Data.Aggregation
         private int MinTradeSize { get; set; }
 
         private int MaxTradeSize { get; set; }
-
-        private decimal MarginRequirement { get; set; }
 
         private decimal RolloverInterestBuy { get; set; }
 
@@ -107,16 +101,6 @@ namespace Nautilus.Data.Aggregation
                     updateInstrument.TickValue.ToString(CultureInfo.InvariantCulture));
 
                 this.TickValue = updateInstrument.TickValue;
-            }
-
-            if (this.ContractSize != updateInstrument.ContractSize)
-            {
-                this.AddChange(
-                    nameof(this.ContractSize),
-                    this.ContractSize.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.ContractSize.ToString(CultureInfo.InvariantCulture));
-
-                this.ContractSize = updateInstrument.ContractSize;
             }
 
             if (this.MinStopDistanceEntry != updateInstrument.MinStopDistanceEntry)
@@ -179,16 +163,6 @@ namespace Nautilus.Data.Aggregation
                 this.MaxTradeSize = updateInstrument.MaxTradeSize;
             }
 
-            if (this.MarginRequirement != updateInstrument.MarginRequirement)
-            {
-                this.AddChange(
-                    nameof(this.MarginRequirement),
-                    this.MarginRequirement.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.MarginRequirement.ToString(CultureInfo.InvariantCulture));
-
-                this.MarginRequirement = updateInstrument.MarginRequirement;
-            }
-
             if (this.RolloverInterestBuy != updateInstrument.RolloverInterestBuy)
             {
                 this.AddChange(
@@ -230,14 +204,12 @@ namespace Nautilus.Data.Aggregation
                 this.TickSize,
                 this.TickValue,
                 this.RoundLotSize,
-                this.ContractSize,
                 this.MinStopDistanceEntry,
                 this.MinLimitDistanceEntry,
                 this.MinStopDistance,
                 this.MinLimitDistance,
                 this.MinTradeSize,
                 this.MaxTradeSize,
-                this.MarginRequirement,
                 this.RolloverInterestBuy,
                 this.RolloverInterestSell,
                 timestamp);

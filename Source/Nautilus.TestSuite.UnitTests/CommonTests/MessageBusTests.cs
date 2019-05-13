@@ -43,6 +43,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
+                { ServiceAddress.DeadLetters, messageStorer.Endpoint },
                 { ServiceAddress.Alpha, messageStorer.Endpoint },
                 { ServiceAddress.Data, messageStorer.Endpoint },
                 { ServiceAddress.Execution, messageStorer.Endpoint },
