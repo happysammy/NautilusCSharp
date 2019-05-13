@@ -30,7 +30,7 @@ namespace Nautilus.Data
     [PerformanceOptimized]
     public sealed class DataService : ComponentBusConnectedBase
     {
-        private readonly ImmutableDictionary<Address, Endpoint> addresses;
+        private readonly ImmutableDictionary<Address, IEndpoint> addresses;
         private readonly IFixGateway fixGateway;
         private readonly bool updateInstruments;
 
