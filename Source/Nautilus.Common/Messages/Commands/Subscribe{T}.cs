@@ -25,8 +25,8 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.
         /// </summary>
         /// <param name="dataType">The message symbol.</param>
-        /// <param name="identifier">The message identifier (cannot be default).</param>
-        /// <param name="timestamp">The message timestamp (cannot be default).</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public Subscribe(
             T dataType,
             Guid identifier,

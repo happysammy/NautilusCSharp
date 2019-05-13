@@ -19,7 +19,6 @@ namespace Nautilus.Common.Componentry
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
         private readonly IMessagingAdapter messagingAdapter;
-        private readonly Address address;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
@@ -34,7 +33,6 @@ namespace Nautilus.Common.Componentry
             : base(serviceContext, container)
         {
             this.messagingAdapter = messagingAdapter;
-            this.address = new Address(this.GetType().Name);
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace Nautilus.Common.Componentry
         protected void Send<T>(Address receiver, T message)
             where T : Message
         {
-            this.messagingAdapter.Send(receiver, message, this.address);
+            this.messagingAdapter.Send(receiver, message, this.Address);
         }
     }
 }

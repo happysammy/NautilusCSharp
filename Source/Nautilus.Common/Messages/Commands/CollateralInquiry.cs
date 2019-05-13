@@ -23,8 +23,8 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CollateralInquiry"/> class.
         /// </summary>
-        /// <param name="identifier">The message identifier (cannot be default).</param>
-        /// <param name="timestamp">The message timestamp (cannot be default).</param>
+        /// <param name="identifier">The message identifier.</param>
+        /// <param name="timestamp">The message timestamp.</param>
         public CollateralInquiry(
             Guid identifier,
             ZonedDateTime timestamp)

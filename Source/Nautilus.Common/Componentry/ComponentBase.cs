@@ -33,6 +33,7 @@ namespace Nautilus.Common.Componentry
         protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
         {
             this.Name = new Label(this.GetType().Name);
+            this.Address = new Address(this.GetType().Name);
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
@@ -48,6 +49,11 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         protected Label Name { get; }
+
+        /// <summary>
+        /// Gets the components messaging address.
+        /// </summary>
+        protected Address Address { get; }
 
         /// <summary>
         /// Gets the components logger.
@@ -108,11 +114,19 @@ namespace Nautilus.Common.Componentry
             this.commandHandler.Execute<T>(action);
         }
 
+        /// <summary>
+        /// Calls the Start() virtual method.
+        /// </summary>
+        /// <param name="message">The start message.</param>
         private void OnMessage(Start message)
         {
             this.Start();
         }
 
+        /// <summary>
+        /// Calls the Stop() virtual method.
+        /// </summary>
+        /// <param name="message">The stop message.</param>
         private void OnMessage(Stop message)
         {
             this.Stop();

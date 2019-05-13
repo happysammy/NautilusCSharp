@@ -81,7 +81,7 @@ namespace Nautilus.Messaging
         /// Opens the envelope and returns the contained message (records the opened time if not
         /// already opened).
         /// </summary>
-        /// <param name="currentTime">The current time (cannot be default).</param>
+        /// <param name="currentTime">The current time.</param>
         /// <returns>The contained message of type T.</returns>
         public T Open(ZonedDateTime currentTime)
         {

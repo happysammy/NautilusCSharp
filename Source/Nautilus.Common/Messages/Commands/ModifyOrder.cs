@@ -27,8 +27,8 @@ namespace Nautilus.Common.Messages.Commands
         /// </summary>
         /// <param name="order">The commands order to modify.</param>
         /// <param name="modifiedPrice">The modified price.</param>
-        /// <param name="commandId">The command identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The command timestamp (cannot be default).</param>
+        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandTimestamp">The command timestamp.</param>
         public ModifyOrder(
             Order order,
             Price modifiedPrice,

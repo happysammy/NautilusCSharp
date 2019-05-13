@@ -25,8 +25,8 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="ClosePosition"/> class.
         /// </summary>
         /// <param name="position">The commands position to close.</param>
-        /// <param name="commandId">The commands identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="commandId">The commands identifier.</param>
+        /// <param name="commandTimestamp">The commands timestamp.</param>
         public ClosePosition(
             Position position,
             Guid commandId,

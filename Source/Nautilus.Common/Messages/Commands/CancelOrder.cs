@@ -26,8 +26,8 @@ namespace Nautilus.Common.Messages.Commands
         /// </summary>
         /// <param name="order">The commands order to cancel.</param>
         /// <param name="cancelReason">The commands cancel reason.</param>
-        /// <param name="commandId">The commands identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="commandId">The commands identifier.</param>
+        /// <param name="commandTimestamp">The commands timestamp.</param>
         public CancelOrder(
             Order order,
             string cancelReason,

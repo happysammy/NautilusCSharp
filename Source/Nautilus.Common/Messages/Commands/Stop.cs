@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="SystemShutdown.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Stop.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,7 +15,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to shutdown the system.
+    /// Represents a command to stop the component.
     /// </summary>
     [Immutable]
     public sealed class Stop : SystemCommand
@@ -23,8 +23,8 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="Stop"/> class.
         /// </summary>
-        /// <param name="messageId">The commands identifier (cannot be default).</param>
-        /// <param name="messageTimestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="messageId">The commands identifier.</param>
+        /// <param name="messageTimestamp">The commands timestamp.</param>
         public Stop(
             Guid messageId,
             ZonedDateTime messageTimestamp)

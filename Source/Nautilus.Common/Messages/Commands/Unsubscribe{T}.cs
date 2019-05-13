@@ -25,8 +25,8 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
         /// <param name="dataType">The commands symbol.</param>
-        /// <param name="identifier">The commands identifier (cannot be default).</param>
-        /// <param name="timestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="timestamp">The commands timestamp.</param>
         public Unsubscribe(
             T dataType,
             Guid identifier,

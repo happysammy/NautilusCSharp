@@ -26,8 +26,8 @@ namespace Nautilus.Common.Messages.Events
         /// </summary>
         /// <param name="broker">The events brokerage connected to.</param>
         /// <param name="sessionId">The events FIX session identifier.</param>
-        /// <param name="id">The events identifier (cannot be default).</param>
-        /// <param name="timestamp">The events timestamp (cannot be default).</param>
+        /// <param name="id">The events identifier.</param>
+        /// <param name="timestamp">The events timestamp.</param>
         public FixSessionConnected(
             Brokerage broker,
             string sessionId,

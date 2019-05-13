@@ -25,8 +25,8 @@ namespace Nautilus.Common.Messages.Commands.Base
         /// Initializes a new instance of the <see cref="OrderCommand"/> class.
         /// </summary>
         /// <param name="order">The commands order.</param>
-        /// <param name="commandId">The commands identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="commandId">The commands identifier.</param>
+        /// <param name="commandTimestamp">The commands timestamp.</param>
         protected OrderCommand(
             Order order,
             Guid commandId,

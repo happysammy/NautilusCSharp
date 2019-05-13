@@ -23,8 +23,8 @@ namespace Nautilus.Common.Messages.Commands.Base
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemCommand"/> class.
         /// </summary>
-        /// <param name="commandId">The commands identifier (cannot be default).</param>
-        /// <param name="commandTimestamp">The commands timestamp (cannot be default).</param>
+        /// <param name="commandId">The commands identifier.</param>
+        /// <param name="commandTimestamp">The commands timestamp.</param>
         protected SystemCommand(
             Guid commandId,
             ZonedDateTime commandTimestamp)
