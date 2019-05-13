@@ -10,6 +10,7 @@ namespace NautilusExecutor
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -81,20 +82,18 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
-            fixGateway.RegisterEventReceiver(orderManager.Endpoint);
-
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
-            };
+            }.ToImmutableDictionary();
 
             return new ExecutionService(
                 container,
                 messagingAdapter,
+                addresses,
                 fixGateway,
-                Switchboard.Create(addresses),
                 config.CommandsPerSecond,
                 config.NewOrdersPerSecond);
         }

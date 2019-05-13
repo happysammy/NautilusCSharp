@@ -9,6 +9,7 @@
 namespace Nautilus.Execution
 {
     using System;
+    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,6 +19,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using NodaTime;
@@ -28,6 +30,7 @@ namespace Nautilus.Execution
     /// </summary>
     public sealed class ExecutionService : ComponentBusConnectedBase
     {
+        private readonly ImmutableDictionary<Address, IEndpoint> addresses;
         private readonly IFixGateway fixGateway;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
@@ -41,7 +44,7 @@ namespace Nautilus.Execution
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixGateway">The execution gateway.</param>
-        /// <param name="switchboard">The service address switchboard.</param>
+        /// <param name="addresses">The execution service addresses.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
@@ -49,8 +52,8 @@ namespace Nautilus.Execution
         public ExecutionService(
             IComponentryContainer container,
             MessagingAdapter messagingAdapter,
+            ImmutableDictionary<Address, IEndpoint> addresses,
             IFixGateway fixGateway,
-            Switchboard switchboard,
             int commandsPerSecond,
             int newOrdersPerSecond)
             : base(
@@ -61,6 +64,7 @@ namespace Nautilus.Execution
             Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
+            this.addresses = addresses;
             this.fixGateway = fixGateway;
 
             this.tradeCommandBus = new OrderCommandBus(
@@ -83,7 +87,7 @@ namespace Nautilus.Execution
                 newOrdersPerSecond).Endpoint;
 
             messagingAdapter.Send(new InitializeSwitchboard(
-                switchboard,
+                Switchboard.Create(this.addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -96,7 +100,9 @@ namespace Nautilus.Execution
             this.RegisterHandler<ConnectFixJob>(this.OnMessage);
             this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
 
+            // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
+            this.fixGateway.RegisterEventReceiver(this.addresses[ExecutionServiceAddress.OrderManager]);
         }
 
         /// <summary>

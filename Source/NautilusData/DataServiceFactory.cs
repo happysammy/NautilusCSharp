@@ -10,6 +10,7 @@ namespace NautilusData
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -96,10 +97,6 @@ namespace NautilusData
                 messagingAdapter,
                 fixClient);
 
-            fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
-            fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
-            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
-
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ServiceAddress.Scheduler, scheduler.Endpoint },
@@ -108,13 +105,13 @@ namespace NautilusData
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
-            };
+            }.ToImmutableDictionary();
 
             return new DataService(
                 container,
                 messagingAdapter,
+                addresses,
                 fixGateway,
-                Switchboard.Create(addresses),
                 config.FixConfiguration.UpdateInstruments);
         }
 

@@ -9,6 +9,7 @@
 namespace Nautilus.Data
 {
     using System;
+    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -18,6 +19,8 @@ namespace Nautilus.Data
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Messaging;
+    using Nautilus.Messaging.Interfaces;
     using Quartz;
 
     /// <summary>
@@ -26,6 +29,7 @@ namespace Nautilus.Data
     [PerformanceOptimized]
     public sealed class DataService : ComponentBusConnectedBase
     {
+        private readonly ImmutableDictionary<Address, Endpoint> addresses;
         private readonly IFixGateway fixGateway;
         private readonly bool updateInstruments;
 
@@ -35,24 +39,25 @@ namespace Nautilus.Data
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
-        /// <param name="switchboard">The data service switchboard.</param>
+        /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
+            ImmutableDictionary<Address, IEndpoint> addresses,
             IFixGateway fixGateway,
-            Switchboard switchboard,
             bool updateInstruments)
             : base(
                 NautilusService.Data,
                 setupContainer,
                 messagingAdapter)
         {
+            this.addresses = this.addresses.ToImmutableDictionary();
             this.fixGateway = fixGateway;
             this.updateInstruments = updateInstruments;
 
             messagingAdapter.Send(new InitializeSwitchboard(
-                switchboard,
+                Switchboard.Create(addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -63,7 +68,11 @@ namespace Nautilus.Data
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
 
+            // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
+            this.fixGateway.RegisterTickReceiver(this.addresses[DataServiceAddress.TickPublisher]);
+            this.fixGateway.RegisterTickReceiver(this.addresses[DataServiceAddress.BarAggregationController]);
+            this.fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.MessageStore;
@@ -47,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 { ServiceAddress.Execution, messageStorer.Endpoint },
                 { ServiceAddress.Portfolio, messageStorer.Endpoint },
                 { ServiceAddress.Risk, messageStorer.Endpoint },
-            };
+            }.ToImmutableDictionary();
 
             this.messageBus.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),

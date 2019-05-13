@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -45,11 +46,10 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 { ServiceAddress.Portfolio, receiver.Endpoint },
                 { ServiceAddress.Risk, receiver.Endpoint },
                 { ServiceAddress.Execution, receiver.Endpoint },
-            };
+            }.ToImmutableDictionary();
 
-            var switchboard = Switchboard.Create(addresses);
             var initializeSwitchboard = new InitializeSwitchboard(
-                switchboard,
+                Switchboard.Create(addresses),
                 Guid.NewGuid(),
                 container.Clock.TimeNow());
 
