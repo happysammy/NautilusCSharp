@@ -6,8 +6,6 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-#pragma warning disable 8618
-
 namespace Nautilus.Data.Aggregation
 {
     using System;
@@ -40,6 +38,8 @@ namespace Nautilus.Data.Aggregation
             this.thisBarsSpreads = new List<decimal>();
             this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
             this.totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
+            this.CurrentBid = Price.Create(0);
+            this.CurrentAsk = Price.Create(0);
             this.MaxSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MinValue);
             this.MinSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MaxValue);
         }
