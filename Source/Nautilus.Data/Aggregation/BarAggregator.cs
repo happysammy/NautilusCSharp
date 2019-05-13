@@ -124,21 +124,25 @@ namespace Nautilus.Data.Aggregation
 
             if (!this.isMarketOpen)
             {
-                // Won't close a bar outside market hours.
-                return;
+                return; // Won't close a bar outside market hours.
             }
 
-            // No ticks have been received for the builders.
             if (this.lastTick is null)
             {
-                return;
+                return; // No ticks have been received for the builders.
+            }
+
+            var builder = this.barBuilders[barSpec];
+            if (builder is null)
+            {
+                return; // No builder to build bar.
             }
 
             // Close the bar.
-            var barType = new BarType(this.symbol, barSpec);
-            var bar = this.barBuilders[barSpec].Build(message.CloseTime);
+            var bar = builder.Build(message.CloseTime);
 
-            this.parent.Send((barType, bar));
+            // Send to bar aggregation controller.
+            this.parent.Send((new BarType(this.symbol, barSpec), bar));
 
             // Refresh bar builder.
             this.barBuilders[barSpec] = new BarBuilder(bar.Close);

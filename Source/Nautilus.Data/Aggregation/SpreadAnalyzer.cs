@@ -24,7 +24,7 @@ namespace Nautilus.Data.Aggregation
     {
         private readonly List<decimal> thisBarsSpreads;
         private readonly List<(ZonedDateTime, decimal)> negativeSpreads;
-        private readonly List<(ZonedDateTime, decimal)> totalAverageSpreads;
+        private readonly List<(ZonedDateTime, decimal)> averageSpreads;
 
         // Initialized on first tick.
         private bool isInitialized;
@@ -37,9 +37,9 @@ namespace Nautilus.Data.Aggregation
         {
             this.thisBarsSpreads = new List<decimal>();
             this.negativeSpreads = new List<(ZonedDateTime, decimal)>();
-            this.totalAverageSpreads = new List<(ZonedDateTime, decimal)>();
-            this.CurrentBid = Price.Create(0);
-            this.CurrentAsk = Price.Create(0);
+            this.averageSpreads = new List<(ZonedDateTime, decimal)>();
+            this.CurrentBid = Price.Create(decimal.One);  // TODO: Refactor this logic
+            this.CurrentAsk = Price.Create(decimal.One);  // TODO: Refactor this logic
             this.MaxSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MinValue);
             this.MinSpread = ValueTuple.Create(default(ZonedDateTime), decimal.MaxValue);
         }
@@ -57,7 +57,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the spread analyzers current spread.
         /// </summary>
-        public decimal CurrentSpread => this.CurrentAsk - this.CurrentBid;
+        public decimal CurrentSpread { get; private set; }
 
         /// <summary>
         /// Gets the spread analyzers average spread.
@@ -82,7 +82,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the spread analyzers negative spreads.
         /// </summary>
-        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.totalAverageSpreads.ToList().AsReadOnly();
+        public IReadOnlyList<(ZonedDateTime, decimal)> TotalAverageSpreads => this.averageSpreads.ToList().AsReadOnly();
 
         /// <summary>
         /// Updates the spread analyzer with the given tick.
@@ -98,26 +98,26 @@ namespace Nautilus.Data.Aggregation
 
             this.CurrentBid = tick.Bid;
             this.CurrentAsk = tick.Ask;
+            this.CurrentSpread = tick.Ask - tick.Bid;
 
-            var spread = this.CurrentSpread;
-            this.thisBarsSpreads.Add(spread);
+            this.thisBarsSpreads.Add(this.CurrentSpread);
 
-            if (spread < decimal.Zero)
+            if (this.CurrentSpread < decimal.Zero)
             {
-                this.negativeSpreads.Add((tick.Timestamp, spread));
+                this.negativeSpreads.Add((tick.Timestamp, this.CurrentSpread));
             }
 
-            if (spread > this.MaxSpread.Spread)
+            if (this.CurrentSpread > this.MaxSpread.Spread)
             {
-                this.MaxSpread = (tick.Timestamp, spread);
+                this.MaxSpread = (tick.Timestamp, this.CurrentSpread);
             }
 
-            if (spread < this.MinSpread.Spread)
+            if (this.CurrentSpread < this.MinSpread.Spread)
             {
-                this.MinSpread = (tick.Timestamp, spread);
+                this.MinSpread = (tick.Timestamp, this.CurrentSpread);
             }
 
-            if (this.totalAverageSpreads.Count == 0)
+            if (this.averageSpreads.Count == 0)
             {
                 this.AverageSpread = this.CalculateAverageSpread();
             }
@@ -132,7 +132,7 @@ namespace Nautilus.Data.Aggregation
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.AverageSpread = this.CalculateAverageSpread();
-            this.totalAverageSpreads.Add((timestamp, this.AverageSpread));
+            this.averageSpreads.Add((timestamp, this.AverageSpread));
             this.thisBarsSpreads.Clear();
         }
 
