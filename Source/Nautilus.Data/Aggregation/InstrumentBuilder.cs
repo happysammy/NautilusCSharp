@@ -36,7 +36,6 @@ namespace Nautilus.Data.Aggregation
             this.SecurityType = startingInstrument.SecurityType;
             this.TickPrecision = startingInstrument.TickPrecision;
             this.TickSize = startingInstrument.TickSize;
-            this.TickValue = startingInstrument.TickValue;
             this.RoundLotSize = startingInstrument.RoundLotSize;
             this.MinStopDistanceEntry = startingInstrument.MinStopDistanceEntry;
             this.MinLimitDistanceEntry = startingInstrument.MinLimitDistanceEntry;
@@ -93,16 +92,6 @@ namespace Nautilus.Data.Aggregation
         /// <returns>A <see cref="InstrumentBuilder"/>.</returns>
         public InstrumentBuilder Update(Instrument updateInstrument)
         {
-            if (this.TickValue != updateInstrument.TickValue)
-            {
-                this.AddChange(
-                    nameof(this.TickValue),
-                    this.TickValue.ToString(CultureInfo.InvariantCulture),
-                    updateInstrument.TickValue.ToString(CultureInfo.InvariantCulture));
-
-                this.TickValue = updateInstrument.TickValue;
-            }
-
             if (this.MinStopDistanceEntry != updateInstrument.MinStopDistanceEntry)
             {
                 this.AddChange(
@@ -202,7 +191,6 @@ namespace Nautilus.Data.Aggregation
                 this.SecurityType,
                 this.TickPrecision,
                 this.TickSize,
-                this.TickValue,
                 this.RoundLotSize,
                 this.MinStopDistanceEntry,
                 this.MinLimitDistanceEntry,

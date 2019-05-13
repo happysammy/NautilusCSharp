@@ -93,8 +93,7 @@ namespace Nautilus.Brokerage.FXCM
                         continue;
                     }
 
-                    var brokerSymbolString = group.GetField(Tags.Symbol);
-                    var brokerSymbol = new BrokerSymbol(brokerSymbolString);
+                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
@@ -114,22 +113,6 @@ namespace Nautilus.Brokerage.FXCM
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
 
-                    var tickValueQuery = this.instrumentData.GetTickValue(brokerSymbol.Value);
-                    if (tickValueQuery.IsFailure)
-                    {
-                        this.Log.Error(tickValueQuery.Message);
-                        continue;
-                    }
-
-                    var tickValue = tickValueQuery.Value;
-
-                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(brokerSymbol.Value);
-                    if (targetDirectSpreadQuery.IsFailure)
-                    {
-                        this.Log.Error(targetDirectSpreadQuery.Message);
-                        continue;
-                    }
-
                     var minStopDistanceEntry = Convert.ToInt32(group.GetField(9092));
                     var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
                     var minStopDistance = Convert.ToInt32(group.GetField(9090));
@@ -147,7 +130,6 @@ namespace Nautilus.Brokerage.FXCM
                         securityType,
                         tickPrecision,
                         tickSize,
-                        tickValue,
                         roundLot,
                         minStopDistanceEntry,
                         minLimitDistanceEntry,

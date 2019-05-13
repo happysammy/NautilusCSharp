@@ -32,7 +32,6 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="securityType">The instruments security type.</param>
         /// <param name="tickPrecision">The instruments tick decimal precision.</param>
         /// <param name="tickSize">The instruments tick size.</param>
-        /// <param name="tickValue">The instruments tick value.</param>
         /// <param name="roundLotSize">The instruments rounded lot size.</param>
         /// <param name="minStopDistanceEntry">The instruments minimum stop distance for entry.</param>
         /// <param name="minLimitDistanceEntry">The instruments minimum limit distance for entry.</param>
@@ -51,7 +50,6 @@ namespace Nautilus.DomainModel.Entities
             SecurityType securityType,
             int tickPrecision,
             decimal tickSize,
-            decimal tickValue,
             int roundLotSize,
             int minStopDistanceEntry,
             int minLimitDistanceEntry,
@@ -67,7 +65,6 @@ namespace Nautilus.DomainModel.Entities
             // Keep validation logic here.
             Precondition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
             Precondition.PositiveDecimal(tickSize, nameof(tickSize));
-            Precondition.PositiveDecimal(tickValue, nameof(tickValue));
             Precondition.PositiveInt32(roundLotSize, nameof(roundLotSize));
             Precondition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
             Precondition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
@@ -83,7 +80,6 @@ namespace Nautilus.DomainModel.Entities
             this.SecurityType = securityType;
             this.TickPrecision = tickPrecision;
             this.TickSize = tickSize;
-            this.TickValue = tickValue;
             this.RoundLotSize = roundLotSize;
             this.MinStopDistanceEntry = minStopDistanceEntry;
             this.MinLimitDistanceEntry = minLimitDistanceEntry;
@@ -124,11 +120,6 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the instruments tick size.
         /// </summary>
         public decimal TickSize { get; }
-
-        /// <summary>
-        /// Gets the instruments tick value.
-        /// </summary>
-        public decimal TickValue { get; }
 
         /// <summary>
         /// Gets the instruments rounded lot size.

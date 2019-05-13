@@ -74,7 +74,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 SecurityType.Bond,
                 2,
                 0.01m,
-                10m,
                 1,
                 1,
                 1,
@@ -92,7 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                .Build(StubZonedDateTime.UnixEpoch());
 
             // Assert
-            Assert.Equal(9, instrumentBuilder.Changes.Count);
+            Assert.Equal(8, instrumentBuilder.Changes.Count);
 
             foreach (var change in instrumentBuilder.Changes)
             {

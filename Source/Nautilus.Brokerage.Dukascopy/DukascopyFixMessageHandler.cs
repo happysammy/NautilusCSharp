@@ -93,8 +93,7 @@ namespace Nautilus.Brokerage.Dukascopy
                         continue;
                     }
 
-                    var brokerSymbolString = group.GetField(Tags.Symbol);
-                    var brokerSymbol = new BrokerSymbol(brokerSymbolString);
+                    var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
                     var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
@@ -104,7 +103,6 @@ namespace Nautilus.Brokerage.Dukascopy
                     }
 
                     var symbol = new Symbol(symbolQuery.Value, Venue.DUKASCOPY);
-
                     var symbolId = new InstrumentId(symbol.ToString());
                     var quoteCurrency = message.GetField(Tags.Currency).ToEnum<Currency>();
                     var securityType = FixMessageHelper.GetSecurityType(group.GetField(9080));
@@ -113,21 +111,6 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     // Field 9002 gives 'point' size. Multiply by 0.1 to get tick size.
                     var tickSize = Convert.ToDecimal(group.GetField(9002)) * 0.1m;
-
-                    var tickValueQuery = this.instrumentData.GetTickValue(brokerSymbol.Value);
-                    if (tickValueQuery.IsFailure)
-                    {
-                        throw new InvalidOperationException($"Cannot find tick value for {group.GetField(Tags.Symbol)}");
-                    }
-
-                    var tickValue = tickValueQuery.Value;
-
-                    var targetDirectSpreadQuery = this.instrumentData.GetTargetDirectSpread(brokerSymbol.Value);
-                    if (targetDirectSpreadQuery.IsFailure)
-                    {
-                        throw new InvalidOperationException($"Cannot find target direct spread for {group.GetField(Tags.Symbol)}");
-                    }
-
                     var minStopDistanceEntry = Convert.ToInt32(group.GetField(9092));
                     var minLimitDistanceEntry = Convert.ToInt32(group.GetField(9093));
                     var minStopDistance = Convert.ToInt32(group.GetField(9090));
@@ -145,7 +128,6 @@ namespace Nautilus.Brokerage.Dukascopy
                         securityType,
                         tickPrecision,
                         tickSize,
-                        tickValue,
                         roundLot,
                         minStopDistanceEntry,
                         minLimitDistanceEntry,
