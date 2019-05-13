@@ -272,29 +272,47 @@ namespace Nautilus.Brokerage.Dukascopy
                     return;
                 }
 
-                var brokerSymbol = message.GetField(Tags.Symbol);
-
-                var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol);
+                var symbolQuery = this.instrumentData.GetNautilusSymbol(message.GetField(Tags.Symbol));
                 if (symbolQuery.IsFailure)
                 {
-                    throw new InvalidOperationException(symbolQuery.Message);
+                    this.Log.Error(symbolQuery.Message);
+                    return; // Cannot get Nautilus symbol for broker symbol.
                 }
 
-                var symbol = symbolQuery.Value;
+                var symbolCode = symbolQuery.Value;
 
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
+                // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
+                // var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 message.GetGroup(1, group);
-                var ask = group.GetField(Tags.MDEntryPx);
-
-                message.GetGroup(2, group);
                 var bid = group.GetField(Tags.MDEntryPx);
 
+                message.GetGroup(2, group);
+                var ask = group.GetField(Tags.MDEntryPx);
+
+                var bidDecimal = decimal.Zero;
+                var askDecimal = decimal.Zero;
+
+                try
+                {
+                    bidDecimal = Convert.ToDecimal(bid);
+                    askDecimal = Convert.ToDecimal(ask);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FormatException || ex is OverflowException)
+                    {
+                        this.Log.Error("Could not parse decimal.");
+                        return;
+                    }
+                }
+
                 this.fixGateway?.OnTick(
-                    symbol,
-                    Venue.DUKASCOPY,
-                    Convert.ToDecimal(bid),
-                    Convert.ToDecimal(ask),
+                    symbolCode,
+                    Venue.FXCM,
+                    bidDecimal,
+                    askDecimal,
                     this.TimeNow());
             });
         }

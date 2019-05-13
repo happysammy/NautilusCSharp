@@ -91,7 +91,7 @@ namespace Nautilus.Network
                 .SendFrame(message);
 
             this.cycles++;
-            this.Log.Debug($"Published message[{this.cycles}].");
+            this.Log.Verbose($"Published message[{this.cycles}].");
         }
     }
 }

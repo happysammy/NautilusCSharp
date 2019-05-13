@@ -129,13 +129,11 @@ namespace NautilusData
                 case Brokerage.FXCM:
                     return FxcmFixClientFactory.Create(
                         container,
-                        messagingAdapter,
                         configuration,
                         instrumentData);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
-                        messagingAdapter,
                         configuration,
                         instrumentData);
                 case Brokerage.Simulation:

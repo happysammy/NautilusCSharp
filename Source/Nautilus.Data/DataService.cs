@@ -53,7 +53,7 @@ namespace Nautilus.Data
                 setupContainer,
                 messagingAdapter)
         {
-            this.addresses = this.addresses.ToImmutableDictionary();
+            this.addresses = addresses;
             this.fixGateway = fixGateway;
             this.updateInstruments = updateInstruments;
 

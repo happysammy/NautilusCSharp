@@ -278,11 +278,13 @@ namespace Nautilus.Brokerage.FXCM
                     return; // Cannot get Nautilus symbol for broker symbol.
                 }
 
+                var symbolCode = symbolQuery.Value;
+
                 var group = new MarketDataSnapshotFullRefresh.NoMDEntriesGroup();
 
+                // var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
+                // var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 message.GetGroup(1, group);
-                var dateTimeString = group.GetField(Tags.MDEntryDate) + group.GetField(Tags.MDEntryTime);
-                var timestamp = FixMessageHelper.GetZonedDateTimeUtcFromMarketDataString(dateTimeString);
                 var bid = group.GetField(Tags.MDEntryPx);
 
                 message.GetGroup(2, group);
@@ -306,11 +308,11 @@ namespace Nautilus.Brokerage.FXCM
                 }
 
                 this.fixGateway?.OnTick(
-                    symbolQuery.Value,
+                    symbolCode,
                     Venue.FXCM,
                     bidDecimal,
                     askDecimal,
-                    timestamp);
+                    this.TimeNow());
             });
         }
 
