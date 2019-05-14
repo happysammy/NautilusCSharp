@@ -159,7 +159,7 @@ namespace Nautilus.Redis
             var keysOfResolution = new Dictionary<string, List<string>>();
             foreach (var key in keysCollection)
             {
-                if (!key.Contains(resolution.ToString().ToLower()))
+                if (!key.Contains(resolution.ToString()))
                 {
                     // Found resolution not applicable.
                     continue;
