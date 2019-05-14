@@ -101,8 +101,7 @@ namespace Nautilus.Redis
         {
             return this.redisServer.Keys(pattern: KeyProvider.InstrumentsWildcard)
                 .Select(k => k.ToString())
-                .ToList()
-                .AsReadOnly();
+                .ToArray();
         }
 
         /// <summary>
@@ -210,18 +209,7 @@ namespace Nautilus.Redis
         /// Returns the list of instrument symbols currently held in cache.
         /// </summary>
         /// <returns>The symbols.</returns>
-        public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToList().AsReadOnly();
-
-        /// <summary>
-        /// Returns the dictionary index of symbols and their corresponding tick size.
-        /// </summary>
-        /// <returns>The tick size index.</returns>
-        public Dictionary<string, int> GetPricePrecisionIndex()
-        {
-            return this.cache.ToDictionary(
-                symbol => symbol.Key.Code,
-                symbol => symbol.Value.TickPrecision);
-        }
+        public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToArray();
 
         private CommandResult Write(Instrument instrument)
         {

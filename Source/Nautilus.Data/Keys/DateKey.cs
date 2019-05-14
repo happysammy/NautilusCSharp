@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Keys
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -105,9 +106,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.Year.GetHashCode() +
-                   this.Month.GetHashCode() +
-                   this.Day.GetHashCode();
+            return Hash.GetCode(this.Year, this.Month, this.Day);
         }
 
         /// <summary>

@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Keys
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.ValueObjects;
@@ -64,8 +65,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.Type.GetHashCode() +
-                   this.DateKey.GetHashCode();
+            return Hash.GetCode(this.Type, this.DateKey);
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.BarsNamespace +
-            $":{this.Type.Symbol.Venue.ToString().ToLower()}" +
-            $":{this.Type.Symbol.Code.ToLower()}" +
-            $":{this.Type.Specification.Resolution.ToString().ToLower()}" +
-            $":{this.Type.Specification.QuoteType.ToString().ToLower()}" +
+            $":{this.Type.Symbol.Venue}" +
+            $":{this.Type.Symbol.Code}" +
+            $":{this.Type.Specification.Resolution}" +
+            $":{this.Type.Specification.QuoteType}" +
             $":{this.DateKey}";
     }
 }

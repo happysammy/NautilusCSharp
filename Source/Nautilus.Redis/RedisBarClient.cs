@@ -154,12 +154,9 @@ namespace Nautilus.Redis
         {
             var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardString());
 
-            var keysCollection = allKeysBytes
-                .Select(key => key.ToString())
-                .ToList();
+            var keysCollection = allKeysBytes.Select(key => key.ToString());
 
             var keysOfResolution = new Dictionary<string, List<string>>();
-
             foreach (var key in keysCollection)
             {
                 if (!key.Contains(resolution.ToString().ToLower()))

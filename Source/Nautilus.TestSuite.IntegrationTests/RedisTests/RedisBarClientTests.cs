@@ -479,7 +479,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
             // Assert
             Assert.Single(result.Keys);
-            Assert.Equal(6, result["dukascopy:audusd"].Count);
+            Assert.Equal(6, result["DUKASCOPY:AUDUSD"].Count);
         }
 
         [Theory]

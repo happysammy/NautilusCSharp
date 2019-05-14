@@ -22,9 +22,9 @@ namespace Nautilus.Data.Keys
     [Immutable]
     public static class KeyProvider
     {
-        private const string TicksConst = "ticks";
-        private const string BarsConst = "bars";
-        private const string InstrumentsConst = "instruments";
+        private const string TicksConst = "Ticks";
+        private const string BarsConst = "Bars";
+        private const string InstrumentsConst = "Instruments";
         private const string WildcardConst = "*";
         private const string Separator = ":";
 
@@ -77,8 +77,7 @@ namespace Nautilus.Data.Keys
             Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
-                .Select(key => new TickDataKey(symbol, key).ToString())
-                .ToList();
+                .Select(key => new TickDataKey(symbol, key).ToString());
         }
 
         /// <summary>
@@ -88,9 +87,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetTicksWildcardString(Symbol symbol)
         {
-            return TicksConst +
-                   $"{Separator}{symbol.Venue.ToString().ToLower()}" +
-                   $"{Separator}{symbol.Code.ToLower()}" + WildcardConst;
+            return TicksConst + Separator + symbol.Venue + Separator + symbol.Code + WildcardConst;
         }
 
         /// <summary>
@@ -120,10 +117,7 @@ namespace Nautilus.Data.Keys
         /// Returns a wildcard string from the given symbol bar spec.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarsWildcardString()
-        {
-            return $"{BarsConst}{WildcardConst}";
-        }
+        public static string GetBarsWildcardString() => BarsConst + WildcardConst;
 
         /// <summary>
         /// Returns a wildcard string from the given symbol bar spec.
@@ -133,10 +127,10 @@ namespace Nautilus.Data.Keys
         public static string GetBarTypeWildcardString(BarType barType)
         {
             return BarsConst +
-                   $"{Separator}{barType.Symbol.Venue.ToString().ToLower()}" +
-                   $"{Separator}{barType.Symbol.Code.ToLower()}" +
-                   $"{Separator}{barType.Specification.Resolution.ToString().ToLower()}" +
-                   $"{Separator}{barType.Specification.QuoteType.ToString().ToLower()}" + WildcardConst;
+                   $"{Separator}{barType.Symbol.Venue}" +
+                   $"{Separator}{barType.Symbol.Code}" +
+                   $"{Separator}{barType.Specification.Resolution}" +
+                   $"{Separator}{barType.Specification.QuoteType}" + WildcardConst;
         }
 
         /// <summary>
@@ -146,7 +140,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetInstrumentKey(Symbol symbol)
         {
-            return InstrumentsConst + Separator + symbol.ToString().ToLower();
+            return InstrumentsConst + Separator + symbol;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.ValueObjects
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Core.Primitives;
     using Nautilus.DomainModel.Enums;
 
@@ -23,11 +24,12 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Initializes a new instance of the <see cref="Symbol"/> class.
         /// </summary>
         /// <param name="code">The symbols code.</param>
-        /// <param name="venue">The symbols exchange.</param>
+        /// <param name="venue">The symbols venue.</param>
         public Symbol(string code, Venue venue)
             : base($"{code}.{venue}")
         {
             Debug.NotEmptyOrWhiteSpace(code, nameof(code));
+            Debug.True(code.IsAllUpperCase(), nameof(code));
 
             this.Code = code.ToUpper();
             this.Venue = venue;
@@ -39,7 +41,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public string Code { get; }
 
         /// <summary>
-        /// Gets the symbols exchange.
+        /// Gets the symbols venue.
         /// </summary>
         public Venue Venue { get; }
     }

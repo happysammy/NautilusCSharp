@@ -9,6 +9,7 @@
 namespace Nautilus.Data.Keys
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
 
@@ -45,7 +46,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other != null && this.Equals(other);
+        public override bool Equals(object other) => other is TickDataKey key && this.Equals(key);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="TickDataKey"/> is equal to the given
@@ -65,8 +66,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.Symbol.GetHashCode() +
-                   this.DateKey.GetHashCode();
+            return Hash.GetCode(this.Symbol, this.DateKey);
         }
 
         /// <summary>
@@ -75,8 +75,8 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() =>
             KeyProvider.TicksNamespace +
-            $":{this.Symbol.Venue.ToString().ToLower()}" +
-            $":{this.Symbol.Code.ToLower()}" +
+            $":{this.Symbol.Venue}" +
+            $":{this.Symbol.Code}" +
             $":{this.DateKey}";
     }
 }

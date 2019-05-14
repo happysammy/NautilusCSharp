@@ -17,9 +17,9 @@ namespace Nautilus.DomainModel.Enums
     public enum Venue
     {
         /// <summary>
-        /// The simulated exchange venue (backtesting).
+        /// An unknown venue.
         /// </summary>
-        Simulation = 0,
+        UNKNOWN = 0,
 
         /// <summary>
         /// The FXCM brokerage venue (OTC products) .

@@ -60,11 +60,5 @@ namespace Nautilus.Common.Interfaces
         /// </summary>
         /// <returns>The collection of symbols held by the repository.</returns>
         IReadOnlyCollection<Symbol> GetSymbols();
-
-        /// <summary>
-        /// Returns the dictionary index of broker symbols and their corresponding tick precision.
-        /// </summary>
-        /// <returns>The tick precision index.</returns>
-        Dictionary<string, int> GetPricePrecisionIndex();
     }
 }

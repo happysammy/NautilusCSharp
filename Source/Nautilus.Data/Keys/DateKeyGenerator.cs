@@ -10,6 +10,7 @@ namespace Nautilus.Data.Keys
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using NodaTime;
@@ -17,6 +18,7 @@ namespace Nautilus.Data.Keys
     /// <summary>
     /// Provides <see cref="DateKey"/>(s) based on the given parameters.
     /// </summary>
+    [PerformanceOptimized]
     public static class DateKeyGenerator
     {
         /// <summary>
@@ -40,8 +42,8 @@ namespace Nautilus.Data.Keys
             }
 
             var iterationCount = Convert.ToInt32(Math.Floor(difference));
-            var dateKeys = new List<DateKey> { new DateKey(fromDateTime) };
 
+            var dateKeys = new List<DateKey> { new DateKey(fromDateTime) };
             for (var i = 0; i < iterationCount; i++)
             {
                 dateKeys.Add(new DateKey(fromDateTime + Duration.FromDays(i + 1)));

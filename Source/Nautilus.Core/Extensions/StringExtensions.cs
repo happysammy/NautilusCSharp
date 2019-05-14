@@ -20,18 +20,36 @@ namespace Nautilus.Core.Extensions
         /// <summary>
         /// Returns an enumerator of the given type (parsed from the given string).
         /// </summary>
-        /// <param name="enumerationString">The enumeration string.</param>
+        /// <param name="input">The input string.</param>
         /// <typeparam name="T">The enumerator type.</typeparam>
         /// <returns>An enumerator type.</returns>
-        public static T ToEnum<T>(this string enumerationString)
+        public static T ToEnum<T>(this string input)
             where T : struct
         {
-            if (string.IsNullOrWhiteSpace(enumerationString))
+            if (string.IsNullOrWhiteSpace(input))
             {
                 return default(T);
             }
 
-            return (T)Enum.Parse(typeof(T), enumerationString);
+            return (T)Enum.Parse(typeof(T), input);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether this string is all upper case.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>True if all upper case, else false.</returns>
+        public static bool IsAllUpperCase(this string input)
+        {
+            for (var i = 0; i < input.Length; i++)
+            {
+                if (char.IsLetter(input[i]) && !char.IsUpper(input[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
