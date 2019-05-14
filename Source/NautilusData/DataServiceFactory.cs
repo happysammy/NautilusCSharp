@@ -113,7 +113,7 @@ namespace NautilusData
                 messagingAdapter,
                 addresses,
                 fixGateway,
-                true);
+                config.UpdateInstruments);
         }
 
         private static IFixClient CreateFixClient(

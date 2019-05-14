@@ -83,6 +83,7 @@ namespace NautilusData
                 .Select(BarSpecificationFactory.Create);
 
             this.BarRollingWindowDays = (int)configJson[ConfigSection.Data]["barDataRollingWindowDays"];
+            this.UpdateInstruments = (bool)configJson[ConfigSection.Data]["updateInstruments"];
         }
 
         /// <summary>
@@ -134,5 +135,10 @@ namespace NautilusData
         /// Gets the database bar rolling window days for trimming.
         /// </summary>
         public int BarRollingWindowDays { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the instruments should be updated.
+        /// </summary>
+        public bool UpdateInstruments { get; }
     }
 }

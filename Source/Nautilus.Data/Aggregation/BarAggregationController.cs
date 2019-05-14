@@ -311,7 +311,7 @@ namespace Nautilus.Data.Aggregation
             }
 
             // Log for debug purposes.
-            // this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
         private void OnMessage(BarJob job)

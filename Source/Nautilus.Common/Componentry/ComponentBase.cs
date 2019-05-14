@@ -12,6 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using NodaTime;
@@ -39,6 +40,10 @@ namespace Nautilus.Common.Componentry
             this.commandHandler = new CommandHandler(this.Log);
             this.Log = container.LoggerFactory.Create(serviceContext, this.Name);
             this.StartTime = this.clock.TimeNow();
+
+            this.RegisterHandler<Envelope<Command>>(this.Open);
+            this.RegisterHandler<Envelope<Event>>(this.Open);
+            this.RegisterHandler<Envelope<Document>>(this.Open);
 
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
@@ -130,6 +135,20 @@ namespace Nautilus.Common.Componentry
         private void OnMessage(Stop message)
         {
             this.Stop();
+        }
+
+        /// <summary>
+        /// Opens the envelope and then sends the message back to the actor component.
+        /// </summary>
+        /// <param name="envelope">The message envelope.</param>
+        private void Open<T>(Envelope<T> envelope)
+            where T : Message
+        {
+            var message = envelope.Open(this.clock.TimeNow());
+
+            this.Endpoint.Send(message);
+
+            this.Log.Verbose($"Received {message}.");
         }
     }
 }

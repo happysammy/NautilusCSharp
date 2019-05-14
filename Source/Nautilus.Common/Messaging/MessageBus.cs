@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -21,7 +20,7 @@ namespace Nautilus.Common.Messaging
     /// Represents a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
-    public sealed class MessageBus<T> : ComponentBase
+    public sealed class MessageBus<T> : MessagingAgent
         where T : Message
     {
         private readonly ILogger log;
@@ -36,7 +35,6 @@ namespace Nautilus.Common.Messaging
         /// <param name="container">The container.</param>
         /// <param name="messageStorer">The message storer endpoint.</param>
         public MessageBus(IComponentryContainer container, IEndpoint messageStorer)
-        : base(NautilusService.Messaging, container)
         {
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
             this.messageStorer = messageStorer;
@@ -44,14 +42,6 @@ namespace Nautilus.Common.Messaging
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
-        }
-
-        /// <summary>
-        /// Runs when starting the component.
-        /// </summary>
-        public override void Start()
-        {
-            this.log.Debug($"Initializing...");
         }
 
         private void OnMessage(InitializeSwitchboard message)

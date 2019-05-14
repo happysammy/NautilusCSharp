@@ -86,6 +86,7 @@
       "1-HOUR[MID]",
       "1-HOUR[BID]"
     ],
-    "barDataRollingWindowDays": 5
+    "barDataRollingWindowDays": 5,
+    "updateInstruments": true
   }
 }
