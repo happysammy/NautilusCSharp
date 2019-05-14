@@ -14,13 +14,10 @@ namespace Nautilus.Data
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Correctness;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Messages.Jobs;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using Quartz;
@@ -62,10 +59,6 @@ namespace Nautilus.Data
             this.isTrimJobActive = false;
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
-            this.RegisterHandler<CollectData<BarType>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.RegisterHandler<DataPersisted<BarType>>(this.OnMessage);
-            this.RegisterHandler<DataCollected<BarType>>(this.OnMessage);
             this.RegisterHandler<TrimBarDataJob>(this.OnMessage);
         }
 
@@ -86,26 +79,6 @@ namespace Nautilus.Data
         private void OnMessage(Subscribe<BarType> message)
         {
             this.Send(DataServiceAddress.BarAggregationController, message);
-        }
-
-        private void OnMessage(CollectData<BarType> message)
-        {
-            // Do nothing.
-        }
-
-        private void OnMessage(DataDelivery<BarDataFrame> message)
-        {
-            // Not implemented.
-        }
-
-        private void OnMessage(DataPersisted<BarType> message)
-        {
-            // Not implemented.
-        }
-
-        private void OnMessage(DataCollected<BarType> message)
-        {
-            // Not implemented.
         }
 
         private void OnMessage(TrimBarDataJob message)

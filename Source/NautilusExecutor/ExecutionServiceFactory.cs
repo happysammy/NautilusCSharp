@@ -58,7 +58,7 @@ namespace NautilusExecutor
             var scheduler = new Scheduler(container);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
-            var symbolProvider = new SymbolProvider(venue, config.SymbolIndex);
+            var symbolProvider = new SymbolConverter(venue, config.SymbolIndex);
 
             var messageServer = new MessageServer(
                 container,
@@ -100,7 +100,7 @@ namespace NautilusExecutor
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
             FixConfiguration configuration,
-            SymbolProvider symbolProvider)
+            SymbolConverter symbolConverter)
         {
             switch (configuration.Broker)
             {
@@ -108,12 +108,12 @@ namespace NautilusExecutor
                     return FxcmFixClientFactory.Create(
                         container,
                         configuration,
-                        symbolProvider);
+                        symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
                         configuration,
-                        symbolProvider);
+                        symbolConverter);
                 case Brokerage.Simulation:
                     throw new InvalidOperationException(
                         $"Cannot create FIX client for broker {configuration.Broker}.");

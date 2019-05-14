@@ -9,6 +9,7 @@
 namespace Nautilus.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -32,6 +33,8 @@ namespace Nautilus.Data
     {
         private readonly ImmutableDictionary<Address, IEndpoint> addresses;
         private readonly IFixGateway fixGateway;
+        private readonly IEnumerable<Symbol> subscribingSymbols;
+        private readonly IEnumerable<BarSpecification> barSpecifications;
         private readonly bool updateInstruments;
 
         /// <summary>
@@ -41,12 +44,16 @@ namespace Nautilus.Data
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
+        /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
+        /// <param name="barSpecifications">The bar specifications to create.</param>
         /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
             ImmutableDictionary<Address, IEndpoint> addresses,
             IFixGateway fixGateway,
+            IEnumerable<Symbol> subscribingSymbols,
+            IEnumerable<BarSpecification> barSpecifications,
             bool updateInstruments)
             : base(
                 NautilusService.Data,
@@ -55,6 +62,8 @@ namespace Nautilus.Data
         {
             this.addresses = addresses;
             this.fixGateway = fixGateway;
+            this.subscribingSymbols = subscribingSymbols;
+            this.barSpecifications = barSpecifications;
             this.updateInstruments = updateInstruments;
 
             messagingAdapter.Send(new InitializeSwitchboard(
@@ -169,7 +178,20 @@ namespace Nautilus.Data
                 this.fixGateway.UpdateInstrumentsSubscribeAll();
             }
 
-            this.fixGateway.MarketDataSubscribeAll();
+            foreach (var symbol in this.subscribingSymbols)
+            {
+                this.fixGateway.MarketDataSubscribe(symbol);
+
+                foreach (var barSpec in this.barSpecifications)
+                {
+                    var barType = new BarType(symbol, barSpec);
+                    var subscribe = new Subscribe<BarType>(
+                        barType,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.Send(DataServiceAddress.DataCollectionManager, subscribe);
+                }
+            }
         }
 
         private void OnMessage(FixSessionDisconnected message)

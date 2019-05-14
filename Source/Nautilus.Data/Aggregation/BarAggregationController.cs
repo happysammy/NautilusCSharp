@@ -405,6 +405,7 @@ namespace Nautilus.Data.Aggregation
                 this.NewGuid(),
                 this.TimeNow());
 
+            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
             this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
         }
     }

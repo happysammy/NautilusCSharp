@@ -11,7 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;

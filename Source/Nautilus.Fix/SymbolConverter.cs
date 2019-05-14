@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-// <copyright file="SymbolProvider.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="SymbolConverter.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -17,19 +17,19 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
-    /// Provides data for tradeable instruments.
+    /// Provides a converter between Nautilus symbols and broker symbols.
     /// </summary>
-    public class SymbolProvider
+    public class SymbolConverter
     {
         private readonly ImmutableList<Symbol> symbols;
         private readonly ImmutableDictionary<string, string> symbolIndex;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymbolProvider"/> class.
+        /// Initializes a new instance of the <see cref="SymbolConverter"/> class.
         /// </summary>
-        /// <param name="venue">The instrument data providers venue.</param>
-        /// <param name="symbolIndex">The CSV data file name.</param>
-        public SymbolProvider(Venue venue, IReadOnlyDictionary<string, string> symbolIndex)
+        /// <param name="venue">The symbol providers venue.</param>
+        /// <param name="symbolIndex">The symbol index dictionary.</param>
+        public SymbolConverter(Venue venue, IReadOnlyDictionary<string, string> symbolIndex)
         {
             this.symbolIndex = symbolIndex.ToImmutableDictionary();
             this.symbols = this.symbolIndex
@@ -39,8 +39,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Gets the Nautilus symbol from the given broker symbol, loaded from the brokerage
-        /// instrument data CSV file (must be contained in the index).
+        /// Gets the Nautilus symbol from the given broker symbol (must be contained in the index).
         /// </summary>
         /// <param name="brokerSymbol">The broker symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
@@ -55,8 +54,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Gets the broker symbol from the given Nautilus symbol, loaded from the brokerage
-        /// instrument data CSV file (must be contained in the index).
+        /// Gets the broker symbol from the given Nautilus symbol (must be contained in the index).
         /// </summary>
         /// <param name="nautilusSymbol">The Nautilus symbol.</param>
         /// <returns>If successful returns the result, otherwise returns failure result.</returns>
@@ -72,18 +70,18 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Gets all Nautilus symbols, loaded from the brokerage instrument data CSV file.
+        /// Gets all Nautilus symbols.
         /// </summary>
-        /// <returns>The list of broker symbols.</returns>
+        /// <returns>The collection of Nautilus symbols.</returns>
         public IEnumerable<Symbol> GetAllSymbols()
         {
             return this.symbols;
         }
 
         /// <summary>
-        /// Gets all broker symbols, loaded from the brokerage instrument data CSV file.
+        /// Returns all broker symbols.
         /// </summary>
-        /// <returns>The list of broker symbols.</returns>
+        /// <returns>The collection of broker symbols.</returns>
         public IEnumerable<string> GetAllBrokerSymbols()
         {
             return this.symbolIndex.Keys;

@@ -66,7 +66,7 @@ namespace NautilusData
             instrumentRepository.CacheAll();
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
-            var symbolProvider = new SymbolProvider(venue, config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var tickPublisher = new TickPublisher(container, config.ServerAddress, config.TickPublisherPort);
             var barPublisher = new BarPublisher(container, config.ServerAddress, config.TickPublisherPort);
@@ -91,7 +91,7 @@ namespace NautilusData
             var fixClient = CreateFixClient(
                 container,
                 config.FixConfiguration,
-                symbolProvider);
+                symbolConverter);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,
@@ -113,13 +113,15 @@ namespace NautilusData
                 messagingAdapter,
                 addresses,
                 fixGateway,
+                symbolConverter.GetAllSymbols(),
+                config.BarSpecifications,
                 config.UpdateInstruments);
         }
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
             FixConfiguration configuration,
-            SymbolProvider symbolProvider)
+            SymbolConverter symbolConverter)
         {
             switch (configuration.Broker)
             {
@@ -127,12 +129,12 @@ namespace NautilusData
                     return FxcmFixClientFactory.Create(
                         container,
                         configuration,
-                        symbolProvider);
+                        symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
                         configuration,
-                        symbolProvider);
+                        symbolConverter);
                 case Brokerage.Simulation:
                     throw new InvalidOperationException(
                         $"Cannot create FIX client for broker {configuration.Broker}.");

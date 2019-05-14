@@ -27,7 +27,7 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageRouter : ComponentBase, IFixMessageRouter
     {
-        private readonly SymbolProvider symbolProvider;
+        private readonly SymbolConverter symbolConverter;
         private readonly string accountNumber;
 
         private Session? fixSession;
@@ -36,18 +36,18 @@ namespace Nautilus.Brokerage.FXCM
         /// Initializes a new instance of the <see cref="FxcmFixMessageRouter"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="symbolProvider">The symbol provider.</param>
+        /// <param name="symbolConverter">The symbol provider.</param>
         /// <param name="accountNumber">The FIX account number.</param>
         /// <exception cref="ArgumentException">If the account number is empty or white space.</exception>
         public FxcmFixMessageRouter(
             IComponentryContainer container,
-            SymbolProvider symbolProvider,
+            SymbolConverter symbolConverter,
             string accountNumber)
         : base(NautilusService.FIX, container)
         {
             Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
-            this.symbolProvider = symbolProvider;
+            this.symbolConverter = symbolConverter;
             this.accountNumber = accountNumber;
         }
 
@@ -98,7 +98,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            var fxcmSymbol = this.symbolProvider.GetBrokerSymbol(symbol.Code);
+            var fxcmSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code);
             var message = SecurityListRequestFactory.Create(
                 fxcmSymbol.Value,
                 this.TimeNow());
@@ -122,7 +122,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbol = this.symbolProvider.GetBrokerSymbol(symbol.Code).Value;
+            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code).Value;
 
             var message = MarketDataRequestFactory.Create(
                 brokerSymbol,
@@ -137,7 +137,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void MarketDataRequestSubscribeAll()
         {
-            foreach (var brokerSymbol in this.symbolProvider.GetAllBrokerSymbols())
+            foreach (var brokerSymbol in this.symbolConverter.GetAllBrokerSymbols())
             {
                 var message = MarketDataRequestFactory.Create(
                     brokerSymbol,
@@ -155,7 +155,7 @@ namespace Nautilus.Brokerage.FXCM
         public void SubmitOrder(Order order)
         {
             var message = NewOrderSingleFactory.Create(
-                this.symbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
                 this.accountNumber,
                 order,
                 this.TimeNow());
@@ -169,7 +169,7 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            var brokerSymbol = this.symbolProvider.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
 
             if (atomicOrder.TakeProfit.HasValue)
             {
@@ -201,7 +201,7 @@ namespace Nautilus.Brokerage.FXCM
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
             var message = OrderCancelReplaceRequestFactory.Create(
-                this.symbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
                 order,
                 modifiedPrice.Value,
                 this.TimeNow());
@@ -216,7 +216,7 @@ namespace Nautilus.Brokerage.FXCM
         public void CancelOrder(Order order)
         {
             var message = OrderCancelRequestFactory.Create(
-                this.symbolProvider.GetBrokerSymbol(order.Symbol.Code).Value,
+                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
                 order,
                 this.TimeNow());
 

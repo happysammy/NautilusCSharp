@@ -22,7 +22,7 @@ namespace Nautilus.Fix
     [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {
-        private readonly SymbolProvider symbolProvider;
+        private readonly SymbolConverter symbolConverter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -31,20 +31,20 @@ namespace Nautilus.Fix
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
-        /// <param name="symbolProvider">The symbol provider.</param>
+        /// <param name="symbolConverter">The symbol provider.</param>
         public FixClient(
             IComponentryContainer container,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter,
-            SymbolProvider symbolProvider)
+            SymbolConverter symbolConverter)
         : base(
             container,
             config,
             messageHandler,
             messageRouter)
         {
-            this.symbolProvider = symbolProvider;
+            this.symbolConverter = symbolConverter;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <returns>The list of symbols.</returns>
         public IEnumerable<Symbol> GetAllSymbols() =>
-            this.symbolProvider.GetAllSymbols();
+            this.symbolConverter.GetAllSymbols();
 
         /// <summary>
         /// Submit a command to execute the given order.

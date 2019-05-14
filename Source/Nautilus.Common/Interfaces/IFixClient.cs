@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
