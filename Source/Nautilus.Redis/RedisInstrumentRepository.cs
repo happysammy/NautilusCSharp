@@ -8,18 +8,22 @@
 
 namespace Nautilus.Redis
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Newtonsoft.Json;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -62,12 +66,13 @@ namespace Nautilus.Redis
             {
                 var query = this.Read(key);
 
-                if (query.IsSuccess && !this.cache.ContainsKey(query.Value.Symbol))
+                if (!query.IsSuccess || this.cache.ContainsKey(query.Value.Symbol))
                 {
-                    var instrument = query.Value;
-
-                    this.cache.Add(instrument.Symbol, instrument);
+                    continue; // Did not contain instruct or already cached.
                 }
+
+                var instrument = query.Value;
+                this.cache.Add(instrument.Symbol, instrument);
             }
         }
 
@@ -172,37 +177,31 @@ namespace Nautilus.Redis
                 return QueryResult<Instrument>.Fail($"Cannot find {key}");
             }
 
-            var serialized = this.redisDatabase.StringGet(key).ToString();
-            var deserialized = JsonConvert.DeserializeObject(serialized);
+            var instrumentDict = this.redisDatabase.HashGetAll(key)
+                .ToDictionary(
+                    hashEntry => hashEntry.Name.ToString(),
+                    hashEntry => hashEntry.Value.ToString());
 
-// var deserializedSymbol = deserialized["Symbol"];
-//            var symbolCode = deserializedSymbol["Code"];
-//            var exchange = deserializedSymbol["Symbol"]["Venue"];
-//            var brokerSymbol = deserialized["BrokerSymbol"]["Value"];
-//
-//            var instrument = new Instrument(
-//                new Symbol(symbolCode, exchange.ToEnum<Venue>()),
-//                new InstrumentId(deserializedSymbol["Value"]),
-//                new BrokerSymbol(brokerSymbol),
-//                deserialized["QuoteCurrency"].ToEnum<Currency>(),
-//                deserialized["SecurityType"].ToEnum<SecurityType>(),
-//                Convert.ToInt32(deserialized["TickDecimals"]),
-//                Convert.ToDecimal(deserialized["TickSize"]),
-//                Convert.ToDecimal(deserialized["TickValue"]),
-//                Convert.ToDecimal(deserialized["TargetDirectSpread"]),
-//                Convert.ToInt32(deserialized["RoundLotSize"]),
-//                Convert.ToInt32(deserialized["ContractSize"]),
-//                Convert.ToInt32(deserialized["MinStopDistanceEntry"]),
-//                Convert.ToInt32(deserialized["MinLimitDistanceEntry"]),
-//                Convert.ToInt32(deserialized["MinStopDistance"]),
-//                Convert.ToInt32(deserialized["MinLimitDistance"]),
-//                Convert.ToInt32(deserialized["MinTradeSize"]),
-//                Convert.ToInt32(deserialized["MaxTradeSize"]),
-//                Convert.ToDecimal(deserialized["MarginRequirement"]),
-//                Convert.ToDecimal(deserialized["RolloverInterestBuy"]),
-//                Convert.ToDecimal(deserialized["RolloverInterestSell"]),
-//                deserialized["Timestamp"].ToZonedDateTimeFromIso());
-            return QueryResult<Instrument>.Fail("OOPS");
+            var instrument = new Instrument(
+                Symbol.Create(instrumentDict[nameof(Instrument.Symbol)]),
+                new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
+                new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
+                instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
+                instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.TickPrecision)]),
+                Convert.ToDecimal(instrumentDict[nameof(Instrument.TickSize)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.RoundLotSize)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistanceEntry)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistanceEntry)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MinStopDistance)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MinLimitDistance)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MinTradeSize)]),
+                Convert.ToInt32(instrumentDict[nameof(Instrument.MaxTradeSize)]),
+                Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestBuy)]),
+                Convert.ToDecimal(instrumentDict[nameof(Instrument.RolloverInterestSell)]),
+                instrumentDict[nameof(Instrument.Timestamp)].ToZonedDateTimeFromIso());
+
+            return QueryResult<Instrument>.Ok(instrument);
         }
 
         /// <summary>
@@ -213,11 +212,30 @@ namespace Nautilus.Redis
 
         private CommandResult Write(Instrument instrument)
         {
-            var symbol = instrument.Symbol;
+            var hashEntry = new[]
+            {
+                new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
+                new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
+                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
+                new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
+                new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
+                new HashEntry(nameof(Instrument.TickPrecision), instrument.TickPrecision),
+                new HashEntry(nameof(Instrument.TickSize), instrument.TickSize.ToString(CultureInfo.InvariantCulture)),
+                new HashEntry(nameof(Instrument.RoundLotSize), instrument.RoundLotSize),
+                new HashEntry(nameof(Instrument.MinStopDistanceEntry), instrument.MinStopDistanceEntry),
+                new HashEntry(nameof(Instrument.MinLimitDistanceEntry), instrument.MinLimitDistanceEntry),
+                new HashEntry(nameof(Instrument.MinStopDistance), instrument.MinStopDistance),
+                new HashEntry(nameof(Instrument.MinLimitDistance), instrument.MinLimitDistance),
+                new HashEntry(nameof(Instrument.MinTradeSize), instrument.MinTradeSize),
+                new HashEntry(nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize),
+                new HashEntry(nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture)),
+                new HashEntry(nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture)),
+                new HashEntry(nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString()),
+            };
 
-            this.redisDatabase.StringSet(KeyProvider.GetInstrumentKey(symbol), JsonConvert.SerializeObject(instrument));
+            this.redisDatabase.HashSet(KeyProvider.GetInstrumentKey(instrument.Symbol), hashEntry);
 
-            return CommandResult.Ok($"Added instrument {symbol}");
+            return CommandResult.Ok($"Added instrument {instrument}");
         }
     }
 }

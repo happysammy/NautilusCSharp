@@ -8,6 +8,7 @@
 
 namespace Nautilus.Data
 {
+    using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -15,11 +16,9 @@ namespace Nautilus.Data
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Documents;
     using Nautilus.Data.Types;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
-    using NodaTime;
 
     /// <summary>
     /// The component manages the queue of job messages being sent to the database.
@@ -46,7 +45,7 @@ namespace Nautilus.Data
 
             this.RegisterHandler<DataDelivery<(BarType, Bar)>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<IEnumerable<Instrument>>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -69,31 +68,30 @@ namespace Nautilus.Data
             }
         }
 
-        private void OnMessage(DataStatusRequest<BarType> message)
-        {
-            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
-            var response = new DataStatusResponse<ZonedDateTime>(
-                lastBarTimestampQuery,
-                this.NewGuid(),
-                this.TimeNow());
-
-            message.Sender.Send(response);
-        }
-
-        private void OnMessage(QueryRequest<BarType> message)
-        {
-            var barDataQuery = this.barRepository.Find(
-                message.DataType,
-                message.FromDateTime,
-                message.ToDateTime);
-            var response = new QueryResponse<BarDataFrame>(
-                barDataQuery,
-                this.NewGuid(),
-                this.TimeNow());
-
-            message.Sender.Send(response);
-        }
-
+// private void OnMessage(DataStatusRequest<BarType> message)
+//        {
+//            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
+//            var response = new DataStatusResponse<ZonedDateTime>(
+//                lastBarTimestampQuery,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            message.Sender.Send(response);
+//        }
+//
+//        private void OnMessage(QueryRequest<BarType> message)
+//        {
+//            var barDataQuery = this.barRepository.Find(
+//                message.DataType,
+//                message.FromDateTime,
+//                message.ToDateTime);
+//            var response = new QueryResponse<BarDataFrame>(
+//                barDataQuery,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            message.Sender.Send(response);
+//        }
         private void OnMessage(DataDelivery<(BarType BarType, Bar Bar)> message)
         {
             this.barRepository
@@ -110,12 +108,15 @@ namespace Nautilus.Data
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 
-        private void OnMessage(DataDelivery<Instrument> message)
+        private void OnMessage(DataDelivery<IEnumerable<Instrument>> message)
         {
-            this.instrumentRepository
-                .Add(message.Data, this.TimeNow())
-                .OnSuccess(result => this.Log.Information(result.Message))
-                .OnFailure(result => this.Log.Error(result.Message));
+            foreach (var instrument in message.Data)
+            {
+                this.instrumentRepository
+                    .Add(instrument, this.TimeNow())
+                    .OnSuccess(result => this.Log.Information(result.Message))
+                    .OnFailure(result => this.Log.Error(result.Message));
+            }
         }
     }
 }

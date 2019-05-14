@@ -44,5 +44,17 @@ namespace Nautilus.DomainModel.ValueObjects
         /// Gets the symbols venue.
         /// </summary>
         public Venue Venue { get; }
+
+        /// <summary>
+        /// Return a new <see cref="Symbol"/> from the given string.
+        /// </summary>
+        /// <param name="symbol">The symbol string.</param>
+        /// <returns>The created symbol.</returns>
+        public static Symbol Create(string symbol)
+        {
+            var symbolSplit = symbol.Split('.');
+
+            return new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>());
+        }
     }
 }

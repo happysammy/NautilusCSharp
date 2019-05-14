@@ -37,9 +37,7 @@ namespace NautilusExecutor
             bool isDevelopment)
         {
             // Log Settings
-            this.LogLevel = isDevelopment
-                ? LogEventLevel.Debug
-                : ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            this.LogLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
 
             // Network Settings
             this.ServerAddress = isDevelopment
