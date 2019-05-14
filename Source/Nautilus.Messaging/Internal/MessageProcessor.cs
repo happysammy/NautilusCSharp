@@ -59,7 +59,7 @@ namespace Nautilus.Messaging.Internal
         /// Gets the types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
-        public IEnumerable<Type> HandlerTypes => this.registeredHandlers.Select(h => h.Key).ToList().AsReadOnly();
+        public IEnumerable<Type> HandlerTypes => this.registeredHandlers.Select(h => h.Key);
 
         /// <summary>
         /// Gets the list of unhandled messages.
