@@ -29,7 +29,6 @@ namespace NautilusData
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network;
     using Nautilus.Redis;
     using Nautilus.Serilog;
     using NodaTime;
@@ -69,8 +68,8 @@ namespace NautilusData
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolProvider = new SymbolProvider(venue, config.SymbolIndex);
 
-            var tickPublisher = new TickPublisher(container, NetworkAddress.LocalHost(), new NetworkPort(60000));
-            var barPublisher = new BarPublisher(container, NetworkAddress.LocalHost(), new NetworkPort(60000));
+            var tickPublisher = new TickPublisher(container, config.ServerAddress, config.TickPublisherPort);
+            var barPublisher = new BarPublisher(container, config.ServerAddress, config.TickPublisherPort);
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,
