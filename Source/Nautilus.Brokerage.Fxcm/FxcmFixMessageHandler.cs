@@ -33,7 +33,7 @@ namespace Nautilus.Brokerage.FXCM
     /// </summary>
     public class FxcmFixMessageHandler : ComponentBase, IFixMessageHandler
     {
-        private readonly InstrumentDataProvider instrumentData;
+        private readonly SymbolProvider symbolProvider;
 
         private IFixGateway? fixGateway;
 
@@ -41,13 +41,13 @@ namespace Nautilus.Brokerage.FXCM
         /// Initializes a new instance of the <see cref="FxcmFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="instrumentData">The instrument data provider.</param>
+        /// <param name="symbolProvider">The instrument data provider.</param>
         public FxcmFixMessageHandler(
             IComponentryContainer container,
-            InstrumentDataProvider instrumentData)
+            SymbolProvider symbolProvider)
             : base(NautilusService.FIX, container)
         {
-            this.instrumentData = instrumentData;
+            this.symbolProvider = symbolProvider;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Nautilus.Brokerage.FXCM
 
                     var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
-                    var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
+                    var symbolQuery = this.symbolProvider.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Error(symbolQuery.Message);
@@ -253,7 +253,7 @@ namespace Nautilus.Brokerage.FXCM
                     return;
                 }
 
-                var symbolQuery = this.instrumentData.GetNautilusSymbol(message.GetField(Tags.Symbol));
+                var symbolQuery = this.symbolProvider.GetNautilusSymbol(message.GetField(Tags.Symbol));
                 if (symbolQuery.IsFailure)
                 {
                     this.Log.Error(symbolQuery.Message);
@@ -333,7 +333,7 @@ namespace Nautilus.Brokerage.FXCM
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? this.instrumentData.GetNautilusSymbol(brokerSymbol).Value
+                    ? this.symbolProvider.GetNautilusSymbol(brokerSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);

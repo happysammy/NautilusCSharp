@@ -21,19 +21,22 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="config">The FIX configuration.</param>
-        /// <param name="instrumentData">The instrument data provider.</param>
+        /// <param name="symbolProvider">The symbol provider.</param>
         /// <returns>The FXCM FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             FixConfiguration config,
-            InstrumentDataProvider instrumentData)
+            SymbolProvider symbolProvider)
         {
             return new FixClient(
                 container,
                 config,
-                new FxcmFixMessageHandler(container, instrumentData),
-                new FxcmFixMessageRouter(container, instrumentData, config.Credentials.Account),
-                instrumentData);
+                new FxcmFixMessageHandler(container, symbolProvider),
+                new FxcmFixMessageRouter(
+                    container,
+                    symbolProvider,
+                    config.Credentials.Account),
+                symbolProvider);
         }
     }
 }

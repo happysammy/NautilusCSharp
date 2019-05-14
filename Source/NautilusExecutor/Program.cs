@@ -8,7 +8,6 @@
 
 namespace NautilusExecutor
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using global::Serilog;
     using Microsoft.AspNetCore;
@@ -19,9 +18,8 @@ namespace NautilusExecutor
     using Serilog.Events;
 
     /// <summary>
-    /// The main entry point for the program.
+    /// The main entry point for the application.
     /// </summary>
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Reviewed. Program is never instantiated.")]
     public class Program
     {
         /// <summary>

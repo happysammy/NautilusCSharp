@@ -21,19 +21,22 @@ namespace Nautilus.Brokerage.Dukascopy
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="config">The FIX configuration.</param>
-        /// <param name="instrumentData">The instrument data provider.</param>
+        /// <param name="symbolProvider">The symbol provider.</param>
         /// <returns>The Dukascopy FIX client.</returns>
         public static IFixClient Create(
             IComponentryContainer container,
             FixConfiguration config,
-            InstrumentDataProvider instrumentData)
+            SymbolProvider symbolProvider)
         {
             return new FixClient(
                 container,
                 config,
-                new DukascopyFixMessageHandler(container, instrumentData),
-                new DukascopyFixMessageRouter(container, instrumentData, config.Credentials.Account),
-                instrumentData);
+                new DukascopyFixMessageHandler(container, symbolProvider),
+                new DukascopyFixMessageRouter(
+                    container,
+                    symbolProvider,
+                    config.Credentials.Account),
+                symbolProvider);
         }
     }
 }

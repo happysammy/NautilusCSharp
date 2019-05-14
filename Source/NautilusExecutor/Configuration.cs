@@ -9,12 +9,14 @@
 namespace NautilusExecutor
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Network;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Serilog.Events;
 
@@ -27,8 +29,12 @@ namespace NautilusExecutor
         /// Initializes a new instance of the <see cref="Configuration"/> class.
         /// </summary>
         /// <param name="configJson">The parsed configuration JSON.</param>
+        /// <param name="symbolIndex">The parsed symbols index string.</param>
         /// <param name="isDevelopment">The flag indicating whether the hosting environment is development.</param>
-        public Configuration(JObject configJson, bool isDevelopment)
+        public Configuration(
+            JObject configJson,
+            string symbolIndex,
+            bool isDevelopment)
         {
             // Log Settings
             this.LogLevel = isDevelopment
@@ -60,9 +66,10 @@ namespace NautilusExecutor
                 broker,
                 configPath,
                 credentials,
-                fixSettings["InstrumentData"],
-                Convert.ToBoolean(fixSettings["SendAccountTag"]),
-                Convert.ToBoolean(fixSettings["UpdateInstruments"]));
+                Convert.ToBoolean(fixSettings["SendAccountTag"]));
+
+            // Data Settings
+            this.SymbolIndex = JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolIndex);
         }
 
         /// <summary>
@@ -99,5 +106,10 @@ namespace NautilusExecutor
         /// Gets the FIX configuration.
         /// </summary>
         public FixConfiguration FixConfiguration { get; }
+
+        /// <summary>
+        /// Gets the symbol conversion index.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> SymbolIndex { get; }
     }
 }

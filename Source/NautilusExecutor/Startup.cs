@@ -54,8 +54,9 @@ namespace NautilusExecutor
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var parsed = JObject.Parse(File.ReadAllText("config.json"));
-            var config = new Configuration(parsed, this.Environment.IsDevelopment());
+            var configJson = JObject.Parse(File.ReadAllText("config.json"));
+            var symbolIndex = File.ReadAllText("symbols.json");
+            var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
 
             this.executionService = ExecutionServiceFactory.Create(config);
             this.executionService?.Start();

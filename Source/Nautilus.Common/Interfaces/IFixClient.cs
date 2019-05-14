@@ -61,12 +61,6 @@ namespace Nautilus.Common.Interfaces
         IEnumerable<Symbol> GetAllSymbols();
 
         /// <summary>
-        /// Returns a read-only dictionary of symbol to price decimal precisions.
-        /// </summary>
-        /// <returns>The tick precision index.</returns>
-        ImmutableDictionary<string, int> GetPricePrecisionIndex();
-
-        /// <summary>
         /// Subscribes to market data for the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol.</param>

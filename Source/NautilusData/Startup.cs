@@ -8,12 +8,14 @@
 
 namespace NautilusData
 {
+    using System.Collections.Generic;
     using System.IO;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Nautilus.Data;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -54,8 +56,9 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var parsed = JObject.Parse(File.ReadAllText("config.json"));
-            var config = new Configuration(parsed, this.Environment.IsDevelopment());
+            var configJson = JObject.Parse(File.ReadAllText("config.json"));
+            var symbolIndex = File.ReadAllText("symbols.json");
+            var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
 
             this.dataService = DataServiceFactory.Create(config);
             this.dataService.Start();

@@ -33,7 +33,7 @@ namespace Nautilus.Brokerage.Dukascopy
     /// </summary>
     public class DukascopyFixMessageHandler : ComponentBase, IFixMessageHandler
     {
-        private readonly InstrumentDataProvider instrumentData;
+        private readonly SymbolProvider symbolProvider;
 
         private IFixGateway? fixGateway;
 
@@ -41,13 +41,13 @@ namespace Nautilus.Brokerage.Dukascopy
         /// Initializes a new instance of the <see cref="DukascopyFixMessageHandler"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="instrumentData">The instrument data provider.</param>
+        /// <param name="symbolProvider">The symbol provider.</param>
         public DukascopyFixMessageHandler(
             IComponentryContainer container,
-            InstrumentDataProvider instrumentData)
+            SymbolProvider symbolProvider)
             : base(NautilusService.FIX, container)
         {
-            this.instrumentData = instrumentData;
+            this.symbolProvider = symbolProvider;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
-                    var symbolQuery = this.instrumentData.GetNautilusSymbol(brokerSymbol.Value);
+                    var symbolQuery = this.symbolProvider.GetNautilusSymbol(brokerSymbol.Value);
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Warning(symbolQuery.Message);
@@ -158,8 +158,8 @@ namespace Nautilus.Brokerage.Dukascopy
             this.Execute(() =>
             {
                 var brokerSymbolString = message.GetField(Tags.Symbol);
-                var brokerSymbol = new BrokerSymbol(brokerSymbolString);
 
+                // var brokerSymbol = new BrokerSymbol(brokerSymbolString);
                 var symbol = new Symbol(brokerSymbolString.Replace("/", string.Empty), Venue.DUKASCOPY);
 
                 this.Log.Information($"QuoteStatusReport({symbol})");
@@ -254,7 +254,7 @@ namespace Nautilus.Brokerage.Dukascopy
                     return;
                 }
 
-                var symbolQuery = this.instrumentData.GetNautilusSymbol(message.GetField(Tags.Symbol));
+                var symbolQuery = this.symbolProvider.GetNautilusSymbol(message.GetField(Tags.Symbol));
                 if (symbolQuery.IsFailure)
                 {
                     this.Log.Error(symbolQuery.Message);
@@ -334,7 +334,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 var brokerSymbol = message.GetField(Tags.Symbol);
 
                 var symbol = message.IsSetField(Tags.Symbol)
-                    ? this.instrumentData.GetNautilusSymbol(brokerSymbol).Value
+                    ? this.symbolProvider.GetNautilusSymbol(brokerSymbol).Value
                     : string.Empty;
 
                 var orderId = GetField(message, Tags.ClOrdID);

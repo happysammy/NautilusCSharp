@@ -9,7 +9,6 @@
 namespace Nautilus.Fix
 {
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
@@ -23,7 +22,7 @@ namespace Nautilus.Fix
     [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {
-        private readonly InstrumentDataProvider instrumentDataProvider;
+        private readonly SymbolProvider symbolProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
@@ -32,20 +31,20 @@ namespace Nautilus.Fix
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
-        /// <param name="instrumentDataProvider">The instrument data provider.</param>
+        /// <param name="symbolProvider">The symbol provider.</param>
         public FixClient(
             IComponentryContainer container,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter,
-            InstrumentDataProvider instrumentDataProvider)
+            SymbolProvider symbolProvider)
         : base(
             container,
             config,
             messageHandler,
             messageRouter)
         {
-            this.instrumentDataProvider = instrumentDataProvider;
+            this.symbolProvider = symbolProvider;
         }
 
         /// <summary>
@@ -77,14 +76,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <returns>The list of symbols.</returns>
         public IEnumerable<Symbol> GetAllSymbols() =>
-            this.instrumentDataProvider.GetAllSymbols();
-
-        /// <summary>
-        /// Returns a read-only dictionary of symbol to price decimal precisions.
-        /// </summary>
-        /// <returns>The tick precision index.</returns>
-        public ImmutableDictionary<string, int> GetPricePrecisionIndex() =>
-            this.instrumentDataProvider.GetPriceDecimalPrecisionIndex();
+            this.symbolProvider.GetAllSymbols();
 
         /// <summary>
         /// Submit a command to execute the given order.
