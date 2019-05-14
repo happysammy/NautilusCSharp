@@ -63,8 +63,7 @@ namespace Nautilus.Fix
             Debug.NotEmptyOrWhiteSpace(nautilusSymbol, nameof(nautilusSymbol));
 
             return this.symbolIndex.ContainsValue(nautilusSymbol)
-                ? QueryResult<string>.Ok(this.symbolIndex
-                    .FirstOrDefault(x => x.Value == nautilusSymbol).Key)
+                ? QueryResult<string>.Ok(this.symbolIndex.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
                 : QueryResult<string>.Fail(
                     $"Cannot find the broker symbol (index did not contain the given Nautilus symbol {nautilusSymbol}.");
         }
