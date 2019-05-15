@@ -33,8 +33,8 @@ namespace Nautilus.Common.Componentry
         /// <param name="container">The components componentry container.</param>
         protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
         {
-            this.Name = new Label(this.GetType().Name);
-            this.Address = new Address(this.GetType().Name);
+            this.Name = this.GetComponentName();
+            this.Address = new Address(this.Name.Value);
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.commandHandler = new CommandHandler(this.Log);
@@ -53,24 +53,23 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Gets the components name label.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        protected Label Name { get; }
+        public Label Name { get; }
 
         /// <summary>
         /// Gets the components messaging address.
         /// </summary>
-        protected Address Address { get; }
+        public Address Address { get; }
+
+        /// <summary>
+        /// Gets the time the component was last started.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public ZonedDateTime StartTime { get; }
 
         /// <summary>
         /// Gets the components logger.
         /// </summary>
         protected ILogger Log { get; }
-
-        /// <summary>
-        /// Gets the time the component was last started or reset.
-        /// </summary>
-        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        protected ZonedDateTime StartTime { get; }
 
         /// <summary>
         /// Actions to be performed on component start.
@@ -156,6 +155,18 @@ namespace Nautilus.Common.Componentry
             this.Endpoint.Send(message);
 
             this.Log.Verbose($"Received {message}.");
+        }
+
+        private Label GetComponentName()
+        {
+            var thisType = this.GetType();
+
+            if (thisType.IsGenericType)
+            {
+                return new Label($"{thisType.Name}<{thisType.GetGenericTypeDefinition().Name}>");
+            }
+
+            return new Label(thisType.Name);
         }
     }
 }

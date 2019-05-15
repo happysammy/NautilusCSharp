@@ -36,13 +36,19 @@ namespace Nautilus.Common.Messaging
         /// <param name="messageStorer">The message storer endpoint.</param>
         public MessageBus(IComponentryContainer container, IEndpoint messageStorer)
         {
-            this.log = container.LoggerFactory.Create(NautilusService.Messaging, new Label($"{typeof(T).Name}Bus"));
+            this.Name = new Label($"MessageBus<{this.GetType().GetGenericTypeDefinition().Name}>");
+            this.log = container.LoggerFactory.Create(NautilusService.Messaging, this.Name);
             this.messageStorer = messageStorer;
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
         }
+
+        /// <summary>
+        /// Gets the name of the message bus.
+        /// </summary>
+        public Label Name { get; }
 
         private void OnMessage(InitializeSwitchboard message)
         {

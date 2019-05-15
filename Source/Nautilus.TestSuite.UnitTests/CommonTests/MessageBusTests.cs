@@ -58,6 +58,16 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         }
 
         [Fact]
+        internal void ComponentName_ReturnsExpected()
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            // Assert something...
+        }
+
+        [Fact]
         internal void GivenEmptyStringMessage_Handles()
         {
             // Arrange
