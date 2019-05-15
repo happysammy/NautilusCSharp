@@ -73,12 +73,13 @@ namespace Nautilus.Execution
         }
 
         /// <summary>
-        /// Actions to be performed when the component is stopping.
+        /// Handles the stop message.
         /// </summary>
-        protected override void Stop()
+        /// <param name="message">The message.</param>
+        protected override void Stop(Stop message)
         {
-            this.commandConsumer.Send(new Stop(this.NewGuid(), this.TimeNow()));
-            this.eventPublisher.Send(new Stop(this.NewGuid(), this.TimeNow()));
+            this.commandConsumer.Send(message);
+            this.eventPublisher.Send(message);
         }
 
         private void OnMessage(SubmitOrder message)

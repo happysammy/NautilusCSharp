@@ -12,6 +12,7 @@ namespace Nautilus.Fix
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -879,18 +880,14 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// To be run on component start.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.Connect();
         }
 
-        /// <summary>
-        /// To be run on component stop.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.Disconnect();
         }

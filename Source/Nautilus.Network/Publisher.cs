@@ -13,6 +13,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using NetMQ;
     using NetMQ.Sockets;
@@ -58,20 +59,16 @@ namespace Nautilus.Network
         /// </summary>
         public ZmqServerAddress ServerAddress { get; }
 
-        /// <summary>
-        /// Actions to be performed when starting the <see cref="Router"/>.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
             this.Log.Debug("Ready to publish...");
         }
 
-        /// <summary>
-        /// Actions to be performed when stopping the <see cref="Router"/>.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");

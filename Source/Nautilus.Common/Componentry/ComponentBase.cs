@@ -88,16 +88,18 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Actions to be performed on component start.
+        /// Handles the start message.
         /// </summary>
-        protected virtual void Start()
+        /// <param name="message">The message.</param>
+        protected virtual void Start(Start message)
         {
         }
 
         /// <summary>
-        /// Actions to be performed on component stop.
+        /// Handles the stop message.
         /// </summary>
-        protected virtual void Stop()
+        /// <param name="message">The message.</param>
+        protected virtual void Stop(Stop message)
         {
         }
 
@@ -141,7 +143,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The start message.</param>
         private void OnMessage(Start message)
         {
-            this.Start();
+            this.Start(message);
         }
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The stop message.</param>
         private void OnMessage(Stop message)
         {
-            this.Stop();
+            this.Stop(message);
         }
 
         private void Unhandled(object message)

@@ -91,10 +91,8 @@ namespace Nautilus.Data
             this.fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
         }
 
-        /// <summary>
-        /// Actions to be performed when the component is started.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
@@ -106,10 +104,8 @@ namespace Nautilus.Data
             this.CreateTrimBarDataJob();
         }
 
-        /// <summary>
-        /// Actions to be performed when the component is stopped.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.Log.Information($"Stopping...");
 

@@ -12,6 +12,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
@@ -49,10 +50,8 @@ namespace Nautilus.Data
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Actions to be performed on stopping the component.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.barRepository.SnapshotDatabase();
         }

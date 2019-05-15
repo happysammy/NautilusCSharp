@@ -77,10 +77,8 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Start method called when the <see cref="Common.Messages.Commands.Start"/> message is received.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
         }

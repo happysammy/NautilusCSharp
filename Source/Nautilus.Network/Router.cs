@@ -15,6 +15,7 @@ namespace Nautilus.Network
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;
     using NetMQ;
     using NetMQ.Sockets;
@@ -61,10 +62,8 @@ namespace Nautilus.Network
             };
         }
 
-        /// <summary>
-        /// Executes on component start.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.socket.Bind(this.serverAddress.Value);
             this.Log.Debug($"Bound router socket to {this.serverAddress}");
@@ -74,10 +73,8 @@ namespace Nautilus.Network
             Task.Run(this.StartConsuming, this.cts.Token);
         }
 
-        /// <summary>
-        /// Executes on component stop.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.Log.Debug($"Stopping...");
             this.isConsuming = false;

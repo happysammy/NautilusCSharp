@@ -43,18 +43,14 @@ namespace Nautilus.Common.Scheduling
             this.RegisterHandler<RemoveJob>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Actions to be performed on component start.
-        /// </summary>
-        protected override void Start()
+        /// <inheritdoc />
+        protected override void Start(Start message)
         {
             this.quartzScheduler.Start();
         }
 
-        /// <summary>
-        /// Actions to be performed on component stop.
-        /// </summary>
-        protected override void Stop()
+        /// <inheritdoc />
+        protected override void Stop(Stop message)
         {
             this.quartzScheduler.Shutdown();
         }
