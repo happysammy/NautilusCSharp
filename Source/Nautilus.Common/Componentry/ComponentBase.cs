@@ -33,7 +33,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="container">The components componentry container.</param>
         protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
         {
-            this.Name = this.GetComponentName();
+            this.Name = new Label(this.CreateComponentName());
             this.Address = new Address(this.Name.Value);
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
@@ -157,16 +157,16 @@ namespace Nautilus.Common.Componentry
             this.Log.Verbose($"Received {message}.");
         }
 
-        private Label GetComponentName()
+        private string CreateComponentName()
         {
             var thisType = this.GetType();
 
             if (thisType.IsGenericType)
             {
-                return new Label($"{thisType.Name}<{thisType.GetGenericTypeDefinition().Name}>");
+                return $"{thisType.Name}<{thisType.GetGenericTypeDefinition().Name}>";
             }
 
-            return new Label(thisType.Name);
+            return thisType.Name;
         }
     }
 }

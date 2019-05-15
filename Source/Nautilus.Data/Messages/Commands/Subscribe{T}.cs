@@ -43,5 +43,11 @@ namespace Nautilus.Data.Messages.Commands
         /// Gets the messages data type T.
         /// </summary>
         public T DataType { get; }
+
+        /// <summary>
+        /// Returns a string representation of this object.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"Subscribe<{typeof(T).Name}>";
     }
 }
