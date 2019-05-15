@@ -67,6 +67,15 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
+        /// Adds the given message to the list of unhandled messages.
+        /// </summary>
+        /// <param name="message">The unhandled message.</param>
+        protected void AddToUnhandledMessages(object message)
+        {
+            this.processor.AddToUnhandledMessages(message);
+        }
+
+        /// <summary>
         /// Send the given message to this agents endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>

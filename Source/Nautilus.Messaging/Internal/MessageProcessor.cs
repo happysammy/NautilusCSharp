@@ -85,7 +85,7 @@ namespace Nautilus.Messaging.Internal
 
             if (this.registeredHandlers.Any(h => h.Key == typeof(object)))
             {
-                // Move handle object to the end of the handlers
+                // Move handle object to the end of the handlers.
                 var handleObject = this.registeredHandlers.FirstOrDefault(h => h.Key == typeof(object));
                 this.registeredHandlers.Remove(handleObject);
                 this.registeredHandlers.Add(handleObject);
@@ -103,17 +103,26 @@ namespace Nautilus.Messaging.Internal
             this.unhandled = handler;
         }
 
+        /// <summary>
+        /// Adds the given message to the list of unhandled messages.
+        /// </summary>
+        /// <param name="message">The unhandled message.</param>
+        public void AddToUnhandledMessages(object message)
+        {
+            this.UnhandledMessages.Add(message);
+        }
+
+        private void Unhandled(object message)
+        {
+            this.unhandled(message);
+        }
+
         private void BuildHandlers()
         {
             this.handlers = this.registeredHandlers.Select(h => h.Value).ToArray();
             this.handlersLength = this.handlers.Length;
         }
 
-        /// <summary>
-        /// Handle the given message.
-        /// </summary>
-        /// <param name="message">The message to handle.</param>
-        /// <returns>The completed task.</returns>
         private Task HandleMessage(object message)
         {
             for (var i = 0; i < this.handlersLength; i++)
@@ -124,26 +133,8 @@ namespace Nautilus.Messaging.Internal
                 }
             }
 
-            return this.Unhandled(message);
-        }
-
-        /// <summary>
-        /// Handles unhandled messages.
-        /// </summary>
-        /// <param name="message">The unhandled message.</param>
-        private Task Unhandled(object message)
-        {
-            this.unhandled(message);
+            this.Unhandled(message);
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// The default handle any delegate which adds the given messages to the list of unhandled messages.
-        /// </summary>
-        /// <param name="message">The unhandled message.</param>
-        private void AddToUnhandledMessages(object message)
-        {
-            this.UnhandledMessages.Add(message);
         }
     }
 }

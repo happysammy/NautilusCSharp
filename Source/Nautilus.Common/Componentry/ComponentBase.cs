@@ -47,6 +47,7 @@ namespace Nautilus.Common.Componentry
 
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
+            this.RegisterUnhandled(this.Unhandled);
         }
 
         /// <summary>
@@ -135,6 +136,12 @@ namespace Nautilus.Common.Componentry
         private void OnMessage(Stop message)
         {
             this.Stop();
+        }
+
+        private void Unhandled(object message)
+        {
+            this.Log.Warning($"Unhandled message {message}.");
+            this.AddToUnhandledMessages(message);
         }
 
         /// <summary>
