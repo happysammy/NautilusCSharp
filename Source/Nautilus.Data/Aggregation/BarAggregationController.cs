@@ -13,7 +13,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
@@ -25,6 +24,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Scheduler.Messages;
     using NodaTime;
     using Quartz;
 

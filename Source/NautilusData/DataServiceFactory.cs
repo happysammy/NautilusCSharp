@@ -19,7 +19,6 @@ namespace NautilusData
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
-    using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
@@ -29,6 +28,7 @@ namespace NautilusData
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis;
+    using Nautilus.Scheduler;
     using Nautilus.Serilog;
     using NodaTime;
     using StackExchange.Redis;

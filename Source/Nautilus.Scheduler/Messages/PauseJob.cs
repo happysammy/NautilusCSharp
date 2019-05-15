@@ -1,12 +1,12 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ResumeJob.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="PauseJob.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Commands
+namespace Nautilus.Scheduler.Messages
 {
     using System;
     using Nautilus.Core;
@@ -16,18 +16,18 @@ namespace Nautilus.Common.Messages.Commands
     using Quartz;
 
     /// <summary>
-    /// Represents a command to resume a job.
+    /// Represents a command to pause a job.
     /// </summary>
     [Immutable]
-    public sealed class ResumeJob : Command
+    public sealed class PauseJob : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResumeJob"/> class.
+        /// Initializes a new instance of the <see cref="PauseJob"/> class.
         /// </summary>
-        /// <param name="jobKey">The job key to resume.</param>
+        /// <param name="jobKey">The job key to pause.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
-        public ResumeJob(
+        public PauseJob(
             JobKey jobKey,
             Guid identifier,
             ZonedDateTime timestamp)
@@ -40,7 +40,7 @@ namespace Nautilus.Common.Messages.Commands
         }
 
         /// <summary>
-        /// Gets the job to resume key.
+        /// Gets the job to pause key.
         /// </summary>
         public JobKey JobKey { get; }
     }

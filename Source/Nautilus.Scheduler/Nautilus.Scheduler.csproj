@@ -9,19 +9,22 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Common.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Scheduler.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Common.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.1\Nautilus.Scheduler.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
-        <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
-        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+      <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+      <ProjectReference Include="..\Nautilus.Messaging\Nautilus.Messaging.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Quartz" Version="3.0.7" />
     </ItemGroup>
 
     <ItemGroup>

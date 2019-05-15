@@ -19,7 +19,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
-    using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
@@ -27,6 +26,7 @@ namespace NautilusExecutor
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.MsgPack;
+    using Nautilus.Scheduler;
     using Nautilus.Serilog;
     using NodaTime;
 

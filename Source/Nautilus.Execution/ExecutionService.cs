@@ -23,6 +23,7 @@ namespace Nautilus.Execution
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Scheduler.Messages;
     using NodaTime;
     using Quartz;
 

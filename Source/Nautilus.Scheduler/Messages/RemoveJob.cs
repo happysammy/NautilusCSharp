@@ -1,12 +1,12 @@
-//--------------------------------------------------------------------------------------------------
-// <copyright file="PauseJob.cs" company="Nautech Systems Pty Ltd">
+﻿//--------------------------------------------------------------------------------------------------
+// <copyright file="RemoveJob.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Commands
+namespace Nautilus.Scheduler.Messages
 {
     using System;
     using Nautilus.Core;
@@ -16,19 +16,21 @@ namespace Nautilus.Common.Messages.Commands
     using Quartz;
 
     /// <summary>
-    /// Represents a command to pause a job.
+    /// Represents a command to remove a job.
     /// </summary>
     [Immutable]
-    public sealed class PauseJob : Command
+    public sealed class RemoveJob : Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PauseJob"/> class.
+        /// Initializes a new instance of the <see cref="RemoveJob"/> class.
         /// </summary>
-        /// <param name="jobKey">The job key to pause.</param>
+        /// <param name="jobKey">The job key to remove.</param>
+        /// <param name="triggerKey">The job trigger key to remove.</param>
         /// <param name="identifier">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
-        public PauseJob(
+        public RemoveJob(
             JobKey jobKey,
+            TriggerKey triggerKey,
             Guid identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
@@ -37,11 +39,17 @@ namespace Nautilus.Common.Messages.Commands
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.JobKey = jobKey;
+            this.TriggerKey = triggerKey;
         }
 
         /// <summary>
-        /// Gets the job to pause key.
+        /// Gets the jobs key.
         /// </summary>
         public JobKey JobKey { get; }
+
+        /// <summary>
+        /// Gets the jobs trigger key.
+        /// </summary>
+        public TriggerKey TriggerKey { get; }
     }
 }

@@ -6,11 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Commands
+namespace Nautilus.Scheduler.Messages
 {
     using System;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Scheduling;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;

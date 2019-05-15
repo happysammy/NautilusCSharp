@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Scheduling
+namespace Nautilus.Scheduler
 {
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;

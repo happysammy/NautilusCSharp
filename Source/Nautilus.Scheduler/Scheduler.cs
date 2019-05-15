@@ -6,13 +6,14 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Scheduling
+namespace Nautilus.Scheduler
 {
     using System.Collections.Specialized;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Scheduler.Messages;
     using Quartz;
     using Quartz.Impl;
 
