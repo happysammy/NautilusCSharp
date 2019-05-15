@@ -18,10 +18,10 @@ namespace Nautilus.Redis
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
-    using Nautilus.Data.Aggregation;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;

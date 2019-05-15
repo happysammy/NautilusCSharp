@@ -6,12 +6,12 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
+namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Data.Aggregation;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;

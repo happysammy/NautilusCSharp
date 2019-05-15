@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Aggregation
+namespace Nautilus.DomainModel.Factories
 {
     using System.Collections.Generic;
     using System.Globalization;
