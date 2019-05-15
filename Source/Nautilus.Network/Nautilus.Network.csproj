@@ -19,12 +19,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NetMQ" Version="4.0.0.1" />
+        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
+        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
-        <ProjectReference Include="..\Nautilus.Core\Nautilus.Core.csproj" />
+        <PackageReference Include="NetMQ" Version="4.0.0.1" />
     </ItemGroup>
 
     <ItemGroup>

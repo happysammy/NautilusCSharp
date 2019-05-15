@@ -43,6 +43,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Common", "Nautilus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Fix", "Nautilus.Fix\Nautilus.Fix.csproj", "{C49CF207-29E8-4838-9634-A99EE3CC29B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nautilus.Messaging\Nautilus.Messaging.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduler", "Nautilus.Scheduler\Nautilus.Scheduler.csproj", "{ECB6AD8B-6714-4619-91DD-C459709C5036}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Brokerage.Dukascopy", "Nautilus.Brokerage.Dukascopy\Nautilus.Brokerage.Dukascopy.csproj", "{7647F824-C557-4BC3-B98B-51E64671CC1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Brokerage.Fxcm", "Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj", "{3E299DAE-B6DB-4BF6-ABE0-CCC1F9E33CB2}"
@@ -59,10 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.MsgPack", "Nautilu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Execution", "Nautilus.Execution\Nautilus.Execution.csproj", "{D3F2837D-750C-41E2-9129-2F284C3915D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nautilus.Messaging\Nautilus.Messaging.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
@@ -70,8 +72,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.IntegrationTests", "Nautilus.TestSuite.IntegrationTests\Nautilus.TestSuite.IntegrationTests.csproj", "{A8A27E8F-EF22-43C3-9350-91FD626A130F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor.Api", "NautilusExecutor.Api\NautilusExecutor.Api.csproj", "{B5CA4594-2F7E-47B9-A1EC-E5640076D252}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduler", "Nautilus.Scheduler\Nautilus.Scheduler.csproj", "{ECB6AD8B-6714-4619-91DD-C459709C5036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,13 +19,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-        <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+        <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
+        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
-        <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
     </ItemGroup>
 
     <ItemGroup>
