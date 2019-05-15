@@ -68,30 +68,6 @@ namespace Nautilus.Data
             }
         }
 
-// private void OnMessage(DataStatusRequest<BarType> message)
-//        {
-//            var lastBarTimestampQuery = this.barRepository.LastBarTimestamp(message.DataType);
-//            var response = new DataStatusResponse<ZonedDateTime>(
-//                lastBarTimestampQuery,
-//                this.NewGuid(),
-//                this.TimeNow());
-//
-//            message.Sender.Send(response);
-//        }
-//
-//        private void OnMessage(QueryRequest<BarType> message)
-//        {
-//            var barDataQuery = this.barRepository.Find(
-//                message.DataType,
-//                message.FromDateTime,
-//                message.ToDateTime);
-//            var response = new QueryResponse<BarDataFrame>(
-//                barDataQuery,
-//                this.NewGuid(),
-//                this.TimeNow());
-//
-//            message.Sender.Send(response);
-//        }
         private void OnMessage(DataDelivery<(BarType BarType, Bar Bar)> message)
         {
             this.barRepository
