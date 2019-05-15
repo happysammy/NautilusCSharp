@@ -14,7 +14,6 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Core;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Represents a generic message bus.
@@ -24,7 +23,6 @@ namespace Nautilus.Common.Messaging
         where T : Message
     {
         private readonly ILogger log;
-        private readonly IEndpoint messageStorer;
 
         private Switchboard switchboard;
         private int messageCount;
@@ -32,13 +30,11 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="messageStorer">The message storer endpoint.</param>
-        public MessageBus(IComponentryContainer container, IEndpoint messageStorer)
+        /// <param name="container">The componentry container.</param>
+        public MessageBus(IComponentryContainer container)
         {
             this.Name = new Label($"MessageBus<{this.GetType().GetGenericTypeDefinition().Name}>");
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, this.Name);
-            this.messageStorer = messageStorer;
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
@@ -66,7 +62,6 @@ namespace Nautilus.Common.Messaging
         private void LogEnvelope(Envelope<T> envelope)
         {
             this.messageCount++;
-            this.messageStorer.Send(envelope);
 
             this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }

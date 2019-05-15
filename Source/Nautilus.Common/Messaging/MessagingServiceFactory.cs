@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.MessageStore;
     using Nautilus.Core;
 
     /// <summary>
@@ -20,16 +19,13 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Creates a new message service and returns its <see cref="IMessagingAdapter"/> interface.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="store">The message store.</param>
+        /// <param name="container">The componentry container.</param>
         /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
-        public static MessagingAdapter Create(IComponentryContainer container, IMessageStore store)
+        public static MessagingAdapter Create(IComponentryContainer container)
         {
-            var messageStorer = new MessageStorer(container, store);
-
-            var commandBus = new MessageBus<Command>(container, messageStorer.Endpoint);
-            var eventBus = new MessageBus<Event>(container, messageStorer.Endpoint);
-            var documentBus = new MessageBus<Document>(container, messageStorer.Endpoint);
+            var commandBus = new MessageBus<Command>(container);
+            var eventBus = new MessageBus<Event>(container);
+            var documentBus = new MessageBus<Document>(container);
 
             return new MessagingAdapter(
                 commandBus.Endpoint,

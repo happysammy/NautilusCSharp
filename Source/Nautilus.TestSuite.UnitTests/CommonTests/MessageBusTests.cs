@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Messaging;
@@ -27,6 +26,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     {
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter mockLoggingAdapter;
+        private readonly MockMessagingAgent mockReceiver;
         private readonly IEndpoint messageBus;
 
         public MessageBusTests(ITestOutputHelper output)
@@ -36,19 +36,18 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var containerFactory = new StubComponentryContainerFactory();
             var container = containerFactory.Create();
-            var messageWarehouse = new InMemoryMessageStore();
-            var messageStorer = new MessageStorer(container, messageWarehouse);
             this.mockLoggingAdapter = containerFactory.LoggingAdapter;
-            this.messageBus = new MessageBus<Command>(container, messageStorer.Endpoint).Endpoint;
+            this.mockReceiver = new MockMessagingAgent();
+            this.messageBus = new MessageBus<Command>(container).Endpoint;
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.DeadLetters, messageStorer.Endpoint },
-                { ServiceAddress.Alpha, messageStorer.Endpoint },
-                { ServiceAddress.Data, messageStorer.Endpoint },
-                { ServiceAddress.Execution, messageStorer.Endpoint },
-                { ServiceAddress.Portfolio, messageStorer.Endpoint },
-                { ServiceAddress.Risk, messageStorer.Endpoint },
+                { ServiceAddress.DeadLetters, mockReceiver.Endpoint },
+                { ServiceAddress.Alpha, mockReceiver.Endpoint },
+                { ServiceAddress.Data, mockReceiver.Endpoint },
+                { ServiceAddress.Execution, mockReceiver.Endpoint },
+                { ServiceAddress.Portfolio, mockReceiver.Endpoint },
+                { ServiceAddress.Risk, mockReceiver.Endpoint },
             }.ToImmutableDictionary();
 
             this.messageBus.Send(new InitializeSwitchboard(

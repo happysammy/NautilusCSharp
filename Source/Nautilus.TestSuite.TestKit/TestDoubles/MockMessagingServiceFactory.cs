@@ -14,7 +14,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Messaging;
@@ -27,11 +26,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public MockMessagingServiceFactory(IComponentryContainer container)
         {
-            var messageWarehouse = new InMemoryMessageStore();
-            var messageStorer = new MessageStorer(container, messageWarehouse);
-            var commandBus = new MessageBus<Command>(container, messageStorer.Endpoint);
-            var eventBus = new MessageBus<Event>(container, messageStorer.Endpoint);
-            var documentBus = new MessageBus<Document>(container, messageStorer.Endpoint);
+            var commandBus = new MessageBus<Command>(container);
+            var eventBus = new MessageBus<Event>(container);
+            var documentBus = new MessageBus<Document>(container);
 
             var messagingAdapter = new MessagingAdapter(
                 commandBus.Endpoint,

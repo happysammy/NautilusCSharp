@@ -18,7 +18,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
-    using Nautilus.Common.MessageStore;
     using Nautilus.Common.Messaging;
     using Nautilus.Common.Scheduling;
     using Nautilus.Core.Extensions;
@@ -54,7 +53,7 @@ namespace NautilusExecutor
                 guidFactory,
                 new LoggerFactory(loggingAdapter));
 
-            var messagingAdapter = MessagingServiceFactory.Create(container, new FakeMessageStore());
+            var messagingAdapter = MessagingServiceFactory.Create(container);
             var scheduler = new Scheduler(container);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
