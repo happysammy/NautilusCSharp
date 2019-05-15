@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -66,8 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe1);
             this.controller.Endpoint.Send(subscribe2);
 
-            // LogDumper.Dump(this.logger, this.output);
             // Assert
+            LogDumper.Dump(this.logger, this.output);
         }
 
         [Fact]
@@ -108,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe3);
             this.controller.Endpoint.Send(subscribe4);
 
-            // LogDumper.Dump(this.logger, this.output);
+            LogDumper.Dump(this.logger, this.output);
             // Assert
         }
 
@@ -141,7 +142,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Task.Delay(2000).Wait();
             this.controller.Endpoint.Send(unsubscribe);
 
-            // LogDumper.Dump(this.logger, this.output);
+            LogDumper.Dump(this.logger, this.output);
             // Assert
         }
 
@@ -190,7 +191,8 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             Task.Delay(5000).Wait();
             this.controller.Endpoint.Send(unsubscribe);
 
-            // LogDumper.Dump(this.logger, this.output);
+            LogDumper.Dump(this.logger, this.output);
+
             // Assert
         }
     }

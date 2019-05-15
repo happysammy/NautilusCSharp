@@ -33,7 +33,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="container">The componentry container.</param>
         public MessageBus(IComponentryContainer container)
         {
-            this.Name = new Label($"MessageBus<{this.GetType().GetGenericTypeDefinition().Name}>");
+            this.Name = new Label($"MessageBus<{typeof(T).Name}>");
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, this.Name);
             this.switchboard = Switchboard.Empty();
 

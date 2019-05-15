@@ -42,12 +42,12 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.DeadLetters, mockReceiver.Endpoint },
-                { ServiceAddress.Alpha, mockReceiver.Endpoint },
-                { ServiceAddress.Data, mockReceiver.Endpoint },
-                { ServiceAddress.Execution, mockReceiver.Endpoint },
-                { ServiceAddress.Portfolio, mockReceiver.Endpoint },
-                { ServiceAddress.Risk, mockReceiver.Endpoint },
+                { ServiceAddress.DeadLetters, this.mockReceiver.Endpoint },
+                { ServiceAddress.Alpha, this.mockReceiver.Endpoint },
+                { ServiceAddress.Data, this.mockReceiver.Endpoint },
+                { ServiceAddress.Execution, this.mockReceiver.Endpoint },
+                { ServiceAddress.Portfolio, this.mockReceiver.Endpoint },
+                { ServiceAddress.Risk, this.mockReceiver.Endpoint },
             }.ToImmutableDictionary();
 
             this.messageBus.Send(new InitializeSwitchboard(
@@ -61,7 +61,6 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         {
             // Arrange
             // Act
-
             // Assert
             // Assert something...
         }

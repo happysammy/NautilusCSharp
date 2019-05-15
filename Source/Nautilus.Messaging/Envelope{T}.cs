@@ -105,6 +105,6 @@ namespace Nautilus.Messaging
         /// Returns a string representation of this <see cref="Envelope{T}"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"[{this.message}]";
+        public override string ToString() => $"Envelope<{typeof(T).Name}>[{this.message}]";
     }
 }

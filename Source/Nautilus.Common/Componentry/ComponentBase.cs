@@ -183,7 +183,7 @@ namespace Nautilus.Common.Componentry
 
             if (thisType.IsGenericType)
             {
-                return $"{thisType.Name}<{thisType.GetGenericTypeDefinition().Name}>";
+                return $"{thisType.Name.Split('`')[0]}<{thisType.GenericTypeArguments[0].Name}>";
             }
 
             return thisType.Name;
