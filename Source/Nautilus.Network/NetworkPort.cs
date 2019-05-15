@@ -14,7 +14,7 @@ namespace Nautilus.Network
 
     /// <summary>
     /// Represents a valid network port number.
-    /// Should be between 49152 to 65535 to avoid registered IANA collision.
+    /// Should be between 49152 to 65535 to avoid registered IANA port collision.
     /// </summary>
     [Immutable]
     public sealed class NetworkPort

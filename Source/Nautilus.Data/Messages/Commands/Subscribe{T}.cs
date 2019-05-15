@@ -48,6 +48,6 @@ namespace Nautilus.Data.Messages.Commands
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Subscribe<{typeof(T).Name}>";
+        public override string ToString() => $"Subscribe<{this.DataType}>";
     }
 }
