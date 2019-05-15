@@ -32,7 +32,6 @@ namespace Nautilus.Data.Aggregation
         private readonly List<BarSpecification> subscriptions;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
 
-        private Tick? lastTick;
         private bool isMarketOpen;
 
         /// <summary>
@@ -107,8 +106,6 @@ namespace Nautilus.Data.Aggregation
                     builder.Update(quote);
                 }
             }
-
-            this.lastTick = tick;
         }
 
         private void OnMessage(CloseBar message)
@@ -124,11 +121,6 @@ namespace Nautilus.Data.Aggregation
             if (!this.isMarketOpen)
             {
                 return; // Won't close a bar outside market hours.
-            }
-
-            if (this.lastTick is null)
-            {
-                return; // No ticks have been received for the builders.
             }
 
             var builder = this.barBuilders[barSpec];

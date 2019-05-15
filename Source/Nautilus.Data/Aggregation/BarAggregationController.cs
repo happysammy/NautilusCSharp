@@ -83,8 +83,6 @@ namespace Nautilus.Data.Aggregation
         public override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
         }
 
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
@@ -128,58 +126,6 @@ namespace Nautilus.Data.Aggregation
                 .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
                 .WithSchedule(CreateBarJobSchedule(barSpec))
                 .Build();
-        }
-
-        private void CreateMarketOpenedJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("market_opened", "bar_aggregation");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new MarketStatusJob(true),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduling, createJob);
-            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
-        }
-
-        private void CreateMarketClosedJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("market_closed", "bar_aggregation");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new MarketStatusJob(false),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduling, createJob);
-            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
         private bool IsFxMarketOpen()
