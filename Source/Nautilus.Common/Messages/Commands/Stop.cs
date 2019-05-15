@@ -33,5 +33,11 @@ namespace Nautilus.Common.Messages.Commands
             Debug.NotDefault(messageId, nameof(messageId));
             Debug.NotDefault(messageTimestamp, nameof(messageTimestamp));
         }
+
+        /// <summary>
+        /// Returns a string representation of this message.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{nameof(Stop)}({this.Id})";
     }
 }

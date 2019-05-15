@@ -96,6 +96,8 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
+            this.Send(ServiceAddress.Scheduler, message);
+
             this.fixGateway.Connect();
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
@@ -108,6 +110,9 @@ namespace Nautilus.Data
         protected override void Stop(Stop message)
         {
             this.Log.Information($"Stopping...");
+
+            this.Send(ServiceAddress.Scheduler, message);
+            this.Send(DataServiceAddress.DatabaseTaskManager, message);
 
             this.fixGateway.Disconnect();
         }
@@ -162,12 +167,16 @@ namespace Nautilus.Data
 
         private void OnMessage(Unsubscribe<BarType> message)
         {
+            this.Log.Debug($"Received {message}");
+
             // Forward message.
             this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(TrimBarDataJob message)
         {
+            this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
+
             var trimCommand = new TrimBarData(
                 this.barSpecifications,
                 this.barRollingWindowDays,
@@ -175,7 +184,6 @@ namespace Nautilus.Data
                 this.TimeNow());
 
             this.Send(DataServiceAddress.DatabaseTaskManager, trimCommand);
-            this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 
         private void CreateConnectFixJob()
@@ -200,7 +208,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
         }
 
@@ -226,7 +234,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
         }
 
@@ -252,7 +260,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
         }
 
@@ -278,7 +286,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
         }
 
@@ -304,7 +312,7 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Send(ServiceAddress.Scheduler, createJob);
             this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
     }

@@ -93,6 +93,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         protected virtual void Start(Start message)
         {
+            this.Log.Error($"Received unhandled {message}.");
         }
 
         /// <summary>
@@ -101,6 +102,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         protected virtual void Stop(Stop message)
         {
+            this.Log.Error($"Received unhandled {message}.");
         }
 
         /// <summary>
@@ -172,7 +174,7 @@ namespace Nautilus.Common.Componentry
 
             this.Endpoint.Send(message);
 
-            this.Log.Verbose($"Received {message}.");
+            this.Log.Debug($"Received {message}.");
         }
 
         private string CreateComponentName()

@@ -92,7 +92,7 @@ namespace NautilusData
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Scheduling, scheduler.Endpoint },
+                { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },

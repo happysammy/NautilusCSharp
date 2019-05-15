@@ -25,9 +25,9 @@ namespace Nautilus.Common.Messaging
         public static Address DeadLetters { get; } = new Address(nameof(DeadLetters));
 
         /// <summary>
-        /// Gets the <see cref="Scheduling"/> messaging address.
+        /// Gets the <see cref="Scheduler"/> messaging address.
         /// </summary>
-        public static Address Scheduling { get; } = new Address(nameof(Scheduling));
+        public static Address Scheduler { get; } = new Address(nameof(Scheduler));
 
         /// <summary>
         /// Gets the alpha service messaging address.

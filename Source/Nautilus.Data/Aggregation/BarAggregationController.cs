@@ -77,12 +77,6 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
         }
 
-        /// <inheritdoc />
-        protected override void Start(Start message)
-        {
-            this.Log.Information($"Started at {this.StartTime}.");
-        }
-
         private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
         {
             var scheduleBuilder = SimpleScheduleBuilder
@@ -138,8 +132,6 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Subscribe<BarType> message)
         {
-            this.Log.Debug($"Received {message}");
-
             var symbol = message.DataType.Symbol;
             var barSpec = message.DataType.Specification;
 
@@ -186,7 +178,7 @@ namespace Nautilus.Data.Aggregation
                 this.barJobs.Add(
                     barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
 
-                this.Send(ServiceAddress.Scheduling, createJob);
+                this.Send(ServiceAddress.Scheduler, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -196,7 +188,7 @@ namespace Nautilus.Data.Aggregation
 
             this.triggerCounts[duration]++;
 
-            this.Log.Debug($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+            this.Log.Verbose($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
                       $"duration (count={this.triggerCounts[duration]}).");
         }
 
@@ -229,7 +221,7 @@ namespace Nautilus.Data.Aggregation
 
             this.triggerCounts[barSpec.Duration]--;
 
-            this.Log.Debug($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
+            this.Log.Verbose($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
                            $"duration (count={this.triggerCounts[barSpec.Duration]}).");
 
             if (this.triggerCounts[barSpec.Duration] <= 0)
@@ -241,7 +233,7 @@ namespace Nautilus.Data.Aggregation
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.Send(ServiceAddress.Scheduling, removeJob);
+                this.Send(ServiceAddress.Scheduler, removeJob);
             }
         }
 
@@ -303,7 +295,7 @@ namespace Nautilus.Data.Aggregation
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(ServiceAddress.Scheduling, resumeJob);
+                    this.Send(ServiceAddress.Scheduler, resumeJob);
                 }
 
                 // Tell all bar aggregators the market is now open.
@@ -327,7 +319,7 @@ namespace Nautilus.Data.Aggregation
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.Send(ServiceAddress.Scheduling, pause);
+                    this.Send(ServiceAddress.Scheduler, pause);
                 }
 
                 // Tell all aggregators the market is now closed.
