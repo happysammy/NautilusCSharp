@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5555),
                 Guid.NewGuid());
-            consumer.Start();
+            consumer.SendStart();
 
             // Act
             requester.SendFrame("MSG");
@@ -70,7 +70,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            consumer.SendStop();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5556),
                 Guid.NewGuid());
-            consumer.Start();
+            consumer.SendStart();
 
             // Act
             requester.SendFrame("MSG-1");
@@ -107,7 +107,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            consumer.SendStop();
         }
 
         [Fact]
@@ -124,14 +124,14 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5557),
                 Guid.NewGuid());
-            consumer.Start();
+            consumer.SendStart();
 
             requester.SendFrame("MSG");
             requester.ReceiveFrameBytes();
             Task.Delay(100).Wait();
 
             // Act
-            consumer.Stop();
+            consumer.SendStop();
 
             requester.SendFrame("AFTER-STOPPED");
 
@@ -159,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5558),
                 Guid.NewGuid());
-            consumer.Start();
+            consumer.SendStart();
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -179,7 +179,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Tear Down
             requester.Disconnect(testAddress);
             requester.Dispose();
-            consumer.Stop();
+            consumer.SendStop();
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.localHost,
                 new NetworkPort(5559),
                 Guid.NewGuid());
-            consumer.Start();
+            consumer.SendStart();
 
             // Act
             for (var i = 0; i < 1000; i++)
@@ -224,7 +224,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester2.Disconnect(testAddress);
             requester1.Dispose();
             requester2.Dispose();
-            consumer.Stop();
+            consumer.SendStop();
         }
     }
 }

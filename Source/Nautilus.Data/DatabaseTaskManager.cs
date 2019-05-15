@@ -52,7 +52,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Actions to be performed on stopping the component.
         /// </summary>
-        public override void Stop()
+        protected override void Stop()
         {
             this.barRepository.SnapshotDatabase();
         }

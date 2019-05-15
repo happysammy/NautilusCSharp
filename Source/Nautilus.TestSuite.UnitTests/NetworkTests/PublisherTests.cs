@@ -64,7 +64,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
                 this.setupContainer,
                 this.localHost,
                 new NetworkPort(55504));
-            publisher.Start();
+            publisher.SendStart();
 
             Task.Delay(100).Wait();
             const string testAddress = "tcp://localhost:55504";
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             subscriber.Unsubscribe(TestTopic);
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Stop();
+            publisher.SendStop();
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }

@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 this.setupContainer,
                 this.localHost,
                 new NetworkPort(55511));
-            publisher.Start();
+            publisher.SendStart();
             Task.Delay(100).Wait();
 
             var barType = StubBarType.AUDUSD();
@@ -75,7 +75,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Unsubscribe(barType.ToString());
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Stop();
+            publisher.SendStart();
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }

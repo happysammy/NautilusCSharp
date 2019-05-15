@@ -61,7 +61,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Actions to be performed when starting the <see cref="Router"/>.
         /// </summary>
-        public override void Start()
+        protected override void Start()
         {
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
@@ -71,7 +71,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Actions to be performed when stopping the <see cref="Router"/>.
         /// </summary>
-        public override void Stop()
+        protected override void Stop()
         {
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");

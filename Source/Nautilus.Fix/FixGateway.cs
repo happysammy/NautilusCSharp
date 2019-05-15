@@ -92,22 +92,6 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// To be run on component start.
-        /// </summary>
-        public override void Start()
-        {
-            this.Connect();
-        }
-
-        /// <summary>
-        /// To be run on component stop.
-        /// </summary>
-        public override void Stop()
-        {
-            this.Disconnect();
-        }
-
-        /// <summary>
         /// Registers the receiver endpoint to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
@@ -893,6 +877,22 @@ namespace Nautilus.Fix
                     $"FilledQty={filledQuantity} at {averagePrice}, " +
                     $"LeavesQty={leavesQuantity})");
             });
+        }
+
+        /// <summary>
+        /// To be run on component start.
+        /// </summary>
+        protected override void Start()
+        {
+            this.Connect();
+        }
+
+        /// <summary>
+        /// To be run on component stop.
+        /// </summary>
+        protected override void Stop()
+        {
+            this.Disconnect();
         }
     }
 }

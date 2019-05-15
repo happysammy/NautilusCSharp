@@ -80,7 +80,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Start method called when the <see cref="Common.Messages.Commands.Start"/> message is received.
         /// </summary>
-        public override void Start()
+        protected override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
         }

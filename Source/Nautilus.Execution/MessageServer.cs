@@ -75,7 +75,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Actions to be performed when the component is stopping.
         /// </summary>
-        public override void Stop()
+        protected override void Stop()
         {
             this.commandConsumer.Send(new Stop(this.NewGuid(), this.TimeNow()));
             this.eventPublisher.Send(new Stop(this.NewGuid(), this.TimeNow()));

@@ -49,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
                 this.setupContainer,
                 this.localHost,
                 new NetworkPort(55506));
-            publisher.Start();
+            publisher.SendStart();
             Task.Delay(100).Wait();
 
             var symbol = new Symbol("AUDUSD", Venue.FXCM);
@@ -76,7 +76,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Unsubscribe(symbol.ToString());
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Stop();
+            publisher.SendStop();
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }

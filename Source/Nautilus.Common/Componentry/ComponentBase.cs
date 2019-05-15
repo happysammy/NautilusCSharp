@@ -72,16 +72,32 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
+        /// Sends a <see cref="Start"/> message to the component.
+        /// </summary>
+        public void SendStart()
+        {
+            this.SendToSelf(new Start(this.NewGuid(), this.TimeNow()));
+        }
+
+        /// <summary>
+        /// Sends a <see cref="Stop"/> message to the component.
+        /// </summary>
+        public void SendStop()
+        {
+            this.SendToSelf(new Stop(this.NewGuid(), this.TimeNow()));
+        }
+
+        /// <summary>
         /// Actions to be performed on component start.
         /// </summary>
-        public virtual void Start()
+        protected virtual void Start()
         {
         }
 
         /// <summary>
         /// Actions to be performed on component stop.
         /// </summary>
-        public virtual void Stop()
+        protected virtual void Stop()
         {
         }
 

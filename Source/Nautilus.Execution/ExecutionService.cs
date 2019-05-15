@@ -109,7 +109,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Actions to be performed when the component is started.
         /// </summary>
-        public override void Start()
+        protected override void Start()
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
@@ -121,7 +121,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Actions to be performed when the component is stopped.
         /// </summary>
-        public override void Stop()
+        protected override void Stop()
         {
             this.fixGateway.Disconnect();
         }

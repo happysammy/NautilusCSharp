@@ -46,7 +46,7 @@ namespace Nautilus.Common.Scheduling
         /// <summary>
         /// Actions to be performed on component start.
         /// </summary>
-        public override void Start()
+        protected override void Start()
         {
             this.quartzScheduler.Start();
         }
@@ -54,7 +54,7 @@ namespace Nautilus.Common.Scheduling
         /// <summary>
         /// Actions to be performed on component stop.
         /// </summary>
-        public override void Stop()
+        protected override void Stop()
         {
             this.quartzScheduler.Shutdown();
         }
