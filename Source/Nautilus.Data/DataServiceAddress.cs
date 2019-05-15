@@ -25,11 +25,6 @@ namespace Nautilus.Data
         /// <summary>
         /// Gets the <see cref="BarAggregationController"/> component messaging address.
         /// </summary>
-        public static Address DataCollectionManager { get; } = new Address(nameof(DataCollectionManager));
-
-        /// <summary>
-        /// Gets the <see cref="BarAggregationController"/> component messaging address.
-        /// </summary>
         public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
 
         /// <summary>

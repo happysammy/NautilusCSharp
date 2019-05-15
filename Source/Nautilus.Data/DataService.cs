@@ -20,6 +20,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -35,7 +36,10 @@ namespace Nautilus.Data
         private readonly IFixGateway fixGateway;
         private readonly IEnumerable<Symbol> subscribingSymbols;
         private readonly IEnumerable<BarSpecification> barSpecifications;
+        private readonly int barRollingWindowDays;
         private readonly bool updateInstruments;
+
+        private bool isTrimJobActive;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -46,6 +50,7 @@ namespace Nautilus.Data
         /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
         /// <param name="barSpecifications">The bar specifications to create.</param>
+        /// <param name="barRollingWindowDays">The number of days to trim bar data to.</param>
         /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
@@ -54,6 +59,7 @@ namespace Nautilus.Data
             IFixGateway fixGateway,
             IEnumerable<Symbol> subscribingSymbols,
             IEnumerable<BarSpecification> barSpecifications,
+            int barRollingWindowDays,
             bool updateInstruments)
             : base(
                 NautilusService.Data,
@@ -64,7 +70,9 @@ namespace Nautilus.Data
             this.fixGateway = fixGateway;
             this.subscribingSymbols = subscribingSymbols;
             this.barSpecifications = barSpecifications;
+            this.barRollingWindowDays = barRollingWindowDays;
             this.updateInstruments = updateInstruments;
+            this.isTrimJobActive = false;
 
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
@@ -77,6 +85,7 @@ namespace Nautilus.Data
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
+            this.RegisterHandler<TrimBarDataJob>(this.OnMessage);
 
             // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
@@ -95,6 +104,14 @@ namespace Nautilus.Data
             this.fixGateway.Connect();
             this.CreateConnectFixJob();
             this.CreateDisconnectFixJob();
+
+            if (this.isTrimJobActive)
+            {
+                return; // No actions to perform.
+            }
+
+            this.CreateTrimBarDataJob();
+            this.isTrimJobActive = true;
         }
 
         /// <summary>
@@ -105,6 +122,72 @@ namespace Nautilus.Data
             this.Log.Information($"Stopping...");
 
             this.fixGateway.Disconnect();
+        }
+
+        private void OnMessage(ConnectFixJob message)
+        {
+            this.fixGateway.Connect();
+        }
+
+        private void OnMessage(DisconnectFixJob message)
+        {
+            this.fixGateway.Disconnect();
+        }
+
+        private void OnMessage(FixSessionConnected message)
+        {
+            this.Log.Information($"{message.SessionId} session is connected.");
+
+            if (this.updateInstruments)
+            {
+                this.fixGateway.UpdateInstrumentsSubscribeAll();
+            }
+
+            foreach (var symbol in this.subscribingSymbols)
+            {
+                this.fixGateway.MarketDataSubscribe(symbol);
+
+                foreach (var barSpec in this.barSpecifications)
+                {
+                    var barType = new BarType(symbol, barSpec);
+                    var subscribe = new Subscribe<BarType>(
+                        barType,
+                        this.NewGuid(),
+                        this.TimeNow());
+                    this.Send(DataServiceAddress.BarAggregationController, subscribe);
+                }
+            }
+        }
+
+        private void OnMessage(FixSessionDisconnected message)
+        {
+            this.Log.Warning($"{message.SessionId} session has been disconnected.");
+        }
+
+        private void OnMessage(Subscribe<BarType> message)
+        {
+            this.Log.Debug($"Received {message}");
+
+            // Forward message.
+            this.Send(DataServiceAddress.BarAggregationController, message);
+        }
+
+        private void OnMessage(Unsubscribe<BarType> message)
+        {
+            // Forward message.
+            this.Send(DataServiceAddress.BarAggregationController, message);
+        }
+
+        private void OnMessage(TrimBarDataJob message)
+        {
+            var trimCommand = new TrimBarData(
+                this.barSpecifications,
+                this.barRollingWindowDays,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Send(DataServiceAddress.DatabaseTaskManager, trimCommand);
+            this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
         }
 
         private void CreateConnectFixJob()
@@ -159,56 +242,30 @@ namespace Nautilus.Data
             this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
         }
 
-        private void OnMessage(ConnectFixJob message)
+        private void CreateTrimBarDataJob()
         {
-            this.fixGateway.Connect();
-        }
+            var schedule = CronScheduleBuilder
+                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 00, 01)
+                .InTimeZone(TimeZoneInfo.Utc)
+                .WithMisfireHandlingInstructionFireAndProceed();
 
-        private void OnMessage(DisconnectFixJob message)
-        {
-            this.fixGateway.Disconnect();
-        }
+            var jobKey = new JobKey("trim_bar_data", "data_management");
+            var trigger = TriggerBuilder
+                .Create()
+                .WithIdentity(jobKey.Name, jobKey.Group)
+                .WithSchedule(schedule)
+                .Build();
 
-        private void OnMessage(FixSessionConnected message)
-        {
-            this.Log.Information($"{message.SessionId} session is connected.");
+            var createJob = new CreateJob(
+                this.Endpoint,
+                new TrimBarDataJob(),
+                jobKey,
+                trigger,
+                this.NewGuid(),
+                this.TimeNow());
 
-            if (this.updateInstruments)
-            {
-                this.fixGateway.UpdateInstrumentsSubscribeAll();
-            }
-
-            foreach (var symbol in this.subscribingSymbols)
-            {
-                this.fixGateway.MarketDataSubscribe(symbol);
-
-                foreach (var barSpec in this.barSpecifications)
-                {
-                    var barType = new BarType(symbol, barSpec);
-                    var subscribe = new Subscribe<BarType>(
-                        barType,
-                        this.NewGuid(),
-                        this.TimeNow());
-                    this.Send(DataServiceAddress.DataCollectionManager, subscribe);
-                }
-            }
-        }
-
-        private void OnMessage(FixSessionDisconnected message)
-        {
-            this.Log.Warning($"{message.SessionId} session has been disconnected.");
-        }
-
-        private void OnMessage(Subscribe<BarType> message)
-        {
-            this.Log.Debug($"Received {message}");
-
-            this.Send(DataServiceAddress.DataCollectionManager, message);
-        }
-
-        private void OnMessage(Unsubscribe<BarType> message)
-        {
-            this.Send(DataServiceAddress.DataCollectionManager, message);
+            this.Send(ServiceAddress.Scheduling, createJob);
+            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
         }
     }
 }

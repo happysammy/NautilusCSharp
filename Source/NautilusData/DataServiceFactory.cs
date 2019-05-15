@@ -76,13 +76,6 @@ namespace NautilusData
                 barRepository,
                 instrumentRepository);
 
-            var dataCollectionManager = new DataCollectionManager(
-                container,
-                messagingAdapter,
-                barPublisher.Endpoint,
-                config.BarSpecifications,
-                config.BarRollingWindowDays);
-
             var barAggregationController = new BarAggregationController(
                 container,
                 messagingAdapter,
@@ -102,7 +95,6 @@ namespace NautilusData
             {
                 { ServiceAddress.Scheduling, scheduler.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
-                { DataServiceAddress.DataCollectionManager, dataCollectionManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
@@ -115,6 +107,7 @@ namespace NautilusData
                 fixGateway,
                 symbolConverter.GetAllSymbols(),
                 config.BarSpecifications,
+                config.BarRollingWindowDays,
                 config.UpdateInstruments);
         }
 
