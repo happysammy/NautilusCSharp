@@ -99,7 +99,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(CollateralInquiry message)
         {
-            this.Send(ServiceAddress.Execution, message);
+            this.Send(ExecutionServiceAddress.Execution, message);
         }
 
         private void OnMessage(Event @event)

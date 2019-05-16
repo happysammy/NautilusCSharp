@@ -57,7 +57,7 @@ namespace NautilusData
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
-            var scheduler = new Scheduler(container);
+            var scheduler = new HashedWheelTimerScheduler(loggingAdapter);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var barRepository = new RedisBarRepository(redisConnection);
@@ -92,7 +92,6 @@ namespace NautilusData
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },

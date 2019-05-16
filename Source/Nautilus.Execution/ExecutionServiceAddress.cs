@@ -20,6 +20,11 @@ namespace Nautilus.Execution
         /// <summary>
         /// Gets the <see cref="MessageServer"/> component messaging address.
         /// </summary>
+        public static Address Execution { get; } = new Address(nameof(Execution));
+
+        /// <summary>
+        /// Gets the <see cref="MessageServer"/> component messaging address.
+        /// </summary>
         public static Address MessageServer { get; } = new Address(nameof(MessageServer));
 
         /// <summary>

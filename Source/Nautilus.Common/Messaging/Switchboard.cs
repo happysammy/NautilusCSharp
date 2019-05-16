@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messaging
         /// <param name="addresses">The system addresses.</param>
         private Switchboard(ImmutableDictionary<Address, IEndpoint> addresses)
         {
-            this.addresses = addresses;
+            this.addresses = addresses.ToImmutableDictionary();
         }
 
         /// <summary>

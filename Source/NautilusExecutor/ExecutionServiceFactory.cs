@@ -54,7 +54,7 @@ namespace NautilusExecutor
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
-            var scheduler = new Scheduler(container);
+            var scheduler = new HashedWheelTimerScheduler(loggingAdapter);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolProvider = new SymbolConverter(venue, config.SymbolIndex);
@@ -82,7 +82,6 @@ namespace NautilusExecutor
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.Scheduler, scheduler.Endpoint },
                 { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
             }.ToImmutableDictionary();
