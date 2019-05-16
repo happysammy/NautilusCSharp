@@ -268,7 +268,7 @@ namespace Nautilus.Scheduler
         private void Run()
         {
             // Initialize the clock.
-            this.startTime = MonotonicClock.Elapsed.Ticks;
+            this.startTime = MonotonicClock.Elapsed.BclCompatibleTicks;
             if (this.startTime == 0)
             {
                 // 0 means it's an uninitialized value, so bump to 1 to indicate it's started.
@@ -317,7 +317,7 @@ namespace Nautilus.Scheduler
         {
             foreach (var toReschedule in this.rescheduleRegistrations)
             {
-                var nextDeadline = MonotonicClock.Elapsed.Ticks - this.startTime + toReschedule.Offset;
+                var nextDeadline = MonotonicClock.Elapsed.BclCompatibleTicks - this.startTime + toReschedule.Offset;
                 toReschedule.Deadline = nextDeadline;
                 this.PlaceInBucket(toReschedule);
             }
@@ -334,7 +334,7 @@ namespace Nautilus.Scheduler
             {
                 for (; ;)
                 {
-                    var currentTime = MonotonicClock.Elapsed.Ticks - this.startTime;
+                    var currentTime = MonotonicClock.Elapsed.BclCompatibleTicks - this.startTime;
                     var sleepMs = (deadline - currentTime + TimeSpan.TicksPerMillisecond - 1) / TimeSpan.TicksPerMillisecond;
 
                     if (sleepMs <= 0)
@@ -393,7 +393,7 @@ namespace Nautilus.Scheduler
             OptionRef<ICancelable> cancelable)
         {
             this.Start();
-            var deadline = MonotonicClock.Elapsed.Ticks + delay.Ticks - this.startTime;
+            var deadline = MonotonicClock.Elapsed.BclCompatibleTicks + delay.Ticks - this.startTime;
             var offset = interval.Ticks;
             var reg = new SchedulerRegistration(action, cancelable)
             {

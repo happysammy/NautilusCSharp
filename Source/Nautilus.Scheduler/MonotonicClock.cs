@@ -8,8 +8,9 @@
 
 namespace Nautilus.Scheduler
 {
-    using System;
     using System.Diagnostics;
+    using NodaTime;
+    using NodaTime.Extensions;
 
     /// <summary>
     /// INTERNAL API
@@ -25,6 +26,6 @@ namespace Nautilus.Scheduler
         /// Gets the elapsed time as determined by a <see cref="Stopwatch"/>
         /// running continuously in the background.
         /// </summary>
-        internal static TimeSpan Elapsed => Stopwatch.Elapsed;
+        internal static Duration Elapsed => Stopwatch.Elapsed.ToDuration();
     }
 }
