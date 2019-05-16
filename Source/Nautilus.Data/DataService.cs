@@ -8,7 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Common.Componentry;

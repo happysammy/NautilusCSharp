@@ -10,7 +10,6 @@ namespace NautilusExecutor
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;

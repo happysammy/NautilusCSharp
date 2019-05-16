@@ -14,7 +14,6 @@ namespace Nautilus.Scheduler
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
@@ -91,41 +90,6 @@ namespace Nautilus.Scheduler
             }
         }
 
-        /// <summary>
-        /// Starts the <see cref="HashedWheelTimerScheduler"/>.
-        /// </summary>
-        /// <exception cref="SchedulerException">If the worker state is already shutdown.</exception>
-        /// <exception cref="InvalidOperationException">If the worker state is invalid.</exception>
-        public void Start()
-        {
-            switch (this.workerState)
-            {
-                case WORKER_STATE_STARTED:
-                    break; // Do nothing.
-                case WORKER_STATE_INIT:
-                {
-                    this.worker = new Thread(this.Run) { IsBackground = true };
-
-                    if (Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_STARTED, WORKER_STATE_INIT) == WORKER_STATE_INIT)
-                    {
-                        this.worker.Start();
-                    }
-
-                    break;
-                }
-
-                case WORKER_STATE_SHUTDOWN:
-                    throw new SchedulerException("Cannot enqueue after timer shutdown.");
-                default:
-                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
-            }
-
-            while (this.startTime == 0)
-            {
-                this.workerInitialized.Wait();
-            }
-        }
-
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -143,17 +107,13 @@ namespace Nautilus.Scheduler
                 {
                     task.Action.Run();
                 }
-                catch (SchedulerException)
-                {
-                    // ignore, this is from terminated actors
-                }
                 catch (Exception ex)
                 {
                     this.Log.Error("Exception while executing timer task.", ex);
                 }
                 finally
                 {
-                    // free the object from bucket
+                    // Free the object from bucket.
                     task.Reset();
                 }
             }
@@ -265,6 +225,41 @@ namespace Nautilus.Scheduler
             }
 
             return normalizedTicksPerWheel;
+        }
+
+        /// <summary>
+        /// Starts the <see cref="HashedWheelTimerScheduler"/>.
+        /// </summary>
+        /// <exception cref="SchedulerException">If the worker state is already shutdown.</exception>
+        /// <exception cref="InvalidOperationException">If the worker state is invalid.</exception>
+        private void Start()
+        {
+            switch (this.workerState)
+            {
+                case WORKER_STATE_STARTED:
+                    break; // Do nothing.
+                case WORKER_STATE_INIT:
+                {
+                    this.worker = new Thread(this.Run) { IsBackground = true };
+
+                    if (Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_STARTED, WORKER_STATE_INIT) == WORKER_STATE_INIT)
+                    {
+                        this.worker.Start();
+                    }
+
+                    break;
+                }
+
+                case WORKER_STATE_SHUTDOWN:
+                    throw new SchedulerException("Cannot enqueue after timer shutdown.");
+                default:
+                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
+            }
+
+            while (this.startTime == 0)
+            {
+                this.workerInitialized.Wait();
+            }
         }
 
         /// <summary>

@@ -10,7 +10,6 @@ namespace Nautilus.Scheduler
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
 
     /// <summary>

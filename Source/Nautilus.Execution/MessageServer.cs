@@ -12,7 +12,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
