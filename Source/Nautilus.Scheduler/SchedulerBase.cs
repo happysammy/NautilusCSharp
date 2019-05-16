@@ -171,7 +171,7 @@ namespace Nautilus.Scheduler
         {
             if (interval <= TimeSpan.Zero)
             {
-                throw new ArgumentOutOfRangeException(nameof(parameterName), $"Interval must be >0. It was {interval}");
+                throw new ArgumentOutOfRangeException(nameof(parameterName), $"Interval must be > 0. It was {interval}");
             }
         }
 
@@ -185,7 +185,7 @@ namespace Nautilus.Scheduler
         {
             if (delay < TimeSpan.Zero)
             {
-                throw new ArgumentOutOfRangeException(nameof(parameterName), $"Delay must be >=0. It was {delay}");
+                throw new ArgumentOutOfRangeException(nameof(parameterName), $"Delay must be >= 0. It was {delay}");
             }
         }
     }

@@ -41,7 +41,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[{this.receiver}.Tell({this.message}, {this.sender})]";
+            return $"[{this.receiver}.Send({this.message}, {this.sender})]";
         }
     }
 }
