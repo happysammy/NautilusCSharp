@@ -18,9 +18,9 @@ namespace Nautilus.Scheduler
         private readonly Action action;
 
         /// <summary>
-        /// TBD
+        /// Initializes a new instance of the <see cref="ActionRunnable"/> class.
         /// </summary>
-        /// <param name="action">TBD</param>
+        /// <param name="action">The runnable delegate.</param>
         public ActionRunnable(Action action)
         {
             this.action = action;

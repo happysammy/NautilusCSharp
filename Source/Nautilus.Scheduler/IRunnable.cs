@@ -14,7 +14,7 @@ namespace Nautilus.Scheduler
     internal interface IRunnable
     {
         /// <summary>
-        /// TBD.
+        /// Runs the runnable.
         /// </summary>
         void Run();
     }

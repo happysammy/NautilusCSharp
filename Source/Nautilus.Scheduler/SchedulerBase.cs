@@ -105,41 +105,60 @@ namespace Nautilus.Scheduler
         }
 
         /// <summary>
-        /// TBD.
+        /// Schedule a message to send once.
         /// </summary>
         /// <param name="delay">The delay.</param>
         /// <param name="receiver">The receiver.</param>
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="cancelable">The cancelable.</param>
-        protected abstract void InternalScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        protected abstract void InternalScheduleSendOnce(
+            TimeSpan delay,
+            IEndpoint receiver,
+            object message,
+            IEndpoint sender,
+            ICancelable cancelable);
 
         /// <summary>
-        /// TBD.
+        /// Schedule a message to send repeatedly.
         /// </summary>
-        /// <param name="initialDelay">TBD</param>
-        /// <param name="interval">TBD</param>
-        /// <param name="receiver">TBD</param>
-        /// <param name="message">TBD</param>
-        /// <param name="sender">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected abstract void InternalScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        /// <param name="initialDelay">The initial delay.</param>
+        /// <param name="interval">The interval.</param>
+        /// <param name="receiver">The receiver.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected abstract void InternalScheduleSendRepeatedly(
+            TimeSpan initialDelay,
+            TimeSpan interval,
+            IEndpoint receiver,
+            object message,
+            IEndpoint sender,
+            ICancelable cancelable);
 
         /// <summary>
-        /// TBD
+        /// Schedule a action to be invoked once.
         /// </summary>
-        /// <param name="delay">TBD</param>
-        /// <param name="action">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected abstract void InternalScheduleOnce(TimeSpan delay, Action action, ICancelable cancelable);
+        /// <param name="delay">The delay.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected abstract void InternalScheduleOnce(
+            TimeSpan delay,
+            Action action,
+            ICancelable cancelable);
+
         /// <summary>
-        /// TBD
+        /// Schedule a action to be invoked repeatedly.
         /// </summary>
-        /// <param name="initialDelay">TBD</param>
-        /// <param name="interval">TBD</param>
-        /// <param name="action">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected abstract void InternalScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable cancelable);
+        /// <param name="initialDelay">The initial delay.</param>
+        /// <param name="interval">The interval.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected abstract void InternalScheduleRepeatedly(
+            TimeSpan initialDelay,
+            TimeSpan interval,
+            Action action,
+            ICancelable cancelable);
 
         /// <summary>
         /// Validate the given interval.

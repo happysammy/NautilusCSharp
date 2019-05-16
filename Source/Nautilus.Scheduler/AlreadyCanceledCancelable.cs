@@ -23,14 +23,14 @@ namespace Nautilus.Scheduler
         }
 
         /// <summary>
-        /// Gets a value indicating whether cancellation is requested.
-        /// </summary>
-        public bool IsCancellationRequested => true;
-
-        /// <summary>
         /// Gets the instance.
         /// </summary>
         public static ICancelable Instance => InternalInstance;
+
+        /// <summary>
+        /// Gets a value indicating whether cancellation is requested.
+        /// </summary>
+        public bool IsCancellationRequested => true;
 
         /// <summary>
         /// Gets the token.
@@ -45,20 +45,19 @@ namespace Nautilus.Scheduler
             // Intentionally left blank.
         }
 
+        /// <inheritdoc/>
         void ICancelable.CancelAfter(TimeSpan delay)
         {
             // Intentionally left blank.
         }
 
+        /// <inheritdoc/>
         void ICancelable.CancelAfter(int millisecondsDelay)
         {
             // Intentionally left blank.
         }
 
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="throwOnFirstException">TBD</param>
+        /// <inheritdoc />
         public void Cancel(bool throwOnFirstException)
         {
             // Intentionally left blank.

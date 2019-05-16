@@ -24,11 +24,13 @@ namespace Nautilus.Scheduler
             this.sender = sender;
         }
 
+        /// <inheritdoc/>
         public void Run()
         {
             this.receiver.Send(this.message);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"[{this.receiver}.Tell({this.message}, {this.sender})]";

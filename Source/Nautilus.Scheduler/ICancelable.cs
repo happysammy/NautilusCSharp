@@ -69,4 +69,3 @@ namespace Nautilus.Scheduler
         void Cancel(bool throwOnFirstException);
     }
 }
-

@@ -16,7 +16,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// If <paramref name="cancelable"/> is not <c>null</c> it's canceled.
         /// </summary>
-        /// <param name="cancelable">The cancelable. Will be canceled if it's not <c>null</c></param>
+        /// <param name="cancelable">The cancelable. Will be canceled if it's not <c>null</c>.</param>
         public static void CancelIfNotNull(this ICancelable cancelable)
         {
             cancelable?.Cancel();

@@ -119,26 +119,10 @@ namespace Nautilus.Scheduler
         /// <param name="scheduler">The scheduler used to schedule the invocation of the action.</param>
         /// <param name="millisecondsDelay">The time in milliseconds that has to pass before the action is invoked.</param>
         /// <param name="action">The action that is being scheduled.</param>
-        /// <param name="cancelable">OPTIONAL. A cancelable that can be used to cancel the action from being executed. Defaults to <c>null</c></param>
+        /// <param name="cancelable">OPTIONAL. A cancelable that can be used to cancel the action from being executed. Defaults to <c>null</c>.</param>
         public static void ScheduleOnce(this IActionScheduler scheduler, int millisecondsDelay, Action action, ICancelable cancelable = null)
         {
             scheduler.ScheduleOnce(TimeSpan.FromMilliseconds(millisecondsDelay), action, cancelable);
-        }
-
-        /// <summary>
-        /// Schedules an action to be invoked after an initial delay and then repeatedly.
-        /// The action is wrapped so that it completes inside the currently active actor
-        /// if it is called from within an actor.
-        /// <remarks>Note! It's considered bad practice to use concurrency inside actors, and very easy to get wrong so usage is discouraged.</remarks>
-        /// </summary>
-        /// <param name="scheduler">The scheduler used to schedule the invocation of the action.</param>
-        /// <param name="initialMillisecondsDelay">The time in milliseconds that has to pass before first invocation of the action.</param>
-        /// <param name="millisecondsInterval">The time in milliseconds that has to pass between each invocation of the action.</param>
-        /// <param name="action">The action that is being scheduled.</param>
-        /// <param name="cancelable">OPTIONAL. A cancelable used to cancel the action from being executed. Defaults to <c>null</c></param>
-        public static void ScheduleRepeatedly(this IActionScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, Action action, ICancelable cancelable = null)
-        {
-            scheduler.ScheduleRepeatedly(TimeSpan.FromMilliseconds(initialMillisecondsDelay), TimeSpan.FromMilliseconds(millisecondsInterval), action, cancelable);
         }
 
         /// <summary>
@@ -197,6 +181,22 @@ namespace Nautilus.Scheduler
             var cancelable = new Cancelable(scheduler);
             scheduler.ScheduleRepeatedly(initialMillisecondsDelay, millisecondsInterval, action, cancelable);
             return cancelable;
+        }
+
+        /// <summary>
+        /// Schedules an action to be invoked after an initial delay and then repeatedly.
+        /// The action is wrapped so that it completes inside the currently active actor
+        /// if it is called from within an actor.
+        /// <remarks>Note! It's considered bad practice to use concurrency inside actors, and very easy to get wrong so usage is discouraged.</remarks>
+        /// </summary>
+        /// <param name="scheduler">The scheduler used to schedule the invocation of the action.</param>
+        /// <param name="initialMillisecondsDelay">The time in milliseconds that has to pass before first invocation of the action.</param>
+        /// <param name="millisecondsInterval">The time in milliseconds that has to pass between each invocation of the action.</param>
+        /// <param name="action">The action that is being scheduled.</param>
+        /// <param name="cancelable">OPTIONAL. A cancelable used to cancel the action from being executed. Defaults to <c>null</c>.</param>
+        private static void ScheduleRepeatedly(this IActionScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, Action action, ICancelable cancelable = null)
+        {
+            scheduler.ScheduleRepeatedly(TimeSpan.FromMilliseconds(initialMillisecondsDelay), TimeSpan.FromMilliseconds(millisecondsInterval), action, cancelable);
         }
     }
 }

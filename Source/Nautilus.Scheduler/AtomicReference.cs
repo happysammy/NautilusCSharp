@@ -18,7 +18,7 @@ namespace Nautilus.Scheduler
     /// this ordering, but the addition of the Volatile guarantees it.
     /// </summary>
     /// <typeparam name="T">The type.</typeparam>
-    public class AtomicReference<T>
+    internal class AtomicReference<T>
         where T : class
     {
         private T atomicValue;
@@ -26,18 +26,18 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicReference{T}"/> class.
         /// </summary>
-        /// <param name="originalValue">The original value.</param>
-        public AtomicReference(T originalValue)
+        internal AtomicReference()
         {
-            this.atomicValue = originalValue;
+            this.atomicValue = default;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicReference{T}"/> class.
         /// </summary>
-        public AtomicReference()
+        /// <param name="originalValue">The original value.</param>
+        private AtomicReference(T originalValue)
         {
-            this.atomicValue = default;
+            this.atomicValue = originalValue;
         }
 
         /// <summary>

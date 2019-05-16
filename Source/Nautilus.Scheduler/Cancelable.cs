@@ -43,7 +43,6 @@ namespace Nautilus.Scheduler
             this.CancelAfter(delay);
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of milliseconds.
         /// </summary>
@@ -58,13 +57,12 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Initializes a new instance of the <see cref="Cancelable"/> class.
         /// </summary>
-        /// <param name="scheduler">TBD</param>
+        /// <param name="scheduler">The scheduler.</param>
         public Cancelable(IActionScheduler scheduler)
             : this(scheduler, new CancellationTokenSource())
         {
             // Intentionally left blank
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cancelable"/> class.

@@ -68,7 +68,7 @@ namespace Nautilus.Scheduler
         /// <param name="registrations">A set of registrations to populate.</param>
         internal void ClearRegistrations(HashSet<SchedulerRegistration> registrations)
         {
-            for (;;)
+            for (; ;)
             {
                 var reg = this.Poll();
                 if (reg == null)
@@ -114,18 +114,11 @@ namespace Nautilus.Scheduler
                         }
                         catch (Exception ex)
                         {
-                            try
-                            {
-                                this.log.Error(NautilusService.Scheduling,
-                                    $"Error while executing scheduled task {current}", ex);
-                                var nextErrored = current.Next;
-                                this.Remove(current);
-                                current = nextErrored;
-                                continue; // Don't reschedule any failed actions.
-                            }
-                            catch
-                            {
-                            } // Suppress any errors thrown during logging.
+                            this.log.Error(NautilusService.Scheduling, $"Error while executing scheduled task {current}", ex);
+                            var nextErrored = current.Next;
+                            this.Remove(current);
+                            current = nextErrored;
+                            continue; // Don't reschedule any failed actions.
                         }
 
                         remove = true;
@@ -158,7 +151,7 @@ namespace Nautilus.Scheduler
         }
 
         /// <summary>
-        /// Reset the reschedule list for this bucket
+        /// Reset the reschedule list for this bucket.
         /// </summary>
         /// <param name="registrations">A set of registrations to populate.</param>
         internal void ClearReschedule(HashSet<SchedulerRegistration> registrations)
@@ -221,7 +214,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Slot a repeating task into the "reschedule" linked list.
         /// </summary>
-        /// <param name="reg">The registration scheduled for repeating</param>
+        /// <param name="reg">The registration scheduled for repeating.</param>
         private void Reschedule(SchedulerRegistration reg)
         {
             if (this.rescheduleHead == null)
