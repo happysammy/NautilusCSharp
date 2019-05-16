@@ -11,7 +11,7 @@ namespace Nautilus.Scheduler
     /// <summary>
     /// TBD.
     /// </summary>
-    public interface IScheduler : ISendScheduler, IActionScheduler, ITimeProvider
+    public interface IScheduler : IActionScheduler, ISendScheduler, ITimeProvider
     {
     }
 }

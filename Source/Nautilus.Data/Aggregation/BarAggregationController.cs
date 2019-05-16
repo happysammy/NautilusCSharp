@@ -26,7 +26,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler.Messages;
     using NodaTime;
-    using Quartz;
 
     /// <summary>
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.

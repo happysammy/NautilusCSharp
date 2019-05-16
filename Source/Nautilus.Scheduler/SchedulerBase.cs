@@ -34,15 +34,6 @@ namespace Nautilus.Scheduler
         DateTimeOffset ITimeProvider.Now => this.TimeNow;
 
         /// <summary>
-        /// Gets the current time since startup, as determined by the monotonic clock implementation.
-        /// </summary>
-        /// <remarks>
-        /// Typically uses <see cref="MonotonicClock"/> in most implementations, but in some cases a
-        /// custom implementation is used - such as when we need to do virtual time scheduling in the Akka.TestKit.
-        /// </remarks>
-        public abstract TimeSpan Elapsed { get; }
-
-        /// <summary>
         /// Gets the current time since startup, as determined by the high resolution monotonic clock implementation.
         /// </summary>
         /// <remarks>
@@ -64,27 +55,27 @@ namespace Nautilus.Scheduler
         void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
         {
             ValidateDelay(delay, "delay");
-            this.InternalScheduleTellOnce(delay, receiver, message, sender, null);
+            this.InternalScheduleSendOnce(delay, receiver, message, sender, null);
         }
 
         void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable)
         {
             ValidateDelay(delay, "delay");
-            this.InternalScheduleTellOnce(delay, receiver, message, sender, cancelable);
+            this.InternalScheduleSendOnce(delay, receiver, message, sender, cancelable);
         }
 
         void ISendScheduler.ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender)
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
-            this.InternalScheduleTellRepeatedly(initialDelay, interval, receiver, message, sender, null);
+            this.InternalScheduleSendRepeatedly(initialDelay, interval, receiver, message, sender, null);
         }
 
         void ISendScheduler.ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable)
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
-            this.InternalScheduleTellRepeatedly(initialDelay, interval, receiver, message, sender, cancelable);
+            this.InternalScheduleSendRepeatedly(initialDelay, interval, receiver, message, sender, cancelable);
         }
 
         void IActionScheduler.ScheduleOnce(TimeSpan delay, Action action)
@@ -121,7 +112,7 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message.</param>
         /// <param name="sender">The sender.</param>
         /// <param name="cancelable">The cancelable.</param>
-        protected abstract void InternalScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        protected abstract void InternalScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
 
         /// <summary>
         /// TBD.
@@ -132,7 +123,7 @@ namespace Nautilus.Scheduler
         /// <param name="message">TBD</param>
         /// <param name="sender">TBD</param>
         /// <param name="cancelable">TBD</param>
-        protected abstract void InternalScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        protected abstract void InternalScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
 
         /// <summary>
         /// TBD
@@ -179,4 +170,3 @@ namespace Nautilus.Scheduler
         }
     }
 }
-

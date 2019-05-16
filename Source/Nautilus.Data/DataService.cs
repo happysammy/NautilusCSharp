@@ -24,8 +24,6 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduler.Messages;
-    using Quartz;
 
     /// <summary>
     /// Provides a data service.

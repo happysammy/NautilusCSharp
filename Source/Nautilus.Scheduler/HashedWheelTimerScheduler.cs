@@ -40,19 +40,20 @@ namespace Nautilus.Scheduler
         private const int WORKER_STATE_STARTED = 1;
         private const int WORKER_STATE_SHUTDOWN = 2;
 
-        private readonly int mask;
-        private readonly CountdownEvent workerInitialized = new CountdownEvent(1);
-        private readonly ConcurrentQueue<SchedulerRegistration> registrations = new ConcurrentQueue<SchedulerRegistration>();
-        private readonly Bucket[] wheel;
+        private static readonly Task<IEnumerable<SchedulerRegistration>> Completed = Task.FromResult((IEnumerable<SchedulerRegistration>)new List<SchedulerRegistration>());
 
+        private readonly AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>> stopped = new AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>>();
         private readonly TimeSpan shutdownTimeout;
         private readonly long tickDuration;
-
+        private readonly ConcurrentQueue<SchedulerRegistration> registrations = new ConcurrentQueue<SchedulerRegistration>();
         private readonly HashSet<SchedulerRegistration> unprocessedRegistrations = new HashSet<SchedulerRegistration>();
         private readonly HashSet<SchedulerRegistration> rescheduleRegistrations = new HashSet<SchedulerRegistration>();
+        private readonly CountdownEvent workerInitialized = new CountdownEvent(1);
+        private readonly Bucket[] wheel;
+        private readonly int mask;
 
         private Thread worker;
-        private long startTime = 0;
+        private long startTime;
         private long tick;
 
         /// <summary>
@@ -67,48 +68,146 @@ namespace Nautilus.Scheduler
         public HashedWheelTimerScheduler(ILoggingAdapter log)
             : base(log)
         {
-            var ticksPerWheel = 10; // SchedulerConfig.GetInt("akka.scheduler.ticks-per-wheel");
+            var ticksPerWheel = 512; // Default.
             var tickDurationTimeSpan = TimeSpan.FromMilliseconds(10);
             if (tickDurationTimeSpan.TotalMilliseconds < 10.0d)
             {
-                // "minimum supported akka.scheduler.tick-duration on Windows is 10ms"
-                throw new ArgumentOutOfRangeException(nameof(tickDurationTimeSpan));
+                // "minimum supported on Windows is 10ms"
+                throw new ArgumentOutOfRangeException(nameof(tickDurationTimeSpan) + "Cannot be less than 10ms.");
             }
 
-            // convert tick-duration to ticks
+            // Convert tick-duration to ticks.
             this.tickDuration = tickDurationTimeSpan.Ticks;
 
-            // Normalize ticks per wheel to power of two and create the wheel
+            // Normalize ticks per wheel to power of two and create the wheel.
             this.wheel = CreateWheel(ticksPerWheel, log);
             this.mask = this.wheel.Length - 1;
 
-            // prevent overflow
+            // Prevent overflow.
             if (this.tickDuration >= long.MaxValue / this.wheel.Length)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(this.tickDuration),
                     this.tickDuration,
-                    $"akka.scheduler.tick-duration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
+                    $"tickDuration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
             }
 
-            this.shutdownTimeout = TimeSpan.Zero; // SchedulerConfig.GetTimeSpan("akka.scheduler.shutdown-timeout");
+            this.shutdownTimeout = TimeSpan.FromSeconds(1);
         }
-
-        /// <summary>
-        /// Gets the elapsed time since start.
-        /// </summary>
-        public override TimeSpan Elapsed => MonotonicClock.Elapsed;
 
         /// <summary>
         /// Gets the elapsed time since start high resolution.
         /// </summary>
-        public override TimeSpan ElapsedHighRes => MonotonicClock.ElapsedHighRes;
+        public override TimeSpan ElapsedHighRes => MonotonicClock.Elapsed;
 
         /// <summary>
         /// Gets the time now.
         /// </summary>
         ///
         protected override DateTimeOffset TimeNow => DateTimeOffset.Now;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            var stoppedTask = this.Stop();
+            if (!stoppedTask.Wait(this.shutdownTimeout))
+            {
+                this.Log.Warning(NautilusService.Scheduling, $"Failed to shutdown scheduler within {this.shutdownTimeout}");
+                return;
+            }
+
+            // Execute all outstanding work items.
+            foreach (var task in stoppedTask.Result)
+            {
+                try
+                {
+                    task.Action.Run();
+                }
+                catch (SchedulerException)
+                {
+                    // ignore, this is from terminated actors
+                }
+                catch (Exception ex)
+                {
+                    this.Log.Error(NautilusService.Scheduling, "Exception while executing timer task.", ex);
+                }
+                finally
+                {
+                    // free the object from bucket
+                    task.Reset();
+                }
+            }
+
+            this.unprocessedRegistrations.Clear();
+        }
+
+        /// <summary>
+        /// Schedule a message to be sent once.
+        /// </summary>
+        /// <param name="delay">The delay.</param>
+        /// <param name="receiver">The receiver.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected override void InternalScheduleSendOnce(
+            TimeSpan delay,
+            IEndpoint receiver,
+            object message,
+            IEndpoint sender,
+            ICancelable cancelable)
+        {
+            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
+        }
+
+        /// <summary>
+        /// Schedule a message to be sent repeatedly.
+        /// </summary>
+        /// <param name="initialDelay">The delay.</param>
+        /// <param name="interval">The interval.</param>
+        /// <param name="receiver">The receiver.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected override void InternalScheduleSendRepeatedly(
+            TimeSpan initialDelay,
+            TimeSpan interval,
+            IEndpoint receiver,
+            object message,
+            IEndpoint sender,
+            ICancelable cancelable)
+        {
+            this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
+        }
+
+        /// <summary>
+        /// Schedule an action to be invoked once.
+        /// </summary>
+        /// <param name="delay">The delay.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected override void InternalScheduleOnce(
+            TimeSpan delay,
+            Action action,
+            ICancelable cancelable)
+        {
+            this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
+        }
+
+        /// <summary>
+        /// Schedule an action to be invoked repeatedly.
+        /// </summary>
+        /// <param name="initialDelay">The initial delay.</param>
+        /// <param name="interval">The interval.</param>
+        /// <param name="action">The action to schedule.</param>
+        /// <param name="cancelable">The cancelable.</param>
+        protected override void InternalScheduleRepeatedly(
+            TimeSpan initialDelay,
+            TimeSpan interval,
+            Action action,
+            ICancelable cancelable)
+        {
+            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
+        }
 
         private static Bucket[] CreateWheel(int ticksPerWheel, ILoggingAdapter log)
         {
@@ -167,9 +266,9 @@ namespace Nautilus.Scheduler
                 }
 
                 case WORKER_STATE_SHUTDOWN:
-                    throw new SchedulerException("cannot enqueue after timer shutdown");
+                    throw new SchedulerException("Cannot enqueue after timer shutdown.");
                 default:
-                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}");
+                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
             }
 
             while (this.startTime == 0)
@@ -183,11 +282,11 @@ namespace Nautilus.Scheduler
         /// </summary>
         private void Run()
         {
-            // Initialize the clock
+            // Initialize the clock.
             this.startTime = this.ElapsedHighRes.Ticks;
             if (this.startTime == 0)
             {
-                // 0 means it's an uninitialized value, so bump to 1 to indicate it's started
+                // 0 means it's an uninitialized value, so bump to 1 to indicate it's started.
                 this.startTime = 1;
             }
 
@@ -202,7 +301,7 @@ namespace Nautilus.Scheduler
                     var bucket = this.wheel[idx];
                     this.TransferRegistrationsToBuckets();
                     bucket.Execute(deadline);
-                    this.tick++; // it will take 2^64 * 10ms for this to overflow
+                    this.tick++; // it will take 2^64 * 10ms for this to overflow.
 
                     bucket.ClearReschedule(this.rescheduleRegistrations);
                     this.ProcessReschedule();
@@ -244,7 +343,7 @@ namespace Nautilus.Scheduler
         private long WaitForNextTick()
         {
             var deadline = this.tickDuration * (this.tick + 1);
-            unchecked // just to avoid trouble with long-running applications
+            unchecked // To avoid trouble with long-running applications.
             {
                 for (; ;)
                 {
@@ -274,14 +373,12 @@ namespace Nautilus.Scheduler
             {
                 if (!this.registrations.TryDequeue(out var registration))
                 {
-                    // all processed
-                    break;
+                    break;  // All processed.
                 }
 
                 if (registration.Cancelled)
                 {
-                    // cancelled before we could process it
-                    continue;
+                    continue;  // Cancelled before we could process it.
                 }
 
                 this.PlaceInBucket(registration);
@@ -293,84 +390,29 @@ namespace Nautilus.Scheduler
             var calculated = reg.Deadline / this.tickDuration;
             reg.RemainingRounds = (calculated - this.tick) / this.wheel.Length;
 
-            var ticks = Math.Max(calculated, this.tick); // Ensure we don't schedule for the past
+            var ticks = Math.Max(calculated, this.tick); // Ensure we don't schedule for the past.
             var stopIndex = (int)(ticks & this.mask);
 
             var bucket = this.wheel[stopIndex];
             bucket.AddRegistration(reg);
         }
 
-
-
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="delay">TBD</param>
-        /// <param name="receiver">TBD</param>
-        /// <param name="message">TBD</param>
-        /// <param name="sender">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected override void InternalScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender,
-                    ICancelable cancelable)
+        private void InternalSchedule(
+            TimeSpan delay,
+            TimeSpan interval,
+            IRunnable action,
+            ICancelable cancelable)
         {
-            InternalSchedule(delay, TimeSpan.Zero, new ScheduledTell(receiver, message, sender), cancelable);
-        }
-
-        private void InternalSchedule(TimeSpan delay, TimeSpan interval, IRunnable action, ICancelable cancelable)
-        {
-            Start();
-            var deadline = ElapsedHighRes.Ticks + delay.Ticks - this.startTime;
+            this.Start();
+            var deadline = this.ElapsedHighRes.Ticks + delay.Ticks - this.startTime;
             var offset = interval.Ticks;
             var reg = new SchedulerRegistration(action, cancelable)
             {
                 Deadline = deadline,
-                Offset = offset
+                Offset = offset,
             };
             this.registrations.Enqueue(reg);
         }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="initialDelay">TBD</param>
-        /// <param name="interval">TBD</param>
-        /// <param name="receiver">TBD</param>
-        /// <param name="message">TBD</param>
-        /// <param name="sender">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected override void InternalScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message,
-            IEndpoint sender, ICancelable cancelable)
-        {
-            InternalSchedule(initialDelay, interval, new ScheduledTell(receiver, message, sender), cancelable);
-        }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="delay">TBD</param>
-        /// <param name="action">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected override void InternalScheduleOnce(TimeSpan delay, Action action, ICancelable cancelable)
-        {
-            InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
-        }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="initialDelay">TBD</param>
-        /// <param name="interval">TBD</param>
-        /// <param name="action">TBD</param>
-        /// <param name="cancelable">TBD</param>
-        protected override void InternalScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable cancelable)
-        {
-            InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
-        }
-
-        private AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>> stopped = new AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>>();
-
-        private static readonly Task<IEnumerable<SchedulerRegistration>> Completed = Task.FromResult((IEnumerable<SchedulerRegistration>)new List<SchedulerRegistration>());
 
         private Task<IEnumerable<SchedulerRegistration>> Stop()
         {
@@ -384,385 +426,5 @@ namespace Nautilus.Scheduler
 
             return Completed;
         }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            var stopped = Stop();
-            if (!stopped.Wait(this.shutdownTimeout))
-            {
-                this.Log.Warning(NautilusService.Scheduling, $"Failed to shutdown scheduler within { this.shutdownTimeout}");
-                return;
-            }
-
-            // Execute all outstanding work items
-            foreach (var task in stopped.Result)
-            {
-                try
-                {
-                    task.Action.Run();
-                }
-                catch (SchedulerException)
-                {
-                    // ignore, this is from terminated actors
-                }
-                catch (Exception ex)
-                {
-                    this.Log.Error(NautilusService.Scheduling, "Exception while executing timer task.", ex);
-                }
-                finally
-                {
-                    // free the object from bucket
-                    task.Reset();
-                }
-            }
-
-            this.unprocessedRegistrations.Clear();
-        }
-
-        /// <summary>
-        /// INTERNAL API.
-        /// </summary>
-        private sealed class ScheduledTell : IRunnable
-        {
-            private readonly IEndpoint _receiver;
-            private readonly object _message;
-            private readonly IEndpoint _sender;
-
-            public ScheduledTell(IEndpoint receiver, object message, IEndpoint sender)
-            {
-                _receiver = receiver;
-                _message = message;
-                _sender = sender;
-            }
-
-            public void Run()
-            {
-                _receiver.Send(_message);
-            }
-
-            public override string ToString()
-            {
-                return $"[{_receiver}.Tell({_message}, {_sender})]";
-            }
-        }
-
-        private class SchedulerRegistration
-        {
-            /// <summary>
-            /// The cancellation handle, if any
-            /// </summary>
-            public readonly ICancelable Cancellation;
-
-            /// <summary>
-            /// The task to be executed
-            /// </summary>
-            public readonly IRunnable Action;
-
-            /*
-             * Linked list is only ever modified from the scheduler thread, so this
-             * implementation does not need to be synchronized or implement CAS semantics.
-             */
-            public SchedulerRegistration Next;
-            public SchedulerRegistration Prev;
-
-            public long RemainingRounds;
-
-            /// <summary>
-            /// Used to determine the delay for repeatable sends
-            /// </summary>
-            public long Offset;
-
-            /// <summary>
-            /// The deadline for determining when to execute
-            /// </summary>
-            public long Deadline;
-
-            public SchedulerRegistration(IRunnable action, ICancelable cancellation)
-            {
-                Action = action;
-                Cancellation = cancellation;
-            }
-
-            /// <summary>
-            /// Determines if this task will need to be re-scheduled according to its <see cref="Offset"/>.
-            /// </summary>
-            public bool Repeat => Offset > 0;
-
-            /// <summary>
-            /// If <c>true</c>, we skip execution of this task.
-            /// </summary>
-            public bool Cancelled => Cancellation?.IsCancellationRequested ?? false;
-
-            /// <summary>
-            /// The <see cref="Bucket"/> to which this registration belongs.
-            /// </summary>
-            public Bucket Bucket;
-
-            /// <summary>
-            /// Resets all of the fields so this registration object can be used again
-            /// </summary>
-            public void Reset()
-            {
-                Next = null;
-                Prev = null;
-                Bucket = null;
-                Deadline = 0;
-                RemainingRounds = 0;
-            }
-
-            public override string ToString()
-            {
-                return
-                    $"ScheduledWork(Deadline={Deadline}, RepeatEvery={Offset}, Cancelled={Cancelled}, Work={Action})";
-            }
-        }
-
-        private sealed class Bucket
-        {
-            private readonly ILoggingAdapter _log;
-
-            /*
-             * Endpoints of our doubly linked list
-             */
-            private SchedulerRegistration head;
-            private SchedulerRegistration tail;
-
-            private SchedulerRegistration rescheduleHead;
-            private SchedulerRegistration rescheduleTail;
-
-            public Bucket(ILoggingAdapter log)
-            {
-                _log = log;
-            }
-
-            /// <summary>
-            /// Adds a <see cref="SchedulerRegistration"/> to this bucket.
-            /// </summary>
-            /// <param name="reg">The scheduled task.</param>
-            public void AddRegistration(SchedulerRegistration reg)
-            {
-                System.Diagnostics.Debug.Assert(reg.Bucket == null);
-                reg.Bucket = this;
-                if (this.head == null) // first time the bucket has been used
-                {
-                    this.head = this.tail = reg;
-                }
-                else
-                {
-                    this.tail.Next = reg;
-                    reg.Prev = this.tail;
-                    this.tail = reg;
-                }
-            }
-
-            /// <summary>
-            /// Slot a repeating task into the "reschedule" linked list.
-            /// </summary>
-            /// <param name="reg">The registration scheduled for repeating</param>
-            public void Reschedule(SchedulerRegistration reg)
-            {
-                if (this.rescheduleHead == null)
-                {
-                    this.rescheduleHead = this.rescheduleTail = reg;
-                }
-                else
-                {
-                    this.rescheduleTail.Next = reg;
-                    reg.Prev = this.rescheduleTail;
-                    this.rescheduleTail = reg;
-                }
-            }
-
-            /// <summary>
-            /// Empty this bucket
-            /// </summary>
-            /// <param name="registrations">A set of registrations to populate.</param>
-            public void ClearRegistrations(HashSet<SchedulerRegistration> registrations)
-            {
-                for (;;)
-                {
-                    var reg = Poll();
-                    if (reg == null)
-                        return;
-                    if (reg.Cancelled)
-                        continue;
-                    registrations.Add(reg);
-                }
-            }
-
-            /// <summary>
-            /// Reset the reschedule list for this bucket
-            /// </summary>
-            /// <param name="registrations">A set of registrations to populate.</param>
-            public void ClearReschedule(HashSet<SchedulerRegistration> registrations)
-            {
-                for (;;)
-                {
-                    var reg = PollReschedule();
-                    if (reg == null)
-                        return;
-                    if (reg.Cancelled)
-                        continue;
-                    registrations.Add(reg);
-                }
-            }
-
-            private static readonly Action<object> ExecuteRunnableWithState = r => ((IRunnable)r).Run();
-
-            /// <summary>
-            /// Execute all <see cref="SchedulerRegistration"/>s that are due by or after <paramref name="deadline"/>.
-            /// </summary>
-            /// <param name="deadline">The execution time.</param>
-            public void Execute(long deadline)
-            {
-                var current = this.head;
-
-                // process all registrations
-                while (current != null)
-                {
-                    bool remove = false;
-                    if (current.Cancelled) // check for cancellation first
-                    {
-                        remove = true;
-                    }
-                    else if (current.RemainingRounds <= 0)
-                    {
-                        if (current.Deadline <= deadline)
-                        {
-                            try
-                            {
-                                // Execute the scheduled work
-                                current.Action.Run();
-                            }
-                            catch (Exception ex)
-                            {
-                                try
-                                {
-                                    _log.Error(NautilusService.Scheduling, $"Error while executing scheduled task {current}", ex);
-                                    var nextErrored = current.Next;
-                                    this.Remove(current);
-                                    current = nextErrored;
-                                    continue; // don't reschedule any failed actions
-                                }
-                                catch
-                                {
-                                } // suppress any errors thrown during logging
-                            }
-
-                            remove = true;
-                        }
-                        else
-                        {
-                            // Registration was placed into the wrong bucket. This should never happen.
-                            throw new InvalidOperationException(
-                                $"SchedulerRegistration.Deadline [{current.Deadline}] > Timer.Deadline [{deadline}]");
-                        }
-                    }
-                    else
-                    {
-                        current.RemainingRounds--;
-                    }
-
-                    var next = current.Next;
-                    if (remove)
-                    {
-                        this.Remove(current);
-                    }
-
-                    if (current.Repeat && remove)
-                    {
-                        this.Reschedule(current);
-                    }
-
-                    current = next;
-                }
-            }
-
-            public void Remove(SchedulerRegistration reg)
-            {
-                var next = reg.Next;
-
-                // Remove work that's already been completed or cancelled
-                // Work that is scheduled to repeat will be handled separately
-                if (reg.Prev != null)
-                {
-                    reg.Prev.Next = next;
-                }
-
-                if (reg.Next != null)
-                {
-                    reg.Next.Prev = reg.Prev;
-                }
-
-                if (reg == this.head)
-                {
-                    // need to adjust the ends
-                    if (reg == this.tail)
-                    {
-                        this.tail = null;
-                        this.head = null;
-                    }
-                    else
-                    {
-                        this.head = next;
-                    }
-                }
-                else if (reg == this.tail)
-                {
-                    this.tail = reg.Prev;
-                }
-
-                // detach the node from Linked list so it can be GCed
-                reg.Reset();
-            }
-
-            private SchedulerRegistration Poll()
-            {
-                var thisHead = this.head;
-                if (thisHead == null)
-                {
-                    return null;
-                }
-
-                var next = thisHead.Next;
-                if (next == null)
-                {
-                    this.tail = this.head = null;
-                }
-                else
-                {
-                    this.head = next;
-                    next.Prev = null;
-                }
-
-                thisHead.Reset();
-                return thisHead;
-            }
-
-            private SchedulerRegistration PollReschedule()
-            {
-                var thisHead = this.rescheduleHead;
-                if (thisHead == null)
-                {
-                    return null;
-                }
-
-                var next = thisHead.Next;
-                if (next == null)
-                {
-                    this.rescheduleTail = this.rescheduleHead = null;
-                }
-                else
-                {
-                    this.rescheduleHead = next;
-                    next.Prev = null;
-                }
-
-                thisHead.Reset();
-                return thisHead;
-            }
-        }
     }
 }
-

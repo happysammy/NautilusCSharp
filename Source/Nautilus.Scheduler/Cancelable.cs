@@ -20,6 +20,8 @@ namespace Nautilus.Scheduler
         private readonly IActionScheduler scheduler;
         private readonly CancellationTokenSource source;
 
+        private bool isDisposed;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of time.
         /// </summary>
@@ -30,7 +32,7 @@ namespace Nautilus.Scheduler
             this.CancelAfter(delay);
         }
 
- /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of time.
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
@@ -38,7 +40,7 @@ namespace Nautilus.Scheduler
         public Cancelable(IScheduler scheduler, TimeSpan delay)
             : this(scheduler)
         {
-            CancelAfter(delay);
+            this.CancelAfter(delay);
         }
 
 
@@ -50,7 +52,7 @@ namespace Nautilus.Scheduler
         public Cancelable(IScheduler scheduler, int millisecondsDelay)
             : this(scheduler)
         {
-            CancelAfter(millisecondsDelay);
+            this.CancelAfter(millisecondsDelay);
         }
 
         /// <summary>
@@ -63,36 +65,41 @@ namespace Nautilus.Scheduler
             // Intentionally left blank
         }
 
-        internal Cancelable(IActionScheduler scheduler, CancellationTokenSource source)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Cancelable"/> class.
+        /// </summary>
+        /// <param name="scheduler">The scheduler.</param>
+        /// <param name="source">The cancellation source.</param>
+        private Cancelable(IActionScheduler scheduler, CancellationTokenSource source)
         {
             this.source = source;
             this.scheduler = scheduler;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether cancellation has been requested.
+        /// </summary>
+        public bool IsCancellationRequested => this.source.IsCancellationRequested;
 
         /// <summary>
-        /// TBD
+        /// Gets the cancellation token.
         /// </summary>
-        public bool IsCancellationRequested
+        public CancellationToken Token => this.source.Token;
+
+        /// <summary>
+        /// Returns a <see cref="ICancelable"/> that has already been canceled.
+        /// </summary>
+        /// <returns>The cancelable.</returns>
+        public static ICancelable CreateCanceled()
         {
-            get { return this.source.IsCancellationRequested; }
+            return AlreadyCanceledCancelable.Instance;
         }
 
-        /// <summary>
-        /// TBD
-        /// </summary>
-        public CancellationToken Token
-        {
-            get { return this.source.Token; }
-        }
-
-
-        /// <summary>
-        /// TBD
-        /// </summary>
+        /// <inheritdoc />
         public void Cancel()
         {
-            Cancel(false);
+            this.Cancel(false);
         }
 
         /// <summary>
@@ -116,10 +123,9 @@ namespace Nautilus.Scheduler
         /// </exception>
         public void Cancel(bool throwOnFirstException)
         {
-            ThrowIfDisposed();
+            this.ThrowIfDisposed();
             this.source.Cancel(throwOnFirstException);
         }
-
 
         /// <summary>
         /// Schedules a cancel operation on this cancelable after the specified delay.
@@ -129,9 +135,12 @@ namespace Nautilus.Scheduler
         /// <exception cref="ObjectDisposedException">This exception is thrown if this cancelable has already been disposed.</exception>
         public void CancelAfter(TimeSpan delay)
         {
-            if(delay < TimeSpan.Zero)
+            if (delay < TimeSpan.Zero)
+            {
                 throw new ArgumentOutOfRangeException(nameof(delay), $"The delay must be >0, it was {delay}");
-            InternalCancelAfter(delay);
+            }
+
+            this.InternalCancelAfter(delay);
         }
 
         /// <summary>
@@ -142,22 +151,37 @@ namespace Nautilus.Scheduler
         /// <exception cref="ObjectDisposedException">This exception is thrown if this cancelable has already been disposed.</exception>
         public void CancelAfter(int millisecondsDelay)
         {
-            if(millisecondsDelay < 0)
+            if (millisecondsDelay < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), $"The delay must be >0, it was {millisecondsDelay}");
-            InternalCancelAfter(TimeSpan.FromMilliseconds(millisecondsDelay));
+            }
+
+            this.InternalCancelAfter(TimeSpan.FromMilliseconds(millisecondsDelay));
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            // Take this object off the finalization queue and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
         }
 
         private void InternalCancelAfter(TimeSpan delay)
         {
-            ThrowIfDisposed();
-            if(this.source.IsCancellationRequested)
-                return;
-
-            //If the scheduler is using the system time, we can optimize for that
-            if(this.scheduler is ITimeProvider)
+            this.ThrowIfDisposed();
+            if (this.source.IsCancellationRequested)
             {
-                //Use the built in functionality on CancellationTokenSource which is
-                //likely more lightweight than using the scheduler
+                return;
+            }
+
+            // If the scheduler is using the system time, we can optimize for that.
+            if (this.scheduler is ITimeProvider)
+            {
+                // Use the built in functionality on CancellationTokenSource which is
+                // likely more lightweight than using the scheduler.
                 this.source.CancelAfter(delay);
             }
             else
@@ -166,98 +190,44 @@ namespace Nautilus.Scheduler
             }
         }
 
-        /// <summary>
-        /// Returns a <see cref="ICancelable"/> that has already been canceled.
-        /// </summary>
-        /// <returns>TBD</returns>
-        public static ICancelable CreateCanceled()
-        {
-            return AlreadyCanceledCancelable.Instance;
-        }
-
-//// <summary>
-//        /// Creates a <see cref="ICancelable"/> that will be in the canceled state
-//        /// when any of the source cancelables are in the canceled state.
-//        /// </summary>
-//        /// <param name="scheduler">The scheduler</param>
-//        /// <param name="cancelables">The cancelables instances to observe.</param>
-//        /// <returns>A new <see cref="ICancelable"/> that is linked to the source .</returns>
-//        public static ICancelable CreateLinkedCancelable(IScheduler scheduler, params ICancelable[] cancelables)
-//        {
-//            var cancellationTokens = cancelables.Select(c => c.Token).ToArray();
-//            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokens);
-//            return new Cancelable(scheduler.Advanced, cts);
-//        }
-//
-//
-//        /// <summary>
-//        /// Creates a <see cref="ICancelable"/> that will be in the canceled state
-//        /// when any of the source cancelables are in the canceled state.
-//        /// </summary>
-//        /// <param name="scheduler">The scheduler</param>
-//        /// <param name="cancelables">The cancelables instances to observe.</param>
-//        /// <returns>A new <see cref="ICancelable"/> that is linked to the source .</returns>
-//        public static ICancelable CreateLinkedCancelable(IActionScheduler scheduler, params ICancelable[] cancelables)
-//        {
-//            var cancellationTokens = cancelables.Select(c => c.Token).ToArray();
-//            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokens);
-//            return new Cancelable(scheduler, cts);
-//        }
-
-
-
-        private void ThrowIfDisposed()
-        {
-            if(_isDisposed)
-                throw new ObjectDisposedException(null, "The cancelable has been disposed");
-        }
-
-        //  Dispose ---------------------------------------------------------------
-        private bool _isDisposed; //Automatically initialized to false;
-
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            //Take this object off the finalization queue and prevent finalization code for this object
-            //from executing a second time.
-            GC.SuppressFinalize(this);
-        }
-
-
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         /// <param name="disposing">if set to <c>true</c> the method has been called directly or indirectly by a
         /// user's code. Managed and unmanaged resources will be disposed.<br />
         /// if set to <c>false</c> the method has been called by the runtime from inside the finalizer and only
         /// unmanaged resources can be disposed.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             // If disposing equals false, the method has been called by the
             // runtime from inside the finalizer and you should not reference
             // other objects. Only unmanaged resources can be disposed.
-
             try
             {
-                //Make sure Dispose does not get called more than once, by checking the disposed field
-                if(!_isDisposed)
+                // Make sure Dispose does not get called more than once, by checking the disposed field.
+                if (!this.isDisposed)
                 {
-                    if(disposing)
+                    if (disposing)
                     {
-                        //Clean up managed resources
-                        if(this.source != null)
-                        {
-                            this.source.Dispose();
-                        }
+                        // Clean up managed resources.
+                        this.source?.Dispose();
                     }
-                    //Clean up unmanaged resources
+
+                    // Clean up unmanaged resources.
                 }
-                _isDisposed = true;
+
+                this.isDisposed = true;
             }
             finally
             {
+                // Generates warning if removed.
+            }
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (this.isDisposed)
+            {
+                throw new ObjectDisposedException(null, "The cancelable has been disposed");
             }
         }
     }
 }
-

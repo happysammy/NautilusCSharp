@@ -16,44 +16,43 @@ namespace Nautilus.Scheduler
     /// </summary>
     public class AlreadyCanceledCancelable : ICancelable
     {
-        private static readonly AlreadyCanceledCancelable _instance = new AlreadyCanceledCancelable();
+        private static readonly AlreadyCanceledCancelable InternalInstance = new AlreadyCanceledCancelable();
 
-        private AlreadyCanceledCancelable() { }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        public void Cancel()
+        private AlreadyCanceledCancelable()
         {
-            //Intentionally left blank
         }
 
         /// <summary>
-        /// TBD
+        /// Gets a value indicating whether cancellation is requested.
         /// </summary>
-        public bool IsCancellationRequested { get { return true; } }
+        public bool IsCancellationRequested => true;
 
         /// <summary>
-        /// TBD
+        /// Gets the instance.
         /// </summary>
-        public static ICancelable Instance { get { return _instance; } }
+        public static ICancelable Instance => InternalInstance;
 
         /// <summary>
-        /// TBD
+        /// Gets the token.
         /// </summary>
-        public CancellationToken Token
+        public CancellationToken Token => new CancellationToken(true);
+
+        /// <summary>
+        /// TBD.
+        /// </summary>
+        public void Cancel()
         {
-            get { return new CancellationToken(true); }
+            // Intentionally left blank.
         }
 
         void ICancelable.CancelAfter(TimeSpan delay)
         {
-            //Intentionally left blank
+            // Intentionally left blank.
         }
 
         void ICancelable.CancelAfter(int millisecondsDelay)
         {
-            //Intentionally left blank
+            // Intentionally left blank.
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Nautilus.Scheduler
         /// <param name="throwOnFirstException">TBD</param>
         public void Cancel(bool throwOnFirstException)
         {
-            //Intentionally left blank
+            // Intentionally left blank.
         }
     }
 }
