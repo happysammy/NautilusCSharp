@@ -62,7 +62,7 @@ namespace Nautilus.Scheduler
         public Cancelable(IActionScheduler scheduler)
             : this(scheduler, new CancellationTokenSource())
         {
-            // Intentionally left blank
+            // Intentionally left blank.
         }
 
         /// <summary>
