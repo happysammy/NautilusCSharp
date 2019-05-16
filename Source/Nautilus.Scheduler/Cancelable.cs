@@ -28,6 +28,7 @@ namespace Nautilus.Scheduler
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="delay">The delay before the cancelable is canceled.</param>
         public Cancelable(IActionScheduler scheduler, TimeSpan delay)
+            : this(scheduler)
         {
             this.CancelAfter(delay);
         }

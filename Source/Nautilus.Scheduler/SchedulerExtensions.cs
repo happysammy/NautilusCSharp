@@ -9,6 +9,7 @@
 namespace Nautilus.Scheduler
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
         /// <param name="cancelable">OPTIONAL. An <see cref="ICancelable"/> used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        public static void ScheduleTellOnce(this ISendScheduler scheduler, int millisecondsDelay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable = null)
+        public static void ScheduleTellOnce(this ISendScheduler scheduler, int millisecondsDelay, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable)
         {
             scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(millisecondsDelay), receiver, message, sender, cancelable);
         }
@@ -40,7 +41,7 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
         /// <param name="cancelable">OPTIONAL. An <see cref="ICancelable"/> used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        public static void ScheduleTellRepeatedly(this ISendScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable = null)
+        public static void ScheduleTellRepeatedly(this ISendScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable)
         {
             scheduler.ScheduleTellRepeatedly(TimeSpan.FromMilliseconds(initialMillisecondsDelay), TimeSpan.FromMilliseconds(millisecondsInterval), receiver, message, sender, cancelable);
         }
@@ -120,7 +121,7 @@ namespace Nautilus.Scheduler
         /// <param name="millisecondsDelay">The time in milliseconds that has to pass before the action is invoked.</param>
         /// <param name="action">The action that is being scheduled.</param>
         /// <param name="cancelable">OPTIONAL. A cancelable that can be used to cancel the action from being executed. Defaults to <c>null</c>.</param>
-        public static void ScheduleOnce(this IActionScheduler scheduler, int millisecondsDelay, Action action, ICancelable cancelable = null)
+        public static void ScheduleOnce(this IActionScheduler scheduler, int millisecondsDelay, Action action, OptionRef<ICancelable> cancelable)
         {
             scheduler.ScheduleOnce(TimeSpan.FromMilliseconds(millisecondsDelay), action, cancelable);
         }
@@ -194,7 +195,7 @@ namespace Nautilus.Scheduler
         /// <param name="millisecondsInterval">The time in milliseconds that has to pass between each invocation of the action.</param>
         /// <param name="action">The action that is being scheduled.</param>
         /// <param name="cancelable">OPTIONAL. A cancelable used to cancel the action from being executed. Defaults to <c>null</c>.</param>
-        private static void ScheduleRepeatedly(this IActionScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, Action action, ICancelable cancelable = null)
+        private static void ScheduleRepeatedly(this IActionScheduler scheduler, int initialMillisecondsDelay, int millisecondsInterval, Action action, OptionRef<ICancelable> cancelable)
         {
             scheduler.ScheduleRepeatedly(TimeSpan.FromMilliseconds(initialMillisecondsDelay), TimeSpan.FromMilliseconds(millisecondsInterval), action, cancelable);
         }

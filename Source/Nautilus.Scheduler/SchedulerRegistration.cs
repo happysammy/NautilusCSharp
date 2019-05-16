@@ -8,80 +8,88 @@
 
 namespace Nautilus.Scheduler
 {
+    using Nautilus.Core;
+
     /// <summary>
     /// Represents a scheduler registration.
     /// </summary>
     internal class SchedulerRegistration
     {
-        private readonly ICancelable cancellation;
-
-        /// <summary>
-        /// gets the next registration.
-        /// </summary>
-        public SchedulerRegistration Next;
-
-        public SchedulerRegistration Prev;
-
-        public long RemainingRounds;
-
-        /// <summary>
-        /// Used to determine the delay for repeatable sends.
-        /// </summary>
-        public long Offset;
-
-        /// <summary>
-        /// The deadline for determining when to execute.
-        /// </summary>
-        public long Deadline;
+        private readonly ICancelable? cancellation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SchedulerRegistration"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="cancellation">The cancellation.</param>
-        internal SchedulerRegistration(IRunnable action, ICancelable cancellation)
+        internal SchedulerRegistration(IRunnable action, OptionRef<ICancelable> cancellation)
         {
             this.Action = action;
-            this.cancellation = cancellation;
+            this.cancellation = cancellation.HasValue ? cancellation.Value : null;
         }
 
         /// <summary>
         /// Gets the registrations action.
         /// </summary>
-        public IRunnable Action { get; }
+        internal IRunnable Action { get; }
+
+        /// <summary>
+        /// Gets or sets the next registration.
+        /// </summary>
+        internal SchedulerRegistration? Next { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous registration.
+        /// </summary>
+        internal SchedulerRegistration? Prev { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Bucket"/> to which this registration belongs.
+        /// </summary>
+        internal Bucket? Bucket { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remaining rounds.
+        /// </summary>
+        internal long RemainingRounds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the offset. Used to determine the delay for repeatable sends.
+        /// </summary>
+        internal long Offset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the deadline. Used to determine when to execute.
+        /// </summary>
+        internal long Deadline { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this task will need to be re-scheduled according to its <see cref="Offset"/>.
         /// </summary>
-        public bool Repeat => this.Offset > 0;
+        internal bool Repeat => this.Offset > 0;
 
         /// <summary>
         ///  Gets a value indicating whether the task is cancelled.
         /// </summary>
-        public bool Cancelled => this.cancellation?.IsCancellationRequested ?? false;
-
-        /// <summary>
-        /// The <see cref="Bucket"/> to which this registration belongs.
-        /// </summary>
-        public Bucket Bucket;
-
-        /// <summary>
-        /// Resets all of the fields so this registration object can be used again
-        /// </summary>
-        public void Reset()
-        {
-            this.Next = null;
-            this.Prev = null;
-            this.Bucket = null;
-            this.Deadline = 0;
-            this.RemainingRounds = 0;
-        }
+        internal bool Cancelled => this.cancellation?.IsCancellationRequested ?? false;
 
         /// <inheritdoc/>
         public override string ToString()
         {
             return
                 $"ScheduledWork(Deadline={this.Deadline}, RepeatEvery={this.Offset}, Cancelled={this.Cancelled}, Work={this.Action})";
+        }
+
+        /// <summary>
+        /// Resets all of the fields so this registration object can be used again.
+        /// </summary>
+        internal void Reset()
+        {
+            this.Next = null;
+            this.Prev = null;
+            this.Bucket = null;
+            this.Deadline = 0;
+            this.RemainingRounds = 0;
         }
     }
 }

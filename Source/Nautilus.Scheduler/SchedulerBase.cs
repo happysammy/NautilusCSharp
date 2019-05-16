@@ -11,6 +11,7 @@ namespace Nautilus.Scheduler
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -40,7 +41,7 @@ namespace Nautilus.Scheduler
         /// Typically uses <see cref="MonotonicClock"/> in most implementations, but in some cases a
         /// custom implementation is used - such as when we need to do virtual time scheduling in the Akka.TestKit.
         /// </remarks>
-        public abstract TimeSpan ElapsedHighRes { get; }
+        public abstract TimeSpan Elapsed { get; }
 
         /// <summary>
         /// Gets the logging adapter.
@@ -55,10 +56,10 @@ namespace Nautilus.Scheduler
         void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
         {
             ValidateDelay(delay, "delay");
-            this.InternalScheduleSendOnce(delay, receiver, message, sender, null);
+            this.InternalScheduleSendOnce(delay, receiver, message, sender, OptionRef<ICancelable>.None());
         }
 
-        void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable)
+        void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable)
         {
             ValidateDelay(delay, "delay");
             this.InternalScheduleSendOnce(delay, receiver, message, sender, cancelable);
@@ -68,10 +69,10 @@ namespace Nautilus.Scheduler
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
-            this.InternalScheduleSendRepeatedly(initialDelay, interval, receiver, message, sender, null);
+            this.InternalScheduleSendRepeatedly(initialDelay, interval, receiver, message, sender, OptionRef<ICancelable>.None());
         }
 
-        void ISendScheduler.ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable)
+        void ISendScheduler.ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable)
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
@@ -81,10 +82,10 @@ namespace Nautilus.Scheduler
         void IActionScheduler.ScheduleOnce(TimeSpan delay, Action action)
         {
             ValidateDelay(delay, "delay");
-            this.InternalScheduleOnce(delay, action, null);
+            this.InternalScheduleOnce(delay, action, OptionRef<ICancelable>.None());
         }
 
-        void IActionScheduler.ScheduleOnce(TimeSpan delay, Action action, ICancelable cancelable)
+        void IActionScheduler.ScheduleOnce(TimeSpan delay, Action action, OptionRef<ICancelable> cancelable)
         {
             ValidateDelay(delay, "delay");
             this.InternalScheduleOnce(delay, action, cancelable);
@@ -94,10 +95,10 @@ namespace Nautilus.Scheduler
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
-            this.InternalScheduleRepeatedly(initialDelay, interval, action, null);
+            this.InternalScheduleRepeatedly(initialDelay, interval, action, OptionRef<ICancelable>.None());
         }
 
-        void IActionScheduler.ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable cancelable)
+        void IActionScheduler.ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, OptionRef<ICancelable> cancelable)
         {
             ValidateDelay(initialDelay, "initialDelay");
             ValidateInterval(interval, "interval");
@@ -117,7 +118,7 @@ namespace Nautilus.Scheduler
             IEndpoint receiver,
             object message,
             IEndpoint sender,
-            ICancelable cancelable);
+            OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedule a message to send repeatedly.
@@ -134,7 +135,7 @@ namespace Nautilus.Scheduler
             IEndpoint receiver,
             object message,
             IEndpoint sender,
-            ICancelable cancelable);
+            OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedule a action to be invoked once.
@@ -145,7 +146,7 @@ namespace Nautilus.Scheduler
         protected abstract void InternalScheduleOnce(
             TimeSpan delay,
             Action action,
-            ICancelable cancelable);
+            OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedule a action to be invoked repeatedly.
@@ -158,7 +159,7 @@ namespace Nautilus.Scheduler
             TimeSpan initialDelay,
             TimeSpan interval,
             Action action,
-            ICancelable cancelable);
+            OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Validate the given interval.

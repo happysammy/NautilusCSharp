@@ -110,6 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(subscribe4);
 
             LogDumper.Dump(this.logger, this.output);
+
             // Assert
         }
 
@@ -143,6 +144,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.controller.Endpoint.Send(unsubscribe);
 
             LogDumper.Dump(this.logger, this.output);
+
             // Assert
         }
 

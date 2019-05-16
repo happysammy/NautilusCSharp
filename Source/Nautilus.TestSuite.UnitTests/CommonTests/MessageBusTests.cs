@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
+    using Nautilus.Data;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -42,12 +43,8 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
-                { ServiceAddress.DeadLetters, this.mockReceiver.Endpoint },
-                { ServiceAddress.Alpha, this.mockReceiver.Endpoint },
-                { ServiceAddress.Data, this.mockReceiver.Endpoint },
-                { ServiceAddress.Execution, this.mockReceiver.Endpoint },
-                { ServiceAddress.Portfolio, this.mockReceiver.Endpoint },
-                { ServiceAddress.Risk, this.mockReceiver.Endpoint },
+                { DataServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
+                { DataServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
             }.ToImmutableDictionary();
 
             this.messageBus.Send(new InitializeSwitchboard(

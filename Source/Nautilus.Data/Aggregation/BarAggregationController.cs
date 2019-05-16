@@ -8,23 +8,18 @@
 
 namespace Nautilus.Data.Aggregation
 {
-    using System;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.Data.Messages.Jobs;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Scheduler.Messages;
     using NodaTime;
 
     /// <summary>
@@ -36,9 +31,11 @@ namespace Nautilus.Data.Aggregation
         private readonly IComponentryContainer storedContainer;
         private readonly IEndpoint barPublisher;
         private readonly Dictionary<Symbol, IEndpoint> barAggregators;
-        private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
+
+        // private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
         private readonly Dictionary<Duration, List<BarSpecification>> barTriggers;
-        private readonly Dictionary<Duration, ITrigger> triggers;
+
+        // private readonly Dictionary<Duration, ITrigger> triggers;
         private readonly Dictionary<Duration, int> triggerCounts;
 
         private bool isMarketOpen;
@@ -61,9 +58,11 @@ namespace Nautilus.Data.Aggregation
             this.storedContainer = container;
             this.barPublisher = barPublisher;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();
-            this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
+
+            // this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
             this.barTriggers = new Dictionary<Duration, List<BarSpecification>>();
-            this.triggers = new Dictionary<Duration, ITrigger>();
+
+            // this.triggers = new Dictionary<Duration, ITrigger>();
             this.triggerCounts = new Dictionary<Duration, int>();
 
             this.isMarketOpen = this.IsFxMarketOpen();
@@ -71,52 +70,54 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Tick>(this.OnMessage);
-            this.RegisterHandler<BarJob>(this.OnMessage);
+
+            // this.RegisterHandler<BarJob>(this.OnMessage);
             this.RegisterHandler<MarketStatusJob>(this.OnMessage);
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
         }
 
-        private static IScheduleBuilder CreateBarJobSchedule(BarSpecification barSpec)
+        // private static IScheduleBuilder
+        private static void CreateBarJobSchedule(BarSpecification barSpec)
         {
-            var scheduleBuilder = SimpleScheduleBuilder
-                .Create()
-                .RepeatForever()
-                .WithMisfireHandlingInstructionFireNow();
+// var scheduleBuilder = SimpleScheduleBuilder
+//                .Create()
+//                .RepeatForever()
+//                .WithMisfireHandlingInstructionFireNow();
 
-            switch (barSpec.Resolution)
-            {
-                case Resolution.SECOND:
-                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
-                    break;
-                case Resolution.MINUTE:
-                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
-                    break;
-                case Resolution.HOUR:
-                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
-                    break;
-                case Resolution.DAY:
-                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
-                    break;
-                case Resolution.TICK:
-                    throw new InvalidOperationException("Cannot schedule tick bars.");
-                default: throw new InvalidOperationException("Bar resolution not recognised.");
-            }
-
-            return scheduleBuilder;
+// switch (barSpec.Resolution)
+//            {
+//                case Resolution.SECOND:
+//                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
+//                    break;
+//                case Resolution.MINUTE:
+//                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
+//                    break;
+//                case Resolution.HOUR:
+//                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
+//                    break;
+//                case Resolution.DAY:
+//                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
+//                    break;
+//                case Resolution.TICK:
+//                    throw new InvalidOperationException("Cannot schedule tick bars.");
+//                default: throw new InvalidOperationException("Bar resolution not recognised.");
+//            }
+//
+//            return scheduleBuilder;
         }
 
-        private ITrigger CreateBarJobTrigger(BarSpecification barSpec)
+        // private ITrigger
+        private void CreateBarJobTrigger(BarSpecification barSpec)
         {
-            Debug.KeyNotIn(barSpec.Duration, this.triggers, nameof(barSpec.Duration), nameof(this.triggers));
-
+            // Debug.KeyNotIn(barSpec.Duration, this.triggers, nameof(barSpec.Duration), nameof(this.triggers));
             var duration = barSpec.Duration;
 
-            return TriggerBuilder
-                .Create()
-                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
-                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
-                .WithSchedule(CreateBarJobSchedule(barSpec))
-                .Build();
+// return TriggerBuilder
+//                .Create()
+//                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
+//                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
+//                .WithSchedule(CreateBarJobSchedule(barSpec))
+//                .Build();
         }
 
         private bool IsFxMarketOpen()
@@ -149,12 +150,11 @@ namespace Nautilus.Data.Aggregation
 
             var duration = barSpec.Duration;
 
-            if (!this.triggers.ContainsKey(duration))
-            {
-                var trigger = this.CreateBarJobTrigger(barSpec);
-                this.triggers.Add(duration, trigger);
-            }
-
+// if (!this.triggers.ContainsKey(duration))
+//            {
+//                var trigger = this.CreateBarJobTrigger(barSpec);
+//                this.triggers.Add(duration, trigger);
+//            }
             if (!this.barTriggers.ContainsKey(duration))
             {
                 this.barTriggers.Add(duration, new List<BarSpecification>());
@@ -164,20 +164,19 @@ namespace Nautilus.Data.Aggregation
             {
                 this.barTriggers[duration].Add(barSpec);
 
-                var barJob = new BarJob(barSpec);
+                // var barJob = new BarJob(barSpec);
 
-                var createJob = new CreateJob(
-                    this.Endpoint,
-                    barJob,
-                    barJob.Key,
-                    this.triggers[duration],
-                    this.NewGuid(),
-                    this.TimeNow());
+// var createJob = new CreateJob(
+//                    this.Endpoint,
+//                    barJob,
+//                    barJob.Key,
+//                    this.triggers[duration],
+//                    this.NewGuid(),
+//                    this.TimeNow());
 
-                this.barJobs.Add(
-                    barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
+                // this.barJobs.Add(barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
 
-                this.Send(ServiceAddress.Scheduler, createJob);
+                // this.Send(ServiceAddress.Scheduler, createJob);
             }
 
             if (!this.triggerCounts.ContainsKey(duration))
@@ -225,14 +224,14 @@ namespace Nautilus.Data.Aggregation
 
             if (this.triggerCounts[barSpec.Duration] <= 0)
             {
-                var job = this.barJobs[barSpec];
-                var removeJob = new RemoveJob(
-                    job.Key,
-                    job.Value,
-                    this.NewGuid(),
-                    this.TimeNow());
+                // var job = this.barJobs[barSpec];
+                // var removeJob = new RemoveJob(
+//                    job.Key,
+//                    job.Value,
+//                    this.NewGuid(),
+//                    this.TimeNow());
 
-                this.Send(ServiceAddress.Scheduler, removeJob);
+                // this.Send(ServiceAddress.Scheduler, removeJob);
             }
         }
 
@@ -249,36 +248,35 @@ namespace Nautilus.Data.Aggregation
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
-        private void OnMessage(BarJob job)
-        {
-            var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
-            foreach (var aggregator in this.barAggregators.Values)
-            {
-                // TODO: Change this logic.
-                var closeBar1 = new CloseBar(
-                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.BID),
-                    closeTime,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                var closeBar2 = new CloseBar(
-                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.ASK),
-                    closeTime,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                var closeBar3 = new CloseBar(
-                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.MID),
-                    closeTime,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                aggregator.Send(closeBar1);
-                aggregator.Send(closeBar2);
-                aggregator.Send(closeBar3);
-            }
-        }
-
+// private void OnMessage(BarJob job)
+//        {
+//            var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
+//            foreach (var aggregator in this.barAggregators.Values)
+//            {
+//                // TODO: Change this logic.
+//                var closeBar1 = new CloseBar(
+//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.BID),
+//                    closeTime,
+//                    this.NewGuid(),
+//                    this.TimeNow());
+//
+//                var closeBar2 = new CloseBar(
+//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.ASK),
+//                    closeTime,
+//                    this.NewGuid(),
+//                    this.TimeNow());
+//
+//                var closeBar3 = new CloseBar(
+//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.MID),
+//                    closeTime,
+//                    this.NewGuid(),
+//                    this.TimeNow());
+//
+//                aggregator.Send(closeBar1);
+//                aggregator.Send(closeBar2);
+//                aggregator.Send(closeBar3);
+//            }
+//        }
         private void OnMessage(MarketStatusJob job)
         {
             if (job.IsMarketOpen)
@@ -287,15 +285,15 @@ namespace Nautilus.Data.Aggregation
                 this.isMarketOpen = true;
 
                 // Resume all active bar jobs.
-                foreach (var barJob in this.barJobs.Values)
-                {
-                    var resumeJob = new ResumeJob(
-                        barJob.Key,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.Send(ServiceAddress.Scheduler, resumeJob);
-                }
+//                foreach (var barJob in this.barJobs.Values)
+//                {
+//                    // var resumeJob = new ResumeJob(
+//                    //    barJob.Key,
+//                    //    this.NewGuid(),
+//                    //    this.TimeNow());
+//
+//                    // this.Send(ServiceAddress.Scheduler, resumeJob);
+//                }
 
                 // Tell all bar aggregators the market is now open.
                 var marketOpened = new MarketOpened(this.NewGuid(), this.TimeNow());
@@ -311,15 +309,15 @@ namespace Nautilus.Data.Aggregation
                 this.isMarketOpen = false;
 
                 // Pause all active bar jobs.
-                foreach (var barJob in this.barJobs.Values)
-                {
-                    var pause = new PauseJob(
-                        barJob.Key,
-                        this.NewGuid(),
-                        this.TimeNow());
-
-                    this.Send(ServiceAddress.Scheduler, pause);
-                }
+//                foreach (var barJob in this.barJobs.Values)
+//                {
+//                    // var pause = new PauseJob(
+//                    //    barJob.Key,
+//                    //    this.NewGuid(),
+//                    //    this.TimeNow());
+//
+//                    // this.Send(ServiceAddress.Scheduler, pause);
+//                }
 
                 // Tell all aggregators the market is now closed.
                 var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());

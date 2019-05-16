@@ -96,7 +96,7 @@ namespace NautilusData
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
-            }.ToImmutableDictionary();
+            };
 
             return new DataService(
                 container,

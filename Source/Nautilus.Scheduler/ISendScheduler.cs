@@ -9,6 +9,7 @@
 namespace Nautilus.Scheduler
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -33,7 +34,7 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
         /// <param name="cancelable">A cancelable used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        void ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        void ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedules a message to be sent repeatedly after an initial delay.
@@ -54,6 +55,6 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
         /// <param name="cancelable">An cancelable used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        void ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable cancelable);
+        void ScheduleTellRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, OptionRef<ICancelable> cancelable);
     }
 }

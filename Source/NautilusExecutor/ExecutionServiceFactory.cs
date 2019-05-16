@@ -84,7 +84,7 @@ namespace NautilusExecutor
             {
                 { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
-            }.ToImmutableDictionary();
+            };
 
             return new ExecutionService(
                 container,

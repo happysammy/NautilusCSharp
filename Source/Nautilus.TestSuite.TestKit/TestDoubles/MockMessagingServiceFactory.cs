@@ -9,15 +9,11 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
@@ -36,17 +32,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 documentBus.Endpoint);
 
             var receiver = new MockMessagingAgent();
-            var addresses = new Dictionary<Address, IEndpoint>
-            {
-                { ServiceAddress.Alpha, receiver.Endpoint },
-                { ServiceAddress.Data, receiver.Endpoint },
-                { ServiceAddress.Portfolio, receiver.Endpoint },
-                { ServiceAddress.Risk, receiver.Endpoint },
-                { ServiceAddress.Execution, receiver.Endpoint },
-            }.ToImmutableDictionary();
 
             var initializeSwitchboard = new InitializeSwitchboard(
-                Switchboard.Create(addresses),
+                Switchboard.Empty(),
                 Guid.NewGuid(),
                 container.Clock.TimeNow());
 

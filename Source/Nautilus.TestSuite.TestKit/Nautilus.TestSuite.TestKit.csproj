@@ -23,6 +23,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Nautilus.Data\Nautilus.Data.csproj" />
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
+        <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -9,6 +9,7 @@
 namespace Nautilus.Scheduler
 {
     using System;
+    using Nautilus.Core;
 
     /// <summary>
     /// This interface defines a scheduler that is able to execute actions on a set schedule.
@@ -23,7 +24,7 @@ namespace Nautilus.Scheduler
         /// <param name="delay">The time period that has to pass before the action is invoked.</param>
         /// <param name="action">The action that is being scheduled.</param>
         /// <param name="cancelable">A cancelable used to cancel the action from being executed.</param>
-        void ScheduleOnce(TimeSpan delay, Action action, ICancelable cancelable);
+        void ScheduleOnce(TimeSpan delay, Action action, OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedules an action to be invoked after a delay. The action is wrapped so that it
@@ -44,7 +45,7 @@ namespace Nautilus.Scheduler
         /// <param name="interval">The time period that has to pass between each invocation of the action.</param>
         /// <param name="action">The action that is being scheduled.</param>
         /// <param name="cancelable">A cancelable used to cancel the action from being executed.</param>
-        void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable cancelable);
+        void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, OptionRef<ICancelable> cancelable);
 
         /// <summary>
         /// Schedules an action to be invoked after an initial delay and then repeatedly.

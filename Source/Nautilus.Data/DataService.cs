@@ -52,7 +52,7 @@ namespace Nautilus.Data
         public DataService(
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
-            ImmutableDictionary<Address, IEndpoint> addresses,
+            Dictionary<Address, IEndpoint> addresses,
             IFixGateway fixGateway,
             IEnumerable<Symbol> subscribingSymbols,
             IEnumerable<BarSpecification> barSpecifications,
@@ -63,7 +63,7 @@ namespace Nautilus.Data
                 setupContainer,
                 messagingAdapter)
         {
-            this.addresses = addresses;
+            this.addresses = addresses.ToImmutableDictionary();
             this.fixGateway = fixGateway;
             this.subscribingSymbols = subscribingSymbols;
             this.barSpecifications = barSpecifications;
@@ -71,7 +71,7 @@ namespace Nautilus.Data
             this.updateInstruments = updateInstruments;
 
             messagingAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(addresses),
+                Switchboard.Create(this.addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -95,14 +95,14 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
-            this.Send(ServiceAddress.Scheduler, message);
-
+            // this.Send(ServiceAddress.Scheduler, message);
             this.fixGateway.Connect();
-            this.CreateConnectFixJob();
-            this.CreateDisconnectFixJob();
-            this.CreateMarketOpenedJob();
-            this.CreateMarketClosedJob();
-            this.CreateTrimBarDataJob();
+
+            // this.CreateConnectFixJob();
+            // this.CreateDisconnectFixJob();
+            // this.CreateMarketOpenedJob();
+            // this.CreateMarketClosedJob();
+            // this.CreateTrimBarDataJob();
         }
 
         /// <inheritdoc />
@@ -110,7 +110,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Stopping...");
 
-            this.Send(ServiceAddress.Scheduler, message);
+            // this.Send(ServiceAddress.Scheduler, message);
             this.Send(DataServiceAddress.DatabaseTaskManager, message);
 
             this.fixGateway.Disconnect();
@@ -185,134 +185,134 @@ namespace Nautilus.Data
             this.Send(DataServiceAddress.DatabaseTaskManager, trimCommand);
         }
 
-        private void CreateConnectFixJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("connect_fix", "fix44");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new ConnectFixJob(),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduler, createJob);
-            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
-        }
-
-        private void CreateDisconnectFixJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("disconnect_fix", "fix44");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new DisconnectFixJob(),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduler, createJob);
-            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
-        }
-
-        private void CreateMarketOpenedJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("market_opened", "bar_aggregation");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.addresses[DataServiceAddress.BarAggregationController],
-                new MarketStatusJob(true),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduler, createJob);
-            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
-        }
-
-        private void CreateMarketClosedJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("market_closed", "bar_aggregation");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.addresses[DataServiceAddress.BarAggregationController],
-                new MarketStatusJob(false),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduler, createJob);
-            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
-        }
-
-        private void CreateTrimBarDataJob()
-        {
-            var schedule = CronScheduleBuilder
-                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 00, 01)
-                .InTimeZone(TimeZoneInfo.Utc)
-                .WithMisfireHandlingInstructionFireAndProceed();
-
-            var jobKey = new JobKey("trim_bar_data", "data_management");
-            var trigger = TriggerBuilder
-                .Create()
-                .WithIdentity(jobKey.Name, jobKey.Group)
-                .WithSchedule(schedule)
-                .Build();
-
-            var createJob = new CreateJob(
-                this.Endpoint,
-                new TrimBarDataJob(),
-                jobKey,
-                trigger,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Send(ServiceAddress.Scheduler, createJob);
-            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
-        }
+// private void CreateConnectFixJob()
+//        {
+//            var schedule = CronScheduleBuilder
+//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
+//                .InTimeZone(TimeZoneInfo.Utc)
+//                .WithMisfireHandlingInstructionFireAndProceed();
+//
+//            var jobKey = new JobKey("connect_fix", "fix44");
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .WithIdentity(jobKey.Name, jobKey.Group)
+//                .WithSchedule(schedule)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.Endpoint,
+//                new ConnectFixJob(),
+//                jobKey,
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(ServiceAddress.Scheduler, createJob);
+//            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
+//        }
+//
+//        private void CreateDisconnectFixJob()
+//        {
+//            var schedule = CronScheduleBuilder
+//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+//                .InTimeZone(TimeZoneInfo.Utc)
+//                .WithMisfireHandlingInstructionFireAndProceed();
+//
+//            var jobKey = new JobKey("disconnect_fix", "fix44");
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .WithIdentity(jobKey.Name, jobKey.Group)
+//                .WithSchedule(schedule)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.Endpoint,
+//                new DisconnectFixJob(),
+//                jobKey,
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(ServiceAddress.Scheduler, createJob);
+//            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
+//        }
+//
+//        private void CreateMarketOpenedJob()
+//        {
+//            var schedule = CronScheduleBuilder
+//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 21, 00)
+//                .InTimeZone(TimeZoneInfo.Utc)
+//                .WithMisfireHandlingInstructionFireAndProceed();
+//
+//            var jobKey = new JobKey("market_opened", "bar_aggregation");
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .WithIdentity(jobKey.Name, jobKey.Group)
+//                .WithSchedule(schedule)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.addresses[DataServiceAddress.BarAggregationController],
+//                new MarketStatusJob(true),
+//                jobKey,
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(ServiceAddress.Scheduler, createJob);
+//            this.Log.Information("Created MarketStatusJob for market open Sundays 21:00 (UTC).");
+//        }
+//
+//        private void CreateMarketClosedJob()
+//        {
+//            var schedule = CronScheduleBuilder
+//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
+//                .InTimeZone(TimeZoneInfo.Utc)
+//                .WithMisfireHandlingInstructionFireAndProceed();
+//
+//            var jobKey = new JobKey("market_closed", "bar_aggregation");
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .WithIdentity(jobKey.Name, jobKey.Group)
+//                .WithSchedule(schedule)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.addresses[DataServiceAddress.BarAggregationController],
+//                new MarketStatusJob(false),
+//                jobKey,
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(ServiceAddress.Scheduler, createJob);
+//            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
+//        }
+//
+//        private void CreateTrimBarDataJob()
+//        {
+//            var schedule = CronScheduleBuilder
+//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 00, 01)
+//                .InTimeZone(TimeZoneInfo.Utc)
+//                .WithMisfireHandlingInstructionFireAndProceed();
+//
+//            var jobKey = new JobKey("trim_bar_data", "data_management");
+//            var trigger = TriggerBuilder
+//                .Create()
+//                .WithIdentity(jobKey.Name, jobKey.Group)
+//                .WithSchedule(schedule)
+//                .Build();
+//
+//            var createJob = new CreateJob(
+//                this.Endpoint,
+//                new TrimBarDataJob(),
+//                jobKey,
+//                trigger,
+//                this.NewGuid(),
+//                this.TimeNow());
+//
+//            this.Send(ServiceAddress.Scheduler, createJob);
+//            this.Log.Information($"Created {nameof(TrimBarDataJob)} for Sundays 00:01 (UTC).");
+//        }
     }
 }

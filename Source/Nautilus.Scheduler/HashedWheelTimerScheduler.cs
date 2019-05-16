@@ -16,6 +16,7 @@ namespace Nautilus.Scheduler
     using System.Threading.Tasks;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -31,28 +32,25 @@ namespace Nautilus.Scheduler
     /// Further reading: http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf
     /// Presentation: http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt.
     /// </summary>
-    [SuppressMessage("ReSharper", "SA1108", Justification = "Justified!")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Justified!")]
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Justified!")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Capitalization easier to read.")]
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
     public class HashedWheelTimerScheduler : SchedulerBase, IDisposable
     {
         private const int WORKER_STATE_INIT = 0;
         private const int WORKER_STATE_STARTED = 1;
         private const int WORKER_STATE_SHUTDOWN = 2;
 
-        private static readonly Task<IEnumerable<SchedulerRegistration>> Completed = Task.FromResult((IEnumerable<SchedulerRegistration>)new List<SchedulerRegistration>());
-
         private readonly AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>> stopped = new AtomicReference<TaskCompletionSource<IEnumerable<SchedulerRegistration>>>();
-        private readonly TimeSpan shutdownTimeout;
-        private readonly long tickDuration;
         private readonly ConcurrentQueue<SchedulerRegistration> registrations = new ConcurrentQueue<SchedulerRegistration>();
         private readonly HashSet<SchedulerRegistration> unprocessedRegistrations = new HashSet<SchedulerRegistration>();
         private readonly HashSet<SchedulerRegistration> rescheduleRegistrations = new HashSet<SchedulerRegistration>();
         private readonly CountdownEvent workerInitialized = new CountdownEvent(1);
+        private readonly TimeSpan shutdownTimeout = TimeSpan.FromSeconds(1);
         private readonly Bucket[] wheel;
+        private readonly long tickDuration;
         private readonly int mask;
 
-        private Thread worker;
+        private Thread? worker;
         private long startTime;
         private long tick;
 
@@ -76,12 +74,12 @@ namespace Nautilus.Scheduler
                 throw new ArgumentOutOfRangeException(nameof(tickDurationTimeSpan) + "Cannot be less than 10ms.");
             }
 
-            // Convert tick-duration to ticks.
-            this.tickDuration = tickDurationTimeSpan.Ticks;
-
             // Normalize ticks per wheel to power of two and create the wheel.
             this.wheel = CreateWheel(ticksPerWheel, log);
             this.mask = this.wheel.Length - 1;
+
+            // Convert tick-duration to ticks.
+            this.tickDuration = tickDurationTimeSpan.Ticks;
 
             // Prevent overflow.
             if (this.tickDuration >= long.MaxValue / this.wheel.Length)
@@ -91,20 +89,53 @@ namespace Nautilus.Scheduler
                     this.tickDuration,
                     $"tickDuration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
             }
-
-            this.shutdownTimeout = TimeSpan.FromSeconds(1);
         }
 
         /// <summary>
         /// Gets the elapsed time since start high resolution.
         /// </summary>
-        public override TimeSpan ElapsedHighRes => MonotonicClock.Elapsed;
+        public override TimeSpan Elapsed => MonotonicClock.Elapsed;
 
         /// <summary>
         /// Gets the time now.
         /// </summary>
         ///
         protected override DateTimeOffset TimeNow => DateTimeOffset.Now;
+
+        /// <summary>
+        /// Starts the <see cref="HashedWheelTimerScheduler"/>.
+        /// </summary>
+        /// <exception cref="SchedulerException">If the worker state is already shutdown.</exception>
+        /// <exception cref="InvalidOperationException">If the worker state is invalid.</exception>
+        public void Start()
+        {
+            switch (this.workerState)
+            {
+                case WORKER_STATE_STARTED:
+                    break; // Do nothing.
+                case WORKER_STATE_INIT:
+                {
+                    this.worker = new Thread(this.Run) { IsBackground = true };
+
+                    if (Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_STARTED, WORKER_STATE_INIT) == WORKER_STATE_INIT)
+                    {
+                        this.worker.Start();
+                    }
+
+                    break;
+                }
+
+                case WORKER_STATE_SHUTDOWN:
+                    throw new SchedulerException("Cannot enqueue after timer shutdown.");
+                default:
+                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
+            }
+
+            while (this.startTime == 0)
+            {
+                this.workerInitialized.Wait();
+            }
+        }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -154,7 +185,7 @@ namespace Nautilus.Scheduler
             IEndpoint receiver,
             object message,
             IEndpoint sender,
-            ICancelable cancelable)
+            OptionRef<ICancelable> cancelable)
         {
             this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
         }
@@ -174,7 +205,7 @@ namespace Nautilus.Scheduler
             IEndpoint receiver,
             object message,
             IEndpoint sender,
-            ICancelable cancelable)
+            OptionRef<ICancelable> cancelable)
         {
             this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
         }
@@ -188,7 +219,7 @@ namespace Nautilus.Scheduler
         protected override void InternalScheduleOnce(
             TimeSpan delay,
             Action action,
-            ICancelable cancelable)
+            OptionRef<ICancelable> cancelable)
         {
             this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
         }
@@ -204,7 +235,7 @@ namespace Nautilus.Scheduler
             TimeSpan initialDelay,
             TimeSpan interval,
             Action action,
-            ICancelable cancelable)
+            OptionRef<ICancelable> cancelable)
         {
             this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
         }
@@ -247,43 +278,13 @@ namespace Nautilus.Scheduler
             return normalizedTicksPerWheel;
         }
 
-        private void Start()
-        {
-            switch (this.workerState)
-            {
-                case WORKER_STATE_STARTED:
-                    break; // Do nothing.
-                case WORKER_STATE_INIT:
-                {
-                    this.worker = new Thread(this.Run) { IsBackground = true };
-
-                    if (Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_STARTED, WORKER_STATE_INIT) == WORKER_STATE_INIT)
-                    {
-                        this.worker.Start();
-                    }
-
-                    break;
-                }
-
-                case WORKER_STATE_SHUTDOWN:
-                    throw new SchedulerException("Cannot enqueue after timer shutdown.");
-                default:
-                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
-            }
-
-            while (this.startTime == 0)
-            {
-                this.workerInitialized.Wait();
-            }
-        }
-
         /// <summary>
         /// Scheduler thread entry method.
         /// </summary>
         private void Run()
         {
             // Initialize the clock.
-            this.startTime = this.ElapsedHighRes.Ticks;
+            this.startTime = this.Elapsed.Ticks;
             if (this.startTime == 0)
             {
                 // 0 means it's an uninitialized value, so bump to 1 to indicate it's started.
@@ -325,14 +326,14 @@ namespace Nautilus.Scheduler
             }
 
             // Return the list of unprocessedRegistrations and signal that we're finished
-            this.stopped.Value.TrySetResult(this.unprocessedRegistrations);
+            this.stopped.Value?.TrySetResult(this.unprocessedRegistrations);
         }
 
         private void ProcessReschedule()
         {
             foreach (var toReschedule in this.rescheduleRegistrations)
             {
-                var nextDeadline = this.ElapsedHighRes.Ticks - this.startTime + toReschedule.Offset;
+                var nextDeadline = this.Elapsed.Ticks - this.startTime + toReschedule.Offset;
                 toReschedule.Deadline = nextDeadline;
                 this.PlaceInBucket(toReschedule);
             }
@@ -343,17 +344,21 @@ namespace Nautilus.Scheduler
         private long WaitForNextTick()
         {
             var deadline = this.tickDuration * (this.tick + 1);
-            unchecked // To avoid trouble with long-running applications.
+
+            // unchecked avoids trouble with long-running applications.
+            unchecked
             {
                 for (; ;)
                 {
-                    var currentTime = this.ElapsedHighRes.Ticks - this.startTime;
+                    var currentTime = this.Elapsed.Ticks - this.startTime;
                     var sleepMs = (deadline - currentTime + TimeSpan.TicksPerMillisecond - 1) / TimeSpan.TicksPerMillisecond;
 
-                    if (sleepMs <= 0) // No need to sleep.
+                    if (sleepMs <= 0)
                     {
-                        if (currentTime == long.MinValue) // wrap-around
+                        // No need to sleep.
+                        if (currentTime == long.MinValue)
                         {
+                            // Wrap-around.
                             return -long.MaxValue;
                         }
 
@@ -401,10 +406,10 @@ namespace Nautilus.Scheduler
             TimeSpan delay,
             TimeSpan interval,
             IRunnable action,
-            ICancelable cancelable)
+            OptionRef<ICancelable> cancelable)
         {
             this.Start();
-            var deadline = this.ElapsedHighRes.Ticks + delay.Ticks - this.startTime;
+            var deadline = this.Elapsed.Ticks + delay.Ticks - this.startTime;
             var offset = interval.Ticks;
             var reg = new SchedulerRegistration(action, cancelable)
             {
@@ -417,14 +422,13 @@ namespace Nautilus.Scheduler
         private Task<IEnumerable<SchedulerRegistration>> Stop()
         {
             var p = new TaskCompletionSource<IEnumerable<SchedulerRegistration>>();
-
             if (this.stopped.CompareAndSet(null, p) && Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_SHUTDOWN, WORKER_STATE_STARTED) == WORKER_STATE_STARTED)
             {
                 // Let remaining work that is already being processed finished. The termination task will complete afterwards.
                 return p.Task;
             }
 
-            return Completed;
+            return Task.FromResult((IEnumerable<SchedulerRegistration>)new List<SchedulerRegistration>());
         }
     }
 }

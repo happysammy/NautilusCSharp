@@ -25,11 +25,11 @@ namespace Nautilus.Scheduler
         /*
          * Endpoints of our doubly linked list
          */
-        private SchedulerRegistration head;
-        private SchedulerRegistration tail;
+        private SchedulerRegistration? head;
+        private SchedulerRegistration? tail;
 
-        private SchedulerRegistration rescheduleHead;
-        private SchedulerRegistration rescheduleTail;
+        private SchedulerRegistration? rescheduleHead;
+        private SchedulerRegistration? rescheduleTail;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bucket"/> class.
@@ -43,22 +43,24 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Adds a <see cref="SchedulerRegistration"/> to this bucket.
         /// </summary>
-        /// <param name="reg">The scheduled task.</param>
-        internal void AddRegistration(SchedulerRegistration reg)
+        /// <param name="registration">The scheduler registration.</param>
+        internal void AddRegistration(SchedulerRegistration registration)
         {
-            Debug.True(reg.Bucket == null, nameof(reg.Bucket));
-
-            reg.Bucket = this;
+            registration.Bucket = this;
             if (this.head == null)
             {
                 // First time the bucket has been used.
-                this.head = this.tail = reg;
+                this.head = this.tail = registration;
             }
             else
             {
-                this.tail.Next = reg;
-                reg.Prev = this.tail;
-                this.tail = reg;
+                if (this.tail != null)
+                {
+                    this.tail.Next = registration;
+                    registration.Prev = this.tail;
+                }
+
+                this.tail = registration;
             }
         }
 
@@ -223,13 +225,16 @@ namespace Nautilus.Scheduler
             }
             else
             {
-                this.rescheduleTail.Next = reg;
-                reg.Prev = this.rescheduleTail;
-                this.rescheduleTail = reg;
+                if (this.rescheduleTail != null)
+                {
+                    this.rescheduleTail.Next = reg;
+                    reg.Prev = this.rescheduleTail;
+                    this.rescheduleTail = reg;
+                }
             }
         }
 
-        private SchedulerRegistration Poll()
+        private SchedulerRegistration? Poll()
         {
             var thisHead = this.head;
             if (thisHead == null)
@@ -252,7 +257,7 @@ namespace Nautilus.Scheduler
             return thisHead;
         }
 
-        private SchedulerRegistration PollReschedule()
+        private SchedulerRegistration? PollReschedule()
         {
             var thisHead = this.rescheduleHead;
             if (thisHead == null)

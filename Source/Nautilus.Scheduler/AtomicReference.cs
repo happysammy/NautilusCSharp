@@ -21,14 +21,14 @@ namespace Nautilus.Scheduler
     internal class AtomicReference<T>
         where T : class
     {
-        private T atomicValue;
+        private T? atomicValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AtomicReference{T}"/> class.
         /// </summary>
         internal AtomicReference()
         {
-            this.atomicValue = default;
+            this.atomicValue = null;
         }
 
         /// <summary>
@@ -43,27 +43,21 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Gets the current value of this <see cref="AtomicReference{T}"/>.
         /// </summary>
-        public T Value => Volatile.Read(ref this.atomicValue);
+        public T? Value => this.atomicValue ?? Volatile.Read(ref this.atomicValue);
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="AtomicReference{T}"/> to <typeparamref name="T"/>.
         /// </summary>
         /// <param name="atomicReference">The reference to convert.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator T(AtomicReference<T> atomicReference)
-        {
-            return atomicReference.Value;
-        }
+        public static implicit operator T?(AtomicReference<T> atomicReference) => atomicReference?.Value;
 
         /// <summary>
         /// Performs an implicit conversion from <typeparamref name="T"/> to <see cref="AtomicReference{T}"/>.
         /// </summary>
         /// <param name="value">The reference to convert.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator AtomicReference<T>(T value)
-        {
-            return new AtomicReference<T>(value);
-        }
+        public static implicit operator AtomicReference<T>(T value) => new AtomicReference<T>(value);
 
         /// <summary>
         /// If <see cref="Value"/> equals <paramref name="expected"/>, then set the Value to
@@ -72,7 +66,7 @@ namespace Nautilus.Scheduler
         /// <param name="expected">The expected value.</param>
         /// <param name="newValue">The new value.</param>
         /// <returns><c>true</c> if <paramref name="newValue"/> was set.</returns>
-        public bool CompareAndSet(T expected, T newValue)
+        public bool CompareAndSet(T? expected, T newValue)
         {
             var previous = Interlocked.CompareExchange(ref this.atomicValue, newValue, expected);
             return ReferenceEquals(previous, expected);
@@ -83,9 +77,6 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="newValue">The new value.</param>
         /// <returns>The old value.</returns>
-        public T GetAndSet(T newValue)
-        {
-            return Interlocked.Exchange(ref this.atomicValue, newValue);
-        }
+        public T? GetAndSet(T newValue) => Interlocked.Exchange(ref this.atomicValue, newValue);
     }
 }

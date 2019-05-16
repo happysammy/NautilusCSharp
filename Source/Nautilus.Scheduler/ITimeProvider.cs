@@ -23,6 +23,6 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Gets the elapsed time.
         /// </summary>
-        TimeSpan ElapsedHighRes { get; }
+        TimeSpan Elapsed { get; }
     }
 }
