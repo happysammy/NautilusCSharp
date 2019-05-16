@@ -12,7 +12,6 @@ namespace Nautilus.Scheduler
     using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a bucket.
@@ -20,7 +19,7 @@ namespace Nautilus.Scheduler
     internal sealed class Bucket
     {
         private static readonly Action<object> ExecuteRunnableWithState = r => ((IRunnable)r).Run();
-        private readonly ILoggingAdapter log;
+        private readonly ILogger log;
 
         /*
          * Endpoints of our doubly linked list
@@ -35,7 +34,7 @@ namespace Nautilus.Scheduler
         /// Initializes a new instance of the <see cref="Bucket"/> class.
         /// </summary>
         /// <param name="log">The logger.</param>
-        internal Bucket(ILoggingAdapter log)
+        internal Bucket(ILogger log)
         {
             this.log = log;
         }
@@ -116,7 +115,7 @@ namespace Nautilus.Scheduler
                         }
                         catch (Exception ex)
                         {
-                            this.log.Error(NautilusService.Scheduling, $"Error while executing scheduled task {current}", ex);
+                            this.log.Error($"Error while executing scheduled task {current}", ex);
                             var nextErrored = current.Next;
                             this.Remove(current);
                             current = nextErrored;

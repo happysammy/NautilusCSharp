@@ -24,6 +24,7 @@ namespace NautilusData
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Publishers;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -57,7 +58,7 @@ namespace NautilusData
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
-            var scheduler = new HashedWheelTimerScheduler(loggingAdapter);
+            var scheduler = new HashedWheelTimerScheduler(container.LoggerFactory.Create(NautilusService.Scheduling, new Label("Scheduler")));
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var barRepository = new RedisBarRepository(redisConnection);

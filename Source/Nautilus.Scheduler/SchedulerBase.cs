@@ -24,34 +24,15 @@ namespace Nautilus.Scheduler
         /// Initializes a new instance of the <see cref="SchedulerBase"/> class.
         /// </summary>
         /// <param name="log">The logging adapter.</param>
-        protected SchedulerBase(ILoggingAdapter log)
+        protected SchedulerBase(ILogger log)
         {
             this.Log = log;
         }
 
         /// <summary>
-        /// Gets the time now.
-        /// </summary>
-        DateTimeOffset ITimeProvider.Now => this.TimeNow;
-
-        /// <summary>
-        /// Gets the current time since startup, as determined by the high resolution monotonic clock implementation.
-        /// </summary>
-        /// <remarks>
-        /// Typically uses <see cref="MonotonicClock"/> in most implementations, but in some cases a
-        /// custom implementation is used - such as when we need to do virtual time scheduling in the Akka.TestKit.
-        /// </remarks>
-        public abstract TimeSpan Elapsed { get; }
-
-        /// <summary>
         /// Gets the logging adapter.
         /// </summary>
-        protected ILoggingAdapter Log { get; }
-
-        /// <summary>
-        /// Gets the time now.
-        /// </summary>
-        protected abstract DateTimeOffset TimeNow { get; }
+        protected ILogger Log { get; }
 
         void ISendScheduler.ScheduleTellOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
         {

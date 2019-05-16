@@ -63,7 +63,7 @@ namespace Nautilus.Scheduler
         /// Initializes a new instance of the <see cref="HashedWheelTimerScheduler"/> class.
         /// </summary>
         /// <param name="log">The logger.</param>
-        public HashedWheelTimerScheduler(ILoggingAdapter log)
+        public HashedWheelTimerScheduler(ILogger log)
             : base(log)
         {
             var ticksPerWheel = 512; // Default.
@@ -90,17 +90,6 @@ namespace Nautilus.Scheduler
                     $"tickDuration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
             }
         }
-
-        /// <summary>
-        /// Gets the elapsed time since start high resolution.
-        /// </summary>
-        public override TimeSpan Elapsed => MonotonicClock.Elapsed;
-
-        /// <summary>
-        /// Gets the time now.
-        /// </summary>
-        ///
-        protected override DateTimeOffset TimeNow => DateTimeOffset.Now;
 
         /// <summary>
         /// Starts the <see cref="HashedWheelTimerScheduler"/>.
@@ -143,7 +132,7 @@ namespace Nautilus.Scheduler
             var stoppedTask = this.Stop();
             if (!stoppedTask.Wait(this.shutdownTimeout))
             {
-                this.Log.Warning(NautilusService.Scheduling, $"Failed to shutdown scheduler within {this.shutdownTimeout}");
+                this.Log.Warning($"Failed to shutdown scheduler within {this.shutdownTimeout}");
                 return;
             }
 
@@ -160,7 +149,7 @@ namespace Nautilus.Scheduler
                 }
                 catch (Exception ex)
                 {
-                    this.Log.Error(NautilusService.Scheduling, "Exception while executing timer task.", ex);
+                    this.Log.Error("Exception while executing timer task.", ex);
                 }
                 finally
                 {
@@ -240,7 +229,7 @@ namespace Nautilus.Scheduler
             this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
         }
 
-        private static Bucket[] CreateWheel(int ticksPerWheel, ILoggingAdapter log)
+        private static Bucket[] CreateWheel(int ticksPerWheel, ILogger log)
         {
             if (ticksPerWheel <= 0)
             {
@@ -284,7 +273,7 @@ namespace Nautilus.Scheduler
         private void Run()
         {
             // Initialize the clock.
-            this.startTime = this.Elapsed.Ticks;
+            this.startTime = MonotonicClock.Elapsed.Ticks;
             if (this.startTime == 0)
             {
                 // 0 means it's an uninitialized value, so bump to 1 to indicate it's started.
@@ -333,7 +322,7 @@ namespace Nautilus.Scheduler
         {
             foreach (var toReschedule in this.rescheduleRegistrations)
             {
-                var nextDeadline = this.Elapsed.Ticks - this.startTime + toReschedule.Offset;
+                var nextDeadline = MonotonicClock.Elapsed.Ticks - this.startTime + toReschedule.Offset;
                 toReschedule.Deadline = nextDeadline;
                 this.PlaceInBucket(toReschedule);
             }
@@ -350,7 +339,7 @@ namespace Nautilus.Scheduler
             {
                 for (; ;)
                 {
-                    var currentTime = this.Elapsed.Ticks - this.startTime;
+                    var currentTime = MonotonicClock.Elapsed.Ticks - this.startTime;
                     var sleepMs = (deadline - currentTime + TimeSpan.TicksPerMillisecond - 1) / TimeSpan.TicksPerMillisecond;
 
                     if (sleepMs <= 0)
@@ -409,7 +398,7 @@ namespace Nautilus.Scheduler
             OptionRef<ICancelable> cancelable)
         {
             this.Start();
-            var deadline = this.Elapsed.Ticks + delay.Ticks - this.startTime;
+            var deadline = MonotonicClock.Elapsed.Ticks + delay.Ticks - this.startTime;
             var offset = interval.Ticks;
             var reg = new SchedulerRegistration(action, cancelable)
             {

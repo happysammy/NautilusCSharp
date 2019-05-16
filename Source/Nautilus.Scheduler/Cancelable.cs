@@ -176,17 +176,7 @@ namespace Nautilus.Scheduler
                 return;
             }
 
-            // If the scheduler is using the system time, we can optimize for that.
-            if (this.scheduler is ITimeProvider)
-            {
-                // Use the built in functionality on CancellationTokenSource which is
-                // likely more lightweight than using the scheduler.
-                this.source.CancelAfter(delay);
-            }
-            else
-            {
-                this.scheduler.ScheduleOnce(delay, () => this.source.Cancel(), this);
-            }
+            this.source.CancelAfter(delay);
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
