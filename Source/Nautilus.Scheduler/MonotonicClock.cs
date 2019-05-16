@@ -13,9 +13,7 @@ namespace Nautilus.Scheduler
     using NodaTime.Extensions;
 
     /// <summary>
-    /// INTERNAL API
-    ///
-    /// A Monotonic clock implementation based on total uptime.
+    /// Provides a monotonic clock implementation based on total uptime.
     /// Used for keeping accurate time internally.
     /// </summary>
     internal static class MonotonicClock
