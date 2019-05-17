@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Scheduler;
+    using Nautilus.Scheduler.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -44,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var result = this.scheduler.Elapsed;
+            var result = MonotonicClock.Elapsed.BclCompatibleTicks;
 
             // Assert
             Assert.True(result > 20);

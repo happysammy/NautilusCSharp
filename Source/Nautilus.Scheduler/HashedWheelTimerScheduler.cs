@@ -71,36 +71,10 @@ namespace Nautilus.Scheduler
         public HashedWheelTimerScheduler(IComponentryContainer container)
             : base(NautilusService.Scheduling, container)
         {
-            var ticksPerWheel = 512; // Default.
-            var tickDurationTimeSpan = Duration.FromMilliseconds(10);
-            if (tickDurationTimeSpan.TotalMilliseconds < 10.0d)
-            {
-                // "minimum supported on Windows is 10ms"
-                throw new ArgumentOutOfRangeException(nameof(tickDurationTimeSpan) + "Cannot be less than 10ms.");
-            }
-
-            // Normalize ticks per wheel to power of two and create the wheel.
-            this.wheel = CreateWheel(ticksPerWheel, this.Log);
+            this.wheel = CreateWheel(512, this.Log);  // Default ticks per wheel 512.
             this.mask = this.wheel.Length - 1;
-
-            // Convert tick-duration to ticks.
-            this.tickDuration = tickDurationTimeSpan.BclCompatibleTicks;
-
-            // Prevent overflow.
-            if (this.tickDuration >= long.MaxValue / this.wheel.Length)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(this.tickDuration),
-                    this.tickDuration,
-                    $"tickDuration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
-            }
+            this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(10), this.wheel.Length);
         }
-
-        /// <summary>
-        /// Gets the number of ticks since the monotonic clock started.
-        /// </summary>
-        // ReSharper disable once MemberCanBeMadeStatic.Global (do not make static).
-        public long Elapsed => MonotonicClock.Elapsed.BclCompatibleTicks;
 
         /// <inheritdoc/>
         public void Dispose()
@@ -209,18 +183,21 @@ namespace Nautilus.Scheduler
             return cancelable;
         }
 
+        private static long DurationToTicksWithCheck(Duration ticksDuration, long wheelLength)
+        {
+            var ticksPerTock = ticksDuration.BclCompatibleTicks;
+            var upperBound = (long.MaxValue / wheelLength) - 1;
+            Precondition.NotOutOfRangeInt64(ticksPerTock, 10, upperBound, nameof(ticksPerTock));
+
+            return ticksPerTock;
+        }
+
         private static Bucket[] CreateWheel(int ticksPerWheel, ILogger log)
         {
-            if (ticksPerWheel <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(ticksPerWheel), ticksPerWheel, "Must be greater than 0.");
-            }
+            // 1073741824 is 2^30.
+            Precondition.NotOutOfRangeInt32(ticksPerWheel, 1, 1073741824, nameof(ticksPerWheel));
 
-            if (ticksPerWheel > 1073741824)
-            {
-                throw new ArgumentOutOfRangeException(nameof(ticksPerWheel), ticksPerWheel, "Cannot be greater than 2^30.");
-            }
-
+            // Normalize ticks per wheel to power of two and create the wheel.
             ticksPerWheel = NormalizeTicksPerWheel(ticksPerWheel);
             var wheel = new Bucket[ticksPerWheel];
             for (var i = 0; i < wheel.Length; i++)
@@ -301,17 +278,19 @@ namespace Nautilus.Scheduler
             while (this.workerState == WORKER_STATE_STARTED)
             {
                 var deadline = this.WaitForNextTick();
-                if (deadline > 0)
+                if (deadline <= 0)
                 {
-                    var idx = (int)(this.tick & this.mask);
-                    var bucket = this.wheel[idx];
-                    this.TransferRegistrationsToBuckets();
-                    bucket.Execute(deadline);
-                    this.tick++; // it will take 2^64 * 10ms for this to overflow.
-
-                    bucket.ClearReschedule(this.rescheduleRegistrations);
-                    this.ProcessReschedule();
+                    continue;
                 }
+
+                var idx = (int)(this.tick & this.mask);
+                var bucket = this.wheel[idx];
+                this.TransferRegistrationsToBuckets();
+                bucket.Execute(deadline);
+                this.tick++; // It will take 2^64 * 10ms for this to overflow.
+
+                bucket.ClearReschedule(this.rescheduleRegistrations);
+                this.ProcessReschedule();
             }
 
             // Empty all of the buckets.
