@@ -180,7 +180,7 @@ namespace Nautilus.Scheduler
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
 
             var cancelable = new Cancelable(this);
-            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), null);
+            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
             return cancelable;
         }
 

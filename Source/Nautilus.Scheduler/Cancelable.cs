@@ -86,15 +86,6 @@ namespace Nautilus.Scheduler
         /// </summary>
         public CancellationToken Token => this.source.Token;
 
-        /// <summary>
-        /// Returns a <see cref="ICancelable"/> that has already been canceled.
-        /// </summary>
-        /// <returns>The cancelable.</returns>
-        public static ICancelable CreateCanceled()
-        {
-            return AlreadyCanceledCancelable.Instance;
-        }
-
         /// <inheritdoc />
         public void Cancel()
         {

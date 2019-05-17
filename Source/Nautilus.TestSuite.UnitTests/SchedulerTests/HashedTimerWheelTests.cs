@@ -86,6 +86,49 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             Assert.Equal(0, this.testActionCount);
         }
 
+        [Fact]
+        internal void ScheduleRepeatedly_ThenActionsShouldBeInvoked()
+        {
+            // Arrange
+            // Act
+            this.scheduler.ScheduleRepeatedly(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+
+            // Takes approx 50ms to spool up the scheduler.
+            Task.Delay(100).Wait(); // Wait for potential action to fire.
+
+            // Assert
+            Assert.Equal(5, this.testActionCount);
+        }
+
+        [Fact]
+        internal void ScheduleRepeatedlyCancelable_WhenNotCancelled_ThenActionsShouldBeInvoked()
+        {
+            // Arrange
+            // Act
+            this.scheduler.ScheduleRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+
+            // Takes approx 50ms to spool up the scheduler.
+            Task.Delay(100).Wait(); // Wait for potential action to fire.
+
+            // Assert
+            Assert.Equal(5, this.testActionCount);
+        }
+
+        [Fact]
+        internal void ScheduleRepeatedlyCancelable_WhenCancelled_ThenActionsShouldNotBeInvoked()
+        {
+            // Arrange
+            // Act
+            var cancelable = this.scheduler.ScheduleRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+            cancelable.Cancel();
+
+            // Takes approx 50ms to spool up the scheduler.
+            Task.Delay(100).Wait(); // Wait for potential action to fire.
+
+            // Assert
+            Assert.Equal(0, this.testActionCount);
+        }
+
         private void Run()
         {
             this.testActionCount++;
