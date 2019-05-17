@@ -12,7 +12,7 @@ namespace Nautilus.Scheduler
     using NodaTime;
 
     /// <summary>
-    /// This interface defines a scheduler that is able to send messages on a set schedule.
+    /// Provides an interface which defines a scheduler that is able to send messages on a set schedule.
     /// </summary>
     public interface ISendScheduler
     {
@@ -24,6 +24,15 @@ namespace Nautilus.Scheduler
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
         void ScheduleSendOnce(Duration delay, IEndpoint receiver, object message, IEndpoint sender);
+
+        /// <summary>
+        /// Schedules a message to be sent once at the given time.
+        /// </summary>
+        /// <param name="forTime">The time the message should be sent.</param>
+        /// <param name="receiver">The actor that receives the message.</param>
+        /// <param name="message">The message that is being sent.</param>
+        /// <param name="sender">The actor that sent the message.</param>
+        void ScheduleSendOnce(ZonedDateTime forTime, IEndpoint receiver, object message, IEndpoint sender);
 
         /// <summary>
         /// Schedules a message to be sent repeatedly after an initial delay.
@@ -44,6 +53,16 @@ namespace Nautilus.Scheduler
         /// <param name="sender">The actor that sent the message.</param>
         /// <returns>The cancellable token.</returns>
         ICancelable ScheduleSendOnceCancelable(Duration delay, IEndpoint receiver, object message, IEndpoint sender);
+
+        /// <summary>
+        /// Schedules a message to be sent at the given time, which can be cancelled.
+        /// </summary>
+        /// <param name="forTime">The time the message should be sent.</param>
+        /// <param name="receiver">The actor that receives the message.</param>
+        /// <param name="message">The message that is being sent.</param>
+        /// <param name="sender">The actor that sent the message.</param>
+        /// <returns>The cancellable token.</returns>
+        ICancelable ScheduleSendOnceCancelable(ZonedDateTime forTime, IEndpoint receiver, object message, IEndpoint sender);
 
         /// <summary>
         /// Schedules a message to be sent repeatedly after an initial delay.

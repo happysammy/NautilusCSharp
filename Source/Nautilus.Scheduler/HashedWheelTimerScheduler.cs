@@ -19,6 +19,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler.Internal;
     using NodaTime;
@@ -116,6 +117,14 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
+        public void ScheduleOnce(ZonedDateTime forTime, Action action)
+        {
+            Precondition.True(forTime.IsGreaterThan(this.TimeNow()), "Given for time > time now.");
+
+            this.InternalSchedule(forTime - this.TimeNow(), Duration.Zero, new ActionRunnable(action), null);
+        }
+
+        /// <inheritdoc />
         public void ScheduleRepeatedly(Duration initialDelay, Duration interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
@@ -130,6 +139,14 @@ namespace Nautilus.Scheduler
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
             this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), null);
+        }
+
+        /// <inheritdoc />
+        public void ScheduleSendOnce(ZonedDateTime forTime, IEndpoint receiver, object message, IEndpoint sender)
+        {
+            Precondition.True(forTime.IsGreaterThan(this.TimeNow()), "Given for time > time now.");
+
+            this.InternalSchedule(forTime - this.TimeNow(), Duration.Zero, new ScheduledSend(receiver, message, sender), null);
         }
 
         /// <inheritdoc />
@@ -152,6 +169,16 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
+        public ICancelable ScheduleOnceCancelable(ZonedDateTime forTime, Action action)
+        {
+            Precondition.True(forTime.IsGreaterThan(this.TimeNow()), "Given for time > time now.");
+
+            var cancelable = new Cancelable(this);
+            this.InternalSchedule(forTime - this.TimeNow(), Duration.Zero, new ActionRunnable(action), cancelable);
+            return cancelable;
+        }
+
+        /// <inheritdoc />
         public ICancelable ScheduleRepeatedlyCancelable(Duration initialDelay, Duration interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
@@ -169,6 +196,16 @@ namespace Nautilus.Scheduler
 
             var cancelable = new Cancelable(this);
             this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), cancelable);
+            return cancelable;
+        }
+
+        /// <inheritdoc />
+        public ICancelable ScheduleSendOnceCancelable(ZonedDateTime forTime, IEndpoint receiver, object message, IEndpoint sender)
+        {
+            Precondition.True(forTime.IsGreaterThan(this.TimeNow()), "Given for time > time now.");
+
+            var cancelable = new Cancelable(this);
+            this.InternalSchedule(forTime - this.TimeNow(), Duration.Zero, new ScheduledSend(receiver, message, sender), cancelable);
             return cancelable;
         }
 
