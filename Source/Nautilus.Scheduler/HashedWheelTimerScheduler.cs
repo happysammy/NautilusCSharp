@@ -17,6 +17,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
 
@@ -281,6 +282,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Scheduler thread entry method.
         /// </summary>
+        [PerformanceOptimized]
         private void Run()
         {
             // Initialize the clock.
@@ -293,7 +295,7 @@ namespace Nautilus.Scheduler
 
             this.workerInitialized.Signal();
 
-            do
+            while (this.workerState == WORKER_STATE_STARTED)
             {
                 var deadline = this.WaitForNextTick();
                 if (deadline > 0)
@@ -308,15 +310,15 @@ namespace Nautilus.Scheduler
                     this.ProcessReschedule();
                 }
             }
-            while (this.workerState == WORKER_STATE_STARTED);
 
-            // Empty all of the buckets
-            foreach (var bucket in this.wheel)
+            // Empty all of the buckets.
+            for (var i = 0; i < this.wheel.Length; i++)
             {
-                bucket.ClearRegistrations(this.unprocessedRegistrations);
+                this.wheel[i].ClearRegistrations(this.unprocessedRegistrations);
             }
 
-            // Empty tasks that haven't been placed into a bucket yet
+            // Empty tasks that haven't been placed into a bucket yet.
+            // Cannot apply indexing to a concurrent queue.
             foreach (var reg in this.registrations)
             {
                 if (!reg.Cancelled)
@@ -325,7 +327,7 @@ namespace Nautilus.Scheduler
                 }
             }
 
-            // Return the list of unprocessedRegistrations and signal that we're finished
+            // Return the list of unprocessedRegistrations and signal that we're finished.
             this.stopped.Value?.TrySetResult(this.unprocessedRegistrations);
         }
 
