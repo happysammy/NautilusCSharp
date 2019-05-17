@@ -57,7 +57,7 @@ namespace NautilusData
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
-            var scheduler = new HashedWheelTimerScheduler(container.LoggerFactory.Create(NautilusService.Scheduling, new Label("Scheduler")));
+            var scheduler = new HashedWheelTimerScheduler(container);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var barRepository = new RedisBarRepository(redisConnection);

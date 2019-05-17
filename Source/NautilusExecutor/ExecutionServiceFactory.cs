@@ -54,7 +54,7 @@ namespace NautilusExecutor
                 new LoggerFactory(loggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
-            var scheduler = new HashedWheelTimerScheduler(container.LoggerFactory.Create(NautilusService.Scheduling, new Label("Scheduler")));
+            var scheduler = new HashedWheelTimerScheduler(container);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolProvider = new SymbolConverter(venue, config.SymbolIndex);

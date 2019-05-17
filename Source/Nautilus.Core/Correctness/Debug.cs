@@ -23,12 +23,12 @@ namespace Nautilus.Core.Correctness
         /// The check passes if the predicate is true.
         /// </summary>
         /// <param name="predicate">The predicate under check.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <param name="description">The predicate description.</param>
         /// <exception cref="ArgumentException">If the predicate is false.</exception>
         [Conditional("DEBUG")]
-        public static void True(bool predicate, string paramName)
+        public static void True(bool predicate, string description)
         {
-            Precondition.True(predicate, paramName);
+            Precondition.True(predicate, description);
         }
 
         /// <summary>
@@ -116,6 +116,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
         [Conditional("DEBUG")]
         public static void NotEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
@@ -129,6 +130,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
         [Conditional("DEBUG")]
         public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
@@ -143,6 +145,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
         [Conditional("DEBUG")]
         public static void NotEmpty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
@@ -157,6 +160,7 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
         [Conditional("DEBUG")]
         public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
@@ -172,6 +176,8 @@ namespace Nautilus.Core.Correctness
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentNullException">If the element is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
         public static void IsIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
@@ -187,6 +193,8 @@ namespace Nautilus.Core.Correctness
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentNullException">If the element is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         [Conditional("DEBUG")]
         public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
@@ -203,6 +211,8 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
+        /// <exception cref="ArgumentNullException">If the key is null.</exception>
+        /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
         [Conditional("DEBUG")]
         public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
@@ -219,6 +229,8 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
+        /// <exception cref="ArgumentNullException">If the key is null.</exception>
+        /// <exception cref="ArgumentNullException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
         [Conditional("DEBUG")]
         public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)

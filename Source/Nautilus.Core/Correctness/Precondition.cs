@@ -10,27 +10,25 @@ namespace Nautilus.Core.Correctness
 {
     using System;
     using System.Collections.Generic;
-    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Provides precondition checking methods which are executed in release configuration.
     /// If the check passes then the method does nothing. If the check fails a type of
     /// <see cref="ArgumentException"/> is thrown with a message.
     /// </summary>
-    [Immutable]
     public static class Precondition
     {
         /// <summary>
         /// The check passes if the predicate is true.
         /// </summary>
         /// <param name="predicate">The predicate under check.</param>
-        /// <param name="paramName">The parameter name.</param>
+        /// <param name="description">The predicate description.</param>
         /// <exception cref="ArgumentException">If the predicate is false.</exception>
-        public static void True(bool predicate, string paramName)
+        public static void True(bool predicate, string description)
         {
             if (!predicate)
             {
-                throw new ArgumentException(FailedMsg.WasFalse(paramName));
+                throw new ArgumentException(FailedMsg.WasFalse(description));
             }
         }
 
@@ -131,9 +129,15 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is empty.</exception>
         public static void NotEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+
             if (collection.Count == 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyList(paramName));
@@ -146,9 +150,15 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection is not empty.</exception>
         public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+
             if (collection.Count != 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyList(paramName));
@@ -162,9 +172,15 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is empty.</exception>
         public static void NotEmpty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+
             if (dictionary.Count == 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyDictionary(paramName));
@@ -178,9 +194,15 @@ namespace Nautilus.Core.Correctness
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary is not empty.</exception>
         public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+
             if (dictionary.Count != 0)
             {
                 throw new ArgumentException(FailedMsg.WasEmptyDictionary(paramName));
@@ -195,12 +217,19 @@ namespace Nautilus.Core.Correctness
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentNullException">If the element is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         public static void IsIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
             if (element is null)
             {
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentNullException(paramName);
+            }
+
+            if (collection is null)
+            {
+                throw new ArgumentNullException(collectionName);
             }
 
             if (!collection.Contains(element))
@@ -217,12 +246,19 @@ namespace Nautilus.Core.Correctness
         /// <param name="collection">The collection under check.</param>
         /// <param name="paramName">The element parameter name.</param>
         /// <param name="collectionName">The collection name.</param>
+        /// <exception cref="ArgumentNullException">If the element is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
         /// <exception cref="ArgumentException">If the collection does not contain the element.</exception>
         public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
             if (element is null)
             {
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentNullException(paramName);
+            }
+
+            if (collection is null)
+            {
+                throw new ArgumentNullException(collectionName);
             }
 
             if (collection.Contains(element))
@@ -240,12 +276,19 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
+        /// <exception cref="ArgumentNullException">If the key is null.</exception>
+        /// <exception cref="ArgumentException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary does not contain the key.</exception>
         public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             if (key is null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw new ArgumentNullException(paramName);
+            }
+
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(dictName);
             }
 
             if (!dictionary.ContainsKey(key))
@@ -263,12 +306,19 @@ namespace Nautilus.Core.Correctness
         /// <param name="dictionary">The dictionary under check.</param>
         /// <param name="paramName">The key parameter name.</param>
         /// <param name="dictName">The dictionary name.</param>
+        /// <exception cref="ArgumentNullException">If the key is null.</exception>
+        /// <exception cref="ArgumentException">If the dictionary is null.</exception>
         /// <exception cref="ArgumentException">If the dictionary already contains the key.</exception>
         public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
             if (key is null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw new ArgumentNullException(paramName);
+            }
+
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(paramName);
             }
 
             if (dictionary.ContainsKey(key))

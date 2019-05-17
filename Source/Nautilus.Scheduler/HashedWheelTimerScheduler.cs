@@ -14,8 +14,10 @@ namespace Nautilus.Scheduler
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
+    using Nautilus.Common.Componentry;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
@@ -33,7 +35,7 @@ namespace Nautilus.Scheduler
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Capitalization easier to read.")]
     [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
-    public class HashedWheelTimerScheduler : SchedulerBase, IDisposable
+    public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
         private const int WORKER_STATE_INIT = 0;
         private const int WORKER_STATE_STARTED = 1;
@@ -61,9 +63,9 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Initializes a new instance of the <see cref="HashedWheelTimerScheduler"/> class.
         /// </summary>
-        /// <param name="log">The logger.</param>
-        public HashedWheelTimerScheduler(ILogger log)
-            : base(log)
+        /// <param name="container">The componentry container.</param>
+        public HashedWheelTimerScheduler(IComponentryContainer container)
+            : base(NautilusService.Scheduling, container)
         {
             var ticksPerWheel = 512; // Default.
             var tickDurationTimeSpan = TimeSpan.FromMilliseconds(10);
@@ -74,7 +76,7 @@ namespace Nautilus.Scheduler
             }
 
             // Normalize ticks per wheel to power of two and create the wheel.
-            this.wheel = CreateWheel(ticksPerWheel, log);
+            this.wheel = CreateWheel(ticksPerWheel, this.Log);
             this.mask = this.wheel.Length - 1;
 
             // Convert tick-duration to ticks.
@@ -89,6 +91,12 @@ namespace Nautilus.Scheduler
                     $"tickDuration: {this.tickDuration} (expected: 0 < tick-duration in ticks < {long.MaxValue / this.wheel.Length}");
             }
         }
+
+        /// <summary>
+        /// Gets the number of ticks since the monotonic clock started.
+        /// </summary>
+        // ReSharper disable once MemberCanBeMadeStatic.Global (do not make static).
+        public long Elapsed => MonotonicClock.Elapsed.BclCompatibleTicks;
 
         /// <inheritdoc/>
         public void Dispose()
@@ -121,71 +129,37 @@ namespace Nautilus.Scheduler
             this.unprocessedRegistrations.Clear();
         }
 
-        /// <summary>
-        /// Schedule a message to be sent once.
-        /// </summary>
-        /// <param name="delay">The delay.</param>
-        /// <param name="receiver">The receiver.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="cancelable">The cancelable.</param>
-        protected override void InternalScheduleSendOnce(
-            TimeSpan delay,
-            IEndpoint receiver,
-            object message,
-            IEndpoint sender,
-            OptionRef<ICancelable> cancelable)
+        /// <inheritdoc />
+        public void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable)
         {
+            Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+
             this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
         }
 
-        /// <summary>
-        /// Schedule a message to be sent repeatedly.
-        /// </summary>
-        /// <param name="initialDelay">The delay.</param>
-        /// <param name="interval">The interval.</param>
-        /// <param name="receiver">The receiver.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="cancelable">The cancelable.</param>
-        protected override void InternalScheduleSendRepeatedly(
-            TimeSpan initialDelay,
-            TimeSpan interval,
-            IEndpoint receiver,
-            object message,
-            IEndpoint sender,
-            OptionRef<ICancelable> cancelable)
+        /// <inheritdoc />
+        public void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable)
         {
+            Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
+            Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+
             this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
         }
 
-        /// <summary>
-        /// Schedule an action to be invoked once.
-        /// </summary>
-        /// <param name="delay">The delay.</param>
-        /// <param name="action">The action.</param>
-        /// <param name="cancelable">The cancelable.</param>
-        protected override void InternalScheduleOnce(
-            TimeSpan delay,
-            Action action,
-            OptionRef<ICancelable> cancelable)
+        /// <inheritdoc />
+        public void ScheduleOnce(TimeSpan delay, Action action, ICancelable? cancelable)
         {
+            Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+
             this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
         }
 
-        /// <summary>
-        /// Schedule an action to be invoked repeatedly.
-        /// </summary>
-        /// <param name="initialDelay">The initial delay.</param>
-        /// <param name="interval">The interval.</param>
-        /// <param name="action">The action to schedule.</param>
-        /// <param name="cancelable">The cancelable.</param>
-        protected override void InternalScheduleRepeatedly(
-            TimeSpan initialDelay,
-            TimeSpan interval,
-            Action action,
-            OptionRef<ICancelable> cancelable)
+        /// <inheritdoc />
+        public void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable? cancelable)
         {
+            Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
+            Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+
             this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
         }
 
@@ -390,7 +364,7 @@ namespace Nautilus.Scheduler
             TimeSpan delay,
             TimeSpan interval,
             IRunnable action,
-            OptionRef<ICancelable> cancelable)
+            ICancelable? cancelable)
         {
             this.Start();
             var deadline = MonotonicClock.Elapsed.BclCompatibleTicks + delay.Ticks - this.startTime;

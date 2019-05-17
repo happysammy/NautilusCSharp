@@ -9,7 +9,7 @@
 namespace Nautilus.Scheduler
 {
     /// <summary>
-    /// TBD.
+    /// Provides an interface to a scheduler for schedules actions and message sending.
     /// </summary>
     public interface IScheduler : IActionScheduler, ISendScheduler
     {

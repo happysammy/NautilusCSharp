@@ -17,15 +17,10 @@ namespace Nautilus.Scheduler
     /// </summary>
     internal sealed class Bucket
     {
-        private static readonly Action<object> ExecuteRunnableWithState = r => ((IRunnable)r).Run();
         private readonly ILogger log;
 
-        /*
-         * Endpoints of our doubly linked list
-         */
         private SchedulerRegistration? head;
         private SchedulerRegistration? tail;
-
         private SchedulerRegistration? rescheduleHead;
         private SchedulerRegistration? rescheduleTail;
 

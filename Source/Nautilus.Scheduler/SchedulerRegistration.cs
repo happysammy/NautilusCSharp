@@ -22,10 +22,10 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="cancellation">The cancellation.</param>
-        internal SchedulerRegistration(IRunnable action, OptionRef<ICancelable> cancellation)
+        internal SchedulerRegistration(IRunnable action, ICancelable? cancellation)
         {
             this.Action = action;
-            this.cancellation = cancellation.HasValue ? cancellation.Value : null;
+            this.cancellation = cancellation;
         }
 
         /// <summary>
