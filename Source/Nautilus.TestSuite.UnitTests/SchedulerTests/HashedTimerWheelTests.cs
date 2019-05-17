@@ -104,7 +104,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
-            Assert.True(this.testActionCount > 4);
+            Assert.True(this.testActionCount > 1);
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
 
             // Assert
-            Assert.True(this.testActionCount > 4);
+            Assert.True(this.testActionCount > 1);
         }
 
         [Fact]
@@ -187,8 +187,8 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
             // Assert
-            Assert.True(this.testReceiver.Messages.Count > 4);
-            Assert.Equal("TEST", this.testReceiver.Messages[4]);
+            Assert.True(this.testReceiver.Messages.Count > 1);
+            Assert.Equal("TEST", this.testReceiver.Messages[0]);
         }
 
         [Fact]
@@ -201,8 +201,8 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
             // Assert
-            Assert.True(this.testReceiver.Messages.Count > 4);
-            Assert.Equal("TEST", this.testReceiver.Messages[4]);
+            Assert.True(this.testReceiver.Messages.Count > 1);
+            Assert.Equal("TEST", this.testReceiver.Messages[0]);
         }
 
         [Fact]
