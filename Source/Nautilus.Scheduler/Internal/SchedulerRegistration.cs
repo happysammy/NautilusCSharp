@@ -6,14 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduler.Internal
 {
-    using Nautilus.Core;
-
     /// <summary>
     /// Represents a scheduler registration.
     /// </summary>
-    internal class SchedulerRegistration
+    internal sealed class SchedulerRegistration
     {
         private readonly ICancelable? cancellation;
 

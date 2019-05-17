@@ -20,6 +20,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Scheduler.Internal;
     using NodaTime;
 
     /// <summary>

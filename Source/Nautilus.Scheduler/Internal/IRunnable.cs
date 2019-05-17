@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduler.Internal
 {
     /// <summary>
     /// An asynchronous operation will be executed by a message dispatcher.

@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduler.Internal
 {
     using System.Threading;
 
@@ -43,7 +43,7 @@ namespace Nautilus.Scheduler
         /// <summary>
         /// Gets the current value of this <see cref="AtomicReference{T}"/>.
         /// </summary>
-        public T? Value => this.atomicValue ?? Volatile.Read(ref this.atomicValue);
+        internal T? Value => this.atomicValue ?? Volatile.Read(ref this.atomicValue);
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="AtomicReference{T}"/> to <typeparamref name="T"/>.

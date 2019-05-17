@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduler.Internal
 {
     using System;
 
@@ -21,7 +21,7 @@ namespace Nautilus.Scheduler
         /// Initializes a new instance of the <see cref="ActionRunnable"/> class.
         /// </summary>
         /// <param name="action">The runnable delegate.</param>
-        public ActionRunnable(Action action)
+        internal ActionRunnable(Action action)
         {
             this.action = action;
         }

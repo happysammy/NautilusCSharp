@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Scheduler
+namespace Nautilus.Scheduler.Internal
 {
     using System;
     using System.Threading;
@@ -15,7 +15,7 @@ namespace Nautilus.Scheduler
     /// A <see cref="ICancelable"/> that wraps a <see cref="CancellationTokenSource"/>.
     /// When canceling this instance the underlying <see cref="CancellationTokenSource"/> is canceled as well.
     /// </summary>
-    public class Cancelable : ICancelable, IDisposable
+    internal class Cancelable : ICancelable, IDisposable
     {
         private readonly IActionScheduler scheduler;
         private readonly CancellationTokenSource source;
@@ -27,7 +27,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="delay">The delay before the cancelable is canceled.</param>
-        public Cancelable(IActionScheduler scheduler, TimeSpan delay)
+        internal Cancelable(IActionScheduler scheduler, TimeSpan delay)
             : this(scheduler)
         {
             this.CancelAfter(delay);
@@ -38,7 +38,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="delay">The delay before the cancelable is canceled.</param>
-        public Cancelable(IScheduler scheduler, TimeSpan delay)
+        internal Cancelable(IScheduler scheduler, TimeSpan delay)
             : this(scheduler)
         {
             this.CancelAfter(delay);
@@ -49,7 +49,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="millisecondsDelay">The delay in milliseconds.</param>
-        public Cancelable(IScheduler scheduler, int millisecondsDelay)
+        internal Cancelable(IScheduler scheduler, int millisecondsDelay)
             : this(scheduler)
         {
             this.CancelAfter(millisecondsDelay);
@@ -59,7 +59,7 @@ namespace Nautilus.Scheduler
         /// Initializes a new instance of the <see cref="Cancelable"/> class.
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
-        public Cancelable(IActionScheduler scheduler)
+        internal Cancelable(IActionScheduler scheduler)
             : this(scheduler, new CancellationTokenSource())
         {
             // Intentionally left blank.

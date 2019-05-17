@@ -8,7 +8,6 @@
 
 namespace Nautilus.Scheduler
 {
-    using System;
     using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
