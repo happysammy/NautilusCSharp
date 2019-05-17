@@ -18,6 +18,11 @@ namespace Nautilus.Data
     public static class DataServiceAddress
     {
         /// <summary>
+        /// Gets the <see cref="Scheduler"/> component messaging address.
+        /// </summary>
+        public static Address Scheduler { get; } = new Address(nameof(Scheduler));
+
+        /// <summary>
         /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
         /// </summary>
         public static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));

@@ -18,6 +18,11 @@ namespace Nautilus.Execution
     public static class ExecutionServiceAddress
     {
         /// <summary>
+        /// Gets the <see cref="Scheduler"/> component messaging address.
+        /// </summary>
+        public static Address Scheduler { get; } = new Address(nameof(Scheduler));
+
+        /// <summary>
         /// Gets the <see cref="MessageServer"/> component messaging address.
         /// </summary>
         public static Address Execution { get; } = new Address(nameof(Execution));
