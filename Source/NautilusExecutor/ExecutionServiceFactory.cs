@@ -20,7 +20,6 @@ namespace NautilusExecutor
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution;
     using Nautilus.Fix;
     using Nautilus.Messaging;

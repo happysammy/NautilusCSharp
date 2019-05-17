@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -90,6 +89,7 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
+            // Create close bar job schedule.
             var closeBar = new CloseBar(
                 barSpec,
                 Guid.NewGuid(),
@@ -125,6 +125,7 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
+            // Cancel close bar job schedule.
             this.subscriptions[barType].Cancel();
             this.subscriptions.Remove(barType);
         }
