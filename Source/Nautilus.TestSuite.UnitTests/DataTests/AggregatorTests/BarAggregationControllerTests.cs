@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -38,10 +39,12 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.receiver = new MockMessagingAgent();
             var container = setupFactory.Create();
             var messagingAdapter = new MockMessagingServiceFactory(container).MessagingAdapter;
+            var scheduler = new HashedWheelTimerScheduler(container);
 
             this.controller = new BarAggregationController(
                 container,
                 messagingAdapter,
+                scheduler,
                 this.receiver.Endpoint);
         }
 

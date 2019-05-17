@@ -78,6 +78,7 @@ namespace NautilusData
             var barAggregationController = new BarAggregationController(
                 container,
                 messagingAdapter,
+                scheduler,
                 barPublisher.Endpoint);
 
             var fixClient = CreateFixClient(

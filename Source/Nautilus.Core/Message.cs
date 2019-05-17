@@ -39,7 +39,7 @@ namespace Nautilus.Core
         public Guid Id { get; }
 
         /// <summary>
-        /// Gets the message timestamp.
+        /// Gets the message creation timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
 

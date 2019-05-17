@@ -16,6 +16,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
@@ -32,20 +33,16 @@ namespace Nautilus.Data.Aggregation
         private readonly List<BarSpecification> subscriptions;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
 
-        private bool isMarketOpen;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="parent">The parent endpoint.</param>
         /// <param name="symbol">The symbol.</param>
-        /// <param name="isMarketOpen">The is market open flag.</param>
         public BarAggregator(
             IComponentryContainer container,
             IEndpoint parent,
-            Symbol symbol,
-            bool isMarketOpen)
+            Symbol symbol)
             : base(NautilusService.Data, container)
         {
             this.parent = parent;
@@ -53,13 +50,10 @@ namespace Nautilus.Data.Aggregation
             this.subscriptions = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
 
-            this.isMarketOpen = isMarketOpen;
-
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<CloseBar>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
-            this.RegisterHandler<MarketOpened>(this.OnMessage);
             this.RegisterHandler<MarketClosed>(this.OnMessage);
         }
 
@@ -88,7 +82,6 @@ namespace Nautilus.Data.Aggregation
             }
         }
 
-        [PerformanceOptimized]
         private void OnMessage(Tick tick)
         {
             Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
@@ -118,11 +111,6 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            if (!this.isMarketOpen)
-            {
-                return; // Won't close a bar outside market hours.
-            }
-
             var builder = this.barBuilders[barSpec];
             if (builder is null)
             {
@@ -130,9 +118,9 @@ namespace Nautilus.Data.Aggregation
             }
 
             // Close the bar.
-            var bar = builder.Build(message.CloseTime);
+            var bar = builder.Build(this.TimeNow().Floor(barSpec.Duration));
 
-            // Send to bar aggregation controller.
+            // Send to bar aggregation controller (parent).
             this.parent.Send((new BarType(this.symbol, barSpec), bar));
 
             // Refresh bar builder.
@@ -142,12 +130,6 @@ namespace Nautilus.Data.Aggregation
         private void OnMessage(Subscribe<BarType> message)
         {
             var barSpec = message.DataType.Specification;
-
-            if (barSpec.Resolution == Resolution.TICK)
-            {
-                // TODO
-                throw new InvalidOperationException("Tick bars not yet supported.");
-            }
 
             if (this.subscriptions.Contains(barSpec))
             {
@@ -186,15 +168,8 @@ namespace Nautilus.Data.Aggregation
             this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
         }
 
-        private void OnMessage(MarketOpened message)
-        {
-            this.isMarketOpen = true;
-        }
-
         private void OnMessage(MarketClosed message)
         {
-            this.isMarketOpen = false;
-
             // Purge bar builders.
             foreach (var barSpec in this.barBuilders.Keys)
             {

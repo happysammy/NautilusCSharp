@@ -8,7 +8,9 @@
 
 namespace Nautilus.Data.Aggregation
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -20,7 +22,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
-    using NodaTime;
+    using Nautilus.Scheduler;
 
     /// <summary>
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
@@ -29,26 +31,22 @@ namespace Nautilus.Data.Aggregation
     public sealed class BarAggregationController : ComponentBusConnectedBase
     {
         private readonly IComponentryContainer storedContainer;
+        private readonly IScheduler scheduler;
         private readonly IEndpoint barPublisher;
         private readonly Dictionary<Symbol, IEndpoint> barAggregators;
-
-        // private readonly Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>> barJobs;
-        private readonly Dictionary<Duration, List<BarSpecification>> barTriggers;
-
-        // private readonly Dictionary<Duration, ITrigger> triggers;
-        private readonly Dictionary<Duration, int> triggerCounts;
-
-        private bool isMarketOpen;
+        private readonly Dictionary<BarType, ICancelable> subscriptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="scheduler">The scheduler.</param>
         /// <param name="barPublisher">The bar publisher endpoint.</param>
         public BarAggregationController(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
+            IScheduler scheduler,
             IEndpoint barPublisher)
             : base(
             NautilusService.Data,
@@ -56,83 +54,22 @@ namespace Nautilus.Data.Aggregation
             messagingAdapter)
         {
             this.storedContainer = container;
+            this.scheduler = scheduler;
             this.barPublisher = barPublisher;
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();
-
-            // this.barJobs = new Dictionary<BarSpecification, KeyValuePair<JobKey, TriggerKey>>();
-            this.barTriggers = new Dictionary<Duration, List<BarSpecification>>();
-
-            // this.triggers = new Dictionary<Duration, ITrigger>();
-            this.triggerCounts = new Dictionary<Duration, int>();
-
-            this.isMarketOpen = this.IsFxMarketOpen();
+            this.subscriptions = new Dictionary<BarType, ICancelable>();
 
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Tick>(this.OnMessage);
-
-            // this.RegisterHandler<BarJob>(this.OnMessage);
             this.RegisterHandler<MarketStatusJob>(this.OnMessage);
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
-        }
-
-        // private static IScheduleBuilder
-        private static void CreateBarJobSchedule(BarSpecification barSpec)
-        {
-// var scheduleBuilder = SimpleScheduleBuilder
-//                .Create()
-//                .RepeatForever()
-//                .WithMisfireHandlingInstructionFireNow();
-
-// switch (barSpec.Resolution)
-//            {
-//                case Resolution.SECOND:
-//                    scheduleBuilder.WithIntervalInSeconds(barSpec.Period);
-//                    break;
-//                case Resolution.MINUTE:
-//                    scheduleBuilder.WithIntervalInMinutes(barSpec.Period);
-//                    break;
-//                case Resolution.HOUR:
-//                    scheduleBuilder.WithIntervalInHours(barSpec.Period);
-//                    break;
-//                case Resolution.DAY:
-//                    scheduleBuilder.WithIntervalInHours(barSpec.Period * 24);
-//                    break;
-//                case Resolution.TICK:
-//                    throw new InvalidOperationException("Cannot schedule tick bars.");
-//                default: throw new InvalidOperationException("Bar resolution not recognised.");
-//            }
-//
-//            return scheduleBuilder;
-        }
-
-        // private ITrigger
-        private void CreateBarJobTrigger(BarSpecification barSpec)
-        {
-            // Debug.KeyNotIn(barSpec.Duration, this.triggers, nameof(barSpec.Duration), nameof(this.triggers));
-            var duration = barSpec.Duration;
-
-// return TriggerBuilder
-//                .Create()
-//                .StartAt(this.TimeNow().Ceiling(duration).ToDateTimeUtc())
-//                .WithIdentity($"{barSpec.Period}-{barSpec.Resolution.ToString().ToLower()}", "bar_aggregation")
-//                .WithSchedule(CreateBarJobSchedule(barSpec))
-//                .Build();
-        }
-
-        private bool IsFxMarketOpen()
-        {
-            // Market open Sun 21:00 UTC (Start of Sydney session)
-            // Market close Sat 20:00 UTC (End of New York session)
-            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
-                this.TimeNow(),
-                (IsoDayOfWeek.Saturday, 20, 00),
-                (IsoDayOfWeek.Sunday, 21, 00));
         }
 
         private void OnMessage(Subscribe<BarType> message)
         {
             var symbol = message.DataType.Symbol;
+            var barType = message.DataType;
             var barSpec = message.DataType.Specification;
 
             if (!this.barAggregators.ContainsKey(symbol))
@@ -140,61 +77,39 @@ namespace Nautilus.Data.Aggregation
                 var barAggregator = new BarAggregator(
                         this.storedContainer,
                         this.Endpoint,
-                        symbol,
-                        this.isMarketOpen).Endpoint;
+                        symbol).Endpoint;
 
                 this.barAggregators.Add(message.DataType.Symbol, barAggregator);
             }
 
             this.barAggregators[symbol].Send(message);
 
-            var duration = barSpec.Duration;
-
-// if (!this.triggers.ContainsKey(duration))
-//            {
-//                var trigger = this.CreateBarJobTrigger(barSpec);
-//                this.triggers.Add(duration, trigger);
-//            }
-            if (!this.barTriggers.ContainsKey(duration))
+            if (this.subscriptions.ContainsKey(message.DataType))
             {
-                this.barTriggers.Add(duration, new List<BarSpecification>());
+                this.Log.Error($"Already subscribed to {barType}.");
+                return;
             }
 
-            if (!this.barTriggers[duration].Contains(barSpec))
-            {
-                this.barTriggers[duration].Add(barSpec);
+            var closeBar = new CloseBar(
+                barSpec,
+                Guid.NewGuid(),
+                this.TimeNow());
 
-                // var barJob = new BarJob(barSpec);
+            var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
+            var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
+                initialDelay,
+                barSpec.Duration,
+                this.barAggregators[symbol],
+                closeBar,
+                this.Endpoint);
 
-// var createJob = new CreateJob(
-//                    this.Endpoint,
-//                    barJob,
-//                    barJob.Key,
-//                    this.triggers[duration],
-//                    this.NewGuid(),
-//                    this.TimeNow());
-
-                // this.barJobs.Add(barSpec, new KeyValuePair<JobKey, TriggerKey>(createJob.JobKey, createJob.Trigger.Key));
-
-                // this.Send(ServiceAddress.Scheduler, createJob);
-            }
-
-            if (!this.triggerCounts.ContainsKey(duration))
-            {
-                this.triggerCounts.Add(duration, 0);
-            }
-
-            this.triggerCounts[duration]++;
-
-            this.Log.Verbose($"Added trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                      $"duration (count={this.triggerCounts[duration]}).");
+            this.subscriptions.Add(barType, cancellable);
         }
 
         private void OnMessage(Unsubscribe<BarType> message)
         {
             var symbol = message.DataType.Symbol;
-            var barSpec = message.DataType.Specification;
-            var duration = barSpec.Duration;
+            var barType = message.DataType;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
@@ -204,35 +119,14 @@ namespace Nautilus.Data.Aggregation
 
             this.barAggregators[symbol].Send(message);
 
-            if (this.barTriggers.ContainsKey(duration))
+            if (!this.subscriptions.ContainsKey(barType))
             {
-                if (this.barTriggers[duration].Contains(barSpec))
-                {
-                    this.barTriggers[duration].Remove(barSpec);
-                }
-            }
-
-            if (!this.triggerCounts.ContainsKey(barSpec.Duration))
-            {
+                this.Log.Error($"Already unsubscribed from {barType}.");
                 return;
             }
 
-            this.triggerCounts[barSpec.Duration]--;
-
-            this.Log.Verbose($"Subtracting trigger count for {barSpec.Period}-{barSpec.Resolution} " +
-                           $"duration (count={this.triggerCounts[barSpec.Duration]}).");
-
-            if (this.triggerCounts[barSpec.Duration] <= 0)
-            {
-                // var job = this.barJobs[barSpec];
-                // var removeJob = new RemoveJob(
-//                    job.Key,
-//                    job.Value,
-//                    this.NewGuid(),
-//                    this.TimeNow());
-
-                // this.Send(ServiceAddress.Scheduler, removeJob);
-            }
+            this.subscriptions[barType].Cancel();
+            this.subscriptions.Remove(barType);
         }
 
         private void OnMessage(Tick tick)
@@ -244,80 +138,40 @@ namespace Nautilus.Data.Aggregation
                 return;
             }
 
-            // Log for debug purposes.
+            // Log for debugging purposes.
             this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
         }
 
-// private void OnMessage(BarJob job)
-//        {
-//            var closeTime = this.TimeNow().Floor(job.BarSpec.Duration);
-//            foreach (var aggregator in this.barAggregators.Values)
-//            {
-//                // TODO: Change this logic.
-//                var closeBar1 = new CloseBar(
-//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.BID),
-//                    closeTime,
-//                    this.NewGuid(),
-//                    this.TimeNow());
-//
-//                var closeBar2 = new CloseBar(
-//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.ASK),
-//                    closeTime,
-//                    this.NewGuid(),
-//                    this.TimeNow());
-//
-//                var closeBar3 = new CloseBar(
-//                    new BarSpecification(1, job.BarSpec.Resolution, QuoteType.MID),
-//                    closeTime,
-//                    this.NewGuid(),
-//                    this.TimeNow());
-//
-//                aggregator.Send(closeBar1);
-//                aggregator.Send(closeBar2);
-//                aggregator.Send(closeBar3);
-//            }
-//        }
         private void OnMessage(MarketStatusJob job)
         {
             if (job.IsMarketOpen)
             {
-                // The market is now open.
-                this.isMarketOpen = true;
-
-                // Resume all active bar jobs.
-//                foreach (var barJob in this.barJobs.Values)
-//                {
-//                    // var resumeJob = new ResumeJob(
-//                    //    barJob.Key,
-//                    //    this.NewGuid(),
-//                    //    this.TimeNow());
-//
-//                    // this.Send(ServiceAddress.Scheduler, resumeJob);
-//                }
-
-                // Tell all bar aggregators the market is now open.
-                var marketOpened = new MarketOpened(this.NewGuid(), this.TimeNow());
-                foreach (var aggregator in this.barAggregators.Values)
+                foreach (var barType in this.subscriptions.Keys)
                 {
-                    aggregator.Send(marketOpened);
+                    var barSpec = barType.Specification;
+                    var closeBar = new CloseBar(
+                        barSpec,
+                        Guid.NewGuid(),
+                        this.TimeNow());
+
+                    var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
+                    var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
+                        initialDelay,
+                        barSpec.Duration,
+                        this.barAggregators[barType.Symbol],
+                        closeBar,
+                        this.Endpoint);
+
+                    this.subscriptions[barType] = cancellable;
                 }
             }
-
-            if (!job.IsMarketOpen)
+            else
             {
-                // The market is now closed.
-                this.isMarketOpen = false;
-
-                // Pause all active bar jobs.
-//                foreach (var barJob in this.barJobs.Values)
-//                {
-//                    // var pause = new PauseJob(
-//                    //    barJob.Key,
-//                    //    this.NewGuid(),
-//                    //    this.TimeNow());
-//
-//                    // this.Send(ServiceAddress.Scheduler, pause);
-//                }
+                foreach (var (subscription, cancellable) in this.subscriptions)
+                {
+                    cancellable.Cancel();
+                    this.Log.Debug($"Market is closed: Cancelled bar close job for {subscription}.");
+                }
 
                 // Tell all aggregators the market is now closed.
                 var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
