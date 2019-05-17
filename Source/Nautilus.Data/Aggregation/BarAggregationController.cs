@@ -58,11 +58,38 @@ namespace Nautilus.Data.Aggregation
             this.barAggregators = new Dictionary<Symbol, IEndpoint>();
             this.subscriptions = new Dictionary<BarType, ICancelable>();
 
+            this.RegisterHandler<Tick>(this.OnMessage);
+            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
-            this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<MarketStatusJob>(this.OnMessage);
-            this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
+        }
+
+        private void OnMessage(Tick tick)
+        {
+            if (this.barAggregators.ContainsKey(tick.Symbol))
+            {
+                this.barAggregators[tick.Symbol].Send(tick);
+
+                return;
+            }
+
+            // Log for debugging purposes.
+            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
+        }
+
+        private void OnMessage((BarType, Bar) data)
+        {
+            // Forward data to bar publisher.
+            this.barPublisher.Send(data);
+
+            var dataDelivery = new DataDelivery<(BarType, Bar)>(
+                data,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
+            this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -130,20 +157,7 @@ namespace Nautilus.Data.Aggregation
             this.subscriptions.Remove(barType);
         }
 
-        private void OnMessage(Tick tick)
-        {
-            if (this.barAggregators.ContainsKey(tick.Symbol))
-            {
-                this.barAggregators[tick.Symbol].Send(tick);
-
-                return;
-            }
-
-            // Log for debugging purposes.
-            this.Log.Warning($"No bar aggregator for {tick.Symbol} ticks.");
-        }
-
-        private void OnMessage(MarketStatusJob job)
+        private void OnMessage(MarketStatusJob job) // TODO: Change to MarketOpen and MarketClosed events.
         {
             if (job.IsMarketOpen)
             {
@@ -181,20 +195,6 @@ namespace Nautilus.Data.Aggregation
                     aggregator.Send(marketClosed);
                 }
             }
-        }
-
-        private void OnMessage((BarType, Bar) data)
-        {
-            // Forward data to bar publisher.
-            this.barPublisher.Send(data);
-
-            var dataDelivery = new DataDelivery<(BarType, Bar)>(
-                data,
-                this.NewGuid(),
-                this.TimeNow());
-
-            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
-            this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
         }
     }
 }
