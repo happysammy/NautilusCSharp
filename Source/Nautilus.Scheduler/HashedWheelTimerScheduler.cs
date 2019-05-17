@@ -130,37 +130,79 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
-        public void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable)
+        public void ScheduleOnce(TimeSpan delay, Action action)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
-            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
+            this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), null);
         }
 
         /// <inheritdoc />
-        public void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable)
+        public void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
 
-            this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
+            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), null);
         }
 
         /// <inheritdoc />
-        public void ScheduleOnce(TimeSpan delay, Action action, ICancelable? cancelable)
+        public void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
+            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), null);
+        }
+
+        /// <inheritdoc />
+        public void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender)
+        {
+            Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
+            Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+
+            this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), null);
+        }
+
+        /// <inheritdoc />
+        public ICancelable ScheduleOnceCancelable(TimeSpan delay, Action action)
+        {
+            Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+
+            var cancelable = new Cancelable(this);
             this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
+            return cancelable;
         }
 
         /// <inheritdoc />
-        public void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action, ICancelable? cancelable)
+        public ICancelable ScheduleRepeatedlyCancelable(TimeSpan initialDelay, TimeSpan interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
 
-            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
+            var cancelable = new Cancelable(this);
+            this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), null);
+            return cancelable;
+        }
+
+        /// <inheritdoc />
+        public ICancelable ScheduleSendOnceCancelable(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
+        {
+            Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+
+            var cancelable = new Cancelable(this);
+            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
+            return cancelable;
+        }
+
+        /// <inheritdoc />
+        public ICancelable ScheduleSendRepeatedlyCancelable(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender)
+        {
+            Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
+            Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+
+            var cancelable = new Cancelable(this);
+            this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
+            return cancelable;
         }
 
         private static Bucket[] CreateWheel(int ticksPerWheel, ILogger log)

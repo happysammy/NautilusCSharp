@@ -23,8 +23,7 @@ namespace Nautilus.Scheduler
         /// <param name="receiver">The actor that receives the message.</param>
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
-        /// <param name="cancelable">A cancelable used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable);
+        void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender);
 
         /// <summary>
         /// Schedules a message to be sent repeatedly after an initial delay.
@@ -34,7 +33,27 @@ namespace Nautilus.Scheduler
         /// <param name="receiver">The actor that receives the message.</param>
         /// <param name="message">The message that is being sent.</param>
         /// <param name="sender">The actor that sent the message.</param>
-        /// <param name="cancelable">An cancelable used to cancel sending the message. Once the message has been sent, it cannot be canceled.</param>
-        void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender, ICancelable? cancelable);
+        void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender);
+
+        /// <summary>
+        /// Schedules a message to be sent once after a specified period of time.
+        /// </summary>
+        /// <param name="delay">The time period that has to pass before the message is sent.</param>
+        /// <param name="receiver">The actor that receives the message.</param>
+        /// <param name="message">The message that is being sent.</param>
+        /// <param name="sender">The actor that sent the message.</param>
+        /// <returns>The cancellable token.</returns>
+        ICancelable ScheduleSendOnceCancelable(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender);
+
+        /// <summary>
+        /// Schedules a message to be sent repeatedly after an initial delay.
+        /// </summary>
+        /// <param name="initialDelay">The time period that has to pass before the first message is sent.</param>
+        /// <param name="interval">The time period that has to pass between sending of the message.</param>
+        /// <param name="receiver">The actor that receives the message.</param>
+        /// <param name="message">The message that is being sent.</param>
+        /// <param name="sender">The actor that sent the message.</param>
+        /// <returns>The cancellable token.</returns>
+        ICancelable ScheduleSendRepeatedlyCancelable(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender);
     }
 }

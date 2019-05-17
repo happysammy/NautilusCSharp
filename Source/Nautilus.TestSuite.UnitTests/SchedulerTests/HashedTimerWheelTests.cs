@@ -8,8 +8,8 @@
 
 namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Scheduler;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -22,7 +22,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         private readonly ITestOutputHelper output;
         private readonly HashedWheelTimerScheduler scheduler;
 
-        private bool didTestActionRun = false;
+        private int testActionCount = 0;
 
         public HashedTimerWheelTests(ITestOutputHelper output)
         {
@@ -47,36 +47,48 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         }
 
         [Fact]
-        internal void WhenScheduleOnce_ThenActionsShouldBeInvoked()
+        internal void ScheduleOnce_ThenActionShouldBeInvoked()
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleOnce(0, this.Run);
+            this.scheduler.ScheduleOnce(TimeSpan.Zero, this.Run);
 
             Task.Delay(100).Wait(); // Wait for potential action to fire.
 
             // Assert
-            Assert.True(this.didTestActionRun);
+            Assert.Equal(1, this.testActionCount);
         }
 
         [Fact]
-        internal void WhenScheduleOnceUsingCanceledCancelable_ThenTheirActionsShouldNotBeInvoked()
+        internal void ScheduleOnceCancelable_WhenNotCancelled_ThenActionShouldBeInvoked()
         {
             // Arrange
-            var cancelable = Cancelable.CreateCanceled();
-
             // Act
-            this.scheduler.ScheduleOnce(0, this.Run, cancelable);
+            this.scheduler.ScheduleOnceCancelable(TimeSpan.Zero, this.Run);
 
             Task.Delay(100).Wait(); // Wait for potential action to fire.
 
             // Assert
-            Assert.False(this.didTestActionRun);
+            Assert.Equal(1, this.testActionCount);
+        }
+
+        [Fact]
+        internal void ScheduleOnceCancelable_WhenCancelled_ThenActionShouldNotBeInvoked()
+        {
+            // Arrange
+            // Act
+            var cancelable = this.scheduler.ScheduleOnceCancelable(TimeSpan.Zero, this.Run);
+            cancelable.Cancel();
+
+            Task.Delay(100).Wait(); // Wait for potential action to fire.
+
+            // Assert
+            Assert.Equal(0, this.testActionCount);
         }
 
         private void Run()
         {
-            this.didTestActionRun = true;
+            this.testActionCount++;
         }
     }
 }
