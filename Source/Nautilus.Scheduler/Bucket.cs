@@ -63,7 +63,7 @@ namespace Nautilus.Scheduler
         /// <param name="registrations">A set of registrations to populate.</param>
         internal void ClearRegistrations(HashSet<SchedulerRegistration> registrations)
         {
-            for (; ;)
+            while (true)
             {
                 var reg = this.Poll();
                 if (reg == null)
@@ -151,7 +151,7 @@ namespace Nautilus.Scheduler
         /// <param name="registrations">A set of registrations to populate.</param>
         internal void ClearReschedule(HashSet<SchedulerRegistration> registrations)
         {
-            for (; ;)
+            while (true)
             {
                 var reg = this.PollReschedule();
                 if (reg == null)

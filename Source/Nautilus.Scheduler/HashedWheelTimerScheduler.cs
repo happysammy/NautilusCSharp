@@ -348,7 +348,7 @@ namespace Nautilus.Scheduler
             // unchecked avoids trouble with long-running applications.
             unchecked
             {
-                for (; ;)
+                while (true)
                 {
                     var currentTime = MonotonicClock.Elapsed.BclCompatibleTicks - this.startTime;
                     var sleepMs = (deadline - currentTime + TimeSpan.TicksPerMillisecond - 1) / TimeSpan.TicksPerMillisecond;
