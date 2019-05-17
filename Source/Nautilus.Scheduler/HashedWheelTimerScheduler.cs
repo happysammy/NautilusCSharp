@@ -20,6 +20,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging.Interfaces;
+    using NodaTime;
 
     /// <summary>
     /// This <see cref="IScheduler"/> implementation is built using a revolving wheel of buckets
@@ -38,6 +39,7 @@ namespace Nautilus.Scheduler
     [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
     public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
+        private const int TICKS_PER_MILLISECOND = 10000;
         private const int WORKER_STATE_INIT = 0;
         private const int WORKER_STATE_STARTED = 1;
         private const int WORKER_STATE_SHUTDOWN = 2;
@@ -69,7 +71,7 @@ namespace Nautilus.Scheduler
             : base(NautilusService.Scheduling, container)
         {
             var ticksPerWheel = 512; // Default.
-            var tickDurationTimeSpan = TimeSpan.FromMilliseconds(10);
+            var tickDurationTimeSpan = Duration.FromMilliseconds(10);
             if (tickDurationTimeSpan.TotalMilliseconds < 10.0d)
             {
                 // "minimum supported on Windows is 10ms"
@@ -81,7 +83,7 @@ namespace Nautilus.Scheduler
             this.mask = this.wheel.Length - 1;
 
             // Convert tick-duration to ticks.
-            this.tickDuration = tickDurationTimeSpan.Ticks;
+            this.tickDuration = tickDurationTimeSpan.BclCompatibleTicks;
 
             // Prevent overflow.
             if (this.tickDuration >= long.MaxValue / this.wheel.Length)
@@ -131,15 +133,15 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
-        public void ScheduleOnce(TimeSpan delay, Action action)
+        public void ScheduleOnce(Duration delay, Action action)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
-            this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), null);
+            this.InternalSchedule(delay, Duration.Zero, new ActionRunnable(action), null);
         }
 
         /// <inheritdoc />
-        public void ScheduleRepeatedly(TimeSpan initialDelay, TimeSpan interval, Action action)
+        public void ScheduleRepeatedly(Duration initialDelay, Duration interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
@@ -148,15 +150,15 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
-        public void ScheduleSendOnce(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
+        public void ScheduleSendOnce(Duration delay, IEndpoint receiver, object message, IEndpoint sender)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
-            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), null);
+            this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), null);
         }
 
         /// <inheritdoc />
-        public void ScheduleSendRepeatedly(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender)
+        public void ScheduleSendRepeatedly(Duration initialDelay, Duration interval, IEndpoint receiver, object message, IEndpoint sender)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
@@ -165,17 +167,17 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
-        public ICancelable ScheduleOnceCancelable(TimeSpan delay, Action action)
+        public ICancelable ScheduleOnceCancelable(Duration delay, Action action)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
             var cancelable = new Cancelable(this);
-            this.InternalSchedule(delay, TimeSpan.Zero, new ActionRunnable(action), cancelable);
+            this.InternalSchedule(delay, Duration.Zero, new ActionRunnable(action), cancelable);
             return cancelable;
         }
 
         /// <inheritdoc />
-        public ICancelable ScheduleRepeatedlyCancelable(TimeSpan initialDelay, TimeSpan interval, Action action)
+        public ICancelable ScheduleRepeatedlyCancelable(Duration initialDelay, Duration interval, Action action)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
@@ -186,17 +188,17 @@ namespace Nautilus.Scheduler
         }
 
         /// <inheritdoc />
-        public ICancelable ScheduleSendOnceCancelable(TimeSpan delay, IEndpoint receiver, object message, IEndpoint sender)
+        public ICancelable ScheduleSendOnceCancelable(Duration delay, IEndpoint receiver, object message, IEndpoint sender)
         {
             Precondition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
 
             var cancelable = new Cancelable(this);
-            this.InternalSchedule(delay, TimeSpan.Zero, new ScheduledSend(receiver, message, sender), cancelable);
+            this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), cancelable);
             return cancelable;
         }
 
         /// <inheritdoc />
-        public ICancelable ScheduleSendRepeatedlyCancelable(TimeSpan initialDelay, TimeSpan interval, IEndpoint receiver, object message, IEndpoint sender)
+        public ICancelable ScheduleSendRepeatedlyCancelable(Duration initialDelay, Duration interval, IEndpoint receiver, object message, IEndpoint sender)
         {
             Precondition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
             Precondition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
@@ -353,7 +355,7 @@ namespace Nautilus.Scheduler
                 while (true)
                 {
                     var currentTime = MonotonicClock.Elapsed.BclCompatibleTicks - this.startTime;
-                    var sleepMs = (deadline - currentTime + TimeSpan.TicksPerMillisecond - 1) / TimeSpan.TicksPerMillisecond;
+                    var sleepMs = (deadline - currentTime + TICKS_PER_MILLISECOND - 1) / TICKS_PER_MILLISECOND;
 
                     if (sleepMs <= 0)
                     {
@@ -405,14 +407,14 @@ namespace Nautilus.Scheduler
         }
 
         private void InternalSchedule(
-            TimeSpan delay,
-            TimeSpan interval,
+            Duration delay,
+            Duration interval,
             IRunnable action,
             ICancelable? cancelable)
         {
             this.Start();
-            var deadline = MonotonicClock.Elapsed.BclCompatibleTicks + delay.Ticks - this.startTime;
-            var offset = interval.Ticks;
+            var deadline = MonotonicClock.Elapsed.BclCompatibleTicks + delay.BclCompatibleTicks - this.startTime;
+            var offset = interval.BclCompatibleTicks;
             var reg = new SchedulerRegistration(action, cancelable)
             {
                 Deadline = deadline,

@@ -8,13 +8,11 @@
 
 namespace Nautilus.TestSuite.UnitTests.SchedulerTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Threading.Tasks;
     using Nautilus.Scheduler;
-    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -58,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleOnce(TimeSpan.Zero, this.Run);
+            this.scheduler.ScheduleOnce(Duration.Zero, this.Run);
 
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
 
@@ -71,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleOnceCancelable(TimeSpan.Zero, this.Run);
+            this.scheduler.ScheduleOnceCancelable(Duration.Zero, this.Run);
 
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
 
@@ -84,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleOnceCancelable(TimeSpan.Zero, this.Run);
+            var cancelable = this.scheduler.ScheduleOnceCancelable(Duration.Zero, this.Run);
             cancelable.Cancel();
 
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
@@ -98,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleRepeatedly(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+            this.scheduler.ScheduleRepeatedly(Duration.Zero, Duration.FromMilliseconds(10), this.Run);
 
             // Takes approx 50ms to spool up the scheduler.
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
@@ -112,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+            this.scheduler.ScheduleRepeatedlyCancelable(Duration.Zero, Duration.FromMilliseconds(10), this.Run);
 
             // Takes approx 50ms to spool up the scheduler.
             Task.Delay(100).Wait(); // Wait for potential action(s) to fire.
@@ -126,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.Run);
+            var cancelable = this.scheduler.ScheduleRepeatedlyCancelable(Duration.Zero, Duration.FromMilliseconds(10), this.Run);
             cancelable.Cancel();
 
             // Takes approx 50ms to spool up the scheduler.
@@ -141,7 +139,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleSendOnce(TimeSpan.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            this.scheduler.ScheduleSendOnce(Duration.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
 
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
@@ -155,7 +153,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleSendOnceCancelable(TimeSpan.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            this.scheduler.ScheduleSendOnceCancelable(Duration.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
 
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
@@ -169,7 +167,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleSendOnceCancelable(TimeSpan.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            var cancelable = this.scheduler.ScheduleSendOnceCancelable(Duration.Zero, this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
             cancelable.Cancel();
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
@@ -182,7 +180,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            this.scheduler.ScheduleSendRepeatedly(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            this.scheduler.ScheduleSendRepeatedly(Duration.Zero, Duration.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
 
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
@@ -196,7 +194,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleSendRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            var cancelable = this.scheduler.ScheduleSendRepeatedlyCancelable(Duration.Zero, Duration.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
 
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
@@ -210,7 +208,7 @@ namespace Nautilus.TestSuite.UnitTests.SchedulerTests
         {
             // Arrange
             // Act
-            var cancelable = this.scheduler.ScheduleSendRepeatedlyCancelable(TimeSpan.Zero, TimeSpan.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
+            var cancelable = this.scheduler.ScheduleSendRepeatedlyCancelable(Duration.Zero, Duration.FromMilliseconds(10), this.testReceiver.Endpoint, "TEST", this.scheduler.Endpoint);
             cancelable.Cancel();
             Task.Delay(100).Wait(); // Wait for potential message(s) to send.
 
