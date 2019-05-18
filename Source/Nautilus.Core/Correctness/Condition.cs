@@ -21,7 +21,7 @@ namespace Nautilus.Core.Correctness
     public static class Condition
     {
         /// <summary>
-        /// The check passes if the predicate is true.
+        /// The condition check passes if the predicate is true.
         /// </summary>
         /// <param name="predicate">The predicate under check.</param>
         /// <param name="description">The predicate description.</param>
@@ -35,8 +35,8 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the condition is false, or both the condition and predicate are
-        /// true.
+        /// The condition check passes if the given condition is false, or both the condition and
+        /// predicate are true.
         /// </summary>
         /// <param name="condition">The condition under check.</param>
         /// <param name="predicate">The predicate under check.</param>
@@ -52,7 +52,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the argument is not null.
+        /// The condition check passes if the argument is not null.
         /// </summary>
         /// <param name="argument">The argument under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -67,7 +67,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the argument is not null, empty or whitespace.
+        /// The condition check passes if the argument is not null, empty or whitespace.
         /// </summary>
         /// <param name="argument">The argument under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -81,7 +81,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the struct argument is not the default value.
+        /// The condition check passes if the struct argument is not the default value.
         /// </summary>
         /// <typeparam name="T">The argument type.</typeparam>
         /// <param name="argument">The argument under check.</param>
@@ -97,7 +97,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the argument is not equal to the notToEqual object.
+        /// The condition check passes if the argument is not equal to the notToEqual object.
         /// </summary>
         /// <param name="argument">The argument under check.</param>
         /// <param name="notToEqual">The object not to be equal to.</param>
@@ -112,7 +112,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the argument is equal to the toEqual object.
+        /// The condition check passes if the argument is equal to the toEqual object.
         /// </summary>
         /// <param name="argument">The argument under check.</param>
         /// <param name="toEqual">The object to be equal to.</param>
@@ -127,7 +127,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyCollection{T}"/> is not empty.
+        /// The condition check passes if the <see cref="IReadOnlyCollection{T}"/> is not empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
@@ -148,7 +148,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyCollection{T}"/> is empty.
+        /// The condition check passes if the <see cref="IReadOnlyCollection{T}"/> is empty.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="collection">The collection under check.</param>
@@ -169,7 +169,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is not empty.
+        /// The condition check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is not empty.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -191,7 +191,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is empty.
+        /// The condition check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> is empty.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -213,7 +213,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> contains the given element.
+        /// The condition check passes if the <see cref="ICollection{T}"/> contains the given element.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="element">The element for the collection to contain.</param>
@@ -242,7 +242,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="ICollection{T}"/> contains the given element.
+        /// The condition check passes if the <see cref="ICollection{T}"/> contains the given element.
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <param name="element">The element for the collection not to contain.</param>
@@ -271,7 +271,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> contains the given key.
+        /// The condition check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> contains the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -301,7 +301,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> does not contain the given key.
+        /// The condition check passes if the <see cref="IReadOnlyDictionary{TKey,TValue}"/> does not contain the given key.
         /// </summary>
         /// <typeparam name="TKey">The key type.</typeparam>
         /// <typeparam name="TValue">The value type.</typeparam>
@@ -331,7 +331,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than zero.
+        /// The condition check passes if the value is greater than zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -345,7 +345,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than zero.
+        /// The condition check passes if the value is greater than zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -359,7 +359,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than zero.
+        /// The condition check passes if the value is greater than zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -373,7 +373,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than zero.
+        /// The condition check passes if the value is greater than zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -387,7 +387,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than or equal to zero.
+        /// The condition check passes if the value is greater than or equal to zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -401,7 +401,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than or equal to zero.
+        /// The condition check passes if the value is greater than or equal to zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -415,7 +415,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than or equal to zero.
+        /// The condition check passes if the value is greater than or equal to zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -429,7 +429,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is greater than or equal to zero.
+        /// The condition check passes if the value is greater than or equal to zero.
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -443,13 +443,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range (inclusive of bounds).
+        /// The condition check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="lowerBound">The range lower bound (inclusive).</param>
         /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is out of the specified range.</exception>
         public static void NotOutOfRangeInt32(
             int value,
             int lowerBound,
@@ -463,13 +463,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range (inclusive of bounds).
+        /// The condition check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="lowerBound">The range lower bound (inclusive).</param>
         /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is out of the specified range.</exception>
         public static void NotOutOfRangeInt64(
             long value,
             long lowerBound,
@@ -483,13 +483,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range (inclusive of bounds).
+        /// The condition check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="lowerBound">The range lower bound (inclusive).</param>
         /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is out of the specified range.</exception>
         public static void NotOutOfRangeDouble(
             double value,
             double lowerBound,
@@ -503,13 +503,13 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The check passes if the value is not out of the specified range (inclusive of bounds).
+        /// The condition check passes if the value is not out of the specified range (inclusive of bounds).
         /// </summary>
         /// <param name="value">The value under check.</param>
         /// <param name="lowerBound">The range lower bound (inclusive).</param>
         /// <param name="upperBound">The range upper bound (inclusive).</param>
         /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the value is out of the specified range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the value is out of the specified range.</exception>
         public static void NotOutOfRangeDecimal(
             decimal value,
             decimal lowerBound,
