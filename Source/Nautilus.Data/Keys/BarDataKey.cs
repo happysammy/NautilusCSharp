@@ -57,7 +57,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="other">The other <see cref="BarDataKey"/>.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(BarDataKey other) => this.Type.Equals(other.Type) && this.DateKey.Equals(other.DateKey);
+        public bool Equals(BarDataKey other) => this.Type.Equals(other.DateKey) && this.DateKey.Equals(other.DateKey);
 
         /// <summary>
         /// Returns the hash code of the <see cref="BarDataKey"/>.

@@ -9,17 +9,17 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public sealed class Bar : ValueObject<Bar>, IEquatable<Bar>, IComparable<Bar>
+    public sealed class Bar : IEquatable<Bar>, IComparable<Bar>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bar"/> class.
@@ -106,6 +106,59 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
+        /// Returns a value indicating whether the <see cref="Bar"/>(s) are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(Bar left, Bar right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Bar"/>(s) are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(Bar left,  Bar right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Bar"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is Bar bar && this.Equals(bar);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Bar"/> is equal
+        /// to the given <see cref="Bar"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(Bar other)
+        {
+            return this.Open == other.Open &&
+                   this.High == other.High &&
+                   this.Low == other.Low &&
+                   this.Close == other.Close &&
+                   this.Volume == other.Volume &&
+                   this.Timestamp == other.Timestamp;
+        }
+
+        /// <summary>
         /// Returns a result indicating whether the left <see cref="Bar"/> is less than, equal
         /// to or greater than the right <see cref="Bar"/>.
         /// </summary>
@@ -114,6 +167,21 @@ namespace Nautilus.DomainModel.ValueObjects
         public int CompareTo(Bar other)
         {
             return this.Timestamp.Compare(other.Timestamp);
+        }
+
+        /// <summary>
+        /// Returns the hash code of the <see cref="Bar"/>.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(
+                this.Open,
+                this.High,
+                this.Low,
+                this.Close,
+                this.Volume,
+                this.Timestamp);
         }
 
         /// <summary>
@@ -128,23 +196,6 @@ namespace Nautilus.DomainModel.ValueObjects
                    this.Close + "," +
                    this.Volume + "," +
                    this.Timestamp.ToIsoString();
-        }
-
-        /// <summary>
-        /// Returns an array of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>The array of equality members.</returns>
-        protected override object[] GetEqualityArray()
-        {
-            return new object[]
-            {
-                this.Open,
-                this.High,
-                this.Low,
-                this.Close,
-                this.Volume,
-                this.Timestamp,
-            };
         }
     }
 }

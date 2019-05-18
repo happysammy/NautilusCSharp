@@ -9,17 +9,17 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>
     [Immutable]
-    public sealed class BarSpecification : ValueObject<BarSpecification>, IEquatable<BarSpecification>
+    public sealed class BarSpecification : IEquatable<BarSpecification>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSpecification"/> class.
@@ -38,6 +38,7 @@ namespace Nautilus.DomainModel.ValueObjects
             this.Period = period;
             this.Resolution = resolution;
             this.QuoteType = quoteType;
+            this.Duration = this.CalculateDuration(this.Period);
         }
 
         /// <summary>
@@ -58,12 +59,57 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bar time duration.
         /// </summary>
-        public Duration Duration => this.CalculateDuration(this.Period);
+        public Duration Duration { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this bars time period is one day.
+        /// Returns a value indicating whether the <see cref="BarSpecification"/>(s) are equal.
         /// </summary>
-        public bool IsOneDayBar => this.Resolution == Resolution.DAY && this.Period == 1;
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(BarSpecification left, BarSpecification right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="BarSpecification"/>(s) are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(BarSpecification left,  BarSpecification right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="BarSpecification"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is BarSpecification barSpec && this.Equals(barSpec);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="BarSpecification"/> is equal
+        /// to the given <see cref="BarSpecification"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(BarSpecification other)
+        {
+            return this.Period == other.Period &&
+                   this.Resolution == other.Resolution &&
+                   this.QuoteType == other.QuoteType;
+        }
 
         /// <summary>
         /// Returns the hash code of the <see cref="BarSpecification"/>.
@@ -72,30 +118,14 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return this.QuoteType.GetHashCode() +
-                   this.Resolution.GetHashCode() +
-                   this.Period.GetHashCode();
+            return Hash.GetCode(this.Period, this.Resolution, this.QuoteType);
         }
 
         /// <summary>
         /// Returns a string representation of the <see cref="BarSpecification"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{this.Period}-{this.Resolution.ToString().ToUpper()}[{this.QuoteType.ToString().ToUpper()}]";
-
-        /// <summary>
-        /// Returns an array of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>The array of equality members.</returns>
-        protected override object[] GetEqualityArray()
-        {
-            return new object[]
-                       {
-                           this.QuoteType,
-                           this.Resolution,
-                           this.Period,
-                       };
-        }
+        public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
 
         private Duration CalculateDuration(int barPeriod)
         {

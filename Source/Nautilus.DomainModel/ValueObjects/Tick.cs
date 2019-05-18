@@ -9,16 +9,16 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.ValueObjects.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public sealed class Tick : ValueObject<Tick>, IEquatable<Tick>, IComparable<Tick>
+    public sealed class Tick : IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Tick"/> class.
@@ -79,6 +79,57 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
+        /// Returns a value indicating whether the <see cref="Tick"/>(s) are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(Tick left, Tick right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Tick"/>(s) are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(Tick left,  Tick right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Tick"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is Tick tick && this.Equals(tick);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Tick"/> is equal
+        /// to the given <see cref="Tick"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(Tick other)
+        {
+            return this.Symbol == other.Symbol &&
+                   this.Bid == other.Bid &&
+                   this.Ask == other.Ask &&
+                   this.Timestamp == other.Timestamp;
+        }
+
+        /// <summary>
         /// Returns a result indicating whether the left <see cref="Tick"/> is less than, equal
         /// to or greater than the right <see cref="Tick"/>.
         /// </summary>
@@ -87,24 +138,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public int CompareTo(Tick other) => this.Timestamp.Compare(other.Timestamp);
 
         /// <summary>
+        /// Returns the hash code of the <see cref="Tick"/>.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(this.Symbol, this.Bid, this.Ask);
+        }
+
+        /// <summary>
         /// Returns a string representation of the <see cref="Tick"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{this.Bid},{this.Ask},{this.Timestamp.ToIsoString()}";
-
-        /// <summary>
-        /// Returns an array of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>The array of equality members.</returns>
-        protected override object[] GetEqualityArray()
-        {
-            return new object[]
-                       {
-                           this.Symbol,
-                           this.Bid,
-                           this.Ask,
-                           this.Timestamp,
-                       };
-        }
     }
 }

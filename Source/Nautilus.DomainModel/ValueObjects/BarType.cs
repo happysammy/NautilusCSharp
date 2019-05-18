@@ -9,13 +9,13 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using Nautilus.DomainModel.ValueObjects.Base;
+    using Nautilus.Core;
 
     /// <summary>
     /// Represents the concept of a bar type representing a <see cref="Symbol"/> and
     /// <see cref="BarSpecification"/>.
     /// </summary>
-    public sealed class BarType : ValueObject<BarType>, IEquatable<BarType>
+    public sealed class BarType : IEquatable<BarType>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarType"/> class.
@@ -41,25 +41,70 @@ namespace Nautilus.DomainModel.ValueObjects
         public BarSpecification Specification { get; }
 
         /// <summary>
+        /// Returns a value indicating whether the <see cref="BarType"/>(s) are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(BarType left, BarType right)
+        {
+            if (left is null && right is null)
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="BarType"/>(s) are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(BarType left,  BarType right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="BarType"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is BarType barType && this.Equals(barType);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="BarType"/> is equal
+        /// to the given <see cref="BarSpecification"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(BarType other)
+        {
+            return this.Symbol == other.Symbol && this.Specification == other.Specification;
+        }
+
+        /// <summary>
+        /// Returns the hash code of the <see cref="BarType"/>.
+        /// </summary>
+        /// <remarks>Non-readonly properties referenced in GetHashCode for serialization.</remarks>
+        /// <returns>A <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(this.Symbol, this.Specification);
+        }
+
+        /// <summary>
         /// Returns a string representation of the <see cref="BarType"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString()
         {
             return $"{this.Symbol}-{this.Specification}";
-        }
-
-        /// <summary>
-        /// Returns an array of objects to be included in equality checks.
-        /// </summary>
-        /// <returns>The array of equality members.</returns>
-        protected override object[] GetEqualityArray()
-        {
-            return new object[]
-            {
-                this.Symbol,
-                this.Specification,
-            };
         }
     }
 }
