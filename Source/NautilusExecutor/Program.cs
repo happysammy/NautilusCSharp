@@ -28,25 +28,18 @@ namespace NautilusExecutor
         /// <param name="args">The program arguments.</param>
         public static void Main(string[] args)
         {
-            var logger = new SerilogLogger(LogEventLevel.Information);
-            logger.Debug(NautilusService.AspCore, "Building ASP.NET Core Web Host...");
-
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("hosting.json", optional: true, reloadOnChange: true)
                 .Build();
 
             BuildWebHost(config, args).Run();
-
-            logger.Information(NautilusService.AspCore, "Closing and flushing Serilog...");
-            Log.CloseAndFlush();
         }
 
         private static IWebHost BuildWebHost(IConfiguration config, string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(config)
                 .UseKestrel()
-                .UseSerilog()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

@@ -32,11 +32,10 @@ namespace Nautilus.Common
             log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
             log.Information(NautilusService.Core, "Copyright (c) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
             log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
+            log.Information(NautilusService.Core, $"OS {Environment.OSVersion}");
             log.Information(NautilusService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information(NautilusService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information(NautilusService.Core, $"OS {Environment.OSVersion}");
             log.Information(NautilusService.Core, $".NET Core v{GetNetCoreVersion()}");
-            log.Information(NautilusService.Core, log.AssemblyVersion);
         }
 
         private static string GetNetCoreVersion()

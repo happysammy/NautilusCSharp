@@ -8,13 +8,17 @@
 
 namespace NautilusData
 {
+    using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Nautilus.Data;
     using Newtonsoft.Json.Linq;
+    using Serilog;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -57,6 +61,14 @@ namespace NautilusData
             var configJson = JObject.Parse(File.ReadAllText("config.json"));
             var symbolIndex = File.ReadAllText("symbols.json");
             var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
+
+            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddDebug();
+                loggingBuilder.AddSerilog();
+            });
 
             this.dataService = DataServiceFactory.Create(config);
             this.dataService.Start();
