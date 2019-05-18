@@ -42,6 +42,7 @@ namespace Nautilus.Scheduler
     public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
         private const int TWO_POWER_30 = 1073741824;
+        private const int MAX_REGISTRATIONS_PER_TICK = 100000;
         private const int TICKS_PER_MILLISECOND = 10000;
         private const int WORKER_STATE_INIT = 0;
         private const int WORKER_STATE_STARTED = 1;
@@ -305,7 +306,7 @@ namespace Nautilus.Scheduler
             this.startTime = MonotonicClock.Elapsed.BclCompatibleTicks;
             if (this.startTime == 0)
             {
-                // 0 means it's an uninitialized value, so bump to 1 to indicate it's started.
+                // Uninitialized value, so bump to 1 to indicate it's started.
                 this.startTime = 1;
             }
 
@@ -323,7 +324,7 @@ namespace Nautilus.Scheduler
                 var bucket = this.wheel[idx];
                 this.TransferRegistrationsToBuckets();
                 bucket.Execute(deadline);
-                this.tick++; // It will take 2^64 * 10ms for this to overflow.
+                this.tick++; // It will take 2^64 * 10ms for this to overflow (a long time).
 
                 bucket.ClearReschedule(this.rescheduleRegistrations);
                 this.ProcessReschedule();
@@ -336,7 +337,6 @@ namespace Nautilus.Scheduler
             }
 
             // Empty tasks that haven't been placed into a bucket yet.
-            // Cannot apply indexing to a concurrent queue.
             foreach (var reg in this.registrations)
             {
                 if (!reg.Cancelled)
@@ -365,7 +365,7 @@ namespace Nautilus.Scheduler
         {
             var deadline = this.tickDuration * (this.tick + 1);
 
-            // unchecked avoids trouble with long-running applications.
+            // Unchecked avoids System.OutOfMemoryException for long-running applications.
             unchecked
             {
                 while (true)
@@ -392,9 +392,8 @@ namespace Nautilus.Scheduler
 
         private void TransferRegistrationsToBuckets()
         {
-            // Transfer only max. 100000 registrations per tick to prevent a thread to stale the workerThread when it just
-            // adds new timeouts in a loop.
-            for (var i = 0; i < 100000; i++)
+            // Transfer only max prevents a stale thread where its just adding new timeouts in a loop.
+            for (var i = 0; i < MAX_REGISTRATIONS_PER_TICK; i++)
             {
                 if (!this.registrations.TryDequeue(out var registration))
                 {
@@ -403,7 +402,7 @@ namespace Nautilus.Scheduler
 
                 if (registration.Cancelled)
                 {
-                    continue;  // Cancelled before we could process it.
+                    continue;  // Cancelled before processing.
                 }
 
                 this.PlaceInBucket(registration);
@@ -415,7 +414,7 @@ namespace Nautilus.Scheduler
             var calculated = reg.Deadline / this.tickDuration;
             reg.RemainingRounds = (calculated - this.tick) / this.wheel.Length;
 
-            var ticks = Math.Max(calculated, this.tick); // Ensure we don't schedule for the past.
+            var ticks = Math.Max(calculated, this.tick); // Ensures not scheduled for the past.
             var stopIndex = (int)(ticks & this.mask);
 
             var bucket = this.wheel[stopIndex];
