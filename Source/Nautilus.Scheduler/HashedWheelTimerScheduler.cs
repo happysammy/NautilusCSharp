@@ -37,8 +37,7 @@ namespace Nautilus.Scheduler
     /// Further reading: http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf
     /// Presentation: http://www.cse.wustl.edu/~cdgill/courses/cs6874/TimingWheels.ppt.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Capitalization easier to read.")]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
         private const int DEFAULT_TICKS_PER_WHEEL = 512;
