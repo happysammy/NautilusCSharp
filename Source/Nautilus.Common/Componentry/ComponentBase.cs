@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -75,7 +74,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Sends a <see cref="Start"/> message to the component.
         /// </summary>
-        public void SendStart()
+        public void Start()
         {
             this.SendToSelf(new Start(this.NewGuid(), this.TimeNow()));
         }
@@ -83,7 +82,7 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Sends a <see cref="Stop"/> message to the component.
         /// </summary>
-        public void SendStop()
+        public void Stop()
         {
             this.SendToSelf(new Stop(this.NewGuid(), this.TimeNow()));
         }
@@ -92,7 +91,7 @@ namespace Nautilus.Common.Componentry
         /// Handles the start message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected virtual void Start(Start message)
+        protected virtual void OnStart(Start message)
         {
             this.Log.Error($"Received unhandled {message}.");
         }
@@ -101,7 +100,7 @@ namespace Nautilus.Common.Componentry
         /// Handles the stop message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected virtual void Stop(Stop message)
+        protected virtual void OnStop(Stop message)
         {
             this.Log.Error($"Received unhandled {message}.");
         }
@@ -146,7 +145,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The start message.</param>
         private void OnMessage(Start message)
         {
-            this.Start(message);
+            this.OnStart(message);
         }
 
         /// <summary>
@@ -155,7 +154,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The stop message.</param>
         private void OnMessage(Stop message)
         {
-            this.Stop(message);
+            this.OnStop(message);
         }
 
         private void Unhandled(object message)

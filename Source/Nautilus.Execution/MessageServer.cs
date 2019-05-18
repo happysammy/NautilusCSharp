@@ -75,7 +75,7 @@ namespace Nautilus.Execution
         /// Handles the stop message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Stop(Stop message)
+        protected override void OnStop(Stop message)
         {
             this.commandConsumer.Send(message);
             this.eventPublisher.Send(message);

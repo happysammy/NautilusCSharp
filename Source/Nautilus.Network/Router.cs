@@ -63,7 +63,7 @@ namespace Nautilus.Network
         }
 
         /// <inheritdoc />
-        protected override void Start(Start message)
+        protected override void OnStart(Start message)
         {
             this.socket.Bind(this.serverAddress.Value);
             this.Log.Debug($"Bound router socket to {this.serverAddress}");
@@ -74,7 +74,7 @@ namespace Nautilus.Network
         }
 
         /// <inheritdoc />
-        protected override void Stop(Stop message)
+        protected override void OnStop(Stop message)
         {
             this.Log.Debug($"Stopping...");
             this.isConsuming = false;

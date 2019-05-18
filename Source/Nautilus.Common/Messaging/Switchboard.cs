@@ -24,6 +24,7 @@ namespace Nautilus.Common.Messaging
     public sealed class Switchboard
     {
         private readonly ImmutableDictionary<Address, IEndpoint> addresses;
+        private Action<object> deadLetterHandler = DoNothing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
@@ -69,9 +70,31 @@ namespace Nautilus.Common.Messaging
         public void SendToReceiver<T>(Envelope<T> envelope)
             where T : Message
         {
-            Debug.KeyIn(envelope.Receiver, this.addresses, nameof(envelope.Receiver), nameof(this.addresses));
+            if (!this.addresses.ContainsKey(envelope.Receiver))
+            {
+                // Receiver address not found.
+                this.deadLetterHandler(envelope);
+                return;
+            }
 
             this.addresses[envelope.Receiver].Send(envelope);
+        }
+
+        /// <summary>
+        /// Registers the given delegate to receive dead letters.
+        /// </summary>
+        /// <param name="handler">The dead letter handler.</param>
+        public void RegisterDeadLetterChannel(Action<object> handler)
+        {
+            this.deadLetterHandler = handler;
+        }
+
+        /// <summary>
+        /// Do nothing with the given message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private static void DoNothing(object message)
+        {
         }
     }
 }

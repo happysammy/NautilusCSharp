@@ -59,7 +59,7 @@ namespace NautilusData
             var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
 
             this.dataService = DataServiceFactory.Create(config);
-            this.dataService.SendStart();
+            this.dataService.Start();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataService?.SendStop();
+            this.dataService?.Stop();
         }
     }
 }

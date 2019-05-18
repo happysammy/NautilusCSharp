@@ -84,7 +84,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc/>
         public void Dispose()
         {
-            var stoppedTask = this.Stop();
+            var stoppedTask = this.OnStop();
             if (!stoppedTask.Wait(this.shutdownTimeout))
             {
                 this.Log.Warning($"Failed to shutdown scheduler within {this.shutdownTimeout}");
@@ -268,7 +268,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <exception cref="SchedulerException">If the worker state is already shutdown.</exception>
         /// <exception cref="InvalidOperationException">If the worker state is invalid.</exception>
-        private void Start()
+        private void OnStart()
         {
             switch (this.workerState)
             {
@@ -429,7 +429,7 @@ namespace Nautilus.Scheduler
             IRunnable action,
             ICancelable? cancelable)
         {
-            this.Start();
+            this.OnStart();
             var deadline = MonotonicClock.Elapsed.BclCompatibleTicks + delay.BclCompatibleTicks - this.startTime;
             var offset = interval.BclCompatibleTicks;
             var reg = new SchedulerRegistration(action, cancelable)
@@ -440,7 +440,7 @@ namespace Nautilus.Scheduler
             this.registrations.Enqueue(reg);
         }
 
-        private Task<IEnumerable<SchedulerRegistration>> Stop()
+        private Task<IEnumerable<SchedulerRegistration>> OnStop()
         {
             var p = new TaskCompletionSource<IEnumerable<SchedulerRegistration>>();
             if (this.stopped.CompareAndSet(null, p) && Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_SHUTDOWN, WORKER_STATE_STARTED) == WORKER_STATE_STARTED)

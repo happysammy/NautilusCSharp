@@ -60,7 +60,7 @@ namespace Nautilus.Network
         public ZmqServerAddress ServerAddress { get; }
 
         /// <inheritdoc />
-        protected override void Start(Start message)
+        protected override void OnStart(Start message)
         {
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
@@ -68,7 +68,7 @@ namespace Nautilus.Network
         }
 
         /// <inheritdoc />
-        protected override void Stop(Stop message)
+        protected override void OnStop(Stop message)
         {
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");

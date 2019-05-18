@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -42,6 +41,7 @@ namespace Nautilus.Common.Messaging
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
+            this.RegisterHandler<Stop>(this.OnStop);
             this.RegisterUnhandled(this.Unhandled);
         }
 
@@ -53,12 +53,21 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Gets the list of dead letters (unhandled messages).
         /// </summary>
-        public IReadOnlyList<object> DeadLetters => this.deadLetters;
+        public IEnumerable<object> DeadLetters => this.deadLetters;
+
+        private void OnStop(Stop message)
+        {
+            foreach (var letter in this.deadLetters)
+            {
+                this.log.Warning($"[DEAD LETTER] {letter}.");
+            }
+        }
 
         private void OnMessage(InitializeSwitchboard message)
         {
             this.switchboard = message.Switchboard;
-            this.log.Information($"Initialized.");
+            this.switchboard.RegisterDeadLetterChannel(this.Unhandled);
+            this.log.Information("Initialized.");
         }
 
         private void OnMessage(Envelope<T> envelope)

@@ -90,7 +90,7 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void Start(Start message)
+        protected override void OnStart(Start message)
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
@@ -105,7 +105,7 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void Stop(Stop message)
+        protected override void OnStop(Stop message)
         {
             this.Log.Information($"Stopping...");
 

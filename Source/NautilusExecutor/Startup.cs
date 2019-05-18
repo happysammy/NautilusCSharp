@@ -59,7 +59,7 @@ namespace NautilusExecutor
             var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
 
             this.executionService = ExecutionServiceFactory.Create(config);
-            this.executionService?.SendStart();
+            this.executionService?.Start();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionService?.SendStop();
+            this.executionService?.Stop();
         }
     }
 }

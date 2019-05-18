@@ -881,13 +881,13 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        protected override void Start(Start message)
+        protected override void OnStart(Start message)
         {
             this.Connect();
         }
 
         /// <inheritdoc />
-        protected override void Stop(Stop message)
+        protected override void OnStop(Stop message)
         {
             this.Disconnect();
         }
