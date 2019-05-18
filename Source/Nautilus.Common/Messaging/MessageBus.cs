@@ -8,6 +8,8 @@
 
 namespace Nautilus.Common.Messaging
 {
+    using System.Collections.Generic;
+    using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -23,6 +25,7 @@ namespace Nautilus.Common.Messaging
         where T : Message
     {
         private readonly ILogger log;
+        private readonly List<object> deadLetters;
 
         private Switchboard switchboard;
 
@@ -34,16 +37,23 @@ namespace Nautilus.Common.Messaging
         {
             this.Name = new Label($"MessageBus<{typeof(T).Name}>");
             this.log = container.LoggerFactory.Create(NautilusService.Messaging, this.Name);
+            this.deadLetters = new List<object>();
             this.switchboard = Switchboard.Empty();
 
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
+            this.RegisterUnhandled(this.Unhandled);
         }
 
         /// <summary>
         /// Gets the name of the message bus.
         /// </summary>
         public Label Name { get; }
+
+        /// <summary>
+        /// Gets the list of dead letters (unhandled messages).
+        /// </summary>
+        public IReadOnlyList<object> DeadLetters => this.deadLetters;
 
         private void OnMessage(InitializeSwitchboard message)
         {
@@ -60,6 +70,12 @@ namespace Nautilus.Common.Messaging
         private void LogEnvelope(Envelope<T> envelope)
         {
             this.log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+        }
+
+        private void Unhandled(object message)
+        {
+            this.log.Warning($"Unhandled message [{message}].");
+            this.deadLetters.Add(message);
         }
     }
 }

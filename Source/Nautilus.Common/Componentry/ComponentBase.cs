@@ -9,6 +9,7 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using System.Collections.Generic;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
@@ -37,8 +38,8 @@ namespace Nautilus.Common.Componentry
             this.Address = new Address(this.Name.Value);
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.commandHandler = new CommandHandler(this.Log);
             this.Log = container.LoggerFactory.Create(serviceContext, this.Name);
+            this.commandHandler = new CommandHandler(this.Log);
             this.StartTime = this.clock.TimeNow();
 
             this.RegisterHandler<Envelope<Command>>(this.Open);
