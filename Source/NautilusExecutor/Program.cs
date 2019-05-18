@@ -29,7 +29,7 @@ namespace NautilusExecutor
         public static void Main(string[] args)
         {
             var logger = new SerilogLogger(LogEventLevel.Information);
-            logger.Debug(NautilusService.AspCoreHost, "Building ASP.NET Core Web Host...");
+            logger.Debug(NautilusService.AspCore, "Building ASP.NET Core Web Host...");
 
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -38,7 +38,7 @@ namespace NautilusExecutor
 
             BuildWebHost(config, args).Run();
 
-            logger.Information(NautilusService.AspCoreHost, "Closing and flushing Serilog...");
+            logger.Information(NautilusService.AspCore, "Closing and flushing Serilog...");
             Log.CloseAndFlush();
         }
 
