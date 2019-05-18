@@ -15,6 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -39,6 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             var container = setupFactory.Create();
             this.logger = setupFactory.LoggingAdapter;
             this.receiver = new MockMessagingAgent();
+            this.receiver.RegisterHandler<ValueTuple<BarType, Bar>>(this.receiver.OnMessage);
 
             this.barAggregator = new BarAggregator(
                 container,
@@ -50,48 +52,102 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
         internal void GivenCloseBarMessage_WhenNoSubscriptions_ThenDoesNothing()
         {
             // Arrange
-            var closeBarMessage = new CloseBar(
+            var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage);
-            Task.Delay(100).Wait();
+            this.barAggregator.Endpoint.Send(closeBar);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
-            // Assert.Single(this.receiver.Messages);
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Empty(this.barAggregator.Specifications);
+            Assert.Empty(this.receiver.Messages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
+        }
+
+        [Fact]
+        internal void GivenSubscribeBarTypeMessage_WhenNoPreviousSubscriptions_ThenSubscribes()
+        {
+            // Arrange
+            var barSpec = new BarSpecification(1, Resolution.SECOND, QuoteType.BID);
+            var subscribe = new Subscribe<BarType>(
+                new BarType(this.symbol, barSpec),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.barAggregator.Endpoint.Send(subscribe);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+
+            // Assert
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Single(this.barAggregator.Specifications);
+            Assert.Contains(barSpec, this.barAggregator.Specifications);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
+        }
+
+        [Fact]
+        internal void GivenSubscribeBarTypeMessage_WhenPreviousSubscription_ThenDoesNotSubscribeAgain()
+        {
+            // Arrange
+            var barSpec = new BarSpecification(1, Resolution.SECOND, QuoteType.BID);
+            var subscribe = new Subscribe<BarType>(
+                new BarType(new Symbol("AUDUSD", Venue.FXCM), barSpec),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            this.barAggregator.Endpoint.Send(subscribe);
+            this.barAggregator.Endpoint.Send(subscribe);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
+
+            // Assert
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Single(this.barAggregator.Specifications);
+            Assert.Contains(barSpec, this.barAggregator.Specifications);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
         internal void GivenCloseBarMessage_WhenMatchingSubscriptionButNoTicks_ThenDoesNothing()
         {
             // Arrange
-            var subscribeMessage = new Subscribe<BarType>(
+            var subscribe = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var closeBarMessage = new CloseBar(
+            var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribeMessage);
+            this.barAggregator.Endpoint.Send(subscribe);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage);
+            this.barAggregator.Endpoint.Send(closeBar);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Empty(this.receiver.Messages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
         internal void GivenCloseBarMessage_WhenDifferentSubscription_ThenDoesNothing()
         {
             // Arrange
-            var subscribeMessage = new Subscribe<BarType>(
+            var subscribe = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
@@ -104,25 +160,30 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
-            var closeBarMessage = new CloseBar(
+            var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.ASK),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribeMessage);
+            this.barAggregator.Endpoint.Send(subscribe);
             this.barAggregator.Endpoint.Send(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage);
+            this.barAggregator.Endpoint.Send(closeBar);
+
+            Task.Delay(300).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Empty(this.receiver.Messages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
         internal void GivenCloseBarMessage_WhenMatchingSubscription1_ThenReturnsExpectedBar()
         {
             // Arrange
-            var subscribeMessage = new Subscribe<BarType>(
+            var subscribe = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
@@ -135,30 +196,32 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
-            var closeBarMessage = new CloseBar(
+            var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribeMessage);
+            this.barAggregator.Endpoint.Send(subscribe);
             this.barAggregator.Endpoint.Send(tick);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage);
+            this.barAggregator.Endpoint.Send(closeBar);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
-//            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
-//            Assert.Equal(0.80000m, result.Bar.Open.Value);
-//            Assert.Equal(0.80000m, result.Bar.Close.Value);
-//            Assert.Equal(tick, result.LastTick);
-//            Assert.Equal(StubZonedDateTime.UnixEpoch(), result.Timestamp);
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Single(this.receiver.Messages);
+            Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Empty(this.receiver.UnhandledMessages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
         internal void GivenCloseBarMessage_WhenMatchingSubscription2_ThenReturnsNextBar()
         {
             // Arrange
-            var subscribeMessage = new Subscribe<BarType>(
+            var subscribe = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
@@ -171,7 +234,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80005m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
-            var closeBarMessage1 = new CloseBar(
+            var closeBar1 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -182,40 +245,41 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80110m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
-            var closeBarMessage2 = new CloseBar(
+            var closeBar2 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribeMessage);
+            this.barAggregator.Endpoint.Send(subscribe);
             this.barAggregator.Endpoint.Send(tick1);
-            this.barAggregator.Endpoint.Send(closeBarMessage1);
-
-            // this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            this.barAggregator.Endpoint.Send(closeBar1);
             this.barAggregator.Endpoint.Send(tick2);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage2);
+            this.barAggregator.Endpoint.Send(closeBar2);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
-            // var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
-//            Assert.Equal(0.80000m, result.Bar.Open.Value);
-//            Assert.Equal(0.80100m, result.Bar.Close.Value);
-//            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Equal(2, this.receiver.Messages.Count);
+            Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80000,0.80000,0.80000,1,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Empty(this.receiver.UnhandledMessages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
         internal void GivenCloseBarMessage_WhenMultipleSubscriptions1_ThenReturnsExpectedBar()
         {
             // Arrange
-            var subscribeMessage1 = new Subscribe<BarType>(
+            var subscribe1 = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(1, Resolution.SECOND, QuoteType.BID)),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var subscribeMessage2 = new Subscribe<BarType>(
+            var subscribe2 = new Subscribe<BarType>(
                 new BarType(
                     this.symbol,
                     new BarSpecification(10, Resolution.SECOND, QuoteType.BID)),
@@ -234,7 +298,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80105m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1));
 
-            var closeBarMessage1 = new CloseBar(
+            var closeBar1 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -245,30 +309,30 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80210m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(100));
 
-            var closeBarMessage2 = new CloseBar(
+            var closeBar2 = new CloseBar(
                 new BarSpecification(10, Resolution.SECOND, QuoteType.BID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            this.barAggregator.Endpoint.Send(subscribeMessage1);
-            this.barAggregator.Endpoint.Send(subscribeMessage2);
+            this.barAggregator.Endpoint.Send(subscribe1);
+            this.barAggregator.Endpoint.Send(subscribe2);
             this.barAggregator.Endpoint.Send(tick1);
             this.barAggregator.Endpoint.Send(tick2);
-            this.barAggregator.Endpoint.Send(closeBarMessage1);
-
-            // this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
+            this.barAggregator.Endpoint.Send(closeBar1);
             this.barAggregator.Endpoint.Send(tick3);
 
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage2);
+            this.barAggregator.Endpoint.Send(closeBar2);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
-//            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
-//            Assert.Equal(0.80000m, result.Bar.Open.Value);
-//            Assert.Equal(0.80200m, result.Bar.High.Value);
-//            Assert.Equal(0.80200m, result.Bar.Close.Value);
-//            Assert.Equal(tick3, result.LastTick);
-//            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(10), result.Timestamp);
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Equal(2, this.receiver.Messages.Count);
+            Assert.Equal("(AUDUSD.FXCM-1-SECOND[BID], 0.80000,0.80100,0.80000,0.80100,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Equal("(AUDUSD.FXCM-10-SECOND[BID], 0.80000,0.80200,0.80000,0.80200,3,1970-01-01T00:00:00.000Z)", this.receiver.Messages[1].ToString());
+            Assert.Empty(this.receiver.UnhandledMessages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
 
         [Fact]
@@ -294,7 +358,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
                 Price.Create(0.80070m, 5),
                 StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(1001));
 
-            var closeBarMessage = new CloseBar(
+            var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.MID),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -303,14 +367,19 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             this.barAggregator.Endpoint.Send(tick1);
             this.barAggregator.Endpoint.Send(tick2);
 
+            LogDumper.Dump(this.logger, this.output);
+
             // Act
-            this.barAggregator.Endpoint.Send(closeBarMessage);
+            this.barAggregator.Endpoint.Send(closeBar);
+
+            Task.Delay(100).Wait();  // Wait for potential message(s) to arrive.
 
             // Assert
-//            var result = this.ExpectMsg<BarClosed>(TimeSpan.FromMilliseconds(100));
-//            Assert.Equal(0.80005m, result.Bar.Open.Value);
-//            Assert.Equal(0.80035m, result.Bar.High.Value);
-//            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromSeconds(1), result.Timestamp);
+            LogDumper.Dump(this.logger, this.output);
+            Assert.Single(this.receiver.Messages);
+            Assert.Equal("(AUDUSD.FXCM-1-SECOND[MID], 0.800050,0.800350,0.800050,0.800350,2,1970-01-01T00:00:00.000Z)", this.receiver.Messages[0].ToString());
+            Assert.Empty(this.receiver.UnhandledMessages);
+            Assert.Empty(this.barAggregator.UnhandledMessages);
         }
     }
 }

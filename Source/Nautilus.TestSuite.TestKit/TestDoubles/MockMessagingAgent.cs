@@ -8,9 +8,11 @@
 
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
+    using System;
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
 
     /// <summary>
@@ -39,6 +41,15 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         /// </summary>
         /// <param name="message">The received message.</param>
         public void OnMessage(object message)
+        {
+            this.Messages.Add(message);
+        }
+
+        /// <summary>
+        /// Add the message to the received messages list.
+        /// </summary>
+        /// <param name="message">The received message.</param>
+        public void OnMessage(ValueTuple<BarType, Bar> message)
         {
             this.Messages.Add(message);
         }

@@ -30,8 +30,9 @@ namespace Nautilus.Data.Aggregation
     {
         private readonly IEndpoint parent;
         private readonly Symbol symbol;
-        private readonly List<BarSpecification> subscriptions;
+        private readonly List<BarSpecification> specifications;
         private readonly Dictionary<BarSpecification, BarBuilder?> barBuilders;
+        private readonly Dictionary<BarSpecification, BarBuilder> pendingBuilders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
@@ -47,8 +48,9 @@ namespace Nautilus.Data.Aggregation
         {
             this.parent = parent;
             this.symbol = symbol;
-            this.subscriptions = new List<BarSpecification>();
+            this.specifications = new List<BarSpecification>();
             this.barBuilders = new Dictionary<BarSpecification, BarBuilder?>();
+            this.pendingBuilders = new Dictionary<BarSpecification, BarBuilder>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<CloseBar>(this.OnMessage);
@@ -60,7 +62,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the bar aggregators current subscriptions.
         /// </summary>
-        public IEnumerable<BarSpecification> Subscriptions => this.subscriptions;
+        public IEnumerable<BarSpecification> Specifications => this.specifications;
 
         private static Price GetUpdateQuote(QuoteType quoteType, Tick tick)
         {
@@ -92,13 +94,29 @@ namespace Nautilus.Data.Aggregation
 
                 if (builder is null)
                 {
-                    this.barBuilders[barSpec] = new BarBuilder(quote);
+                    this.pendingBuilders.Add(barSpec, new BarBuilder(quote));
                 }
                 else
                 {
                     builder.Update(quote);
                 }
             }
+
+            if (this.pendingBuilders.Count > 0)
+            {
+                this.CreateBuilders();
+            }
+        }
+
+        private void CreateBuilders()
+        {
+            foreach (var (barSpec, builder) in this.pendingBuilders)
+            {
+                this.barBuilders[barSpec] = builder;
+                this.Log.Debug($"Created new BarBuilder for {barSpec}.");
+            }
+
+            this.pendingBuilders.Clear();
         }
 
         private void OnMessage(CloseBar message)
@@ -131,13 +149,13 @@ namespace Nautilus.Data.Aggregation
         {
             var barSpec = message.DataType.Specification;
 
-            if (this.subscriptions.Contains(barSpec))
+            if (this.specifications.Contains(barSpec))
             {
                 this.Log.Warning($"Already subscribed to {message.DataType} bars.");
                 return;
             }
 
-            this.subscriptions.Add(barSpec);
+            this.specifications.Add(barSpec);
 
             if (this.barBuilders.ContainsKey(barSpec))
             {
@@ -152,13 +170,13 @@ namespace Nautilus.Data.Aggregation
         {
             var barSpec = message.DataType.Specification;
 
-            if (!this.subscriptions.Contains(barSpec))
+            if (!this.specifications.Contains(barSpec))
             {
                 this.Log.Warning($"Already unsubscribed from {message.DataType} bars.");
                 return;
             }
 
-            this.subscriptions.Remove(barSpec);
+            this.specifications.Remove(barSpec);
 
             if (this.barBuilders.ContainsKey(barSpec))
             {
