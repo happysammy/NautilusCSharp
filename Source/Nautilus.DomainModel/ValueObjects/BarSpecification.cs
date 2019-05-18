@@ -38,8 +38,7 @@ namespace Nautilus.DomainModel.ValueObjects
             this.Period = period;
             this.Resolution = resolution;
             this.QuoteType = quoteType;
-            this.TimePeriod = this.GetTimePeriod(period);
-            this.Duration = this.TimePeriod.ToDuration();
+            this.Duration = this.CalculateDuration(period);
         }
 
         /// <summary>
@@ -58,12 +57,7 @@ namespace Nautilus.DomainModel.ValueObjects
         public QuoteType QuoteType { get; }
 
         /// <summary>
-        /// Gets the bars specifications time period.
-        /// </summary>
-        public Period TimePeriod { get; }
-
-        /// <summary>
-        /// Gets the duration.
+        /// Gets the bar time duration.
         /// </summary>
         public Duration Duration { get; }
 
@@ -104,22 +98,22 @@ namespace Nautilus.DomainModel.ValueObjects
                        };
         }
 
-        private Period GetTimePeriod(int barPeriod)
+        private Duration CalculateDuration(int barPeriod)
         {
             Debug.PositiveInt32(barPeriod, nameof(barPeriod));
 
             switch (this.Resolution)
             {
                 case Resolution.TICK:
-                    return NodaTime.Period.Zero;
+                    return NodaTime.Duration.Zero;
                 case Resolution.SECOND:
-                    return NodaTime.Period.FromSeconds(barPeriod);
+                    return NodaTime.Duration.FromSeconds(barPeriod);
                 case Resolution.MINUTE:
-                    return NodaTime.Period.FromMinutes(barPeriod);
+                    return NodaTime.Duration.FromMinutes(barPeriod);
                 case Resolution.HOUR:
-                    return NodaTime.Period.FromHours(barPeriod);
+                    return NodaTime.Duration.FromHours(barPeriod);
                 case Resolution.DAY:
-                    return NodaTime.Period.FromDays(barPeriod);
+                    return NodaTime.Duration.FromDays(barPeriod);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(this.Resolution, nameof(this.Resolution));
             }

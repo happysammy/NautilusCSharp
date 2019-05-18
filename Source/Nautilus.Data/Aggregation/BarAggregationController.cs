@@ -88,8 +88,9 @@ namespace Nautilus.Data.Aggregation
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
             this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
+
+            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
         }
 
         private void OnMessage(Subscribe<BarType> message)
@@ -122,7 +123,7 @@ namespace Nautilus.Data.Aggregation
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
+            var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();
             var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
                 initialDelay,
                 barSpec.Duration,
