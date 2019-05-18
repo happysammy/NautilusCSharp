@@ -10,12 +10,14 @@ namespace Nautilus.Core.Correctness
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides condition checking methods which are executed in debug and release
     /// configurations. If the check passes then the method does nothing. If the check fails a type
     /// of <see cref="ArgumentException"/> is thrown with a message.
     /// </summary>
+    [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Global", Justification = "These are conditional checks.")]
     public static class Condition
     {
         /// <summary>
@@ -40,6 +42,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="predicate">The predicate under check.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the condition is true and the predicate is false.</exception>
+        [Obsolete]
         public static void TrueIf(bool condition, bool predicate, string paramName)
         {
             if (condition && !predicate)

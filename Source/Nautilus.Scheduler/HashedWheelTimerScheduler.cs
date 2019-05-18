@@ -41,6 +41,7 @@ namespace Nautilus.Scheduler
     [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
     public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
+        private const int TWO_POWER_30 = 1073741824;
         private const int TICKS_PER_MILLISECOND = 10000;
         private const int WORKER_STATE_INIT = 0;
         private const int WORKER_STATE_STARTED = 1;
@@ -231,11 +232,9 @@ namespace Nautilus.Scheduler
 
         private static Bucket[] CreateWheel(int ticksPerWheel, ILogger log)
         {
-            // 1073741824 is 2^30.
-            Condition.NotOutOfRangeInt32(ticksPerWheel, 1, 1073741824, nameof(ticksPerWheel));
+            Condition.NotOutOfRangeInt32(ticksPerWheel, 1, TWO_POWER_30, nameof(ticksPerWheel));
 
-            // Normalize ticks per wheel to power of two and create the wheel.
-            ticksPerWheel = NormalizeTicksPerWheel(ticksPerWheel);
+            ticksPerWheel = NormalizeToPowerOf2(ticksPerWheel);
             var wheel = new Bucket[ticksPerWheel];
             for (var i = 0; i < wheel.Length; i++)
             {
@@ -250,7 +249,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="ticksPerWheel">The original input per wheel.</param>
         /// <returns><paramref name="ticksPerWheel"/> normalized to the nearest power of 2.</returns>
-        private static int NormalizeTicksPerWheel(int ticksPerWheel)
+        private static int NormalizeToPowerOf2(int ticksPerWheel)
         {
             var normalizedTicksPerWheel = 1;
             while (normalizedTicksPerWheel < ticksPerWheel)

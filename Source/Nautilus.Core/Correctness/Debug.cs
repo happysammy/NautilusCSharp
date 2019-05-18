@@ -40,6 +40,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="paramName">The parameter name.</param>
         /// <exception cref="ArgumentException">If the condition is true and the predicate is false.</exception>
         [Conditional("DEBUG")]
+        [Obsolete]
         public static void TrueIf(bool condition, bool predicate, string paramName)
         {
             Condition.TrueIf(condition, predicate, paramName);
