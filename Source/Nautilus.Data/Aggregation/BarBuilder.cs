@@ -17,43 +17,25 @@ namespace Nautilus.Data.Aggregation
     /// </summary>
     public sealed class BarBuilder
     {
+        private readonly Price open;
+
+        private Price high;
+        private Price low;
+        private Price close;
+        private int volume;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BarBuilder"/> class.
         /// </summary>
         /// <param name="open">The open price for the bar.</param>
         public BarBuilder(Price open)
         {
-            this.Open = open;
-            this.High = open;
-            this.Low = open;
-            this.Close = open;
-            this.Volume += 1;
+            this.open = open;
+            this.high = open;
+            this.low = open;
+            this.close = open;
+            this.volume += 1;
         }
-
-        /// <summary>
-        /// Gets the bar builders open price.
-        /// </summary>
-        public Price Open { get; }
-
-        /// <summary>
-        /// Gets the bar builders high price.
-        /// </summary>
-        public Price High { get; private set; }
-
-        /// <summary>
-        /// Gets the bar builders low price.
-        /// </summary>
-        public Price Low { get; private set; }
-
-        /// <summary>
-        /// Gets the bar builders close price.
-        /// </summary>
-        public Price Close { get; private set; }
-
-        /// <summary>
-        /// Gets the bar builders volume.
-        /// </summary>
-        public int Volume { get; private set; }
 
         /// <summary>
         /// Updates the bar builder with the given quote price.
@@ -61,19 +43,19 @@ namespace Nautilus.Data.Aggregation
         /// <param name="quote">The quote price.</param>
         public void Update(Price quote)
         {
-            if (quote > this.High)
+            if (quote > this.high)
             {
-                this.High = quote;
+                this.high = quote;
             }
 
-            if (quote < this.Low)
+            if (quote < this.low)
             {
-                this.Low = quote;
+                this.low = quote;
             }
 
-            this.Close = quote;
+            this.close = quote;
 
-            this.Volume += 1;
+            this.volume += 1;
         }
 
         /// <summary>
@@ -86,11 +68,11 @@ namespace Nautilus.Data.Aggregation
             Debug.NotDefault(closeTime, nameof(closeTime));
 
             return new Bar(
-                this.Open,
-                this.High,
-                this.Low,
-                this.Close,
-                Quantity.Create(this.Volume),
+                this.open,
+                this.high,
+                this.low,
+                this.close,
+                Quantity.Create(this.volume),
                 closeTime);
         }
     }
