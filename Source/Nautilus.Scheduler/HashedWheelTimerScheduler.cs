@@ -26,12 +26,12 @@ namespace Nautilus.Scheduler
 
     /// <summary>
     /// This <see cref="IScheduler"/> implementation is built using a revolving wheel of buckets
-    /// with each bucket belonging to a specific time resolution. As the "clock" of the scheduler ticks it advances
-    /// to the next bucket in the circle and processes the items in it, and optionally reschedules recurring
-    /// tasks into the future into the next relevant bucket.
+    /// with each bucket belonging to a specific time resolution. As the "clock" of the scheduler
+    /// ticks it advances to the next bucket in the circle and processes the items in it, and
+    /// optionally reschedules recurring tasks into the future into the next relevant bucket.
     ///
-    /// There are `akka.scheduler.ticks-per-wheel` initial buckets (we round up to the nearest power of 2) with 512
-    /// being the initial default value. The timings are approximated and are still limited by the ceiling of the operating
+    /// There are 512 initial buckets as default (we round up to the nearest power of 2).
+    /// The timings are approximated and are still limited by the ceiling of the operating
     /// system's clock resolution.
     ///
     /// Further reading: http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf
@@ -41,7 +41,9 @@ namespace Nautilus.Scheduler
     [SuppressMessage("ReSharper", "SA1310", Justification = "Underscores easier to read.")]
     public class HashedWheelTimerScheduler : ComponentBase, IScheduler, IDisposable
     {
+        private const int DEFAULT_TICKS_PER_WHEEL = 512;
         private const int TWO_POWER_30 = 1073741824;
+        private const int MIN_TICK_DURATION_MS = 10;
         private const int MAX_REGISTRATIONS_PER_TICK = 100000;
         private const int TICKS_PER_MILLISECOND = 10000;
         private const int WORKER_STATE_INIT = 0;
@@ -74,9 +76,9 @@ namespace Nautilus.Scheduler
         public HashedWheelTimerScheduler(IComponentryContainer container)
             : base(NautilusService.Scheduling, container)
         {
-            this.wheel = CreateWheel(512, this.Log);  // Default ticks per wheel 512.
+            this.wheel = CreateWheel(DEFAULT_TICKS_PER_WHEEL, this.Log);
             this.mask = this.wheel.Length - 1;
-            this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(10), this.wheel.Length);
+            this.tickDuration = DurationToTicksWithCheck(Duration.FromMilliseconds(MIN_TICK_DURATION_MS), this.wheel.Length);
         }
 
         /// <inheritdoc/>
