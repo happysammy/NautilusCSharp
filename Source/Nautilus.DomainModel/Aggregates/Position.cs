@@ -10,7 +10,6 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -27,9 +26,9 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Position : Aggregate<Position>
     {
-        private readonly List<OrderId> orderIds = new List<OrderId>();
-        private readonly List<ExecutionId> executionIds = new List<ExecutionId>();
-        private readonly List<ExecutionTicket> executionTickets = new List<ExecutionTicket>();
+        private readonly List<OrderId> orderIds;
+        private readonly List<ExecutionId> executionIds;
+        private readonly List<ExecutionTicket> executionTickets;
 
         private int relativeQuantity;
 
@@ -47,6 +46,10 @@ namespace Nautilus.DomainModel.Aggregates
                   positionId,
                   timestamp)
         {
+            this.orderIds = new List<OrderId>();
+            this.executionIds = new List<ExecutionId>();
+            this.executionTickets = new List<ExecutionTicket>();
+
             this.Symbol = symbol;
             this.Quantity = Quantity.Zero();
             this.PeakQuantity = Quantity.Zero();
@@ -210,8 +213,8 @@ namespace Nautilus.DomainModel.Aggregates
                         filled.AveragePrice,
                         filled.ExecutionTime);
                     break;
-                default: throw new InvalidEnumArgumentException(
-                    $"The event {@event} is not recognized by the position {this}");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
 
             this.Events.Add(@event);
@@ -255,9 +258,9 @@ namespace Nautilus.DomainModel.Aggregates
                     this.relativeQuantity -= quantity;
                     break;
                 case OrderSide.UNKNOWN:
-                    throw new InvalidEnumArgumentException("The order side was UNKNOWN.");
+                    goto default;
                 default:
-                    throw new InvalidEnumArgumentException("The order side was undefined.");
+                    throw ExceptionFactory.InvalidSwitchArgument(orderSide, nameof(orderSide));
             }
 
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));
@@ -276,11 +279,7 @@ namespace Nautilus.DomainModel.Aggregates
                 this.IsExited = true;
             }
 
-            this.SetMarketPosition();
-        }
-
-        private void SetMarketPosition()
-        {
+            // Market position logic.
             if (this.relativeQuantity > 0)
             {
                 this.MarketPosition = MarketPosition.Long;
