@@ -12,7 +12,7 @@ namespace Nautilus.Core.Correctness
     using System.ComponentModel;
 
     /// <summary>
-    /// Provides useful generic <see cref="Enum"/> extension methods.
+    /// Provides common exception objects.
     /// </summary>
     public static class ExceptionFactory
     {
