@@ -22,7 +22,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="argument">The out of range argument.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <returns>The exception to throw.</returns>
-        public static ArgumentOutOfRangeException InvalidSwitchArgumentException(object argument, string paramName)
+        public static ArgumentOutOfRangeException InvalidSwitchArgument(object argument, string paramName)
         {
             Debug.NotEmptyOrWhiteSpace(paramName, nameof(paramName));
 
@@ -38,7 +38,7 @@ namespace Nautilus.Core.Correctness
         /// <param name="value">The invalid enum value.</param>
         /// <param name="paramName">The parameter name.</param>
         /// <returns>The exception to throw.</returns>
-        public static InvalidEnumArgumentException InvalidSwitchArgumentException(Enum value, string paramName)
+        public static InvalidEnumArgumentException InvalidSwitchArgument(Enum value, string paramName)
         {
             Debug.NotEmptyOrWhiteSpace(paramName, nameof(paramName));
 

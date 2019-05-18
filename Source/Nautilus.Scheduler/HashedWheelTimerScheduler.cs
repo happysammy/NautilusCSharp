@@ -11,7 +11,6 @@ namespace Nautilus.Scheduler
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
@@ -290,7 +289,7 @@ namespace Nautilus.Scheduler
                 case WORKER_STATE_SHUTDOWN:
                     throw new SchedulerException("Cannot enqueue after timer shutdown.");
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(this.workerState, nameof(this.workerState));
+                    throw ExceptionFactory.InvalidSwitchArgument(this.workerState, nameof(this.workerState));
             }
 
             while (this.startTime == 0)

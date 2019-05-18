@@ -8,7 +8,6 @@
 
 namespace NautilusData
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using Nautilus.Brokerage.Dukascopy;

@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.ValueObjects
 {
     using System;
-    using System.ComponentModel;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
@@ -122,7 +121,7 @@ namespace Nautilus.DomainModel.ValueObjects
                 case Resolution.DAY:
                     return NodaTime.Period.FromDays(barPeriod);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(this.Resolution, nameof(this.Resolution));
+                    throw ExceptionFactory.InvalidSwitchArgument(this.Resolution, nameof(this.Resolution));
             }
         }
     }

@@ -9,7 +9,6 @@
 namespace Nautilus.MsgPack
 {
     using System;
-    using System.ComponentModel;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -60,7 +59,7 @@ namespace Nautilus.MsgPack
                     };
                     return MsgPackSerializer.Serialize(package.Freeze());
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(command, nameof(command));
+                    throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
         }
 
@@ -84,7 +83,7 @@ namespace Nautilus.MsgPack
                 case CollateralInquiry:
                     return new CollateralInquiry(commandId, commandTimestamp);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(commandType, nameof(commandType));
+                    throw ExceptionFactory.InvalidSwitchArgument(commandType, nameof(commandType));
             }
         }
 
@@ -112,7 +111,7 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.ModifiedPrice), command.ModifiedPrice.ToString());
                     break;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderCommand, nameof(orderCommand));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -147,7 +146,7 @@ namespace Nautilus.MsgPack
                         commandId,
                         commandTimestamp);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderCommand, nameof(orderCommand));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
             }
         }
     }

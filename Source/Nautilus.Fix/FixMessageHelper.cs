@@ -11,7 +11,6 @@ namespace Nautilus.Fix
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
     using NodaTime.Text;
@@ -252,7 +251,7 @@ namespace Nautilus.Fix
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderType, nameof(orderType));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
             }
         }
 
@@ -368,7 +367,7 @@ namespace Nautilus.Fix
                 case "S":
                     return "Pending_Cancel";
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderStatus, nameof(orderStatus));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderStatus, nameof(orderStatus));
             }
         }
 

@@ -9,7 +9,6 @@
 namespace Nautilus.MsgPack
 {
     using System;
-    using System.ComponentModel;
     using System.Globalization;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
@@ -71,7 +70,7 @@ namespace Nautilus.MsgPack
                         { new MessagePackObject(Key.EventTimestamp), accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(@event, nameof(@event));
+                    throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
         }
 
@@ -113,7 +112,7 @@ namespace Nautilus.MsgPack
                         eventId,
                         eventTimestamp);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(eventType, nameof(eventType));
+                    throw ExceptionFactory.InvalidSwitchArgument(eventType, nameof(eventType));
             }
         }
 
@@ -195,7 +194,7 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderEvent, nameof(orderEvent));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -307,7 +306,7 @@ namespace Nautilus.MsgPack
                         eventId,
                         eventTimestamp);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderEvent, nameof(orderEvent));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
         }
     }

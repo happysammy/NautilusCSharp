@@ -121,7 +121,7 @@ namespace Nautilus.MsgPack
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(orderType, nameof(orderType));
+                    throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
             }
         }
     }

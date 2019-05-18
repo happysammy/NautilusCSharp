@@ -8,9 +8,7 @@
 
 namespace NautilusExecutor
 {
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -121,7 +119,7 @@ namespace NautilusExecutor
                 case Brokerage.LMAX:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(
+                    throw ExceptionFactory.InvalidSwitchArgument(
                         configuration.Broker,
                         nameof(configuration.Broker));
             }

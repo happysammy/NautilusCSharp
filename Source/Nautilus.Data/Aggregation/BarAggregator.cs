@@ -10,7 +10,6 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -79,7 +78,7 @@ namespace Nautilus.Data.Aggregation
                 case QuoteType.LAST:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(quoteType, nameof(quoteType));
+                    throw ExceptionFactory.InvalidSwitchArgument(quoteType, nameof(quoteType));
             }
         }
 

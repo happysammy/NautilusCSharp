@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using System.ComponentModel;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
@@ -95,7 +94,7 @@ namespace Nautilus.Common.Messaging
                         this.documentBus.Send(serviceEnvelope);
                         break;
                     default:
-                        throw ExceptionFactory.InvalidSwitchArgumentException(message, nameof(message));
+                        throw ExceptionFactory.InvalidSwitchArgument(message, nameof(message));
             }
         }
     }

@@ -9,7 +9,6 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
 

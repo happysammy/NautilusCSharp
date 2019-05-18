@@ -8,10 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using System.ComponentModel;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
@@ -71,7 +68,7 @@ namespace Nautilus.Fix.MessageFactories
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgumentException(order.Type, nameof(order.Type));
+                    throw ExceptionFactory.InvalidSwitchArgument(order.Type, nameof(order.Type));
             }
 
             return message;

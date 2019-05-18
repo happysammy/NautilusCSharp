@@ -9,7 +9,6 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
-    using Nautilus.Core.Annotations;
 
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.
