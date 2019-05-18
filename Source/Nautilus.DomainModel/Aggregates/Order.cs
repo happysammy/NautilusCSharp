@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
@@ -241,7 +242,7 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderModified @event:
                     this.When(@event);
                     break;
-                default: throw new InvalidOperationException($"The {orderEvent} is not recognized by the order {this}");
+                default: throw new InvalidEnumArgumentException($"The {orderEvent} is not recognized by the order {this}");
             }
 
             this.Events.Add(orderEvent);

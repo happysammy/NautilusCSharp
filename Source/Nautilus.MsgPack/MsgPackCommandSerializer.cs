@@ -9,9 +9,11 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using System.ComponentModel;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Messages.Commands.Base;
@@ -57,8 +59,8 @@ namespace Nautilus.MsgPack
                         { new MessagePackObject(Key.CommandTimestamp), collateralInquiry.Timestamp.ToIsoString() },
                     };
                     return MsgPackSerializer.Serialize(package.Freeze());
-                default: throw new InvalidOperationException(
-                    "Cannot serialize the command (unrecognized command).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(command, nameof(command));
             }
         }
 
@@ -73,15 +75,16 @@ namespace Nautilus.MsgPack
 
             var commandId = new Guid(unpacked[Key.CommandId].ToString());
             var commandTimestamp = unpacked[Key.CommandTimestamp].ToString().ToZonedDateTimeFromIso();
+            var commandType = unpacked[Key.CommandType].ToString();
 
-            switch (unpacked[Key.CommandType].ToString())
+            switch (commandType)
             {
                 case OrderCommand:
                     return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
                 case CollateralInquiry:
                     return new CollateralInquiry(commandId, commandTimestamp);
-                default: throw new InvalidOperationException(
-                    "Cannot deserialize the command (unrecognized command).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(commandType, nameof(commandType));
             }
         }
 
@@ -108,8 +111,8 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.OrderCommand), ModifyOrder);
                     package.Add(new MessagePackObject(Key.ModifiedPrice), command.ModifiedPrice.ToString());
                     break;
-                default: throw new InvalidOperationException(
-                    "Cannot serialize the order command (unrecognized order command).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderCommand, nameof(orderCommand));
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -122,8 +125,9 @@ namespace Nautilus.MsgPack
         {
             var order = this.orderSerializer.Deserialize(
                 Hex.FromHexString(unpacked[Key.Order].ToString()));
+            var orderCommand = unpacked[Key.OrderCommand].ToString();
 
-            switch (unpacked[Key.OrderCommand].ToString())
+            switch (orderCommand)
             {
                 case SubmitOrder:
                     return new SubmitOrder(
@@ -142,8 +146,8 @@ namespace Nautilus.MsgPack
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         commandId,
                         commandTimestamp);
-                default: throw new InvalidOperationException(
-                    "Cannot deserialize the order command (unrecognized order command).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderCommand, nameof(orderCommand));
             }
         }
     }

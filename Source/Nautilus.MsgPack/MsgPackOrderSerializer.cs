@@ -11,6 +11,7 @@ namespace Nautilus.MsgPack
     using System;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -118,11 +119,9 @@ namespace Nautilus.MsgPack
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         timestamp);
                 case OrderType.UNKNOWN:
-                    throw new InvalidOperationException(
-                        "Cannot deserialize order (the type is UNKNOWN).");
+                    goto default;
                 default:
-                    throw new InvalidOperationException(
-                        "Cannot deserialize order (the order type is not recognized).");
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderType, nameof(orderType));
             }
         }
     }

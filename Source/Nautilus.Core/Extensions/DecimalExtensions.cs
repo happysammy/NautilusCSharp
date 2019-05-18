@@ -15,7 +15,6 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful generic <see cref="decimal"/> extension methods.
     /// </summary>
-    [Immutable]
     public static class DecimalExtensions
     {
         /// <summary>

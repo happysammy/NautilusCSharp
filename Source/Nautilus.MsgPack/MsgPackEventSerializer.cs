@@ -9,10 +9,12 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using System.ComponentModel;
     using System.Globalization;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -68,8 +70,8 @@ namespace Nautilus.MsgPack
                         { new MessagePackObject(Key.EventId), accountEvent.Id.ToString() },
                         { new MessagePackObject(Key.EventTimestamp), accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
-                default: throw new InvalidOperationException(
-                    "Cannot serialize the event (unrecognized event).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(@event, nameof(@event));
             }
         }
 
@@ -85,8 +87,9 @@ namespace Nautilus.MsgPack
 
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
+            var eventType = unpacked[Key.EventType].ToString();
 
-            switch (unpacked[Key.EventType].ToString())
+            switch (eventType)
             {
                 case OrderEvent:
                     return DeserializeOrderEvent(
@@ -109,8 +112,8 @@ namespace Nautilus.MsgPack
                         unpacked[Key.MarginCallStatus].ToString(),
                         eventId,
                         eventTimestamp);
-                default: throw new InvalidOperationException(
-                    "Cannot deserialize the event (unrecognized byte[] pattern).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(eventType, nameof(eventType));
             }
         }
 
@@ -191,8 +194,8 @@ namespace Nautilus.MsgPack
                     package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
                     package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
                     break;
-                default: throw new InvalidOperationException(
-                    "Cannot serialize the order event (unrecognized order event).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderEvent, nameof(orderEvent));
             }
 
             return MsgPackSerializer.Serialize(package.Freeze());
@@ -205,8 +208,9 @@ namespace Nautilus.MsgPack
         {
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
             var orderId = new OrderId(unpacked[Key.OrderId].ToString());
+            var orderEvent = unpacked[Key.OrderEvent].ToString();
 
-            switch (unpacked[Key.OrderEvent].ToString())
+            switch (orderEvent)
             {
                 case OrderSubmitted:
                     return new OrderSubmitted(
@@ -302,8 +306,8 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                default: throw new InvalidOperationException(
-                    "Cannot deserialize the order event (unrecognized bytes pattern).");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderEvent, nameof(orderEvent));
             }
         }
     }

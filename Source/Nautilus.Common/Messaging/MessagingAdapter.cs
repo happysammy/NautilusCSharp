@@ -8,11 +8,12 @@
 
 namespace Nautilus.Common.Messaging
 {
-    using System;
+    using System.ComponentModel;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
@@ -93,8 +94,8 @@ namespace Nautilus.Common.Messaging
                             message.Timestamp);
                         this.documentBus.Send(serviceEnvelope);
                         break;
-                    default: throw new InvalidOperationException(
-                        $"Cannot send message ({message.GetType()} message type is not supported).");
+                    default:
+                        throw ExceptionFactory.InvalidSwitchArgumentException(message, nameof(message));
             }
         }
     }

@@ -8,7 +8,7 @@
 
 namespace Nautilus.Fix.MessageFactories
 {
-    using System;
+    using System.ComponentModel;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
@@ -73,8 +73,9 @@ namespace Nautilus.Fix.MessageFactories
                     message.SetField(new StopPx(order.Price.Value.Value));
                     break;
                 case OrderType.UNKNOWN:
-                    throw new InvalidOperationException("OrderType not recognized.");
-                default: throw new InvalidOperationException("OrderType not recognized.");
+                    goto default;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgumentException(order.Type, nameof(order.Type));
             }
 
             return message;

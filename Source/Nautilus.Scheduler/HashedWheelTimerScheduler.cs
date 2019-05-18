@@ -11,6 +11,7 @@ namespace Nautilus.Scheduler
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace Nautilus.Scheduler
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler.Internal;
     using NodaTime;
+    using Exception = System.Exception;
 
     /// <summary>
     /// This <see cref="IScheduler"/> implementation is built using a revolving wheel of buckets
@@ -288,7 +290,7 @@ namespace Nautilus.Scheduler
                 case WORKER_STATE_SHUTDOWN:
                     throw new SchedulerException("Cannot enqueue after timer shutdown.");
                 default:
-                    throw new InvalidOperationException($"Worker in invalid state: {this.workerState}.");
+                    throw ExceptionFactory.InvalidSwitchArgumentException(this.workerState, nameof(this.workerState));
             }
 
             while (this.startTime == 0)

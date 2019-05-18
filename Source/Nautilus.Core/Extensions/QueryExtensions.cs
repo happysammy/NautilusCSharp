@@ -9,14 +9,12 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
 
     /// <summary>
     /// Provides useful <see cref="QueryResult{T}"/> extension methods.
     /// </summary>
-    [Immutable]
     public static class QueryExtensions
     {
         /// <summary>

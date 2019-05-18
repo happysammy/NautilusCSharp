@@ -10,6 +10,7 @@ namespace NautilusExecutor
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -18,6 +19,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
@@ -113,17 +115,15 @@ namespace NautilusExecutor
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:
-                    throw new InvalidOperationException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 case Brokerage.IB:
-                    throw new InvalidOperationException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 case Brokerage.LMAX:
-                    throw new InvalidOperationException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 default:
-                    throw new InvalidOperationException(
-                        $"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
+                    throw ExceptionFactory.InvalidSwitchArgumentException(
+                        configuration.Broker,
+                        nameof(configuration.Broker));
             }
         }
     }

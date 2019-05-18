@@ -14,7 +14,6 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful generic <see cref="string"/> extension methods.
     /// </summary>
-    [Immutable]
     public static class StringExtensions
     {
         /// <summary>

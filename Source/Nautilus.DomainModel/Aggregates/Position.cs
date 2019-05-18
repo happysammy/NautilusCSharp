@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.Aggregates
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -209,7 +210,7 @@ namespace Nautilus.DomainModel.Aggregates
                         filled.AveragePrice,
                         filled.ExecutionTime);
                     break;
-                default: throw new InvalidOperationException(
+                default: throw new InvalidEnumArgumentException(
                     $"The event {@event} is not recognized by the position {this}");
             }
 
@@ -254,9 +255,9 @@ namespace Nautilus.DomainModel.Aggregates
                     this.relativeQuantity -= quantity;
                     break;
                 case OrderSide.UNKNOWN:
-                    throw new ArgumentOutOfRangeException(nameof(orderSide), orderSide, "The order side was UNKNOWN.");
+                    throw new InvalidEnumArgumentException("The order side was UNKNOWN.");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(orderSide), orderSide, "The order side was undefined.");
+                    throw new InvalidEnumArgumentException("The order side was undefined.");
             }
 
             this.Quantity = Quantity.Create(Math.Abs(this.relativeQuantity));

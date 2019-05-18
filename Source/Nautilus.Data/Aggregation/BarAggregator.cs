@@ -10,6 +10,7 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -76,9 +77,9 @@ namespace Nautilus.Data.Aggregation
                         Math.Round((tick.Bid + tick.Ask) / 2, decimalsPlusOne),
                         decimalsPlusOne);
                 case QuoteType.LAST:
-                    throw new InvalidOperationException("Cannot update with QuoteType.Last.");
+                    goto default;
                 default:
-                    throw new InvalidOperationException($"QuoteType {quoteType} not recognized.");
+                    throw ExceptionFactory.InvalidSwitchArgumentException(quoteType, nameof(quoteType));
             }
         }
 

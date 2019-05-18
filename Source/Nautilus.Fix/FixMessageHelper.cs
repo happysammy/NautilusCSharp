@@ -10,6 +10,8 @@ namespace Nautilus.Fix
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using NodaTime;
     using NodaTime.Text;
@@ -233,7 +235,7 @@ namespace Nautilus.Fix
         /// </summary>
         /// <param name="orderType">The order type.</param>
         /// <returns>The <see cref="OrdType"/>.</returns>
-        public static OrdType? GetFixOrderType(OrderType orderType)
+        public static OrdType GetFixOrderType(OrderType orderType)
         {
             switch (orderType)
             {
@@ -248,9 +250,9 @@ namespace Nautilus.Fix
                 case OrderType.MIT:
                     return new OrdType(OrdType.MARKET_IF_TOUCHED);
                 case OrderType.UNKNOWN:
-                    return null;
+                    goto default;
                 default:
-                    return null;
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderType, nameof(orderType));
             }
         }
 
@@ -308,7 +310,7 @@ namespace Nautilus.Fix
 
             if (orderStatus == OrdStatus.PENDING_CANCELREPLACE.ToString())
             {
-                return "PENDING_CANCELREPLACE";
+                return "PENDING_CANCEL_REPLACE";
             }
 
             if (orderStatus == OrdStatus.REJECTED.ToString())
@@ -366,7 +368,7 @@ namespace Nautilus.Fix
                 case "S":
                     return "Pending_Cancel";
                 default:
-                    return "Unknown?";
+                    throw ExceptionFactory.InvalidSwitchArgumentException(orderStatus, nameof(orderStatus));
             }
         }
 
@@ -379,8 +381,7 @@ namespace Nautilus.Fix
         /// <returns>A <see cref="decimal"/>.</returns>
         public static decimal GetOrderPrice(OrderType orderType, decimal stopPrice, decimal limitPrice)
         {
-            if (orderType == OrderType.STOP_MARKET
-             || orderType == OrderType.MIT)
+            if (orderType == OrderType.STOP_MARKET || orderType == OrderType.MIT)
             {
                 return stopPrice;
             }

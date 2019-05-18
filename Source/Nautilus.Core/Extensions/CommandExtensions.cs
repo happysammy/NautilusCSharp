@@ -16,7 +16,6 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful <see cref="CommandResult"/> extension methods.
     /// </summary>
-    [Immutable]
     public static class CommandExtensions
     {
         /// <summary>
