@@ -115,7 +115,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public void ScheduleOnce(Duration delay, Action action)
         {
-            Condition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+            Condition.NotNegativeInt32((int)delay.TotalMilliseconds, nameof(delay.TotalMilliseconds));
 
             this.InternalSchedule(delay, Duration.Zero, new ActionRunnable(action), null);
         }
@@ -131,8 +131,8 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public void ScheduleRepeatedly(Duration initialDelay, Duration interval, Action action)
         {
-            Condition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
-            Condition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+            Condition.NotNegativeInt32((int)initialDelay.TotalMilliseconds, nameof(initialDelay.TotalMilliseconds));
+            Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
 
             this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), null);
         }
@@ -140,7 +140,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public void ScheduleSendOnce(Duration delay, IEndpoint receiver, object message, IEndpoint sender)
         {
-            Condition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+            Condition.NotNegativeInt32((int)delay.TotalMilliseconds, nameof(delay.TotalMilliseconds));
 
             this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), null);
         }
@@ -156,8 +156,8 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public void ScheduleSendRepeatedly(Duration initialDelay, Duration interval, IEndpoint receiver, object message, IEndpoint sender)
         {
-            Condition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
-            Condition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+            Condition.NotNegativeInt32((int)initialDelay.TotalMilliseconds, nameof(initialDelay.TotalMilliseconds));
+            Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
 
             this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), null);
         }
@@ -165,7 +165,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public ICancelable ScheduleOnceCancelable(Duration delay, Action action)
         {
-            Condition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+            Condition.NotNegativeInt32((int)delay.TotalMilliseconds, nameof(delay.TotalMilliseconds));
 
             var cancelable = new Cancelable(this);
             this.InternalSchedule(delay, Duration.Zero, new ActionRunnable(action), cancelable);
@@ -185,8 +185,8 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public ICancelable ScheduleRepeatedlyCancelable(Duration initialDelay, Duration interval, Action action)
         {
-            Condition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
-            Condition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+            Condition.NotNegativeInt32((int)initialDelay.TotalMilliseconds, nameof(initialDelay.TotalMilliseconds));
+            Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
 
             var cancelable = new Cancelable(this);
             this.InternalSchedule(initialDelay, interval, new ActionRunnable(action), cancelable);
@@ -196,7 +196,7 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public ICancelable ScheduleSendOnceCancelable(Duration delay, IEndpoint receiver, object message, IEndpoint sender)
         {
-            Condition.NotNegativeInt32(delay.Milliseconds, nameof(delay.Milliseconds));
+            Condition.NotNegativeInt32((int)delay.TotalMilliseconds, nameof(delay.TotalMilliseconds));
 
             var cancelable = new Cancelable(this);
             this.InternalSchedule(delay, Duration.Zero, new ScheduledSend(receiver, message, sender), cancelable);
@@ -216,8 +216,8 @@ namespace Nautilus.Scheduler
         /// <inheritdoc />
         public ICancelable ScheduleSendRepeatedlyCancelable(Duration initialDelay, Duration interval, IEndpoint receiver, object message, IEndpoint sender)
         {
-            Condition.NotNegativeInt32(initialDelay.Milliseconds, nameof(initialDelay.Milliseconds));
-            Condition.PositiveInt32(interval.Milliseconds, nameof(interval.Milliseconds));
+            Condition.NotNegativeInt32((int)initialDelay.TotalMilliseconds, nameof(initialDelay.TotalMilliseconds));
+            Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
 
             var cancelable = new Cancelable(this);
             this.InternalSchedule(initialDelay, interval, new ScheduledSend(receiver, message, sender), cancelable);
