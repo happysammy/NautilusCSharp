@@ -83,7 +83,7 @@ namespace Nautilus.Common.Messaging
 
         private void Unhandled(object message)
         {
-            this.log.Warning($"Unhandled message [{message}].");
+            this.log.Error($"Unhandled message [{message}].");
             this.deadLetters.Add(message);
         }
     }

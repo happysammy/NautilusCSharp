@@ -93,7 +93,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         protected virtual void OnStart(Start message)
         {
-            this.Log.Error($"Received unhandled {message}.");
+            this.Log.Error($"Received {message} handling not implemented.");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The message.</param>
         protected virtual void OnStop(Stop message)
         {
-            this.Log.Error($"Received unhandled {message}.");
+            this.Log.Error($"Received {message} handling not implemented.");
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Nautilus.Common.Componentry
 
         private void Unhandled(object message)
         {
-            this.Log.Warning($"Unhandled message [{message}].");
+            this.Log.Error($"Unhandled message [{message}].");
             this.AddToUnhandledMessages(message);
         }
 

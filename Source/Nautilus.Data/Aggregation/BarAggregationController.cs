@@ -170,7 +170,7 @@ namespace Nautilus.Data.Aggregation
             if (this.subscriptions.All(s => s.Key.Symbol != symbol))
             {
                 this.barAggregators.Remove(symbol);
-                this.Log.Error($"Removed BarAggregator[{symbol}].");
+                this.Log.Debug($"Removed BarAggregator[{symbol}].");
             }
 
             this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
