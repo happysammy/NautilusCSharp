@@ -320,13 +320,13 @@ namespace Nautilus.DomainModel.Aggregates
         {
             if (expireTime.HasNoValue)
             {
-                Precondition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+                Condition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
             }
             else
             {
                 var expireTimeValue = expireTime.Value;
-                Precondition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
-                Precondition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+                Condition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
+                Condition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
             }
         }
 

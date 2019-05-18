@@ -13,7 +13,7 @@ namespace Nautilus.Core.Correctness
     using System.Diagnostics;
 
     /// <summary>
-    /// Provides assertion checking methods which are executed in debug configuration.
+    /// Provides condition checking methods which are executed in debug configuration.
     /// If the check passes then the method does nothing. If the check fails a type of
     /// <see cref="ArgumentException"/> is thrown with a message.
     /// </summary>
@@ -28,7 +28,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void True(bool predicate, string description)
         {
-            Precondition.True(predicate, description);
+            Condition.True(predicate, description);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void TrueIf(bool condition, bool predicate, string paramName)
         {
-            Precondition.TrueIf(condition, predicate, paramName);
+            Condition.TrueIf(condition, predicate, paramName);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotNull<T>(T argument, string paramName)
         {
-            Precondition.NotNull(argument, paramName);
+            Condition.NotNull(argument, paramName);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotEmptyOrWhiteSpace(string argument, string paramName)
         {
-            Precondition.NotEmptyOrWhiteSpace(argument, paramName);
+            Condition.NotEmptyOrWhiteSpace(argument, paramName);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nautilus.Core.Correctness
         public static void NotDefault<T>(T argument, string paramName)
             where T : struct
         {
-            Precondition.NotDefault(argument, paramName);
+            Condition.NotDefault(argument, paramName);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotEqualTo(object argument, object notToEqual, string paramName)
         {
-            Precondition.NotEqualTo(argument, notToEqual, paramName);
+            Condition.NotEqualTo(argument, notToEqual, paramName);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void EqualTo(object argument, object toEqual, string paramName)
         {
-            Precondition.EqualTo(argument, toEqual, paramName);
+            Condition.EqualTo(argument, toEqual, paramName);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Precondition.NotEmpty(collection, paramName);
+            Condition.NotEmpty(collection, paramName);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void Empty<T>(IReadOnlyCollection<T> collection, string paramName)
         {
-            Precondition.Empty(collection, paramName);
+            Condition.Empty(collection, paramName);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotEmpty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
-            Precondition.NotEmpty(dictionary, paramName);
+            Condition.NotEmpty(dictionary, paramName);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void Empty<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, string paramName)
         {
-            Precondition.Empty(dictionary, paramName);
+            Condition.Empty(dictionary, paramName);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void IsIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
-            Precondition.IsIn(element, collection, paramName, collectionName);
+            Condition.IsIn(element, collection, paramName, collectionName);
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotIn<T>(T element, ICollection<T> collection, string paramName, string collectionName)
         {
-            Precondition.NotIn(element, collection, paramName, collectionName);
+            Condition.NotIn(element, collection, paramName, collectionName);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void KeyIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
-            Precondition.KeyIn(key, dictionary, paramName, dictName);
+            Condition.KeyIn(key, dictionary, paramName, dictName);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void KeyNotIn<TKey, TValue>(TKey key, IReadOnlyDictionary<TKey, TValue> dictionary, string paramName, string dictName)
         {
-            Precondition.KeyNotIn(key, dictionary, paramName, dictName);
+            Condition.KeyNotIn(key, dictionary, paramName, dictName);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void PositiveInt32(int value, string paramName)
         {
-            Precondition.PositiveInt32(value, paramName);
+            Condition.PositiveInt32(value, paramName);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void PositiveInt64(long value, string paramName)
         {
-            Precondition.PositiveInt64(value, paramName);
+            Condition.PositiveInt64(value, paramName);
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void PositiveDouble(double value, string paramName)
         {
-            Precondition.PositiveDouble(value, paramName);
+            Condition.PositiveDouble(value, paramName);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void PositiveDecimal(decimal value, string paramName)
         {
-            Precondition.PositiveDecimal(value, paramName);
+            Condition.PositiveDecimal(value, paramName);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotNegativeInt32(int value, string paramName)
         {
-            Precondition.NotNegativeInt32(value, paramName);
+            Condition.NotNegativeInt32(value, paramName);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotNegativeInt64(long value, string paramName)
         {
-            Precondition.NotNegativeInt64(value, paramName);
+            Condition.NotNegativeInt64(value, paramName);
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotNegativeDouble(double value, string paramName)
         {
-            Precondition.NotNegativeDouble(value, paramName);
+            Condition.NotNegativeDouble(value, paramName);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace Nautilus.Core.Correctness
         [Conditional("DEBUG")]
         public static void NotNegativeDecimal(decimal value, string paramName)
         {
-            Precondition.NotNegativeDecimal(value, paramName);
+            Condition.NotNegativeDecimal(value, paramName);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Nautilus.Core.Correctness
             int upperBound,
             string paramName)
         {
-            Precondition.NotOutOfRangeInt32(value, lowerBound, upperBound, paramName);
+            Condition.NotOutOfRangeInt32(value, lowerBound, upperBound, paramName);
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace Nautilus.Core.Correctness
             long upperBound,
             string paramName)
         {
-            Precondition.NotOutOfRangeInt64(value, lowerBound, upperBound, paramName);
+            Condition.NotOutOfRangeInt64(value, lowerBound, upperBound, paramName);
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Nautilus.Core.Correctness
             double upperBound,
             string paramName)
         {
-            Precondition.NotOutOfRangeDouble(value, lowerBound, upperBound, paramName);
+            Condition.NotOutOfRangeDouble(value, lowerBound, upperBound, paramName);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace Nautilus.Core.Correctness
             decimal upperBound,
             string paramName)
         {
-            Precondition.NotOutOfRangeDecimal(value, lowerBound, upperBound, paramName);
+            Condition.NotOutOfRangeDecimal(value, lowerBound, upperBound, paramName);
         }
     }
 }

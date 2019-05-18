@@ -47,9 +47,9 @@ namespace Nautilus.DomainModel.Aggregates
                 accountId,
                 timestamp)
         {
-            Precondition.NotEmptyOrWhiteSpace(username, nameof(username));
-            Precondition.NotEmptyOrWhiteSpace(password, nameof(password));
-            Precondition.NotDefault(currency, nameof(currency));
+            Condition.NotEmptyOrWhiteSpace(username, nameof(username));
+            Condition.NotEmptyOrWhiteSpace(password, nameof(password));
+            Condition.NotDefault(currency, nameof(currency));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Broker = broker;

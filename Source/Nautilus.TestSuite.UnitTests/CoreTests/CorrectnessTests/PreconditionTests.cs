@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.True(false, "some_evaluation"));
+            Assert.Throws<ArgumentException>(() => Condition.True(false, "some_evaluation"));
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.True(true, "some_evaluation");
+            Condition.True(true, "some_evaluation");
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.TrueIf(true, false, "some_evaluation"));
+            Assert.Throws<ArgumentException>(() => Condition.TrueIf(true, false, "some_evaluation"));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.TrueIf(true, true, "some_evaluation");
+            Condition.TrueIf(true, true, "some_evaluation");
         }
 
         [Theory]
@@ -62,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => Precondition.NotEmptyOrWhiteSpace(value, nameof(value)));
+            Assert.Throws<ArgumentNullException>(() => Condition.NotEmptyOrWhiteSpace(value, nameof(value)));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotEmptyOrWhiteSpace(obj, nameof(obj));
+            Condition.NotEmptyOrWhiteSpace(obj, nameof(obj));
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotNull(obj, nameof(obj));
+            Condition.NotNull(obj, nameof(obj));
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotDefault(obj, nameof(obj));
+            Condition.NotDefault(obj, nameof(obj));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotDefault(point, nameof(point)));
+            Assert.Throws<ArgumentException>(() => Condition.NotDefault(point, nameof(point)));
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.Empty(collection, nameof(collection));
+            Condition.Empty(collection, nameof(collection));
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.Empty(collection, nameof(collection)));
+            Assert.Throws<ArgumentException>(() => Condition.Empty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotEmpty(collection, nameof(collection));
+            Condition.NotEmpty(collection, nameof(collection));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEmpty(collection, nameof(collection)));
+            Assert.Throws<ArgumentException>(() => Condition.NotEmpty(collection, nameof(collection)));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEmpty(dictionary, nameof(dictionary)));
+            Assert.Throws<ArgumentException>(() => Condition.NotEmpty(dictionary, nameof(dictionary)));
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.IsIn(element,  collection, nameof(element), nameof(collection)));
+            Assert.Throws<ArgumentException>(() => Condition.IsIn(element,  collection, nameof(element), nameof(collection)));
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.IsIn(element, collection, nameof(element), nameof(collection));
+            Condition.IsIn(element, collection, nameof(element), nameof(collection));
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotIn(element, collection, nameof(element), nameof(collection));
+            Condition.NotIn(element, collection, nameof(element), nameof(collection));
         }
 
         [Fact]
@@ -211,7 +211,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotIn(element, collection, nameof(element), nameof(collection)));
+            Assert.Throws<ArgumentException>(() => Condition.NotIn(element, collection, nameof(element), nameof(collection)));
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.KeyIn(key, dictionary, nameof(key), nameof(dictionary));
+            Condition.KeyIn(key, dictionary, nameof(key), nameof(dictionary));
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.KeyIn(key, dictionary, nameof(key), nameof(dictionary));
+            Condition.KeyIn(key, dictionary, nameof(key), nameof(dictionary));
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.KeyIn(key, dictionary, nameof(key), nameof(dictionary)));
+            Assert.Throws<ArgumentException>(() => Condition.KeyIn(key, dictionary, nameof(key), nameof(dictionary)));
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.KeyNotIn(key, dictionary, nameof(key), nameof(dictionary));
+            Condition.KeyNotIn(key, dictionary, nameof(key), nameof(dictionary));
         }
 
         [Fact]
@@ -271,7 +271,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.KeyNotIn(key, dictionary, nameof(key), nameof(dictionary)));
+            Assert.Throws<ArgumentException>(() => Condition.KeyNotIn(key, dictionary, nameof(key), nameof(dictionary)));
         }
 
         [Fact]
@@ -283,7 +283,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.EqualTo(object1, object2, nameof(object1));
+            Condition.EqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -295,7 +295,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.EqualTo(object1, object2, nameof(object1));
+            Condition.EqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.EqualTo(object1, object2, nameof(object1)));
+            Assert.Throws<ArgumentException>(() => Condition.EqualTo(object1, object2, nameof(object1)));
         }
 
         [Fact]
@@ -319,7 +319,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.EqualTo(object1, object2, nameof(object1)));
+            Assert.Throws<ArgumentException>(() => Condition.EqualTo(object1, object2, nameof(object1)));
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotEqualTo(object1, object2, nameof(object1));
+            Condition.NotEqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -343,7 +343,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Precondition.NotEqualTo(object1, object2, nameof(object1));
+            Condition.NotEqualTo(object1, object2, nameof(object1));
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEqualTo(object1, object2, nameof(object1)));
+            Assert.Throws<ArgumentException>(() => Condition.NotEqualTo(object1, object2, nameof(object1)));
         }
 
         [Fact]
@@ -367,7 +367,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Precondition.NotEqualTo(object1, object2, nameof(object1)));
+            Assert.Throws<ArgumentException>(() => Condition.NotEqualTo(object1, object2, nameof(object1)));
         }
 
         [Theory]
@@ -378,7 +378,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.PositiveInt32(value, nameof(value));
+            Condition.PositiveInt32(value, nameof(value));
         }
 
         [Theory]
@@ -390,7 +390,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveInt32(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.PositiveInt32(value, nameof(value)));
         }
 
         [Theory]
@@ -402,7 +402,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotNegativeInt32(value, nameof(value));
+            Condition.NotNegativeInt32(value, nameof(value));
         }
 
         [Theory]
@@ -413,7 +413,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeInt32(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotNegativeInt32(value, nameof(value)));
         }
 
         [Theory]
@@ -424,7 +424,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.PositiveInt64(value, nameof(value));
+            Condition.PositiveInt64(value, nameof(value));
         }
 
         [Theory]
@@ -436,7 +436,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveInt64(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.PositiveInt64(value, nameof(value)));
         }
 
         [Theory]
@@ -448,7 +448,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotNegativeInt64(value, nameof(value));
+            Condition.NotNegativeInt64(value, nameof(value));
         }
 
         [Theory]
@@ -459,7 +459,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeInt64(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotNegativeInt64(value, nameof(value)));
         }
 
         [Theory]
@@ -470,7 +470,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.PositiveDouble(value, nameof(value));
+            Condition.PositiveDouble(value, nameof(value));
         }
 
         [Theory]
@@ -482,7 +482,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveDouble(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.PositiveDouble(value, nameof(value)));
         }
 
         [Theory]
@@ -494,7 +494,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotNegativeDouble(value, nameof(value));
+            Condition.NotNegativeDouble(value, nameof(value));
         }
 
         [Theory]
@@ -505,7 +505,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeDouble(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotNegativeDouble(value, nameof(value)));
         }
 
         [Theory]
@@ -516,7 +516,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.PositiveDecimal(value, nameof(value));
+            Condition.PositiveDecimal(value, nameof(value));
         }
 
         [Theory]
@@ -527,7 +527,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.PositiveDecimal(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.PositiveDecimal(value, nameof(value)));
         }
 
         [Theory]
@@ -538,7 +538,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotNegativeDecimal(value, nameof(value));
+            Condition.NotNegativeDecimal(value, nameof(value));
         }
 
         [Theory]
@@ -549,7 +549,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotNegativeDecimal(value, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotNegativeDecimal(value, nameof(value)));
         }
 
         [Theory]
@@ -562,7 +562,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotOutOfRangeInt32(value,  0, 3, nameof(value));
+            Condition.NotOutOfRangeInt32(value,  0, 3, nameof(value));
         }
 
         [Theory]
@@ -575,7 +575,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotOutOfRangeInt32(value, 0, 1, nameof(value)));
         }
 
         [Theory]
@@ -588,7 +588,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotOutOfRangeInt64(value, 0, 3, nameof(value));
+            Condition.NotOutOfRangeInt64(value, 0, 3, nameof(value));
         }
 
         [Theory]
@@ -601,7 +601,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotOutOfRangeInt64(value, 0, 1, nameof(value)));
         }
 
         [Theory]
@@ -614,7 +614,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value));
+            Condition.NotOutOfRangeDouble(value, 1, 2, nameof(value));
         }
 
         [Theory]
@@ -630,7 +630,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotOutOfRangeDouble(value, 1, 2, nameof(value)));
         }
 
         [Theory]
@@ -643,7 +643,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value));
+            Condition.NotOutOfRangeDecimal(value, 1, 2, nameof(value));
         }
 
         [Theory]
@@ -654,7 +654,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             // Arrange
             // Act
             // Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => Precondition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Condition.NotOutOfRangeDecimal(value, 1, 2, nameof(value)));
         }
     }
 }

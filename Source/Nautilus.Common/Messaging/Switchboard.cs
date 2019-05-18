@@ -55,7 +55,7 @@ namespace Nautilus.Common.Messaging
         /// <returns>The switchboard.</returns>
         public static Switchboard Create(ImmutableDictionary<Address, IEndpoint> addressDictionary)
         {
-            Precondition.NotEmpty(addressDictionary, nameof(addressDictionary));
+            Condition.NotEmpty(addressDictionary, nameof(addressDictionary));
 
             return new Switchboard(addressDictionary);
         }

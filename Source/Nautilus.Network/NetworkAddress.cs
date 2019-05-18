@@ -27,7 +27,7 @@ namespace Nautilus.Network
         /// <exception cref="ArgumentException">If the address is empty or white space.</exception>
         public NetworkAddress(string address)
         {
-            Precondition.NotEmptyOrWhiteSpace(address, nameof(address));
+            Condition.NotEmptyOrWhiteSpace(address, nameof(address));
 
             this.Value = address;
         }

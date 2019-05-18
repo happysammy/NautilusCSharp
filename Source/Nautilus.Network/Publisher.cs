@@ -40,7 +40,7 @@ namespace Nautilus.Network
             Guid id)
             : base(NautilusService.Network, container)
         {
-            Precondition.NotDefault(id, nameof(id));
+            Condition.NotDefault(id, nameof(id));
 
             this.socket = new PublisherSocket()
             {

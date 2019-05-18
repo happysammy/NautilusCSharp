@@ -24,7 +24,7 @@ namespace Nautilus.Fix
         /// <exception cref="ArgumentException">If the orderId is empty or whitespace.</exception>
         public static string Remove(string orderId)
         {
-            Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+            Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);

@@ -45,7 +45,7 @@ namespace Nautilus.Brokerage.Dukascopy
             string accountNumber)
         : base(NautilusService.FIX, container)
         {
-            Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+            Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
             this.symbolConverter = symbolConverter;
             this.accountNumber = accountNumber;

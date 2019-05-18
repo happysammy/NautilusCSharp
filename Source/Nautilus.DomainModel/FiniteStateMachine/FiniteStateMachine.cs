@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
             Dictionary<StateTransition, State> stateTransitionTable,
             State startingState)
         {
-            Precondition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
+            Condition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
             this.stateTransitionTable = new Dictionary<StateTransition, State>(stateTransitionTable);
             this.State = startingState;

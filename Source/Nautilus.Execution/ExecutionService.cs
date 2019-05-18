@@ -61,8 +61,8 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
-            Precondition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Precondition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+            Condition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
+            Condition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             addresses.Add(ExecutionServiceAddress.Execution, this.Endpoint);
             var immutableAddresses = addresses.ToImmutableDictionary();

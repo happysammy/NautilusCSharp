@@ -63,16 +63,16 @@ namespace Nautilus.DomainModel.Entities
             : base(instrumentId, timestamp)
         {
             // Keep validation logic here.
-            Precondition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
-            Precondition.PositiveDecimal(tickSize, nameof(tickSize));
-            Precondition.PositiveInt32(roundLotSize, nameof(roundLotSize));
-            Precondition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
-            Precondition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
-            Precondition.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
-            Precondition.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
-            Precondition.PositiveInt32(minTradeSize, nameof(minTradeSize));
-            Precondition.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
-            Precondition.NotDefault(timestamp, nameof(timestamp));
+            Condition.NotNegativeInt32(tickPrecision, nameof(tickPrecision));
+            Condition.PositiveDecimal(tickSize, nameof(tickSize));
+            Condition.PositiveInt32(roundLotSize, nameof(roundLotSize));
+            Condition.NotNegativeInt32(minStopDistanceEntry, nameof(minStopDistanceEntry));
+            Condition.NotNegativeInt32(minLimitDistanceEntry, nameof(minLimitDistanceEntry));
+            Condition.NotNegativeInt32(minStopDistance, nameof(minStopDistance));
+            Condition.NotNegativeInt32(minLimitDistance, nameof(minLimitDistance));
+            Condition.PositiveInt32(minTradeSize, nameof(minTradeSize));
+            Condition.PositiveInt32(maxTradeSize, nameof(maxTradeSize));
+            Condition.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;
             this.BrokerSymbol = brokerSymbol;

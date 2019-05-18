@@ -28,7 +28,7 @@ namespace Nautilus.Network
         /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [0, 65535].</exception>
         public NetworkPort(ushort portNumber)
         {
-            Precondition.NotOutOfRangeInt32(portNumber, 0, 65535, nameof(portNumber));
+            Condition.NotOutOfRangeInt32(portNumber, 0, 65535, nameof(portNumber));
 
             this.Value = portNumber;
             this.valueString = portNumber.ToString();

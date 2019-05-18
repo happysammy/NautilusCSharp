@@ -31,7 +31,7 @@ namespace Nautilus.Fix
             FixCredentials credentials,
             bool sendAccountTag)
         {
-            Precondition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
+            Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
             this.Broker = broker;
             this.ConfigPath = configPath;

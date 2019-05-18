@@ -28,7 +28,7 @@ namespace Nautilus.Data.Keys
         /// <param name="dateKey">The date key the key is based on.</param>
         public BarDataKey(BarType barType, DateKey dateKey)
         {
-            Precondition.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
+            Condition.EqualTo(barType.Specification.Period, 1, nameof(barType.Specification.Period));
 
             this.Type = barType;
             this.DateKey = dateKey;

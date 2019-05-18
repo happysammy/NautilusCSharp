@@ -242,9 +242,9 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.PositiveDecimal(bid, nameof(bid));
-                Precondition.PositiveDecimal(ask, nameof(ask));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.PositiveDecimal(bid, nameof(bid));
+                Condition.PositiveDecimal(ask, nameof(ask));
 
                 var tick = new Tick(
                     new Symbol(symbolCode, venue),
@@ -268,7 +268,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(account, nameof(account));
+                Condition.NotEmptyOrWhiteSpace(account, nameof(account));
 
                 this.Log.Debug($"PositionReport: ({account})");
             });
@@ -284,8 +284,8 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(inquiryId, nameof(inquiryId));
-                Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+                Condition.NotEmptyOrWhiteSpace(inquiryId, nameof(inquiryId));
+                Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 
                 this.Log.Debug(
                     $"CollateralInquiryAck: ({this.Broker}-{accountNumber}, " +
@@ -302,7 +302,7 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(message, nameof(message));
+                Condition.NotEmptyOrWhiteSpace(message, nameof(message));
 
                 this.Log.Debug($"BusinessMessageReject: {message}");
             });
@@ -322,8 +322,8 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(responseId, nameof(responseId));
-                Precondition.NotEmptyOrWhiteSpace(result, nameof(result));
+                Condition.NotEmptyOrWhiteSpace(responseId, nameof(responseId));
+                Condition.NotEmptyOrWhiteSpace(result, nameof(result));
 
                 this.Log.Debug(
                     $"SecurityListReceived: " +
@@ -351,8 +351,8 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-                Precondition.NotEmptyOrWhiteSpace(positionRequestId, nameof(positionRequestId));
+                Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+                Condition.NotEmptyOrWhiteSpace(positionRequestId, nameof(positionRequestId));
 
                 this.Log.Debug(
                     $"RequestForPositionsAck: ({accountNumber}-{positionRequestId})");
@@ -388,16 +388,16 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(inquiryId, nameof(inquiryId));
-                Precondition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-                Precondition.NotNegativeDecimal(cashBalance, nameof(cashBalance));
-                Precondition.NotNegativeDecimal(cashStartDay, nameof(cashStartDay));
-                Precondition.NotNegativeDecimal(cashDaily, nameof(cashDaily));
-                Precondition.NotNegativeDecimal(marginUsedMaintenance, nameof(marginUsedMaintenance));
-                Precondition.NotNegativeDecimal(marginUsedLiq, nameof(marginUsedLiq));
-                Precondition.NotNegativeDecimal(marginRatio, nameof(marginRatio));
-                Precondition.NotEmptyOrWhiteSpace(marginCallStatus, nameof(marginCallStatus));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(inquiryId, nameof(inquiryId));
+                Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
+                Condition.NotNegativeDecimal(cashBalance, nameof(cashBalance));
+                Condition.NotNegativeDecimal(cashStartDay, nameof(cashStartDay));
+                Condition.NotNegativeDecimal(cashDaily, nameof(cashDaily));
+                Condition.NotNegativeDecimal(marginUsedMaintenance, nameof(marginUsedMaintenance));
+                Condition.NotNegativeDecimal(marginUsedLiq, nameof(marginUsedLiq));
+                Condition.NotNegativeDecimal(marginRatio, nameof(marginRatio));
+                Condition.NotEmptyOrWhiteSpace(marginCallStatus, nameof(marginCallStatus));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var accountEvent = new AccountEvent(
                     EntityIdFactory.Account(this.fixClient.Broker, accountNumber),
@@ -445,10 +445,10 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(rejectReason, nameof(rejectReason));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(rejectReason, nameof(rejectReason));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderRejected = new OrderRejected(
                     new Symbol(symbolCode, venue),
@@ -491,11 +491,11 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
-                Precondition.NotEmptyOrWhiteSpace(cancelRejectReason, nameof(cancelRejectReason));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
+                Condition.NotEmptyOrWhiteSpace(cancelRejectReason, nameof(cancelRejectReason));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelReject = new OrderCancelReject(
                     new Symbol(symbolCode, venue),
@@ -540,11 +540,11 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelled = new OrderCancelled(
                     new Symbol(symbolCode, venue),
@@ -588,12 +588,12 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.PositiveDecimal(price, nameof(price));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.PositiveDecimal(price, nameof(price));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderModified = new OrderModified(
                     new Symbol(symbolCode, venue),
@@ -650,12 +650,12 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.PositiveDecimal(price, nameof(price));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.PositiveDecimal(price, nameof(price));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderWorking = new OrderWorking(
                     new Symbol(symbolCode, venue),
@@ -714,11 +714,11 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderExpired = new OrderExpired(
                     new Symbol(symbolCode, venue),
@@ -770,15 +770,15 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
-                Precondition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.PositiveInt32(filledQuantity, nameof(filledQuantity));
-                Precondition.PositiveDecimal(averagePrice, nameof(averagePrice));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
+                Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
+                Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderFilled = new OrderFilled(
                     new Symbol(symbolCode, venue),
@@ -840,16 +840,16 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Precondition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
-                Precondition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Precondition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Precondition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
-                Precondition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Precondition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
-                Precondition.PositiveInt32(filledQuantity, nameof(filledQuantity));
-                Precondition.PositiveInt32(leavesQuantity, nameof(leavesQuantity));
-                Precondition.PositiveDecimal(averagePrice, nameof(averagePrice));
-                Precondition.NotDefault(timestamp, nameof(timestamp));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
+                Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
+                Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
+                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
+                Condition.PositiveInt32(leavesQuantity, nameof(leavesQuantity));
+                Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
+                Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(
                     new Symbol(symbolCode, venue),

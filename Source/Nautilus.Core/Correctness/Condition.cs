@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Precondition.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Condition.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -12,11 +12,11 @@ namespace Nautilus.Core.Correctness
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides precondition checking methods which are executed in release configuration.
-    /// If the check passes then the method does nothing. If the check fails a type of
-    /// <see cref="ArgumentException"/> is thrown with a message.
+    /// Provides condition checking methods which are executed in debug and release
+    /// configurations. If the check passes then the method does nothing. If the check fails a type
+    /// of <see cref="ArgumentException"/> is thrown with a message.
     /// </summary>
-    public static class Precondition
+    public static class Condition
     {
         /// <summary>
         /// The check passes if the predicate is true.

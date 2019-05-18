@@ -50,8 +50,8 @@ namespace Nautilus.Network
             int limit)
             : base(serviceContext, container)
         {
-            Precondition.NotDefault(interval, nameof(interval));
-            Precondition.PositiveInt32(limit, nameof(limit));
+            Condition.NotDefault(interval, nameof(interval));
+            Condition.PositiveInt32(limit, nameof(limit));
 
             this.receiver = receiver;
             this.interval = interval.ToTimeSpan();

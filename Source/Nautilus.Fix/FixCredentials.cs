@@ -28,9 +28,9 @@ namespace Nautilus.Fix
             string username,
             string password)
         {
-            Precondition.NotEmptyOrWhiteSpace(account, nameof(account));
-            Precondition.NotEmptyOrWhiteSpace(username, nameof(username));
-            Precondition.NotEmptyOrWhiteSpace(password, nameof(password));
+            Condition.NotEmptyOrWhiteSpace(account, nameof(account));
+            Condition.NotEmptyOrWhiteSpace(username, nameof(username));
+            Condition.NotEmptyOrWhiteSpace(password, nameof(password));
 
             this.Account = account;
             this.Username = username;
