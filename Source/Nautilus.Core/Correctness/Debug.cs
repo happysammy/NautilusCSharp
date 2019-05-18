@@ -32,21 +32,6 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// The condition check passes if the given condition is false, or both the condition and
-        /// predicate are true.
-        /// </summary>
-        /// <param name="condition">The condition under check.</param>
-        /// <param name="predicate">The predicate under check.</param>
-        /// <param name="paramName">The parameter name.</param>
-        /// <exception cref="ArgumentException">If the condition is true and the predicate is false.</exception>
-        [Conditional("DEBUG")]
-        [Obsolete]
-        public static void TrueIf(bool condition, bool predicate, string paramName)
-        {
-            Condition.TrueIf(condition, predicate, paramName);
-        }
-
-        /// <summary>
         /// The condition check passes if the argument is not null.
         /// </summary>
         /// <param name="argument">The argument under check.</param>

@@ -35,24 +35,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
             Condition.True(true, "some_evaluation");
         }
 
-        [Fact]
-        internal void TrueIf_WhenConditionTrueAndPredicateFalse_Throws()
-        {
-            // Arrange
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Condition.TrueIf(true, false, "some_evaluation"));
-        }
-
-        [Fact]
-        internal void TrueIf_WhenConditionTrueAndPredicateTrue_DoesNothing()
-        {
-            // Arrange
-            // Act
-            // Assert
-            Condition.TrueIf(true, true, "some_evaluation");
-        }
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
