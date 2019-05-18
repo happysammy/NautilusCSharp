@@ -19,8 +19,8 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// The command to trim the bar data keys held in the database to be equal to the size of the
-    /// given rolling window.
+    /// Represents a command to trim the bar data keys held in the database to be equal to the size
+    /// of the given rolling window (days).
     /// </summary>
     [Immutable]
     public class TrimBarData : Command
@@ -29,20 +29,20 @@ namespace Nautilus.Data.Messages.Commands
         /// Initializes a new instance of the <see cref="TrimBarData"/> class.
         /// </summary>
         /// <param name="barSpecifications">The bar specifications to trim.</param>
-        /// <param name="rollingWindow">The bar data rolling window size to trim to.</param>
+        /// <param name="rollingWindowDays">The bar data rolling window size to trim to.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public TrimBarData(
             IEnumerable<BarSpecification> barSpecifications,
-            int rollingWindow,
+            int rollingWindowDays,
             Guid id,
             ZonedDateTime timestamp)
             : base(id, timestamp)
         {
-            Debug.PositiveInt32(rollingWindow, nameof(rollingWindow));
+            Debug.PositiveInt32(rollingWindowDays, nameof(rollingWindowDays));
 
             this.Resolutions = barSpecifications.Select(b => b.Resolution).Distinct();
-            this.RollingWindowSize = rollingWindow;
+            this.RollingWindowDaysDays = rollingWindowDays;
         }
 
         /// <summary>
@@ -53,6 +53,6 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Gets the rolling window size for the bar data trimming operation.
         /// </summary>
-        public int RollingWindowSize { get; }
+        public int RollingWindowDaysDays { get; }
     }
 }

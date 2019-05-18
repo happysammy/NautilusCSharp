@@ -23,7 +23,6 @@ namespace Nautilus.Scheduler
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler.Internal;
     using NodaTime;
-    using Exception = System.Exception;
 
     /// <summary>
     /// This <see cref="IScheduler"/> implementation is built using a revolving wheel of buckets

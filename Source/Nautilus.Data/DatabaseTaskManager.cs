@@ -62,7 +62,7 @@ namespace Nautilus.Data
             foreach (var resolution in message.Resolutions)
             {
                 this.barRepository
-                    .TrimToDays(resolution, message.RollingWindowSize)
+                    .TrimToDays(resolution, message.RollingWindowDaysDays)
                     .OnSuccess(result => this.Log.Information(result.Message))
                     .OnFailure(result => this.Log.Error(result.Message));
             }
