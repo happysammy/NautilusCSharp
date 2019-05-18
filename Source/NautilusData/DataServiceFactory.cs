@@ -9,7 +9,6 @@
 namespace NautilusData
 {
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
     using Nautilus.Common;
@@ -18,6 +17,7 @@ namespace NautilusData
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
@@ -128,17 +128,15 @@ namespace NautilusData
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:
-                    throw new InvalidEnumArgumentException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 case Brokerage.IB:
-                    throw new InvalidEnumArgumentException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 case Brokerage.LMAX:
-                    throw new InvalidEnumArgumentException(
-                        $"Cannot create FIX client for broker {configuration.Broker}.");
+                    goto default;
                 default:
-                    throw new InvalidEnumArgumentException(
-                        $"Cannot create FIX client (broker {configuration.Broker} is not recognized).");
+                    throw ExceptionFactory.InvalidSwitchArgument(
+                        configuration.Broker,
+                        nameof(configuration.Broker));
             }
         }
     }
