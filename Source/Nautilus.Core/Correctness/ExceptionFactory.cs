@@ -17,7 +17,7 @@ namespace Nautilus.Core.Correctness
     public static class ExceptionFactory
     {
         /// <summary>
-        /// Returns an ArgumentOutOfRangeException with the given arguments and a message.
+        /// Returns an ArgumentOutOfRangeException with the given arguments.
         /// </summary>
         /// <param name="argument">The out of range argument.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -29,7 +29,7 @@ namespace Nautilus.Core.Correctness
             return new ArgumentOutOfRangeException(
                 paramName,
                 argument,
-                $"The {paramName} value was invalid out of range for this switch (was {argument}).");
+                $"The value of argument '{paramName}' of type {argument.GetType().Name} was invalid out of range for this switch.");
         }
 
         /// <summary>
