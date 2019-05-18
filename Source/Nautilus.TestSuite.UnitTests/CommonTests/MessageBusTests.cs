@@ -12,12 +12,14 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Data;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;
@@ -28,7 +30,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
         private readonly ITestOutputHelper output;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly MockMessagingAgent mockReceiver;
-        private readonly IEndpoint messageBus;
+        private readonly MessageBus<Command> messageBus;
 
         public MessageBusTests(ITestOutputHelper output)
         {
@@ -39,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             var container = containerFactory.Create();
             this.mockLoggingAdapter = containerFactory.LoggingAdapter;
             this.mockReceiver = new MockMessagingAgent();
-            this.messageBus = new MessageBus<Command>(container).Endpoint;
+            this.messageBus = new MessageBus<Command>(container);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -47,7 +49,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
                 { DataServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
             }.ToImmutableDictionary();
 
-            this.messageBus.Send(new InitializeSwitchboard(
+            this.messageBus.Endpoint.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 Guid.NewGuid(),
                 containerFactory.Clock.TimeNow()));
@@ -59,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             // Act
             // Assert
-            // Assert something...
+            Assert.Equal("MessageBus<Command>", this.messageBus.Name.Value);
         }
 
         [Fact]
@@ -68,10 +70,12 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
 
             // Act
-            this.messageBus.Send(string.Empty);
+            this.messageBus.Endpoint.Send(string.Empty);
+
+            Task.Delay(100).Wait();
 
             // Assert
-            // Assert something...
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }

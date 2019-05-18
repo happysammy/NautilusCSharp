@@ -73,6 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert
             Assert.Contains(1, receiver);
             Assert.DoesNotContain(1, processor.UnhandledMessages);
+            Assert.Equal(1, processor.ProcessedCount);
         }
 
         [Fact]
@@ -91,6 +92,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert
             Assert.Contains(1, receiver);
             Assert.DoesNotContain(1, processor.UnhandledMessages);
+            Assert.Equal(1, processor.ProcessedCount);
         }
 
         [Fact]
@@ -107,6 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             // Assert
             Assert.Contains("test", processor.UnhandledMessages);
             Assert.Equal(0, processor.InputCount);
+            Assert.Equal(1, processor.ProcessedCount);
         }
 
         [Fact]
@@ -128,6 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             Assert.Contains("test", receiver);
             Assert.DoesNotContain("test", processor.UnhandledMessages);
             Assert.Equal(0, processor.InputCount);
+            Assert.Equal(1, processor.ProcessedCount);
         }
 
         [Fact]
@@ -149,8 +153,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             Assert.Contains(typeof(int), receiver.HandlerTypes);
             Assert.True(receiver.Messages[0].Equals("test"));
             Assert.True(receiver.Messages[1].Equals(2));
-            Assert.Equal(2, receiver.Messages.Count);
             Assert.Equal(0, receiver.InputCount);
+            Assert.Equal(2, receiver.ProcessedCount);
+            Assert.Equal(2, receiver.Messages.Count);
         }
 
         [Fact]
@@ -181,8 +186,9 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             Assert.True(receiver.Messages[5].Equals(3));
             Assert.True(receiver.Messages[6].Equals("4"));
             Assert.True(receiver.Messages[7].Equals(4));
-            Assert.Equal(8, receiver.Messages.Count);
             Assert.Equal(0, receiver.InputCount);
+            Assert.Equal(8, receiver.ProcessedCount);
+            Assert.Equal(8, receiver.Messages.Count);
         }
 
         [Fact]
@@ -203,6 +209,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             Assert.Contains("test", receiver.Messages);
             Assert.Single(receiver.Messages);
             Assert.Equal(1, receiver.InputCount);
+            Assert.Equal(1, receiver.ProcessedCount);
         }
 
         [Fact]
@@ -223,6 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             Assert.Contains("1", receiver.Messages);
             Assert.Single(receiver.Messages);
             Assert.Equal(3, receiver.InputCount);
+            Assert.Equal(1, receiver.ProcessedCount);
         }
 
         [Fact]
@@ -252,6 +260,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
             this.output.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
             this.output.WriteLine(receiver.Messages.Count.ToString());
             Assert.Equal(0, receiver.InputCount);
+            Assert.Equal(2000000, receiver.ProcessedCount);
         }
     }
 }

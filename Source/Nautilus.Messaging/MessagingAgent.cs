@@ -33,9 +33,14 @@ namespace Nautilus.Messaging
         public Endpoint Endpoint => this.processor.Endpoint;
 
         /// <summary>
-        /// Gets the message input count for the processor.
+        /// Gets the message input count for the agent.
         /// </summary>
         public int InputCount => this.processor.InputCount;
+
+        /// <summary>
+        /// Gets the message processed count for the agent.
+        /// </summary>
+        public int ProcessedCount => this.processor.ProcessedCount;
 
         /// <summary>
         /// Gets the message handler types.
@@ -61,7 +66,7 @@ namespace Nautilus.Messaging
         /// Register the given handler to receive unhandled messaged.
         /// </summary>ve
         /// <param name="handler">The handler.</param>
-        public void RegisterUnhandled(Action<object> handler)
+        protected void RegisterUnhandled(Action<object> handler)
         {
             this.processor.RegisterUnhandled(handler);
         }
@@ -76,7 +81,7 @@ namespace Nautilus.Messaging
         }
 
         /// <summary>
-        /// Send the given message to this agents endpoint.
+        /// Send the given message to this agents own endpoint.
         /// </summary>
         /// <param name="message">The message to send.</param>
         protected void SendToSelf(object message)

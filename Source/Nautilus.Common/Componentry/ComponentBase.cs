@@ -159,7 +159,7 @@ namespace Nautilus.Common.Componentry
 
         private void Unhandled(object message)
         {
-            this.Log.Warning($"Unhandled message {message}.");
+            this.Log.Warning($"Unhandled message [{message}].");
             this.AddToUnhandledMessages(message);
         }
 
@@ -171,7 +171,6 @@ namespace Nautilus.Common.Componentry
             where T : Message
         {
             var message = envelope.Open(this.clock.TimeNow());
-
             this.Endpoint.Send(message);
 
             this.Log.Debug($"Received {message}.");

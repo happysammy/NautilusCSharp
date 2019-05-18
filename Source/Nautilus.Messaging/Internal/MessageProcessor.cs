@@ -56,6 +56,11 @@ namespace Nautilus.Messaging.Internal
         public int InputCount => this.processor.InputCount;
 
         /// <summary>
+        /// Gets the message processed count for the processor.
+        /// </summary>
+        public int ProcessedCount { get; private set; }
+
+        /// <summary>
         /// Gets the types which can be handled.
         /// </summary>
         /// <returns>The list.</returns>
@@ -125,6 +130,8 @@ namespace Nautilus.Messaging.Internal
 
         private Task HandleMessage(object message)
         {
+            this.ProcessedCount++;
+
             for (var i = 0; i < this.handlersLength; i++)
             {
                 if (this.handlers[i].Handle(message))

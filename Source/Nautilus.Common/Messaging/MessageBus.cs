@@ -25,7 +25,6 @@ namespace Nautilus.Common.Messaging
         private readonly ILogger log;
 
         private Switchboard switchboard;
-        private int messageCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBus{T}"/> class.
@@ -49,7 +48,6 @@ namespace Nautilus.Common.Messaging
         private void OnMessage(InitializeSwitchboard message)
         {
             this.switchboard = message.Switchboard;
-
             this.log.Information($"Initialized.");
         }
 
@@ -61,9 +59,7 @@ namespace Nautilus.Common.Messaging
 
         private void LogEnvelope(Envelope<T> envelope)
         {
-            this.messageCount++;
-
-            this.log.Verbose($"[{this.messageCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
+            this.log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }
     }
 }
