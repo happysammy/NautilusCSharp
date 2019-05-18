@@ -10,6 +10,8 @@ namespace Nautilus.Data.Aggregation
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -32,7 +34,7 @@ namespace Nautilus.Data.Aggregation
         private readonly IComponentryContainer storedContainer;
         private readonly IScheduler scheduler;
         private readonly IEndpoint barPublisher;
-        private readonly Dictionary<Symbol, IEndpoint> barAggregators;
+        private readonly Dictionary<Symbol, BarAggregator> barAggregators;
         private readonly Dictionary<BarType, ICancelable> subscriptions;
 
         /// <summary>
@@ -55,7 +57,7 @@ namespace Nautilus.Data.Aggregation
             this.storedContainer = container;
             this.scheduler = scheduler;
             this.barPublisher = barPublisher;
-            this.barAggregators = new Dictionary<Symbol, IEndpoint>();
+            this.barAggregators = new Dictionary<Symbol, BarAggregator>();
             this.subscriptions = new Dictionary<BarType, ICancelable>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
@@ -65,11 +67,21 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<MarketStatusJob>(this.OnMessage);
         }
 
+        /// <summary>
+        /// Gets the dictionary of bar aggregators.
+        /// </summary>
+        public IReadOnlyDictionary<Symbol, BarAggregator> BarAggregators => this.barAggregators.ToImmutableDictionary();
+
+        /// <summary>
+        /// Gets the dictionary of bar subscriptions.
+        /// </summary>
+        public IReadOnlyDictionary<BarType, ICancelable> Subscriptions => this.subscriptions.ToImmutableDictionary();
+
         private void OnMessage(Tick tick)
         {
             if (this.barAggregators.ContainsKey(tick.Symbol))
             {
-                this.barAggregators[tick.Symbol].Send(tick);
+                this.barAggregators[tick.Symbol].Endpoint.Send(tick);
 
                 return;
             }
@@ -104,18 +116,20 @@ namespace Nautilus.Data.Aggregation
                 var barAggregator = new BarAggregator(
                         this.storedContainer,
                         this.Endpoint,
-                        symbol).Endpoint;
+                        symbol);
 
                 this.barAggregators.Add(message.DataType.Symbol, barAggregator);
-            }
 
-            this.barAggregators[symbol].Send(message);
+                this.Log.Debug($"Created BarAggregator[{symbol}].");
+            }
 
             if (this.subscriptions.ContainsKey(message.DataType))
             {
                 this.Log.Error($"Already subscribed to {barType}.");
                 return;
             }
+
+            this.barAggregators[symbol].Endpoint.Send(message);
 
             // Create close bar job schedule.
             var closeBar = new CloseBar(
@@ -127,11 +141,13 @@ namespace Nautilus.Data.Aggregation
             var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
                 initialDelay,
                 barSpec.Duration,
-                this.barAggregators[symbol],
+                this.barAggregators[symbol].Endpoint,
                 closeBar,
                 this.Endpoint);
 
             this.subscriptions.Add(barType, cancellable);
+
+            this.Log.Debug($"Subscribed to {message.DataType} bars.");
         }
 
         private void OnMessage(Unsubscribe<BarType> message)
@@ -139,23 +155,25 @@ namespace Nautilus.Data.Aggregation
             var symbol = message.DataType.Symbol;
             var barType = message.DataType;
 
-            if (!this.barAggregators.ContainsKey(symbol))
-            {
-                // Nothing to unsubscribe from.
-                return;
-            }
-
-            this.barAggregators[symbol].Send(message);
-
-            if (!this.subscriptions.ContainsKey(barType))
+            if (!this.barAggregators.ContainsKey(symbol) || !this.subscriptions.ContainsKey(barType))
             {
                 this.Log.Error($"Already unsubscribed from {barType}.");
                 return;
             }
 
+            this.barAggregators[symbol].Endpoint.Send(message);
+
             // Cancel close bar job schedule.
             this.subscriptions[barType].Cancel();
             this.subscriptions.Remove(barType);
+
+            if (this.subscriptions.All(s => s.Key.Symbol != symbol))
+            {
+                this.barAggregators.Remove(symbol);
+                this.Log.Error($"Removed BarAggregator[{symbol}].");
+            }
+
+            this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
         }
 
         private void OnMessage(MarketStatusJob job) // TODO: Change to MarketOpen and MarketClosed events.
@@ -174,7 +192,7 @@ namespace Nautilus.Data.Aggregation
                     var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
                         initialDelay,
                         barSpec.Duration,
-                        this.barAggregators[barType.Symbol],
+                        this.barAggregators[barType.Symbol].Endpoint,
                         closeBar,
                         this.Endpoint);
 
@@ -193,7 +211,7 @@ namespace Nautilus.Data.Aggregation
                 var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
                 foreach (var aggregator in this.barAggregators.Values)
                 {
-                    aggregator.Send(marketClosed);
+                    aggregator.Endpoint.Send(marketClosed);
                 }
             }
         }

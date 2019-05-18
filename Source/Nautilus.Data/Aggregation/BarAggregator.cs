@@ -62,7 +62,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the bar aggregators current subscriptions.
         /// </summary>
-        public IEnumerable<BarSpecification> Specifications => this.specifications;
+        public IReadOnlyCollection<BarSpecification> Specifications => this.specifications.AsReadOnly();
 
         private static Price GetUpdateQuote(QuoteType quoteType, Tick tick)
         {
@@ -163,7 +163,6 @@ namespace Nautilus.Data.Aggregation
             }
 
             this.barBuilders.Add(barSpec, null);
-            this.Log.Debug($"Subscribed to {message.DataType} bars.");
         }
 
         private void OnMessage(Unsubscribe<BarType> message)
@@ -182,8 +181,6 @@ namespace Nautilus.Data.Aggregation
             {
                 this.barBuilders.Remove(barSpec);
             }
-
-            this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
         }
 
         private void OnMessage(MarketClosed message)

@@ -38,7 +38,6 @@ namespace Nautilus.DomainModel.ValueObjects
             this.Period = period;
             this.Resolution = resolution;
             this.QuoteType = quoteType;
-            this.Duration = this.CalculateDuration(period);
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <summary>
         /// Gets the bar time duration.
         /// </summary>
-        public Duration Duration { get; }
+        public Duration Duration => this.CalculateDuration(this.Period);
 
         /// <summary>
         /// Gets a value indicating whether this bars time period is one day.
