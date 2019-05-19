@@ -22,41 +22,40 @@ namespace Nautilus.Data.Keys
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Allows nameof.")]
     public static class KeyProvider
     {
+        private const string NautilusData = nameof(Nautilus) + ":" + nameof(Data);
         private const string Ticks = nameof(Ticks);
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);
-        private const string Wildcard = "*";
-        private const string Separator = ":";
 
         /// <summary>
         /// Gets the ticks namespace <see cref="string"/>.
         /// </summary>
-        public static string TicksNamespace => Ticks;
+        public static string TicksNamespace { get; } = $"{NautilusData}:{Ticks}";
 
         /// <summary>
         /// Gets the bars namespace <see cref="string"/>.
         /// </summary>
-        public static string BarsNamespace => Bars;
+        public static string BarsNamespace { get; } = $"{NautilusData}:{Bars}";
 
         /// <summary>
         /// Gets the instruments namespace <see cref="string"/>.
         /// </summary>
-        public static string InstrumentsNamespace => Instruments;
+        public static string InstrumentsNamespace { get; } = $"{NautilusData}:{Instruments}";
 
         /// <summary>
         /// Gets the bars namespace wildcard <see cref="string"/>.
         /// </summary>
-        public static string TicksNamespaceWildcard => Ticks + Wildcard;
+        public static string TicksWildcard { get; } = TicksNamespace + "*";
 
         /// <summary>
         /// Gets the bars namespace wildcard <see cref="string"/>.
         /// </summary>
-        public static string BarsNamespaceWildcard => Bars + Wildcard;
+        public static string BarsWildcard { get; } = BarsNamespace + "*";
 
         /// <summary>
         /// Gets the instruments namespace wildcard <see cref="string"/>.
         /// </summary>
-        public static string InstrumentsWildcard => Instruments + Wildcard;
+        public static string InstrumentsWildcard { get; } = InstrumentsNamespace + "*";
 
         /// <summary>
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to
@@ -87,7 +86,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetTicksWildcardString(Symbol symbol)
         {
-            return Ticks + Separator + symbol.Venue + Separator + symbol.Code + Wildcard;
+            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}";
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace Nautilus.Data.Keys
         {
             Debug.NotDefault(fromDateTime, nameof(fromDateTime));
             Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+            Debug.True(toDateTime.IsGreaterThanOrEqualTo(fromDateTime), nameof(toDateTime));
 
             return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
                 .Select(key => new BarDataKey(barType, key).ToString());
@@ -115,21 +114,15 @@ namespace Nautilus.Data.Keys
         /// <summary>
         /// Returns a wildcard string from the given symbol bar spec.
         /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarsWildcardString() => Bars + Wildcard;
-
-        /// <summary>
-        /// Returns a wildcard string from the given symbol bar spec.
-        /// </summary>
         /// <param name="barType">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetBarTypeWildcardString(BarType barType)
         {
-            return Bars +
-                   $"{Separator}{barType.Symbol.Venue}" +
-                   $"{Separator}{barType.Symbol.Code}" +
-                   $"{Separator}{barType.Specification.Resolution}" +
-                   $"{Separator}{barType.Specification.QuoteType}" + Wildcard;
+            return BarsNamespace +
+                   $":{barType.Symbol.Venue}" +
+                   $":{barType.Symbol.Code}" +
+                   $":{barType.Specification.Resolution}" +
+                   $":{barType.Specification.QuoteType}" + "*";
         }
 
         /// <summary>
@@ -139,7 +132,7 @@ namespace Nautilus.Data.Keys
         /// <returns>A <see cref="string"/>.</returns>
         public static string GetInstrumentKey(Symbol symbol)
         {
-            return Instruments + Separator + symbol;
+            return InstrumentsNamespace + ":" + symbol;
         }
     }
 }

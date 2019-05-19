@@ -72,7 +72,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllKeysCount()
         {
-            return this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).Count();
+            return this.redisServer.Keys(pattern: KeyProvider.BarsWildcard).Count();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nautilus.Redis
         /// <returns>A <see cref="long"/>.</returns>
         public long AllBarsCount()
         {
-            var allKeys = this.redisServer.Keys(pattern: KeyProvider.BarsNamespaceWildcard).ToArray();
+            var allKeys = this.redisServer.Keys(pattern: KeyProvider.BarsWildcard).ToArray();
 
             if (allKeys.Length == 0)
             {
@@ -152,11 +152,11 @@ namespace Nautilus.Redis
         [PerformanceOptimized]
         public Dictionary<string, List<string>> GetSortedKeysBySymbolResolution(Resolution resolution)
         {
-            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.GetBarsWildcardString());
+            var allKeysBytes = this.redisServer.Keys(pattern: KeyProvider.BarsWildcard);
 
             var keysCollection = allKeysBytes.Select(key => key.ToString());
-
             var keysOfResolution = new Dictionary<string, List<string>>();
+
             foreach (var key in keysCollection)
             {
                 if (!key.Contains(resolution.ToString()))
@@ -166,7 +166,7 @@ namespace Nautilus.Redis
                 }
 
                 var splitKey = key.Split(':');
-                var symbolKey = splitKey[1] + ":" + splitKey[2];
+                var symbolKey = splitKey[3] + ":" + splitKey[4];
 
                 if (!keysOfResolution.ContainsKey(symbolKey))
                 {

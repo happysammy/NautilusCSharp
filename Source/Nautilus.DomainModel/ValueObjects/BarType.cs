@@ -85,7 +85,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A <see cref="bool"/>.</returns>
         public bool Equals(BarType other)
         {
-            return this.Symbol == other.Symbol && this.Specification == other.Specification;
+            return this.Symbol.Equals(other.Symbol) && this.Specification.Equals(other.Specification);
         }
 
         /// <summary>
