@@ -94,7 +94,6 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Started at {this.StartTime}.");
 
-            // this.Send(ServiceAddress.Scheduler, message);
             this.fixGateway.Connect();
 
             // this.CreateConnectFixJob();

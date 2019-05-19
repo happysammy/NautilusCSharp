@@ -329,14 +329,17 @@ namespace Nautilus.Fix
                     $"SecurityListReceived: " +
                     $"(SecurityResponseId={responseId}) result={result}");
 
-                var dataDelivery = new DataDelivery<IEnumerable<Instrument>>(
-                    instruments,
-                    this.NewGuid(),
-                    this.TimeNow());
-
-                foreach (var receiver in this.instrumentReceivers)
+                foreach (var instrument in instruments)
                 {
-                    this.Send(receiver, dataDelivery);
+                    var dataDelivery = new DataDelivery<Instrument>(
+                        instrument,
+                        this.NewGuid(),
+                        this.TimeNow());
+
+                    foreach (var receiver in this.instrumentReceivers)
+                    {
+                        this.Send(receiver, dataDelivery);
+                    }
                 }
             });
         }

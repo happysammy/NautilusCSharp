@@ -46,7 +46,7 @@ namespace Nautilus.Data
 
             this.RegisterHandler<DataDelivery<(BarType, Bar)>>(this.OnMessage);
             this.RegisterHandler<DataDelivery<BarDataFrame>>(this.OnMessage);
-            this.RegisterHandler<DataDelivery<IEnumerable<Instrument>>>(this.OnMessage);
+            this.RegisterHandler<DataDelivery<Instrument>>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -84,15 +84,12 @@ namespace Nautilus.Data
                 .OnFailure(result => this.Log.Warning(result.Message));
         }
 
-        private void OnMessage(DataDelivery<IEnumerable<Instrument>> message)
+        private void OnMessage(DataDelivery<Instrument> message)
         {
-            foreach (var instrument in message.Data)
-            {
-                this.instrumentRepository
-                    .Add(instrument, this.TimeNow())
-                    .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Error(result.Message));
-            }
+            this.instrumentRepository
+                .Add(message.Data, this.TimeNow())
+                .OnSuccess(result => this.Log.Information(result.Message))
+                .OnFailure(result => this.Log.Error(result.Message));
         }
     }
 }
