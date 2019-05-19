@@ -173,7 +173,7 @@ namespace Nautilus.Common.Componentry
             var message = envelope.Open(this.clock.TimeNow());
             this.Endpoint.Send(message);
 
-            this.Log.Debug($"Received {message}.");
+            this.Log.Verbose($"Received {message}.");
         }
 
         private string CreateComponentName()

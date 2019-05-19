@@ -53,6 +53,7 @@ namespace Nautilus.Data
         protected override void OnStop(Stop message)
         {
             this.Log.Information($"Stopping from {message}...");
+
             this.barRepository.SnapshotDatabase();
         }
 

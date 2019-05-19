@@ -113,7 +113,6 @@ namespace Nautilus.Data.Aggregation
             foreach (var (barSpec, builder) in this.pendingBuilders)
             {
                 this.barBuilders[barSpec] = builder;
-                this.Log.Debug($"Created new BarBuilder for {barSpec}.");
             }
 
             this.pendingBuilders.Clear();

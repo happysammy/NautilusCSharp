@@ -101,8 +101,6 @@ namespace Nautilus.Data.Aggregation
                 this.TimeNow());
 
             this.Send(DataServiceAddress.DatabaseTaskManager, dataDelivery);
-
-            this.Log.Debug($"Received {data.Item1}({data.Item2}).");
         }
 
         private void OnMessage(Subscribe<BarType> message)

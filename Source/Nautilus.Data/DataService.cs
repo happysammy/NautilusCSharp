@@ -92,7 +92,7 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Started at {this.StartTime}.");
+            this.Log.Information($"Stopping from {message}...");
 
             this.fixGateway.Connect();
 
@@ -106,7 +106,7 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Information($"Stopping...");
+            this.Log.Information($"Stopping from {message}...");
 
             // this.Send(ServiceAddress.Scheduler, message);
             this.Send(DataServiceAddress.DatabaseTaskManager, message);
