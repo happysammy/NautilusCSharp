@@ -9,13 +9,9 @@
 namespace NautilusExecutor
 {
     using System.IO;
-    using global::Serilog;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
-    using Nautilus.Common.Enums;
-    using Nautilus.Serilog;
-    using Serilog.Events;
 
     /// <summary>
     /// The main entry point for the application.

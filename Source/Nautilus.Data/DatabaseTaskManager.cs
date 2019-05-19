@@ -8,7 +8,6 @@
 
 namespace Nautilus.Data
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -57,17 +56,6 @@ namespace Nautilus.Data
             this.barRepository.SnapshotDatabase();
         }
 
-        private void OnMessage(TrimBarData message)
-        {
-            foreach (var resolution in message.Resolutions)
-            {
-                this.barRepository
-                    .TrimToDays(resolution, message.RollingWindowDaysDays)
-                    .OnSuccess(result => this.Log.Information(result.Message))
-                    .OnFailure(result => this.Log.Error(result.Message));
-            }
-        }
-
         private void OnMessage(DataDelivery<(BarType BarType, Bar Bar)> message)
         {
             this.barRepository
@@ -90,6 +78,17 @@ namespace Nautilus.Data
                 .Add(message.Data, this.TimeNow())
                 .OnSuccess(result => this.Log.Information(result.Message))
                 .OnFailure(result => this.Log.Error(result.Message));
+        }
+
+        private void OnMessage(TrimBarData message)
+        {
+            foreach (var resolution in message.Resolutions)
+            {
+                this.barRepository
+                    .TrimToDays(resolution, message.RollingWindowDaysDays)
+                    .OnSuccess(result => this.Log.Information(result.Message))
+                    .OnFailure(result => this.Log.Error(result.Message));
+            }
         }
     }
 }
