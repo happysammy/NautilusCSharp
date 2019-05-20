@@ -39,7 +39,6 @@ namespace Nautilus.DomainModel.Events
             this.Symbol = symbol;
         }
 
-
         /// <summary>
         /// Gets the market events symbol.
         /// </summary>

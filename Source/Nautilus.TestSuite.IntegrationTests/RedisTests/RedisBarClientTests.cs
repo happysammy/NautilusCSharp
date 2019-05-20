@@ -40,6 +40,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
 
         public void Dispose()
         {
+            // Tear Down
             this.redisConnection.GetServer(RedisConstants.LocalHost, RedisConstants.DefaultPort).FlushAllDatabases();
         }
 
