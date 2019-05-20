@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages.Commands
+namespace Nautilus.Data.Messages.Jobs
 {
     using System;
     using Nautilus.Core;

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Events
+namespace Nautilus.DomainModel.Events
 {
     using System;
     using Nautilus.Core;
@@ -16,25 +16,33 @@ namespace Nautilus.Common.Messages.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where a financial market has opened.
+    /// Represents an account change event.
     /// </summary>
     [Immutable]
-    public class MarketOpened : Event
+    public sealed class MarketOpened : Event
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarketOpened"/> class.
+        /// Initializes a new instance of the <see cref="MarketOpened" /> class.
         /// </summary>
         /// <param name="symbol">The symbol of the market.</param>
-        /// <param name="id">The event identifier.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <param name="eventId">The account event identifier.</param>
+        /// <param name="eventTimestamp">The account event timestamp.</param>
         public MarketOpened(
             Symbol symbol,
-            Guid id,
-            ZonedDateTime timestamp)
-            : base(id, timestamp)
+            Guid eventId,
+            ZonedDateTime eventTimestamp)
+            : base(eventId, eventTimestamp)
         {
-            Debug.NotDefault(id, nameof(id));
-            Debug.NotDefault(timestamp, nameof(timestamp));
+            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
+
+            this.Symbol = symbol;
         }
+
+
+        /// <summary>
+        /// Gets the market events symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
     }
 }

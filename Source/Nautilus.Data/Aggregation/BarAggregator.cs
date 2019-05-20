@@ -18,6 +18,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;

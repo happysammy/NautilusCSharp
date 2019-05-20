@@ -13,7 +13,7 @@ namespace Nautilus.Data.Messages.Jobs
 
     /// <summary>
     /// A command message representing an instruction to trim the bar data keys held in the database
-    /// to be equal to the size of the given rolling window.
+    /// to be equal to the size of the rolling window.
     /// </summary>
     [Immutable]
     public class TrimBarDataJob : IScheduledJob

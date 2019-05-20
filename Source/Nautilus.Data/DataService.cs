@@ -78,8 +78,6 @@ namespace Nautilus.Data
             this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
-            this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
-            this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<TrimBarDataJob>(this.OnMessage);
 
             // Wire up system
@@ -152,22 +150,6 @@ namespace Nautilus.Data
         private void OnMessage(FixSessionDisconnected message)
         {
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
-        }
-
-        private void OnMessage(Subscribe<BarType> message)
-        {
-            this.Log.Debug($"Received {message}");
-
-            // Forward message.
-            this.Send(DataServiceAddress.BarAggregationController, message);
-        }
-
-        private void OnMessage(Unsubscribe<BarType> message)
-        {
-            this.Log.Debug($"Received {message}");
-
-            // Forward message.
-            this.Send(DataServiceAddress.BarAggregationController, message);
         }
 
         private void OnMessage(TrimBarDataJob message)

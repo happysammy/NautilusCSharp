@@ -64,7 +64,8 @@ namespace Nautilus.Data.Aggregation
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
             this.RegisterHandler<Subscribe<BarType>>(this.OnMessage);
             this.RegisterHandler<Unsubscribe<BarType>>(this.OnMessage);
-            this.RegisterHandler<MarketStatusJob>(this.OnMessage);
+            this.RegisterHandler<MarketOpened>(this.OnMessage);
+            this.RegisterHandler<MarketClosed>(this.OnMessage);
         }
 
         /// <summary>
@@ -174,44 +175,49 @@ namespace Nautilus.Data.Aggregation
             this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
         }
 
-        private void OnMessage(MarketStatusJob job) // TODO: Change to MarketOpen and MarketClosed events.
+        private void OnMessage(MarketOpened message)
         {
-            if (job.IsMarketOpen)
-            {
-                foreach (var barType in this.subscriptions.Keys)
-                {
-                    var barSpec = barType.Specification;
-                    var closeBar = new CloseBar(
-                        barSpec,
-                        Guid.NewGuid(),
-                        this.TimeNow());
+// if (job.IsMarketOpen)
+//            {
+//                foreach (var barType in this.subscriptions.Keys)
+//                {
+//                    var barSpec = barType.Specification;
+//                    var closeBar = new CloseBar(
+//                        barSpec,
+//                        Guid.NewGuid(),
+//                        this.TimeNow());
+//
+//                    var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
+//                    var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
+//                        initialDelay,
+//                        barSpec.Duration,
+//                        this.barAggregators[barType.Symbol].Endpoint,
+//                        closeBar,
+//                        this.Endpoint);
+//
+//                    this.subscriptions[barType] = cancellable;
+//                }
+//            }
+//            else
+//            {
+//                foreach (var (subscription, cancellable) in this.subscriptions)
+//                {
+//                    cancellable.Cancel();
+//                    this.Log.Debug($"Market is closed: Cancelled bar close job for {subscription}.");
+//                }
+//
+//                // Tell all aggregators the market is now closed.
+//                var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
+//                foreach (var aggregator in this.barAggregators.Values)
+//                {
+//                    aggregator.Endpoint.Send(marketClosed);
+//                }
+//            }
+        }
 
-                    var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
-                    var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
-                        initialDelay,
-                        barSpec.Duration,
-                        this.barAggregators[barType.Symbol].Endpoint,
-                        closeBar,
-                        this.Endpoint);
-
-                    this.subscriptions[barType] = cancellable;
-                }
-            }
-            else
-            {
-                foreach (var (subscription, cancellable) in this.subscriptions)
-                {
-                    cancellable.Cancel();
-                    this.Log.Debug($"Market is closed: Cancelled bar close job for {subscription}.");
-                }
-
-                // Tell all aggregators the market is now closed.
-                var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
-                foreach (var aggregator in this.barAggregators.Values)
-                {
-                    aggregator.Endpoint.Send(marketClosed);
-                }
-            }
+        private void OnMessage(MarketClosed message)
+        {
+            // Implement.
         }
     }
 }

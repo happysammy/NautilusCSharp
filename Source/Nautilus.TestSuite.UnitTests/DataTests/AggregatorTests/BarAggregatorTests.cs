@@ -13,6 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Threading.Tasks;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Messages.Commands;
+    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
