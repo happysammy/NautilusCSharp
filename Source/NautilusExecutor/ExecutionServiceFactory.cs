@@ -82,7 +82,7 @@ namespace NautilusExecutor
 
             // Wire up system
             fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
-            fixGateway.RegisterEventReceiver(orderManager.Endpoint);
+            fixGateway.RegisterEventReceiver(ExecutionServiceAddress.OrderManager);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {

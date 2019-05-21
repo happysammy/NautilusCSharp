@@ -37,7 +37,7 @@ namespace Nautilus.Fix
     {
         private readonly IFixClient fixClient;
         private readonly List<IEndpoint> tickReceivers;
-        private readonly List<IEndpoint> eventReceivers;
+        private readonly List<Address> eventReceivers;
         private readonly List<Address> instrumentReceivers;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Nautilus.Fix
         {
             this.fixClient = fixClient;
             this.tickReceivers = new List<IEndpoint>();
-            this.eventReceivers = new List<IEndpoint>();
+            this.eventReceivers = new List<Address>();
             this.instrumentReceivers = new List<Address>();
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
@@ -103,9 +103,9 @@ namespace Nautilus.Fix
         /// Registers the receiver endpoint to receive <see cref="Event"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        public void RegisterEventReceiver(IEndpoint receiver)
+        public void RegisterEventReceiver(Address receiver)
         {
-            Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.eventReceivers));
+            Debug.NotIn(receiver, this.eventReceivers, nameof(receiver), nameof(this.eventReceivers));
 
             this.eventReceivers.Add(receiver);
         }
@@ -875,7 +875,7 @@ namespace Nautilus.Fix
         {
             for (var i = 0; i < this.eventReceivers.Count; i++)
             {
-                this.eventReceivers[i].Send(message);
+                this.Send(this.eventReceivers[i], message);
             }
         }
 

@@ -35,22 +35,22 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Registers the receiver endpoint to receive connection events from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        void RegisterConnectionEventReceiver(Address receiver);
-
-        /// <summary>
         /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
         void RegisterTickReceiver(IEndpoint receiver);
 
         /// <summary>
+        /// Registers the receiver endpoint to receive connection events from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        void RegisterConnectionEventReceiver(Address receiver);
+
+        /// <summary>
         /// Registers the receiver to receive <see cref="Event"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        void RegisterEventReceiver(IEndpoint receiver);
+        void RegisterEventReceiver(Address receiver);
 
         /// <summary>
         /// Registers the receiver to receive <see cref="Instrument"/> updates from the gateway.
