@@ -214,9 +214,9 @@ namespace Nautilus.Redis
         {
             var hashEntry = new[]
             {
-                new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.Value),
+                new HashEntry(nameof(Instrument.Symbol), instrument.Symbol.ToString()),
                 new HashEntry(nameof(Instrument.Id), instrument.Id.Value),
-                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.Value),
+                new HashEntry(nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.ToString()),
                 new HashEntry(nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString()),
                 new HashEntry(nameof(Instrument.SecurityType), instrument.SecurityType.ToString()),
                 new HashEntry(nameof(Instrument.TickPrecision), instrument.TickPrecision),

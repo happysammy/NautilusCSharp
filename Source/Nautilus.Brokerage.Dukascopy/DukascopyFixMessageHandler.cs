@@ -96,7 +96,7 @@ namespace Nautilus.Brokerage.Dukascopy
 
                     var brokerSymbol = new BrokerSymbol(group.GetField(Tags.Symbol));
 
-                    var symbolQuery = this.symbolConverter.GetNautilusSymbol(brokerSymbol.Value);
+                    var symbolQuery = this.symbolConverter.GetNautilusSymbol(brokerSymbol.ToString());
                     if (symbolQuery.IsFailure)
                     {
                         this.Log.Warning(symbolQuery.Message);

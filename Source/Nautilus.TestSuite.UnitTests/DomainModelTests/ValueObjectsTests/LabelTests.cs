@@ -6,35 +6,35 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
+namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core.Primitives;
+    using Nautilus.DomainModel.ValueObjects;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class ValidStringTests
+    public class LabelTests
     {
         [Fact]
         internal void Value_WithValidValueGiven_ReturnsExpectedValue()
         {
             // Arrange
-            var validString = new TestString("abc123");
+            var label = new Label("abc123");
 
             // Act
-            var result = validString.Value;
+            var result = label.ToString();
 
             // Assert
-            Assert.Equal("abc123", result);
+            Assert.Equal("abc123", result.ToString());
         }
 
         [Fact]
         internal void EqualityOperators_ReturnExpectedValues()
         {
             // Arrange
-            var validString1 = new TestString("abc123");
-            var validString2 = new TestString("def999");
-            var validString3 = new TestString("abc123");
+            var validString1 = new Label("abc123");
+            var validString2 = new Label("def999");
+            var validString3 = new Label("abc123");
 
             // Act
             // Assert
@@ -45,14 +45,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.PrimitivesTests
 
             Assert.True(validString1.Equals(validString1));
             Assert.False(validString1.Equals(validString2));
-        }
-
-        private class TestString : ValidString<TestString>
-        {
-            public TestString(string value)
-                : base(value)
-            {
-            }
         }
     }
 }

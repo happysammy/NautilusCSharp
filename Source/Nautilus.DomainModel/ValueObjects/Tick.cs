@@ -18,10 +18,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market tick.
     /// </summary>
     [Immutable]
-    public sealed class Tick : IEquatable<Tick>, IComparable<Tick>
+    public struct Tick : IEquatable<object>, IEquatable<Tick>, IComparable<Tick>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tick"/> class.
+        /// Initializes a new instance of the <see cref="Tick"/> structure.
         /// </summary>
         /// <param name="symbol">The quoted symbol.</param>
         /// <param name="bid">The quoted bid price.</param>
@@ -40,7 +40,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tick"/> class.
+        /// Initializes a new instance of the <see cref="Tick"/> structure.
         /// </summary>
         /// <param name="symbol">The quoted symbol.</param>
         /// <param name="bid">The quoted bid price.</param>
@@ -79,28 +79,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Tick"/>(s) are equal.
+        /// Returns a value indicating whether the <see cref="Tick"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(Tick left, Tick right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Tick"/>(s) are not equal.
+        /// Returns a value indicating whether the <see cref="Tick"/>s are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>

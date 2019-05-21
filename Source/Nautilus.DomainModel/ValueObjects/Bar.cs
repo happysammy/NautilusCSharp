@@ -19,10 +19,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a financial market trade bar.
     /// </summary>
     [Immutable]
-    public sealed class Bar : IEquatable<Bar>, IComparable<Bar>
+    public struct Bar : IEquatable<object>, IEquatable<Bar>, IComparable<Bar>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bar"/> class.
+        /// Initializes a new instance of the <see cref="Bar"/> structure.
         /// </summary>
         /// <param name="open">The open price.</param>
         /// <param name="high">The high price.</param>
@@ -49,7 +49,7 @@ namespace Nautilus.DomainModel.ValueObjects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bar"/> class.
+        /// Initializes a new instance of the <see cref="Bar"/> structure.
         /// </summary>
         /// <param name="open">The open price.</param>
         /// <param name="high">The high price.</param>
@@ -106,28 +106,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public ZonedDateTime Timestamp { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Bar"/>(s) are equal.
+        /// Returns a value indicating whether the <see cref="Bar"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(Bar left, Bar right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="Bar"/>(s) are not equal.
+        /// Returns a value indicating whether the <see cref="Bar"/>s are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>

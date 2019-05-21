@@ -57,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             const string testAddress = "tcp://localhost:55506";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe(symbol.Value);
+            subscriber.Subscribe(symbol.ToString());
             Task.Delay(100).Wait();
 
             var tick = StubTickFactory.Create(symbol);
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(tick.Symbol.Value, Encoding.UTF8.GetString(receivedTopic));
+            Assert.Equal(tick.Symbol.ToString(), Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(tick.ToString(), Encoding.UTF8.GetString(receivedMessage));
 
             // Tear Down

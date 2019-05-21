@@ -34,7 +34,7 @@ namespace Nautilus.Common.Componentry
         protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
         {
             this.Name = new Label(this.CreateComponentName());
-            this.Address = new Address(this.Name.Value);
+            this.Address = new Address(this.Name.ToString());
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.Log = container.LoggerFactory.Create(serviceContext, this.Name);

@@ -8,30 +8,34 @@
 
 namespace Nautilus.DomainModel.ValueObjects
 {
+    using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Core.Primitives;
     using Nautilus.DomainModel.Enums;
 
     /// <summary>
     /// Represents a financial market instruments symbol.
     /// </summary>
     [Immutable]
-    public sealed class Symbol : ValidString<Symbol>
+    public struct Symbol : IEquatable<object>, IEquatable<Symbol>
     {
+        private readonly string value;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Symbol"/> class.
+        /// Initializes a new instance of the <see cref="Symbol"/> structure.
         /// </summary>
         /// <param name="code">The symbols code.</param>
         /// <param name="venue">The symbols venue.</param>
         public Symbol(string code, Venue venue)
-            : base($"{code}.{venue}")
         {
             Debug.NotEmptyOrWhiteSpace(code, nameof(code));
             Debug.True(code.IsAllUpperCase(), nameof(code));
 
-            this.Code = code.ToUpper();
+            this.value = $"{code}.{venue}";
+
+            this.Code = code;
             this.Venue = venue;
         }
 
@@ -46,6 +50,25 @@ namespace Nautilus.DomainModel.ValueObjects
         public Venue Venue { get; }
 
         /// <summary>
+        /// Returns a value indicating whether the <see cref="Symbol"/>s are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(Symbol left, Symbol right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Symbol"/>s are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(Symbol left,  Symbol right) => !(left == right);
+
+        /// <summary>
         /// Return a new <see cref="Symbol"/> from the given string.
         /// </summary>
         /// <param name="symbol">The symbol string.</param>
@@ -56,5 +79,39 @@ namespace Nautilus.DomainModel.ValueObjects
 
             return new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>());
         }
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Symbol"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is Symbol symbol && this.Equals(symbol);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Symbol"/> is equal
+        /// to the given <see cref="Symbol"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(Symbol other)
+        {
+            return this.value == other.value;
+        }
+
+        /// <summary>
+        /// Returns the hash code of the <see cref="Symbol"/>.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(this.Code, this.Venue);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Symbol"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.value;
     }
 }

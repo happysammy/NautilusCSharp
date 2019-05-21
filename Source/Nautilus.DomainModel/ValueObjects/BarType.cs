@@ -15,10 +15,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents the concept of a bar type representing a <see cref="Symbol"/> and
     /// <see cref="BarSpecification"/>.
     /// </summary>
-    public sealed class BarType : IEquatable<BarType>
+    public struct BarType : IEquatable<object>, IEquatable<BarType>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarType"/> class.
+        /// Initializes a new instance of the <see cref="BarType"/> structure.
         /// </summary>
         /// <param name="symbol">The bar type symbol.</param>
         /// <param name="specification">The bar type specification.</param>
@@ -41,28 +41,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public BarSpecification Specification { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="BarType"/>(s) are equal.
+        /// Returns a value indicating whether the <see cref="BarType"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(BarType left, BarType right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="BarType"/>(s) are not equal.
+        /// Returns a value indicating whether the <see cref="BarType"/>s are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>

@@ -41,7 +41,7 @@ namespace Nautilus.Data.Publishers
         private void OnMessage(Tick tick)
         {
             this.Publish(
-                Encoding.UTF8.GetBytes(tick.Symbol.Value),
+                Encoding.UTF8.GetBytes(tick.Symbol.ToString()),
                 Encoding.UTF8.GetBytes(tick.ToString()));
         }
     }

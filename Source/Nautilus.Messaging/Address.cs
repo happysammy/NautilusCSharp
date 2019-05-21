@@ -8,22 +8,81 @@
 
 namespace Nautilus.Messaging
 {
+    using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Primitives;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// Represents a components messaging address within the system.
     /// </summary>
     [Immutable]
-    public sealed class Address : ValidString<Address>
+    public struct Address : IEquatable<object>, IEquatable<Address>
     {
+        private readonly string value;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Address"/> class.
+        /// Initializes a new instance of the <see cref="Address"/> structure.
         /// </summary>
         /// <param name="value">The value of the address.</param>
         public Address(string value)
-            : base(value)
         {
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
+
+            this.value = value;
         }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Address"/>s are equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator ==(Address left, Address right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the <see cref="Address"/>s are not equal.
+        /// </summary>
+        /// <param name="left">The left object.</param>
+        /// <param name="right">The right object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public static bool operator !=(Address left,  Address right) => !(left == right);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Address"/> is equal
+        /// to the given <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public override bool Equals(object other) => other is Address label && this.Equals(label);
+
+        /// <summary>
+        /// Returns a value indicating whether this <see cref="Address"/> is equal
+        /// to the given <see cref="Address"/>.
+        /// </summary>
+        /// <param name="other">The other object.</param>
+        /// <returns>A <see cref="bool"/>.</returns>
+        public bool Equals(Address other)
+        {
+            return this.value == other.value;
+        }
+
+        /// <summary>
+        /// Returns the hash code of the <see cref="Address"/>.
+        /// </summary>
+        /// <returns>An <see cref="int"/>.</returns>
+        public override int GetHashCode()
+        {
+            return Hash.GetCode(this.value);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the <see cref="Address"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => this.value;
     }
 }

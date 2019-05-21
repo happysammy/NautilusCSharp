@@ -61,7 +61,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             // Arrange
             // Act
             // Assert
-            Assert.Equal("MessageBus<Command>", this.messageBus.Name.Value);
+            Assert.Equal("MessageBus<Command>", this.messageBus.Name.ToString());
         }
 
         [Fact]

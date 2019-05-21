@@ -19,10 +19,10 @@ namespace Nautilus.DomainModel.ValueObjects
     /// Represents a bar specification being a quote type, resolution and period.
     /// </summary>
     [Immutable]
-    public sealed class BarSpecification : IEquatable<BarSpecification>
+    public struct BarSpecification : IEquatable<object>, IEquatable<BarSpecification>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarSpecification"/> class.
+        /// Initializes a new instance of the <see cref="BarSpecification"/> structure.
         /// </summary>
         /// <param name="period">The specification period.</param>
         /// <param name="resolution">The specification resolution.</param>
@@ -38,7 +38,7 @@ namespace Nautilus.DomainModel.ValueObjects
             this.Period = period;
             this.Resolution = resolution;
             this.QuoteType = quoteType;
-            this.Duration = this.CalculateDuration(this.Period);
+            this.Duration = CalculateDuration(period, resolution);
         }
 
         /// <summary>
@@ -62,28 +62,18 @@ namespace Nautilus.DomainModel.ValueObjects
         public Duration Duration { get; }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="BarSpecification"/>(s) are equal.
+        /// Returns a value indicating whether the <see cref="BarSpecification"/>s are equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
         public static bool operator ==(BarSpecification left, BarSpecification right)
         {
-            if (left is null && right is null)
-            {
-                return true;
-            }
-
-            if (left is null || right is null)
-            {
-                return false;
-            }
-
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Returns a value indicating whether the <see cref="BarSpecification"/>(s) are not equal.
+        /// Returns a value indicating whether the <see cref="BarSpecification"/>s are not equal.
         /// </summary>
         /// <param name="left">The left object.</param>
         /// <param name="right">The right object.</param>
@@ -127,24 +117,24 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>A string.</returns>
         public override string ToString() => $"{this.Period}-{this.Resolution}[{this.QuoteType}]";
 
-        private Duration CalculateDuration(int barPeriod)
+        private static Duration CalculateDuration(int barPeriod, Resolution resolution)
         {
             Debug.PositiveInt32(barPeriod, nameof(barPeriod));
 
-            switch (this.Resolution)
+            switch (resolution)
             {
                 case Resolution.TICK:
-                    return NodaTime.Duration.Zero;
+                    return Duration.Zero;
                 case Resolution.SECOND:
-                    return NodaTime.Duration.FromSeconds(barPeriod);
+                    return Duration.FromSeconds(barPeriod);
                 case Resolution.MINUTE:
-                    return NodaTime.Duration.FromMinutes(barPeriod);
+                    return Duration.FromMinutes(barPeriod);
                 case Resolution.HOUR:
-                    return NodaTime.Duration.FromHours(barPeriod);
+                    return Duration.FromHours(barPeriod);
                 case Resolution.DAY:
-                    return NodaTime.Duration.FromDays(barPeriod);
+                    return Duration.FromDays(barPeriod);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(this.Resolution, nameof(this.Resolution));
+                    throw ExceptionFactory.InvalidSwitchArgument(resolution, nameof(resolution));
             }
         }
     }
