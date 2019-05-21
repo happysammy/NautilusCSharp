@@ -14,11 +14,6 @@ namespace Nautilus.Common.Enums
     public enum NautilusService
     {
         /// <summary>
-        /// The ASP.NET core host service context.
-        /// </summary>
-        AspCore,
-
-        /// <summary>
         /// The system core service context.
         /// </summary>
         Core,
