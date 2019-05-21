@@ -146,7 +146,7 @@ namespace Nautilus.Data.Aggregation
 
             this.subscriptions.Add(barType, cancellable);
 
-            this.Log.Debug($"Subscribed to {message.DataType} bars.");
+            this.Log.Information($"Subscribed to {message.DataType} bars.");
         }
 
         private void OnMessage(Unsubscribe<BarType> message)
@@ -172,7 +172,7 @@ namespace Nautilus.Data.Aggregation
                 this.Log.Debug($"Removed BarAggregator[{symbol}].");
             }
 
-            this.Log.Debug($"Unsubscribed from {message.DataType} bars.");
+            this.Log.Information($"Unsubscribed from {message.DataType} bars.");
         }
 
         private void OnMessage(MarketOpened message)

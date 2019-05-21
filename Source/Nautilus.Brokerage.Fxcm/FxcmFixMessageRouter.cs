@@ -232,7 +232,7 @@ namespace Nautilus.Brokerage.FXCM
             }
 
             this.fixSession.Send(message);
-            this.Log.Information($"Sent => {message}");
+            this.Log.Debug($"Sent => {message}");
         }
     }
 }
