@@ -108,12 +108,14 @@ namespace Nautilus.Data
 
         private void OnMessage(ConnectFix message)
         {
-            this.fixGateway.Connect();
+            // Forward message.
+            this.Send(DataServiceAddress.FixGateway, message);
         }
 
         private void OnMessage(DisconnectFix message)
         {
-            this.fixGateway.Disconnect();
+            // Forward message.
+            this.Send(DataServiceAddress.FixGateway, message);
         }
 
         private void OnMessage(FixSessionConnected message)
@@ -196,7 +198,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {jobDay}s {jobTime.Hour}:{jobTime.Minute} (UTC).");
+            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}");
         }
 
         private void CreateDisconnectFixJob()
@@ -219,7 +221,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {jobDay}s {jobTime.Hour}:{jobTime.Minute} (UTC).");
+            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}");
         }
 
         private void CreateMarketOpenedJob()
@@ -245,7 +247,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Log.Information($"Created {marketOpened}Job for {jobDay}s {jobTime.Hour}:{jobTime.Minute} (UTC).");
+                this.Log.Information($"Created {marketOpened}Job for {nextTime.ToIsoString()}");
             }
         }
 
@@ -272,7 +274,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Log.Information($"Created {marketClosed}Job for {jobDay}s {jobTime.Hour}:{jobTime.Minute} (UTC).");
+                this.Log.Information($"Created {marketClosed}Job for {nextTime.ToIsoString()}");
             }
         }
 
@@ -298,7 +300,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {jobDay}s {jobTime.Hour}:{jobTime.Minute} (UTC).");
+            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}");
         }
     }
 }

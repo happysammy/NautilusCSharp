@@ -59,6 +59,9 @@ namespace Nautilus.Fix
             this.tickReceivers = new List<IEndpoint>();
             this.eventReceivers = new List<IEndpoint>();
             this.instrumentReceivers = new List<Address>();
+
+            this.RegisterHandler<ConnectFix>(this.OnMessage);
+            this.RegisterHandler<DisconnectFix>(this.OnMessage);
         }
 
         /// <summary>
@@ -75,22 +78,6 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the brokerage gateways broker client is connected.
         /// </summary>
         public bool IsConnected => this.fixClient.IsConnected;
-
-        /// <summary>
-        /// Connect to the FIX platform.
-        /// </summary>
-        public void Connect()
-        {
-            this.fixClient.Connect();
-        }
-
-        /// <summary>
-        /// Disconnect from the the FIX platform.
-        /// </summary>
-        public void Disconnect()
-        {
-            this.fixClient.Disconnect();
-        }
 
         /// <summary>
         /// Registers the receiver endpoint to receive connection events from the gateway.
@@ -855,7 +842,7 @@ namespace Nautilus.Fix
         {
             this.Log.Information($"Starting from {message}...");
 
-            this.Connect();
+            this.fixClient.Connect();
         }
 
         /// <inheritdoc />
@@ -863,7 +850,17 @@ namespace Nautilus.Fix
         {
             this.Log.Information($"Stopping from {message}...");
 
-            this.Disconnect();
+            this.fixClient.Disconnect();
+        }
+
+        private void OnMessage(ConnectFix message)
+        {
+            this.fixClient.Connect();
+        }
+
+        private void OnMessage(DisconnectFix message)
+        {
+            this.fixClient.Disconnect();
         }
 
         private void SendToTickReceivers(Tick tick)

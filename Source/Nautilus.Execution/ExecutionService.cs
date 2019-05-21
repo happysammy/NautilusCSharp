@@ -18,10 +18,12 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using Nautilus.Scheduler;
     using NodaTime;
 
     /// <summary>
@@ -29,6 +31,7 @@ namespace Nautilus.Execution
     /// </summary>
     public sealed class ExecutionService : ComponentBusConnectedBase
     {
+        private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
@@ -41,6 +44,7 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The execution gateway.</param>
         /// <param name="addresses">The execution service addresses.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
@@ -51,6 +55,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             MessagingAdapter messagingAdapter,
             Dictionary<Address, IEndpoint> addresses,
+            IScheduler scheduler,
             IFixGateway fixGateway,
             int commandsPerSecond,
             int newOrdersPerSecond)
@@ -68,6 +73,7 @@ namespace Nautilus.Execution
                 this.NewGuid(),
                 this.TimeNow()));
 
+            this.scheduler = scheduler;
             this.fixGateway = fixGateway;
 
             this.tradeCommandBus = new OrderCommandBus(
@@ -102,9 +108,9 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Started at {this.StartTime}.");
+            this.Log.Information($"Started from {message}...");
 
-            this.fixGateway.Connect();
+            this.Send(ExecutionServiceAddress.FixGateway, message);
 
             // this.CreateConnectFixJob();
             // this.CreateDisconnectFixJob();
@@ -113,68 +119,22 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.fixGateway.Disconnect();
+            this.Log.Information($"Stopping from {message}...");
+
+            // Forward message.
+            this.Send(ExecutionServiceAddress.FixGateway, message);
         }
 
-// private void CreateConnectFixJob()
-//        {
-//            var schedule = CronScheduleBuilder
-//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Sunday, 20, 00)
-//                .InTimeZone(TimeZoneInfo.Utc)
-//                .WithMisfireHandlingInstructionFireAndProceed();
-//
-//            var jobKey = new JobKey("connect_fix", "fix44");
-//            var trigger = TriggerBuilder
-//                .Create()
-//                .WithIdentity(jobKey.Name, jobKey.Group)
-//                .WithSchedule(schedule)
-//                .Build();
-//
-//            var createJob = new CreateJob(
-//                this.Endpoint,
-//                new ConnectFixJob(),
-//                jobKey,
-//                trigger,
-//                this.NewGuid(),
-//                this.TimeNow());
-//
-//            this.Send(ServiceAddress.Scheduler, createJob);
-//            this.Log.Information("Created ConnectFixJob for Sundays 20:00 (UTC).");
-//        }
-//
-//        private void CreateDisconnectFixJob()
-//        {
-//            var schedule = CronScheduleBuilder
-//                .WeeklyOnDayAndHourAndMinute(DayOfWeek.Saturday, 20, 00)
-//                .InTimeZone(TimeZoneInfo.Utc)
-//                .WithMisfireHandlingInstructionFireAndProceed();
-//
-//            var jobKey = new JobKey("disconnect_fix", "fix44");
-//            var trigger = TriggerBuilder
-//                .Create()
-//                .WithIdentity(jobKey.Name, jobKey.Group)
-//                .WithSchedule(schedule)
-//                .Build();
-//
-//            var createJob = new CreateJob(
-//                this.Endpoint,
-//                new DisconnectFixJob(),
-//                jobKey,
-//                trigger,
-//                this.NewGuid(),
-//                this.TimeNow());
-//
-//            this.Send(ServiceAddress.Scheduler, createJob);
-//            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
-//        }
         private void OnMessage(ConnectFix message)
         {
-            this.fixGateway.Connect();
+            // Forward message.
+            this.Send(ExecutionServiceAddress.FixGateway, message);
         }
 
         private void OnMessage(DisconnectFix message)
         {
-            this.fixGateway.Disconnect();
+            // Forward message.
+            this.Send(ExecutionServiceAddress.FixGateway, message);
         }
 
         private void OnMessage(CollateralInquiry message)
@@ -204,11 +164,60 @@ namespace Nautilus.Execution
             this.fixGateway.UpdateInstrumentsSubscribeAll();
             this.fixGateway.CollateralInquiry();
             this.fixGateway.TradingSessionStatus();
+
+            this.CreateDisconnectFixJob();
+            this.CreateConnectFixJob();
         }
 
         private void OnMessage(FixSessionDisconnected message)
         {
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
+        }
+
+        private void CreateConnectFixJob()
+        {
+            var jobDay = IsoDayOfWeek.Sunday;
+            var jobTime = new LocalTime(20, 00);
+            var timeNow = this.TimeNow().ToInstant();
+
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+
+            var job = new ConnectFix(
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
+
+            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}.");
+        }
+
+        private void CreateDisconnectFixJob()
+        {
+            var jobDay = IsoDayOfWeek.Saturday;
+            var jobTime = new LocalTime(20, 00);
+            var timeNow = this.TimeNow().ToInstant();
+
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+
+            var job = new DisconnectFix(
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
+
+            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}.");
         }
     }
 }

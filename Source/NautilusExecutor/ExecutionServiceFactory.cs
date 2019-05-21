@@ -96,6 +96,7 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter,
                 addresses,
+                scheduler,
                 fixGateway,
                 config.CommandsPerSecond,
                 config.NewOrdersPerSecond);

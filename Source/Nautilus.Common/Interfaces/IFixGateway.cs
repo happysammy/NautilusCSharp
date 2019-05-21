@@ -35,16 +35,6 @@ namespace Nautilus.Common.Interfaces
         bool IsConnected { get; }
 
         /// <summary>
-        /// Connect to the FIX platform.
-        /// </summary>
-        void Connect();
-
-        /// <summary>
-        /// Disconnect from the FIX platform.
-        /// </summary>
-        void Disconnect();
-
-        /// <summary>
         /// Registers the receiver endpoint to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
