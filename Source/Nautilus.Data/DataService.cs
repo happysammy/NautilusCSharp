@@ -37,7 +37,6 @@ namespace Nautilus.Data
         private readonly IEnumerable<Symbol> subscribingSymbols;
         private readonly IEnumerable<BarSpecification> barSpecifications;
         private readonly int barRollingWindowDays;
-        private readonly bool updateInstruments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
@@ -50,7 +49,6 @@ namespace Nautilus.Data
         /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
         /// <param name="barSpecifications">The bar specifications to create.</param>
         /// <param name="barRollingWindowDays">The number of days to trim bar data to.</param>
-        /// <param name="updateInstruments">The option flag to update instruments on connection.</param>
         public DataService(
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
@@ -59,8 +57,7 @@ namespace Nautilus.Data
             IFixGateway fixGateway,
             IEnumerable<Symbol> subscribingSymbols,
             IEnumerable<BarSpecification> barSpecifications,
-            int barRollingWindowDays,
-            bool updateInstruments)
+            int barRollingWindowDays)
             : base(
                 NautilusService.Data,
                 setupContainer,
@@ -72,7 +69,6 @@ namespace Nautilus.Data
             this.subscribingSymbols = subscribingSymbols;
             this.barSpecifications = barSpecifications;
             this.barRollingWindowDays = barRollingWindowDays;
-            this.updateInstruments = updateInstruments;
 
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),

@@ -26,8 +26,7 @@ namespace Nautilus.Serilog
                 const string logTemplateDefault = "{Timestamp:yyyy/MM/dd HH:mm:ss.fff} [{ThreadId:00}][{Level:u3}] {Message}{NewLine}{Exception}";
 
                 Log.Logger = new LoggerConfiguration()
-                   .MinimumLevel.Debug()
-                   .Enrich.FromLogContext()
+                    .Enrich.FromLogContext()
                    .Enrich.With(new ThreadIdEnricher())
                    .WriteTo.Console(logLevel, logTemplateDefault)
                    .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplateDefault)

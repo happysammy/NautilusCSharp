@@ -107,8 +107,7 @@ namespace NautilusData
                 fixGateway,
                 symbolConverter.GetAllSymbols(),
                 config.BarSpecifications,
-                config.BarRollingWindowDays,
-                config.UpdateInstruments);
+                config.BarRollingWindowDays);
         }
 
         private static IFixClient CreateFixClient(
