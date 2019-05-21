@@ -265,6 +265,10 @@ namespace Nautilus.Data
 //            this.Log.Information("Created MarketStatusJob for market close Saturdays 20:00 (UTC).");
 //        }
 //
+        private void CreateTrimBarDataJob()
+        {
+
+        }
 //        private void CreateTrimBarDataJob()
 //        {
 //            var schedule = CronScheduleBuilder

@@ -9,6 +9,7 @@
 namespace Nautilus.Core.Extensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Nautilus.Core.Correctness;
     using NodaTime;
@@ -17,13 +18,14 @@ namespace Nautilus.Core.Extensions
     /// <summary>
     /// Provides useful comparison operations for the <see cref="ZonedDateTime"/> type.
     /// </summary>
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read with underscores.")]
     public static class ZonedDateTimeExtensions
     {
-        private const string IsoStringParsePattern = "yyyy-MM-ddTHH:mm:ss.fff";
+        private const string ISO_STRING_PARSE_PATTERN = "yyyy-MM-ddTHH:mm:ss.fff";
 
         private static readonly ZonedDateTimePattern NodaIsoStringParsePattern =
             ZonedDateTimePattern.CreateWithInvariantCulture(
-                IsoStringParsePattern,
+                ISO_STRING_PARSE_PATTERN,
                 DateTimeZoneProviders.Tzdb);
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace Nautilus.Core.Extensions
         {
             Debug.NotDefault(time, nameof(time));
 
-            return time.ToString(IsoStringParsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
+            return time.ToString(ISO_STRING_PARSE_PATTERN, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
         }
 
         /// <summary>
@@ -276,7 +278,7 @@ namespace Nautilus.Core.Extensions
             Debug.NotOutOfRangeInt32(end.Minute, 0, 59, nameof(end.Minute));
             Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
 
-            var localUtcNow = new LocalDateTime(
+            var localNow = new LocalDateTime(
                 timeNowUtc.Year,
                 timeNowUtc.Month,
                 timeNowUtc.Day,
@@ -287,10 +289,10 @@ namespace Nautilus.Core.Extensions
             var endDiff = (int)(7 - timeNowUtc.DayOfWeek);
 
             var localStartDay = startDiff >= 0
-                ? localUtcNow + Period.FromDays(startDiff)
-                : localUtcNow - Period.FromDays(Math.Abs(startDiff));
+                ? localNow + Period.FromDays(startDiff)
+                : localNow - Period.FromDays(Math.Abs(startDiff));
 
-            var localEndDay = localUtcNow + Period.FromDays(endDiff);
+            var localEndDay = localNow + Period.FromDays(endDiff);
 
             var localStart = new LocalDateTime(
                 localStartDay.Year,
@@ -306,7 +308,35 @@ namespace Nautilus.Core.Extensions
                 end.Hour,
                 end.Minute);
 
-            return localUtcNow < localStart || localUtcNow >= localEnd;
+            return localNow < localStart || localNow >= localEnd;
+        }
+
+        /// <summary>
+        /// Returns the duration to the next day of week and time of day (UTC).
+        /// </summary>
+        /// <param name="dayOfWeek">The day of week.</param>
+        /// <param name="timeOfDay">The time of day.</param>
+        /// <param name="now">The current instant in time.</param>
+        /// <returns>The duration.</returns>
+        public static Duration GetDurationToNextUtc(
+            IsoDayOfWeek dayOfWeek,
+            LocalTime timeOfDay,
+            Instant now)
+        {
+            var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
+            var localNext = localNow
+                .Date.With(DateAdjusters.NextOrSame(dayOfWeek))
+                .At(timeOfDay);
+
+            // Handle "we're already on the right day-of-week, but later in the day".
+            if (localNext <= localNow)
+            {
+                localNext = localNext.PlusWeeks(1);
+            }
+
+            var zonedNext = localNext.InZoneLeniently(DateTimeZone.Utc);
+            var instantNext = zonedNext.ToInstant();
+            return instantNext - now;
         }
     }
 }
