@@ -80,15 +80,6 @@ namespace Nautilus.Fix
         public bool IsConnected => this.fixClient.IsConnected;
 
         /// <summary>
-        /// Registers the receiver endpoint to receive connection events from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        public void RegisterConnectionEventReceiver(Address receiver)
-        {
-            this.fixClient.RegisterConnectionEventReceiver(receiver);
-        }
-
-        /// <summary>
         /// Registers the receiver endpoint to receive <see cref="Tick"/>s from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
@@ -100,9 +91,18 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Registers the receiver endpoint to receive <see cref="Event"/>s from the gateway.
+        /// Registers the receiver endpoint to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
+        public void RegisterConnectionEventReceiver(Address receiver)
+        {
+            this.fixClient.RegisterConnectionEventReceiver(receiver);
+        }
+
+        /// <summary>
+        /// Registers the receiver endpoint to receive <see cref="Event"/>s from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver module.</param>
         public void RegisterEventReceiver(Address receiver)
         {
             Debug.NotIn(receiver, this.eventReceivers, nameof(receiver), nameof(this.eventReceivers));
@@ -111,7 +111,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Registers the service to receive <see cref="Instrument"/> updates from the gateway.
+        /// Registers the module to receive <see cref="Instrument"/> updates from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
         public void RegisterInstrumentReceiver(Address receiver)
