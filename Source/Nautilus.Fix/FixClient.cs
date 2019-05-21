@@ -15,7 +15,6 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
-    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a generic FIX client.
