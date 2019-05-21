@@ -48,13 +48,14 @@ namespace Nautilus.Messaging.Internal
         {
             bool ActionDelegate(object message)
             {
-                if (message is TMessage typedMessage)
+                if (!(message is TMessage typedMessage))
                 {
-                    handle.Invoke(typedMessage);
-                    return true;
+                    return false;
                 }
 
-                return false;
+                handle.Invoke(typedMessage);
+
+                return true;
             }
 
             return new Handler(typeof(TMessage), ActionDelegate);
