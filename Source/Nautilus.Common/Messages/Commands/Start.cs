@@ -11,7 +11,6 @@ namespace Nautilus.Common.Messages.Commands
     using System;
     using Nautilus.Common.Messages.Commands.Base;
     using Nautilus.Core.Annotations;
-    using Nautilus.Core.Correctness;
     using NodaTime;
 
     /// <summary>
@@ -28,8 +27,6 @@ namespace Nautilus.Common.Messages.Commands
         public Start(Guid identifier, ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
-            Debug.NotDefault(timestamp, nameof(timestamp));
         }
 
         /// <summary>

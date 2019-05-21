@@ -8,10 +8,16 @@
 
 namespace Nautilus.Common.Interfaces
 {
+    using NodaTime;
+
     /// <summary>
-    /// Represents a job.
+    /// Represents a command to execute at a scheduled time.
     /// </summary>
     public interface IScheduledJob
     {
+        /// <summary>
+        /// Gets the commands scheduled job time.
+        /// </summary>
+        ZonedDateTime ScheduledTime { get; }
     }
 }

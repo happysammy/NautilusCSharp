@@ -16,9 +16,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
@@ -136,7 +134,7 @@ namespace Nautilus.Data.Aggregation
             }
 
             // Close the bar.
-            var bar = builder.Build(this.TimeNow().Floor(barSpec.Duration));
+            var bar = builder.Build(message.ScheduledTime);
 
             // Send to bar aggregation controller (parent).
             this.parent.Send((new BarType(this.symbol, barSpec), bar));

@@ -143,9 +143,9 @@ namespace Nautilus.Redis
             var results = new List<CommandResult>();
             var keys = this.barClient.GetSortedKeysBySymbolResolution(resolution);
 
-            foreach (var symbol in keys)
+            foreach (var value in keys.Values)
             {
-                var keyCount = symbol.Value.Count;
+                var keyCount = value.Count;
                 if (keyCount <= trimToDays)
                 {
                     continue;
@@ -154,7 +154,7 @@ namespace Nautilus.Redis
                 var difference = keyCount - trimToDays;
                 for (var i = 0; i < difference; i++)
                 {
-                    var result = this.barClient.Delete(symbol.Value[i]);
+                    var result = this.barClient.Delete(value[i]);
                     results.Add(result);
                 }
             }

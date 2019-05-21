@@ -15,7 +15,6 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
@@ -96,8 +95,8 @@ namespace Nautilus.Execution
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
-            this.RegisterHandler<ConnectFixJob>(this.OnMessage);
-            this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
+            this.RegisterHandler<ConnectFix>(this.OnMessage);
+            this.RegisterHandler<DisconnectFix>(this.OnMessage);
 
             // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
@@ -172,12 +171,12 @@ namespace Nautilus.Execution
 //            this.Send(ServiceAddress.Scheduler, createJob);
 //            this.Log.Information("Created DisconnectFixJob for Saturdays 20:00 (UTC).");
 //        }
-        private void OnMessage(ConnectFixJob message)
+        private void OnMessage(ConnectFix message)
         {
             this.fixGateway.Connect();
         }
 
-        private void OnMessage(DisconnectFixJob message)
+        private void OnMessage(DisconnectFix message)
         {
             this.fixGateway.Disconnect();
         }

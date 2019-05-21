@@ -20,7 +20,6 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler;
@@ -131,22 +130,27 @@ namespace Nautilus.Data.Aggregation
             this.barAggregators[symbol].Endpoint.Send(message);
 
             // Create close bar job schedule.
-            var closeBar = new CloseBar(
-                barSpec,
-                Guid.NewGuid(),
-                this.TimeNow());
-
             var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();
-            var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
+            var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
                 initialDelay,
                 barSpec.Duration,
-                this.barAggregators[symbol].Endpoint,
-                closeBar,
-                this.Endpoint);
+                () =>
+                {
+                    this.CreateCloseBarDelegate(barSpec, this.barAggregators[symbol].Endpoint);
+                });
 
             this.subscriptions.Add(barType, cancellable);
 
             this.Log.Information($"Subscribed to {message.DataType} bars.");
+        }
+
+        private void CreateCloseBarDelegate(BarSpecification barSpec, IEndpoint aggregator)
+        {
+            aggregator.Send(new CloseBar(
+                barSpec,
+                this.TimeNow().Floor(barSpec.Duration),
+                this.NewGuid(),
+                this.TimeNow()));
         }
 
         private void OnMessage(Unsubscribe<BarType> message)

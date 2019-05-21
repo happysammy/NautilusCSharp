@@ -15,11 +15,9 @@ namespace Nautilus.Data
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
-    using Nautilus.Common.Messages.Jobs;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
@@ -75,11 +73,11 @@ namespace Nautilus.Data
                 this.NewGuid(),
                 this.TimeNow()));
 
-            this.RegisterHandler<ConnectFixJob>(this.OnMessage);
-            this.RegisterHandler<DisconnectFixJob>(this.OnMessage);
+            this.RegisterHandler<ConnectFix>(this.OnMessage);
+            this.RegisterHandler<DisconnectFix>(this.OnMessage);
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
-            this.RegisterHandler<TrimBarDataJob>(this.OnMessage);
+            this.RegisterHandler<TrimBarData>(this.OnMessage);
 
             // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
@@ -112,12 +110,12 @@ namespace Nautilus.Data
             this.fixGateway.Disconnect();
         }
 
-        private void OnMessage(ConnectFixJob message)
+        private void OnMessage(ConnectFix message)
         {
             this.fixGateway.Connect();
         }
 
-        private void OnMessage(DisconnectFixJob message)
+        private void OnMessage(DisconnectFix message)
         {
             this.fixGateway.Disconnect();
         }
@@ -149,17 +147,18 @@ namespace Nautilus.Data
             this.Log.Warning($"{message.SessionId} session has been disconnected.");
         }
 
-        private void OnMessage(TrimBarDataJob message)
+        private void OnMessage(TrimBarData message)
         {
-            this.Log.Information($"Received {nameof(TrimBarDataJob)}.");
+            this.Log.Information($"Received {nameof(TrimBarData)}.");
 
-            var trimCommand = new TrimBarData(
-                this.barSpecifications,
-                this.barRollingWindowDays,
-                this.NewGuid(),
-                this.TimeNow());
+// var trimCommand = new Messages.Commands.TrimBarData(
+//                this.barSpecifications,
+//                this.barRollingWindowDays,
+//                this.NewGuid(),
+//                this.TimeNow());
 
-            this.Send(DataServiceAddress.DatabaseTaskManager, trimCommand);
+            // Forward message.
+            this.Send(DataServiceAddress.DatabaseTaskManager, message);
         }
 
 // private void CreateConnectFixJob()

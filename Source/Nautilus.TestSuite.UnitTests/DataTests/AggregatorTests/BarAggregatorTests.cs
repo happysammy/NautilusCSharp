@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
     using System.Threading.Tasks;
     using Nautilus.Data.Aggregation;
     using Nautilus.Data.Messages.Commands;
-    using Nautilus.Data.Messages.Jobs;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit;
@@ -55,6 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
             // Arrange
             var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -128,6 +128,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -163,6 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.ASK),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -199,6 +201,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -237,6 +240,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar1 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -248,6 +252,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar2 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -301,6 +306,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar1 = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -312,6 +318,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar2 = new CloseBar(
                 new BarSpecification(10, Resolution.SECOND, QuoteType.BID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -361,6 +368,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.AggregatorTests
 
             var closeBar = new CloseBar(
                 new BarSpecification(1, Resolution.SECOND, QuoteType.MID),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

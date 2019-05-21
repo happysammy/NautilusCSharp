@@ -6,9 +6,10 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Messages.Jobs
+namespace Nautilus.Data.Messages.Commands
 {
     using System;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.ValueObjects;
@@ -18,20 +19,23 @@ namespace Nautilus.Data.Messages.Jobs
     /// The command message to close the bar of the given bar specification.
     /// </summary>
     [Immutable]
-    public sealed class CloseBar : Command
+    public sealed class CloseBar : Command, IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBar"/> class.
         /// </summary>
         /// <param name="barSpec">The bar specification.</param>
+        /// <param name="scheduledTime">The scheduled job time.</param>
         /// <param name="id">The close identifier.</param>
         /// <param name="timestamp">The close timestamp.</param>
         public CloseBar(
             BarSpecification barSpec,
+            ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
             : base(id, timestamp)
         {
+            this.ScheduledTime = scheduledTime;
             this.BarSpecification = barSpec;
         }
 
@@ -39,5 +43,8 @@ namespace Nautilus.Data.Messages.Jobs
         /// Gets the messages bar specification to close.
         /// </summary>
         public BarSpecification BarSpecification { get; }
+
+        /// <inheritdoc />
+        public ZonedDateTime ScheduledTime { get; }
     }
 }
