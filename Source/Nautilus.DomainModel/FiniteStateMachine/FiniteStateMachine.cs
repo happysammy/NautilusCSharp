@@ -12,8 +12,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     using System.Collections.Generic;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
 
     /// <summary>
     /// Represents a simple generic finite state machine comprising of a state transition look-up
@@ -50,15 +48,17 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// Processes the finite state machine with the given <see cref="Trigger"/>.
         /// </summary>
         /// <param name="trigger">The trigger.</param>
-        /// <returns>A command result.</returns>
         /// <exception cref="ArgumentNullException">Throws if the trigger is null.</exception>
-        internal CommandResult Process(Trigger trigger)
+        internal void Process(Trigger trigger)
         {
             var transition = new StateTransition(this.State, trigger);
 
-            return this.IsValidStateTransition(transition)
-                       ? CommandResult.Ok().OnSuccess(() => this.ChangeStateTo(this.StateTransitionResult(transition)))
-                       : CommandResult.Fail($"Invalid state transition: {this.State} -> {trigger}");
+            if (!this.IsValidStateTransition(transition))
+            {
+                throw new InvalidOperationException($"Invalid state transition ({transition}).");
+            }
+
+            this.ChangeStateTo(this.StateTransitionResult(transition));
         }
 
         private bool IsValidStateTransition(StateTransition transition) => this.stateTransitionTable.ContainsKey(transition);

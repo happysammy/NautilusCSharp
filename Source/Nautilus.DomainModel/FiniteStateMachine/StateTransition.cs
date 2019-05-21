@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     /// <see cref="Trigger"/> resulting in a valid resultant <see cref="State"/>.
     /// </summary>
     [Immutable]
-    internal struct StateTransition : IEquatable<StateTransition>
+    internal struct StateTransition : IEquatable<object>, IEquatable<StateTransition>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StateTransition"/> struct.
@@ -61,10 +62,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) =>
-            obj is StateTransition other
-            && this.CurrentState == other.CurrentState
-            && this.Trigger == other.Trigger;
+        public override bool Equals(object obj) => obj is StateTransition other && this.Equals(other);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="StateTransition"/>.
@@ -72,14 +70,14 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <param name="other">The other state transition.</param>
         /// <returns>A boolean.</returns>
         public bool Equals(StateTransition other) =>
-               this.CurrentState.Equals(other.CurrentState)
-            && this.Trigger.Equals(other.Trigger);
+               this.CurrentState.Equals(other.CurrentState) &&
+               this.Trigger.Equals(other.Trigger);
 
         /// <summary>
         /// Returns the hash code of this <see cref="StateTransition"/>.
         /// </summary>
         /// <returns>An integer.</returns>
-        public override int GetHashCode() => this.CurrentState.GetHashCode() + this.Trigger.GetHashCode();
+        public override int GetHashCode() => Hash.GetCode(this.CurrentState, this.Trigger);
 
         /// <summary>
         /// Returns a string representation of the <see cref="StateTransition"/>.

@@ -29,10 +29,10 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Order : Aggregate<Order>
     {
-        private readonly FiniteStateMachine orderState = OrderStateMachine.Create();
-        private readonly List<OrderId> orderIds = new List<OrderId>();
-        private readonly List<OrderId> orderIdsBroker = new List<OrderId>();
-        private readonly List<ExecutionId> executionIds = new List<ExecutionId>();
+        private readonly FiniteStateMachine orderState;
+        private readonly List<OrderId> orderIds;
+        private readonly List<OrderId> orderIdsBroker;
+        private readonly List<ExecutionId> executionIds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
@@ -61,6 +61,11 @@ namespace Nautilus.DomainModel.Aggregates
             : base(orderId, timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
+
+            this.orderState = OrderStateMachine.Create();
+            this.orderIds = new List<OrderId>();
+            this.orderIdsBroker = new List<OrderId>();
+            this.executionIds = new List<ExecutionId>();
 
             this.Symbol = symbol;
             this.Label = orderLabel;
@@ -172,7 +177,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the current order status.
         /// </summary>
-        public OrderStatus Status => (OrderStatus)this.orderState.State.Value;
+        public OrderStatus Status => this.orderState.State.ToString().ToEnum<OrderStatus>();
 
         /// <summary>
         /// Gets a value indicating whether the order status is complete.

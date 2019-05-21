@@ -18,6 +18,8 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     [Immutable]
     internal struct Trigger : IEquatable<Trigger>
     {
+        private readonly string value;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Trigger"/> structure.
         /// </summary>
@@ -27,7 +29,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         {
             Debug.NotEmptyOrWhiteSpace(trigger, nameof(trigger));
 
-            this.Value = trigger;
+            this.value = trigger;
         }
 
         /// <summary>
@@ -37,13 +39,8 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
         internal Trigger(Enum trigger)
         {
-            this.Value = trigger.ToString();
+            this.value = trigger.ToString();
         }
-
-        /// <summary>
-        /// Gets the <see cref="string"/> value of this trigger.
-        /// </summary>
-        public string Value { get; }
 
         /// <summary>
         /// The ==.
@@ -66,25 +63,25 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) => obj is Trigger other && this.Value == other.Value;
+        public override bool Equals(object obj) => obj is Trigger trigger && this.Equals(trigger);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="Trigger"/>.
         /// </summary>
         /// <param name="other">The other state.</param>
         /// <returns>A boolean.</returns>
-        public bool Equals(Trigger other) => this.Value == other.Value;
+        public bool Equals(Trigger other) => this.value == other.value;
 
         /// <summary>
         /// Returns the hash code of this <see cref="Trigger"/>.
         /// </summary>
         /// <returns>An integer.</returns>
-        public override int GetHashCode() => this.Value.GetHashCode();
+        public override int GetHashCode() => this.value.GetHashCode();
 
         /// <summary>
         /// Returns a string representation of the <see cref="Trigger"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => this.Value;
+        public override string ToString() => this.value;
     }
 }

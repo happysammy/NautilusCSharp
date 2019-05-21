@@ -8,6 +8,7 @@
 
 namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
@@ -37,10 +38,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = ExampleOrderStateMachine.Create();
 
             // Act
-            var result = stateMachine.Process(new Trigger(nameof(OrderAccepted)));
+            stateMachine.Process(new Trigger(nameof(OrderAccepted)));
 
             // Assert
-            Assert.True(result.IsSuccess);
             Assert.Equal(new State(OrderStatus.Accepted), stateMachine.State);
         }
 
@@ -51,10 +51,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = ExampleOrderStateMachine.Create();
 
             // Act
-            var result = stateMachine.Process(new Trigger(nameof(OrderWorking)));
-
             // Assert
-            Assert.True(result.IsFailure);
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(nameof(OrderWorking))));
         }
 
         [Fact]
@@ -67,10 +65,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             stateMachine.Process(new Trigger(nameof(OrderAccepted)));
             stateMachine.Process(new Trigger(nameof(OrderWorking)));
             stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
-            var result = stateMachine.Process(new Trigger(nameof(OrderFilled)));
+            stateMachine.Process(new Trigger(nameof(OrderFilled)));
 
             // Assert
-            Assert.True(result.IsSuccess);
             Assert.Equal(new State(OrderStatus.Filled), stateMachine.State);
         }
 
@@ -84,11 +81,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             stateMachine.Process(new Trigger(nameof(OrderAccepted)));
             stateMachine.Process(new Trigger(nameof(OrderWorking)));
             stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
-            var result = stateMachine.Process(new Trigger(nameof(OrderExpired)));
 
             // Assert
-            Assert.True(result.IsFailure);
-            Assert.Equal(new State(OrderStatus.PartiallyFilled), stateMachine.State);
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(OrderStatus.Expired)));
         }
     }
 }
