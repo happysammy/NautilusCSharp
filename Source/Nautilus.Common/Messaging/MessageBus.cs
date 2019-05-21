@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Messaging;
 
     /// <summary>
-    /// Represents a generic message bus.
+    /// Provides a generic message bus.
     /// </summary>
     /// <typeparam name="T">The message bus type.</typeparam>
     public sealed class MessageBus<T> : MessagingAgent
@@ -42,7 +42,7 @@ namespace Nautilus.Common.Messaging
             this.RegisterHandler<InitializeSwitchboard>(this.OnMessage);
             this.RegisterHandler<Envelope<T>>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnStop);
-            this.RegisterUnhandled(this.Unhandled);
+            this.RegisterUnhandled(this.AddToDeadLetters);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nautilus.Common.Messaging
         private void OnMessage(InitializeSwitchboard message)
         {
             this.switchboard = message.Switchboard;
-            this.switchboard.RegisterDeadLetterChannel(this.Unhandled);
+            this.switchboard.RegisterDeadLetterChannel(this.AddToDeadLetters);
             this.log.Information("Initialized.");
         }
 
@@ -81,7 +81,7 @@ namespace Nautilus.Common.Messaging
             this.log.Verbose($"[{this.ProcessedCount}] {envelope.Sender} -> {envelope} -> {envelope.Receiver}");
         }
 
-        private void Unhandled(object message)
+        private void AddToDeadLetters(object message)
         {
             this.log.Error($"Unhandled message [{message}].");
             this.deadLetters.Add(message);

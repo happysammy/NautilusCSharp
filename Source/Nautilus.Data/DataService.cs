@@ -23,6 +23,7 @@ namespace Nautilus.Data
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
+    using Nautilus.Scheduler;
 
     /// <summary>
     /// Provides a data service.
@@ -31,6 +32,7 @@ namespace Nautilus.Data
     public sealed class DataService : ComponentBusConnectedBase
     {
         private readonly ImmutableDictionary<Address, IEndpoint> addresses;
+        private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
         private readonly IEnumerable<Symbol> subscribingSymbols;
         private readonly IEnumerable<BarSpecification> barSpecifications;
@@ -42,6 +44,7 @@ namespace Nautilus.Data
         /// </summary>
         /// <param name="setupContainer">The setup container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
@@ -52,6 +55,7 @@ namespace Nautilus.Data
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
             Dictionary<Address, IEndpoint> addresses,
+            IScheduler scheduler,
             IFixGateway fixGateway,
             IEnumerable<Symbol> subscribingSymbols,
             IEnumerable<BarSpecification> barSpecifications,
@@ -63,6 +67,7 @@ namespace Nautilus.Data
                 messagingAdapter)
         {
             this.addresses = addresses.ToImmutableDictionary();
+            this.scheduler = scheduler;
             this.fixGateway = fixGateway;
             this.subscribingSymbols = subscribingSymbols;
             this.barSpecifications = barSpecifications;
@@ -70,7 +75,7 @@ namespace Nautilus.Data
             this.updateInstruments = updateInstruments;
 
             messagingAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(this.addresses),
+                Switchboard.Create(addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -106,7 +111,6 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Stopping from {message}...");
 
-            // this.Send(ServiceAddress.Scheduler, message);
             this.Send(DataServiceAddress.DatabaseTaskManager, message);
 
             this.fixGateway.Disconnect();
@@ -126,10 +130,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"{message.SessionId} session is connected.");
 
-            if (this.updateInstruments)
-            {
-                this.fixGateway.UpdateInstrumentsSubscribeAll();
-            }
+            this.fixGateway.UpdateInstrumentsSubscribeAll();
 
             foreach (var symbol in this.subscribingSymbols)
             {

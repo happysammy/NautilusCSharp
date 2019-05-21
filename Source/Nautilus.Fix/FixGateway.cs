@@ -252,10 +252,7 @@ namespace Nautilus.Fix
                     Price.Create(ask),
                     timestamp);
 
-                for (var i = 0; i < this.tickReceivers.Count; i++)
-                {
-                    this.tickReceivers[i].Send(tick);
-                }
+                this.SendToTickReceivers(tick);
             });
         }
 
@@ -336,10 +333,7 @@ namespace Nautilus.Fix
                         this.NewGuid(),
                         this.TimeNow());
 
-                    foreach (var receiver in this.instrumentReceivers)
-                    {
-                        this.Send(receiver, dataDelivery);
-                    }
+                    this.SendToInstrumentReceivers(dataDelivery);
                 }
             });
         }
@@ -417,10 +411,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     timestamp);
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(accountEvent);
-                }
+                this.SendToEventReceivers(accountEvent);
 
                 this.Log.Debug(
                     $"AccountEvent: " +
@@ -461,10 +452,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderRejected);
-                }
+                this.SendToEventReceivers(orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -509,10 +497,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderCancelReject);
-                }
+                this.SendToEventReceivers(orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -556,10 +541,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderCancelled);
-                }
+                this.SendToEventReceivers(orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {orderLabel} " +
@@ -607,10 +589,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderModified);
-                }
+                this.SendToEventReceivers(orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {orderLabel} " +
@@ -675,10 +654,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderWorking);
-                }
+                this.SendToEventReceivers(orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -730,10 +706,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderExpired);
-                }
+                this.SendToEventReceivers(orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {orderLabel} " +
@@ -795,10 +768,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderFilled);
-                }
+                this.SendToEventReceivers(orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: {orderLabel} " +
@@ -867,10 +837,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                foreach (var receiver in this.eventReceivers)
-                {
-                    receiver.Send(orderPartiallyFilled);
-                }
+                this.SendToEventReceivers(orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: {orderLabel} " +
@@ -893,6 +860,30 @@ namespace Nautilus.Fix
         protected override void OnStop(Stop message)
         {
             this.Disconnect();
+        }
+
+        private void SendToTickReceivers(Tick tick)
+        {
+            for (var i = 0; i < this.tickReceivers.Count; i++)
+            {
+                this.tickReceivers[i].Send(tick);
+            }
+        }
+
+        private void SendToEventReceivers(Event message)
+        {
+            for (var i = 0; i < this.eventReceivers.Count; i++)
+            {
+                this.eventReceivers[i].Send(message);
+            }
+        }
+
+        private void SendToInstrumentReceivers(DataDelivery<Instrument> message)
+        {
+            for (var i = 0; i < this.instrumentReceivers.Count; i++)
+            {
+                this.Send(this.instrumentReceivers[i], message);
+            }
         }
     }
 }

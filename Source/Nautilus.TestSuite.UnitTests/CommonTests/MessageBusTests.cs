@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests
             {
                 { DataServiceAddress.BarAggregationController, this.mockReceiver.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, this.mockReceiver.Endpoint },
-            }.ToImmutableDictionary();
+            };
 
             this.messageBus.Endpoint.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),

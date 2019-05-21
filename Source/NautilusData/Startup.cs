@@ -10,6 +10,7 @@ namespace NautilusData
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -95,6 +96,8 @@ namespace NautilusData
         private void OnShutdown()
         {
             this.dataService?.Stop();
+
+            Task.Delay(2000).Wait(); // TODO: Graceful stop.
         }
     }
 }

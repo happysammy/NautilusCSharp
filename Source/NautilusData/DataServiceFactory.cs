@@ -103,6 +103,7 @@ namespace NautilusData
                 container,
                 messagingAdapter,
                 addresses,
+                scheduler,
                 fixGateway,
                 symbolConverter.GetAllSymbols(),
                 config.BarSpecifications,

@@ -10,7 +10,6 @@ namespace Nautilus.Execution
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -65,10 +64,8 @@ namespace Nautilus.Execution
             Condition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
             addresses.Add(ExecutionServiceAddress.Execution, this.Endpoint);
-            var immutableAddresses = addresses.ToImmutableDictionary();
-
             messagingAdapter.Send(new InitializeSwitchboard(
-                Switchboard.Create(immutableAddresses),
+                Switchboard.Create(addresses),
                 this.NewGuid(),
                 this.TimeNow()));
 
@@ -104,7 +101,7 @@ namespace Nautilus.Execution
 
             // Wire up system
             this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
-            this.fixGateway.RegisterEventReceiver(immutableAddresses[ExecutionServiceAddress.OrderManager]);
+            this.fixGateway.RegisterEventReceiver(addresses[ExecutionServiceAddress.OrderManager]);
         }
 
         /// <inheritdoc />

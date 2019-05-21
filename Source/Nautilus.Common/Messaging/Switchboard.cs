@@ -12,15 +12,13 @@ namespace Nautilus.Common.Messaging
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using Nautilus.Core;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
-    /// Represents a messaging switchboard of all addresses within the system.
+    /// Provides a messaging switchboard of all addresses within the system.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class Switchboard
     {
         private readonly ImmutableDictionary<Address, IEndpoint> addresses;
@@ -30,7 +28,7 @@ namespace Nautilus.Common.Messaging
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
         /// <param name="addresses">The system addresses.</param>
-        private Switchboard(ImmutableDictionary<Address, IEndpoint> addresses)
+        private Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
             this.addresses = addresses.ToImmutableDictionary();
         }
@@ -46,7 +44,7 @@ namespace Nautilus.Common.Messaging
         /// <returns>The empty switchboard.</returns>
         public static Switchboard Empty()
         {
-            return new Switchboard(ImmutableDictionary<Address, IEndpoint>.Empty);
+            return new Switchboard(new Dictionary<Address, IEndpoint>());
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace Nautilus.Common.Messaging
         /// </summary>
         /// <param name="addressDictionary">The system addresses.</param>
         /// <returns>The switchboard.</returns>
-        public static Switchboard Create(ImmutableDictionary<Address, IEndpoint> addressDictionary)
+        public static Switchboard Create(Dictionary<Address, IEndpoint> addressDictionary)
         {
             Condition.NotEmpty(addressDictionary, nameof(addressDictionary));
 
