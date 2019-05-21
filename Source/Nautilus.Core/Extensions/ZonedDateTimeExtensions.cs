@@ -10,7 +10,6 @@ namespace Nautilus.Core.Extensions
 {
     using System;
     using System.Globalization;
-    using System.Text;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using NodaTime.Text;
@@ -94,18 +93,6 @@ namespace Nautilus.Core.Extensions
             Debug.NotEmptyOrWhiteSpace(parsePattern, nameof(parsePattern));
 
             return time.ToString(parsePattern, CultureInfo.InvariantCulture.DateTimeFormat) + "Z";
-        }
-
-        /// <summary>
-        /// Returns a <see cref="byte"/> array from this <see cref="ZonedDateTime"/>.
-        /// </summary>
-        /// <param name="time">The time.</param>
-        /// <returns>A <see cref="byte"/> array.</returns>
-        public static byte[] ToBytes(this ZonedDateTime time)
-        {
-            Debug.NotDefault(time, nameof(time));
-
-            return Encoding.UTF8.GetBytes(ToIsoString(time));
         }
 
         /// <summary>

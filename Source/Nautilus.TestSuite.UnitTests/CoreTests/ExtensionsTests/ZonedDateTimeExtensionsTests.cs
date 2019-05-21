@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using Nautilus.Core.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -95,21 +94,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 
             // Assert
             Assert.Equal("2018-01-12T23:59:00.000Z", result.ToIsoString());
-        }
-
-        [Fact]
-        internal void ToBytes_WithValidZonedDateTime_ReturnsExpectedResults()
-        {
-            // Arrange
-            var time = StubZonedDateTime.UnixEpoch();
-
-            // Act
-            var result = time.ToBytes();
-
-            // Assert
-            Assert.Equal(typeof(byte[]), result.GetType());
-            Assert.Equal("1970-01-01T00:00:00.000Z", Encoding.UTF8.GetString(result));
-            Assert.Equal(time, Encoding.UTF8.GetString(result).ToZonedDateTimeFromIso());
         }
 
         [Fact]

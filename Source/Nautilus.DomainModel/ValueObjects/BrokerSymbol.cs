@@ -29,7 +29,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public BrokerSymbol(string symbol)
         {
             Debug.NotEmptyOrWhiteSpace(symbol, nameof(symbol));
-            Debug.True(symbol.IsAllUpperCase(), nameof(symbol));
 
             this.value = symbol;
         }

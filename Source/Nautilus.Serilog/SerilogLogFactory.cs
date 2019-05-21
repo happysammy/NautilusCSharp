@@ -27,10 +27,10 @@ namespace Nautilus.Serilog
 
                 Log.Logger = new LoggerConfiguration()
                     .Enrich.FromLogContext()
-                   .Enrich.With(new ThreadIdEnricher())
-                   .WriteTo.Console(logLevel, logTemplateDefault)
-                   .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplateDefault)
-                   .CreateLogger();
+                    .Enrich.With(new ThreadIdEnricher())
+                    .WriteTo.Console(logLevel, logTemplateDefault)
+                    .WriteTo.RollingFile("Logs/Nautilus-Log-{Date}.txt", outputTemplate: logTemplateDefault)
+                    .CreateLogger();
             }
         }
     }
