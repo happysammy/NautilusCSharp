@@ -8,6 +8,7 @@
 
 namespace Nautilus.Data.Keys
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -27,35 +28,61 @@ namespace Nautilus.Data.Keys
         private const string Bars = nameof(Bars);
         private const string Instruments = nameof(Instruments);
 
-        /// <summary>
-        /// Gets the ticks namespace <see cref="string"/>.
-        /// </summary>
-        public static string TicksNamespace { get; } = $"{NautilusData}:{Ticks}";
+        private static readonly string TicksNamespace = $"{NautilusData}:{Ticks}";
+        private static readonly string BarsNamespace = $"{NautilusData}:{Bars}";
+        private static readonly string InstrumentsNamespace = $"{NautilusData}:{Instruments}";
 
         /// <summary>
-        /// Gets the bars namespace <see cref="string"/>.
+        /// Returns an array of <see cref="DateKey"/>s based on the given from and to <see cref="ZonedDateTime"/> range.
         /// </summary>
-        public static string BarsNamespace { get; } = $"{NautilusData}:{Bars}";
+        /// <param name="fromDateTime">The from date time.</param>
+        /// <param name="toDateTime">The to date time.</param>
+        /// <returns>An array of <see cref="DateKey"/>.</returns>
+        /// <remarks>The given time range should have been previously validated.</remarks>
+        public static List<DateKey> GetDateKeys(ZonedDateTime fromDateTime, ZonedDateTime toDateTime)
+        {
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
+
+            var difference = (toDateTime - fromDateTime) / Duration.FromDays(1);
+
+            if (difference <= 1)
+            {
+                return new List<DateKey> { new DateKey(fromDateTime) };
+            }
+
+            var iterationCount = Convert.ToInt32(Math.Floor(difference));
+
+            var dateKeys = new List<DateKey> { new DateKey(fromDateTime) };
+            for (var i = 0; i < iterationCount; i++)
+            {
+                dateKeys.Add(new DateKey(fromDateTime + Duration.FromDays(i + 1)));
+            }
+
+            return dateKeys;
+        }
 
         /// <summary>
-        /// Gets the instruments namespace <see cref="string"/>.
+        /// Returns a wildcard string from the given symbol bar spec.
         /// </summary>
-        public static string InstrumentsNamespace { get; } = $"{NautilusData}:{Instruments}";
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>A <see cref="string"/>.</returns>
+        public static string GetTickWildcardKey(Symbol symbol)
+        {
+            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}";
+        }
 
         /// <summary>
-        /// Gets the bars namespace wildcard <see cref="string"/>.
+        /// Returns the tick data key for the given parameters.
         /// </summary>
-        public static string TicksWildcard { get; } = TicksNamespace + "*";
-
-        /// <summary>
-        /// Gets the bars namespace wildcard <see cref="string"/>.
-        /// </summary>
-        public static string BarsWildcard { get; } = BarsNamespace + "*";
-
-        /// <summary>
-        /// Gets the instruments namespace wildcard <see cref="string"/>.
-        /// </summary>
-        public static string InstrumentsWildcard { get; } = InstrumentsNamespace + "*";
+        /// <param name="symbol">The symbol.</param>
+        /// <param name="dateKey">The date key.</param>
+        /// <returns>The key string.</returns>
+        public static string GetTickKey(Symbol symbol, DateKey dateKey)
+        {
+            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}:{dateKey}";
+        }
 
         /// <summary>
         /// Returns an array of <see cref="DateKey"/>s based on the given from and to
@@ -66,7 +93,7 @@ namespace Nautilus.Data.Keys
         /// <param name="toDateTime">The ticks to date time.</param>
         /// <returns>An array of <see cref="DateKey"/>.</returns>
         /// <remarks>The given time range should have been previously validated.</remarks>
-        public static IEnumerable<string> GetTicksKeyStrings(
+        public static IEnumerable<string> GetTickKeys(
             Symbol symbol,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime)
@@ -75,40 +102,16 @@ namespace Nautilus.Data.Keys
             Debug.NotDefault(toDateTime, nameof(toDateTime));
             Debug.True(!toDateTime.IsLessThan(fromDateTime), nameof(toDateTime));
 
-            return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
-                .Select(key => new TickDataKey(symbol, key).ToString());
+            return GetDateKeys(fromDateTime, toDateTime).Select(key => GetTickKey(symbol, key));
         }
 
         /// <summary>
-        /// Returns a wildcard string from the given symbol bar spec.
+        /// Returns a wildcard key string for all bars.
         /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        public static string GetTicksWildcardString(Symbol symbol)
+        /// <returns>The key <see cref="string"/>.</returns>
+        public static string GetBarWildcardKey()
         {
-            return $"{TicksNamespace}:{symbol.Venue}:{symbol.Code}";
-        }
-
-        /// <summary>
-        /// Returns an array of <see cref="DateKey"/>s based on the given from and to
-        /// <see cref="ZonedDateTime"/> range.
-        /// </summary>
-        /// <param name="barType">The bar specification.</param>
-        /// <param name="fromDateTime">The from date time.</param>
-        /// <param name="toDateTime">The to date time.</param>
-        /// <returns>An array of <see cref="DateKey"/>.</returns>
-        /// <remarks>The given time range should have been previously validated.</remarks>
-        public static IEnumerable<string> GetBarsKeyStrings(
-            BarType barType,
-            ZonedDateTime fromDateTime,
-            ZonedDateTime toDateTime)
-        {
-            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
-            Debug.NotDefault(toDateTime, nameof(toDateTime));
-            Debug.True(toDateTime.IsGreaterThanOrEqualTo(fromDateTime), nameof(toDateTime));
-
-            return DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime)
-                .Select(key => new BarDataKey(barType, key).ToString());
+            return BarsNamespace + "*";
         }
 
         /// <summary>
@@ -116,7 +119,7 @@ namespace Nautilus.Data.Keys
         /// </summary>
         /// <param name="barType">The symbol bar spec.</param>
         /// <returns>A <see cref="string"/>.</returns>
-        public static string GetBarTypeWildcardString(BarType barType)
+        public static string GetBarWildcardKey(BarType barType)
         {
             return BarsNamespace +
                    $":{barType.Symbol.Venue}" +
@@ -126,10 +129,56 @@ namespace Nautilus.Data.Keys
         }
 
         /// <summary>
+        /// Returns the bar data key for the given parameters.
+        /// </summary>
+        /// <param name="barType">The bar type.</param>
+        /// <param name="dateKey">The date key.</param>
+        /// <returns>The key <see cref="string"/>.</returns>
+        public static string GetBarKey(BarType barType, DateKey dateKey)
+        {
+            return BarsNamespace +
+                   $":{barType.Symbol.Venue}" +
+                   $":{barType.Symbol.Code}" +
+                   $":{barType.Specification.Resolution}" +
+                   $":{barType.Specification.QuoteType}" +
+                   $":{dateKey}";
+        }
+
+        /// <summary>
+        /// Returns an array of <see cref="DateKey"/>s based on the given from and to
+        /// <see cref="ZonedDateTime"/> range.
+        /// </summary>
+        /// <param name="barType">The bar specification.</param>
+        /// <param name="fromDateTime">The from date time.</param>
+        /// <param name="toDateTime">The to date time.</param>
+        /// <returns>An array of key <see cref="string"/>(s).</returns>
+        /// <remarks>The given time range should have been previously validated.</remarks>
+        public static IEnumerable<string> GetBarKeys(
+            BarType barType,
+            ZonedDateTime fromDateTime,
+            ZonedDateTime toDateTime)
+        {
+            Debug.NotDefault(fromDateTime, nameof(fromDateTime));
+            Debug.NotDefault(toDateTime, nameof(toDateTime));
+            Debug.True(toDateTime.IsGreaterThanOrEqualTo(fromDateTime), nameof(toDateTime));
+
+            return GetDateKeys(fromDateTime, toDateTime).Select(key => GetBarKey(barType, key));
+        }
+
+        /// <summary>
+        /// Returns a wildcard key string for all instruments.
+        /// </summary>
+        /// <returns>The key <see cref="string"/>.</returns>
+        public static string GetInstrumentWildcardKey()
+        {
+            return InstrumentsNamespace + "*";
+        }
+
+        /// <summary>
         /// Returns the instruments key.
         /// </summary>
         /// <param name="symbol">The instruments symbol.</param>
-        /// <returns>A <see cref="string"/>.</returns>
+        /// <returns>The key <see cref="string"/>.</returns>
         public static string GetInstrumentKey(Symbol symbol)
         {
             return InstrumentsNamespace + ":" + symbol;

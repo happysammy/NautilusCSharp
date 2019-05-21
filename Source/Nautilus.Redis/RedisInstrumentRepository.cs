@@ -13,11 +13,11 @@ namespace Nautilus.Redis
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.CQS;
     using Nautilus.Core.Extensions;
+    using Nautilus.Data.Interfaces;
     using Nautilus.Data.Keys;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -104,7 +104,7 @@ namespace Nautilus.Redis
         /// <returns>The keys.</returns>
         public IReadOnlyCollection<string> GetAllKeys()
         {
-            return this.redisServer.Keys(pattern: KeyProvider.InstrumentsWildcard)
+            return this.redisServer.Keys(pattern: KeyProvider.GetInstrumentWildcardKey())
                 .Select(k => k.ToString())
                 .ToArray();
         }

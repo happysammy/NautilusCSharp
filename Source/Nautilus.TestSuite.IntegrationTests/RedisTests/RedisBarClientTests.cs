@@ -73,15 +73,13 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
-            var marketDataKey = new BarDataKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var barKey = KeyProvider.GetBarKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
 
             // Act
-            var result1 = this.client.KeyExists(marketDataKey);
-            var result2 = this.client.KeyExists(marketDataKey.ToString());
+            var result = this.client.KeyExists(barKey);
 
             // Assert
-            Assert.False(result1);
-            Assert.False(result2);
+            Assert.False(result);
         }
 
         [Fact]
@@ -89,18 +87,16 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
         {
             // Arrange
             var barType = StubBarType.AUDUSD();
-            var marketDataKey = new BarDataKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
+            var barKey = KeyProvider.GetBarKey(barType, new DateKey(StubZonedDateTime.UnixEpoch()));
             var bar = new Bar(0.80000M, 0.80010M, 0.79990M, 0.80001M, 1000000, StubZonedDateTime.UnixEpoch());
 
             this.client.AddBars(barType, new[] { bar });
 
             // Act
-            var result1 = this.client.KeyExists(marketDataKey);
-            var result2 = this.client.KeyExists(marketDataKey.ToString());
+            var result = this.client.KeyExists(barKey);
 
             // Assert
-            Assert.True(result1);
-            Assert.True(result2);
+            Assert.True(result);
         }
 
         [Fact]
@@ -154,7 +150,7 @@ namespace Nautilus.TestSuite.IntegrationTests.RedisTests
             var toDateTime = StubZonedDateTime.UnixEpoch() + Duration.FromHours(hoursOffset);
 
             // Act
-            var result = DateKeyGenerator.GetDateKeys(fromDateTime, toDateTime);
+            var result = KeyProvider.GetDateKeys(fromDateTime, toDateTime);
 
             // Assert
             Assert.Equal(dateKeyCount, result.Count);

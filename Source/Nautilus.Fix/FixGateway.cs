@@ -306,7 +306,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Updates the given instruments in the <see cref="IInstrumentRepository"/>.
+        /// Updates the given instruments in the instrument repository.
         /// </summary>
         /// <param name="instruments">The instruments collection.</param>
         /// <param name="responseId">The response identifier.</param>
