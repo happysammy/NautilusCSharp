@@ -36,12 +36,6 @@ namespace Nautilus.Common.Componentry
         public ZonedDateTime TimeNow() => this.clock.GetCurrentZonedDateTime();
 
         /// <summary>
-        /// Returns the current instant of this clock.
-        /// </summary>
-        /// <returns>An <see cref="Instant"/>.</returns>
-        public Instant CurrentInstant() => this.clock.GetCurrentInstant();
-
-        /// <summary>
         /// Returns the time zone of this clock.
         /// </summary>
         /// <returns>A <see cref="DateTimeZone"/>.</returns>

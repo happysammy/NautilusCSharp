@@ -62,7 +62,7 @@ namespace Nautilus.Execution
             Condition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Condition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
-            addresses.Add(ExecutionServiceAddress.Execution, this.Endpoint);
+            addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),
@@ -97,10 +97,6 @@ namespace Nautilus.Execution
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<ConnectFix>(this.OnMessage);
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
-
-            // Wire up system
-            this.fixGateway.RegisterConnectionEventReceiver(this.Endpoint);
-            this.fixGateway.RegisterEventReceiver(addresses[ExecutionServiceAddress.OrderManager]);
         }
 
         /// <inheritdoc />

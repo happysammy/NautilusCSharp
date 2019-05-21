@@ -57,7 +57,7 @@ namespace Nautilus.Execution
             this.orders.Add(order);
             this.Log.Debug($"Order {order.Id} added to order list.");
 
-            this.Send(ExecutionServiceAddress.Execution, message);
+            this.Send(ExecutionServiceAddress.Core, message);
 
             if (order.Price.HasValue && !this.modifyCache.ContainsKey(order.Id))
             {
@@ -83,7 +83,7 @@ namespace Nautilus.Execution
                 message.Id,
                 message.Timestamp);
 
-            this.Send(ExecutionServiceAddress.Execution, cancelOrder);
+            this.Send(ExecutionServiceAddress.Core, cancelOrder);
         }
 
         private void OnMessage(ModifyOrder message)
@@ -112,7 +112,7 @@ namespace Nautilus.Execution
 
             if (this.modifyCache[order.Id].Count == 0)
             {
-                this.Send(ExecutionServiceAddress.Execution, modifyOrder);
+                this.Send(ExecutionServiceAddress.Core, modifyOrder);
                 this.AddToCache(modifyOrder);
             }
             else
@@ -210,7 +210,7 @@ namespace Nautilus.Execution
             {
                 var command = this.modifyCache[order.Id][0];
 
-                this.Send(ExecutionServiceAddress.Execution, command);
+                this.Send(ExecutionServiceAddress.Core, command);
                 this.Log.Debug($"Sent cached {command}.");
             }
         }

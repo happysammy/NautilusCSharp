@@ -11,6 +11,7 @@ namespace Nautilus.Core.Extensions
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Runtime.CompilerServices;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using NodaTime.Text;
@@ -318,7 +319,7 @@ namespace Nautilus.Core.Extensions
         /// <param name="timeOfDay">The time of day.</param>
         /// <param name="now">The current instant in time.</param>
         /// <returns>The duration.</returns>
-        public static Duration GetDurationToNextUtc(
+        public static ZonedDateTime GetNextUtc(
             IsoDayOfWeek dayOfWeek,
             LocalTime timeOfDay,
             Instant now)
@@ -334,9 +335,20 @@ namespace Nautilus.Core.Extensions
                 localNext = localNext.PlusWeeks(1);
             }
 
-            var zonedNext = localNext.InZoneLeniently(DateTimeZone.Utc);
-            var instantNext = zonedNext.ToInstant();
-            return instantNext - now;
+            return localNext.InZoneLeniently(DateTimeZone.Utc);
+        }
+
+        /// <summary>
+        /// Returns the duration to the given next time (UTC).
+        /// </summary>
+        /// <param name="next">The next time (UTC).</param>
+        /// <param name="now">The current instant in time.</param>
+        /// <returns>The duration.</returns>
+        public static Duration GetDurationToNextUtc(
+            ZonedDateTime next,
+            Instant now)
+        {
+            return next.ToInstant() - now;
         }
     }
 }

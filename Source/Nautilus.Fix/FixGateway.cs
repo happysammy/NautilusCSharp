@@ -96,7 +96,7 @@ namespace Nautilus.Fix
         /// Registers the receiver endpoint to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        public void RegisterConnectionEventReceiver(IEndpoint receiver)
+        public void RegisterConnectionEventReceiver(Address receiver)
         {
             this.fixClient.RegisterConnectionEventReceiver(receiver);
         }
@@ -853,12 +853,16 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
+            this.Log.Information($"Starting from {message}...");
+
             this.Connect();
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
+            this.Log.Information($"Stopping from {message}...");
+
             this.Disconnect();
         }
 

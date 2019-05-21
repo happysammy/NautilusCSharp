@@ -48,7 +48,7 @@ namespace Nautilus.Common.Interfaces
         /// Registers the receiver endpoint to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
-        void RegisterConnectionEventReceiver(IEndpoint receiver);
+        void RegisterConnectionEventReceiver(Address receiver);
 
         /// <summary>
         /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.

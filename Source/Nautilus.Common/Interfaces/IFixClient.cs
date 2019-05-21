@@ -13,7 +13,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging.Interfaces;
+    using Nautilus.Messaging;
 
     /// <summary>
     /// The adapter for FIX data feed client.
@@ -35,7 +35,7 @@ namespace Nautilus.Common.Interfaces
         /// Registers the given receiver for brokerage connection events.
         /// </summary>
         /// <param name="receiver">The event receiver.</param>
-        void RegisterConnectionEventReceiver(IEndpoint receiver);
+        void RegisterConnectionEventReceiver(Address receiver);
 
         /// <summary>
         /// Connects to the FIX session.

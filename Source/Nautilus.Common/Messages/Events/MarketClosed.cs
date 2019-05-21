@@ -11,6 +11,8 @@ namespace Nautilus.Common.Messages.Events
     using System;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -22,11 +24,32 @@ namespace Nautilus.Common.Messages.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketClosed"/> class.
         /// </summary>
+        /// <param name="symbol">The symbol of the market.</param>
+        /// <param name="closedTime">The market closed time.</param>
         /// <param name="id">The event identifier.</param>
         /// <param name="timestamp">The event timestamp.</param>
-        public MarketClosed(Guid id, ZonedDateTime timestamp)
+        public MarketClosed(
+            Symbol symbol,
+            ZonedDateTime closedTime,
+            Guid id,
+            ZonedDateTime timestamp)
             : base(id, timestamp)
         {
+            Debug.NotDefault(id, nameof(id));
+            Debug.NotDefault(timestamp, nameof(timestamp));
+
+            this.Symbol = symbol;
+            this.ClosedTime = closedTime;
         }
+
+        /// <summary>
+        /// Gets the market closed symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
+
+        /// <summary>
+        /// Gets the market closed time.
+        /// </summary>
+        public ZonedDateTime ClosedTime { get; }
     }
 }

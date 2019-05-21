@@ -82,6 +82,7 @@ namespace NautilusData
 
             var fixClient = CreateFixClient(
                 container,
+                messagingAdapter,
                 config.FixConfiguration,
                 symbolConverter);
 
@@ -90,9 +91,16 @@ namespace NautilusData
                 messagingAdapter,
                 fixClient);
 
+            // Wire up system
+            fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
+            fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
+            fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
+            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
+
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { DataServiceAddress.Scheduler, scheduler.Endpoint },
+                { DataServiceAddress.FixGateway, fixGateway.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
@@ -112,6 +120,7 @@ namespace NautilusData
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
@@ -120,11 +129,13 @@ namespace NautilusData
                 case Brokerage.FXCM:
                     return FxcmFixClientFactory.Create(
                         container,
+                        messagingAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
+                        messagingAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:

@@ -12,33 +12,43 @@ namespace Nautilus.Data
     using Nautilus.Messaging;
 
     /// <summary>
-    /// Provides data service component messaging addresses.
+    /// Provides data service module messaging addresses.
     /// </summary>
     [PerformanceOptimized]
     public static class DataServiceAddress
     {
         /// <summary>
-        /// Gets the <see cref="Scheduler"/> component messaging address.
+        /// Gets the <see cref="Core"/> module messaging address.
+        /// </summary>
+        public static Address Core { get; } = new Address(nameof(Core));
+
+        /// <summary>
+        /// Gets the <see cref="Scheduler"/> module messaging address.
         /// </summary>
         public static Address Scheduler { get; } = new Address(nameof(Scheduler));
 
         /// <summary>
-        /// Gets the <see cref="DatabaseTaskManager"/> component messaging address.
+        /// Gets the <see cref="FixGateway"/> module messaging address.
+        /// </summary>
+        public static Address FixGateway { get; } = new Address(nameof(FixGateway));
+
+        /// <summary>
+        /// Gets the <see cref="DatabaseTaskManager"/> module messaging address.
         /// </summary>
         public static Address DatabaseTaskManager { get; } = new Address(nameof(DatabaseTaskManager));
 
         /// <summary>
-        /// Gets the <see cref="BarAggregationController"/> component messaging address.
+        /// Gets the <see cref="BarAggregationController"/> module messaging address.
         /// </summary>
         public static Address BarAggregationController { get; } = new Address(nameof(BarAggregationController));
 
         /// <summary>
-        /// Gets the <see cref="BarPublisher"/> component messaging address.
+        /// Gets the <see cref="BarPublisher"/> module messaging address.
         /// </summary>
         public static Address BarPublisher { get; } = new Address(nameof(BarPublisher));
 
         /// <summary>
-        /// Gets the <see cref="TickPublisher"/> component messaging address.
+        /// Gets the <see cref="TickPublisher"/> module messaging address.
         /// </summary>
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
     }

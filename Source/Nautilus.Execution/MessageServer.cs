@@ -98,7 +98,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(CollateralInquiry message)
         {
-            this.Send(ExecutionServiceAddress.Execution, message);
+            this.Send(ExecutionServiceAddress.Core, message);
         }
 
         private void OnMessage(Event @event)

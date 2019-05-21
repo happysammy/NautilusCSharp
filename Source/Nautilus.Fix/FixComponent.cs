@@ -20,7 +20,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix.Interfaces;
-    using Nautilus.Messaging.Interfaces;
+    using Nautilus.Messaging;
     using NodaTime;
     using QuickFix;
     using QuickFix.Fields;
@@ -39,10 +39,11 @@ namespace Nautilus.Fix
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly ILogger logger;
+        private readonly IMessagingAdapter messagingAdapter;
         private readonly CommandHandler commandHandler;
         private readonly FixConfiguration config;
         private readonly bool sendAccountTag;
-        private readonly List<IEndpoint> connectionEventReceivers;
+        private readonly List<Address> connectionEventReceivers;
 
         private SocketInitiator? initiator;
         private Session? session;
@@ -51,11 +52,13 @@ namespace Nautilus.Fix
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
         /// <param name="container">The setup container.</param>
+        /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
         protected FixComponent(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
             IFixMessageRouter messageRouter)
@@ -63,6 +66,7 @@ namespace Nautilus.Fix
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
             this.logger = container.LoggerFactory.Create(NautilusService.FIX, new Label(nameof(FixClient)));
+            this.messagingAdapter = messagingAdapter;
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;
             this.Account = config.Credentials.Account;
@@ -72,7 +76,7 @@ namespace Nautilus.Fix
             this.FixMessageHandler = messageHandler;
             this.FixMessageRouter = messageRouter;
 
-            this.connectionEventReceivers = new List<IEndpoint>();
+            this.connectionEventReceivers = new List<Address>();
         }
 
         /// <summary>
@@ -148,7 +152,7 @@ namespace Nautilus.Fix
         /// Registers the given receiver to receive connection events from the FIX client.
         /// </summary>
         /// <param name="receiver">The event receiver endpoint.</param>
-        public void RegisterConnectionEventReceiver(IEndpoint receiver)
+        public void RegisterConnectionEventReceiver(Address receiver)
         {
             Debug.NotIn(receiver, this.connectionEventReceivers, nameof(receiver), nameof(this.connectionEventReceivers));
 
@@ -210,11 +214,14 @@ namespace Nautilus.Fix
             {
                 foreach (var receiver in this.connectionEventReceivers)
                 {
-                    receiver.Send(new FixSessionConnected(
-                        this.Broker,
-                        sessionId.ToString(),
-                        this.NewGuid(),
-                        this.TimeNow()));
+                    this.messagingAdapter.Send(
+                        receiver,
+                        new FixSessionConnected(
+                            this.Broker,
+                            sessionId.ToString(),
+                            this.NewGuid(),
+                            this.TimeNow()),
+                        new Address(nameof(FixGateway)));
                 }
 
                 this.Log.Debug($"Logon - {sessionId}");
@@ -231,11 +238,14 @@ namespace Nautilus.Fix
             {
                 foreach (var receiver in this.connectionEventReceivers)
                 {
-                    receiver.Send(new FixSessionDisconnected(
-                        this.Broker,
-                        sessionId.ToString(),
-                        this.NewGuid(),
-                        this.TimeNow()));
+                    this.messagingAdapter.Send(
+                        receiver,
+                        new FixSessionDisconnected(
+                            this.Broker,
+                            sessionId.ToString(),
+                            this.NewGuid(),
+                            this.TimeNow()),
+                        new Address(nameof(FixGateway)));
                 }
 
                 this.Log.Debug($"Logout - {sessionId}");

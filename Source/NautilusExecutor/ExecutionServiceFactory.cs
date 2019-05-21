@@ -71,6 +71,7 @@ namespace NautilusExecutor
 
             var fixClient = CreateFixClient(
                 container,
+                messagingAdapter,
                 config.FixConfiguration,
                 symbolProvider);
 
@@ -79,9 +80,14 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
+            // Wire up system
+            fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
+            fixGateway.RegisterEventReceiver(orderManager.Endpoint);
+
             var addresses = new Dictionary<Address, IEndpoint>
             {
                 { ExecutionServiceAddress.Scheduler, scheduler.Endpoint },
+                { ExecutionServiceAddress.FixGateway, fixGateway.Endpoint },
                 { ExecutionServiceAddress.MessageServer, messageServer.Endpoint },
                 { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
             };
@@ -97,6 +103,7 @@ namespace NautilusExecutor
 
         private static IFixClient CreateFixClient(
             IComponentryContainer container,
+            IMessagingAdapter messagingAdapter,
             FixConfiguration configuration,
             SymbolConverter symbolConverter)
         {
@@ -105,11 +112,13 @@ namespace NautilusExecutor
                 case Brokerage.FXCM:
                     return FxcmFixClientFactory.Create(
                         container,
+                        messagingAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.DUKASCOPY:
                     return DukascopyFixClientFactory.Create(
                         container,
+                        messagingAdapter,
                         configuration,
                         symbolConverter);
                 case Brokerage.Simulation:

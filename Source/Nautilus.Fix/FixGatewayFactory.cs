@@ -22,7 +22,7 @@ namespace Nautilus.Fix
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         /// <returns>The created FIX gateway.</returns>
-        public static IFixGateway Create(
+        public static FixGateway Create(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient)
