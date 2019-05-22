@@ -98,9 +98,16 @@ namespace Nautilus.Brokerage.FXCM
         /// </param>
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
-            var fxcmSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+
+            if (brokerSymbolQuery.IsFailure)
+            {
+                this.Log.Error(brokerSymbolQuery.Message);
+                return;
+            }
+
             var message = SecurityListRequestFactory.Create(
-                fxcmSymbol.Value,
+                brokerSymbolQuery.Value,
                 this.TimeNow());
 
             this.SendFixMessage(message);
@@ -122,10 +129,16 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="symbol">The symbol.</param>
         public void MarketDataRequestSubscribe(Symbol symbol)
         {
-            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(symbol.Code).Value;
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(symbol.Code);
+
+            if (brokerSymbolQuery.IsFailure)
+            {
+                this.Log.Error(brokerSymbolQuery.Message);
+                return;
+            }
 
             var message = MarketDataRequestFactory.Create(
-                brokerSymbol,
+                brokerSymbolQuery.Value,
                 0,
                 this.TimeNow());
 

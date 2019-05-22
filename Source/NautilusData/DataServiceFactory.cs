@@ -113,7 +113,7 @@ namespace NautilusData
                 addresses,
                 scheduler,
                 fixGateway,
-                symbolConverter.GetAllSymbols(),
+                symbolConverter.GetAllSymbols(config.Symbols, Venue.FXCM),
                 config.BarSpecifications,
                 config.BarRollingWindowDays);
         }

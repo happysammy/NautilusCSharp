@@ -254,7 +254,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Log.Information($"Created {marketOpened}Job for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created {marketOpened}Job[{symbol}] scheduled for {nextTime.ToIsoString()}");
             }
         }
 
@@ -281,7 +281,7 @@ namespace Nautilus.Data
                     marketClosed,
                     this.Endpoint);
 
-                this.Log.Information($"Created {marketClosed}Job for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created {marketClosed}Event[{symbol}] scheduled for {nextTime.ToIsoString()}");
             }
         }
 
@@ -307,7 +307,7 @@ namespace Nautilus.Data
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}");
+            this.Log.Information($"Created {job}Job scheduled for {nextTime.ToIsoString()}");
         }
     }
 }
