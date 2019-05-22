@@ -331,7 +331,7 @@ namespace Nautilus.DomainModel.Aggregates
             {
                 var expireTimeValue = expireTime.Value;
                 Condition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
-                Condition.True(expireTimeValue.IsGreaterThan(this.Timestamp), nameof(expireTime));
+                Condition.True(expireTimeValue.IsGreaterThanOrEqualTo(this.Timestamp), nameof(expireTime));
             }
         }
 

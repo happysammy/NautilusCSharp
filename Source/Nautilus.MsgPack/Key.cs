@@ -16,241 +16,241 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string EventType => "event_type";
+        internal static string EventType => nameof(EventType);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string EventId => "event_id";
+        internal static string EventId => nameof(EventId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string EventTimestamp => "event_timestamp";
+        internal static string EventTimestamp => nameof(EventTimestamp);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderEvent => "order_event";
+        internal static string OrderEvent => nameof(OrderEvent);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Symbol => "symbol";
+        internal static string Symbol => nameof(Symbol);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderId => "order_id";
+        internal static string OrderId => nameof(OrderId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderIdBroker => "order_id_broker";
+        internal static string OrderIdBroker => nameof(OrderIdBroker);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Label => "label";
+        internal static string Label => nameof(Label);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string SubmittedTime => "submitted_time";
+        internal static string SubmittedTime => nameof(SubmittedTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string AcceptedTime => "accepted_time";
+        internal static string AcceptedTime => nameof(AcceptedTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CancelledTime => "cancelled_time";
+        internal static string CancelledTime => nameof(CancelledTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string RejectedTime => "rejected_time";
+        internal static string RejectedTime => nameof(RejectedTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string RejectedResponse => "rejected_response";
+        internal static string RejectedResponse => nameof(RejectedResponse);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string RejectedReason => "rejected_reason";
+        internal static string RejectedReason => nameof(RejectedReason);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string WorkingTime => "working_time";
+        internal static string WorkingTime => nameof(WorkingTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ModifiedTime => "modified_time";
+        internal static string ModifiedTime => nameof(ModifiedTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ModifiedPrice => "modified_price";
+        internal static string ModifiedPrice => nameof(ModifiedPrice);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ExpireTime => "expire_time";
+        internal static string ExpireTime => nameof(ExpireTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ExpiredTime => "expired_time";
+        internal static string ExpiredTime => nameof(ExpiredTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ExecutionTime => "execution_time";
+        internal static string ExecutionTime => nameof(ExecutionTime);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ExecutionId => "execution_id";
+        internal static string ExecutionId => nameof(ExecutionId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string ExecutionTicket => "execution_ticket";
+        internal static string ExecutionTicket => nameof(ExecutionTicket);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderSide => "order_side";
+        internal static string OrderSide => nameof(OrderSide);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderType => "order_type";
+        internal static string OrderType => nameof(OrderType);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Price => "price";
+        internal static string Price => nameof(Price);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Quantity => "quantity";
+        internal static string Quantity => nameof(Quantity);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string TimeInForce => "time_in_force";
+        internal static string TimeInForce => nameof(TimeInForce);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string FilledQuantity => "filled_quantity";
+        internal static string FilledQuantity => nameof(FilledQuantity);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string LeavesQuantity => "leaves_quantity";
+        internal static string LeavesQuantity => nameof(LeavesQuantity);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string AveragePrice => "average_price";
+        internal static string AveragePrice => nameof(AveragePrice);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Timestamp => "timestamp";
+        internal static string Timestamp => nameof(Timestamp);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandType => "command_type";
+        internal static string CommandType => nameof(CommandType);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandId => "command_id";
+        internal static string CommandId => nameof(CommandId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandTimestamp => "command_timestamp";
+        internal static string CommandTimestamp => nameof(CommandTimestamp);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderCommand => "order_command";
+        internal static string OrderCommand => nameof(OrderCommand);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Order => "order";
+        internal static string Order => nameof(Order);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CancelReason => "cancel_reason";
+        internal static string CancelReason => nameof(CancelReason);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Broker => "broker";
+        internal static string Broker => nameof(Broker);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string AccountId => "account_id";
+        internal static string AccountId => nameof(AccountId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string AccountNumber => "account_number";
+        internal static string AccountNumber => nameof(AccountNumber);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Currency => "currency";
+        internal static string Currency => nameof(Currency);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CashBalance => "cash_balance";
+        internal static string CashBalance => nameof(CashBalance);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CashStartDay => "cash_start_day";
+        internal static string CashStartDay => nameof(CashStartDay);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CashActivityDay => "cash_activity_day";
+        internal static string CashActivityDay => nameof(CashActivityDay);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string MarginUsedLiquidation => "margin_used_liquidation";
+        internal static string MarginUsedLiquidation => nameof(MarginUsedLiquidation);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string MarginUsedMaintenance => "margin_used_maintenance";
+        internal static string MarginUsedMaintenance => nameof(MarginUsedMaintenance);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string MarginRatio => "margin_ratio";
+        internal static string MarginRatio => nameof(MarginRatio);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string MarginCallStatus => "margin_call_status";
+        internal static string MarginCallStatus => nameof(MarginCallStatus);
     }
 }

@@ -21,7 +21,7 @@ namespace Nautilus.MsgPack
     /// </summary>
     internal static class MsgPackSerializationHelper
     {
-        private const string None = "NONE";
+        private const string NONE = nameof(NONE);
 
         /// <summary>
         /// Parses and returns the symbol from the given string.
@@ -45,7 +45,7 @@ namespace Nautilus.MsgPack
         {
             Debug.NotEmptyOrWhiteSpace(priceString, nameof(priceString));
 
-            if (priceString == None)
+            if (priceString == NONE)
             {
                 return OptionRef<Price>.None();
             }
@@ -64,7 +64,7 @@ namespace Nautilus.MsgPack
         internal static string GetPriceString(OptionRef<Price> price)
         {
             return price.HasValue
-                ? None
+                ? NONE
                 : price.ToString();
         }
 
@@ -77,7 +77,7 @@ namespace Nautilus.MsgPack
         {
             Debug.NotEmptyOrWhiteSpace(expireTimeString, nameof(expireTimeString));
 
-            return expireTimeString == None
+            return expireTimeString == NONE
                 ? OptionVal<ZonedDateTime>.None()
                 : OptionVal<ZonedDateTime>.Some(expireTimeString.ToZonedDateTimeFromIso());
         }
@@ -90,7 +90,7 @@ namespace Nautilus.MsgPack
         internal static string GetExpireTimeString(OptionVal<ZonedDateTime> expireTime)
         {
             return expireTime.HasNoValue
-                ? None
+                ? NONE
                 : expireTime.Value.ToIsoString();
         }
     }

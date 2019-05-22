@@ -23,12 +23,6 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {
-        private const string OrderCommand = "order_command";
-        private const string SubmitOrder = "submit_order";
-        private const string CancelOrder = "cancel_order";
-        private const string ModifyOrder = "modify_order";
-        private const string CollateralInquiry = "collateral_inquiry";
-
         private readonly IOrderSerializer orderSerializer;
 
         /// <summary>
@@ -53,9 +47,9 @@ namespace Nautilus.MsgPack
                 case CollateralInquiry collateralInquiry:
                     var package = new MessagePackObjectDictionary
                     {
-                        { new MessagePackObject(Key.CommandType), CollateralInquiry },
-                        { new MessagePackObject(Key.CommandId), collateralInquiry.Identifier.ToString() },
-                        { new MessagePackObject(Key.CommandTimestamp), collateralInquiry.Timestamp.ToIsoString() },
+                        { Key.CommandType, nameof(CollateralInquiry) },
+                        { Key.CommandId, collateralInquiry.Identifier.ToString() },
+                        { Key.CommandTimestamp, collateralInquiry.Timestamp.ToIsoString() },
                     };
                     return MsgPackSerializer.Serialize(package.Freeze());
                 default:
@@ -78,9 +72,9 @@ namespace Nautilus.MsgPack
 
             switch (commandType)
             {
-                case OrderCommand:
+                case nameof(OrderCommand):
                     return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
-                case CollateralInquiry:
+                case nameof(CollateralInquiry):
                     return new CollateralInquiry(commandId, commandTimestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(commandType, nameof(commandType));
@@ -91,24 +85,24 @@ namespace Nautilus.MsgPack
         {
             var package = new MessagePackObjectDictionary
             {
-                { new MessagePackObject(Key.CommandType), OrderCommand },
-                { new MessagePackObject(Key.Order), Hex.ToHexString(this.orderSerializer.Serialize(orderCommand.Order)) },
-                { new MessagePackObject(Key.CommandId), orderCommand.Identifier.ToString() },
-                { new MessagePackObject(Key.CommandTimestamp), orderCommand.Timestamp.ToIsoString() },
+                { Key.CommandType, nameof(OrderCommand) },
+                { Key.Order, Hex.ToHexString(this.orderSerializer.Serialize(orderCommand.Order)) },
+                { Key.CommandId, orderCommand.Identifier.ToString() },
+                { Key.CommandTimestamp, orderCommand.Timestamp.ToIsoString() },
             };
 
             switch (orderCommand)
             {
                 case SubmitOrder command:
-                    package.Add(new MessagePackObject(Key.OrderCommand), SubmitOrder);
+                    package.Add(Key.OrderCommand, nameof(SubmitOrder));
                     break;
                 case CancelOrder command:
-                    package.Add(new MessagePackObject(Key.OrderCommand), CancelOrder);
-                    package.Add(new MessagePackObject(Key.CancelReason), command.Reason);
+                    package.Add(Key.OrderCommand, nameof(CancelOrder));
+                    package.Add(Key.CancelReason, command.Reason);
                     break;
                 case ModifyOrder command:
-                    package.Add(new MessagePackObject(Key.OrderCommand), ModifyOrder);
-                    package.Add(new MessagePackObject(Key.ModifiedPrice), command.ModifiedPrice.ToString());
+                    package.Add(Key.OrderCommand, nameof(ModifyOrder));
+                    package.Add(Key.ModifiedPrice, command.ModifiedPrice.ToString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
@@ -122,24 +116,23 @@ namespace Nautilus.MsgPack
             ZonedDateTime commandTimestamp,
             MessagePackObjectDictionary unpacked)
         {
-            var order = this.orderSerializer.Deserialize(
-                Hex.FromHexString(unpacked[Key.Order].ToString()));
+            var order = this.orderSerializer.Deserialize(Hex.FromHexString(unpacked[Key.Order].ToString()));
             var orderCommand = unpacked[Key.OrderCommand].ToString();
 
             switch (orderCommand)
             {
-                case SubmitOrder:
+                case nameof(SubmitOrder):
                     return new SubmitOrder(
                         order,
                         commandId,
                         commandTimestamp);
-                case CancelOrder:
+                case nameof(CancelOrder):
                     return new CancelOrder(
                         order,
                         unpacked[Key.CancelReason].ToString(),
                         commandId,
                         commandTimestamp);
-                case ModifyOrder:
+                case nameof(ModifyOrder):
                     return new ModifyOrder(
                         order,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,

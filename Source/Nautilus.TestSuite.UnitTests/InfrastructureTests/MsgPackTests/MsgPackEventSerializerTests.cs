@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_market_order_submitted_event()
+        internal void CanSerializeAndDeserialize_MarketOrderSubmittedEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_market_order_accepted_event()
+        internal void CanSerializeAndDeserialize_MarketOrderAcceptedEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -78,7 +78,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_market_order_rejected_event()
+        internal void CanSerializeAndDeserialize_MarketOrderRejectedEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -101,7 +101,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_market_order_working_event()
+        internal void CanSerializeAndDeserialize_StopMarketOrderWorkingEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -131,7 +131,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_market_order_working_with_expire_time_event()
+        internal void CanSerializeAndDeserialize_StopMarketOrderWorkingWithExpireTimeEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -164,7 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_limit_order_cancelled_event()
+        internal void CanSerializeAndDeserialize_StopLimitOrderCancelledEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -186,7 +186,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_limit_order_cancel_reject_event()
+        internal void CanSerializeAndDeserialize_StopLimitOrderCancelRejectEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -210,7 +210,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_limit_order_modified_event()
+        internal void CanSerializeAndDeserialize_StopLimitOrderModifiedEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -234,7 +234,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_market_order_expired_event()
+        internal void CanSerializeAndDeserialize_StopMarketOrderExpiredEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -256,7 +256,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_limit_order_partially_filled_event()
+        internal void CanSerializeAndDeserialize_StopLimitOrderPartiallyFilledEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -286,7 +286,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_stop_limit_order_filled_event()
+        internal void CanSerializeAndDeserialize_StopLimitOrderFilledEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -315,7 +315,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         }
 
         [Fact]
-        internal void Test_can_serialize_and_deserialize_account_event()
+        internal void CanSerializeAndDeserialize_AccountEvent()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();

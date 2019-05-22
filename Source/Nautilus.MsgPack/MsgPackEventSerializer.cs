@@ -26,19 +26,6 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {
-        private const string AccountEvent = "account_event";
-        private const string OrderEvent = "order_event";
-        private const string OrderSubmitted = "order_submitted";
-        private const string OrderAccepted = "order_accepted";
-        private const string OrderRejected = "order_rejected";
-        private const string OrderCancelled = "order_cancelled";
-        private const string OrderCancelReject = "order_cancel_reject";
-        private const string OrderWorking = "order_working";
-        private const string OrderModified = "order_modified";
-        private const string OrderExpired = "order_expired";
-        private const string OrderPartiallyFilled = "order_partially_filled";
-        private const string OrderFilled = "order_filled";
-
         /// <summary>
         /// Serialize the given event to Message Pack specification bytes.
         /// </summary>
@@ -54,20 +41,20 @@ namespace Nautilus.MsgPack
                 case AccountEvent accountEvent:
                     return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
                     {
-                        { new MessagePackObject(Key.EventType), AccountEvent },
-                        { new MessagePackObject(Key.AccountId), accountEvent.AccountId.ToString() },
-                        { new MessagePackObject(Key.Broker), accountEvent.Broker.ToString() },
-                        { new MessagePackObject(Key.AccountNumber), accountEvent.AccountNumber },
-                        { new MessagePackObject(Key.Currency), accountEvent.Currency.ToString() },
-                        { new MessagePackObject(Key.CashBalance), accountEvent.CashBalance.Value.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.CashStartDay), accountEvent.CashStartDay.Value.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.CashActivityDay), accountEvent.CashActivityDay.Value.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.MarginUsedLiquidation), accountEvent.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.MarginUsedMaintenance), accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.MarginRatio), accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture) },
-                        { new MessagePackObject(Key.MarginCallStatus), accountEvent.MarginCallStatus.ToString() },
-                        { new MessagePackObject(Key.EventId), accountEvent.Identifier.ToString() },
-                        { new MessagePackObject(Key.EventTimestamp), accountEvent.Timestamp.ToIsoString() },
+                        { Key.EventType, nameof(AccountEvent) },
+                        { Key.AccountId, accountEvent.AccountId.ToString() },
+                        { Key.Broker, accountEvent.Broker.ToString() },
+                        { Key.AccountNumber, accountEvent.AccountNumber },
+                        { Key.Currency, accountEvent.Currency.ToString() },
+                        { Key.CashBalance, accountEvent.CashBalance.Value.ToString(CultureInfo.InvariantCulture) },
+                        { Key.CashStartDay, accountEvent.CashStartDay.Value.ToString(CultureInfo.InvariantCulture) },
+                        { Key.CashActivityDay, accountEvent.CashActivityDay.Value.ToString(CultureInfo.InvariantCulture) },
+                        { Key.MarginUsedLiquidation, accountEvent.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture) },
+                        { Key.MarginUsedMaintenance, accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture) },
+                        { Key.MarginRatio, accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture) },
+                        { Key.MarginCallStatus, accountEvent.MarginCallStatus.ToString() },
+                        { Key.EventId, accountEvent.Identifier.ToString() },
+                        { Key.EventTimestamp, accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
@@ -90,12 +77,12 @@ namespace Nautilus.MsgPack
 
             switch (eventType)
             {
-                case OrderEvent:
+                case nameof(OrderEvent):
                     return DeserializeOrderEvent(
                         eventId,
                         eventTimestamp,
                         unpacked);
-                case AccountEvent:
+                case nameof(AccountEvent):
                     var currency = unpacked[Key.Currency].ToString().ToEnum<Currency>();
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
@@ -120,78 +107,78 @@ namespace Nautilus.MsgPack
         {
             var package = new MessagePackObjectDictionary
             {
-                { new MessagePackObject(Key.EventType), OrderEvent },
-                { new MessagePackObject(Key.Symbol), orderEvent.Symbol.ToString() },
-                { new MessagePackObject(Key.OrderId), orderEvent.OrderId.Value },
-                { new MessagePackObject(Key.EventId), orderEvent.Identifier.ToString() },
-                { new MessagePackObject(Key.EventTimestamp), orderEvent.Timestamp.ToIsoString() },
+                { Key.EventType, nameof(OrderEvent) },
+                { Key.Symbol, orderEvent.Symbol.ToString() },
+                { Key.OrderId, orderEvent.OrderId.Value },
+                { Key.EventId, orderEvent.Identifier.ToString() },
+                { Key.EventTimestamp, orderEvent.Timestamp.ToIsoString() },
             };
 
             switch (orderEvent)
             {
                 case OrderSubmitted @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderSubmitted);
-                    package.Add(new MessagePackObject(Key.SubmittedTime), @event.SubmittedTime.ToIsoString());
+                    package.Add(nameof(OrderEvent), nameof(OrderSubmitted));
+                    package.Add(Key.SubmittedTime, @event.SubmittedTime.ToIsoString());
                     break;
                 case OrderAccepted @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderAccepted);
-                    package.Add(new MessagePackObject(Key.AcceptedTime), @event.AcceptedTime.ToIsoString());
+                    package.Add(nameof(OrderEvent), nameof(OrderAccepted));
+                    package.Add(Key.AcceptedTime, @event.AcceptedTime.ToIsoString());
                     break;
                 case OrderRejected @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderRejected);
-                    package.Add(new MessagePackObject(Key.RejectedTime), @event.RejectedTime.ToIsoString());
-                    package.Add(new MessagePackObject(Key.RejectedReason), @event.RejectedReason);
+                    package.Add(nameof(OrderEvent), nameof(OrderRejected));
+                    package.Add(Key.RejectedTime, @event.RejectedTime.ToIsoString());
+                    package.Add(Key.RejectedReason, @event.RejectedReason);
                     break;
                 case OrderWorking @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderWorking);
-                    package.Add(new MessagePackObject(Key.OrderIdBroker), @event.OrderIdBroker.ToString());
-                    package.Add(new MessagePackObject(Key.Label), @event.Label.ToString());
-                    package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
-                    package.Add(new MessagePackObject(Key.OrderType), @event.OrderType.ToString());
-                    package.Add(new MessagePackObject(Key.Quantity), @event.Quantity.Value);
-                    package.Add(new MessagePackObject(Key.Price), @event.Price.ToString());
-                    package.Add(new MessagePackObject(Key.TimeInForce), @event.TimeInForce.ToString());
-                    package.Add(new MessagePackObject(Key.ExpireTime), MsgPackSerializationHelper.GetExpireTimeString(@event.ExpireTime));
-                    package.Add(new MessagePackObject(Key.WorkingTime), @event.WorkingTime.ToIsoString());
+                    package.Add(nameof(OrderEvent), nameof(OrderWorking));
+                    package.Add(Key.OrderIdBroker, @event.OrderIdBroker.ToString());
+                    package.Add(Key.Label, @event.Label.ToString());
+                    package.Add(Key.OrderSide, @event.OrderSide.ToString());
+                    package.Add(Key.OrderType, @event.OrderType.ToString());
+                    package.Add(Key.Quantity, @event.Quantity.Value);
+                    package.Add(Key.Price, @event.Price.ToString());
+                    package.Add(Key.TimeInForce, @event.TimeInForce.ToString());
+                    package.Add(Key.ExpireTime, MsgPackSerializationHelper.GetExpireTimeString(@event.ExpireTime));
+                    package.Add(Key.WorkingTime, @event.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderCancelled);
-                    package.Add(new MessagePackObject(Key.CancelledTime), @event.CancelledTime.ToIsoString());
+                    package.Add(Key.OrderEvent, nameof(OrderCancelled));
+                    package.Add(Key.CancelledTime, @event.CancelledTime.ToIsoString());
                     break;
                 case OrderCancelReject @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderCancelReject);
-                    package.Add(new MessagePackObject(Key.RejectedTime), @event.RejectedTime.ToIsoString());
-                    package.Add(new MessagePackObject(Key.RejectedResponse), @event.RejectedResponseTo);
-                    package.Add(new MessagePackObject(Key.RejectedReason), @event.RejectedReason);
+                    package.Add(nameof(OrderEvent), nameof(OrderCancelReject));
+                    package.Add(Key.RejectedTime, @event.RejectedTime.ToIsoString());
+                    package.Add(Key.RejectedResponse, @event.RejectedResponseTo);
+                    package.Add(Key.RejectedReason, @event.RejectedReason);
                     break;
                 case OrderModified @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderModified);
-                    package.Add(new MessagePackObject(Key.OrderIdBroker), @event.BrokerOrderId.ToString());
-                    package.Add(new MessagePackObject(Key.ModifiedPrice), @event.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(new MessagePackObject(Key.ModifiedTime), @event.ModifiedTime.ToIsoString());
+                    package.Add(Key.OrderEvent, nameof(OrderModified));
+                    package.Add(Key.OrderIdBroker, @event.BrokerOrderId.ToString());
+                    package.Add(Key.ModifiedPrice, @event.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(Key.ModifiedTime, @event.ModifiedTime.ToIsoString());
                     break;
                 case OrderExpired @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderExpired);
-                    package.Add(new MessagePackObject(Key.ExpiredTime), @event.ExpiredTime.ToIsoString());
+                    package.Add(Key.OrderEvent, nameof(OrderExpired));
+                    package.Add(Key.ExpiredTime, @event.ExpiredTime.ToIsoString());
                     break;
                 case OrderPartiallyFilled @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderPartiallyFilled);
-                    package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
-                    package.Add(new MessagePackObject(Key.ExecutionTicket), @event.ExecutionTicket.Value);
-                    package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
-                    package.Add(new MessagePackObject(Key.FilledQuantity), @event.FilledQuantity.Value);
-                    package.Add(new MessagePackObject(Key.LeavesQuantity), @event.LeavesQuantity.Value);
-                    package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
-                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
+                    package.Add(Key.OrderEvent, nameof(OrderPartiallyFilled));
+                    package.Add(Key.ExecutionId, @event.ExecutionId.Value);
+                    package.Add(Key.ExecutionTicket, @event.ExecutionTicket.Value);
+                    package.Add(Key.OrderSide, @event.OrderSide.ToString());
+                    package.Add(Key.FilledQuantity, @event.FilledQuantity.Value);
+                    package.Add(Key.LeavesQuantity, @event.LeavesQuantity.Value);
+                    package.Add(Key.AveragePrice, @event.AveragePrice.ToString());
+                    package.Add(Key.ExecutionTime, @event.ExecutionTime.ToIsoString());
                     break;
                 case OrderFilled @event:
-                    package.Add(new MessagePackObject(Key.OrderEvent), OrderFilled);
-                    package.Add(new MessagePackObject(Key.ExecutionId), @event.ExecutionId.Value);
-                    package.Add(new MessagePackObject(Key.ExecutionTicket), @event.ExecutionTicket.Value);
-                    package.Add(new MessagePackObject(Key.OrderSide), @event.OrderSide.ToString());
-                    package.Add(new MessagePackObject(Key.FilledQuantity), @event.FilledQuantity.Value);
-                    package.Add(new MessagePackObject(Key.AveragePrice), @event.AveragePrice.ToString());
-                    package.Add(new MessagePackObject(Key.ExecutionTime), @event.ExecutionTime.ToIsoString());
+                    package.Add(Key.OrderEvent, nameof(OrderFilled));
+                    package.Add(Key.ExecutionId, @event.ExecutionId.Value);
+                    package.Add(Key.ExecutionTicket, @event.ExecutionTicket.Value);
+                    package.Add(Key.OrderSide, @event.OrderSide.ToString());
+                    package.Add(Key.FilledQuantity, @event.FilledQuantity.Value);
+                    package.Add(Key.AveragePrice, @event.AveragePrice.ToString());
+                    package.Add(Key.ExecutionTime, @event.ExecutionTime.ToIsoString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
@@ -211,21 +198,21 @@ namespace Nautilus.MsgPack
 
             switch (orderEvent)
             {
-                case OrderSubmitted:
+                case nameof(OrderSubmitted):
                     return new OrderSubmitted(
                         symbol,
                         orderId,
                         unpacked[Key.SubmittedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderAccepted:
+                case nameof(OrderAccepted):
                     return new OrderAccepted(
                         symbol,
                         orderId,
                         unpacked[Key.AcceptedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderRejected:
+                case nameof(OrderRejected):
                     return new OrderRejected(
                         symbol,
                         orderId,
@@ -233,7 +220,7 @@ namespace Nautilus.MsgPack
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
-                case OrderWorking:
+                case nameof(OrderWorking):
                     return new OrderWorking(
                         symbol,
                         orderId,
@@ -248,14 +235,14 @@ namespace Nautilus.MsgPack
                         unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderCancelled:
+                case nameof(OrderCancelled):
                     return new OrderCancelled(
                         symbol,
                         orderId,
                         unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderCancelReject:
+                case nameof(OrderCancelReject):
                     return new OrderCancelReject(
                         symbol,
                         orderId,
@@ -264,7 +251,7 @@ namespace Nautilus.MsgPack
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
-                case OrderModified:
+                case nameof(OrderModified):
                     return new OrderModified(
                         symbol,
                         orderId,
@@ -273,14 +260,14 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderExpired:
+                case nameof(OrderExpired):
                     return new OrderExpired(
                         symbol,
                         orderId,
                         unpacked[Key.ExpiredTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderPartiallyFilled:
+                case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
                         symbol,
                         orderId,
@@ -293,7 +280,7 @@ namespace Nautilus.MsgPack
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
-                case OrderFilled:
+                case nameof(OrderFilled):
                     return new OrderFilled(
                         symbol,
                         orderId,
