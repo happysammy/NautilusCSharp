@@ -11,7 +11,7 @@
   },
 
   "fix44": {
-    "configFile": "fix_fxcm4_md.cfg",
+    "configFile": "fix_fxcm2_md.cfg",
     "connectDay": "Sunday",
     "connectHour": 20,
     "connectMinute": 0,
