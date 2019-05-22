@@ -259,12 +259,12 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a value indicating whether the current time in inside the given weekly interval.
+        /// Returns a value indicating whether the current time is inside the given weekly interval.
         /// </summary>
-        /// <param name="start">The start of the interval for the week.</param>
-        /// <param name="end">The end of the interval for the week.</param>
+        /// <param name="start">The start of the weekly interval.</param>
+        /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current instant in time.</param>
-        /// <returns>True is now is inside the given interval, else false.</returns>
+        /// <returns>True if now is inside the given interval, else false.</returns>
         public static bool IsInsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
             (IsoDayOfWeek DayOfWeek, LocalTime time) end,
@@ -288,12 +288,12 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a value indicating whether the current time in outside the given weekly interval.
+        /// Returns a value indicating whether the current time is outside the given weekly interval.
         /// </summary>
-        /// <param name="start">The start of the interval for the week.</param>
-        /// <param name="end">The end of the interval for the week.</param>
+        /// <param name="start">The start of the weekly interval.</param>
+        /// <param name="end">The end of the weekly interval.</param>
         /// <param name="now">The current instant in time.</param>
-        /// <returns>True is now is outside the given interval, else false.</returns>
+        /// <returns>True if now is outside the given interval, else false.</returns>
         public static bool IsOutsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
             (IsoDayOfWeek DayOfWeek, LocalTime time) end,
