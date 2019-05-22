@@ -65,9 +65,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void CollateralInquiry()
         {
-            var message = CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM);
-
-            this.SendFixMessage(message);
+            this.SendFixMessage(CollateralInquiryFactory.Create(this.TimeNow(), Brokerage.FXCM));
         }
 
         /// <summary>
@@ -75,9 +73,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void TradingSessionStatus()
         {
-            var message = TradingSessionStatusRequestFactory.Create(this.TimeNow());
-
-            this.SendFixMessage(message);
+            this.SendFixMessage(TradingSessionStatusRequestFactory.Create(this.TimeNow()));
         }
 
         /// <summary>
@@ -85,9 +81,7 @@ namespace Nautilus.Brokerage.FXCM
         /// </summary>
         public void RequestAllPositions()
         {
-            var message = RequestForOpenPositionsFactory.Create(this.TimeNow());
-
-            this.SendFixMessage(message);
+            this.SendFixMessage(RequestForOpenPositionsFactory.Create(this.TimeNow()));
         }
 
         /// <summary>
@@ -182,12 +176,18 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="atomicOrder">The atomic order to submit.</param>
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
-            var brokerSymbol = this.symbolConverter.GetBrokerSymbol(atomicOrder.Symbol.Code).Value;
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(atomicOrder.Symbol.Code);
+
+            if (brokerSymbolQuery.IsFailure)
+            {
+                this.Log.Error(brokerSymbolQuery.Message);
+                return;
+            }
 
             if (atomicOrder.TakeProfit.HasValue)
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
-                    brokerSymbol,
+                    brokerSymbolQuery.Value,
                     this.accountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -197,7 +197,7 @@ namespace Nautilus.Brokerage.FXCM
             else
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLoss(
-                    brokerSymbol,
+                    brokerSymbolQuery.Value,
                     this.accountNumber,
                     atomicOrder,
                     this.TimeNow());
@@ -213,8 +213,16 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="modifiedPrice">The modified order price.</param>
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(order.Symbol.Code);
+
+            if (brokerSymbolQuery.IsFailure)
+            {
+                this.Log.Error(brokerSymbolQuery.Message);
+                return;
+            }
+
             var message = OrderCancelReplaceRequestFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                brokerSymbolQuery.Value,
                 order,
                 modifiedPrice.Value,
                 this.TimeNow());
@@ -228,8 +236,16 @@ namespace Nautilus.Brokerage.FXCM
         /// <param name="order">The order to cancel.</param>
         public void CancelOrder(Order order)
         {
+            var brokerSymbolQuery = this.symbolConverter.GetBrokerSymbol(order.Symbol.Code);
+
+            if (brokerSymbolQuery.IsFailure)
+            {
+                this.Log.Error(brokerSymbolQuery.Message);
+                return;
+            }
+
             var message = OrderCancelRequestFactory.Create(
-                this.symbolConverter.GetBrokerSymbol(order.Symbol.Code).Value,
+                brokerSymbolQuery.Value,
                 order,
                 this.TimeNow());
 
