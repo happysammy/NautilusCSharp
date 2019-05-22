@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Factories;
@@ -52,7 +51,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(submitted, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -74,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(accepted, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -97,7 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(rejected, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -127,7 +126,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -160,7 +159,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(working, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -182,7 +181,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelled, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -206,7 +205,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(cancelReject, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -230,7 +229,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(modified, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -252,7 +251,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(expired, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -282,7 +281,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(partiallyFilled, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -311,7 +310,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(filled, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
 
         [Fact]
@@ -340,7 +339,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 
             // Assert
             Assert.Equal(accountEvent, unpacked);
-            this.output.WriteLine(Hex.ToHexString(packed));
+            this.output.WriteLine(Convert.ToBase64String(packed));
         }
     }
 }

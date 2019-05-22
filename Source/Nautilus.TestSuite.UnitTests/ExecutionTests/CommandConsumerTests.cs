@@ -11,13 +11,11 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.MsgPack;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -74,10 +72,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                             "2d30312d30315430303a30303a30302e3030305aad6f726465725f636f6d6d616e64" +
                             "ac7375626d69745f6f72646572";
 
-            var commandBytes = Hex.FromHexString(hexString);
+            // var commandBytes = Hex.FromHexString(hexString);
 
             // Act
-            requester.SendFrame(commandBytes);
+            // requester.SendFrame(commandBytes);
 
             Task.Delay(300).Wait();
 
