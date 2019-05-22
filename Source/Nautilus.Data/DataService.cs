@@ -34,8 +34,8 @@ namespace Nautilus.Data
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
-        private readonly IEnumerable<Symbol> subscribingSymbols;
-        private readonly IEnumerable<BarSpecification> barSpecifications;
+        private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
+        private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
         private readonly int barRollingWindowDays;
 
         /// <summary>

@@ -11,6 +11,7 @@ namespace Nautilus.Core.Extensions
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using NodaTime.Text;
@@ -263,16 +264,15 @@ namespace Nautilus.Core.Extensions
         /// <param name="start">The start of the interval for the week.</param>
         /// <param name="end">The end of the interval for the week.</param>
         /// <param name="now">The current instant in time.</param>
-        /// <returns>True is the market is open, otherwise false.</returns>
+        /// <returns>True is now is inside the given interval, else false.</returns>
         public static bool IsInsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
             (IsoDayOfWeek DayOfWeek, LocalTime time) end,
-            Instant now)
+            [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
             Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
-            Debug.NotDefault(now, nameof(now));
 
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
@@ -293,16 +293,15 @@ namespace Nautilus.Core.Extensions
         /// <param name="start">The start of the interval for the week.</param>
         /// <param name="end">The end of the interval for the week.</param>
         /// <param name="now">The current instant in time.</param>
-        /// <returns>True is the market is open, otherwise false.</returns>
+        /// <returns>True is now is outside the given interval, else false.</returns>
         public static bool IsOutsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
             (IsoDayOfWeek DayOfWeek, LocalTime time) end,
-            Instant now)
+            [CanBeDefault] Instant now)
         {
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
             Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
-            Debug.NotDefault(now, nameof(now));
 
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
@@ -327,8 +326,12 @@ namespace Nautilus.Core.Extensions
         public static ZonedDateTime GetNextUtc(
             IsoDayOfWeek dayOfWeek,
             LocalTime timeOfDay,
-            Instant now)
+            [CanBeDefault] Instant now)
         {
+            Debug.NotDefault(dayOfWeek, nameof(dayOfWeek));
+            Debug.NotDefault(timeOfDay, nameof(timeOfDay));
+            Debug.NotDefault(now, nameof(now));
+
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
             var localNext = localNow
                 .Date.With(DateAdjusters.NextOrSame(dayOfWeek))
@@ -351,8 +354,10 @@ namespace Nautilus.Core.Extensions
         /// <returns>The duration.</returns>
         public static Duration GetDurationToNextUtc(
             ZonedDateTime next,
-            Instant now)
+            [CanBeDefault] Instant now)
         {
+            Debug.NotDefault(next, nameof(next));
+
             return next.ToInstant() - now;
         }
     }

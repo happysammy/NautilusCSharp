@@ -22,6 +22,7 @@ namespace Nautilus.Data.Aggregation
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Scheduler;
+    using NodaTime;
 
     /// <summary>
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
@@ -33,7 +34,7 @@ namespace Nautilus.Data.Aggregation
         private readonly IScheduler scheduler;
         private readonly IEndpoint barPublisher;
         private readonly Dictionary<Symbol, BarAggregator> barAggregators;
-        private readonly Dictionary<BarType, ICancelable> subscriptions;
+        private readonly Dictionary<BarType, ICancelable?> subscriptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
@@ -56,7 +57,7 @@ namespace Nautilus.Data.Aggregation
             this.scheduler = scheduler;
             this.barPublisher = barPublisher;
             this.barAggregators = new Dictionary<Symbol, BarAggregator>();
-            this.subscriptions = new Dictionary<BarType, ICancelable>();
+            this.subscriptions = new Dictionary<BarType, ICancelable?>();
 
             this.RegisterHandler<Tick>(this.OnMessage);
             this.RegisterHandler<(BarType, Bar)>(this.OnMessage);
@@ -74,7 +75,15 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Gets the dictionary of bar subscriptions.
         /// </summary>
-        public IReadOnlyDictionary<BarType, ICancelable> Subscriptions => this.subscriptions.ToImmutableDictionary();
+        public IReadOnlyDictionary<BarType, ICancelable?> Subscriptions => this.subscriptions.ToImmutableDictionary();
+
+        private static bool IsMarketOpen(Instant now)
+        {
+            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                (IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
+                (IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
+                now);
+        }
 
         private void OnMessage(Tick tick)
         {
@@ -128,17 +137,24 @@ namespace Nautilus.Data.Aggregation
 
             this.barAggregators[symbol].Endpoint.Send(message);
 
-            // Create close bar job schedule.
-            var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();
-            var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
-                initialDelay,
-                barSpec.Duration,
-                () =>
-                {
-                    this.CreateCloseBarDelegate(barSpec, this.barAggregators[symbol].Endpoint);
-                });
+            if (IsMarketOpen(this.TimeNow().ToInstant()))
+            {
+                // Create close bar job schedule.
+                var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();
+                var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
+                    initialDelay,
+                    barSpec.Duration,
+                    () =>
+                    {
+                        this.CreateCloseBarDelegate(barSpec, this.barAggregators[symbol].Endpoint);
+                    });
 
-            this.subscriptions.Add(barType, cancellable);
+                this.subscriptions.Add(barType, cancellable);
+            }
+            else
+            {
+                this.subscriptions.Add(barType, null);
+            }
 
             this.Log.Information($"Subscribed to {message.DataType} bars.");
         }
@@ -165,8 +181,12 @@ namespace Nautilus.Data.Aggregation
 
             this.barAggregators[symbol].Endpoint.Send(message);
 
-            // Cancel close bar job schedule.
-            this.subscriptions[barType].Cancel();
+            if (this.subscriptions[barType] != null)
+            {
+                // Cancel close bar job schedule.
+                this.subscriptions[barType]?.Cancel();
+            }
+
             this.subscriptions.Remove(barType);
 
             if (this.subscriptions.All(s => s.Key.Symbol != symbol))
@@ -180,47 +200,36 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
-// if (job.IsMarketOpen)
-//            {
-//                foreach (var barType in this.subscriptions.Keys)
-//                {
-//                    var barSpec = barType.Specification;
-//                    var closeBar = new CloseBar(
-//                        barSpec,
-//                        Guid.NewGuid(),
-//                        this.TimeNow());
-//
-//                    var initialDelay = this.TimeNow() - this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration;
-//                    var cancellable = this.scheduler.ScheduleSendRepeatedlyCancelable(
-//                        initialDelay,
-//                        barSpec.Duration,
-//                        this.barAggregators[barType.Symbol].Endpoint,
-//                        closeBar,
-//                        this.Endpoint);
-//
-//                    this.subscriptions[barType] = cancellable;
-//                }
-//            }
-//            else
-//            {
-//                foreach (var (subscription, cancellable) in this.subscriptions)
-//                {
-//                    cancellable.Cancel();
-//                    this.Log.Debug($"Market is closed: Cancelled bar close job for {subscription}.");
-//                }
-//
-//                // Tell all aggregators the market is now closed.
-//                var marketClosed = new MarketClosed(this.NewGuid(), this.TimeNow());
-//                foreach (var aggregator in this.barAggregators.Values)
-//                {
-//                    aggregator.Endpoint.Send(marketClosed);
-//                }
-//            }
+            foreach (var barType in this.subscriptions.Keys.Where(barType => barType.Symbol == message.Symbol))
+            {
+                if (this.subscriptions[barType] is null)
+                {
+                    // Create close bar job schedule.
+                    var initialDelay = (this.TimeNow().Floor(barType.Specification.Duration) + barType.Specification.Duration) - this.TimeNow();
+                    var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
+                        initialDelay,
+                        barType.Specification.Duration,
+                        () =>
+                        {
+                            this.CreateCloseBarDelegate(barType.Specification, this.barAggregators[barType.Symbol].Endpoint);
+                        });
+
+                    this.subscriptions[barType] = cancellable;
+                }
+
+                this.Log.Debug($"MarketOpened: Started CloseBar job for {barType}.");
+            }
         }
 
         private void OnMessage(MarketClosed message)
         {
-            // Implement.
+            foreach (var (barType, cancellable) in this.subscriptions.ToImmutableDictionary())
+            {
+                cancellable.Cancel();
+                this.subscriptions[barType] = null;
+
+                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {barType}.");
+            }
         }
     }
 }
