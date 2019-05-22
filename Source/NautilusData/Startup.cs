@@ -63,9 +63,9 @@ namespace NautilusData
         public void ConfigureServices(IServiceCollection services)
         {
             var configJson = JObject.Parse(File.ReadAllText("config.json"));
-            var symbolIndex = File.ReadAllText("symbols.json");
             var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
             var loggingAdapter = new SerilogLogger(logLevel);
+            var symbolIndex = File.ReadAllText("symbols.json");
 
             var config = new Configuration(
                 loggingAdapter,
