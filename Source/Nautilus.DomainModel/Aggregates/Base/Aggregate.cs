@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Aggregates.Base
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities.Base;
-    using Nautilus.DomainModel.Identifiers.Base;
     using NodaTime;
 
     /// <summary>

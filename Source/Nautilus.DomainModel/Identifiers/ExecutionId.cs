@@ -8,10 +8,10 @@
 
 namespace Nautilus.DomainModel.Identifiers
 {
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Identifiers.Base;
 
     /// <summary>
     /// Represents a valid and unique identifier for executions.
