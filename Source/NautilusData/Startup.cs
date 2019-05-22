@@ -29,7 +29,7 @@ namespace NautilusData
     /// </summary>
     public class Startup
     {
-        private DataService? dataService;
+        private readonly DataService dataService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -44,6 +44,20 @@ namespace NautilusData
                 .Build();
 
             this.Environment = environment;
+
+            var configJson = JObject.Parse(File.ReadAllText("config.json"));
+            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            var loggingAdapter = new SerilogLogger(logLevel);
+            var symbolIndex = File.ReadAllText("symbols.json");
+
+            var config = new Configuration(
+                loggingAdapter,
+                configJson,
+                symbolIndex,
+                this.Environment.IsDevelopment());
+
+            this.dataService = DataServiceFactory.Create(config);
+            this.dataService.Start();
         }
 
         /// <summary>
@@ -62,27 +76,13 @@ namespace NautilusData
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var configJson = JObject.Parse(File.ReadAllText("config.json"));
-            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
-            var loggingAdapter = new SerilogLogger(logLevel);
-            var symbolIndex = File.ReadAllText("symbols.json");
-
-            var config = new Configuration(
-                loggingAdapter,
-                configJson,
-                symbolIndex,
-                this.Environment.IsDevelopment());
-
-            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
-
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddDebug();
                 loggingBuilder.AddSerilog();
             });
 
-            this.dataService = DataServiceFactory.Create(config);
-            this.dataService.Start();
+            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace NautilusData
 
         private void OnShutdown()
         {
-            this.dataService?.Stop();
+            this.dataService.Stop();
 
             Task.Delay(2000).Wait(); // TODO: Graceful stop.
         }

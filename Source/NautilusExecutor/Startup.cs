@@ -10,6 +10,7 @@ namespace NautilusExecutor
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -28,7 +29,7 @@ namespace NautilusExecutor
     /// </summary>
     public class Startup
     {
-        private ExecutionService? executionService;
+        private readonly ExecutionService executionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -43,6 +44,20 @@ namespace NautilusExecutor
                 .Build();
 
             this.Environment = environment;
+
+            var configJson = JObject.Parse(File.ReadAllText("config.json"));
+            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            var loggingAdapter = new SerilogLogger(logLevel);
+            var symbolIndex = File.ReadAllText("symbols.json");
+
+            var config = new Configuration(
+                loggingAdapter,
+                configJson,
+                symbolIndex,
+                this.Environment.IsDevelopment());
+
+            this.executionService = ExecutionServiceFactory.Create(config);
+            this.executionService.Start();
         }
 
         /// <summary>
@@ -61,27 +76,13 @@ namespace NautilusExecutor
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var configJson = JObject.Parse(File.ReadAllText("config.json"));
-            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
-            var loggingAdapter = new SerilogLogger(logLevel);
-            var symbolIndex = File.ReadAllText("symbols.json");
-
-            var config = new Configuration(
-                loggingAdapter,
-                configJson,
-                symbolIndex,
-                this.Environment.IsDevelopment());
-
-            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
-
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddDebug();
                 loggingBuilder.AddSerilog();
             });
 
-            this.executionService = ExecutionServiceFactory.Create(config);
-            this.executionService?.Start();
+            AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
         }
 
         /// <summary>
@@ -105,7 +106,9 @@ namespace NautilusExecutor
 
         private void OnShutdown()
         {
-            this.executionService?.Stop();
+            this.executionService.Stop();
+
+            Task.Delay(2000).Wait(); // TODO: Graceful stop.
         }
     }
 }
