@@ -114,6 +114,14 @@ namespace Nautilus.Common.Componentry
         protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
+        /// Returns the current instant of the system clock.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="Instant"/>.
+        /// </returns>
+        protected Instant InstantNow() => this.clock.InstantNow();
+
+        /// <summary>
         /// Returns a new <see cref="Guid"/> from the systems <see cref="Guid"/> factory.
         /// </summary>
         /// <returns>A <see cref="Guid"/>.</returns>

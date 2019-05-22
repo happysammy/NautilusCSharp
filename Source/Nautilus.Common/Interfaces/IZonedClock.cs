@@ -22,6 +22,12 @@ namespace Nautilus.Common.Interfaces
         ZonedDateTime TimeNow();
 
         /// <summary>
+        /// Returns the current instant of this clock.
+        /// </summary>
+        /// <returns>A <see cref="Instant"/>.</returns>
+        Instant InstantNow();
+
+        /// <summary>
         /// Returns the time zone of this clock.
         /// </summary>
         /// <returns>A <see cref="DateTimeZone"/>.</returns>

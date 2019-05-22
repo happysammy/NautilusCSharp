@@ -79,7 +79,7 @@ namespace Nautilus.Data.Aggregation
 
         private static bool IsMarketOpen(Instant now)
         {
-            return ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+            return TimeProvider.IsOutsideWeeklyInterval(
                 (IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
                 (IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
                 now);
@@ -137,7 +137,7 @@ namespace Nautilus.Data.Aggregation
 
             this.barAggregators[symbol].Endpoint.Send(message);
 
-            if (IsMarketOpen(this.TimeNow().ToInstant()))
+            if (IsMarketOpen(this.InstantNow()))
             {
                 // Create close bar job schedule.
                 var initialDelay = (this.TimeNow().Floor(barSpec.Duration) + barSpec.Duration) - this.TimeNow();

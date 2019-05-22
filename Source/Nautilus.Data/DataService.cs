@@ -98,10 +98,10 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Starting from {message}...");
 
-            if (ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+            if (TimeProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
-                this.TimeNow().ToInstant()))
+                this.InstantNow()))
             {
                 this.Send(DataServiceAddress.FixGateway, message);
             }
@@ -198,12 +198,12 @@ namespace Nautilus.Data
 
         private void CreateConnectFixJob()
         {
-            var now = this.TimeNow().ToInstant();
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+            var now = this.InstantNow();
+            var nextTime = TimeProvider.GetNextUtc(
                 this.fixConnectTime.Day,
                 this.fixConnectTime.Time,
                 now);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new ConnectFix(
                 nextTime,
@@ -221,12 +221,12 @@ namespace Nautilus.Data
 
         private void CreateDisconnectFixJob()
         {
-            var now = this.TimeNow().ToInstant();
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+            var now = this.InstantNow();
+            var nextTime = TimeProvider.GetNextUtc(
                 this.fixDisconnectTime.Day,
                 this.fixDisconnectTime.Time,
                 now);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new DisconnectFix(
                 nextTime,
@@ -246,12 +246,12 @@ namespace Nautilus.Data
         {
             var jobDay = IsoDayOfWeek.Sunday;
             var jobTime = new LocalTime(21, 00);
-            var timeNow = this.TimeNow().ToInstant();
+            var now = this.InstantNow();
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-                var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+                var nextTime = TimeProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketOpened = new MarketOpened(
                     symbol,
@@ -273,12 +273,12 @@ namespace Nautilus.Data
         {
             var jobDay = IsoDayOfWeek.Saturday;
             var jobTime = new LocalTime(20, 00);
-            var timeNow = this.TimeNow().ToInstant();
+            var now = this.InstantNow();
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-                var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+                var nextTime = TimeProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketClosed = new MarketClosed(
                     symbol,
@@ -298,12 +298,12 @@ namespace Nautilus.Data
 
         private void CreateTrimBarDataJob()
         {
-            var now = this.TimeNow().ToInstant();
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+            var now = this.InstantNow();
+            var nextTime = TimeProvider.GetNextUtc(
                 this.barDataTrimTime.Day,
                 this.barDataTrimTime.Time,
                 now);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new TrimBarData(
                 this.barSpecifications,

@@ -12,7 +12,7 @@ namespace Nautilus.Common.Componentry
     using NodaTime;
 
     /// <summary>
-    /// The system clock with an imbedded timezone.
+    /// Provides a clock with an imbedded timezone.
     /// </summary>
     public class Clock : IZonedClock
     {
@@ -34,6 +34,12 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         public ZonedDateTime TimeNow() => this.clock.GetCurrentZonedDateTime();
+
+        /// <summary>
+        /// Returns the current instant of this clock.
+        /// </summary>
+        /// <returns>A <see cref="Instant"/>.</returns>
+        public Instant InstantNow() => this.clock.GetCurrentInstant();
 
         /// <summary>
         /// Returns the time zone of this clock.

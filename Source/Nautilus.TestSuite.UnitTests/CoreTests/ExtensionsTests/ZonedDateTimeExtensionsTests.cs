@@ -9,6 +9,7 @@
 namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 {
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.Common.Componentry;
     using Nautilus.Core.Extensions;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
@@ -28,33 +29,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 
             // Assert
             Assert.Equal("1970-01-01T00:00:00.000Z", result);
-        }
-
-        [Fact]
-        internal void ToIsoString_WithValidNullableZonedDateTime_ReturnsExpectedString()
-        {
-            // Arrange
-            var nullableZonedDateTime = (ZonedDateTime?)StubZonedDateTime.UnixEpoch();
-
-            // Act
-            var result = nullableZonedDateTime.ToIsoString();
-
-            // Assert
-            Assert.Equal("1970-01-01T00:00:00.000Z", result);
-        }
-
-        [Fact]
-        internal void ToIsoString_WhenInputValueNull_ReturnsEmptyString()
-        {
-            // Arrange
-            var nullableZonedDateTime = (ZonedDateTime?)null;
-
-            // Act
-            // ReSharper disable once ExpressionIsAlwaysNull (this is the point of the test)
-            var result = nullableZonedDateTime.ToIsoString();
-
-            // Assert
-            Assert.Equal(string.Empty, result);
         }
 
         [Fact]
@@ -283,88 +257,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.ExtensionsTests
 
             // Assert
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(expectedCeiling), result);
-        }
-
-        [Theory]
-        [InlineData(2018, 6, 30, 19, 59, false)]
-        [InlineData(2018, 7, 1, 20, 00, false)]
-        [InlineData(2018, 7, 1, 20, 59, false)]
-        [InlineData(2018, 7, 1, 21, 0, false)]
-        [InlineData(2018, 7, 2, 12, 0, false)]
-        [InlineData(2018, 7, 3, 21, 0, false)]
-        [InlineData(2018, 7, 4, 00, 0, false)]
-        [InlineData(2018, 7, 7, 19, 59, false)]
-        [InlineData(2018, 7, 7, 20, 00, true)]
-        [InlineData(2018, 7, 7, 20, 01, true)]
-        [InlineData(2008, 1, 26, 19, 59, false)]
-        [InlineData(2008, 1, 26, 20, 00, true)]
-        [InlineData(2008, 1, 26, 20, 59, true)]
-        [InlineData(2008, 1, 27, 21, 0, false)]
-        [InlineData(2008, 1, 28, 00, 0, false)]
-        [InlineData(2008, 1, 29, 00, 0, false)]
-        [InlineData(2008, 2, 2, 19, 59, false)]
-        [InlineData(2008, 2, 2, 20, 00, true)]
-        [InlineData(2008, 2, 2, 20, 01, true)]
-        internal void IsInsideWeeklyInterval_WithVariousDateTimes_ReturnsExpectedResult(
-            int year,
-            int month,
-            int day,
-            int hour,
-            int minute,
-            bool expected)
-        {
-            // Arrange
-            var localUtc = new LocalDateTime(year, month, day, hour, minute);
-            var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
-
-            // Act
-            var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = ZonedDateTimeExtensions.IsInsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
-
-            // Assert
-            Assert.Equal(expected, result);
-        }
-
-        [Theory]
-        [InlineData(2018, 6, 30, 19, 59, true)]
-        [InlineData(2018, 7, 1, 20, 00, true)]
-        [InlineData(2018, 7, 1, 20, 59, true)]
-        [InlineData(2018, 7, 1, 21, 0, true)]
-        [InlineData(2018, 7, 2, 12, 0, true)]
-        [InlineData(2018, 7, 3, 21, 0, true)]
-        [InlineData(2018, 7, 4, 00, 0, true)]
-        [InlineData(2018, 7, 7, 19, 59, true)]
-        [InlineData(2018, 7, 7, 20, 00, false)]
-        [InlineData(2018, 7, 7, 20, 01, false)]
-        [InlineData(2008, 1, 26, 19, 59, true)]
-        [InlineData(2008, 1, 26, 20, 00, false)]
-        [InlineData(2008, 1, 26, 20, 59, false)]
-        [InlineData(2008, 1, 27, 21, 0, true)]
-        [InlineData(2008, 1, 28, 00, 0, true)]
-        [InlineData(2008, 1, 29, 00, 0, true)]
-        [InlineData(2008, 2, 2, 19, 59, true)]
-        [InlineData(2008, 2, 2, 20, 00, false)]
-        [InlineData(2008, 2, 2, 20, 01, false)]
-        internal void IsOutSideWeeklyInterval_WithVariousDateTimes_ReturnsExpectedResult(
-            int year,
-            int month,
-            int day,
-            int hour,
-            int minute,
-            bool expected)
-        {
-            // Arrange
-            var localUtc = new LocalDateTime(year, month, day, hour, minute);
-            var utcNow = new ZonedDateTime(localUtc, DateTimeZone.Utc, Offset.Zero);
-
-            // Act
-            var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
-            var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = ZonedDateTimeExtensions.IsOutsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
-
-            // Assert
-            Assert.Equal(expected, result);
         }
     }
 }

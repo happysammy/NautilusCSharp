@@ -30,6 +30,16 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return SystemClock.Instance.GetCurrentInstant().InUtc();
         }
 
+        public Instant InstantNow()
+        {
+            if (this.isTimeFrozen)
+            {
+                return this.frozenTime.ToInstant();
+            }
+
+            return SystemClock.Instance.GetCurrentInstant();
+        }
+
         public void UnfreezeTime()
         {
             this.isTimeFrozen = false;
