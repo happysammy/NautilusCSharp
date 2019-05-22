@@ -112,7 +112,7 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Started from {message}...");
+            this.Log.Information($"Starting from {message}...");
 
             if (TimeProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
