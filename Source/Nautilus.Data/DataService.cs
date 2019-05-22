@@ -8,8 +8,8 @@
 
 namespace Nautilus.Data
 {
+    using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -17,6 +17,7 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
     using Nautilus.DomainModel.ValueObjects;
@@ -31,7 +32,6 @@ namespace Nautilus.Data
     [PerformanceOptimized]
     public sealed class DataService : ComponentBusConnectedBase
     {
-        private readonly ImmutableDictionary<Address, IEndpoint> addresses;
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
         private readonly IEnumerable<Symbol> subscribingSymbols;
@@ -49,29 +49,36 @@ namespace Nautilus.Data
         /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
         /// <param name="barSpecifications">The bar specifications to create.</param>
         /// <param name="barRollingWindowDays">The number of days to trim bar data to.</param>
+        /// <exception cref="ArgumentException">If the addresses is empty.</exception>
+        /// <exception cref="ArgumentException">If the subscribing symbols is empty.</exception>
+        /// <exception cref="ArgumentException">If the bar specifications is empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindowDays is not positive (> 0).</exception>
         public DataService(
             IComponentryContainer setupContainer,
             MessagingAdapter messagingAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
-            IEnumerable<Symbol> subscribingSymbols,
-            IEnumerable<BarSpecification> barSpecifications,
+            IReadOnlyCollection<Symbol> subscribingSymbols,
+            IReadOnlyCollection<BarSpecification> barSpecifications,
             int barRollingWindowDays)
             : base(
                 NautilusService.Data,
                 setupContainer,
                 messagingAdapter)
         {
-            addresses.Add(DataServiceAddress.Core, this.Endpoint);
+            Condition.NotEmpty(addresses, nameof(addresses));
+            Condition.NotEmpty(subscribingSymbols, nameof(subscribingSymbols));
+            Condition.NotEmpty(barSpecifications, nameof(barSpecifications));
+            Condition.PositiveInt32(barRollingWindowDays, nameof(this.barRollingWindowDays));
 
-            this.addresses = addresses.ToImmutableDictionary();
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
             this.subscribingSymbols = subscribingSymbols;
             this.barSpecifications = barSpecifications;
             this.barRollingWindowDays = barRollingWindowDays;
 
+            addresses.Add(DataServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
                 Switchboard.Create(addresses),
                 this.NewGuid(),

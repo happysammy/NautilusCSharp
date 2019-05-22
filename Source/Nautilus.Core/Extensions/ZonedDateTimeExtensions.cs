@@ -11,7 +11,6 @@ namespace Nautilus.Core.Extensions
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Runtime.CompilerServices;
     using Nautilus.Core.Correctness;
     using NodaTime;
     using NodaTime.Text;
@@ -55,7 +54,7 @@ namespace Nautilus.Core.Extensions
             return ZonedDateTimePattern
                 .CreateWithInvariantCulture(parsePattern, DateTimeZoneProviders.Tzdb)
                 .Parse(dateTime)
-                .Value;
+                .GetValueOrThrow();
         }
 
         /// <summary>
@@ -259,57 +258,63 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a value indicating whether the FX market is open based on the given UTC time now.
+        /// Returns a value indicating whether the current time in inside the given weekly interval.
         /// </summary>
-        /// <param name="timeNowUtc">The time now (UTC).</param>
         /// <param name="start">The start of the interval for the week.</param>
         /// <param name="end">The end of the interval for the week.</param>
+        /// <param name="now">The current instant in time.</param>
         /// <returns>True is the market is open, otherwise false.</returns>
-        public static bool IsOutsideWeeklyInterval(
-            ZonedDateTime timeNowUtc,
-            (IsoDayOfWeek DayOfWeek, int Hour, int Minute) start,
-            (IsoDayOfWeek DayOfWeek, int Hour, int Minute) end)
+        public static bool IsInsideWeeklyInterval(
+            (IsoDayOfWeek DayOfWeek, LocalTime time) start,
+            (IsoDayOfWeek DayOfWeek, LocalTime time) end,
+            Instant now)
         {
-            Debug.NotDefault(timeNowUtc, nameof(timeNowUtc));
             Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
             Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
-            Debug.NotOutOfRangeInt32(start.Hour, 0, 23, nameof(start.Hour));
-            Debug.NotOutOfRangeInt32(end.Hour, 0, 23, nameof(end.Hour));
-            Debug.NotOutOfRangeInt32(start.Minute, 0, 59, nameof(start.Minute));
-            Debug.NotOutOfRangeInt32(end.Minute, 0, 59, nameof(end.Minute));
             Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
+            Debug.NotDefault(now, nameof(now));
 
-            var localNow = new LocalDateTime(
-                timeNowUtc.Year,
-                timeNowUtc.Month,
-                timeNowUtc.Day,
-                timeNowUtc.Hour,
-                timeNowUtc.Minute);
+            var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
-            var startDiff = (int)(6 - timeNowUtc.DayOfWeek);
-            var endDiff = (int)(7 - timeNowUtc.DayOfWeek);
+            var startThisWeek = localNow
+                .Date.With(DateAdjusters.NextOrSame(start.DayOfWeek))
+                .At(start.time);
 
-            var localStartDay = startDiff >= 0
-                ? localNow + Period.FromDays(startDiff)
-                : localNow - Period.FromDays(Math.Abs(startDiff));
+            var endThisWeek = localNow
+                .Date.With(DateAdjusters.NextOrSame(end.DayOfWeek))
+                .At(end.time);
 
-            var localEndDay = localNow + Period.FromDays(endDiff);
+            return localNow >= startThisWeek && localNow <= endThisWeek;
+        }
 
-            var localStart = new LocalDateTime(
-                localStartDay.Year,
-                localStartDay.Month,
-                localStartDay.Day,
-                start.Hour,
-                start.Minute);
+        /// <summary>
+        /// Returns a value indicating whether the current time in outside the given weekly interval.
+        /// </summary>
+        /// <param name="start">The start of the interval for the week.</param>
+        /// <param name="end">The end of the interval for the week.</param>
+        /// <param name="now">The current instant in time.</param>
+        /// <returns>True is the market is open, otherwise false.</returns>
+        public static bool IsOutsideWeeklyInterval(
+            (IsoDayOfWeek DayOfWeek, LocalTime time) start,
+            (IsoDayOfWeek DayOfWeek, LocalTime time) end,
+            Instant now)
+        {
+            Debug.NotDefault(start.DayOfWeek, nameof(start.DayOfWeek));
+            Debug.NotDefault(end.DayOfWeek, nameof(end.DayOfWeek));
+            Debug.True(start.DayOfWeek <= end.DayOfWeek, nameof(start.DayOfWeek));
+            Debug.NotDefault(now, nameof(now));
 
-            var localEnd = new LocalDateTime(
-                localEndDay.Year,
-                localEndDay.Month,
-                localEndDay.Day,
-                end.Hour,
-                end.Minute);
+            var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
 
-            return localNow < localStart || localNow >= localEnd;
+            var startThisWeek = localNow
+                .Date.With(DateAdjusters.NextOrSame(start.DayOfWeek))
+                .At(start.time);
+
+            var endThisWeek = localNow
+                .Date.With(DateAdjusters.NextOrSame(end.DayOfWeek))
+                .At(end.time);
+
+            return localNow < startThisWeek || localNow > endThisWeek;
         }
 
         /// <summary>
@@ -335,7 +340,7 @@ namespace Nautilus.Core.Extensions
                 localNext = localNext.PlusWeeks(1);
             }
 
-            return localNext.InZoneLeniently(DateTimeZone.Utc);
+            return localNext.InUtc();
         }
 
         /// <summary>

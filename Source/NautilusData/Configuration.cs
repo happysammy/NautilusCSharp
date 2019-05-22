@@ -10,6 +10,7 @@ namespace NautilusData
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
     using Nautilus.Common.Configuration;
@@ -74,13 +75,15 @@ namespace NautilusData
             var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
             this.Symbols = symbols
                 .Select(s => s.ToString())
-                .Distinct();
+                .Distinct()
+                .ToImmutableList();
 
             var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"];
             this.BarSpecifications = barSpecs
                 .Select(bs => bs.ToString())
                 .Distinct()
-                .Select(BarSpecificationFactory.Create);
+                .Select(BarSpecificationFactory.Create)
+                .ToImmutableList();
 
             this.BarRollingWindowDays = (int)configJson[ConfigSection.Data]["barDataRollingWindowDays"];
         }
@@ -123,12 +126,12 @@ namespace NautilusData
         /// <summary>
         /// Gets the configuration symbols.
         /// </summary>
-        public IEnumerable<string> Symbols { get; }
+        public IReadOnlyCollection<string> Symbols { get; }
 
         /// <summary>
         /// Gets the configuration bar specifications.
         /// </summary>
-        public IEnumerable<BarSpecification> BarSpecifications { get; }
+        public IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
 
         /// <summary>
         /// Gets the database bar rolling window days for trimming.

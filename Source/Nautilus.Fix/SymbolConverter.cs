@@ -72,7 +72,7 @@ namespace Nautilus.Fix
         /// Gets all Nautilus symbols.
         /// </summary>
         /// <returns>The collection of Nautilus symbols.</returns>
-        public IEnumerable<Symbol> GetAllSymbols()
+        public IReadOnlyCollection<Symbol> GetAllSymbols()
         {
             return this.symbols;
         }
@@ -81,9 +81,9 @@ namespace Nautilus.Fix
         /// Returns all broker symbols.
         /// </summary>
         /// <returns>The collection of broker symbols.</returns>
-        public IEnumerable<string> GetAllBrokerSymbols()
+        public IReadOnlyCollection<string> GetAllBrokerSymbols()
         {
-            return this.symbolIndex.Keys;
+            return this.symbolIndex.Keys.ToList();
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Nautilus.Execution
         /// <param name="addresses">The execution service addresses.</param>
         /// <param name="commandsPerSecond">The commands per second throttling.</param>
         /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
+        /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public ExecutionService(
@@ -64,6 +65,7 @@ namespace Nautilus.Execution
             container,
             messagingAdapter)
         {
+            Condition.NotEmpty(addresses, nameof(addresses));
             Condition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
             Condition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
 
