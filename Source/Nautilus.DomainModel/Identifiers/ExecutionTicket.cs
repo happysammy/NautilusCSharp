@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for executions.
     /// </summary>
     [Immutable]
-    public sealed class ExecutionTicket : EntityId<Execution>
+    public sealed class ExecutionTicket : Identifier<Execution>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionTicket"/> class.

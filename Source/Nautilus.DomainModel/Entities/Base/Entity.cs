@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// <param name="identifier">The entity identifier.</param>
         /// <param name="timestamp">The entity timestamp.</param>
         protected Entity(
-            EntityId<T> identifier,
+            Identifier<T> identifier,
             ZonedDateTime timestamp)
         {
             Debug.NotDefault(timestamp, nameof(timestamp));
@@ -40,7 +40,7 @@ namespace Nautilus.DomainModel.Entities.Base
         /// <summary>
         /// Gets the entity identifier.
         /// </summary>
-        public EntityId<T> Id { get; }
+        public Identifier<T> Id { get; }
 
         /// <summary>
         /// Gets the entity timestamp.

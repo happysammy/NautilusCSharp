@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for orders.
     /// </summary>
     [Immutable]
-    public sealed class OrderId : EntityId<Order>
+    public sealed class OrderId : Identifier<Order>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderId"/> class.

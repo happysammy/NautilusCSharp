@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Aggregates.Base
         /// <param name="identifier">The aggregate identifier.</param>
         /// <param name="timestamp">The aggregate timestamp.</param>
         protected Aggregate(
-            EntityId<T> identifier,
+            Identifier<T> identifier,
             ZonedDateTime timestamp)
             : base(identifier, timestamp)
         {

@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for instruments.
     /// </summary>
     [Immutable]
-    public sealed class InstrumentId : EntityId<Instrument>
+    public sealed class InstrumentId : Identifier<Instrument>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentId"/> class.

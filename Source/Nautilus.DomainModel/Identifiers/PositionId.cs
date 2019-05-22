@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Identifiers
     /// Represents a valid and unique identifier for positions.
     /// </summary>
     [Immutable]
-    public sealed class PositionId : EntityId<Position>
+    public sealed class PositionId : Identifier<Position>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionId"/> class.
