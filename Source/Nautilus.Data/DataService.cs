@@ -16,7 +16,6 @@ namespace Nautilus.Data
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.Data.Messages.Commands;
@@ -29,7 +28,6 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides a data service.
     /// </summary>
-    [PerformanceOptimized]
     public sealed class DataService : ComponentBusConnectedBase
     {
         private readonly IScheduler scheduler;
