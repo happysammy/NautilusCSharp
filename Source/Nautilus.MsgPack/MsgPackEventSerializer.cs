@@ -131,7 +131,7 @@ namespace Nautilus.MsgPack
                     break;
                 case OrderWorking @event:
                     package.Add(nameof(OrderEvent), nameof(OrderWorking));
-                    package.Add(Key.OrderIdBroker, @event.OrderIdBroker.ToString());
+                    package.Add(Key.BrokerOrderId, @event.OrderIdBroker.ToString());
                     package.Add(Key.Label, @event.Label.ToString());
                     package.Add(Key.OrderSide, @event.OrderSide.ToString());
                     package.Add(Key.OrderType, @event.OrderType.ToString());
@@ -153,7 +153,7 @@ namespace Nautilus.MsgPack
                     break;
                 case OrderModified @event:
                     package.Add(Key.OrderEvent, nameof(OrderModified));
-                    package.Add(Key.OrderIdBroker, @event.BrokerOrderId.ToString());
+                    package.Add(Key.BrokerOrderId, @event.BrokerOrderId.ToString());
                     package.Add(Key.ModifiedPrice, @event.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.ModifiedTime, @event.ModifiedTime.ToIsoString());
                     break;
@@ -224,7 +224,7 @@ namespace Nautilus.MsgPack
                     return new OrderWorking(
                         symbol,
                         orderId,
-                        new OrderId(unpacked[Key.OrderIdBroker].ToString()),
+                        new OrderId(unpacked[Key.BrokerOrderId].ToString()),
                         new Label(unpacked[Key.Label].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
@@ -255,7 +255,7 @@ namespace Nautilus.MsgPack
                     return new OrderModified(
                         symbol,
                         orderId,
-                        new OrderId(unpacked[Key.OrderIdBroker].ToString()),
+                        new OrderId(unpacked[Key.BrokerOrderId].ToString()),
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,

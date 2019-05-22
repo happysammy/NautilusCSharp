@@ -11,6 +11,8 @@ namespace Nautilus.Execution.Messages.Commands
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
@@ -24,14 +26,38 @@ namespace Nautilus.Execution.Messages.Commands
         /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
         /// </summary>
         /// <param name="order">The order to submit.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
+        /// <param name="positionId">The position identifier.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitOrder(
             Order order,
+            TraderId traderId,
+            StrategyId strategyId,
+            PositionId positionId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(order, commandId, commandTimestamp)
         {
+            this.TraderId = traderId;
+            this.StrategyId = strategyId;
+            this.PositionId = positionId;
         }
+
+        /// <summary>
+        /// Gets the commands trader identifier.
+        /// </summary>
+        public TraderId TraderId { get; }
+
+        /// <summary>
+        /// Gets the commands strategy identifier.
+        /// </summary>
+        public StrategyId StrategyId { get; }
+
+        /// <summary>
+        /// Gets the commands position identifier.
+        /// </summary>
+        public PositionId PositionId { get; }
     }
 }

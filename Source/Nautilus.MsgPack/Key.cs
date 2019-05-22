@@ -41,12 +41,27 @@ namespace Nautilus.MsgPack
         /// <summary>
         /// Gets the key string.
         /// </summary>
+        internal static string TraderId => nameof(TraderId);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string StrategyId => nameof(StrategyId);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string PositionId => nameof(PositionId);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
         internal static string OrderId => nameof(OrderId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderIdBroker => nameof(OrderIdBroker);
+        internal static string BrokerOrderId => nameof(BrokerOrderId);
 
         /// <summary>
         /// Gets the key string.

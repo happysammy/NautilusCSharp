@@ -10,7 +10,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.MsgPack;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -36,6 +38,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new SubmitOrder(
                 order,
+                new TraderId("000"),
+                new StrategyId("001"),
+                new PositionId("001"),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 

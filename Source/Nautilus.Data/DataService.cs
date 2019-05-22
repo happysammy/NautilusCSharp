@@ -33,10 +33,10 @@ namespace Nautilus.Data
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
-        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) barDataTrimTime;
         private readonly int barRollingWindowDays;
 
@@ -71,10 +71,11 @@ namespace Nautilus.Data
 
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
-            this.fixConnectTime = config.FixConfiguration.ConnectTime;
-            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
             this.subscribingSymbols = config.SubscribingSymbols;
             this.barSpecifications = config.BarSpecifications;
+
+            this.fixConnectTime = config.FixConfiguration.ConnectTime;
+            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
             this.barDataTrimTime = config.BarDataTrimTime;
             this.barRollingWindowDays = config.BarDataTrimWindowDays;
 

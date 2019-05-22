@@ -14,6 +14,8 @@ namespace Nautilus.MsgPack
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
@@ -95,6 +97,9 @@ namespace Nautilus.MsgPack
             {
                 case SubmitOrder command:
                     package.Add(Key.OrderCommand, nameof(SubmitOrder));
+                    package.Add(Key.TraderId, command.TraderId.ToString());
+                    package.Add(Key.StrategyId, command.StrategyId.ToString());
+                    package.Add(Key.PositionId, command.PositionId.ToString());
                     break;
                 case CancelOrder command:
                     package.Add(Key.OrderCommand, nameof(CancelOrder));
@@ -124,6 +129,9 @@ namespace Nautilus.MsgPack
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
                         order,
+                        new TraderId(unpacked[Key.TraderId].ToString()),
+                        new StrategyId(unpacked[Key.StrategyId].ToString()),
+                        new PositionId(unpacked[Key.PositionId].ToString()),
                         commandId,
                         commandTimestamp);
                 case nameof(CancelOrder):

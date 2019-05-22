@@ -51,16 +51,16 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Gets a value indicating whether the FIX session is connected.
-        /// </summary>
-        /// <returns>A <see cref="bool"/>.</returns>
-        public bool IsConnected => this.IsFixConnected;
-
-        /// <summary>
         /// Connects to the FIX session.
         /// </summary>
         public void Connect()
         {
+            if (this.IsConnected)
+            {
+                this.Log.Warning($"Already connected to FIX session {this.Broker}-{this.Account}...");
+                return;
+            }
+
             this.Log.Information($"Connecting to FIX session {this.Broker}-{this.Account}...");
             this.ConnectFix();
         }
@@ -70,6 +70,12 @@ namespace Nautilus.Fix
         /// </summary>
         public void Disconnect()
         {
+            if (!this.IsConnected)
+            {
+                this.Log.Warning($"Already disconnected from FIX session {this.Broker}-{this.Account}...");
+                return;
+            }
+
             this.Log.Information($"Disconnecting from FIX session {this.Broker}-{this.Account}...");
             this.DisconnectFix();
         }

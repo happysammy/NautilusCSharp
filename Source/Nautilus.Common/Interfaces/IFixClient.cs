@@ -26,26 +26,26 @@ namespace Nautilus.Common.Interfaces
         Brokerage Broker { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the FIX session is connected.
+        /// Gets a value indicating whether a FIX session is connected.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         bool IsConnected { get; }
+
+        /// <summary>
+        /// Connects to a FIX session.
+        /// </summary>
+        void Connect();
+
+        /// <summary>
+        /// Disconnects from a FIX session.
+        /// </summary>
+        void Disconnect();
 
         /// <summary>
         /// Registers the given receiver for brokerage connection events.
         /// </summary>
         /// <param name="receiver">The event receiver.</param>
         void RegisterConnectionEventReceiver(Address receiver);
-
-        /// <summary>
-        /// Connects to the FIX session.
-        /// </summary>
-        void Connect();
-
-        /// <summary>
-        /// Disconnects from the FIX session.
-        /// </summary>
-        void Disconnect();
 
         /// <summary>
         /// Initializes the execution gateway.
