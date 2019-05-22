@@ -252,7 +252,7 @@ namespace Nautilus.Data
                     marketOpened,
                     this.Endpoint);
 
-                this.Log.Information($"Created {marketOpened}Job[{symbol}] scheduled for {nextTime.ToIsoString()}");
+                this.Log.Information($"Created {marketOpened}Event[{symbol}] scheduled for {nextTime.ToIsoString()}");
             }
         }
 
