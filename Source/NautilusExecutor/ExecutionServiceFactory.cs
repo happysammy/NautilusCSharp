@@ -11,9 +11,7 @@ namespace NautilusExecutor
     using System.Collections.Generic;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
-    using Nautilus.Common;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
@@ -21,12 +19,12 @@ namespace NautilusExecutor
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
+    using Nautilus.Execution.Network;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.MsgPack;
     using Nautilus.Scheduler;
-    using Nautilus.Serilog;
     using NodaTime;
 
     /// <summary>
@@ -35,28 +33,24 @@ namespace NautilusExecutor
     public static class ExecutionServiceFactory
     {
         /// <summary>
-        /// Creates a new <see cref="ExecutionService"/> and returns an address book of endpoints.
+        /// Creates and returns a new <see cref="ExecutionService"/>.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        /// <returns>The services switchboard.</returns>
+        /// <returns>The service.</returns>
         public static ExecutionService Create(Configuration config)
         {
-            var loggingAdapter = new SerilogLogger(config.LogLevel);
-            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusExecutor)} builder...");
-            VersionChecker.Run(loggingAdapter, "NautilusExecutor - Financial Market Execution Service");
-
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
                 clock,
                 guidFactory,
-                new LoggerFactory(loggingAdapter));
+                new LoggerFactory(config.LoggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
-            var symbolProvider = new SymbolConverter(venue, config.SymbolIndex);
+            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var messageServer = new MessageServer(
                 container,
@@ -73,7 +67,7 @@ namespace NautilusExecutor
                 container,
                 messagingAdapter,
                 config.FixConfiguration,
-                symbolProvider);
+                symbolConverter);
 
             var fixGateway = FixGatewayFactory.Create(
                 container,
@@ -98,8 +92,7 @@ namespace NautilusExecutor
                 addresses,
                 scheduler,
                 fixGateway,
-                config.CommandsPerSecond,
-                config.NewOrdersPerSecond);
+                config);
         }
 
         private static IFixClient CreateFixClient(

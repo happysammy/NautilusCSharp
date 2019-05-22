@@ -11,6 +11,7 @@ namespace Nautilus.Fix
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;
+    using NodaTime;
 
     /// <summary>
     /// Represents the configuration for a FIX session.
@@ -25,11 +26,15 @@ namespace Nautilus.Fix
         /// <param name="configPath">The FIX configuration file path.</param>
         /// <param name="credentials">The FIX credentials.</param>
         /// <param name="sendAccountTag">The option flag to send account tags with messages.</param>
+        /// <param name="connectTime">The time to connect FIX sessions.</param>
+        /// <param name="disconnectTime">The time to disconnect FIX sessions.</param>
         public FixConfiguration(
             Brokerage broker,
             string configPath,
             FixCredentials credentials,
-            bool sendAccountTag)
+            bool sendAccountTag,
+            (IsoDayOfWeek, LocalTime) connectTime,
+            (IsoDayOfWeek, LocalTime) disconnectTime)
         {
             Condition.NotEmptyOrWhiteSpace(configPath, nameof(configPath));
 
@@ -37,6 +42,8 @@ namespace Nautilus.Fix
             this.ConfigPath = configPath;
             this.Credentials = credentials;
             this.SendAccountTag = sendAccountTag;
+            this.ConnectTime = connectTime;
+            this.DisconnectTime = disconnectTime;
         }
 
         /// <summary>
@@ -58,5 +65,15 @@ namespace Nautilus.Fix
         /// Gets a value indicating whether the Account tag should be sent with FIX messages.
         /// </summary>
         public bool SendAccountTag { get; }
+
+        /// <summary>
+        /// Gets the day of week and time for connecting FIX sessions.
+        /// </summary>
+        public (IsoDayOfWeek, LocalTime) ConnectTime { get; }
+
+        /// <summary>
+        /// Gets the day of week and time for disconnecting FIX sessions.
+        /// </summary>
+        public (IsoDayOfWeek, LocalTime) DisconnectTime { get; }
     }
 }

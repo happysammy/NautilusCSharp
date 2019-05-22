@@ -10,7 +10,6 @@ namespace Nautilus.Common
 {
     using System;
     using System.Reflection;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
 
@@ -24,18 +23,18 @@ namespace Nautilus.Common
         /// </summary>
         /// <param name="log">The logger.</param>
         /// <param name="serviceTitle">The service title string.</param>
-        public static void Run(ILoggingAdapter log, string serviceTitle)
+        public static void Run(ILogger log, string serviceTitle)
         {
             Condition.NotEmptyOrWhiteSpace(serviceTitle, nameof(serviceTitle));
 
-            log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
-            log.Information(NautilusService.Core, $"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
-            log.Information(NautilusService.Core, "Copyright (c) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
-            log.Information(NautilusService.Core, "---------------------------------------------------------------------------");
-            log.Information(NautilusService.Core, $"OS {Environment.OSVersion}");
-            log.Information(NautilusService.Core, $"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
-            log.Information(NautilusService.Core, $"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information(NautilusService.Core, $".NET Core v{GetNetCoreVersion()}");
+            log.Information("---------------------------------------------------------------------------");
+            log.Information($"{serviceTitle} (version " + Assembly.GetExecutingAssembly().GetName().Version + ")");
+            log.Information("Copyright (c) 2015-2019 by Nautech Systems Pty Ltd. All rights reserved.");
+            log.Information("---------------------------------------------------------------------------");
+            log.Information($"OS {Environment.OSVersion}");
+            log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
+            log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
+            log.Information($".NET Core v{GetNetCoreVersion()}");
         }
 
         private static string GetNetCoreVersion()

@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution
+namespace Nautilus.Execution.Network
 {
     using System;
     using System.Text;

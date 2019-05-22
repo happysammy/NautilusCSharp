@@ -10,6 +10,7 @@ namespace Nautilus.Data
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -32,8 +33,11 @@ namespace Nautilus.Data
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
         private readonly IReadOnlyCollection<Symbol> subscribingSymbols;
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) barDataTrimTime;
         private readonly int barRollingWindowDays;
 
         /// <summary>
@@ -44,9 +48,7 @@ namespace Nautilus.Data
         /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
-        /// <param name="subscribingSymbols">The symbols to subscribe to.</param>
-        /// <param name="barSpecifications">The bar specifications to create.</param>
-        /// <param name="barRollingWindowDays">The number of days to trim bar data to.</param>
+        /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         /// <exception cref="ArgumentException">If the subscribing symbols is empty.</exception>
         /// <exception cref="ArgumentException">If the bar specifications is empty.</exception>
@@ -57,24 +59,24 @@ namespace Nautilus.Data
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
-            IReadOnlyCollection<Symbol> subscribingSymbols,
-            IReadOnlyCollection<BarSpecification> barSpecifications,
-            int barRollingWindowDays)
+            Configuration config)
             : base(
                 NautilusService.Data,
                 setupContainer,
                 messagingAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
-            Condition.NotEmpty(subscribingSymbols, nameof(subscribingSymbols));
-            Condition.NotEmpty(barSpecifications, nameof(barSpecifications));
-            Condition.PositiveInt32(barRollingWindowDays, nameof(this.barRollingWindowDays));
+
+            VersionChecker.Run(this.Log, "NautilusData - Financial Market Data Service");
 
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
-            this.subscribingSymbols = subscribingSymbols;
-            this.barSpecifications = barSpecifications;
-            this.barRollingWindowDays = barRollingWindowDays;
+            this.fixConnectTime = config.FixConfiguration.ConnectTime;
+            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
+            this.subscribingSymbols = config.SubscribingSymbols;
+            this.barSpecifications = config.BarSpecifications;
+            this.barDataTrimTime = config.BarDataTrimTime;
+            this.barRollingWindowDays = config.BarDataTrimWindowDays;
 
             addresses.Add(DataServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
@@ -87,6 +89,7 @@ namespace Nautilus.Data
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
+            this.RegisterHandler<MarketClosed>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -95,7 +98,17 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Starting from {message}...");
 
-            this.Send(DataServiceAddress.FixGateway, message);
+            if (ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                this.fixDisconnectTime,
+                this.fixConnectTime,
+                this.TimeNow().ToInstant()))
+            {
+                this.Send(DataServiceAddress.FixGateway, message);
+            }
+            else
+            {
+                this.CreateConnectFixJob();
+            }
 
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
@@ -185,12 +198,12 @@ namespace Nautilus.Data
 
         private void CreateConnectFixJob()
         {
-            var jobDay = IsoDayOfWeek.Sunday;
-            var jobTime = new LocalTime(20, 00);
-            var timeNow = this.TimeNow().ToInstant();
-
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+            var now = this.TimeNow().ToInstant();
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+                this.fixConnectTime.Day,
+                this.fixConnectTime.Time,
+                now);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
 
             var job = new ConnectFix(
                 nextTime,
@@ -208,12 +221,12 @@ namespace Nautilus.Data
 
         private void CreateDisconnectFixJob()
         {
-            var jobDay = IsoDayOfWeek.Saturday;
-            var jobTime = new LocalTime(20, 00);
-            var timeNow = this.TimeNow().ToInstant();
-
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+            var now = this.TimeNow().ToInstant();
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+                this.fixDisconnectTime.Day,
+                this.fixDisconnectTime.Time,
+                now);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
 
             var job = new DisconnectFix(
                 nextTime,
@@ -285,12 +298,12 @@ namespace Nautilus.Data
 
         private void CreateTrimBarDataJob()
         {
-            var jobDay = IsoDayOfWeek.Sunday;
-            var jobTime = new LocalTime(00, 01);
-            var timeNow = this.TimeNow().ToInstant();
-
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+            var now = this.TimeNow().ToInstant();
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+                this.barDataTrimTime.Day,
+                this.barDataTrimTime.Time,
+                now);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
 
             var job = new TrimBarData(
                 this.barSpecifications,

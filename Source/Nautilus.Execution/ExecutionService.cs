@@ -10,6 +10,7 @@ namespace Nautilus.Execution
 {
     using System;
     using System.Collections.Generic;
+    using Nautilus.Common;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
@@ -33,11 +34,11 @@ namespace Nautilus.Execution
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
+        private readonly IEndpoint orderCommandBus;
         private readonly IEndpoint commandThrottler;
         private readonly IEndpoint newOrderThrottler;
-
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly IEndpoint tradeCommandBus;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
@@ -47,8 +48,7 @@ namespace Nautilus.Execution
         /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The execution gateway.</param>
         /// <param name="addresses">The execution service addresses.</param>
-        /// <param name="commandsPerSecond">The commands per second throttling.</param>
-        /// <param name="newOrdersPerSecond">The new orders per second throttling.</param>
+        /// <param name="config">The execution service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
@@ -58,16 +58,15 @@ namespace Nautilus.Execution
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
-            int commandsPerSecond,
-            int newOrdersPerSecond)
+            Configuration config)
             : base(
             NautilusService.Execution,
             container,
             messagingAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
-            Condition.PositiveInt32(commandsPerSecond, nameof(commandsPerSecond));
-            Condition.PositiveInt32(newOrdersPerSecond, nameof(newOrdersPerSecond));
+
+            VersionChecker.Run(this.Log, "NautilusData - Financial Market Execution Service");
 
             addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
@@ -78,7 +77,7 @@ namespace Nautilus.Execution
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
 
-            this.tradeCommandBus = new OrderCommandBus(
+            this.orderCommandBus = new OrderCommandBus(
                 container,
                 messagingAdapter,
                 fixGateway).Endpoint;
@@ -86,16 +85,19 @@ namespace Nautilus.Execution
             this.commandThrottler = new Throttler<Command>(
                 container,
                 NautilusService.Execution,
-                this.tradeCommandBus,
+                this.orderCommandBus,
                 Duration.FromSeconds(1),
-                commandsPerSecond).Endpoint;
+                config.CommandsPerSecond).Endpoint;
 
             this.newOrderThrottler = new Throttler<SubmitOrder>(
                 container,
                 NautilusService.Execution,
                 this.commandThrottler,
                 Duration.FromSeconds(1),
-                newOrdersPerSecond).Endpoint;
+                config.NewOrdersPerSecond).Endpoint;
+
+            this.fixConnectTime = config.FixConfiguration.ConnectTime;
+            this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
@@ -112,10 +114,17 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"Started from {message}...");
 
-            this.Send(ExecutionServiceAddress.FixGateway, message);
-
-            // this.CreateConnectFixJob();
-            // this.CreateDisconnectFixJob();
+            if (ZonedDateTimeExtensions.IsOutsideWeeklyInterval(
+                this.fixDisconnectTime,
+                this.fixConnectTime,
+                this.TimeNow().ToInstant()))
+            {
+                this.Send(ExecutionServiceAddress.FixGateway, message);
+            }
+            else
+            {
+                this.CreateConnectFixJob();
+            }
         }
 
         /// <inheritdoc />
@@ -178,12 +187,12 @@ namespace Nautilus.Execution
 
         private void CreateConnectFixJob()
         {
-            var jobDay = IsoDayOfWeek.Sunday;
-            var jobTime = new LocalTime(20, 00);
-            var timeNow = this.TimeNow().ToInstant();
-
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+            var now = this.TimeNow().ToInstant();
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+                this.fixConnectTime.Day,
+                this.fixConnectTime.Time,
+                now);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
 
             var job = new ConnectFix(
                 nextTime,
@@ -201,12 +210,12 @@ namespace Nautilus.Execution
 
         private void CreateDisconnectFixJob()
         {
-            var jobDay = IsoDayOfWeek.Saturday;
-            var jobTime = new LocalTime(20, 00);
-            var timeNow = this.TimeNow().ToInstant();
-
-            var nextTime = ZonedDateTimeExtensions.GetNextUtc(jobDay, jobTime, timeNow);
-            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, this.TimeNow().ToInstant());
+            var now = this.TimeNow().ToInstant();
+            var nextTime = ZonedDateTimeExtensions.GetNextUtc(
+                this.fixDisconnectTime.Day,
+                this.fixDisconnectTime.Time,
+                now);
+            var durationToNext = ZonedDateTimeExtensions.GetDurationToNextUtc(nextTime, now);
 
             var job = new DisconnectFix(
                 nextTime,

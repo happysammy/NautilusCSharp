@@ -14,11 +14,6 @@ namespace Nautilus.Common.Enums
     public enum NautilusService
     {
         /// <summary>
-        /// The system core service context.
-        /// </summary>
-        Core,
-
-        /// <summary>
         /// The scheduling service context.
         /// </summary>
         Scheduling,

@@ -11,7 +11,13 @@
   },
 
   "fix44": {
-    "configFile": "fix_fxcm2_md.cfg"
+    "configFile": "fix_fxcm4_md.cfg",
+    "connectDay": "Sunday",
+    "connectHour": 20,
+    "connectMinute": 0,
+    "disconnectDay": "Saturday",
+    "disconnectHour": 20,
+    "disconnectMinute": 0
   },
 
   "data": {
@@ -86,6 +92,9 @@
       "1-HOUR[MID]",
       "1-HOUR[BID]"
     ],
-    "barDataRollingWindowDays": 5
+    "barDataTrimDay": "Sunday",
+    "barDataTrimHour": 0,
+    "barDataTrimMinute": 1,
+    "barDataTrimWindowDays": 5
   }
 }

@@ -15,9 +15,13 @@ namespace NautilusExecutor
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Nautilus.Common.Configuration;
+    using Nautilus.Core.Extensions;
     using Nautilus.Execution;
+    using Nautilus.Serilog;
     using Newtonsoft.Json.Linq;
     using Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
@@ -59,7 +63,14 @@ namespace NautilusExecutor
         {
             var configJson = JObject.Parse(File.ReadAllText("config.json"));
             var symbolIndex = File.ReadAllText("symbols.json");
-            var config = new Configuration(configJson, symbolIndex, this.Environment.IsDevelopment());
+            var logLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            var loggingAdapter = new SerilogLogger(logLevel);
+
+            var config = new Configuration(
+                loggingAdapter,
+                configJson,
+                symbolIndex,
+                this.Environment.IsDevelopment());
 
             AppDomain.CurrentDomain.DomainUnload += (o, e) => Log.CloseAndFlush();
 

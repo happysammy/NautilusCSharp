@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
-    using Nautilus.Execution;
+    using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.MsgPack;
     using Nautilus.Network;

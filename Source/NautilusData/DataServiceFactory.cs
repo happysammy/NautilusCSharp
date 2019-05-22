@@ -11,9 +11,7 @@ namespace NautilusData
     using System.Collections.Generic;
     using Nautilus.Brokerage.Dukascopy;
     using Nautilus.Brokerage.FXCM;
-    using Nautilus.Common;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Logging;
     using Nautilus.Common.Messaging;
@@ -28,7 +26,6 @@ namespace NautilusData
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis;
     using Nautilus.Scheduler;
-    using Nautilus.Serilog;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -38,22 +35,18 @@ namespace NautilusData
     public static class DataServiceFactory
     {
         /// <summary>
-        /// Builds the database and returns an address book endpoints.
+        /// Creates and returns a new <see cref="DataService"/>.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        /// <returns>The endpoint addresses for the data service.</returns>
+        /// <returns>The service.</returns>
         public static DataService Create(Configuration config)
         {
-            var loggingAdapter = new SerilogLogger(config.LogLevel);
-            loggingAdapter.Debug(NautilusService.Core, $"Starting {nameof(NautilusData)} builder...");
-            VersionChecker.Run(loggingAdapter, "NautilusData - Financial Market Data Service");
-
             var clock = new Clock(DateTimeZone.Utc);
             var guidFactory = new GuidFactory();
             var container = new ComponentryContainer(
                 clock,
                 guidFactory,
-                new LoggerFactory(loggingAdapter));
+                new LoggerFactory(config.LoggingAdapter));
 
             var messagingAdapter = MessagingServiceFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
@@ -113,9 +106,7 @@ namespace NautilusData
                 addresses,
                 scheduler,
                 fixGateway,
-                symbolConverter.GetAllSymbols(config.Symbols, Venue.FXCM),
-                config.BarSpecifications,
-                config.BarRollingWindowDays);
+                config);
         }
 
         private static IFixClient CreateFixClient(

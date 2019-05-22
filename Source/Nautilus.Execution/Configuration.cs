@@ -6,23 +6,20 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace NautilusData
+namespace Nautilus.Execution
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.IO;
-    using System.Linq;
     using Nautilus.Common.Configuration;
+    using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.Factories;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Fix;
     using Nautilus.Network;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using Serilog.Events;
+    using NodaTime;
 
     /// <summary>
     /// Represents a data system configuration.
@@ -32,24 +29,26 @@ namespace NautilusData
         /// <summary>
         /// Initializes a new instance of the <see cref="Configuration"/> class.
         /// </summary>
+        /// <param name="loggingAdapter">The logging adapter.</param>
         /// <param name="configJson">The parsed configuration JSON.</param>
-        /// <param name="symbolsIndex">The parsed symbols index string.</param>
+        /// <param name="symbolIndex">The parsed symbols index string.</param>
         /// <param name="isDevelopment">The flag indicating whether the hosting environment is development.</param>
         public Configuration(
+            ILoggingAdapter loggingAdapter,
             JObject configJson,
-            string symbolsIndex,
+            string symbolIndex,
             bool isDevelopment)
         {
-            // Log Settings
-            this.LogLevel = ((string)configJson[ConfigSection.Logging]["logLevel"]).ToEnum<LogEventLevel>();
+            this.LoggingAdapter = loggingAdapter;
 
             // Network Settings
             this.ServerAddress = isDevelopment
                 ? NetworkAddress.LocalHost()
                 : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
-            this.TickPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickPublisherPort"]);
-            this.BarPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barPublisherPort"]);
-            this.HistoricalBarsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["historicalBarsPort"]);
+            this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["commandsPort"]);
+            this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);
+            this.CommandsPerSecond = (int)configJson[ConfigSection.Network]["commandsPerSecond"];
+            this.NewOrdersPerSecond = (int)configJson[ConfigSection.Network]["newOrdersPerSecond"];
 
             // FIX Settings
             var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"];
@@ -63,35 +62,32 @@ namespace NautilusData
                 fixSettings["Username"],
                 fixSettings["Password"]);
 
+            var connectDay = configJson[ConfigSection.Fix44]["connectDay"].ToString().ToEnum<IsoDayOfWeek>();
+            var connectHour = (int)configJson[ConfigSection.Fix44]["connectHour"];
+            var connectMinute = (int)configJson[ConfigSection.Fix44]["connectMinute"];
+            var connectTime = (connectDay, new LocalTime(connectHour, connectMinute));
+
+            var disconnectDay = configJson[ConfigSection.Fix44]["disconnectDay"].ToString().ToEnum<IsoDayOfWeek>();
+            var disconnectHour = (int)configJson[ConfigSection.Fix44]["disconnectHour"];
+            var disconnectMinute = (int)configJson[ConfigSection.Fix44]["disconnectMinute"];
+            var disconnectTime = (disconnectDay, new LocalTime(disconnectHour, disconnectMinute));
+
             this.FixConfiguration = new FixConfiguration(
                 broker,
                 configPath,
                 credentials,
-                Convert.ToBoolean(fixSettings["SendAccountTag"]));
+                Convert.ToBoolean(fixSettings["SendAccountTag"]),
+                connectTime,
+                disconnectTime);
 
             // Data Settings
-            this.SymbolIndex = JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolsIndex);
-
-            var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
-            this.Symbols = symbols
-                .Select(s => s.ToString())
-                .Distinct()
-                .ToImmutableList();
-
-            var barSpecs = (JArray)configJson[ConfigSection.Data]["barSpecifications"];
-            this.BarSpecifications = barSpecs
-                .Select(bs => bs.ToString())
-                .Distinct()
-                .Select(BarSpecificationFactory.Create)
-                .ToImmutableList();
-
-            this.BarRollingWindowDays = (int)configJson[ConfigSection.Data]["barDataRollingWindowDays"];
+            this.SymbolIndex = JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolIndex);
         }
 
         /// <summary>
-        /// Gets the configuration log level.
+        /// Gets the systems logging adapter.
         /// </summary>
-        public LogEventLevel LogLevel { get; }
+        public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
         /// Gets the configuration server address.
@@ -99,19 +95,24 @@ namespace NautilusData
         public NetworkAddress ServerAddress { get; }
 
         /// <summary>
-        /// Gets the configuration tick publisher port.
+        /// Gets the configuration commands port.
         /// </summary>
-        public NetworkPort TickPublisherPort { get; }
+        public NetworkPort CommandsPort { get; }
 
         /// <summary>
-        /// Gets the configuration bar publisher port.
+        /// Gets the configuration events port.
         /// </summary>
-        public NetworkPort BarPublisherPort { get; }
+        public NetworkPort EventsPort { get; }
 
         /// <summary>
-        /// Gets the configuration historical bars publisher port.
+        /// Gets the configuration maximum commands per second.
         /// </summary>
-        public NetworkPort HistoricalBarsPort { get; }
+        public int CommandsPerSecond { get; }
+
+        /// <summary>
+        /// Gets the configuration maximum new orders per second.
+        /// </summary>
+        public int NewOrdersPerSecond { get; }
 
         /// <summary>
         /// Gets the FIX configuration.
@@ -122,20 +123,5 @@ namespace NautilusData
         /// Gets the symbol conversion index.
         /// </summary>
         public IReadOnlyDictionary<string, string> SymbolIndex { get; }
-
-        /// <summary>
-        /// Gets the configuration symbols.
-        /// </summary>
-        public IReadOnlyCollection<string> Symbols { get; }
-
-        /// <summary>
-        /// Gets the configuration bar specifications.
-        /// </summary>
-        public IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
-
-        /// <summary>
-        /// Gets the database bar rolling window days for trimming.
-        /// </summary>
-        public int BarRollingWindowDays { get; }
     }
 }
