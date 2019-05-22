@@ -71,7 +71,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             commandMessage,
-                            message.Id,
+                            message.Identifier,
                             message.Timestamp);
                         this.commandBus.Send(commandEnvelope);
                         break;
@@ -80,7 +80,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             eventMessage,
-                            message.Id,
+                            message.Identifier,
                             message.Timestamp);
                         this.eventBus.Send(eventEnvelope);
                         break;
@@ -89,7 +89,7 @@ namespace Nautilus.Common.Messaging
                             receiver,
                             sender,
                             serviceMessage,
-                            message.Id,
+                            message.Identifier,
                             message.Timestamp);
                         this.documentBus.Send(serviceEnvelope);
                         break;

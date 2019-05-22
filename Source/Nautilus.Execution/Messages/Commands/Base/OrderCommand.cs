@@ -25,15 +25,15 @@ namespace Nautilus.Execution.Messages.Commands.Base
         /// Initializes a new instance of the <see cref="OrderCommand"/> class.
         /// </summary>
         /// <param name="order">The commands order.</param>
-        /// <param name="commandId">The commands identifier.</param>
+        /// <param name="commandIdentifier">The commands identifier.</param>
         /// <param name="commandTimestamp">The commands timestamp.</param>
         protected OrderCommand(
             Order order,
-            Guid commandId,
+            Guid commandIdentifier,
             ZonedDateTime commandTimestamp)
-            : base(commandId, commandTimestamp)
+            : base(commandIdentifier, commandTimestamp)
         {
-            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandIdentifier, nameof(commandIdentifier));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.Order = order;

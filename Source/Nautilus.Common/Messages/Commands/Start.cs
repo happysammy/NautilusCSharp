@@ -33,6 +33,6 @@ namespace Nautilus.Common.Messages.Commands
         /// Returns a string representation of this message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Start)}({this.Id})";
+        public override string ToString() => $"{nameof(Start)}({this.Identifier})";
     }
 }

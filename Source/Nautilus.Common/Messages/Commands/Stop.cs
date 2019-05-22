@@ -22,12 +22,12 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="Stop"/> class.
         /// </summary>
-        /// <param name="messageId">The commands identifier.</param>
+        /// <param name="messageIdentifier">The commands identifier.</param>
         /// <param name="messageTimestamp">The commands timestamp.</param>
         public Stop(
-            Guid messageId,
+            Guid messageIdentifier,
             ZonedDateTime messageTimestamp)
-            : base(messageId, messageTimestamp)
+            : base(messageIdentifier, messageTimestamp)
         {
         }
 
@@ -35,6 +35,6 @@ namespace Nautilus.Common.Messages.Commands
         /// Returns a string representation of this message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Stop)}({this.Id})";
+        public override string ToString() => $"{nameof(Stop)}({this.Identifier})";
     }
 }

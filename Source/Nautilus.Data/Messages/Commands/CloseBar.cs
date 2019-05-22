@@ -26,14 +26,14 @@ namespace Nautilus.Data.Messages.Commands
         /// </summary>
         /// <param name="barSpec">The bar specification.</param>
         /// <param name="scheduledTime">The scheduled job time.</param>
-        /// <param name="id">The close identifier.</param>
+        /// <param name="identifier">The close identifier.</param>
         /// <param name="timestamp">The close timestamp.</param>
         public CloseBar(
             BarSpecification barSpec,
             ZonedDateTime scheduledTime,
-            Guid id,
+            Guid identifier,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(identifier, timestamp)
         {
             this.ScheduledTime = scheduledTime;
             this.BarSpecification = barSpec;

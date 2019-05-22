@@ -25,15 +25,15 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="MarketOpened" /> class.
         /// </summary>
         /// <param name="symbol">The symbol of the market.</param>
-        /// <param name="eventId">The account event identifier.</param>
+        /// <param name="eventIdentifier">The account event identifier.</param>
         /// <param name="eventTimestamp">The account event timestamp.</param>
         public MarketOpened(
             Symbol symbol,
-            Guid eventId,
+            Guid eventIdentifier,
             ZonedDateTime eventTimestamp)
-            : base(eventId, eventTimestamp)
+            : base(eventIdentifier, eventTimestamp)
         {
-            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.Symbol = symbol;

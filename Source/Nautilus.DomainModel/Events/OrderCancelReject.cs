@@ -29,7 +29,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedResponseTo">The event cancel reject response.</param>
         /// <param name="rejectedReason">The event order cancel rejected reason.</param>
-        /// <param name="eventId">The event identifier.</param>
+        /// <param name="eventIdentifier">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderCancelReject(
             Symbol symbol,
@@ -37,18 +37,18 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime rejectedTime,
             string rejectedResponseTo,
             string rejectedReason,
-            Guid eventId,
+            Guid eventIdentifier,
             ZonedDateTime eventTimestamp)
             : base(
                 symbol,
                 orderId,
-                eventId,
+                eventIdentifier,
                 eventTimestamp)
         {
             Debug.NotDefault(rejectedTime, nameof(rejectedTime));
             Debug.NotEmptyOrWhiteSpace(rejectedResponseTo, nameof(rejectedResponseTo));
             Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
-            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.RejectedTime = rejectedTime;

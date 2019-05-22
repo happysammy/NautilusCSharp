@@ -34,7 +34,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
         /// <param name="executionTime">The event order execution time.</param>
-        /// <param name="eventId">The event identifier.</param>
+        /// <param name="eventIdentifier">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderFilled(
             Symbol symbol,
@@ -45,17 +45,17 @@ namespace Nautilus.DomainModel.Events
             Quantity filledQuantity,
             Price averagePrice,
             ZonedDateTime executionTime,
-            Guid eventId,
+            Guid eventIdentifier,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventId,
+                  eventIdentifier,
                   eventTimestamp)
         {
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotDefault(executionTime, nameof(executionTime));
-            Debug.NotDefault(eventId, nameof(eventId));
+            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExecutionId = executionId;

@@ -24,13 +24,13 @@ namespace Nautilus.Execution.Messages.Commands
         /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
         /// </summary>
         /// <param name="order">The order to submit.</param>
-        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandIdentifier">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitOrder(
             Order order,
-            Guid commandId,
+            Guid commandIdentifier,
             ZonedDateTime commandTimestamp)
-            : base(order, commandId, commandTimestamp)
+            : base(order, commandIdentifier, commandTimestamp)
         {
         }
     }

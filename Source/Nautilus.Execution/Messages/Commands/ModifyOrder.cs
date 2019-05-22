@@ -27,19 +27,19 @@ namespace Nautilus.Execution.Messages.Commands
         /// </summary>
         /// <param name="order">The commands order to modify.</param>
         /// <param name="modifiedPrice">The modified price.</param>
-        /// <param name="commandId">The command identifier.</param>
+        /// <param name="commandIdentifier">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public ModifyOrder(
             Order order,
             Price modifiedPrice,
-            Guid commandId,
+            Guid commandIdentifier,
             ZonedDateTime commandTimestamp)
             : base(
                 order,
-                commandId,
+                commandIdentifier,
                 commandTimestamp)
         {
-            Debug.NotDefault(commandId, nameof(commandId));
+            Debug.NotDefault(commandIdentifier, nameof(commandIdentifier));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.ModifiedPrice = modifiedPrice;
