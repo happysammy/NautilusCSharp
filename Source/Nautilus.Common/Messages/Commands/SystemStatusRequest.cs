@@ -23,14 +23,14 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.
         /// </summary>
-        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public SystemStatusRequest(
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }

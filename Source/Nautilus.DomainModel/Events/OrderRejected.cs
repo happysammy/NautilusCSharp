@@ -28,24 +28,24 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedReason">The event order rejected reason.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderRejected(
             Symbol symbol,
             OrderId orderId,
             ZonedDateTime rejectedTime,
             string rejectedReason,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventIdentifier,
+                  eventId,
                   eventTimestamp)
         {
             Debug.NotDefault(rejectedTime, nameof(rejectedTime));
             Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.RejectedTime = rejectedTime;

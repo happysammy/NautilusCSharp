@@ -37,7 +37,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="marginUsedMaintenance">The account margin used maintenance.</param>
         /// <param name="marginRatio">The account margin ratio.</param>
         /// <param name="marginCallStatus">The account margin call status.</param>
-        /// <param name="eventIdentifier">The account event identifier.</param>
+        /// <param name="eventId">The account event identifier.</param>
         /// <param name="eventTimestamp">The account event timestamp.</param>
         public AccountEvent(
             AccountId accountId,
@@ -51,12 +51,12 @@ namespace Nautilus.DomainModel.Events
             Money marginUsedMaintenance,
             decimal marginRatio,
             string marginCallStatus,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventIdentifier, eventTimestamp)
+            : base(eventId, eventTimestamp)
         {
             Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.AccountId = accountId;

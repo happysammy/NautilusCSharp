@@ -25,15 +25,15 @@ namespace Nautilus.Data.Messages.Commands
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
         /// <param name="dataType">The commands symbol.</param>
-        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public Unsubscribe(
             T dataType,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.DataType = dataType;

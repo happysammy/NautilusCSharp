@@ -22,10 +22,10 @@ namespace Nautilus.Common.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="Start"/> class.
         /// </summary>
-        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
-        public Start(Guid identifier, ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+        public Start(Guid id, ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
         }
 
@@ -33,6 +33,6 @@ namespace Nautilus.Common.Messages.Commands
         /// Returns a string representation of this message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Start)}({this.Identifier})";
+        public override string ToString() => $"{nameof(Start)}({this.Id})";
     }
 }

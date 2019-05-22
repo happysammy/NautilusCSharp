@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="leavesQuantity">The event leaves quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
         /// <param name="executionTime">The event order execution time.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderPartiallyFilled(
             Symbol symbol,
@@ -47,17 +47,17 @@ namespace Nautilus.DomainModel.Events
             Quantity leavesQuantity,
             Price averagePrice,
             ZonedDateTime executionTime,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventIdentifier,
+                  eventId,
                   eventTimestamp)
         {
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotDefault(executionTime, nameof(executionTime));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExecutionId = executionId;

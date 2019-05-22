@@ -27,16 +27,16 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderEvent(
             Symbol symbol,
             OrderId orderId,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventIdentifier, eventTimestamp)
+            : base(eventId, eventTimestamp)
         {
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.Symbol = symbol;

@@ -22,21 +22,21 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
         /// </summary>
-        /// <param name="identifier">The message identifier.</param>
+        /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        protected Message(Guid identifier, ZonedDateTime timestamp)
+        protected Message(Guid id, ZonedDateTime timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.Identifier = identifier;
+            this.Id = id;
             this.Timestamp = timestamp;
         }
 
         /// <summary>
         /// Gets the message identifier.
         /// </summary>
-        public Guid Identifier { get; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Gets the message creation timestamp.
@@ -86,13 +86,13 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>True if the message identifier equals the other identifier, otherwise false.</returns>
-        public bool Equals(Message other) => this.Identifier == other.Identifier;
+        public bool Equals(Message other) => this.Id == other.Id;
 
         /// <summary>
         /// Returns the hash code for this <see cref="Message"/>.
         /// </summary>
         /// <returns>The hash code <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Identifier);
+        public override int GetHashCode() => Hash.GetCode(this.Id);
 
         /// <summary>
         /// Returns a string representation of this <see cref="Message"/>.

@@ -53,7 +53,7 @@ namespace Nautilus.MsgPack
                         { Key.MarginUsedMaintenance, accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture) },
                         { Key.MarginRatio, accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture) },
                         { Key.MarginCallStatus, accountEvent.MarginCallStatus.ToString() },
-                        { Key.EventId, accountEvent.Identifier.ToString() },
+                        { Key.EventId, accountEvent.Id.ToString() },
                         { Key.EventTimestamp, accountEvent.Timestamp.ToIsoString() },
                     }.Freeze());
                 default:
@@ -110,7 +110,7 @@ namespace Nautilus.MsgPack
                 { Key.EventType, nameof(OrderEvent) },
                 { Key.Symbol, orderEvent.Symbol.ToString() },
                 { Key.OrderId, orderEvent.OrderId.Value },
-                { Key.EventId, orderEvent.Identifier.ToString() },
+                { Key.EventId, orderEvent.Id.ToString() },
                 { Key.EventTimestamp, orderEvent.Timestamp.ToIsoString() },
             };
 

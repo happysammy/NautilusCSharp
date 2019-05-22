@@ -22,12 +22,12 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Document"/> class.
         /// </summary>
-        /// <param name="identifier">The command identifier.</param>
+        /// <param name="id">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
-        protected Document(Guid identifier, ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+        protected Document(Guid id, ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }

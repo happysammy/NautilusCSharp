@@ -26,16 +26,16 @@ namespace Nautilus.Common.Messages.Events
         /// </summary>
         /// <param name="symbol">The symbol of the market.</param>
         /// <param name="closedTime">The market closed time.</param>
-        /// <param name="identifier">The event identifier.</param>
+        /// <param name="id">The event identifier.</param>
         /// <param name="timestamp">The event timestamp.</param>
         public MarketClosed(
             Symbol symbol,
             ZonedDateTime closedTime,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Symbol = symbol;

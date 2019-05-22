@@ -25,13 +25,13 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="ConnectFix"/> class.
         /// </summary>
         /// <param name="scheduledTime">The commands scheduled time.</param>
-        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands creation timestamp.</param>
         public ConnectFix(
             ZonedDateTime scheduledTime,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));
 

@@ -25,17 +25,17 @@ namespace Nautilus.Execution.Messages.Commands
         /// Initializes a new instance of the <see cref="ClosePosition"/> class.
         /// </summary>
         /// <param name="position">The commands position to close.</param>
-        /// <param name="commandIdentifier">The commands identifier.</param>
+        /// <param name="commandId">The commands identifier.</param>
         /// <param name="commandTimestamp">The commands timestamp.</param>
         public ClosePosition(
             Position position,
-            Guid commandIdentifier,
+            Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
-                commandIdentifier,
+                commandId,
                 commandTimestamp)
         {
-            Debug.NotDefault(commandIdentifier, nameof(commandIdentifier));
+            Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
             this.Position = position;

@@ -27,16 +27,16 @@ namespace Nautilus.Common.Messages.Commands
         /// </summary>
         /// <param name="componentName">The component name.</param>
         /// <param name="status">The status.</param>
-        /// <param name="identifier">The documents identifier.</param>
+        /// <param name="id">The documents identifier.</param>
         /// <param name="timestamp">The documents timestamp.</param>
         public SystemStatusResponse(
             Label componentName,
             Status status,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.ComponentName = componentName;

@@ -26,14 +26,14 @@ namespace Nautilus.Common.Messages.Events
         /// </summary>
         /// <param name="broker">The events brokerage disconnected from.</param>
         /// <param name="sessionId">The events FIX session identifier.</param>
-        /// <param name="identifier">The events identifier.</param>
+        /// <param name="id">The events identifier.</param>
         /// <param name="timestamp">The events timestamp.</param>
         public FixSessionDisconnected(
             Brokerage broker,
             string sessionId,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
             Debug.NotEmptyOrWhiteSpace(sessionId, nameof(sessionId));
 

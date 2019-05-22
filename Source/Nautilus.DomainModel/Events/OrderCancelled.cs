@@ -27,22 +27,22 @@ namespace Nautilus.DomainModel.Events
         /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="cancelledTime">The event order cancelled time.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderCancelled(
             Symbol symbol,
             OrderId orderId,
             ZonedDateTime cancelledTime,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventIdentifier,
+                  eventId,
                   eventTimestamp)
         {
             Debug.NotDefault(cancelledTime, nameof(cancelledTime));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.CancelledTime = cancelledTime;

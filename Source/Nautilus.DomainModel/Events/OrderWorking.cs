@@ -37,7 +37,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="timeInForce">The event order time in force.</param>
         /// <param name="expireTime">The event order expire time.</param>
         /// <param name="workingTime">The event order accepted time.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderWorking(
             Symbol symbol,
@@ -51,19 +51,19 @@ namespace Nautilus.DomainModel.Events
             TimeInForce timeInForce,
             OptionVal<ZonedDateTime> expireTime,
             ZonedDateTime workingTime,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventIdentifier,
+                  eventId,
                   eventTimestamp)
         {
             Debug.NotDefault(orderSide, nameof(orderSide));
             Debug.NotDefault(orderType, nameof(orderType));
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(workingTime, nameof(workingTime));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.OrderIdBroker = orderIdBroker;

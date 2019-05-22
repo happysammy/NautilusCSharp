@@ -25,15 +25,15 @@ namespace Nautilus.Common.Messages.Commands
         /// Initializes a new instance of the <see cref="InitializeSwitchboard"/> class.
         /// </summary>
         /// <param name="switchboard">The command switchboard.</param>
-        /// <param name="identifier">The command identifier.</param>
+        /// <param name="id">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
         public InitializeSwitchboard(
             Switchboard switchboard,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Switchboard = switchboard;

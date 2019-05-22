@@ -29,7 +29,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="lastTick">The event last tick.</param>
         /// <param name="averageSpread">The event average spread.</param>
         /// <param name="isHistorical">The event is historical flag.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public BarDataEvent(
             BarType barType,
@@ -37,9 +37,9 @@ namespace Nautilus.DomainModel.Events
             Tick lastTick,
             decimal averageSpread,
             bool isHistorical,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventIdentifier, eventTimestamp)
+            : base(eventId, eventTimestamp)
         {
             Debug.NotNegativeDecimal(averageSpread, nameof(averageSpread));
 

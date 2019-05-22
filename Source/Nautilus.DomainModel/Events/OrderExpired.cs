@@ -27,22 +27,22 @@ namespace Nautilus.DomainModel.Events
         /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="expiredTime">The event order expired time.</param>
-        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderExpired(
             Symbol symbol,
             OrderId orderId,
             ZonedDateTime expiredTime,
-            Guid eventIdentifier,
+            Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                   symbol,
                   orderId,
-                  eventIdentifier,
+                  eventId,
                   eventTimestamp)
         {
             Debug.NotDefault(expiredTime, nameof(expiredTime));
-            Debug.NotDefault(eventIdentifier, nameof(eventIdentifier));
+            Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExpiredTime = expiredTime;

@@ -22,12 +22,12 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Event"/> class.
         /// </summary>
-        /// <param name="identifier">The event identifier.</param>
+        /// <param name="id">The event identifier.</param>
         /// <param name="timestamp">The event timestamp.</param>
-        protected Event(Guid identifier, ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+        protected Event(Guid id, ZonedDateTime timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
         }
     }

@@ -25,15 +25,15 @@ namespace Nautilus.Common.Messages.Documents
         /// Initializes a new instance of the <see cref="DataDelivery{T}"/> class.
         /// </summary>
         /// <param name="data">The message data.</param>
-        /// <param name="identifier">The message identifier.</param>
+        /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
         public DataDelivery(
             T data,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
-            Debug.NotDefault(identifier, nameof(identifier));
+            Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.Data = data;

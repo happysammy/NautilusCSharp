@@ -48,7 +48,7 @@ namespace Nautilus.MsgPack
                     var package = new MessagePackObjectDictionary
                     {
                         { Key.CommandType, nameof(CollateralInquiry) },
-                        { Key.CommandId, collateralInquiry.Identifier.ToString() },
+                        { Key.CommandId, collateralInquiry.Id.ToString() },
                         { Key.CommandTimestamp, collateralInquiry.Timestamp.ToIsoString() },
                     };
                     return MsgPackSerializer.Serialize(package.Freeze());
@@ -87,7 +87,7 @@ namespace Nautilus.MsgPack
             {
                 { Key.CommandType, nameof(OrderCommand) },
                 { Key.Order, this.orderSerializer.Serialize(orderCommand.Order) },
-                { Key.CommandId, orderCommand.Identifier.ToString() },
+                { Key.CommandId, orderCommand.Id.ToString() },
                 { Key.CommandTimestamp, orderCommand.Timestamp.ToIsoString() },
             };
 

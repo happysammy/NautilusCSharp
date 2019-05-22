@@ -32,15 +32,15 @@ namespace Nautilus.Data.Messages.Commands
         /// <param name="barSpecifications">The bar specifications to trim.</param>
         /// <param name="rollingWindowDays">The number of days in the rolling window.</param>
         /// <param name="scheduledTime">The commands scheduled time.</param>
-        /// <param name="identifier">The commands identifier.</param>
+        /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands creation timestamp.</param>
         public TrimBarData(
             IEnumerable<BarSpecification> barSpecifications,
             int rollingWindowDays,
             ZonedDateTime scheduledTime,
-            Guid identifier,
+            Guid id,
             ZonedDateTime timestamp)
-            : base(identifier, timestamp)
+            : base(id, timestamp)
         {
             Debug.PositiveInt32(rollingWindowDays, nameof(rollingWindowDays));
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));

@@ -80,7 +80,7 @@ namespace Nautilus.Execution
             var cancelOrder = new CancelOrder(
                 order,
                 message.Reason,
-                message.Identifier,
+                message.Id,
                 message.Timestamp);
 
             this.Send(ExecutionServiceAddress.Core, cancelOrder);
@@ -100,7 +100,7 @@ namespace Nautilus.Execution
             var modifyOrder = new ModifyOrder(
                 order,
                 message.ModifiedPrice,
-                message.Identifier,
+                message.Id,
                 message.Timestamp);
 
             if (!this.modifyCache.ContainsKey(order.Id))
@@ -131,7 +131,7 @@ namespace Nautilus.Execution
 
                 if (order is null)
                 {
-                    this.Log.Warning($"Order not found for OrderEvent (event order_id={orderEvent.Identifier}).");
+                    this.Log.Warning($"Order not found for OrderEvent (event order_id={orderEvent.Id}).");
                     return;
                 }
 
