@@ -11,12 +11,12 @@ namespace Nautilus.Common.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to execute at a scheduled time.
+    /// Represents a job command to execute at a scheduled time.
     /// </summary>
     public interface IScheduledJob
     {
         /// <summary>
-        /// Gets the commands scheduled job time.
+        /// Gets the job commands scheduled time.
         /// </summary>
         ZonedDateTime ScheduledTime { get; }
     }
