@@ -16,7 +16,7 @@ namespace Nautilus.Data.Keys
     using NodaTime;
 
     /// <summary>
-    /// Represents a trading session date.
+    /// Represents a trading session date (UTC).
     /// </summary>
     [Immutable]
     public struct DateKey : IComparable<DateKey>, IEquatable<DateKey>
