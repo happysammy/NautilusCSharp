@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messages.Commands.Base;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using NodaTime;
 
@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command to stop the component.
     /// </summary>
     [Immutable]
-    public sealed class Stop : SystemCommand
+    public sealed class Stop : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Stop"/> class.

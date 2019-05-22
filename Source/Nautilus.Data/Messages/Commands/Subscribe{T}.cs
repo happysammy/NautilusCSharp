@@ -9,7 +9,7 @@
 namespace Nautilus.Data.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messages.Commands.Base;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;
@@ -19,7 +19,7 @@ namespace Nautilus.Data.Messages.Commands
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
-    public sealed class Subscribe<T> : SystemCommand
+    public sealed class Subscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.

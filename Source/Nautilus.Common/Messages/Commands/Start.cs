@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messages.Commands.Base;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using NodaTime;
 
@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command message to start the system.
     /// </summary>
     [Immutable]
-    public sealed class Start : SystemCommand
+    public sealed class Start : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Start"/> class.

@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Messages.Commands
 {
     using System;
-    using Nautilus.Common.Messages.Commands.Base;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using NodaTime;
@@ -18,7 +18,7 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command requesting .
     /// </summary>
     [Immutable]
-    public sealed class SystemStatusRequest : SystemCommand
+    public sealed class SystemStatusRequest : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SystemStatusRequest"/> class.
