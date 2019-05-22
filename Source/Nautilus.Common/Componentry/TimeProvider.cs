@@ -18,11 +18,11 @@ namespace Nautilus.Common.Componentry
     public static class TimeProvider
     {
         /// <summary>
-        /// Returns a value indicating whether the current time is inside the given weekly interval.
+        /// Returns a value indicating whether the given instant now is inside the given weekly interval.
         /// </summary>
         /// <param name="start">The start of the weekly interval.</param>
         /// <param name="end">The end of the weekly interval.</param>
-        /// <param name="now">The current instant in time.</param>
+        /// <param name="now">The current time instant.</param>
         /// <returns>True if now is inside the given interval, else false.</returns>
         public static bool IsInsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
@@ -47,11 +47,11 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Returns a value indicating whether the current time is outside the given weekly interval.
+        /// Returns a value indicating whether the given instant now is outside the given weekly interval.
         /// </summary>
         /// <param name="start">The start of the weekly interval.</param>
         /// <param name="end">The end of the weekly interval.</param>
-        /// <param name="now">The current instant in time.</param>
+        /// <param name="now">The current time instant.</param>
         /// <returns>True if now is outside the given interval, else false.</returns>
         public static bool IsOutsideWeeklyInterval(
             (IsoDayOfWeek DayOfWeek, LocalTime time) start,
@@ -80,8 +80,8 @@ namespace Nautilus.Common.Componentry
         /// </summary>
         /// <param name="dayOfWeek">The day of week.</param>
         /// <param name="timeOfDay">The time of day.</param>
-        /// <param name="now">The current instant in time.</param>
-        /// <returns>The duration.</returns>
+        /// <param name="now">The current time instant.</param>
+        /// <returns>The next date time (UTC).</returns>
         public static ZonedDateTime GetNextUtc(
             IsoDayOfWeek dayOfWeek,
             LocalTime timeOfDay,
@@ -108,8 +108,8 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Returns the duration to the given next time (UTC).
         /// </summary>
-        /// <param name="next">The next time (UTC).</param>
-        /// <param name="now">The current instant in time.</param>
+        /// <param name="next">The next date time (UTC).</param>
+        /// <param name="now">The current time instant.</param>
         /// <returns>The duration.</returns>
         public static Duration GetDurationToNextUtc(
             ZonedDateTime next,
