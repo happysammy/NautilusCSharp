@@ -9,7 +9,6 @@
 namespace Nautilus.MsgPack
 {
     using System;
-    using System.Text;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -28,7 +27,7 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {
-        private const string NONE = nameof(NONE);
+        private const byte NIL = 0xc0;
 
         private readonly IOrderSerializer orderSerializer;
 
@@ -118,7 +117,7 @@ namespace Nautilus.MsgPack
         {
             return takeProfit.HasValue
                 ? this.orderSerializer.Serialize(takeProfit.Value)
-                : Encoding.UTF8.GetBytes(NONE);
+                : new[] { NIL };
         }
 
         private OptionRef<Order> DeserializeTakeProfit(byte[] takeProfit, bool hasTakeProfit)

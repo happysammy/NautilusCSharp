@@ -22,9 +22,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         private Symbol Symbol { get; set; } = new Symbol("AUDUSD", Venue.FXCM);
 
-        private OrderId OrderId { get; set; } = new OrderId("StubOrderId");
+        private OrderId OrderId { get; set; } = new OrderId("O-123456");
 
-        private Label OrderLabel { get; set; } = new Label("StubOrderLabel");
+        private Label OrderLabel { get; set; } = new Label("TEST_ORDER");
 
         private OrderSide OrderSide { get; set; } = OrderSide.BUY;
 
@@ -109,7 +109,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             this.Quantity = Quantity.Create(100000);
             this.Price = Price.Create(0.80000m, 5);
             this.TimeInForce = TimeInForce.GTD;
-            this.ExpireTime = StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration();
+            this.ExpireTime = StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(5);
 
             return this;
         }

@@ -329,7 +329,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(2, order.IdCount);
-            Assert.Equal(new OrderId("StubOrderId_R1"), order.IdCurrent);
+            Assert.Equal(new OrderId("O-123456_R1"), order.IdCurrent);
         }
 
         [Fact]
