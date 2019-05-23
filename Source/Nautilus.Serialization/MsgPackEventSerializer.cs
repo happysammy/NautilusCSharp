@@ -41,7 +41,7 @@ namespace Nautilus.Serialization
                 case AccountEvent accountEvent:
                     return this.SerializeToMsgPack(new MessagePackObjectDictionary
                     {
-                        { Key.EventType, nameof(AccountEvent) },
+                        { Key.Event, nameof(AccountEvent) },
                         { Key.AccountId, accountEvent.AccountId.ToString() },
                         { Key.Broker, accountEvent.Broker.ToString() },
                         { Key.AccountNumber, accountEvent.AccountNumber },
@@ -73,7 +73,7 @@ namespace Nautilus.Serialization
 
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
-            var eventType = unpacked[Key.EventType].ToString();
+            var eventType = unpacked[Key.Event].ToString();
 
             switch (eventType)
             {
@@ -107,7 +107,7 @@ namespace Nautilus.Serialization
         {
             var package = new MessagePackObjectDictionary
             {
-                { Key.EventType, nameof(OrderEvent) },
+                { Key.Event, nameof(OrderEvent) },
                 { Key.Symbol, orderEvent.Symbol.ToString() },
                 { Key.OrderId, orderEvent.OrderId.Value },
                 { Key.EventId, orderEvent.Id.ToString() },

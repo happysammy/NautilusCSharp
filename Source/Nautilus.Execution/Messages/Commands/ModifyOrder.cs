@@ -9,18 +9,18 @@
 namespace Nautilus.Execution.Messages.Commands
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a command to modify an order.
     /// </summary>
     [Immutable]
-    public sealed class ModifyOrder : OrderCommand
+    public sealed class ModifyOrder : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyOrder"/> class.
@@ -34,16 +34,19 @@ namespace Nautilus.Execution.Messages.Commands
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(
-                order,
-                commandId,
-                commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
+            this.Order = order;
             this.ModifiedPrice = modifiedPrice;
         }
+
+        /// <summary>
+        /// Gets the commands order.
+        /// </summary>
+        public Order Order { get; }
 
         /// <summary>
         /// Gets the commands modified order price.

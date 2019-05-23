@@ -16,7 +16,17 @@ namespace Nautilus.Serialization
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string EventType => nameof(EventType);
+        internal static string Type => nameof(Type);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string Command => nameof(Command);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string Event => nameof(Event);
 
         /// <summary>
         /// Gets the key string.
@@ -186,22 +196,12 @@ namespace Nautilus.Serialization
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandType => nameof(CommandType);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
         internal static string CommandId => nameof(CommandId);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
         internal static string CommandTimestamp => nameof(CommandTimestamp);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string OrderCommand => nameof(OrderCommand);
 
         /// <summary>
         /// Gets the key string.
@@ -267,11 +267,6 @@ namespace Nautilus.Serialization
         /// Gets the key string.
         /// </summary>
         internal static string MarginCallStatus => nameof(MarginCallStatus);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string AtomicOrder => nameof(AtomicOrder);
 
         /// <summary>
         /// Gets the key string.

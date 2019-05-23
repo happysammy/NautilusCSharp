@@ -9,17 +9,17 @@
 namespace Nautilus.Execution.Messages.Commands
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
-    using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a command to cancel an order.
     /// </summary>
     [Immutable]
-    public sealed class CancelOrder : OrderCommand
+    public sealed class CancelOrder : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelOrder"/> class.
@@ -33,17 +33,20 @@ namespace Nautilus.Execution.Messages.Commands
             string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(
-                order,
-                commandId,
-                commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
             Debug.NotEmptyOrWhiteSpace(cancelReason, nameof(cancelReason));
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
+            this.Order = order;
             this.Reason = cancelReason;
         }
+
+        /// <summary>
+        /// Gets the commands order.
+        /// </summary>
+        public Order Order { get; }
 
         /// <summary>
         /// Gets the commands cancel reason.

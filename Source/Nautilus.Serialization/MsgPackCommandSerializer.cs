@@ -19,8 +19,6 @@ namespace Nautilus.Serialization
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
-    using Nautilus.Execution.Messages.Commands.Base;
-    using NodaTime;
 
     /// <summary>
     /// Provides a command binary serializer for the Message Pack specification.
@@ -46,34 +44,50 @@ namespace Nautilus.Serialization
         /// <returns>The serialized command.</returns>
         public byte[] Serialize(Command command)
         {
+            var package = new MessagePackObjectDictionary
+            {
+                { Key.Type, nameof(Command) },
+                { Key.CommandId, command.Id.ToString() },
+                { Key.CommandTimestamp, command.Timestamp.ToIsoString() },
+            };
+
             switch (command)
             {
-                case OrderCommand orderCommand:
-                    return this.SerializeOrderCommand(orderCommand);
-                case CollateralInquiry collateralInquiry:
-                    return this.SerializeToMsgPack(new MessagePackObjectDictionary
-                    {
-                        { Key.CommandType, nameof(CollateralInquiry) },
-                        { Key.CommandId, collateralInquiry.Id.ToString() },
-                        { Key.CommandTimestamp, collateralInquiry.Timestamp.ToIsoString() },
-                    });
-                case SubmitAtomicOrder submitOrder:
-                    return this.SerializeToMsgPack(new MessagePackObjectDictionary
-                    {
-                        { Key.CommandType, nameof(SubmitAtomicOrder) },
-                        { Key.Entry, this.orderSerializer.Serialize(submitOrder.AtomicOrder.Entry) },
-                        { Key.StopLoss, this.orderSerializer.Serialize(submitOrder.AtomicOrder.StopLoss) },
-                        { Key.TakeProfit, this.SerializeTakeProfit(submitOrder.AtomicOrder.StopLoss) },
-                        { Key.HasTakeProfit, submitOrder.AtomicOrder.HasTakeProfit },
-                        { Key.TraderId, submitOrder.TraderId.Value },
-                        { Key.StrategyId, submitOrder.StrategyId.Value },
-                        { Key.PositionId, submitOrder.PositionId.Value },
-                        { Key.CommandId, submitOrder.Id.ToString() },
-                        { Key.CommandTimestamp, submitOrder.Timestamp.ToIsoString() },
-                    });
+                case CancelOrder cmd:
+                    package.Add(Key.Command, nameof(CancelOrder));
+                    package.Add(Key.Order, this.orderSerializer.Serialize(cmd.Order));
+                    package.Add(Key.CancelReason, cmd.Reason);
+                    break;
+                case ModifyOrder cmd:
+                    package.Add(Key.Command, nameof(ModifyOrder));
+                    package.Add(Key.Order, this.orderSerializer.Serialize(cmd.Order));
+                    package.Add(Key.ModifiedPrice, cmd.ModifiedPrice.ToString());
+                    break;
+                case CollateralInquiry cmd:
+                    package.Add(Key.Command, nameof(CollateralInquiry));
+                    break;
+                case SubmitOrder cmd:
+                    package.Add(Key.Command, nameof(SubmitOrder));
+                    package.Add(Key.TraderId, cmd.TraderId.ToString());
+                    package.Add(Key.StrategyId, cmd.StrategyId.ToString());
+                    package.Add(Key.PositionId, cmd.PositionId.ToString());
+                    package.Add(Key.Order, this.orderSerializer.Serialize(cmd.Order));
+                    break;
+                case SubmitAtomicOrder cmd:
+                    package.Add(Key.Command, nameof(SubmitAtomicOrder));
+                    package.Add(Key.TraderId, cmd.TraderId.ToString());
+                    package.Add(Key.StrategyId, cmd.StrategyId.ToString());
+                    package.Add(Key.PositionId, cmd.PositionId.ToString());
+                    package.Add(Key.Entry, this.orderSerializer.Serialize(cmd.AtomicOrder.Entry));
+                    package.Add(Key.StopLoss, this.orderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
+                    package.Add(Key.TakeProfit, this.SerializeTakeProfit(cmd.AtomicOrder.TakeProfit));
+                    package.Add(Key.HasTakeProfit, cmd.HasTakeProfit);
+                    break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
+
+            return this.SerializeToMsgPack(package);
         }
 
         /// <summary>
@@ -87,14 +101,32 @@ namespace Nautilus.Serialization
 
             var commandId = new Guid(unpacked[Key.CommandId].ToString());
             var commandTimestamp = unpacked[Key.CommandTimestamp].ToString().ToZonedDateTimeFromIso();
-            var commandType = unpacked[Key.CommandType].ToString();
+            var command = unpacked[Key.Command].ToString();
 
-            switch (commandType)
+            switch (command)
             {
-                case nameof(OrderCommand):
-                    return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
                 case nameof(CollateralInquiry):
                     return new CollateralInquiry(commandId, commandTimestamp);
+                case nameof(CancelOrder):
+                    return new CancelOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        unpacked[Key.CancelReason].ToString(),
+                        commandId,
+                        commandTimestamp);
+                case nameof(ModifyOrder):
+                    return new ModifyOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
+                        commandId,
+                        commandTimestamp);
+                case nameof(SubmitOrder):
+                    return new SubmitOrder(
+                        this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
+                        new TraderId(unpacked[Key.TraderId].ToString()),
+                        new StrategyId(unpacked[Key.StrategyId].ToString()),
+                        new PositionId(unpacked[Key.PositionId].ToString()),
+                        commandId,
+                        commandTimestamp);
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
                         new AtomicOrder(
@@ -109,7 +141,7 @@ namespace Nautilus.Serialization
                         commandId,
                         commandTimestamp);
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(commandType, nameof(commandType));
+                    throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
         }
 
@@ -125,74 +157,6 @@ namespace Nautilus.Serialization
             return hasTakeProfit
                 ? OptionRef<Order>.Some(this.orderSerializer.Deserialize(takeProfit))
                 : OptionRef<Order>.None();
-        }
-
-        private byte[] SerializeOrderCommand(OrderCommand orderCommand)
-        {
-            var package = new MessagePackObjectDictionary
-            {
-                { Key.CommandType, nameof(OrderCommand) },
-                { Key.Order, this.orderSerializer.Serialize(orderCommand.Order) },
-                { Key.CommandId, orderCommand.Id.ToString() },
-                { Key.CommandTimestamp, orderCommand.Timestamp.ToIsoString() },
-            };
-
-            switch (orderCommand)
-            {
-                case SubmitOrder command:
-                    package.Add(Key.OrderCommand, nameof(SubmitOrder));
-                    package.Add(Key.TraderId, command.TraderId.ToString());
-                    package.Add(Key.StrategyId, command.StrategyId.ToString());
-                    package.Add(Key.PositionId, command.PositionId.ToString());
-                    break;
-                case CancelOrder command:
-                    package.Add(Key.OrderCommand, nameof(CancelOrder));
-                    package.Add(Key.CancelReason, command.Reason);
-                    break;
-                case ModifyOrder command:
-                    package.Add(Key.OrderCommand, nameof(ModifyOrder));
-                    package.Add(Key.ModifiedPrice, command.ModifiedPrice.ToString());
-                    break;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
-            }
-
-            return this.SerializeToMsgPack(package);
-        }
-
-        private OrderCommand DeserializeOrderCommand(
-            Guid commandId,
-            ZonedDateTime commandTimestamp,
-            MessagePackObjectDictionary unpacked)
-        {
-            var order = this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary());
-            var orderCommand = unpacked[Key.OrderCommand].ToString();
-
-            switch (orderCommand)
-            {
-                case nameof(SubmitOrder):
-                    return new SubmitOrder(
-                        order,
-                        new TraderId(unpacked[Key.TraderId].ToString()),
-                        new StrategyId(unpacked[Key.StrategyId].ToString()),
-                        new PositionId(unpacked[Key.PositionId].ToString()),
-                        commandId,
-                        commandTimestamp);
-                case nameof(CancelOrder):
-                    return new CancelOrder(
-                        order,
-                        unpacked[Key.CancelReason].ToString(),
-                        commandId,
-                        commandTimestamp);
-                case nameof(ModifyOrder):
-                    return new ModifyOrder(
-                        order,
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
-                        commandId,
-                        commandTimestamp);
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
-            }
         }
     }
 }

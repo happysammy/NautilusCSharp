@@ -9,18 +9,18 @@
 namespace Nautilus.Execution.Messages.Commands
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Identifiers;
-    using Nautilus.Execution.Messages.Commands.Base;
     using NodaTime;
 
     /// <summary>
     /// Represents a command to submit an order to the execution system.
     /// </summary>
     [Immutable]
-    public sealed class SubmitOrder : OrderCommand
+    public sealed class SubmitOrder : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
@@ -38,12 +38,18 @@ namespace Nautilus.Execution.Messages.Commands
             PositionId positionId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(order, commandId, commandTimestamp)
+            : base(commandId, commandTimestamp)
         {
+            this.Order = order;
             this.TraderId = traderId;
             this.StrategyId = strategyId;
             this.PositionId = positionId;
         }
+
+        /// <summary>
+        /// Gets the commands order.
+        /// </summary>
+        public Order Order { get; }
 
         /// <summary>
         /// Gets the commands trader identifier.
