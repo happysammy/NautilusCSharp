@@ -6,15 +6,15 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     using System.IO;
-    using global::MsgPack.Serialization;
+    using MsgPack.Serialization;
 
     /// <summary>
     /// Provides a serializer for Message Pack specification.
     /// </summary>
-    public static class MsgPackSerializer
+    public abstract class MsgPackSerializer
     {
         /// <summary>
         /// Serializes the given object to the Message Pack specification.
@@ -22,7 +22,7 @@ namespace Nautilus.MsgPack
         /// <param name="obj">The object to serialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
         /// <returns>The serialized object as a byte array.</returns>
-        public static byte[] Serialize<T>(T obj)
+        public byte[] SerializeToMsgPack<T>(T obj)
         {
             var serializer = MessagePackSerializer.Get<T>();
 
@@ -39,7 +39,7 @@ namespace Nautilus.MsgPack
         /// <param name="bytes">The bytes to deserialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
         /// <returns>The deserialized object of type T.</returns>
-        public static T Deserialize<T>(byte[] bytes)
+        public T DeserializeFromMsgPack<T>(byte[] bytes)
         {
             var serializer = MessagePackSerializer.Get<T>();
             using (var byteStream = new MemoryStream(bytes))

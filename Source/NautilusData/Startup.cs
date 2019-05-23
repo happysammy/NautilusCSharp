@@ -19,7 +19,7 @@ namespace NautilusData
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
-    using Nautilus.Serilog;
+    using Nautilus.Logging;
     using Newtonsoft.Json.Linq;
     using Serilog;
     using Serilog.Events;

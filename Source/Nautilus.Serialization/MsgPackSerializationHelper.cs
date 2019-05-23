@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     using System;
     using Nautilus.Core;

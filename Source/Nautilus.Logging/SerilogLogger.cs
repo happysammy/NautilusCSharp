@@ -6,17 +6,17 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serilog
+namespace Nautilus.Logging
 {
     using System;
     using System.Reflection;
-    using global::Serilog;
-    using global::Serilog.Events;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
+    using Serilog;
+    using Serilog.Events;
 
     /// <summary>
-    /// The <see cref="Serilog"/> adapter.
+    /// The <see cref="Nautilus.Logging"/> adapter.
     /// </summary>
     public class SerilogLogger : ILoggingAdapter
     {

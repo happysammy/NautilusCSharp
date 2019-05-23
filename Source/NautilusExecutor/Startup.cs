@@ -19,7 +19,7 @@ namespace NautilusExecutor
     using Nautilus.Common.Configuration;
     using Nautilus.Core.Extensions;
     using Nautilus.Execution;
-    using Nautilus.Serilog;
+    using Nautilus.Logging;
     using Newtonsoft.Json.Linq;
     using Serilog;
     using Serilog.Events;

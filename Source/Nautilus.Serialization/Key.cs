@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     /// <summary>
     /// Provides key strings for Message Pack serialization.

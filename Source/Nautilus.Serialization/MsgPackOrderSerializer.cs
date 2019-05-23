@@ -6,10 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     using System;
-    using global::MsgPack;
+    using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -22,7 +22,7 @@ namespace Nautilus.MsgPack
     /// <summary>
     /// Provides serialization of <see cref="Order"/> objects to Message Pack specification.
     /// </summary>
-    public class MsgPackOrderSerializer : IOrderSerializer
+    public class MsgPackOrderSerializer : MsgPackSerializer, IOrderSerializer
     {
         /// <summary>
         /// Serialize the given order to Message Pack specification bytes.
@@ -31,7 +31,7 @@ namespace Nautilus.MsgPack
         /// <returns>The serialized order.</returns>
         public byte[] Serialize(Order order)
         {
-            return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+            return this.SerializeToMsgPack(new MessagePackObjectDictionary
             {
                 { Key.Symbol, order.Symbol.ToString() },
                 { Key.OrderId, order.Id.Value },
@@ -64,7 +64,7 @@ namespace Nautilus.MsgPack
         /// <exception cref="InvalidOperationException">If the order type is unknown.</exception>
         public Order Deserialize(byte[] orderBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
+            var unpacked = this.DeserializeFromMsgPack<MessagePackObjectDictionary>(orderBytes);
 
             var orderType = unpacked[Key.OrderType].ToString().ToEnum<OrderType>();
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());
@@ -137,16 +137,6 @@ namespace Nautilus.MsgPack
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
             }
-        }
-
-        /// <summary>
-        /// Deserialize the given base64 string to an <see cref="Order"/>.
-        /// </summary>
-        /// <param name="orderString">The base64 string to deserialize.</param>
-        /// <returns>The deserialized order.</returns>
-        public Order DeserializeBase64(string orderString)
-        {
-            return this.Deserialize(Convert.FromBase64String(orderString));
         }
     }
 }

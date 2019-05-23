@@ -11,7 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.MsgPack;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
     using Xunit.Abstractions;

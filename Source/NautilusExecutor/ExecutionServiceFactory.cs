@@ -23,8 +23,8 @@ namespace NautilusExecutor
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.MsgPack;
     using Nautilus.Scheduler;
+    using Nautilus.Serialization;
     using NodaTime;
 
     /// <summary>

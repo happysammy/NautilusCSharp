@@ -24,11 +24,11 @@
         <ProjectReference Include="..\Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj" />
         <ProjectReference Include="..\Nautilus.Common\Nautilus.Common.csproj" />
         <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
-        <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
+        <ProjectReference Include="..\Nautilus.Logging\Nautilus.Logging.csproj" />
         <ProjectReference Include="..\Nautilus.Network\Nautilus.Network.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
-        <ProjectReference Include="..\Nautilus.Serilog\Nautilus.Serilog.csproj" />
+        <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
         <ProjectReference Include="..\NautilusExecutor.Api\NautilusExecutor.Api.csproj" />
     </ItemGroup>
 

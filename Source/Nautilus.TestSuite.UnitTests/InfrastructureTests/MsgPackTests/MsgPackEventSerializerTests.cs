@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.MsgPack;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;

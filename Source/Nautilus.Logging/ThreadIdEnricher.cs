@@ -6,11 +6,11 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serilog
+namespace Nautilus.Logging
 {
     using System.Threading;
-    using global::Serilog.Core;
-    using global::Serilog.Events;
+    using Serilog.Core;
+    using Serilog.Events;
 
     /// <summary>
     /// The Serilog thread identifier enricher.

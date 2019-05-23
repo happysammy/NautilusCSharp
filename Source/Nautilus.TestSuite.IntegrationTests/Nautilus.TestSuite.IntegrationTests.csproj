@@ -20,8 +20,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
+        <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
         <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
     </ItemGroup>
 

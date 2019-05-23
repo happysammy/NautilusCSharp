@@ -6,18 +6,18 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serilog
+namespace Nautilus.Logging
 {
-    using global::Serilog;
-    using global::Serilog.Events;
+    using Serilog;
+    using Serilog.Events;
 
     /// <summary>
-    /// Provides a factory for the <see cref="Serilog"/> logger.
+    /// Provides a factory for the <see cref="Nautilus.Logging"/> logger.
     /// </summary>
     public static class SerilogLogFactory
     {
         /// <summary>
-        /// Creates a new global static <see cref="Serilog"/> logger.
+        /// Creates a new global static <see cref="Nautilus.Logging"/> logger.
         /// </summary>
         /// <param name="logLevel">The threshold level for the logger.</param>
         public static void Create(LogEventLevel logLevel)

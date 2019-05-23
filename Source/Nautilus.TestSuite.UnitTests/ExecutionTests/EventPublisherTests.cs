@@ -14,8 +14,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.DomainModel.Events;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.MsgPack;
     using Nautilus.Network;
+    using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NetMQ.Sockets;
@@ -23,9 +23,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class EventPublisherTests
     {
-        private const string ExecutionEvents = "nautilus_execution_events";
+        private const string EXECUTION_EVENTS = "nautilus_execution_events";
 
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
@@ -48,10 +49,10 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         internal void Test_can_publish_events()
         {
             // Arrange
-            const string TestAddress = "tcp://127.0.0.1:56601";
-            var subscriber = new SubscriberSocket(TestAddress);
-            subscriber.Connect(TestAddress);
-            subscriber.Subscribe(ExecutionEvents);
+            const string testAddress = "tcp://127.0.0.1:56601";
+            var subscriber = new SubscriberSocket(testAddress);
+            subscriber.Connect(testAddress);
+            subscriber.Subscribe(EXECUTION_EVENTS);
 
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
@@ -68,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
                 new MsgPackEventSerializer(),
                 this.localHost,
                 new NetworkPort(56601),
-                ExecutionEvents);
+                EXECUTION_EVENTS);
 
             // Act
             publisher.Endpoint.Send(rejected);

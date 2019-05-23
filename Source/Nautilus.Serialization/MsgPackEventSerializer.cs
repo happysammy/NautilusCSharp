@@ -6,11 +6,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     using System;
     using System.Globalization;
-    using global::MsgPack;
+    using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
@@ -24,7 +24,7 @@ namespace Nautilus.MsgPack
     /// <summary>
     /// Provides an events binary serializer for the Message Pack specification.
     /// </summary>
-    public class MsgPackEventSerializer : IEventSerializer
+    public class MsgPackEventSerializer : MsgPackSerializer, IEventSerializer
     {
         /// <summary>
         /// Serialize the given event to Message Pack specification bytes.
@@ -37,9 +37,9 @@ namespace Nautilus.MsgPack
             switch (@event)
             {
                 case OrderEvent orderEvent:
-                    return SerializeOrderEvent(orderEvent);
+                    return this.SerializeOrderEvent(orderEvent);
                 case AccountEvent accountEvent:
-                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+                    return this.SerializeToMsgPack(new MessagePackObjectDictionary
                     {
                         { Key.EventType, nameof(AccountEvent) },
                         { Key.AccountId, accountEvent.AccountId.ToString() },
@@ -69,7 +69,7 @@ namespace Nautilus.MsgPack
         /// <exception cref="InvalidOperationException">Throws if the event cannot be deserialized.</exception>
         public Event Deserialize(byte[] eventBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
+            var unpacked = this.DeserializeFromMsgPack<MessagePackObjectDictionary>(eventBytes);
 
             var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
             var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
@@ -78,7 +78,7 @@ namespace Nautilus.MsgPack
             switch (eventType)
             {
                 case nameof(OrderEvent):
-                    return DeserializeOrderEvent(
+                    return this.DeserializeOrderEvent(
                         eventId,
                         eventTimestamp,
                         unpacked);
@@ -103,7 +103,7 @@ namespace Nautilus.MsgPack
             }
         }
 
-        private static byte[] SerializeOrderEvent(OrderEvent orderEvent)
+        private byte[] SerializeOrderEvent(OrderEvent orderEvent)
         {
             var package = new MessagePackObjectDictionary
             {
@@ -184,10 +184,10 @@ namespace Nautilus.MsgPack
                     throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return this.SerializeToMsgPack(package);
         }
 
-        private static OrderEvent DeserializeOrderEvent(
+        private OrderEvent DeserializeOrderEvent(
             Guid eventId,
             ZonedDateTime eventTimestamp,
             MessagePackObjectDictionary unpacked)

@@ -23,8 +23,8 @@
         <ProjectReference Include="..\Nautilus.DomainModel\Nautilus.DomainModel.csproj" />
         <ProjectReference Include="..\Nautilus.Execution\Nautilus.Execution.csproj" />
         <ProjectReference Include="..\Nautilus.Fix\Nautilus.Fix.csproj" />
-        <ProjectReference Include="..\Nautilus.MsgPack\Nautilus.MsgPack.csproj" />
         <ProjectReference Include="..\Nautilus.Network\Nautilus.Network.csproj" />
+        <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
         <ProjectReference Include="..\Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj" />
     </ItemGroup>
 

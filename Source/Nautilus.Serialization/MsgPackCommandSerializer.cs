@@ -6,10 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.MsgPack
+namespace Nautilus.Serialization
 {
     using System;
-    using global::MsgPack;
+    using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
@@ -25,7 +25,7 @@ namespace Nautilus.MsgPack
     /// <summary>
     /// Provides a command binary serializer for the Message Pack specification.
     /// </summary>
-    public class MsgPackCommandSerializer : ICommandSerializer
+    public class MsgPackCommandSerializer : MsgPackSerializer, ICommandSerializer
     {
         private const byte NIL = 0xc0;
 
@@ -51,14 +51,14 @@ namespace Nautilus.MsgPack
                 case OrderCommand orderCommand:
                     return this.SerializeOrderCommand(orderCommand);
                 case CollateralInquiry collateralInquiry:
-                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+                    return this.SerializeToMsgPack(new MessagePackObjectDictionary
                     {
                         { Key.CommandType, nameof(CollateralInquiry) },
                         { Key.CommandId, collateralInquiry.Id.ToString() },
                         { Key.CommandTimestamp, collateralInquiry.Timestamp.ToIsoString() },
                     });
                 case SubmitAtomicOrder submitOrder:
-                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+                    return this.SerializeToMsgPack(new MessagePackObjectDictionary
                     {
                         { Key.CommandType, nameof(SubmitAtomicOrder) },
                         { Key.Entry, this.orderSerializer.Serialize(submitOrder.AtomicOrder.Entry) },
@@ -83,7 +83,7 @@ namespace Nautilus.MsgPack
         /// <returns>The deserialized command.</returns>
         public Command Deserialize(byte[] commandBytes)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
+            var unpacked = this.DeserializeFromMsgPack<MessagePackObjectDictionary>(commandBytes);
 
             var commandId = new Guid(unpacked[Key.CommandId].ToString());
             var commandTimestamp = unpacked[Key.CommandTimestamp].ToString().ToZonedDateTimeFromIso();
@@ -157,7 +157,7 @@ namespace Nautilus.MsgPack
                     throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
             }
 
-            return MsgPackSerializer.Serialize(package);
+            return this.SerializeToMsgPack(package);
         }
 
         private OrderCommand DeserializeOrderCommand(
