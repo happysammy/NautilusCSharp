@@ -43,7 +43,17 @@ namespace Nautilus.MsgPack
                 { Key.TimeInForce, order.TimeInForce.ToString() },
                 { Key.ExpireTime, MsgPackSerializationHelper.GetExpireTimeString(order.ExpireTime) },
                 { Key.Timestamp, order.Timestamp.ToIsoString() },
-            }.Freeze());
+            });
+        }
+
+        /// <summary>
+        /// Serialize the given order to a base64 string.
+        /// </summary>
+        /// <param name="order">The order to serialize.</param>
+        /// <returns>The serialized order.</returns>
+        public string SerializeBase64(Order order)
+        {
+            return Convert.ToBase64String(this.Serialize(order));
         }
 
         /// <summary>
@@ -83,7 +93,8 @@ namespace Nautilus.MsgPack
                         quantity,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackSerializationHelper.GetExpireTime(
+                            unpacked[Key.ExpireTime].ToString()),
                         timestamp);
                 case OrderType.STOP_LIMIT:
                     return OrderFactory.StopLimit(
@@ -94,7 +105,8 @@ namespace Nautilus.MsgPack
                         quantity,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackSerializationHelper.GetExpireTime(
+                            unpacked[Key.ExpireTime].ToString()),
                         timestamp);
                 case OrderType.STOP_MARKET:
                     return OrderFactory.StopMarket(
@@ -105,7 +117,8 @@ namespace Nautilus.MsgPack
                         quantity,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackSerializationHelper.GetExpireTime(
+                            unpacked[Key.ExpireTime].ToString()),
                         timestamp);
                 case OrderType.MIT:
                     return OrderFactory.MarketIfTouched(
@@ -116,13 +129,24 @@ namespace Nautilus.MsgPack
                         quantity,
                         MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackSerializationHelper.GetExpireTime(
+                            unpacked[Key.ExpireTime].ToString()),
                         timestamp);
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
             }
+        }
+
+        /// <summary>
+        /// Deserialize the given base64 string to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="orderString">The base64 string to deserialize.</param>
+        /// <returns>The deserialized order.</returns>
+        public Order DeserializeBase64(string orderString)
+        {
+            return this.Deserialize(Convert.FromBase64String(orderString));
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Nautilus.MsgPack
                         { Key.MarginCallStatus, accountEvent.MarginCallStatus.ToString() },
                         { Key.EventId, accountEvent.Id.ToString() },
                         { Key.EventTimestamp, accountEvent.Timestamp.ToIsoString() },
-                    }.Freeze());
+                    });
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
@@ -184,7 +184,7 @@ namespace Nautilus.MsgPack
                     throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
 
-            return MsgPackSerializer.Serialize(package.Freeze());
+            return MsgPackSerializer.Serialize(package);
         }
 
         private static OrderEvent DeserializeOrderEvent(

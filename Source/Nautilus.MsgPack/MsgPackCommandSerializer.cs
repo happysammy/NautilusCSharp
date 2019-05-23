@@ -9,11 +9,14 @@
 namespace Nautilus.MsgPack
 {
     using System;
+    using System.Text;
     using global::MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
@@ -25,6 +28,8 @@ namespace Nautilus.MsgPack
     /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {
+        private const string NONE = nameof(NONE);
+
         private readonly IOrderSerializer orderSerializer;
 
         /// <summary>
@@ -47,13 +52,26 @@ namespace Nautilus.MsgPack
                 case OrderCommand orderCommand:
                     return this.SerializeOrderCommand(orderCommand);
                 case CollateralInquiry collateralInquiry:
-                    var package = new MessagePackObjectDictionary
+                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
                     {
                         { Key.CommandType, nameof(CollateralInquiry) },
                         { Key.CommandId, collateralInquiry.Id.ToString() },
                         { Key.CommandTimestamp, collateralInquiry.Timestamp.ToIsoString() },
-                    };
-                    return MsgPackSerializer.Serialize(package.Freeze());
+                    });
+                case SubmitAtomicOrder submitOrder:
+                    return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
+                    {
+                        { Key.CommandType, nameof(SubmitAtomicOrder) },
+                        { Key.Entry, this.orderSerializer.Serialize(submitOrder.AtomicOrder.Entry) },
+                        { Key.StopLoss, this.orderSerializer.Serialize(submitOrder.AtomicOrder.StopLoss) },
+                        { Key.TakeProfit, this.SerializeTakeProfit(submitOrder.AtomicOrder.StopLoss) },
+                        { Key.HasTakeProfit, submitOrder.AtomicOrder.HasTakeProfit },
+                        { Key.TraderId, submitOrder.TraderId.Value },
+                        { Key.StrategyId, submitOrder.StrategyId.Value },
+                        { Key.PositionId, submitOrder.PositionId.Value },
+                        { Key.CommandId, submitOrder.Id.ToString() },
+                        { Key.CommandTimestamp, submitOrder.Timestamp.ToIsoString() },
+                    });
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
@@ -78,9 +96,36 @@ namespace Nautilus.MsgPack
                     return this.DeserializeOrderCommand(commandId, commandTimestamp, unpacked);
                 case nameof(CollateralInquiry):
                     return new CollateralInquiry(commandId, commandTimestamp);
+                case nameof(SubmitAtomicOrder):
+                    return new SubmitAtomicOrder(
+                        new AtomicOrder(
+                            this.orderSerializer.Deserialize(unpacked[Key.Entry].AsBinary()),
+                            this.orderSerializer.Deserialize(unpacked[Key.StopLoss].AsBinary()),
+                            this.DeserializeTakeProfit(
+                                unpacked[Key.TakeProfit].AsBinary(),
+                                unpacked[Key.HasTakeProfit].AsBoolean())),
+                        new TraderId(unpacked[Key.TraderId].ToString()),
+                        new StrategyId(unpacked[Key.StrategyId].ToString()),
+                        new PositionId(unpacked[Key.PositionId].ToString()),
+                        commandId,
+                        commandTimestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(commandType, nameof(commandType));
             }
+        }
+
+        private byte[] SerializeTakeProfit(OptionRef<Order> takeProfit)
+        {
+            return takeProfit.HasValue
+                ? this.orderSerializer.Serialize(takeProfit.Value)
+                : Encoding.UTF8.GetBytes(NONE);
+        }
+
+        private OptionRef<Order> DeserializeTakeProfit(byte[] takeProfit, bool hasTakeProfit)
+        {
+            return hasTakeProfit
+                ? OptionRef<Order>.Some(this.orderSerializer.Deserialize(takeProfit))
+                : OptionRef<Order>.None();
         }
 
         private byte[] SerializeOrderCommand(OrderCommand orderCommand)
@@ -113,7 +158,7 @@ namespace Nautilus.MsgPack
                     throw ExceptionFactory.InvalidSwitchArgument(orderCommand, nameof(orderCommand));
             }
 
-            return MsgPackSerializer.Serialize(package.Freeze());
+            return MsgPackSerializer.Serialize(package);
         }
 
         private OrderCommand DeserializeOrderCommand(

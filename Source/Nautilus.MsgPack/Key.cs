@@ -267,5 +267,30 @@ namespace Nautilus.MsgPack
         /// Gets the key string.
         /// </summary>
         internal static string MarginCallStatus => nameof(MarginCallStatus);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string AtomicOrder => nameof(AtomicOrder);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string Entry => nameof(Entry);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string StopLoss => nameof(StopLoss);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string TakeProfit => nameof(TakeProfit);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string HasTakeProfit => nameof(HasTakeProfit);
     }
 }

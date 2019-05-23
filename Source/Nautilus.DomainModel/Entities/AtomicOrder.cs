@@ -33,7 +33,7 @@ namespace Nautilus.DomainModel.Entities
             Order stopLoss,
             OptionRef<Order> takeProfit)
             : base(
-                  new AtomicOrderId(entry.Id.Value),
+                  new AtomicOrderId("A" + entry.Id.Value),
                   entry.Timestamp)
         {
             this.Entry = entry;
@@ -41,6 +41,7 @@ namespace Nautilus.DomainModel.Entities
             this.TakeProfit = takeProfit.HasValue
                 ? OptionRef<Order>.Some(takeProfit.Value)
                 : OptionRef<Order>.None();
+            this.HasTakeProfit = takeProfit.HasValue;
         }
 
         /// <summary>
@@ -62,5 +63,10 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
         public OptionRef<Order> TakeProfit { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the atomic order has a take .
+        /// </summary>
+        public bool HasTakeProfit { get; }
     }
 }

@@ -16,7 +16,7 @@ namespace Nautilus.Common.Interfaces
     public interface IOrderSerializer
     {
         /// <summary>
-        /// Serialize the given order object.
+        /// Serialize the given order object to a byte array.
         /// </summary>
         /// <param name="order">The order to serialize.</param>
         /// <returns>The serialized order.</returns>

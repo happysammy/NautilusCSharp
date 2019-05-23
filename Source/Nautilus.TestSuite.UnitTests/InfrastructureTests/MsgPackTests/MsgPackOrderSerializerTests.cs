@@ -112,9 +112,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         {
             // Arrange
             var serializer = new MsgPackOrderSerializer();
-            var hexString = "8aa653796d626f6cab4155445553442e4658434da74f726465724964bb4f2d31393730303130312d3030303030302d3030312d3030312d31a94f7264657253696465a3425559a94f7264657254797065a54c494d4954a85175616e74697479ce000186a0a954696d657374616d70b8313937302d30312d30315430303a30303a30302e3030305aa55072696365a7312e3030303030a54c6162656ca553315f534cab54696d65496e466f726365a3444159aa45787069726554696d65a44e4f4e45";
+            var base64 = "iqZTeW1ib2yrQVVEVVNELkZYQ02nT3JkZXJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGpT3JkZXJTaWRlo0JVWalPcmRlclR5cGWlTElNSVSoUXVhbnRpdHnOAAGGoKlUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapVByaWNlpzEuMDAwMDClTGFiZWylUzFfU0yrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORQ==";
 
-            var orderBytes = Convert.FromBase64String(hexString);
+            var orderBytes = Convert.FromBase64String(base64);
 
             // Act
             var order = serializer.Deserialize(orderBytes);
@@ -128,9 +128,9 @@ namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
         {
             // Arrange
             var serializer = new MsgPackOrderSerializer();
-            var hexString = "8aa653796d626f6cab4155445553442e4658434da74f726465724964a74f313233343536a94f7264657253696465a3425559a94f7264657254797065aa53544f505f4c494d4954a85175616e74697479ce000186a0a954696d657374616d70b8313937302d30312d30315430303a30303a30302e3030305aa55072696365a7312e3030303030a54c6162656ca553315f534cab54696d65496e466f726365a3444159aa45787069726554696d65a44e4f4e45";
+            var base64 = "iqZTeW1ib2yrQVVEVVNELkZYQ02nT3JkZXJJZKdPMTIzNDU2qU9yZGVyU2lkZaNCVVmpT3JkZXJUeXBlqlNUT1BfTElNSVSoUXVhbnRpdHnOAAGGoKlUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapVByaWNlpzEuMDAwMDClTGFiZWylUzFfU0yrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORQ==";
 
-            var orderBytes = Convert.FromBase64String(hexString);
+            var orderBytes = Convert.FromBase64String(base64);
 
             // Act
             var order = serializer.Deserialize(orderBytes);
