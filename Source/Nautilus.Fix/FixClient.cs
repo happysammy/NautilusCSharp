@@ -8,7 +8,6 @@
 
 namespace Nautilus.Fix
 {
-    using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
@@ -45,9 +44,7 @@ namespace Nautilus.Fix
         {
         }
 
-        /// <summary>
-        /// Connects to the FIX session.
-        /// </summary>
+        /// <inheritdoc />
         public void Connect()
         {
             if (this.IsConnected)
@@ -60,9 +57,7 @@ namespace Nautilus.Fix
             this.ConnectFix();
         }
 
-        /// <summary>
-        /// Disconnects from the FIX session.
-        /// </summary>
+        /// <inheritdoc />
         public void Disconnect()
         {
             if (!this.IsConnected)
@@ -75,10 +70,7 @@ namespace Nautilus.Fix
             this.DisconnectFix();
         }
 
-        /// <summary>
-        /// Submit a command to execute the given order.
-        /// </summary>
-        /// <param name="order">The order to submit.</param>
+        /// <inheritdoc />
         public void SubmitOrder(Order order)
         {
             this.Execute(() =>
@@ -87,10 +79,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Submit a command to execute the given trade.
-        /// </summary>
-        /// <param name="atomicOrder">The atomic order to submit.</param>
+        /// <inheritdoc />
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
             this.Execute(() =>
@@ -99,78 +88,49 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Submit a command to the execution system to modify the given order.
-        /// </summary>
-        /// <param name="order">The order to modify.</param>
-        /// <param name="modifiedPrice">The modified order price.</param>
+        /// <inheritdoc />
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
             this.FixMessageRouter.ModifyOrder(order, modifiedPrice);
         }
 
-        /// <summary>
-        /// Submit the command to the execution system to cancel the given order.
-        /// </summary>
-        /// <param name="command">The cancel order command.</param>
+        /// <inheritdoc />
         public void CancelOrder(Order command)
         {
             this.FixMessageRouter.CancelOrder(command);
         }
 
-        /// <summary>
-        /// The collateral inquiry.
-        /// </summary>
+        /// <inheritdoc />
         public void CollateralInquiry()
         {
             this.FixMessageRouter.CollateralInquiry();
         }
 
-        /// <summary>
-        /// The trading session status.
-        /// </summary>
+        /// <inheritdoc />
         public void TradingSessionStatus()
         {
             this.FixMessageRouter.TradingSessionStatus();
         }
 
-        /// <summary>
-        /// Sends request all positions.
-        /// </summary>
-        public void RequestAllPositions()
-        {
-            this.FixMessageRouter.RequestAllPositions();
-        }
-
-        /// <summary>
-        /// The update instrument subscribe.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             this.FixMessageRouter.UpdateInstrumentSubscribe(symbol);
         }
 
-        /// <summary>
-        /// The update instruments subscribe all.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateInstrumentsSubscribeAll()
         {
             this.FixMessageRouter.UpdateInstrumentsSubscribeAll();
         }
 
-        /// <summary>
-        /// The request market data subscribe.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <inheritdoc />
         public void RequestMarketDataSubscribe(Symbol symbol)
         {
             this.FixMessageRouter.MarketDataRequestSubscribe(symbol);
         }
 
-        /// <summary>
-        /// The request market data subscribe all.
-        /// </summary>
+        /// <inheritdoc />
         public void RequestMarketDataSubscribeAll()
         {
             this.FixMessageRouter.MarketDataRequestSubscribeAll();

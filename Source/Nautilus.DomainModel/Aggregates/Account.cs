@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Aggregates
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
