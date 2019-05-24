@@ -17,7 +17,7 @@ namespace Nautilus.Logging
     public static class SerilogLogFactory
     {
         /// <summary>
-        /// Creates a new global static <see cref="Nautilus.Logging"/> logger.
+        /// Creates a new global static <see cref="Serilog"/> logger.
         /// </summary>
         /// <param name="logLevel">The threshold level for the logger.</param>
         public static void Create(LogEventLevel logLevel)

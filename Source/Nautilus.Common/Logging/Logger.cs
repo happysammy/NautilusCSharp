@@ -31,7 +31,6 @@ namespace Nautilus.Common.Logging
             this.component = component;
         }
 
-
         /// <inheritdoc />
         public void Verbose(string message)
         {

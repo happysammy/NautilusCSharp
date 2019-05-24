@@ -12,9 +12,7 @@ namespace Nautilus.Messaging
     using Nautilus.Core.Annotations;
     using Nautilus.Messaging.Interfaces;
 
-    /// <summary>
-    /// Represents a messaging endpoint.
-    /// </summary>
+    /// <inheritdoc />
     [Immutable]
     public sealed class Endpoint : IEndpoint
     {
@@ -29,10 +27,7 @@ namespace Nautilus.Messaging
             this.target = target;
         }
 
-        /// <summary>
-        /// Send the given message to the endpoint.
-        /// </summary>
-        /// <param name="message">The message to send.</param>
+        /// <inheritdoc />
         public void Send(object message)
         {
             this.target.Invoke(message);

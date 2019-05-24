@@ -30,71 +30,46 @@ namespace Nautilus.Logging
             this.AssemblyVersion = $"Serilog v{Assembly.GetAssembly(typeof(Log)).GetName().Version}";
         }
 
-        /// <summary>
-        /// Gets the logging adapters assembly library and version.
-        /// </summary>
+        /// <inheritdoc />
         public string AssemblyVersion { get; }
 
-        /// <summary>
-        /// The verbose.
-        /// </summary>
-        /// <param name="message">The log message.</param>
+        /// <inheritdoc />
         public void Verbose(string message)
         {
             Log.Verbose(message);
         }
 
-        /// <summary>
-        /// The debug.
-        /// </summary>
-        /// <param name="message">The log message.</param>
+        /// <inheritdoc />
         public void Debug(string message)
         {
             Log.Debug(message);
         }
 
-        /// <summary>
-        /// The information.
-        /// </summary>
-        /// <param name="message">The log message.</param>
+        /// <inheritdoc />
         public void Information(string message)
         {
             Log.Information(message);
         }
 
-        /// <summary>
-        /// The warning.
-        /// </summary>
-        /// <param name="message">The log message.</param>
+        /// <inheritdoc />
         public void Warning(string message)
         {
             Log.Warning(message);
         }
 
-        /// <summary>
-        /// Creates an error log event.
-        /// </summary>
-        /// <param name="message">The log message.</param>
+        /// <inheritdoc />
         public void Error(string message)
         {
             Log.Error(message);
         }
 
-        /// <summary>
-        /// Creates an error log event including an exception.
-        /// </summary>
-        /// <param name="message">The log message.</param>
-        /// <param name="ex">The exception.</param>
+        /// <inheritdoc />
         public void Error(string message, Exception ex)
         {
             Log.Error(ex, message);
         }
 
-        /// <summary>
-        /// Creates a fatal log event.
-        /// </summary>
-        /// <param name="message">The log message.</param>
-        /// <param name="ex">The fatal exception.</param>
+        /// <inheritdoc />
         public void Fatal(string message, Exception ex)
         {
             Log.Fatal(ex, message);

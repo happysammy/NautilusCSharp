@@ -9,7 +9,7 @@
 namespace Nautilus.Messaging.Interfaces
 {
     /// <summary>
-    /// Provides a generic messaging endpoint.
+    /// Provides a messaging endpoint.
     /// </summary>
     public interface IEndpoint
     {
