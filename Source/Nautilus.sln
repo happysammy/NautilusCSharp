@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NautilusExecutor", "Nautilu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor", "NautilusExecutor\NautilusExecutor.csproj", "{9EB3742E-68A0-4E4F-AC6C-66CB7A8D7722}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor.Api", "NautilusExecutor.Api\NautilusExecutor.Api.csproj", "{B5CA4594-2F7E-47B9-A1EC-E5640076D252}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Core", "Nautilus.Core\Nautilus.Core.csproj", "{AEE3A061-B7B0-4492-BE1C-2C43631379E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Common", "Nautilus.Common\Nautilus.Common.csproj", "{FF13E1FD-FA68-4D83-B99F-97029E312B1C}"
@@ -70,8 +72,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.UnitTests", "Nautilus.TestSuite.UnitTests\Nautilus.TestSuite.UnitTests.csproj", "{1F9D5678-8D2D-4AC9-A7B4-1B5CD3FC41F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.IntegrationTests", "Nautilus.TestSuite.IntegrationTests\Nautilus.TestSuite.IntegrationTests.csproj", "{A8A27E8F-EF22-43C3-9350-91FD626A130F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor.Api", "NautilusExecutor.Api\NautilusExecutor.Api.csproj", "{B5CA4594-2F7E-47B9-A1EC-E5640076D252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
