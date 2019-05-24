@@ -49,11 +49,5 @@ namespace Nautilus.DomainModel.Aggregates.Base
         /// </summary>
         /// <returns>The <see cref="IList{Event}"/>.</returns>
         protected List<Event> Events { get; }
-
-        /// <summary>
-        /// Applies the given <see cref="Event"/> to the aggregate.
-        /// </summary>
-        /// <param name="event">The event.</param>
-        public abstract void Apply(Event @event);
     }
 }

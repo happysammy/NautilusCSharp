@@ -145,22 +145,17 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given event to the brokerage account.
         /// </summary>
         /// <param name="event">The event.</param>
-        public override void Apply(Event @event)
+        public void Apply(AccountEvent @event)
         {
-            if (!(@event is AccountEvent accountEvent))
-            {
-                return; // Not an account event.
-            }
-
             this.Events.Add(@event);
-            this.CashBalance = accountEvent.CashBalance;
-            this.CashStartDay = accountEvent.CashStartDay;
-            this.CashActivityDay = accountEvent.CashActivityDay;
-            this.MarginRatio = accountEvent.MarginRatio;
-            this.MarginUsedMaintenance = accountEvent.MarginUsedMaintenance;
-            this.MarginUsedLiquidation = accountEvent.MarginUsedLiquidation;
-            this.MarginCallStatus = accountEvent.MarginCallStatus;
-            this.LastUpdated = accountEvent.Timestamp;
+            this.CashBalance = @event.CashBalance;
+            this.CashStartDay = @event.CashStartDay;
+            this.CashActivityDay = @event.CashActivityDay;
+            this.MarginRatio = @event.MarginRatio;
+            this.MarginUsedMaintenance = @event.MarginUsedMaintenance;
+            this.MarginUsedLiquidation = @event.MarginUsedLiquidation;
+            this.MarginCallStatus = @event.MarginCallStatus;
+            this.LastUpdated = @event.Timestamp;
         }
 
         /// <summary>

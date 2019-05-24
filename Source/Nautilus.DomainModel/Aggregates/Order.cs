@@ -19,6 +19,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.FiniteStateMachine;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -234,7 +235,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to the <see cref="Order"/>.
         /// </summary>
         /// <param name="orderEvent">The order event.</param>
-        public override void Apply(Event orderEvent)
+        public void Apply(OrderEvent orderEvent)
         {
             switch (orderEvent)
             {

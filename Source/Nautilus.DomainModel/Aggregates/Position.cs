@@ -16,6 +16,7 @@ namespace Nautilus.DomainModel.Aggregates
     using Nautilus.DomainModel.Aggregates.Base;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -189,7 +190,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Applies the given <see cref="Event"/> to this position.
         /// </summary>
         /// <param name="event">The position event.</param>
-        public override void Apply(Event @event)
+        public void Apply(OrderEvent @event)
         {
             switch (@event)
             {
