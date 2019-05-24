@@ -52,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(OrderSide.BUY, order.Side);
             Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
-            Assert.True(order.AveragePrice.HasNoValue);
+            Assert.Null(order.AveragePrice);
             Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }, order.GetOrderIdList());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
@@ -82,8 +82,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(OrderType.STOP_MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Equal(Price.Create(2000, 1), order.Price);
-            Assert.True(order.AveragePrice.HasNoValue);
-            Assert.True(order.Slippage.HasNoValue);
+            Assert.Null(order.AveragePrice);
+            Assert.Null(order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIdList());
@@ -99,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.True(order.IdBroker.HasNoValue);
+            Assert.Null(order.IdBroker);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Assert
-            Assert.True(order.ExecutionId.HasNoValue);
+            Assert.Null(order.ExecutionId);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message);
 
             // Assert
-            Assert.Equal(1, order.EventCount);
+            Assert.Equal(2, order.EventCount);
             Assert.Equal(OrderStatus.Rejected, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -142,7 +142,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message2);
 
             // Assert
-            Assert.Equal(2, order.EventCount);
+            Assert.Equal(3, order.EventCount);
             Assert.Equal(OrderStatus.Cancelled, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -160,7 +160,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message2);
 
             // Assert
-            Assert.Equal(2, order.EventCount);
+            Assert.Equal(3, order.EventCount);
             Assert.Equal(OrderStatus.Expired, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -176,8 +176,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(message);
 
             // Assert
-            Assert.Equal("some_broker_orderId", order.IdBroker.ToString());
-            Assert.Equal(1, order.EventCount);
+            Assert.Equal("some_broker_orderId", order.IdBroker?.ToString());
+            Assert.Equal(2, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -234,6 +234,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             var message = new OrderWorking(
                 new Symbol("AUDUSD", Venue.LMAX),
                 order.Id,
@@ -242,7 +247,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 order.TimeInForce,
                 order.ExpireTime,
                 StubZonedDateTime.UnixEpoch(),
@@ -265,6 +270,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                .WithQuantity(Quantity.Create(100000))
                .BuildStopMarketOrder();
 
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderPartiallyFilled(
                 new Symbol("AUDUSD", Venue.LMAX),
@@ -274,7 +284,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 order.Side,
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
-                order.Price.Value,
+                order.Price,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -295,6 +305,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             var message1 = StubEventMessages.OrderWorkingEvent(order);
             var message2 = new OrderFilled(
                 order.Symbol,
@@ -303,7 +318,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 new ExecutionTicket("some_execution_ticket"),
                 order.Side,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

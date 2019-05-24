@@ -19,6 +19,7 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
@@ -60,7 +61,7 @@ namespace Nautilus.Execution
 
             this.Send(ExecutionServiceAddress.Core, message);
 
-            if (order.Price.HasValue && !this.modifyCache.ContainsKey(order.Id))
+            if (!(order.Price is null) && !this.modifyCache.ContainsKey(order.Id))
             {
                 // Buffer modification cache preemptively.
                 this.modifyCache.Add(order.Id, new List<ModifyOrder>());
@@ -189,7 +190,7 @@ namespace Nautilus.Execution
                 return;
             }
 
-            if (order.Price.HasNoValue)
+            if (order.Price is null)
             {
                 // Cannot process - no price for order (this should never happen).
                 this.Log.Warning($"Cannot process modification cache, no price {order.Id}.");

@@ -64,7 +64,12 @@ namespace Nautilus.Fix.MessageFactories
             }
 
             order1.SetField(new OrderQty(entry.Quantity.Value));
-            order1.SetField(new StopPx(entry.Price.Value.Value));
+
+            if (entry.Price?.Value != null)
+            {
+                order1.SetField(new StopPx(entry.Price.Value));
+            }
+
             message.AddGroup(order1);
 
             var stopLoss = atomicOrder.StopLoss;
@@ -79,7 +84,12 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
-            order2.SetField(new StopPx(stopLoss.Price.Value.Value));
+
+            if (stopLoss.Price?.Value != null)
+            {
+                order2.SetField(new StopPx(stopLoss.Price.Value));
+            }
+
             message.AddGroup(order2);
 
             return message;
@@ -129,7 +139,12 @@ namespace Nautilus.Fix.MessageFactories
             }
 
             order1.SetField(new OrderQty(entry.Quantity.Value));
-            order1.SetField(new StopPx(entry.Price.Value.Value));
+
+            if (entry.Price?.Value != null)
+            {
+                order1.SetField(new StopPx(entry.Price.Value));
+            }
+
             message.AddGroup(order1);
 
             var stopLoss = atomicOrder.StopLoss;
@@ -144,23 +159,37 @@ namespace Nautilus.Fix.MessageFactories
             order2.SetField(new OrdType(OrdType.STOP));
             order2.SetField(FixMessageHelper.GetFixTimeInForce(stopLoss.TimeInForce));
             order2.SetField(new OrderQty(stopLoss.Quantity.Value));
-            order2.SetField(new StopPx(stopLoss.Price.Value.Value));
+
+            if (stopLoss.Price?.Value != null)
+            {
+                order2.SetField(new StopPx(stopLoss.Price.Value));
+            }
+
             message.AddGroup(order2);
 
             var takeProfit = atomicOrder.TakeProfit;
-            var order3 = new NewOrderList.NoOrdersGroup();
-            order3.SetField(new ClOrdID(takeProfit.Value.Id.ToString()));
-            order3.SetField(new ListSeqNo(2));
-            order3.SetField(new SecondaryClOrdID(takeProfit.Value.Label.ToString()));
-            order3.SetField(new ClOrdLinkID("2"));
-            order3.SetField(new Account(accountNumber));
-            order3.SetField(new Symbol(brokerSymbol));
-            order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.Value.Side));
-            order3.SetField(new OrdType(OrdType.LIMIT));
-            order3.SetField(FixMessageHelper.GetFixTimeInForce(takeProfit.Value.TimeInForce));
-            order3.SetField(new OrderQty(takeProfit.Value.Quantity.Value));
-            order3.SetField(new Price(takeProfit.Value.Price.Value.Value));
-            message.AddGroup(order3);
+
+            if (takeProfit != null)
+            {
+                var order3 = new NewOrderList.NoOrdersGroup();
+                order3.SetField(new ClOrdID(takeProfit.Id.ToString()));
+                order3.SetField(new ListSeqNo(2));
+                order3.SetField(new SecondaryClOrdID(takeProfit.Label.ToString()));
+                order3.SetField(new ClOrdLinkID("2"));
+                order3.SetField(new Account(accountNumber));
+                order3.SetField(new Symbol(brokerSymbol));
+                order3.SetField(FixMessageHelper.GetFixOrderSide(takeProfit.Side));
+                order3.SetField(new OrdType(OrdType.LIMIT));
+                order3.SetField(FixMessageHelper.GetFixTimeInForce(takeProfit.TimeInForce));
+                order3.SetField(new OrderQty(takeProfit.Quantity.Value));
+
+                if (takeProfit.Price?.Value != null)
+                {
+                    order3.SetField(new Price(takeProfit.Price.Value));
+                }
+
+                message.AddGroup(order3);
+            }
 
             return message;
         }

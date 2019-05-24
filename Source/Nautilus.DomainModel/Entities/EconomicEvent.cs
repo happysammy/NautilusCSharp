@@ -88,21 +88,21 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the economic news events actual figure.
         /// </summary>
-        public OptionVal<decimal> Actual { get; }
+        public decimal? Actual { get; }
 
         /// <summary>
         /// Gets the economic news events consensus figure.
         /// </summary>
-        public OptionVal<decimal> Consensus { get; }
+        public decimal? Consensus { get; }
 
         /// <summary>
         /// Gets the economic news events previous figure.
         /// </summary>
-        public OptionVal<decimal> Previous { get; }
+        public decimal? Previous { get; }
 
         /// <summary>
         /// Gets a value indicating whether this economic event is a speech or meeting.
         /// </summary>
-        public bool IsSpeechOrMeeting => this.Previous.HasNoValue;
+        public bool IsSpeechOrMeeting => this.Previous is null;
     }
 }

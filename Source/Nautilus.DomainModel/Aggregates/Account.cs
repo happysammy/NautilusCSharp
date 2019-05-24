@@ -159,7 +159,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.MarginRatio = accountEvent.MarginRatio;
             this.MarginUsedMaintenance = accountEvent.MarginUsedMaintenance;
             this.MarginUsedLiquidation = accountEvent.MarginUsedLiquidation;
-            this.MarginCallStatus = accountEvent.MarginCallStatus.Value;
+            this.MarginCallStatus = accountEvent.MarginCallStatus;
             this.LastUpdated = accountEvent.Timestamp;
         }
 

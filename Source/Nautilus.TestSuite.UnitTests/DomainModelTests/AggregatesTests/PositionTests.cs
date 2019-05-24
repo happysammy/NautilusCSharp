@@ -47,7 +47,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.GLOBEX), position.Symbol);
-            Assert.Equal("123456", position.FromOrderId.ToString());
+            Assert.Equal("123456", position.FromOrderId?.ToString());
             Assert.Equal(Quantity.Create(1000), position.Quantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);

@@ -9,7 +9,6 @@
 namespace Nautilus.TestSuite.TestKit.TestDoubles
 {
     using System.Diagnostics.CodeAnalysis;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
@@ -34,7 +33,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         private TimeInForce TimeInForce { get; set; } = TimeInForce.DAY;
 
-        private OptionVal<ZonedDateTime> ExpireTime { get; set; } = OptionVal<ZonedDateTime>.None();
+        private ZonedDateTime? ExpireTime { get; set; }
 
         private ZonedDateTime Timestamp { get; set; } = StubZonedDateTime.UnixEpoch();
 

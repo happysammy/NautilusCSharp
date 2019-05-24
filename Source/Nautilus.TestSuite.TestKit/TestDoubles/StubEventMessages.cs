@@ -23,6 +23,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     {
         public static OrderFilled OrderFilledEvent(Order order)
         {
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             return new OrderFilled(
                 order.Symbol,
                 order.Id,
@@ -30,7 +35,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 new ExecutionTicket("NONE"),
                 order.Side,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -41,6 +46,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             int filledQuantity,
             int leavesQuantity)
         {
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             return new OrderPartiallyFilled(
                 order.Symbol,
                 order.Id,
@@ -49,7 +59,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Side,
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
-                order.Price.Value,
+                order.Price,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -68,6 +78,11 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
 
         public static OrderWorking OrderWorkingEvent(Order order)
         {
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             return new OrderWorking(
                 order.Symbol,
                 order.Id,
@@ -76,7 +91,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 order.TimeInForce,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
                 StubZonedDateTime.UnixEpoch(),

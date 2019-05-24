@@ -54,12 +54,12 @@ namespace Nautilus.DomainModel.Aggregates
             this.Quantity = Quantity.Zero();
             this.PeakQuantity = Quantity.Zero();
             this.MarketPosition = MarketPosition.Flat;
-            this.FromOrderId = OptionRef<OrderId>.None();
-            this.LastOrderId = OptionRef<OrderId>.None();
-            this.EntryTime = OptionVal<ZonedDateTime>.None();
-            this.ExitTime = OptionVal<ZonedDateTime>.None();
-            this.AverageEntryPrice = OptionRef<Price>.None();
-            this.AverageExitPrice = OptionRef<Price>.None();
+            this.FromOrderId = null;
+            this.LastOrderId = null;
+            this.EntryTime = null;
+            this.ExitTime = null;
+            this.AverageEntryPrice = null;
+            this.AverageExitPrice = null;
             this.IsEntered = false;
             this.IsExited = false;
         }
@@ -87,42 +87,42 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the positions entry order identifier.
         /// </summary>
-        public OptionRef<OrderId> FromOrderId { get; private set; }
+        public OrderId? FromOrderId { get; private set; }
 
         /// <summary>
         /// Gets the positions last order identifier.
         /// </summary>
-        public OptionRef<OrderId> LastOrderId { get; private set; }
+        public OrderId? LastOrderId { get; private set; }
 
         /// <summary>
         /// Gets the positions entry direction.
         /// </summary>
-        public OptionVal<OrderSide> EntryDirection { get; private set; }
+        public OrderSide? EntryDirection { get; private set; }
 
         /// <summary>
         /// Gets the positions entry time.
         /// </summary>
-        public OptionVal<ZonedDateTime> EntryTime { get; private set; }
+        public ZonedDateTime? EntryTime { get; private set; }
 
         /// <summary>
         /// Gets the positions exit time.
         /// </summary>
-        public OptionVal<ZonedDateTime> ExitTime { get; private set; }
+        public ZonedDateTime? ExitTime { get; private set; }
 
         /// <summary>
         /// Gets the positions average entry price.
         /// </summary>
-        public OptionRef<Price> AverageEntryPrice { get; private set; }
+        public Price? AverageEntryPrice { get; private set; }
 
         /// <summary>
         /// Gets the positions average exit price.
         /// </summary>
-        public OptionRef<Price> AverageExitPrice { get; private set; }
+        public Price? AverageExitPrice { get; private set; }
 
         /// <summary>
         /// Gets the last event applied to the position.
         /// </summary>
-        public OptionRef<Event> LastEvent { get; private set; }
+        public Event? LastEvent { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the position is entered.

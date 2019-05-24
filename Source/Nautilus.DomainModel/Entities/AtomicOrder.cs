@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Entities
 {
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities.Base;
@@ -31,17 +30,13 @@ namespace Nautilus.DomainModel.Entities
         public AtomicOrder(
             Order entry,
             Order stopLoss,
-            OptionRef<Order> takeProfit)
-            : base(
-                  new AtomicOrderId("A" + entry.Id.Value),
-                  entry.Timestamp)
+            Order? takeProfit = null)
+            : base(new AtomicOrderId("A" + entry.Id.Value), entry.Timestamp)
         {
             this.Entry = entry;
             this.StopLoss = stopLoss;
-            this.TakeProfit = takeProfit.HasValue
-                ? OptionRef<Order>.Some(takeProfit.Value)
-                : OptionRef<Order>.None();
-            this.HasTakeProfit = takeProfit.HasValue;
+            this.TakeProfit = takeProfit;
+            this.HasTakeProfit = takeProfit != null;
         }
 
         /// <summary>
@@ -62,7 +57,7 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
-        public OptionRef<Order> TakeProfit { get; }
+        public Order? TakeProfit { get; }
 
         /// <summary>
         /// Gets a value indicating whether the atomic order has a take .

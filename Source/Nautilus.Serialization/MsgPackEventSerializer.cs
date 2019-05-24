@@ -210,7 +210,7 @@ namespace Nautilus.Serialization
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
                         Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
                         unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
                         MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
@@ -237,7 +237,7 @@ namespace Nautilus.Serialization
                         MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
                         new OrderId(unpacked[Key.OrderId].ToString()),
                         new OrderId(unpacked[Key.BrokerOrderId].ToString()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()),
                         unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -257,7 +257,7 @@ namespace Nautilus.Serialization
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
                         Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()),
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);
@@ -269,7 +269,7 @@ namespace Nautilus.Serialization
                         new ExecutionTicket(unpacked[Key.ExecutionTicket].ToString()),
                         unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
                         Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()),
                         unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
                         eventId,
                         eventTimestamp);

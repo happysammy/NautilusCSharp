@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Aggregates
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -54,12 +55,15 @@ namespace Nautilus.DomainModel.Aggregates
             OrderSide orderSide,
             OrderType orderType,
             Quantity quantity,
-            OptionRef<Price> price,
+            Price? price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime timestamp)
             : base(orderId, timestamp)
         {
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotDefault(orderType, nameof(orderType));
+            Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.orderState = OrderStateMachine.Create();
@@ -74,13 +78,28 @@ namespace Nautilus.DomainModel.Aggregates
             this.Quantity = quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = price;
-            this.AveragePrice = OptionRef<Price>.None();
-            this.Slippage = OptionVal<decimal>.None();
+            this.AveragePrice = null;
+            this.Slippage = null;
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
             this.orderIds.Add(this.Id);
 
             this.ValidateExpireTime(expireTime);
+
+            var initialized = new OrderInitialized(
+                symbol,
+                orderId,
+                orderLabel,
+                orderSide,
+                orderType,
+                quantity,
+                price,
+                timeInForce,
+                expireTime,
+                Guid.NewGuid(),
+                timestamp);
+
+            this.Events.Add(initialized);
         }
 
         /// <summary>
@@ -106,16 +125,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier for the broker.
         /// </summary>
-        public OptionRef<OrderId> IdBroker => this.orderIdsBroker.Count > 0
-            ? this.orderIdsBroker.Last()
-            : OptionRef<OrderId>.None();
+        public OrderId? IdBroker => this.orderIdsBroker.LastOrDefault();
 
         /// <summary>
         /// Gets the orders current execution identifier.
         /// </summary>
-        public OptionRef<ExecutionId> ExecutionId => this.executionIds.Count > 0
-            ? this.executionIds.Last()
-            : OptionRef<ExecutionId>.None();
+        public ExecutionId? ExecutionId => this.executionIds.LastOrDefault();
 
         /// <summary>
         /// Gets the orders label.
@@ -145,17 +160,17 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders price.
         /// </summary>
-        public OptionRef<Price> Price { get; private set; }
+        public Price? Price { get; private set; }
 
         /// <summary>
         /// Gets the orders average fill price (optional, may be unfilled).
         /// </summary>
-        public OptionRef<Price> AveragePrice { get; private set; }
+        public Price? AveragePrice { get; private set; }
 
         /// <summary>
         /// Gets the orders slippage.
         /// </summary>
-        public OptionVal<decimal> Slippage { get; private set; }
+        public decimal? Slippage { get; private set; }
 
         /// <summary>
         /// Gets the orders time in force.
@@ -165,14 +180,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders expire time (optional).
         /// </summary>
-        public OptionVal<ZonedDateTime> ExpireTime { get; }
+        public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
         /// Gets the orders last event time.
         /// </summary>
-        public ZonedDateTime LastEventTime => this.Events.Count > 0
-            ? this.Events.Last().Timestamp
-            : this.Timestamp;
+        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Always contains OrderInitialized.
 
         /// <summary>
         /// Gets the current order status.
@@ -295,7 +308,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
-            this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());
+            this.Slippage = this.CalculateSlippage();
         }
 
         private void When(OrderFilled orderEvent)
@@ -304,7 +317,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
-            this.Slippage = OptionVal<decimal>.Some(this.CalculateSlippage());
+            this.Slippage = this.CalculateSlippage();
             this.IsComplete = true;
         }
 
@@ -321,9 +334,9 @@ namespace Nautilus.DomainModel.Aggregates
             this.Price = orderEvent.ModifiedPrice;
         }
 
-        private void ValidateExpireTime(OptionVal<ZonedDateTime> expireTime)
+        private void ValidateExpireTime(ZonedDateTime? expireTime)
         {
-            if (expireTime.HasNoValue)
+            if (expireTime is null)
             {
                 Condition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
             }
@@ -337,7 +350,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private decimal CalculateSlippage()
         {
-            if (this.Price.HasNoValue || this.AveragePrice.HasNoValue)
+            if (this.Price is null || this.AveragePrice is null)
             {
                 return decimal.Zero;
             }

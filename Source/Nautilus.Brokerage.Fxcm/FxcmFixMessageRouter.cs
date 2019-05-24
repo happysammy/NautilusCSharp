@@ -184,7 +184,7 @@ namespace Nautilus.Brokerage.FXCM
                 return;
             }
 
-            if (atomicOrder.TakeProfit.HasValue)
+            if (atomicOrder.TakeProfit != null)
             {
                 var message = NewOrderListEntryFactory.CreateWithStopLossAndTakeProfit(
                     brokerSymbolQuery.Value,

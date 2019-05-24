@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.TestKitTests.TestDoublesTests
             Assert.Equal(Quantity.Create(1), order.Quantity);
             Assert.Equal(Price.Create(1, 1), order.Price);
             Assert.Equal(TimeInForce.DAY, order.TimeInForce);
-            Assert.True(order.ExpireTime.HasNoValue);
+            Assert.Null(order.ExpireTime);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.Timestamp);
         }
 

@@ -45,9 +45,9 @@ namespace Nautilus.DomainModel.Factories
                 orderSide,
                 OrderType.MARKET,
                 quantity,
-                OptionRef<Price>.None(),
+                null,
                 TimeInForce.DAY,
-                OptionVal<ZonedDateTime>.None(),
+                null,
                 timestamp);
         }
 
@@ -70,9 +70,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            OptionRef<Price> price,
+            Price? price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -107,9 +107,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            OptionRef<Price> price,
+            Price? price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -144,9 +144,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            OptionRef<Price> price,
+            Price? price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(
@@ -181,9 +181,9 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            OptionRef<Price> price,
+            Price? price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime timestamp)
         {
             return new Order(

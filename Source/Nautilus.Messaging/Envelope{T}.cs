@@ -70,7 +70,7 @@ namespace Nautilus.Messaging
         /// <summary>
         /// Gets the envelopes opened time.
         /// </summary>
-        public OptionVal<ZonedDateTime> OpenedTime { get; private set; }
+        public ZonedDateTime? OpenedTime { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the envelope has been opened.
@@ -87,7 +87,7 @@ namespace Nautilus.Messaging
         {
             Debug.NotDefault(currentTime, nameof(currentTime));
 
-            if (this.OpenedTime.HasNoValue)
+            if (this.OpenedTime is null)
             {
                 this.OpenedTime = currentTime;
             }

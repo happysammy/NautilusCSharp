@@ -66,8 +66,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackCommandSerializer();
             var entry = new StubOrderBuilder().BuildMarketOrder();
             var stopLoss = new StubOrderBuilder().BuildStopMarketOrder();
-            var takeProfit = OptionRef<Order>.None();
-            var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
+            var atomicOrder = new AtomicOrder(entry, stopLoss);
 
             var command = new SubmitAtomicOrder(
                 atomicOrder,
@@ -93,9 +92,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var serializer = new MsgPackCommandSerializer();
-            var entry = new StubOrderBuilder().BuildMarketOrder();
-            var stopLoss = new StubOrderBuilder().BuildStopMarketOrder();
-            var takeProfit = OptionRef<Order>.None();
+            var entry = new StubOrderBuilder().EntryOrder("O-123456").BuildMarketOrder();
+            var stopLoss = new StubOrderBuilder().StopLossOrder("O-123457").BuildStopMarketOrder();
+            var takeProfit = new StubOrderBuilder().TakeProfitOrder("O-123458").BuildLimitOrder();
             var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
 
             var command = new SubmitAtomicOrder(

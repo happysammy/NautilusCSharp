@@ -57,8 +57,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var result = message.ToString();
 
             // Assert
-            Assert.True(result.StartsWith("SystemStatusRequest("));
-            Assert.True(result.EndsWith(")"));
+            Assert.StartsWith("SystemStatusRequest(", result);
+            Assert.EndsWith(")", result);
         }
 
         [Fact]
@@ -76,8 +76,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var result = message.ToString();
 
             // Assert
-            Assert.True(result.StartsWith("SystemStatusResponse("));
-            Assert.True(result.EndsWith("-CommandBus=Running"));
+            Assert.StartsWith("SystemStatusResponse(", result);
+            Assert.EndsWith("-CommandBus=Running", result);
         }
     }
 }

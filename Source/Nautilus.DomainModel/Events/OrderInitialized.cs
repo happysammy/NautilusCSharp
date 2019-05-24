@@ -11,6 +11,7 @@ namespace Nautilus.DomainModel.Events
     using System;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -25,13 +26,27 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderInitialized"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
+        /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="orderLabel">The event order label.</param>
+        /// <param name="orderSide">The event order side.</param>
+        /// <param name="orderType">The event order type.</param>
+        /// <param name="quantity">The event order quantity.</param>
+        /// <param name="price">The event order price (optional).</param>
+        /// <param name="timeInForce">The event order time in force.</param>
+        /// <param name="expireTime">The event order expire time (optional).</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderInitialized(
             Symbol symbol,
             OrderId orderId,
+            Label orderLabel,
+            OrderSide orderSide,
+            OrderType orderType,
+            Quantity quantity,
+            Price? price,
+            TimeInForce timeInForce,
+            ZonedDateTime? expireTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
@@ -41,6 +56,9 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
+            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotDefault(orderType, nameof(orderType));
+            Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
         }

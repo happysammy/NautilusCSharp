@@ -50,7 +50,7 @@ namespace Nautilus.DomainModel.Events
             Quantity quantity,
             Price price,
             TimeInForce timeInForce,
-            OptionVal<ZonedDateTime> expireTime,
+            ZonedDateTime? expireTime,
             ZonedDateTime workingTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -117,7 +117,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order expire time (optional).
         /// </summary>
-        public OptionVal<ZonedDateTime> ExpireTime { get; }
+        public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
         /// Gets the events order working time.

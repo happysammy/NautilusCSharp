@@ -393,8 +393,8 @@ namespace Nautilus.Brokerage.Dukascopy
                 if (orderStatus == OrdStatus.NEW.ToString())
                 {
                     var expireTime = message.IsSetField(Tags.ExpireTime)
-                                       ? OptionVal<ZonedDateTime>.Some(FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime)))
-                                       : OptionVal<ZonedDateTime>.None();
+                        ? FixMessageHelper.ConvertExecutionReportString(message.GetField(Tags.ExpireTime))
+                        : (ZonedDateTime?)null;
 
                     this.fixGateway?.OnOrderWorking(
                         symbol,

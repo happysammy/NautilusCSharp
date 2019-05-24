@@ -9,7 +9,6 @@
 namespace Nautilus.Serialization
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
@@ -41,19 +40,11 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="priceString">The price string.</param>
         /// <returns>The optional price.</returns>
-        internal static OptionRef<Price> GetPrice(string priceString)
+        internal static Price GetPrice(string priceString)
         {
             Debug.NotEmptyOrWhiteSpace(priceString, nameof(priceString));
 
-            if (priceString == NONE)
-            {
-                return OptionRef<Price>.None();
-            }
-
-            var priceDecimal = Convert.ToDecimal(priceString);
-            var priceDecimalPlaces = priceDecimal.GetDecimalPlaces();
-
-            return Price.Create(priceDecimal, priceDecimalPlaces);
+            return Price.Create(Convert.ToDecimal(priceString));
         }
 
         /// <summary>
@@ -61,9 +52,9 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="price">The price.</param>
         /// <returns>The optional price.</returns>
-        internal static string GetPriceString(OptionRef<Price> price)
+        internal static string GetPriceString(Price? price)
         {
-            return price.HasValue
+            return price is null
                 ? NONE
                 : price.ToString();
         }
@@ -73,13 +64,13 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="expireTimeString">The expire time string.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static OptionVal<ZonedDateTime> GetExpireTime(string expireTimeString)
+        internal static ZonedDateTime? GetExpireTime(string expireTimeString)
         {
             Debug.NotEmptyOrWhiteSpace(expireTimeString, nameof(expireTimeString));
 
             return expireTimeString == NONE
-                ? OptionVal<ZonedDateTime>.None()
-                : OptionVal<ZonedDateTime>.Some(expireTimeString.ToZonedDateTimeFromIso());
+                ? null
+                : (ZonedDateTime?)expireTimeString.ToZonedDateTimeFromIso();
         }
 
         /// <summary>
@@ -87,9 +78,9 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="expireTime">The optional expire time.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static string GetExpireTimeString(OptionVal<ZonedDateTime> expireTime)
+        internal static string GetExpireTimeString(ZonedDateTime? expireTime)
         {
-            return expireTime.HasNoValue
+            return expireTime is null
                 ? NONE
                 : expireTime.Value.ToIsoString();
         }

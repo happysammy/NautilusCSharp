@@ -105,6 +105,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopMarketOrder();
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             var working = new OrderWorking(
                 order.Symbol,
                 order.Id,
@@ -113,7 +118,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 order.TimeInForce,
                 order.ExpireTime,
                 StubZonedDateTime.UnixEpoch(),
@@ -138,6 +143,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .WithTimeInForce(TimeInForce.GTD)
                 .WithExpireTime(StubZonedDateTime.UnixEpoch() + Duration.FromMinutes(1))
                 .BuildStopMarketOrder();
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
             var working = new OrderWorking(
                 order.Symbol,
                 order.Id,
@@ -146,7 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price.Value,
+                order.Price,
                 order.TimeInForce,
                 order.ExpireTime,
                 StubZonedDateTime.UnixEpoch(),

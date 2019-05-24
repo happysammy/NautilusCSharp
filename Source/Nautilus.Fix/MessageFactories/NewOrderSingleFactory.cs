@@ -65,11 +65,19 @@ namespace Nautilus.Fix.MessageFactories
                     break;
                 case OrderType.LIMIT:
                 case OrderType.STOP_LIMIT:
-                    message.SetField(new Price(order.Price.Value.Value));
+                    if (order.Price?.Value != null)
+                    {
+                        message.SetField(new Price(order.Price.Value));
+                    }
+
                     break;
                 case OrderType.STOP_MARKET:
                 case OrderType.MIT:
-                    message.SetField(new StopPx(order.Price.Value.Value));
+                    if (order.Price?.Value != null)
+                    {
+                        message.SetField(new StopPx(order.Price.Value));
+                    }
+
                     break;
                 case OrderType.UNKNOWN:
                     goto default;

@@ -116,7 +116,7 @@ namespace Nautilus.Serialization
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
                         this.orderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()).Value,
+                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()),
                         commandId,
                         commandTimestamp);
                 case nameof(SubmitOrder):
@@ -145,18 +145,18 @@ namespace Nautilus.Serialization
             }
         }
 
-        private byte[] SerializeTakeProfit(OptionRef<Order> takeProfit)
+        private byte[] SerializeTakeProfit(Order? takeProfit)
         {
-            return takeProfit.HasValue
-                ? this.orderSerializer.Serialize(takeProfit.Value)
+            return takeProfit != null
+                ? this.orderSerializer.Serialize(takeProfit)
                 : new[] { NIL };
         }
 
-        private OptionRef<Order> DeserializeTakeProfit(byte[] takeProfit, bool hasTakeProfit)
+        private Order? DeserializeTakeProfit(byte[] takeProfit, bool hasTakeProfit)
         {
             return hasTakeProfit
-                ? OptionRef<Order>.Some(this.orderSerializer.Deserialize(takeProfit))
-                : OptionRef<Order>.None();
+                ? this.orderSerializer.Deserialize(takeProfit)
+                : null;
         }
     }
 }
