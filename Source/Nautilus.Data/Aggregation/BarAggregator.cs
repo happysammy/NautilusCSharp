@@ -86,10 +86,11 @@ namespace Nautilus.Data.Aggregation
         {
             Debug.EqualTo(tick.Symbol, this.symbol, nameof(tick.Symbol));
 
-            foreach (var (barSpec, builder) in this.barBuilders)
+            foreach (var barSpec in this.barBuilders.Keys)
             {
                 var quote = GetUpdateQuote(barSpec.QuoteType, tick);
 
+                var builder = this.barBuilders[barSpec];
                 if (builder is null)
                 {
                     this.pendingBuilders.Add(barSpec, new BarBuilder(quote));
@@ -108,9 +109,9 @@ namespace Nautilus.Data.Aggregation
 
         private void CreateBuilders()
         {
-            foreach (var (barSpec, builder) in this.pendingBuilders)
+            foreach (var barSpec in this.pendingBuilders.Keys)
             {
-                this.barBuilders[barSpec] = builder;
+                this.barBuilders[barSpec] = this.pendingBuilders[barSpec];
             }
 
             this.pendingBuilders.Clear();

@@ -197,13 +197,13 @@ namespace Nautilus.Redis
             var barsAddedCounter = 0;
             var barsIndex = this.OrganizeBarsByDay(bars);
 
-            foreach (var (dateKey, value) in barsIndex)
+            foreach (var dateKey in barsIndex.Keys)
             {
                 var key = KeyProvider.GetBarKey(barType, dateKey);
 
                 if (!this.KeyExists(key))
                 {
-                    foreach (var bar in value)
+                    foreach (var bar in barsIndex[dateKey])
                     {
                         this.redisDatabase.ListRightPush(key, bar.ToString());
                         barsAddedCounter++;
@@ -215,7 +215,7 @@ namespace Nautilus.Redis
                 // The key should exist in Redis because it was just checked by KeyExists().
                 var persistedBars = this.GetBarsByDay(key).Value;
 
-                foreach (var bar in value)
+                foreach (var bar in barsIndex[dateKey])
                 {
                     if (bar.Timestamp.IsGreaterThan(persistedBars.Last().Timestamp))
                     {

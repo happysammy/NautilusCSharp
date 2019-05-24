@@ -196,7 +196,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
-            foreach (var barType in this.subscriptions.Keys.Where(barType => barType.Symbol == message.Symbol))
+            foreach (var barType in this.subscriptions.Keys.Where(k => k.Symbol == message.Symbol))
             {
                 if (this.subscriptions[barType] is null)
                 {
@@ -219,9 +219,9 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketClosed message)
         {
-            foreach (var (barType, cancellable) in this.subscriptions.ToImmutableDictionary())
+            foreach (var barType in this.subscriptions.Keys.Where(k => k.Symbol == message.Symbol))
             {
-                cancellable.Cancel();
+                this.subscriptions[barType]?.Cancel();
                 this.subscriptions[barType] = null;
 
                 this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {barType}.");
