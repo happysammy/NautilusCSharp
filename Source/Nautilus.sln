@@ -17,9 +17,9 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A4A5BDFD-FAD5-46AA-B36E-33A6675CF888}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{594EE890-8228-4812-AC7E-9E55610EDF59}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Brokerages", "Brokerages", "{EF67F7D5-84AB-4AEA-A8E4-323B4BC9EBB9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{594EE890-8228-4812-AC7E-9E55610EDF59}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B47CB9B7-F826-4E50-8D3F-81C80989740E}"
 EndProject
@@ -39,33 +39,33 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor", "Nautilu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NautilusExecutor.Api", "NautilusExecutor.Api\NautilusExecutor.Api.csproj", "{B5CA4594-2F7E-47B9-A1EC-E5640076D252}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Common", "Nautilus.Common\Nautilus.Common.csproj", "{FF13E1FD-FA68-4D83-B99F-97029E312B1C}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Core", "Nautilus.Core\Nautilus.Core.csproj", "{AEE3A061-B7B0-4492-BE1C-2C43631379E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Common", "Nautilus.Common\Nautilus.Common.csproj", "{FF13E1FD-FA68-4D83-B99F-97029E312B1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.DomainModel", "Nautilus.DomainModel\Nautilus.DomainModel.csproj", "{2BB6E1DA-9469-44C6-A07E-2D980030E3CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Fix", "Nautilus.Fix\Nautilus.Fix.csproj", "{C49CF207-29E8-4838-9634-A99EE3CC29B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Logging", "Nautilus.Logging\Nautilus.Logging.csproj", "{9D3616C8-EE7A-42EC-8063-98388DF15FB8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Messaging", "Nautilus.Messaging\Nautilus.Messaging.csproj", "{F5058BCF-C19A-4A04-962D-2B37F248FDA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Network", "Nautilus.Network\Nautilus.Network.csproj", "{8F5C4B6A-FE7D-4E20-9701-059F70965645}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Scheduler", "Nautilus.Scheduler\Nautilus.Scheduler.csproj", "{ECB6AD8B-6714-4619-91DD-C459709C5036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Serialization", "Nautilus.Serialization\Nautilus.Serialization.csproj", "{FDF77D1F-4284-4DDC-9E10-F11AFA74535D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Data", "Nautilus.Data\Nautilus.Data.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Execution", "Nautilus.Execution\Nautilus.Execution.csproj", "{D3F2837D-750C-41E2-9129-2F284C3915D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Redis", "Nautilus.Redis\Nautilus.Redis.csproj", "{679E1404-AC41-4842-AA83-0F4091503A79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Brokerage.Dukascopy", "Nautilus.Brokerage.Dukascopy\Nautilus.Brokerage.Dukascopy.csproj", "{7647F824-C557-4BC3-B98B-51E64671CC1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Brokerage.Fxcm", "Nautilus.Brokerage.Fxcm\Nautilus.Brokerage.Fxcm.csproj", "{3E299DAE-B6DB-4BF6-ABE0-CCC1F9E33CB2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Logging", "Nautilus.Logging\Nautilus.Logging.csproj", "{9D3616C8-EE7A-42EC-8063-98388DF15FB8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Data", "Nautilus.Data\Nautilus.Data.csproj", "{4E729CD4-6836-424D-B3C7-4D5FFD723A51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.DomainModel", "Nautilus.DomainModel\Nautilus.DomainModel.csproj", "{2BB6E1DA-9469-44C6-A07E-2D980030E3CC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Redis", "Nautilus.Redis\Nautilus.Redis.csproj", "{679E1404-AC41-4842-AA83-0F4091503A79}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Serialization", "Nautilus.Serialization\Nautilus.Serialization.csproj", "{FDF77D1F-4284-4DDC-9E10-F11AFA74535D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.Execution", "Nautilus.Execution\Nautilus.Execution.csproj", "{D3F2837D-750C-41E2-9129-2F284C3915D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nautilus.TestSuite.TestKit", "Nautilus.TestSuite.TestKit\Nautilus.TestSuite.TestKit.csproj", "{5C57208C-5B4D-4413-A632-0159D379BC34}"
 EndProject
