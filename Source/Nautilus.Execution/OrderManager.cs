@@ -22,7 +22,7 @@ namespace Nautilus.Execution
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
-    /// Provides a messaging server using the ZeroMQ protocol.
+    /// Provides an <see cref="Order"/> manager.
     /// </summary>
     [PerformanceOptimized]
     public class OrderManager : ComponentBusConnectedBase
@@ -39,7 +39,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(
-                NautilusService.Messaging,
+                NautilusService.Execution,
                 container,
                 messagingAdapter)
         {
@@ -47,6 +47,7 @@ namespace Nautilus.Execution
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
@@ -65,6 +66,11 @@ namespace Nautilus.Execution
                 // Buffer modification cache preemptively.
                 this.modifyCache.Add(order.Id, new List<ModifyOrder>());
             }
+        }
+
+        private void OnMessage(SubmitAtomicOrder message)
+        {
+            // TODO: Implement.
         }
 
         private void OnMessage(CancelOrder message)

@@ -40,6 +40,7 @@ namespace Nautilus.Execution
 
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<AtomicOrder>(this.RouteOrder);
@@ -55,6 +56,11 @@ namespace Nautilus.Execution
         private void OnMessage(SubmitOrder message)
         {
             this.gateway.SubmitOrder(message.Order);
+        }
+
+        private void OnMessage(SubmitAtomicOrder message)
+        {
+            this.gateway.SubmitOrder(message.AtomicOrder);
         }
 
         private void OnMessage(CancelOrder message)

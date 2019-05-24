@@ -66,7 +66,7 @@ namespace Nautilus.Execution
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
-            VersionChecker.Run(this.Log, "NautilusData - Financial Market Execution Service");
+            VersionChecker.Run(this.Log, "NautilusExecutor - Financial Market Execution Service");
 
             addresses.Add(ExecutionServiceAddress.Core, this.Endpoint);
             messagingAdapter.Send(new InitializeSwitchboard(
@@ -100,6 +100,7 @@ namespace Nautilus.Execution
             this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
@@ -154,6 +155,11 @@ namespace Nautilus.Execution
         }
 
         private void OnMessage(SubmitOrder message)
+        {
+            this.newOrderThrottler.Send(message);
+        }
+
+        private void OnMessage(SubmitAtomicOrder message)
         {
             this.newOrderThrottler.Send(message);
         }

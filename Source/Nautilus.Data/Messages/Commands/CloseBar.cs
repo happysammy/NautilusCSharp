@@ -16,7 +16,7 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// The command message to close the bar of the given bar specification.
+    /// Represents a command to close a <see cref="Bar"/> of the given <see cref="BarSpecification"/>.
     /// </summary>
     [Immutable]
     public sealed class CloseBar : Command, IScheduledJob

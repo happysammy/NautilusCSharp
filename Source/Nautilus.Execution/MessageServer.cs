@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Execution.Network
+namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Enums;
@@ -15,6 +15,7 @@ namespace Nautilus.Execution.Network
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
+    using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
 
@@ -65,16 +66,14 @@ namespace Nautilus.Execution.Network
                 "NAUTILUS_EVENTS").Endpoint;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
+            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Handles the stop message.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
             this.commandConsumer.Send(message);
@@ -82,6 +81,11 @@ namespace Nautilus.Execution.Network
         }
 
         private void OnMessage(SubmitOrder message)
+        {
+            this.Send(ExecutionServiceAddress.OrderManager, message);
+        }
+
+        private void OnMessage(SubmitAtomicOrder message)
         {
             this.Send(ExecutionServiceAddress.OrderManager, message);
         }
