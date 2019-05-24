@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Common.Enums;
     using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
@@ -19,9 +18,8 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Creates and returns a new <see cref="ILogger"/> from the given inputs.
         /// </summary>
-        /// <param name="service">The service context.</param>
         /// <param name="component">The component label.</param>
         /// <returns>A <see cref="ILogger"/>.</returns>
-        ILogger Create(NautilusService service, Label component);
+        ILogger Create(Label component);
     }
 }

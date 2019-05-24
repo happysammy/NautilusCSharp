@@ -15,7 +15,6 @@ namespace Nautilus.Scheduler
     using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
@@ -73,7 +72,7 @@ namespace Nautilus.Scheduler
         /// </summary>
         /// <param name="container">The componentry container.</param>
         public HashedWheelTimerScheduler(IComponentryContainer container)
-            : base(NautilusService.Scheduling, container)
+            : base(container)
         {
             this.wheel = CreateWheel(DEFAULT_TICKS_PER_WHEEL, this.Log);
             this.mask = this.wheel.Length - 1;

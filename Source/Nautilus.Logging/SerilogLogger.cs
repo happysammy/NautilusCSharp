@@ -10,7 +10,6 @@ namespace Nautilus.Logging
 {
     using System;
     using System.Reflection;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Serilog;
     using Serilog.Events;
@@ -39,99 +38,66 @@ namespace Nautilus.Logging
         /// <summary>
         /// The verbose.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
-        public void Verbose(NautilusService service, string message)
+        public void Verbose(string message)
         {
-            Log.Verbose($"[{ToOutput(service)}] {message}");
+            Log.Verbose(message);
         }
 
         /// <summary>
         /// The debug.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
-        public void Debug(NautilusService service, string message)
+        public void Debug(string message)
         {
-            Log.Debug($"[{ToOutput(service)}] {message}");
+            Log.Debug(message);
         }
 
         /// <summary>
         /// The information.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
-        public void Information(NautilusService service, string message)
+        public void Information(string message)
         {
-            Log.Information($"[{ToOutput(service)}] {message}");
+            Log.Information(message);
         }
 
         /// <summary>
         /// The warning.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
-        public void Warning(NautilusService service, string message)
+        public void Warning(string message)
         {
-            Log.Warning($"[{ToOutput(service)}] {message}");
+            Log.Warning(message);
         }
 
         /// <summary>
         /// Creates an error log event.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
-        public void Error(NautilusService service, string message)
+        public void Error(string message)
         {
-            Log.Error($"[{ToOutput(service)}] {message}");
+            Log.Error(message);
         }
 
         /// <summary>
         /// Creates an error log event including an exception.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
-        public void Error(NautilusService service, string message, Exception ex)
+        public void Error(string message, Exception ex)
         {
-            Log.Error(ex, $"[{ToOutput(service)}] {message}");
+            Log.Error(ex, message);
         }
 
         /// <summary>
         /// Creates a fatal log event.
         /// </summary>
-        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The fatal exception.</param>
-        public void Fatal(NautilusService service, string message, Exception ex)
+        public void Fatal(string message, Exception ex)
         {
-            Log.Fatal(ex, $"[{ToOutput(service)}] {message}");
-        }
-
-        // TODO: Refactor.
-        private static string ToOutput(NautilusService service)
-        {
-            const int logStringLength = 10;
-
-            if (service.ToString().Length >= logStringLength)
-            {
-                return service.ToString();
-            }
-
-            var lengthDifference = logStringLength - service.ToString().Length;
-
-            var underscoreAppend = string.Empty;
-            var builder = new System.Text.StringBuilder();
-            builder.Append(underscoreAppend);
-
-            for (var i = 0; i < lengthDifference; i++)
-            {
-                builder.Append("_");
-            }
-
-            underscoreAppend = builder.ToString();
-
-            return service + underscoreAppend;
+            Log.Fatal(ex, message);
         }
     }
 }

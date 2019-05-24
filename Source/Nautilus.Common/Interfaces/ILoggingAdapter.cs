@@ -25,52 +25,45 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Logs the given message with a verbose log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
-        void Verbose(NautilusService service, string message);
+        void Verbose(string message);
 
         /// <summary>
         /// Logs the given message with a debug log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
-        void Debug(NautilusService service, string message);
+        void Debug(string message);
 
         /// <summary>
         /// Logs the given message with an information log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
-        void Information(NautilusService service, string message);
+        void Information(string message);
 
         /// <summary>
         /// Logs the given message with a warning log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
-        void Warning(NautilusService service, string message);
+        void Warning(string message);
 
         /// <summary>
         /// Logs the given message with an error log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
-        void Error(NautilusService service, string message);
+        void Error(string message);
 
         /// <summary>
         /// Logs the given message and exception with an error log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
-        void Error(NautilusService service, string message, Exception ex);
+        void Error(string message, Exception ex);
 
         /// <summary>
         /// Logs the given message and exception with a fatal log level.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
-        void Fatal(NautilusService service, string message, Exception ex);
+        void Fatal(string message, Exception ex);
     }
 }

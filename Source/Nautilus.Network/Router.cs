@@ -45,7 +45,7 @@ namespace Nautilus.Network
             NetworkAddress host,
             NetworkPort port,
             Guid id)
-            : base(NautilusService.Network, container)
+            : base(container)
         {
             Condition.NotDefault(id, nameof(id));
 

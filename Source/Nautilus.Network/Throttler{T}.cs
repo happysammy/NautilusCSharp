@@ -38,17 +38,15 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="Throttler{T}"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="serviceContext">The service context.</param>
         /// <param name="receiver">The receiver service.</param>
         /// <param name="interval">The throttle timer interval.</param>
         /// <param name="limit">The message limit per second.</param>
         public Throttler(
             IComponentryContainer container,
-            NautilusService serviceContext,
             IEndpoint receiver,
             Duration interval,
             int limit)
-            : base(serviceContext, container)
+            : base(container)
         {
             Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
             Condition.PositiveInt32(limit, nameof(limit));

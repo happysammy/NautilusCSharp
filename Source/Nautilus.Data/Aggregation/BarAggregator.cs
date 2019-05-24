@@ -43,7 +43,7 @@ namespace Nautilus.Data.Aggregation
             IComponentryContainer container,
             IEndpoint parent,
             Symbol symbol)
-            : base(NautilusService.Data, container)
+            : base(container)
         {
             this.parent = parent;
             this.symbol = symbol;

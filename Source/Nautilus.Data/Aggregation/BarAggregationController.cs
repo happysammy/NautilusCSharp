@@ -48,10 +48,7 @@ namespace Nautilus.Data.Aggregation
             IMessagingAdapter messagingAdapter,
             IScheduler scheduler,
             IEndpoint barPublisher)
-            : base(
-            NautilusService.Data,
-            container,
-            messagingAdapter)
+            : base(container, messagingAdapter)
         {
             this.storedContainer = container;
             this.scheduler = scheduler;

@@ -45,7 +45,7 @@ namespace Nautilus.Brokerage.Dukascopy
         public DukascopyFixMessageHandler(
             IComponentryContainer container,
             SymbolConverter symbolConverter)
-            : base(NautilusService.FIX, container)
+            : base(container)
         {
             this.symbolConverter = symbolConverter;
         }

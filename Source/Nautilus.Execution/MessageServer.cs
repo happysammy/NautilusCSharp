@@ -46,10 +46,7 @@ namespace Nautilus.Execution
             NetworkAddress serverAddress,
             NetworkPort commandsPort,
             NetworkPort eventsPort)
-            : base(
-                NautilusService.Messaging,
-                container,
-                messagingAdapter)
+            : base(container, messagingAdapter)
         {
             this.commandConsumer = new CommandRouter(
                 container,

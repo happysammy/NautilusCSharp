@@ -23,14 +23,12 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
         /// </summary>
-        /// <param name="serviceContext">The service context.</param>
         /// <param name="container">The container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         protected ComponentBusConnectedBase(
-            NautilusService serviceContext,
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
-            : base(serviceContext, container)
+            : base(container)
         {
             this.messagingAdapter = messagingAdapter;
         }

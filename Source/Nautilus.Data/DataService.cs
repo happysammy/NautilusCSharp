@@ -43,7 +43,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
-        /// <param name="setupContainer">The componentry container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
@@ -54,16 +54,13 @@ namespace Nautilus.Data
         /// <exception cref="ArgumentException">If the bar specifications is empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindowDays is not positive (> 0).</exception>
         public DataService(
-            IComponentryContainer setupContainer,
+            IComponentryContainer container,
             MessagingAdapter messagingAdapter,
             Dictionary<Address, IEndpoint> addresses,
             IScheduler scheduler,
             IFixGateway fixGateway,
             Configuration config)
-            : base(
-                NautilusService.Data,
-                setupContainer,
-                messagingAdapter)
+            : base(container, messagingAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 

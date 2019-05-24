@@ -37,37 +37,37 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             return this.GetLogStashTextAsStringList().Any(logEntry => logEntry.StartsWith(text));
         }
 
-        public void Verbose(NautilusService service, string message)
+        public void Verbose(string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Debug(NautilusService service, string message)
+        public void Debug(string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Information(NautilusService service, string message)
+        public void Information(string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Warning(NautilusService service, string message)
+        public void Warning(string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Error(NautilusService service, string message)
+        public void Error(string message)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Error(NautilusService service, string message, Exception ex)
+        public void Error(string message, Exception ex)
         {
             this.stash.Enqueue(message);
         }
 
-        public void Fatal(NautilusService service, string message, Exception ex)
+        public void Fatal(string message, Exception ex)
         {
             this.stash.Enqueue(message);
         }

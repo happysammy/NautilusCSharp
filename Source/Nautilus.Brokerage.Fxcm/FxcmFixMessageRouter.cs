@@ -43,7 +43,7 @@ namespace Nautilus.Brokerage.FXCM
             IComponentryContainer container,
             SymbolConverter symbolConverter,
             string accountNumber)
-        : base(NautilusService.FIX, container)
+        : base(container)
         {
             Condition.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
 

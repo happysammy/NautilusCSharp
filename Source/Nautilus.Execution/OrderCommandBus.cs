@@ -31,10 +31,7 @@ namespace Nautilus.Execution
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixGateway gateway)
-            : base(
-            NautilusService.Execution,
-            container,
-            messagingAdapter)
+            : base(container, messagingAdapter)
         {
             this.gateway = gateway;
 

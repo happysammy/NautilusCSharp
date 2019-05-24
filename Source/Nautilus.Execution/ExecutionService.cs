@@ -59,10 +59,7 @@ namespace Nautilus.Execution
             IScheduler scheduler,
             IFixGateway fixGateway,
             Configuration config)
-            : base(
-            NautilusService.Execution,
-            container,
-            messagingAdapter)
+            : base(container, messagingAdapter)
         {
             Condition.NotEmpty(addresses, nameof(addresses));
 
@@ -84,14 +81,12 @@ namespace Nautilus.Execution
 
             this.commandThrottler = new Throttler<Command>(
                 container,
-                NautilusService.Execution,
                 this.orderCommandBus,
                 Duration.FromSeconds(1),
                 config.CommandsPerSecond).Endpoint;
 
             this.newOrderThrottler = new Throttler<SubmitOrder>(
                 container,
-                NautilusService.Execution,
                 this.commandThrottler,
                 Duration.FromSeconds(1),
                 config.NewOrdersPerSecond).Endpoint;

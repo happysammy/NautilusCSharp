@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Messaging
 {
     using System.Collections.Generic;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
@@ -35,7 +34,7 @@ namespace Nautilus.Common.Messaging
         public MessageBus(IComponentryContainer container)
         {
             this.Name = new Label($"MessageBus<{typeof(T).Name}>");
-            this.log = container.LoggerFactory.Create(NautilusService.Messaging, this.Name);
+            this.log = container.LoggerFactory.Create(this.Name);
             this.deadLetters = new List<object>();
             this.switchboard = Switchboard.Empty();
 

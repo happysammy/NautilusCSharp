@@ -38,10 +38,7 @@ namespace Nautilus.Execution
         public OrderManager(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
-            : base(
-                NautilusService.Execution,
-                container,
-                messagingAdapter)
+            : base(container, messagingAdapter)
         {
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();

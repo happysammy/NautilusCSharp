@@ -51,10 +51,7 @@ namespace Nautilus.Fix
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             IFixClient fixClient)
-            : base(
-                NautilusService.FIX,
-                container,
-                messagingAdapter)
+            : base(container, messagingAdapter)
         {
             this.fixClient = fixClient;
             this.tickReceivers = new List<IEndpoint>();

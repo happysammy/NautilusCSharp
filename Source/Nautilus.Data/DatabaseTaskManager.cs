@@ -38,7 +38,7 @@ namespace Nautilus.Data
             IComponentryContainer container,
             IBarRepository barRepository,
             IInstrumentRepository instrumentRepository)
-            : base(NautilusService.Data, container)
+            : base(container)
         {
             this.barRepository = barRepository;
             this.instrumentRepository = instrumentRepository;

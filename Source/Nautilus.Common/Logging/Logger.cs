@@ -19,22 +19,16 @@ namespace Nautilus.Common.Logging
     public sealed class Logger : ILogger
     {
         private readonly ILoggingAdapter loggingAdapter;
-        private readonly NautilusService service;
         private readonly Label component;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
         /// </summary>
         /// <param name="loggingAdapter">The logging adapter.</param>
-        /// <param name="service">The service context.</param>
         /// <param name="component">The component name.</param>
-        public Logger(
-            ILoggingAdapter loggingAdapter,
-            NautilusService service,
-            Label component)
+        public Logger(ILoggingAdapter loggingAdapter, Label component)
         {
             this.loggingAdapter = loggingAdapter;
-            this.service = service;
             this.component = component;
         }
 
@@ -44,7 +38,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Verbose(string message)
         {
-            this.loggingAdapter.Verbose(this.service, $"{this.component}: {message}");
+            this.loggingAdapter.Verbose($"{this.component}: {message}");
         }
 
         /// <summary>
@@ -53,7 +47,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Information(string message)
         {
-            this.loggingAdapter.Information(this.service, $"{this.component}: {message}");
+            this.loggingAdapter.Information($"{this.component}: {message}");
         }
 
         /// <summary>
@@ -62,7 +56,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Debug(string message)
         {
-            this.loggingAdapter.Debug(this.service, $"{this.component}: {message}");
+            this.loggingAdapter.Debug($"{this.component}: {message}");
         }
 
         /// <summary>
@@ -71,7 +65,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Warning(string message)
         {
-            this.loggingAdapter.Warning(this.service, $"{this.component}: {message}");
+            this.loggingAdapter.Warning($"{this.component}: {message}");
         }
 
         /// <summary>
@@ -80,7 +74,7 @@ namespace Nautilus.Common.Logging
         /// <param name="message">The message to log.</param>
         public void Error(string message)
         {
-            this.loggingAdapter.Error(this.service, $"{this.component}: {message}");
+            this.loggingAdapter.Error($"{this.component}: {message}");
         }
 
         /// <summary>
@@ -90,7 +84,7 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Error(string message, Exception ex)
         {
-            this.loggingAdapter.Error(this.service, $"{this.component}: {message}", ex);
+            this.loggingAdapter.Error($"{this.component}: {message}", ex);
         }
 
         /// <summary>
@@ -100,7 +94,7 @@ namespace Nautilus.Common.Logging
         /// <param name="ex">The exception to log.</param>
         public void Fatal(string message, Exception ex)
         {
-            this.loggingAdapter.Fatal(this.service, $"{this.component}: {message}", ex);
+            this.loggingAdapter.Fatal($"{this.component}: {message}", ex);
         }
     }
 }

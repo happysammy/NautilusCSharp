@@ -31,12 +31,11 @@ namespace Nautilus.Common.Logging
         /// <summary>
         /// Creates and returns a new <see cref="ILogger"/> from the given inputs.
         /// </summary>
-        /// <param name="service">The service context.</param>
         /// <param name="component">The component label.</param>
         /// <returns>The logger.</returns>
-        public ILogger Create(NautilusService service, Label component)
+        public ILogger Create(Label component)
         {
-            return new Logger(this.loggingAdapter, service, component);
+            return new Logger(this.loggingAdapter, component);
         }
     }
 }

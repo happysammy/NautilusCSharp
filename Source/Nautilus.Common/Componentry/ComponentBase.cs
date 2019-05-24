@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
@@ -29,15 +28,14 @@ namespace Nautilus.Common.Componentry
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
-        /// <param name="serviceContext">The components service context.</param>
         /// <param name="container">The components componentry container.</param>
-        protected ComponentBase(NautilusService serviceContext, IComponentryContainer container)
+        protected ComponentBase(IComponentryContainer container)
         {
             this.Name = new Label(this.CreateComponentName());
             this.Address = new Address(this.Name.ToString());
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.Log = container.LoggerFactory.Create(serviceContext, this.Name);
+            this.Log = container.LoggerFactory.Create(this.Name);
             this.commandHandler = new CommandHandler(this.Log);
             this.StartTime = this.clock.TimeNow();
 

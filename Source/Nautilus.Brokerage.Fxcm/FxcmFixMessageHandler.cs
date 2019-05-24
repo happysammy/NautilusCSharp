@@ -45,7 +45,7 @@ namespace Nautilus.Brokerage.FXCM
         public FxcmFixMessageHandler(
             IComponentryContainer container,
             SymbolConverter symbolConverter)
-            : base(NautilusService.FIX, container)
+            : base(container)
         {
             this.symbolConverter = symbolConverter;
         }

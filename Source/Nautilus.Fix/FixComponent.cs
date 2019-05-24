@@ -65,7 +65,7 @@ namespace Nautilus.Fix
         {
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.logger = container.LoggerFactory.Create(NautilusService.FIX, new Label(nameof(FixClient)));
+            this.logger = container.LoggerFactory.Create(new Label(nameof(FixClient)));
             this.messagingAdapter = messagingAdapter;
             this.commandHandler = new CommandHandler(this.logger);
             this.Broker = config.Broker;

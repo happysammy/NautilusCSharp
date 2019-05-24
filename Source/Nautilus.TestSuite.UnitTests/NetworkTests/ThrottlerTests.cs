@@ -45,7 +45,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var throttler = new Throttler<string>(
                 this.setupContainer,
-                NautilusService.Execution,
                 this.testReceiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
@@ -86,7 +85,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var throttler = new Throttler<string>(
                 this.setupContainer,
-                NautilusService.Execution,
                 this.testReceiver.Endpoint,
                 Duration.FromMilliseconds(100),
                 10);
