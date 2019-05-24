@@ -16,10 +16,7 @@ namespace Nautilus.Common.Componentry
     /// </summary>
     public sealed class GuidFactory : IGuidFactory
     {
-        /// <summary>
-        /// Returns a new <see cref="Guid"/>.
-        /// </summary>
-        /// <returns>A <see cref="Guid"/>.</returns>
+        /// <inheritdoc />
         public Guid NewGuid()
         {
             return Guid.NewGuid();

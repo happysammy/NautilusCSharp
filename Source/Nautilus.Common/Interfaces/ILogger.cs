@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using System;
 
     /// <summary>
-    /// The adapter interface for logging with the <see cref="ILoggingAdapter"/>.
+    /// Provides an adapter for logging to an <see cref="ILoggingAdapter"/>.
     /// </summary>
     public interface ILogger
     {

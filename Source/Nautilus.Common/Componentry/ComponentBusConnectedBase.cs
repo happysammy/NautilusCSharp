@@ -13,7 +13,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Messaging;
 
     /// <summary>
-    /// The base class for all components which are connected to the messaging module.
+    /// The base class for all components which are connected to the message bus.
     /// </summary>
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
