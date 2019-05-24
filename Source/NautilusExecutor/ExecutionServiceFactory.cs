@@ -74,7 +74,7 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
-            // Wire up system
+            // Wire up service
             fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
             fixGateway.RegisterEventReceiver(ExecutionServiceAddress.OrderManager);
 

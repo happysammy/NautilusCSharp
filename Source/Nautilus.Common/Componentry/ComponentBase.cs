@@ -18,7 +18,7 @@ namespace Nautilus.Common.Componentry
     using NodaTime;
 
     /// <summary>
-    /// The base class for all system components.
+    /// The base class for all service components.
     /// </summary>
     public abstract class ComponentBase : MessagingAgent
     {
@@ -106,7 +106,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Returns the current time of the system clock.
+        /// Returns the current time of the service clock.
         /// </summary>
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.
@@ -114,7 +114,7 @@ namespace Nautilus.Common.Componentry
         protected ZonedDateTime TimeNow() => this.clock.TimeNow();
 
         /// <summary>
-        /// Returns the current instant of the system clock.
+        /// Returns the current instant of the service clock.
         /// </summary>
         /// <returns>
         /// An <see cref="Instant"/>.

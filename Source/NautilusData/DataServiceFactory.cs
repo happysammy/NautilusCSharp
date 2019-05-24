@@ -84,7 +84,7 @@ namespace NautilusData
                 messagingAdapter,
                 fixClient);
 
-            // Wire up system
+            // Wire up service.
             fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
             fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
             fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);

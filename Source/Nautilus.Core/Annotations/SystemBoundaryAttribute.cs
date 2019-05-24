@@ -11,7 +11,7 @@ namespace Nautilus.Core.Annotations
     using System;
 
     /// <summary>
-    /// This decorative attribute indicates that the annotated method is at the system boundary,
+    /// This decorative attribute indicates that the annotated method is at the service boundary,
     /// all input argument data passed into the method should be fully validated to preserve the
     /// systems design specification.
     /// </summary>

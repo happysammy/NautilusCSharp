@@ -39,7 +39,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// The verbose.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         public void Verbose(NautilusService service, string message)
         {
@@ -49,7 +49,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// The debug.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         public void Debug(NautilusService service, string message)
         {
@@ -59,7 +59,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// The information.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         public void Information(NautilusService service, string message)
         {
@@ -69,7 +69,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// The warning.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         public void Warning(NautilusService service, string message)
         {
@@ -79,7 +79,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// Creates an error log event.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         public void Error(NautilusService service, string message)
         {
@@ -89,7 +89,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// Creates an error log event including an exception.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The exception.</param>
         public void Error(NautilusService service, string message, Exception ex)
@@ -100,7 +100,7 @@ namespace Nautilus.Logging
         /// <summary>
         /// Creates a fatal log event.
         /// </summary>
-        /// <param name="service">The system service.</param>
+        /// <param name="service">The Nautilus service.</param>
         /// <param name="message">The log message.</param>
         /// <param name="ex">The fatal exception.</param>
         public void Fatal(NautilusService service, string message, Exception ex)

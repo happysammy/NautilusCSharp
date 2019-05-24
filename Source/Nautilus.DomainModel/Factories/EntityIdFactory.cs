@@ -16,7 +16,7 @@ namespace Nautilus.DomainModel.Factories
     using NodaTime;
 
     /// <summary>
-    /// A factory which creates valid <see cref="OrderId"/>(s) for the system.
+    /// A factory which creates valid EntityIds.
     /// </summary>
     public static class EntityIdFactory
     {

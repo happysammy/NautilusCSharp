@@ -9,27 +9,27 @@
 namespace Nautilus.Common.Enums
 {
     /// <summary>
-    /// Represents the status of the system or system component.
+    /// Represents the status of a service component or module.
     /// </summary>
     public enum Status
     {
         /// <summary>
-        /// The system or component is running normally.
+        /// The component or module is running normally.
         /// </summary>
         Running = 0,
 
         /// <summary>
-        /// The system or component has gracefully stopped.
+        /// The component or module has gracefully stopped.
         /// </summary>
         Stopped = 1,
 
         /// <summary>
-        /// The system or component is temporarily suspended (has not failed).
+        /// The component or module is temporarily suspended (has not failed).
         /// </summary>
         Suspended = 2,
 
         /// <summary>
-        /// The system or component has failed and will not process further work.
+        /// The component or module has failed and will not process further work.
         /// </summary>
         Failed = 3,
     }

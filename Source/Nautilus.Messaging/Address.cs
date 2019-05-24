@@ -14,7 +14,7 @@ namespace Nautilus.Messaging
     using Nautilus.Core.Correctness;
 
     /// <summary>
-    /// Represents a modules messaging address within the system.
+    /// Represents a modules messaging address within the service.
     /// </summary>
     [Immutable]
     public struct Address : IEquatable<object>, IEquatable<Address>

@@ -14,7 +14,7 @@ namespace Nautilus.Common
     using Nautilus.Core.Correctness;
 
     /// <summary>
-    /// Provides a means of checking dependency versions and outputting to the log at system initialization.
+    /// Provides a means of checking dependency versions and outputting to the log at service initialization.
     /// </summary>
     public static class VersionChecker
     {

@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Enums;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Documents;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -23,13 +24,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void Equal_WithDifferentMessagesOfTheSameContent_CanEquateById()
         {
             // Arrange
-            var message1 = new SystemStatusResponse(
+            var message1 = new StatusResponse(
                 new Label("SomeComponent1"),
                 Status.Running,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            var message2 = new SystemStatusResponse(
+            var message2 = new StatusResponse(
                 new Label("SomeComponent2"),
                 Status.Running,
                 Guid.NewGuid(),
@@ -51,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var message = new SystemStatusRequest(guid, StubZonedDateTime.UnixEpoch());
+            var message = new StatusRequest(guid, StubZonedDateTime.UnixEpoch());
 
             // Act
             var result = message.ToString();
@@ -66,7 +67,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         {
             // Arrange
             var guid = Guid.NewGuid();
-            var message = new SystemStatusResponse(
+            var message = new StatusResponse(
                 new Label("CommandBus"),
                 Status.Running,
                 guid,

@@ -12,7 +12,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Common.Interfaces;
 
     /// <summary>
-    /// Provides <see cref="Guid"/>(s) for the system.
+    /// Provides <see cref="Guid"/>(s) for the service.
     /// </summary>
     public sealed class GuidFactory : IGuidFactory
     {

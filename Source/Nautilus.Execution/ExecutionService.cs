@@ -45,7 +45,7 @@ namespace Nautilus.Execution
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The system scheduler.</param>
+        /// <param name="scheduler">The scheduler.</param>
         /// <param name="fixGateway">The execution gateway.</param>
         /// <param name="addresses">The execution service addresses.</param>
         /// <param name="config">The execution service configuration.</param>

@@ -26,7 +26,7 @@ namespace Nautilus.Data
     using NodaTime;
 
     /// <summary>
-    /// Represents a data system configuration.
+    /// Represents a <see cref="DataService"/> configuration.
     /// </summary>
     public class Configuration
     {

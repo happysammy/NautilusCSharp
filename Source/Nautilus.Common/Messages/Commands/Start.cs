@@ -14,7 +14,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command message to start the system.
+    /// Represents a command message to start a service component.
     /// </summary>
     [Immutable]
     public sealed class Start : Command

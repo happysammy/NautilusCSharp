@@ -22,7 +22,7 @@ namespace Nautilus.Execution
     using NodaTime;
 
     /// <summary>
-    /// Represents a data system configuration.
+    /// Represents an <see cref="ExecutionService"/> configuration.
     /// </summary>
     public class Configuration
     {

@@ -28,7 +28,7 @@ namespace Nautilus.Redis
     using StackExchange.Redis;
 
     /// <summary>
-    /// Provides a Redis implementation for the system instrument repository.
+    /// Provides a Redis implementation for an instrument repository.
     /// </summary>
     public class RedisInstrumentRepository : IInstrumentRepository
     {

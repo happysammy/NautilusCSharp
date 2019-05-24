@@ -14,7 +14,7 @@ namespace Nautilus.Common.Componentry
     using Nautilus.Messaging;
 
     /// <summary>
-    /// The base class for all components which are connected to the messaging service.
+    /// The base class for all components which are connected to the messaging module.
     /// </summary>
     public abstract class ComponentBusConnectedBase : ComponentBase
     {
@@ -36,7 +36,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given object to the given endpoint via the messaging system.
+        /// Sends the given object to the given endpoint via the message bus.
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>

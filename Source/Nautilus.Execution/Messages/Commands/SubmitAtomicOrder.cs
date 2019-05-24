@@ -17,7 +17,7 @@ namespace Nautilus.Execution.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to submit an order to the execution system.
+    /// Represents a command to submit an <see cref="AtomicOrder"/>.
     /// </summary>
     [Immutable]
     public sealed class SubmitAtomicOrder : Command

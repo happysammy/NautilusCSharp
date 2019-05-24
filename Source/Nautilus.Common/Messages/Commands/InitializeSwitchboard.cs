@@ -16,7 +16,7 @@ namespace Nautilus.Common.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to initialize the messaging system switchboard.
+    /// Represents a command to initialize a messaging switchboard.
     /// </summary>
     [Immutable]
     public sealed class InitializeSwitchboard : Command

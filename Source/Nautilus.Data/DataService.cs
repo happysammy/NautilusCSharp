@@ -45,7 +45,7 @@ namespace Nautilus.Data
         /// </summary>
         /// <param name="setupContainer">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        /// <param name="scheduler">The system scheduler.</param>
+        /// <param name="scheduler">The scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>
         /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="config">The service configuration.</param>

@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using System;
 
     /// <summary>
-    /// Provides <see cref="Guid"/>(s) for the system.
+    /// Provides <see cref="Guid"/>(s) for the service.
     /// </summary>
     public interface IGuidFactory
     {

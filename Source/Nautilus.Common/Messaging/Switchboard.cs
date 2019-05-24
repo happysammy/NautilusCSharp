@@ -17,7 +17,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Messaging.Interfaces;
 
     /// <summary>
-    /// Provides a messaging switchboard of all addresses within the system.
+    /// Provides a messaging switchboard for all addresses within the service.
     /// </summary>
     public sealed class Switchboard
     {
@@ -27,7 +27,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
-        /// <param name="addresses">The system addresses.</param>
+        /// <param name="addresses">The component addresses.</param>
         private Switchboard(Dictionary<Address, IEndpoint> addresses)
         {
             this.addresses = addresses.ToImmutableDictionary();
@@ -50,7 +50,7 @@ namespace Nautilus.Common.Messaging
         /// <summary>
         /// Initializes a new instance of the <see cref="Switchboard"/> class.
         /// </summary>
-        /// <param name="addressDictionary">The system addresses.</param>
+        /// <param name="addressDictionary">The component addresses.</param>
         /// <returns>The switchboard.</returns>
         public static Switchboard Create(Dictionary<Address, IEndpoint> addressDictionary)
         {
