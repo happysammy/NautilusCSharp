@@ -588,8 +588,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
         [Theory]
         [InlineData(1)]
-        [InlineData(1.1)]
-        [InlineData(1.9)]
         [InlineData(2)]
         internal void NotOutOfRangeDouble_VariousInInclusiveRangeValues_DoesNothing(double value)
         {
@@ -617,8 +615,6 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests.CorrectnessTests
 
         [Theory]
         [InlineData(1)]
-        [InlineData(1.000000000000000000000000000000000001)]
-        [InlineData(1.999999999999999999999999999999999999)]
         [InlineData(2)]
         internal void NotOutOfRangeDecimal_VariousInInclusiveRangeValues_DoesNothing(decimal value)
         {
