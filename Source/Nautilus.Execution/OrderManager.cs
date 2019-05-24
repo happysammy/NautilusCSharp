@@ -19,7 +19,6 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>

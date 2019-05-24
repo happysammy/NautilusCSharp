@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Entities
 {
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;

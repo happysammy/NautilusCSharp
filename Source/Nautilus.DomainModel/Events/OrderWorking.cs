@@ -9,7 +9,6 @@
 namespace Nautilus.DomainModel.Events
 {
     using System;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Enums;

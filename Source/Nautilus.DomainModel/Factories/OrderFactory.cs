@@ -8,7 +8,6 @@
 
 namespace Nautilus.DomainModel.Factories
 {
-    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

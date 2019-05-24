@@ -11,8 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Nautilus.Core;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
