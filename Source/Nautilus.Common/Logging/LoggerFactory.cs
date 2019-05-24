@@ -27,11 +27,7 @@ namespace Nautilus.Common.Logging
             this.loggingAdapter = loggingAdapter;
         }
 
-        /// <summary>
-        /// Creates and returns a new <see cref="ILogger"/> from the given inputs.
-        /// </summary>
-        /// <param name="component">The component label.</param>
-        /// <returns>The logger.</returns>
+        /// <inheritdoc />
         public ILogger Create(Label component)
         {
             return new Logger(this.loggingAdapter, component);

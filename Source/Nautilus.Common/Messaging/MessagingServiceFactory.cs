@@ -17,10 +17,10 @@ namespace Nautilus.Common.Messaging
     public static class MessagingServiceFactory
     {
         /// <summary>
-        /// Creates a new message service and returns its <see cref="IMessagingAdapter"/> interface.
+        /// Creates and returns a new messaging adapter.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <returns>A <see cref="IMessagingAdapter"/>.</returns>
+        /// <returns>The messaging adapter.</returns>
         public static MessagingAdapter Create(IComponentryContainer container)
         {
             var commandBus = new MessageBus<Command>(container);

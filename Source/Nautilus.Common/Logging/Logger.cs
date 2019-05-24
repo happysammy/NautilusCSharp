@@ -31,66 +31,44 @@ namespace Nautilus.Common.Logging
             this.component = component;
         }
 
-        /// <summary>
-        /// Sends the given verbose message to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
+
+        /// <inheritdoc />
         public void Verbose(string message)
         {
             this.loggingAdapter.Verbose($"{this.component}: {message}");
         }
 
-        /// <summary>
-        /// Sends the given information message to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <inheritdoc />
         public void Information(string message)
         {
             this.loggingAdapter.Information($"{this.component}: {message}");
         }
 
-        /// <summary>
-        /// Sends the given debug message to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <inheritdoc />
         public void Debug(string message)
         {
             this.loggingAdapter.Debug($"{this.component}: {message}");
         }
 
-        /// <summary>
-        /// Sends the given warning message to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <inheritdoc />
         public void Warning(string message)
         {
             this.loggingAdapter.Warning($"{this.component}: {message}");
         }
 
-        /// <summary>
-        /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <inheritdoc />
         public void Error(string message)
         {
             this.loggingAdapter.Error($"{this.component}: {message}");
         }
 
-        /// <summary>
-        /// Sends the given error message and exception to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log.</param>
+        /// <inheritdoc />
         public void Error(string message, Exception ex)
         {
             this.loggingAdapter.Error($"{this.component}: {message}", ex);
         }
 
-        /// <summary>
-        /// Sends the given fatal message and exception to the <see cref="ILoggingAdapter"/> to log.
-        /// </summary>
-        /// <param name="message">The message to log.</param>
-        /// <param name="ex">The exception to log.</param>
+        /// <inheritdoc />
         public void Fatal(string message, Exception ex)
         {
             this.loggingAdapter.Fatal($"{this.component}: {message}", ex);

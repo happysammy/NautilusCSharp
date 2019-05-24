@@ -33,19 +33,13 @@ namespace Nautilus.Common.Componentry
             this.LoggerFactory = loggerFactory;
         }
 
-        /// <summary>
-        /// Gets the containers clock.
-        /// </summary>
+        /// <inheritdoc />
         public IZonedClock Clock { get; }
 
-        /// <summary>
-        /// Gets the containers GUID factory.
-        /// </summary>
+        /// <inheritdoc />
         public IGuidFactory GuidFactory { get; }
 
-        /// <summary>
-        /// Gets the containers logger factory.
-        /// </summary>
+        /// <inheritdoc />
         public ILoggerFactory LoggerFactory { get; }
     }
 }

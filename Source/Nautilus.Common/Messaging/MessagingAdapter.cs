@@ -16,9 +16,7 @@ namespace Nautilus.Common.Messaging
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
 
-    /// <summary>
-    /// The immutable sealed <see cref="MessagingAdapter"/> class.
-    /// </summary>
+    /// <inheritdoc />
     [Immutable]
     public sealed class MessagingAdapter : IMessagingAdapter
     {
@@ -43,7 +41,8 @@ namespace Nautilus.Common.Messaging
         }
 
         /// <summary>
-        /// Sends the message switchboard to the message bus(s) for initialization.
+        /// Sends the message containing the <see cref="Switchboard"/> to the message bus(s) for
+        /// initialization.
         /// </summary>
         /// <param name="message">The message.</param>
         public void Send(InitializeSwitchboard message)
@@ -53,42 +52,35 @@ namespace Nautilus.Common.Messaging
             this.documentBus.Send(message);
         }
 
-        /// <summary>
-        /// Sends the given message to the given receivers (<see cref="Envelope{T}"/> marked
-        /// from the given sender).
-        /// </summary>
-        /// <typeparam name="T">The message type.</typeparam>
-        /// <param name="receiver">The message receiver.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="sender">The sender.</param>
+        /// <inheritdoc />
         public void Send<T>(Address receiver, T message, Address sender)
             where T : Message
         {
             switch (message)
             {
-                    case Command commandMessage:
+                    case Command msg:
                         var commandEnvelope = new Envelope<Command>(
                             receiver,
                             sender,
-                            commandMessage,
+                            msg,
                             message.Id,
                             message.Timestamp);
                         this.commandBus.Send(commandEnvelope);
                         break;
-                    case Event eventMessage:
+                    case Event msg:
                         var eventEnvelope = new Envelope<Event>(
                             receiver,
                             sender,
-                            eventMessage,
+                            msg,
                             message.Id,
                             message.Timestamp);
                         this.eventBus.Send(eventEnvelope);
                         break;
-                    case Document serviceMessage:
+                    case Document msg:
                         var serviceEnvelope = new Envelope<Document>(
                             receiver,
                             sender,
-                            serviceMessage,
+                            msg,
                             message.Id,
                             message.Timestamp);
                         this.documentBus.Send(serviceEnvelope);

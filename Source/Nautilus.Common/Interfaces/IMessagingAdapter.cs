@@ -12,13 +12,13 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Messaging;
 
     /// <summary>
-    /// An adapter to facilitate components sending messages to other components via the messaging
-    /// service.
+    /// Provides a means for components to send messages to other components via the message bus.
     /// </summary>
     public interface IMessagingAdapter
     {
         /// <summary>
-        /// Sends the given message to the given receiver marked from the given sender.
+        /// Sends the given message to the given receiver in an <see cref="Envelope{T}"/> marked
+        /// from the given sender.
         /// </summary>
         /// <typeparam name="T">The message type.</typeparam>
         /// <param name="receiver">The receiver address.</param>
