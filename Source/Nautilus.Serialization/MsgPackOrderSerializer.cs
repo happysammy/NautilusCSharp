@@ -31,10 +31,10 @@ namespace Nautilus.Serialization
         /// <returns>The serialized order.</returns>
         public byte[] Serialize(Order order)
         {
-            return this.SerializeToMsgPack(new MessagePackObjectDictionary
+            return SerializeToMsgPack(new MessagePackObjectDictionary
             {
                 { Key.Symbol, order.Symbol.ToString() },
-                { Key.OrderId, order.Id.Value },
+                { Key.OrderId, order.Id.ToString() },
                 { Key.Label, order.Label.ToString() },
                 { Key.OrderSide, order.Side.ToString() },
                 { Key.OrderType, order.Type.ToString() },
@@ -47,16 +47,6 @@ namespace Nautilus.Serialization
         }
 
         /// <summary>
-        /// Serialize the given order to a base64 string.
-        /// </summary>
-        /// <param name="order">The order to serialize.</param>
-        /// <returns>The serialized order.</returns>
-        public string SerializeBase64(Order order)
-        {
-            return Convert.ToBase64String(this.Serialize(order));
-        }
-
-        /// <summary>
         /// Deserialize the given byte array to an <see cref="Order"/>.
         /// </summary>
         /// <param name="orderBytes">The order bytes.</param>
@@ -64,7 +54,7 @@ namespace Nautilus.Serialization
         /// <exception cref="InvalidOperationException">If the order type is unknown.</exception>
         public Order Deserialize(byte[] orderBytes)
         {
-            var unpacked = this.DeserializeFromMsgPack<MessagePackObjectDictionary>(orderBytes);
+            var unpacked = DeserializeFromMsgPack<MessagePackObjectDictionary>(orderBytes);
 
             var orderType = unpacked[Key.OrderType].ToString().ToEnum<OrderType>();
             var symbol = MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString());

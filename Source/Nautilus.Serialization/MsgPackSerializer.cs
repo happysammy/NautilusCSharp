@@ -22,7 +22,7 @@ namespace Nautilus.Serialization
         /// <param name="obj">The object to serialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
         /// <returns>The serialized object as a byte array.</returns>
-        public byte[] SerializeToMsgPack<T>(T obj)
+        protected static byte[] SerializeToMsgPack<T>(T obj)
         {
             var serializer = MessagePackSerializer.Get<T>();
 
@@ -39,7 +39,7 @@ namespace Nautilus.Serialization
         /// <param name="bytes">The bytes to deserialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
         /// <returns>The deserialized object of type T.</returns>
-        public T DeserializeFromMsgPack<T>(byte[] bytes)
+        protected static T DeserializeFromMsgPack<T>(byte[] bytes)
         {
             var serializer = MessagePackSerializer.Get<T>();
             using (var byteStream = new MemoryStream(bytes))

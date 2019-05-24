@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.DomainModel.Events
+namespace Nautilus.DomainModel.Events.Base
 {
     using System;
     using Nautilus.Core;

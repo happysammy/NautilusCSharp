@@ -41,11 +41,6 @@ namespace Nautilus.Serialization
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string OrderEvent => nameof(OrderEvent);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
         internal static string Symbol => nameof(Symbol);
 
         /// <summary>

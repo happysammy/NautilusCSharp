@@ -87,7 +87,7 @@ namespace Nautilus.Serialization
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
             }
 
-            return this.SerializeToMsgPack(package);
+            return SerializeToMsgPack(package);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Nautilus.Serialization
         /// <returns>The deserialized command.</returns>
         public Command Deserialize(byte[] commandBytes)
         {
-            var unpacked = this.DeserializeFromMsgPack<MessagePackObjectDictionary>(commandBytes);
+            var unpacked = DeserializeFromMsgPack<MessagePackObjectDictionary>(commandBytes);
 
             var commandId = new Guid(unpacked[Key.CommandId].ToString());
             var commandTimestamp = unpacked[Key.CommandTimestamp].ToString().ToZonedDateTimeFromIso();
