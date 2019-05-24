@@ -12,7 +12,6 @@ namespace Nautilus.Data.Aggregation
     using System.Collections.Immutable;
     using System.Linq;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Documents;
     using Nautilus.Common.Messages.Events;

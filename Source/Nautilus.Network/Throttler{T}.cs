@@ -12,7 +12,6 @@ namespace Nautilus.Network
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;

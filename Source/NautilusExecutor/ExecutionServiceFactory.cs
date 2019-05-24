@@ -19,7 +19,6 @@ namespace NautilusExecutor
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Execution;
-    using Nautilus.Execution.Network;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;

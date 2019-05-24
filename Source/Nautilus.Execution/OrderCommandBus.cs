@@ -9,7 +9,6 @@
 namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Execution.Messages.Commands;

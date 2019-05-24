@@ -9,7 +9,6 @@
 namespace Nautilus.Common.Logging
 {
     using System;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.ValueObjects;
 

@@ -10,7 +10,6 @@ namespace Nautilus.Brokerage.Dukascopy
 {
     using System;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;

@@ -10,7 +10,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;

@@ -11,7 +11,6 @@ namespace Nautilus.Network
     using System;
     using System.Text;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;

@@ -11,7 +11,6 @@ namespace Nautilus.Execution
     using System.Collections.Generic;
     using System.Linq;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;

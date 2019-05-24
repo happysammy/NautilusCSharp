@@ -13,7 +13,6 @@ namespace Nautilus.Network
     using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Correctness;

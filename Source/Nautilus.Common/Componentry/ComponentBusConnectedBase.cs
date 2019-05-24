@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Componentry
 {
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging;

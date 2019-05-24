@@ -11,7 +11,6 @@ namespace Nautilus.Data.Aggregation
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Core.Annotations;

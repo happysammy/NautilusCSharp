@@ -13,7 +13,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Xunit.Abstractions;
 

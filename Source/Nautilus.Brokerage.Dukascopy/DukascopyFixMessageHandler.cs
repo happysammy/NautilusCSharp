@@ -11,7 +11,6 @@ namespace Nautilus.Brokerage.Dukascopy
     using System;
     using System.Collections.Generic;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;

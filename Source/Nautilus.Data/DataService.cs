@@ -12,7 +12,6 @@ namespace Nautilus.Data
     using System.Collections.Generic;
     using Nautilus.Common;
     using Nautilus.Common.Componentry;
-    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
