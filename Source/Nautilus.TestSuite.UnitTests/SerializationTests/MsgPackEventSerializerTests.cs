@@ -33,7 +33,64 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_MarketOrderSubmittedEvent()
+        internal void CanSerializeAndDeserialize_AccountEvent()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var accountEvent = new AccountEvent(
+                EntityIdFactory.Account(Brokerage.FXCM, "123456"),
+                Brokerage.FXCM,
+                "123456",
+                Currency.USD,
+                Money.Create(100000, Currency.USD),
+                Money.Create(100000, Currency.USD),
+                Money.Zero(Currency.USD),
+                Money.Zero(Currency.USD),
+                Money.Zero(Currency.USD),
+                0m,
+                string.Empty,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(accountEvent);
+            var unpacked = (AccountEvent)serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(accountEvent, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_OrderInitializedEvents()
+        {
+            // Arrange
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var initialized = new OrderInitialized(
+                order.Symbol,
+                order.Id,
+                order.Label,
+                order.Side,
+                order.Type,
+                order.Quantity,
+                order.Price,
+                order.TimeInForce,
+                order.ExpireTime,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = serializer.Serialize(initialized);
+            var unpacked = (OrderInitialized)serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(initialized, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_OrderSubmittedEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -55,7 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_MarketOrderAcceptedEvent()
+        internal void CanSerializeAndDeserialize_OrderAcceptedEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -77,7 +134,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_MarketOrderRejectedEvent()
+        internal void CanSerializeAndDeserialize_OrderRejectedEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -100,7 +157,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopMarketOrderWorkingEvent()
+        internal void CanSerializeAndDeserialize_OrderWorkingEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -135,7 +192,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopMarketOrderWorkingWithExpireTimeEvent()
+        internal void CanSerializeAndDeserialize_OrderWorkingWithExpireTimeEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -173,7 +230,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopLimitOrderCancelledEvent()
+        internal void CanSerializeAndDeserialize_OrderCancelledEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -195,7 +252,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopLimitOrderCancelRejectEvent()
+        internal void CanSerializeAndDeserialize_OrderCancelRejectEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -219,7 +276,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopLimitOrderModifiedEvent()
+        internal void CanSerializeAndDeserialize_OrderModifiedEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -243,7 +300,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopMarketOrderExpiredEvent()
+        internal void CanSerializeAndDeserialize_OrderExpiredEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -265,7 +322,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopLimitOrderPartiallyFilledEvent()
+        internal void CanSerializeAndDeserialize_OrderPartiallyFilledEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -295,7 +352,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_StopLimitOrderFilledEvent()
+        internal void CanSerializeAndDeserialize_OrderFilledEvents()
         {
             // Arrange
             var serializer = new MsgPackEventSerializer();
@@ -320,35 +377,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(filled, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-        }
-
-        [Fact]
-        internal void CanSerializeAndDeserialize_AccountEvent()
-        {
-            // Arrange
-            var serializer = new MsgPackEventSerializer();
-            var accountEvent = new AccountEvent(
-                EntityIdFactory.Account(Brokerage.FXCM, "123456"),
-                Brokerage.FXCM,
-                "123456",
-                Currency.USD,
-                Money.Create(100000, Currency.USD),
-                Money.Create(100000, Currency.USD),
-                Money.Zero(Currency.USD),
-                Money.Zero(Currency.USD),
-                Money.Zero(Currency.USD),
-                0m,
-                string.Empty,
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-
-            // Act
-            var packed = serializer.Serialize(accountEvent);
-            var unpacked = (AccountEvent)serializer.Deserialize(packed);
-
-            // Assert
-            Assert.Equal(accountEvent, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
         }
     }

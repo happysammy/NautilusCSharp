@@ -48,6 +48,20 @@ namespace Nautilus.Serialization
         }
 
         /// <summary>
+        /// Return a <see cref="Price"/> from the given string.
+        /// </summary>
+        /// <param name="priceString">The price string.</param>
+        /// <returns>The optional price.</returns>
+        internal static Price? GetNullablePrice(string priceString)
+        {
+            Debug.NotEmptyOrWhiteSpace(priceString, nameof(priceString));
+
+            return priceString is NONE
+                ? null
+                : Price.Create(Convert.ToDecimal(priceString));
+        }
+
+        /// <summary>
         /// Return a string from the given price.
         /// </summary>
         /// <param name="price">The price.</param>

@@ -98,7 +98,8 @@ namespace Nautilus.DomainModel.Aggregates
                 timestamp);
 
             this.Events.Add(initialized);
-            Debug.IsIn(initialized, this.Events, nameof(initialized), nameof(this.Events));
+
+            this.CheckClassInvariants();
         }
 
         /// <summary>
@@ -126,7 +127,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
 
             this.Events.Add(initialized);
-            Debug.IsIn(initialized, this.Events, nameof(initialized), nameof(this.Events));
+
+            this.CheckClassInvariants();
         }
 
         /// <summary>
@@ -147,7 +149,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public OrderId IdCurrent => this.orderIds[this.orderIds.Count - 1];
+        public OrderId IdCurrent => this.orderIds.Last();  // Always contains an initial OrderId.
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
@@ -234,25 +236,25 @@ namespace Nautilus.DomainModel.Aggregates
         }
 
         /// <summary>
-        /// Returns a read-only list of the orders.
+        /// Returns the order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<OrderId> GetOrderIdList() => this.orderIds;
+        public IEnumerable<OrderId> GetOrderIds() => this.orderIds;
 
         /// <summary>
-        /// Returns a read-only list of broker order identifiers.
+        /// Returns the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<OrderId> GetBrokerOrderIdList() => this.orderIdsBroker;
+        public IEnumerable<OrderId> GetBrokerOrderIds() => this.orderIdsBroker;
 
         /// <summary>
-        /// Returns a read-only list of execution identifiers.
+        /// Returns the execution identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<ExecutionId> GetExecutionIdList() => this.executionIds;
+        public IEnumerable<ExecutionId> GetExecutionIds() => this.executionIds;
 
         /// <summary>
-        /// Returns an immutable collection of the order events.
+        /// Returns the order events.
         /// </summary>
         /// <returns>A read only collection.</returns>
         public IEnumerable<Event> GetEvents() => this.Events;
@@ -387,6 +389,13 @@ namespace Nautilus.DomainModel.Aggregates
             return this.Side == OrderSide.BUY
                 ? this.AveragePrice.Value - this.Price.Value
                 : this.Price.Value - this.AveragePrice.Value;
+        }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        private void CheckClassInvariants()
+        {
+            Debug.IsIn(this.Id, this.orderIds, nameof(this.Id), nameof(this.orderIds));
+            Debug.True(this.Events.Count > 0, "this.Events.Count > 0.");
         }
 
         private static class OrderStateMachine

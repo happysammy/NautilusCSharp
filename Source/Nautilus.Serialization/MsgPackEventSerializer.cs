@@ -56,6 +56,18 @@ namespace Nautilus.Serialization
                     package.Add(Key.MarginRatio, accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.MarginCallStatus, accountEvent.MarginCallStatus.ToString());
                     break;
+                case OrderInitialized orderEvent:
+                    package.Add(Key.Event, nameof(OrderInitialized));
+                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
+                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.Label, orderEvent.OrderLabel.ToString());
+                    package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
+                    package.Add(Key.OrderType, orderEvent.OrderType.ToString());
+                    package.Add(Key.Quantity, orderEvent.Quantity.Value);
+                    package.Add(Key.Price, MsgPackSerializationHelper.GetPriceString(orderEvent.Price));
+                    package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
+                    package.Add(Key.ExpireTime, MsgPackSerializationHelper.GetExpireTimeString(orderEvent.ExpireTime));
+                    break;
                 case OrderSubmitted orderEvent:
                     package.Add(Key.Event, nameof(OrderSubmitted));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
@@ -177,6 +189,19 @@ namespace Nautilus.Serialization
                         Money.Create(Convert.ToDecimal(unpacked[Key.MarginUsedMaintenance].ToString()), currency),
                         Convert.ToDecimal(unpacked[Key.MarginRatio].ToString()),
                         unpacked[Key.MarginCallStatus].ToString(),
+                        eventId,
+                        eventTimestamp);
+                case nameof(OrderInitialized):
+                    return new OrderInitialized(
+                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
+                        new OrderId(unpacked[Key.OrderId].ToString()),
+                        new Label(unpacked[Key.Label].ToString()),
+                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
+                        unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
+                        Quantity.Create(unpacked[Key.Quantity].AsInt32()),
+                        MsgPackSerializationHelper.GetNullablePrice(unpacked[Key.Price].ToString()),
+                        unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
+                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderSubmitted):

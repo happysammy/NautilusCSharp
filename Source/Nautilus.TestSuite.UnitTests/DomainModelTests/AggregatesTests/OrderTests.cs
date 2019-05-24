@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(OrderType.MARKET, order.Type);
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
-            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }, order.GetOrderIdList());
+            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }, order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
@@ -86,7 +86,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Null(order.Slippage);
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
-            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIdList());
+            Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIds());
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
