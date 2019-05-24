@@ -38,7 +38,10 @@ namespace Nautilus.Execution.Messages.Commands
             PositionId positionId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(commandId, commandTimestamp)
+            : base(
+                typeof(SubmitOrder),
+                commandId,
+                commandTimestamp)
         {
             this.Order = order;
             this.TraderId = traderId;

@@ -37,10 +37,11 @@ namespace Nautilus.DomainModel.Events
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                  symbol,
-                  orderId,
-                  eventId,
-                  eventTimestamp)
+                symbol,
+                orderId,
+                typeof(OrderCancelled),
+                eventId,
+                eventTimestamp)
         {
             Debug.NotDefault(cancelledTime, nameof(cancelledTime));
             Debug.NotDefault(eventId, nameof(eventId));

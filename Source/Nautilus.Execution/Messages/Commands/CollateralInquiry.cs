@@ -28,7 +28,10 @@ namespace Nautilus.Execution.Messages.Commands
         public CollateralInquiry(
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(
+                typeof(CollateralInquiry),
+                id,
+                timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

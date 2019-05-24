@@ -34,7 +34,10 @@ namespace Nautilus.Execution.Messages.Commands
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(commandId, commandTimestamp)
+            : base(
+                typeof(ModifyOrder),
+                commandId,
+                commandTimestamp)
         {
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));

@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messages.Commands
             ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(ConnectFix), id, timestamp)
         {
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));
 

@@ -31,7 +31,10 @@ namespace Nautilus.Data.Messages.Commands
             T dataType,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(
+                typeof(Unsubscribe<T>),
+                id,
+                timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

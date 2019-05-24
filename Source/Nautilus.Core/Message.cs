@@ -14,7 +14,7 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all message types.
+    /// The base class for all messages.
     /// </summary>
     [Immutable]
     public abstract class Message
@@ -22,16 +22,27 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
         /// </summary>
+        /// <param name="type">The message type.</param>
         /// <param name="id">The message identifier.</param>
         /// <param name="timestamp">The message timestamp.</param>
-        protected Message(Guid id, ZonedDateTime timestamp)
+        protected Message(
+            Type type,
+            Guid id,
+            ZonedDateTime timestamp)
         {
+            Debug.EqualTo(type, this.GetType(), nameof(type));
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
+            this.Type = type;
             this.Id = id;
             this.Timestamp = timestamp;
         }
+
+        /// <summary>
+        /// Gets the message type.
+        /// </summary>
+        public Type Type { get; }
 
         /// <summary>
         /// Gets the message identifier.
@@ -98,6 +109,6 @@ namespace Nautilus.Core
         /// Returns a string representation of this <see cref="Message"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.GetType().Name;
+        public override string ToString() => $"{this.Type.Name}({this.Id})";
     }
 }

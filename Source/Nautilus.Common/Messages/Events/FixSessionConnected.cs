@@ -33,7 +33,7 @@ namespace Nautilus.Common.Messages.Events
             string sessionId,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(FixSessionConnected), id, timestamp)
         {
             Debug.NotEmptyOrWhiteSpace(sessionId, nameof(sessionId));
 

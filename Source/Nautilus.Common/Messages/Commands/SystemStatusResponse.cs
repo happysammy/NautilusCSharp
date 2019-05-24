@@ -34,7 +34,7 @@ namespace Nautilus.Common.Messages.Commands
             Status status,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(SystemStatusResponse), id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

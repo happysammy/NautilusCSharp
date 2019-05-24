@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messages.Commands
             Switchboard switchboard,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(InitializeSwitchboard), id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

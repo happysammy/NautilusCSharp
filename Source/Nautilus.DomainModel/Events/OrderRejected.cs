@@ -39,10 +39,11 @@ namespace Nautilus.DomainModel.Events
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                  symbol,
-                  orderId,
-                  eventId,
-                  eventTimestamp)
+                symbol,
+                orderId,
+                typeof(OrderRejected),
+                eventId,
+                eventTimestamp)
         {
             Debug.NotDefault(rejectedTime, nameof(rejectedTime));
             Debug.NotEmptyOrWhiteSpace(rejectedReason, nameof(rejectedReason));

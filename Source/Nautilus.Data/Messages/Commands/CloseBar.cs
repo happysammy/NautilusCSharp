@@ -33,7 +33,10 @@ namespace Nautilus.Data.Messages.Commands
             ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(
+                typeof(CloseBar),
+                id,
+                timestamp)
         {
             this.ScheduledTime = scheduledTime;
             this.BarSpecification = barSpec;

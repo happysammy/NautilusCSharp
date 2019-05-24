@@ -51,7 +51,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasDefault(object value, string paramName)
         {
-            return $"The {paramName} was default ={value}.";
+            return $"The {paramName} was default, value = {value}.";
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNotEqualTo(object value, object toEqual, string paramName)
         {
-            return $"The {paramName} was not equal to {toEqual} ={value}.";
+            return $"The {paramName} was not equal to {toEqual}, value = {value}.";
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNotPositive(object value, string paramName)
         {
-            return $"The {paramName} was not positive (> 0) ={value}.";
+            return $"The {paramName} was not positive (> 0), value = {value}.";
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Nautilus.Core.Correctness
         /// <returns>The string.</returns>
         public static string WasNegative(object value, string paramName)
         {
-            return $"The {paramName} was negative ={value}.";
+            return $"The {paramName} was negative, value = {value}.";
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Nautilus.Core.Correctness
             object upperBound,
             string paramName)
         {
-            return $"The {paramName} was out of range [{lowerBound}, {upperBound}] ={value}.";
+            return $"The {paramName} was out of range [{lowerBound}, {upperBound}], value = {value}.";
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Events
             Symbol symbol,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventId, eventTimestamp)
+            : base(typeof(MarketClosed), eventId, eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));

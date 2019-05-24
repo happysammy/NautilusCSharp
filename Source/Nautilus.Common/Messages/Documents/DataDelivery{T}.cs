@@ -31,7 +31,7 @@ namespace Nautilus.Common.Messages.Documents
             T data,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(DataDelivery<T>), id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

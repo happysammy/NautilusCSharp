@@ -25,10 +25,8 @@ namespace Nautilus.Common.Messages.Commands
         /// </summary>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
-        public SystemStatusRequest(
-            Guid id,
-            ZonedDateTime timestamp)
-            : base(id, timestamp)
+        public SystemStatusRequest(Guid id, ZonedDateTime timestamp)
+            : base(typeof(SystemStatusRequest), id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

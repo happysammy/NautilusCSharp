@@ -40,7 +40,10 @@ namespace Nautilus.Data.Messages.Commands
             ZonedDateTime scheduledTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(
+                typeof(TrimBarData),
+                id,
+                timestamp)
         {
             Debug.PositiveInt32(rollingWindowDays, nameof(rollingWindowDays));
             Debug.NotDefault(scheduledTime, nameof(scheduledTime));

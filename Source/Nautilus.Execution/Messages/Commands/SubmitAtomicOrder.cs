@@ -38,7 +38,10 @@ namespace Nautilus.Execution.Messages.Commands
             PositionId positionId,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(commandId, commandTimestamp)
+            : base(
+                typeof(SubmitAtomicOrder),
+                commandId,
+                commandTimestamp)
         {
             this.AtomicOrder = atomicOrder;
             this.HasTakeProfit = atomicOrder.HasTakeProfit;

@@ -12,11 +12,11 @@ namespace Nautilus.Core
     using Nautilus.Core.Correctness;
 
     /// <summary>
-    /// Represents an identifier.
+    /// The base class for all identifiers.
     /// </summary>
     /// <typeparam name="T">The identifier type.</typeparam>
     [Immutable]
-    public class Identifier<T>
+    public abstract class Identifier<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Identifier{T}"/> class.

@@ -53,7 +53,7 @@ namespace Nautilus.DomainModel.Events
             string marginCallStatus,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventId, eventTimestamp)
+            : base(typeof(AccountEvent), eventId, eventTimestamp)
         {
             Debug.NotEmptyOrWhiteSpace(accountNumber, nameof(accountNumber));
             Debug.NotDefault(eventId, nameof(eventId));

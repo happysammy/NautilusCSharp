@@ -43,6 +43,7 @@ namespace Nautilus.DomainModel.Events
             : base(
                 symbol,
                 orderId,
+                typeof(OrderCancelReject),
                 eventId,
                 eventTimestamp)
         {

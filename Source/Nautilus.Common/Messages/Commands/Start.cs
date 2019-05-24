@@ -25,7 +25,7 @@ namespace Nautilus.Common.Messages.Commands
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public Start(Guid id, ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(Start), id, timestamp)
         {
         }
 

@@ -33,7 +33,7 @@ namespace Nautilus.Common.Messages.Events
             ZonedDateTime closedTime,
             Guid id,
             ZonedDateTime timestamp)
-            : base(id, timestamp)
+            : base(typeof(MarketClosed), id, timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

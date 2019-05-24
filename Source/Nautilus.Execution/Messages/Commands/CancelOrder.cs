@@ -33,7 +33,10 @@ namespace Nautilus.Execution.Messages.Commands
             string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
-            : base(commandId, commandTimestamp)
+            : base(
+                typeof(CancelOrder),
+                commandId,
+                commandTimestamp)
         {
             Debug.NotEmptyOrWhiteSpace(cancelReason, nameof(cancelReason));
             Debug.NotDefault(commandId, nameof(commandId));

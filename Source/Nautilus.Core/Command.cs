@@ -22,10 +22,17 @@ namespace Nautilus.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
         /// </summary>
+        /// <param name="type">The command type.</param>
         /// <param name="id">The command identifier.</param>
         /// <param name="timestamp">The command timestamp.</param>
-        protected Command(Guid id, ZonedDateTime timestamp)
-            : base(id, timestamp)
+        protected Command(
+            Type type,
+            Guid id,
+            ZonedDateTime timestamp)
+            : base(
+                type,
+                id,
+                timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

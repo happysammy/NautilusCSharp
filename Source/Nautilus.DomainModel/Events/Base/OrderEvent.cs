@@ -25,16 +25,21 @@ namespace Nautilus.DomainModel.Events.Base
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderEvent"/> class.
         /// </summary>
-        /// <param name="symbol">The event order symbol.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="eventType">The event type.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderEvent(
             Symbol symbol,
             OrderId orderId,
+            Type eventType,
             Guid eventId,
             ZonedDateTime eventTimestamp)
-            : base(eventId, eventTimestamp)
+            : base(
+                eventType,
+                eventId,
+                eventTimestamp)
         {
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
