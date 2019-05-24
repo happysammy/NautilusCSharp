@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.TestSuite.UnitTests.InfrastructureTests.MsgPackTests
+namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
