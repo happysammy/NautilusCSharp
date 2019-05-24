@@ -18,8 +18,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been completely filled in the market (filled quantity
-    /// equal to order quantity).
+    /// Represents an event where an order had been completely filled.
     /// </summary>
     [Immutable]
     public sealed class OrderFilled : OrderEvent

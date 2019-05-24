@@ -18,7 +18,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order has been initialized by the system.
+    /// Represents an event where an order has been initialized.
     /// </summary>
     [Immutable]
     public sealed class OrderInitialized : OrderEvent
@@ -61,6 +61,49 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
+
+            this.OrderLabel = orderLabel;
+            this.OrderSide = orderSide;
+            this.OrderType = orderType;
+            this.Quantity = quantity;
+            this.Price = price;
+            this.TimeInForce = timeInForce;
+            this.ExpireTime = expireTime;
         }
+
+        /// <summary>
+        /// Gets the events order label.
+        /// </summary>
+        public Label OrderLabel { get; }
+
+        /// <summary>
+        /// Gets the events order side.
+        /// </summary>
+        public OrderSide OrderSide { get; }
+
+        /// <summary>
+        /// Gets the events order type.
+        /// </summary>
+        public OrderType OrderType { get; }
+
+        /// <summary>
+        /// Gets the events order quantity.
+        /// </summary>
+        public Quantity Quantity { get; }
+
+        /// <summary>
+        /// Gets the events order price.
+        /// </summary>
+        public Price? Price { get; }
+
+        /// <summary>
+        /// Gets the events order time in force.
+        /// </summary>
+        public TimeInForce TimeInForce { get; }
+
+        /// <summary>
+        /// Gets the events order expire time.
+        /// </summary>
+        public ZonedDateTime? ExpireTime { get; }
     }
 }

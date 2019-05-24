@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Events
     using NodaTime;
 
     /// <summary>
-    /// Represents an event where an order had been submitted by the system to the broker.
+    /// Represents an event where an order had been submitted to the broker.
     /// </summary>
     [Immutable]
     public sealed class OrderSubmitted : OrderEvent

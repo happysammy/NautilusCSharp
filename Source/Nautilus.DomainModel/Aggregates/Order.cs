@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Aggregates
     [PerformanceOptimized]
     public sealed class Order : Aggregate<Order>
     {
-        private readonly FiniteStateMachine orderState;
+        private readonly FiniteStateMachine orderStateMachine;
         private readonly List<OrderId> orderIds;
         private readonly List<OrderId> orderIdsBroker;
         private readonly List<ExecutionId> executionIds;
@@ -67,8 +67,8 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.orderState = OrderStateMachine.Create();
-            this.orderIds = new List<OrderId>();
+            this.orderStateMachine = OrderStateMachine.Create();
+            this.orderIds = new List<OrderId> { this.Id };
             this.orderIdsBroker = new List<OrderId>();
             this.executionIds = new List<ExecutionId>();
 
@@ -82,10 +82,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.AveragePrice = null;
             this.Slippage = null;
             this.TimeInForce = timeInForce;
-            this.ExpireTime = expireTime;
-            this.orderIds.Add(this.Id);
-
-            this.ValidateExpireTime(expireTime);
+            this.ExpireTime = this.ValidateExpireTime(expireTime);
 
             var initialized = new OrderInitialized(
                 symbol,
@@ -101,6 +98,35 @@ namespace Nautilus.DomainModel.Aggregates
                 timestamp);
 
             this.Events.Add(initialized);
+            Debug.IsIn(initialized, this.Events, nameof(initialized), nameof(this.Events));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Order"/> class.
+        /// </summary>
+        /// <param name="initialized">The order initialized event.</param>
+        public Order(OrderInitialized initialized)
+            : base(initialized.OrderId, initialized.Timestamp)
+        {
+            this.orderStateMachine = OrderStateMachine.Create();
+            this.orderIds = new List<OrderId> { this.Id };
+            this.orderIdsBroker = new List<OrderId>();
+            this.executionIds = new List<ExecutionId>();
+
+            this.Symbol = initialized.Symbol;
+            this.Label = initialized.OrderLabel;
+            this.Side = initialized.OrderSide;
+            this.Type = initialized.OrderType;
+            this.Quantity = initialized.Quantity;
+            this.FilledQuantity = Quantity.Zero();
+            this.Price = initialized.Price;
+            this.AveragePrice = null;
+            this.Slippage = null;
+            this.TimeInForce = initialized.TimeInForce;
+            this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
+
+            this.Events.Add(initialized);
+            Debug.IsIn(initialized, this.Events, nameof(initialized), nameof(this.Events));
         }
 
         /// <summary>
@@ -186,12 +212,12 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last event time.
         /// </summary>
-        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Always contains OrderInitialized.
+        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Always contains an OrderInitialized event.
 
         /// <summary>
         /// Gets the current order status.
         /// </summary>
-        public OrderStatus Status => this.orderState.State.ToString().ToEnum<OrderStatus>();
+        public OrderStatus Status => this.orderStateMachine.State.ToString().ToEnum<OrderStatus>();
 
         /// <summary>
         /// Gets a value indicating whether the order status is complete.
@@ -287,25 +313,25 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderRejected orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderRejected)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderRejected)));
             this.IsComplete = true;
         }
 
         private void When(OrderCancelled orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderCancelled)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderCancelled)));
             this.IsComplete = true;
         }
 
         private void When(OrderWorking orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderWorking)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderWorking)));
             this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
         }
 
         private void When(OrderPartiallyFilled orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderPartiallyFilled)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
@@ -314,7 +340,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderFilled orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderFilled)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderFilled)));
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
@@ -324,29 +350,31 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderExpired orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderExpired)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderExpired)));
             this.IsComplete = true;
         }
 
         private void When(OrderModified orderEvent)
         {
-            this.orderState.Process(new Trigger(nameof(OrderModified)));
+            this.orderStateMachine.Process(new Trigger(nameof(OrderModified)));
             this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
             this.Price = orderEvent.ModifiedPrice;
         }
 
-        private void ValidateExpireTime(ZonedDateTime? expireTime)
+        private ZonedDateTime? ValidateExpireTime(ZonedDateTime? expireTime)
         {
-            if (expireTime is null)
-            {
-                Condition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
-            }
-            else
+            if (expireTime.HasValue)
             {
                 var expireTimeValue = expireTime.Value;
                 Condition.True(this.TimeInForce == TimeInForce.GTD, nameof(this.TimeInForce));
                 Condition.True(expireTimeValue.IsGreaterThanOrEqualTo(this.Timestamp), nameof(expireTime));
             }
+            else
+            {
+                Condition.True(this.TimeInForce != TimeInForce.GTD, nameof(this.TimeInForce));
+            }
+
+            return expireTime;
         }
 
         private decimal CalculateSlippage()
