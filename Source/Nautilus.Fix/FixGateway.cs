@@ -30,7 +30,7 @@ namespace Nautilus.Fix
     using NodaTime;
 
     /// <summary>
-    /// Provides a gateway to the FIX implementation of the system.
+    /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     [PerformanceOptimized]
     public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
@@ -39,11 +39,12 @@ namespace Nautilus.Fix
         private readonly List<IEndpoint> tickReceivers;
         private readonly List<Address> eventReceivers;
         private readonly List<Address> instrumentReceivers;
+        private readonly Currency accountCurrency = Currency.AUD;  // TODO
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FixGateway"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="fixClient">The FIX client.</param>
         public FixGateway(
@@ -64,25 +65,13 @@ namespace Nautilus.Fix
             this.RegisterHandler<DisconnectFix>(this.OnMessage);
         }
 
-        /// <summary>
-        /// Gets the brokerage gateways broker name.
-        /// </summary>
+        /// <inheritdoc />
         public Brokerage Broker => this.fixClient.Broker;
 
-        /// <summary>
-        /// Gets the brokerage account currency.
-        /// </summary>
-        public Currency AccountCurrency => Currency.AUD;  // TODO: Account currency
-
-        /// <summary>
-        /// Gets a value indicating whether the brokerage gateways broker client is connected.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;
 
-        /// <summary>
-        /// Registers the receiver endpoint to receive <see cref="Tick"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
+        /// <inheritdoc />
         public void RegisterTickReceiver(IEndpoint receiver)
         {
             Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.tickReceivers));
@@ -90,19 +79,13 @@ namespace Nautilus.Fix
             this.tickReceivers.Add(receiver);
         }
 
-        /// <summary>
-        /// Registers the receiver endpoint to receive connection events from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
+        /// <inheritdoc />
         public void RegisterConnectionEventReceiver(Address receiver)
         {
             this.fixClient.RegisterConnectionEventReceiver(receiver);
         }
 
-        /// <summary>
-        /// Registers the receiver endpoint to receive <see cref="Event"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver module.</param>
+        /// <inheritdoc />
         public void RegisterEventReceiver(Address receiver)
         {
             Debug.NotIn(receiver, this.eventReceivers, nameof(receiver), nameof(this.eventReceivers));
@@ -110,10 +93,7 @@ namespace Nautilus.Fix
             this.eventReceivers.Add(receiver);
         }
 
-        /// <summary>
-        /// Registers the module to receive <see cref="Instrument"/> updates from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
+        /// <inheritdoc />
         public void RegisterInstrumentReceiver(Address receiver)
         {
             Debug.NotIn(receiver, this.instrumentReceivers, nameof(receiver), nameof(this.instrumentReceivers));
@@ -121,103 +101,67 @@ namespace Nautilus.Fix
             this.instrumentReceivers.Add(receiver);
         }
 
-        /// <summary>
-        /// Submits a market data subscribe FIX message for the given symbol to the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
+        /// <inheritdoc />
         public void MarketDataSubscribe(Symbol symbol)
         {
             this.fixClient.RequestMarketDataSubscribe(symbol);
         }
 
-        /// <summary>
-        /// Submits a market data subscribe all FIX message for all symbols to the brokerage.
-        /// </summary>
+        /// <inheritdoc />
         public void MarketDataSubscribeAll()
         {
             this.fixClient.RequestMarketDataSubscribeAll();
         }
 
-        /// <summary>
-        /// Submits an update on the instrument corresponding to the given symbol, and subscribe to
-        /// updates FIX message, to the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol of the instrument to update.</param>
+        /// <inheritdoc />
         public void UpdateInstrumentSubscribe(Symbol symbol)
         {
             this.fixClient.UpdateInstrumentSubscribe(symbol);
         }
 
-        /// <summary>
-        /// Submits an update all instruments FIX message to the brokerage.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateInstrumentsSubscribeAll()
         {
             this.fixClient.UpdateInstrumentsSubscribeAll();
         }
 
-        /// <summary>
-        /// Submits a collateral inquiry FIX message to the brokerage.
-        /// </summary>
+        /// <inheritdoc />
         public void CollateralInquiry()
         {
             this.fixClient.CollateralInquiry();
         }
 
-        /// <summary>
-        /// Submits a trading session status FIX message to the brokerage.
-        /// </summary>
+        /// <inheritdoc />
         public void TradingSessionStatus()
         {
             this.fixClient.TradingSessionStatus();
         }
 
-        /// <summary>
-        /// Submits a new order FIX message to the brokerage.
-        /// </summary>
-        /// <param name="order">The new order.</param>
+        /// <inheritdoc />
         public void SubmitOrder(Order order)
         {
             this.fixClient.SubmitOrder(order);
         }
 
-        /// <summary>
-        /// Submits a new atomic order FIX message to the brokerage.
-        /// </summary>
-        /// <param name="atomicOrder">The new atomic order.</param>
+        /// <inheritdoc />
         public void SubmitOrder(AtomicOrder atomicOrder)
         {
             this.fixClient.SubmitOrder(atomicOrder);
         }
 
-        /// <summary>
-        /// Submits an order cancel replace FIX message to modify the stop-loss of an existing order,
-        /// to the brokerage.
-        /// </summary>
-        /// <param name="order">The order to modify.</param>
-        /// <param name="modifiedPrice">The modified order price.</param>
+        /// <inheritdoc />
         public void ModifyOrder(Order order, Price modifiedPrice)
         {
             this.fixClient.ModifyOrder(order, modifiedPrice);
         }
 
-        /// <summary>
-        /// Submits a cancel order FIX message to the brokerage.
-        /// </summary>
-        /// <param name="order">The order to cancel.</param>
+        /// <inheritdoc />
         public void CancelOrder(Order order)
         {
             this.fixClient.CancelOrder(order);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="Tick"/> and sends it directly to registered tick receivers.
-        /// </summary>
-        /// <param name="symbolCode">The tick symbol code.</param>
-        /// <param name="venue">The tick venue.</param>
-        /// <param name="bid">The tick best bid price.</param>
-        /// <param name="ask">The tick best ask price.</param>
-        /// <param name="timestamp">The tick timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         [PerformanceOptimized]
         public void OnTick(
@@ -243,10 +187,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Event handler for receiving FIX Position Reports.
-        /// </summary>
-        /// <param name="account">The account.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnPositionReport(string account)
         {
@@ -258,11 +199,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Event handler for receiving FIX Collateral Inquiry Acknowledgements.
-        /// </summary>
-        /// <param name="inquiryId">The inquiry identifier.</param>
-        /// <param name="accountNumber">The account number.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnCollateralInquiryAck(string inquiryId, string accountNumber)
         {
@@ -277,10 +214,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Event handler for receiving FIX business messages.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnBusinessMessage(string message)
         {
@@ -292,12 +226,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Updates the given instruments in the instrument repository.
-        /// </summary>
-        /// <param name="instruments">The instruments collection.</param>
-        /// <param name="responseId">The response identifier.</param>
-        /// <param name="result">The result.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnInstrumentsUpdate(
             IEnumerable<Instrument> instruments,
@@ -325,11 +254,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Event handler for acknowledgement of a request for positions.
-        /// </summary>
-        /// <param name="accountNumber">The account number.</param>
-        /// <param name="positionRequestId">The position request identifier.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnRequestForPositionsAck(string accountNumber, string positionRequestId)
         {
@@ -343,20 +268,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the
-        /// Messaging system.
-        /// </summary>
-        /// <param name="inquiryId">The inquiry identifier.</param>
-        /// <param name="accountNumber">The account number.</param>
-        /// <param name="cashBalance">The cash balance.</param>
-        /// <param name="cashStartDay">The cash start day.</param>
-        /// <param name="cashDaily">The cash daily.</param>
-        /// <param name="marginUsedMaintenance">The margin used maintenance.</param>
-        /// <param name="marginUsedLiq">The margin used liquidity.</param>
-        /// <param name="marginRatio">The margin ratio.</param>
-        /// <param name="marginCallStatus">The margin call status.</param>
-        /// <param name="timestamp">The report timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnAccountReport(
             string inquiryId,
@@ -387,12 +299,12 @@ namespace Nautilus.Fix
                     EntityIdFactory.Account(this.fixClient.Broker, accountNumber),
                     this.fixClient.Broker,
                     accountNumber,
-                    this.AccountCurrency,
-                    Money.Create(cashBalance, this.AccountCurrency),
-                    Money.Create(cashStartDay, this.AccountCurrency),
-                    Money.Create(cashDaily, this.AccountCurrency),
-                    Money.Create(marginUsedLiq, this.AccountCurrency),
-                    Money.Create(marginUsedMaintenance, this.AccountCurrency),
+                    this.accountCurrency,
+                    Money.Create(cashBalance, this.accountCurrency),
+                    Money.Create(cashStartDay, this.accountCurrency),
+                    Money.Create(cashDaily, this.accountCurrency),
+                    Money.Create(marginUsedLiq, this.accountCurrency),
+                    Money.Create(marginUsedMaintenance, this.accountCurrency),
                     marginRatio,
                     marginCallStatus,
                     this.NewGuid(),
@@ -407,15 +319,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderRejected"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="rejectReason">The order reject reason.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderRejected(
             string symbolCode,
@@ -448,16 +352,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderCancelReject"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="cancelRejectResponseTo">The order cancel reject response to.</param>
-        /// <param name="cancelRejectReason">The order cancel reject reason.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderCancelReject(
             string symbolCode,
@@ -494,16 +389,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderCancelled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order Label.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderCancelled(
             string symbolCode,
@@ -537,17 +423,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderModified"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="price">The order price.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderModified(
             string symbolCode,
@@ -586,22 +462,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderWorking"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
-        /// <param name="orderType">The order type.</param>
-        /// <param name="quantity">The order quantity.</param>
-        /// <param name="price">The order price.</param>
-        /// <param name="timeInForce">The order time in force.</param>
-        /// <param name="expireTime">The order expire time.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderWorking(
             string symbolCode,
@@ -659,16 +520,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderExpired"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderExpired(
             string symbolCode,
@@ -702,21 +554,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderFilled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="executionId">The order execution identifier.</param>
-        /// <param name="executionTicket">The order execution ticket.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
-        /// <param name="filledQuantity">The order filled quantity.</param>
-        /// <param name="averagePrice">The order average price.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderFilled(
             string symbolCode,
@@ -767,22 +605,7 @@ namespace Nautilus.Fix
             });
         }
 
-        /// <summary>
-        /// Creates an <see cref="OrderPartiallyFilled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
-        /// </summary>
-        /// <param name="symbolCode">The order symbol code.</param>
-        /// <param name="venue">The order venue.</param>
-        /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="executionId">The order execution identifier.</param>
-        /// <param name="executionTicket">The order execution ticket.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
-        /// <param name="filledQuantity">The order filled quantity.</param>
-        /// <param name="leavesQuantity">The order leaves quantity.</param>
-        /// <param name="averagePrice">The order average price.</param>
-        /// <param name="timestamp">The event timestamp.</param>
+        /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderPartiallyFilled(
             string symbolCode,

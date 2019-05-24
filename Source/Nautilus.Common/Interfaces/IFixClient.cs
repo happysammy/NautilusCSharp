@@ -8,7 +8,6 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using System.Collections.Generic;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
@@ -16,17 +15,17 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Messaging;
 
     /// <summary>
-    /// The adapter for FIX data feed client.
+    /// Provides an adapter for a FIX client.
     /// </summary>
     public interface IFixClient
     {
         /// <summary>
-        /// Gets the name of the brokerage.
+        /// Gets the name of the FIX brokerage.
         /// </summary>
         Brokerage Broker { get; }
 
         /// <summary>
-        /// Gets a value indicating whether a FIX session is connected.
+        /// Gets a value indicating whether the FIX client is connected to a session.
         /// </summary>
         /// <returns>A <see cref="bool"/>.</returns>
         bool IsConnected { get; }
@@ -42,31 +41,36 @@ namespace Nautilus.Common.Interfaces
         void Disconnect();
 
         /// <summary>
-        /// Registers the given receiver for brokerage connection events.
-        /// </summary>
-        /// <param name="receiver">The event receiver.</param>
-        void RegisterConnectionEventReceiver(Address receiver);
-
-        /// <summary>
-        /// Initializes the execution gateway.
+        /// Initializes the FIX gateway.
         /// </summary>
         /// <param name="gateway">The execution gateway.</param>
         void InitializeGateway(IFixGateway gateway);
 
         /// <summary>
-        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
+        /// Registers the given receiver to receiver connection events from the client.
         /// </summary>
-        /// <returns>The list of symbols.</returns>
-        IEnumerable<Symbol> GetAllSymbols();
+        /// <param name="receiver">The event receiver.</param>
+        void RegisterConnectionEventReceiver(Address receiver);
 
         /// <summary>
-        /// Subscribes to market data for the given symbol.
+        /// Request an update on the instrument corresponding to the given symbol from the brokerage.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
+        void UpdateInstrumentSubscribe(Symbol symbol);
+
+        /// <summary>
+        /// Send an update and subscribe request message for all instruments.
+        /// </summary>
+        void UpdateInstrumentsSubscribeAll();
+
+        /// <summary>
+        /// Sends an update and subscribe request message for the instrument of the given symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol of the instrument to update.</param>
         void RequestMarketDataSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Subscribes to market data for all symbols.
+        /// Sends a market data subscribe request message for all symbols.
         /// </summary>
         void RequestMarketDataSubscribeAll();
 
@@ -79,22 +83,6 @@ namespace Nautilus.Common.Interfaces
         /// Requests the trading session status.
         /// </summary>
         void TradingSessionStatus();
-
-        /// <summary>
-        /// Requests all positions.
-        /// </summary>
-        void RequestAllPositions();
-
-        /// <summary>
-        /// Request an update on the instrument corresponding to the given symbol from the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        void UpdateInstrumentSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Requests an update on all instruments from the brokerage.
-        /// </summary>
-        void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
         /// Submits an order.

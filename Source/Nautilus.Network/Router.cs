@@ -36,7 +36,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="Router"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>

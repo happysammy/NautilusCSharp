@@ -11,24 +11,24 @@ namespace Nautilus.Common.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IZonedClock"/> interface. The clock for the system.
+    /// Provides an adapter to a time zone embedded clock.
     /// </summary>
     public interface IZonedClock
     {
         /// <summary>
-        /// Returns the current time of this clock.
+        /// Returns the current time of the clock.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
         ZonedDateTime TimeNow();
 
         /// <summary>
-        /// Returns the current instant of this clock.
+        /// Returns the current instant of the clock.
         /// </summary>
         /// <returns>A <see cref="Instant"/>.</returns>
         Instant InstantNow();
 
         /// <summary>
-        /// Returns the time zone of this clock.
+        /// Returns the time zone of the clock.
         /// </summary>
         /// <returns>A <see cref="DateTimeZone"/>.</returns>
         DateTimeZone GetTimeZone();

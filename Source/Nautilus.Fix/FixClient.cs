@@ -17,13 +17,11 @@ namespace Nautilus.Fix
     using Nautilus.Fix.Interfaces;
 
     /// <summary>
-    /// Provides a generic FIX client.
+    /// Provides a FIX client.
     /// </summary>
     [PerformanceOptimized]
     public class FixClient : FixComponent, IFixClient
     {
-        private readonly SymbolConverter symbolConverter;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.
         /// </summary>
@@ -32,14 +30,12 @@ namespace Nautilus.Fix
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
         /// <param name="messageRouter">The FIX message router.</param>
-        /// <param name="symbolConverter">The symbol provider.</param>
         public FixClient(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             FixConfiguration config,
             IFixMessageHandler messageHandler,
-            IFixMessageRouter messageRouter,
-            SymbolConverter symbolConverter)
+            IFixMessageRouter messageRouter)
         : base(
             container,
             messagingAdapter,
@@ -47,7 +43,6 @@ namespace Nautilus.Fix
             messageHandler,
             messageRouter)
         {
-            this.symbolConverter = symbolConverter;
         }
 
         /// <summary>
@@ -79,13 +74,6 @@ namespace Nautilus.Fix
             this.Log.Information($"Disconnecting from FIX session {this.Broker}-{this.Account}...");
             this.DisconnectFix();
         }
-
-        /// <summary>
-        /// Returns a read-only list of all <see cref="Symbol"/>(s) provided by the FIX client.
-        /// </summary>
-        /// <returns>The list of symbols.</returns>
-        public IEnumerable<Symbol> GetAllSymbols() =>
-            this.symbolConverter.GetAllSymbols();
 
         /// <summary>
         /// Submit a command to execute the given order.

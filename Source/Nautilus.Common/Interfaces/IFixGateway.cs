@@ -20,17 +20,17 @@ namespace Nautilus.Common.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// Provides a gateway and anti-corruption layer into the system.
+    /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     public interface IFixGateway
     {
         /// <summary>
-        /// Gets the gateways broker name.
+        /// Gets the gateways brokerage name.
         /// </summary>
         Brokerage Broker { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the brokerage gateways broker client is connected.
+        /// Gets a value indicating whether the gateway is connected.
         /// </summary>
         bool IsConnected { get; }
 
@@ -41,7 +41,7 @@ namespace Nautilus.Common.Interfaces
         void RegisterTickReceiver(IEndpoint receiver);
 
         /// <summary>
-        /// Registers the receiver endpoint to receive connection events from the gateway.
+        /// Registers the receiver to receive connection events from the gateway.
         /// </summary>
         /// <param name="receiver">The receiver.</param>
         void RegisterConnectionEventReceiver(Address receiver);
@@ -59,53 +59,51 @@ namespace Nautilus.Common.Interfaces
         void RegisterInstrumentReceiver(Address receiver);
 
         /// <summary>
-        /// Submits a market data subscribe FIX message for the given symbol to the brokerage.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        void MarketDataSubscribe(Symbol symbol);
-
-        /// <summary>
-        /// Submits a market data subscribe all FIX message for all symbols to the brokerage.
-        /// </summary>
-        void MarketDataSubscribeAll();
-
-        /// <summary>
-        /// Submits an update on the instrument for the given symbol, and subscribe to updates FIX
-        /// message, to the brokerage.
+        /// Sends an update and subscribe request message for the instrument of the given symbol.
         /// </summary>
         /// <param name="symbol">The symbol of the instrument to update.</param>
         void UpdateInstrumentSubscribe(Symbol symbol);
 
         /// <summary>
-        /// Submits an update all instruments FIX message to the brokerage.
+        /// Send an update and subscribe request message for all instruments.
         /// </summary>
         void UpdateInstrumentsSubscribeAll();
 
         /// <summary>
-        /// Submits a collateral inquiry FIX message to the brokerage.
+        /// Sends a market data subscribe request message for the given symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        void MarketDataSubscribe(Symbol symbol);
+
+        /// <summary>
+        /// Sends a market data subscribe request message for all symbols.
+        /// </summary>
+        void MarketDataSubscribeAll();
+
+        /// <summary>
+        /// Sends a collateral inquiry request message.
         /// </summary>
         void CollateralInquiry();
 
         /// <summary>
-        /// Submits a trading session status FIX message to the brokerage.
+        /// Sends a trading session status request message.
         /// </summary>
         void TradingSessionStatus();
 
         /// <summary>
-        /// Submits a new order FIX message to the brokerage.
+        /// Sends a message to submit the given order.
         /// </summary>
         /// <param name="order">The new order.</param>
         void SubmitOrder(Order order);
 
         /// <summary>
-        /// Submits a new atomic order FIX message to the brokerage.
+        /// Sends a message to submit the given atomic order.
         /// </summary>
         /// <param name="atomicOrder">The new atomic order.</param>
         void SubmitOrder(AtomicOrder atomicOrder);
 
         /// <summary>
-        /// Submits an order cancel replace FIX message to modify the stop-loss of an existing order,
-        /// to the brokerage.
+        /// Sends a message to modify the given order with the given price.
         /// </summary>
         /// <param name="order">The order to modify.</param>
         /// <param name="modifiedPrice">The modified order price.</param>
@@ -171,8 +169,7 @@ namespace Nautilus.Common.Interfaces
         void OnRequestForPositionsAck(string accountNumber, string positionRequestId);
 
         /// <summary>
-        /// Creates an <see cref="AccountEvent"/> event, and sends it to the Risk Service via the
-        /// Messaging system.
+        /// Creates an <see cref="AccountEvent"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="inquiryId">The inquiry identifier.</param>
         /// <param name="accountNumber">The account.</param>
@@ -197,8 +194,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderRejected"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderRejected"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -213,8 +209,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderCancelReject"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderCancelReject"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -231,8 +226,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderCancelled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderCancelled"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -249,8 +243,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderModified"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderModified"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -269,8 +262,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderWorking"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderWorking"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -299,8 +291,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderExpired"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderExpired"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -317,8 +308,7 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderFilled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderFilled"/> event and sends it to the registered event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
@@ -345,8 +335,8 @@ namespace Nautilus.Common.Interfaces
             ZonedDateTime timestamp);
 
         /// <summary>
-        /// Creates an <see cref="OrderPartiallyFilled"/> event, and sends it to the Portfolio
-        /// Service via the Messaging system.
+        /// Creates an <see cref="OrderPartiallyFilled"/> event and sends it to the registered
+        /// event receivers.
         /// </summary>
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>

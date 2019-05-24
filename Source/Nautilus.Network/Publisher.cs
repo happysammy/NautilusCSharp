@@ -29,7 +29,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
         /// <param name="id">The publishers identifier.</param>

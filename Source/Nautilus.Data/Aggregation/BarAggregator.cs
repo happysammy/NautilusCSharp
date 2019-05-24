@@ -36,7 +36,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregator"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="parent">The parent endpoint.</param>
         /// <param name="symbol">The symbol.</param>
         public BarAggregator(

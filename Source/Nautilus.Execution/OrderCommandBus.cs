@@ -24,7 +24,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderCommandBus"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="gateway">The execution gateway.</param>
         public OrderCommandBus(

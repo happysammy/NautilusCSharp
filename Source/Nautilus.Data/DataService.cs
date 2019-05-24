@@ -43,7 +43,7 @@ namespace Nautilus.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="DataService"/> class.
         /// </summary>
-        /// <param name="setupContainer">The setup container.</param>
+        /// <param name="setupContainer">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The FIX gateway.</param>

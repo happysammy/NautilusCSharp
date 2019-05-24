@@ -39,7 +39,7 @@ namespace Nautilus.Data.Aggregation
         /// <summary>
         /// Initializes a new instance of the <see cref="BarAggregationController"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="barPublisher">The bar publisher endpoint.</param>

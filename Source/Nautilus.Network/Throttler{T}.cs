@@ -37,7 +37,7 @@ namespace Nautilus.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="Throttler{T}"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="serviceContext">The service context.</param>
         /// <param name="receiver">The receiver service.</param>
         /// <param name="interval">The throttle timer interval.</param>

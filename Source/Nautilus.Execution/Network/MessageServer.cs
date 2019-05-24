@@ -30,7 +30,7 @@ namespace Nautilus.Execution.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageServer"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="commandSerializer">The command serializer.</param>
         /// <param name="eventSerializer">The event serializer.</param>

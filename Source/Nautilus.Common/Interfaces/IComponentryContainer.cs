@@ -9,7 +9,7 @@
 namespace Nautilus.Common.Interfaces
 {
     /// <summary>
-    /// The componentry container for constructing system components.
+    /// The componentry container for constructing service components.
     /// </summary>
     public interface IComponentryContainer
     {

@@ -43,7 +43,7 @@ namespace Nautilus.Execution
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionService"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="scheduler">The system scheduler.</param>
         /// <param name="fixGateway">The execution gateway.</param>

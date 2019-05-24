@@ -51,7 +51,7 @@ namespace Nautilus.Fix
         /// <summary>
         /// Initializes a new instance of the <see cref="FixComponent"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="messageHandler">The FIX message handler.</param>
@@ -120,7 +120,7 @@ namespace Nautilus.Fix
         }
 
         /// <summary>
-        /// Returns the current time of the black box system clock.
+        /// Returns the current time of the components clock.
         /// </summary>
         /// <returns>
         /// A <see cref="ZonedDateTime"/>.

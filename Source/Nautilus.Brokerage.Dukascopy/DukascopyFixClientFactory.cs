@@ -19,7 +19,7 @@ namespace Nautilus.Brokerage.Dukascopy
         /// <summary>
         /// Creates and returns a new Dukascopy FIX client.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="config">The FIX configuration.</param>
         /// <param name="symbolConverter">The symbol provider.</param>
@@ -38,8 +38,7 @@ namespace Nautilus.Brokerage.Dukascopy
                 new DukascopyFixMessageRouter(
                     container,
                     symbolConverter,
-                    config.Credentials.Account),
-                symbolConverter);
+                    config.Credentials.Account));
         }
     }
 }

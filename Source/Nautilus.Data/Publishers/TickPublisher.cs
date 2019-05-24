@@ -22,7 +22,7 @@ namespace Nautilus.Data.Publishers
         /// <summary>
         /// Initializes a new instance of the <see cref="TickPublisher"/> class.
         /// </summary>
-        /// <param name="container">The setup container.</param>
+        /// <param name="container">The componentry container.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public TickPublisher(
