@@ -11,7 +11,7 @@ namespace Nautilus.DomainModel.Enums
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// The type of order at the brokerage.
+    /// Represents an order type.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Align with Python enums.")]
     public enum OrderType

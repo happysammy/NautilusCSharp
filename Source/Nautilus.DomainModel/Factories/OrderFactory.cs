@@ -15,7 +15,7 @@ namespace Nautilus.DomainModel.Factories
     using NodaTime;
 
     /// <summary>
-    /// Provides an order factory for creating different order types.
+    /// Provides a factory for creating different <see cref="Order"/> types.
     /// </summary>
     public static class OrderFactory
     {

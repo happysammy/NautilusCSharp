@@ -10,9 +10,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -32,7 +34,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         {
             // Arrange
             var serializer = new MsgPackOrderSerializer();
-            var order = new StubOrderBuilder().BuildMarketOrder();
+            var order = new StubOrderBuilder()
+                .WithTimestamp(StubZonedDateTime.UnixEpoch() + Duration.FromDays(1))
+                .BuildMarketOrder();
 
             // Act
             var packed = serializer.Serialize(order);
@@ -41,6 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -57,6 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -73,6 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -89,6 +96,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(order, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
