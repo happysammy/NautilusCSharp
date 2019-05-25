@@ -83,6 +83,10 @@ namespace Nautilus.DomainModel.Aggregates
             this.Slippage = null;
             this.TimeInForce = timeInForce;
             this.ExpireTime = this.ValidateExpireTime(expireTime);
+            this.IsBuy = this.Side == OrderSide.BUY;
+            this.IsSell = this.Side == OrderSide.SELL;
+            this.IsActive = false;
+            this.IsComplete = false;
 
             var initialized = new OrderInitialized(
                 symbol,
@@ -97,8 +101,7 @@ namespace Nautilus.DomainModel.Aggregates
                 Guid.NewGuid(),
                 timestamp);
 
-            this.Events.Add(initialized);
-
+            this.Apply(initialized);
             this.CheckClassInvariants();
         }
 
@@ -125,9 +128,12 @@ namespace Nautilus.DomainModel.Aggregates
             this.Slippage = null;
             this.TimeInForce = initialized.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
+            this.IsBuy = this.Side == OrderSide.BUY;
+            this.IsSell = this.Side == OrderSide.SELL;
+            this.IsActive = false;
+            this.IsComplete = false;
 
-            this.Events.Add(initialized);
-
+            this.Apply(initialized);
             this.CheckClassInvariants();
         }
 
@@ -149,7 +155,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders current identifier.
         /// </summary>
-        public OrderId IdCurrent => this.orderIds.Last();  // Always contains an initial OrderId.
+        public OrderId IdCurrent => this.orderIds.Last();  // Should always contain an initial OrderId.
 
         /// <summary>
         /// Gets the orders current identifier for the broker.
@@ -214,7 +220,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the orders last event time.
         /// </summary>
-        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Always contains an OrderInitialized event.
+        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Should always contain an OrderInitialized event.
 
         /// <summary>
         /// Gets the current order status.
@@ -222,7 +228,22 @@ namespace Nautilus.DomainModel.Aggregates
         public OrderStatus Status => this.orderStateMachine.State.ToString().ToEnum<OrderStatus>();
 
         /// <summary>
-        /// Gets a value indicating whether the order status is complete.
+        /// Gets a value indicating whether the order side is BUY.
+        /// </summary>
+        public bool IsBuy { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the order side is SELL.
+        /// </summary>
+        public bool IsSell { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the order is active.
+        /// </summary>
+        public bool IsActive { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the order is complete.
         /// </summary>
         public bool IsComplete { get; private set; }
 
@@ -267,10 +288,22 @@ namespace Nautilus.DomainModel.Aggregates
         {
             switch (orderEvent)
             {
+                case OrderInitialized @event:
+                    this.When(@event);
+                    break;
+                case OrderSubmitted @event:
+                    this.When(@event);
+                    break;
+                case OrderAccepted @event:
+                    this.When(@event);
+                    break;
                 case OrderRejected @event:
                     this.When(@event);
                     break;
                 case OrderCancelled @event:
+                    this.When(@event);
+                    break;
+                case OrderCancelReject @event:
                     this.When(@event);
                     break;
                 case OrderWorking @event:
@@ -313,15 +346,26 @@ namespace Nautilus.DomainModel.Aggregates
             }
         }
 
-        private void When(OrderRejected orderEvent)
+        private void When(OrderInitialized orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderRejected)));
+            // Do nothing.
+        }
+
+        private void When(OrderSubmitted orderEvent)
+        {
+            this.orderStateMachine.Process(new Trigger(OrderStatus.Accepted));
             this.IsComplete = true;
         }
 
-        private void When(OrderCancelled orderEvent)
+        private void When(OrderAccepted orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderCancelled)));
+            this.orderStateMachine.Process(new Trigger(OrderStatus.Accepted));
+            this.IsComplete = true;
+        }
+
+        private void When(OrderRejected orderEvent)
+        {
+            this.orderStateMachine.Process(new Trigger(nameof(OrderRejected)));
             this.IsComplete = true;
         }
 
@@ -329,6 +373,33 @@ namespace Nautilus.DomainModel.Aggregates
         {
             this.orderStateMachine.Process(new Trigger(nameof(OrderWorking)));
             this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
+            this.IsActive = true;
+        }
+
+        private void When(OrderCancelled orderEvent)
+        {
+            this.orderStateMachine.Process(new Trigger(nameof(OrderCancelled)));
+            this.IsActive = false;
+            this.IsComplete = true;
+        }
+
+        private void When(OrderCancelReject orderEvent)
+        {
+            // Do nothing.
+        }
+
+        private void When(OrderExpired orderEvent)
+        {
+            this.orderStateMachine.Process(new Trigger(nameof(OrderExpired)));
+            this.IsActive = false;
+            this.IsComplete = true;
+        }
+
+        private void When(OrderModified orderEvent)
+        {
+            this.orderStateMachine.Process(new Trigger(nameof(OrderModified)));
+            this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
+            this.Price = orderEvent.ModifiedPrice;
         }
 
         private void When(OrderPartiallyFilled orderEvent)
@@ -347,20 +418,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
             this.Slippage = this.CalculateSlippage();
+            this.IsActive = false;
             this.IsComplete = true;
-        }
-
-        private void When(OrderExpired orderEvent)
-        {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderExpired)));
-            this.IsComplete = true;
-        }
-
-        private void When(OrderModified orderEvent)
-        {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderModified)));
-            this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
-            this.Price = orderEvent.ModifiedPrice;
         }
 
         private ZonedDateTime? ValidateExpireTime(ZonedDateTime? expireTime)
