@@ -17,7 +17,7 @@ namespace Nautilus.Core.Correctness
     public static class ExceptionFactory
     {
         /// <summary>
-        /// Returns an ArgumentOutOfRangeException with the given arguments.
+        /// Returns an ArgumentOutOfRangeException from the given arguments.
         /// </summary>
         /// <param name="argument">The out of range argument.</param>
         /// <param name="paramName">The parameter name.</param>
@@ -33,7 +33,7 @@ namespace Nautilus.Core.Correctness
         }
 
         /// <summary>
-        /// Returns an InvalidEnumArgumentException with the given arguments.
+        /// Returns an InvalidEnumArgumentException from the given arguments.
         /// </summary>
         /// <param name="value">The invalid enum value.</param>
         /// <param name="paramName">The parameter name.</param>

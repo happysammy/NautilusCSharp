@@ -321,7 +321,8 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderFilled @event:
                     this.When(@event);
                     break;
-                default: throw new InvalidEnumArgumentException($"The {orderEvent} is not recognized by the order {this}");
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(orderEvent, nameof(orderEvent));
             }
 
             this.orderStateMachine.Process(Trigger.Event(orderEvent));
@@ -376,7 +377,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderInitialized orderEvent)
         {
-            // Order state machine starts OrderStatus.Initialized.
+            // Do nothing.
         }
 
         private void When(OrderSubmitted orderEvent)
