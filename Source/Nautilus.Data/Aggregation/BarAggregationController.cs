@@ -196,36 +196,46 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
-            foreach (var barType in this.subscriptions.Keys.Where(k => k.Symbol == message.Symbol))
+            foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
-                if (this.subscriptions[barType] is null)
+                // Cancel old scheduled job if it still exists (this shouldn't need to happen).
+                if (subscription.Value != null)
                 {
-                    // Create close bar job schedule.
-                    var initialDelay = (this.TimeNow().Floor(barType.Specification.Duration) + barType.Specification.Duration) - this.TimeNow();
-                    var cancellable = this.scheduler.ScheduleRepeatedlyCancelable(
-                        initialDelay,
-                        barType.Specification.Duration,
-                        () =>
-                        {
-                            this.CreateCloseBarDelegate(barType.Specification, this.barAggregators[barType.Symbol].Endpoint);
-                        });
-
-                    this.subscriptions[barType] = cancellable;
+                    this.subscriptions[subscription.Key]?.Cancel();
+                    this.subscriptions[subscription.Key] = null;
                 }
 
-                this.Log.Debug($"MarketOpened: Started CloseBar job for {barType}.");
+                // Create close bar job schedule.
+                var barDuration = subscription.Key.Specification.Duration;
+                var initialDelay = TimeProvider.GetDelayForDuration(this.TimeNow(), barDuration);
+                var scheduledCancelable = this.scheduler.ScheduleRepeatedlyCancelable(
+                    initialDelay,
+                    barDuration,
+                    () =>
+                    {
+                        this.CreateCloseBarDelegate(subscription.Key.Specification, this.barAggregators[subscription.Key.Symbol].Endpoint);
+                    });
+
+                this.subscriptions[subscription.Key] = scheduledCancelable;
+
+                this.Log.Debug($"MarketOpened: Started CloseBar job for {subscription.Key}.");
             }
         }
 
         private void OnMessage(MarketClosed message)
         {
-            foreach (var barType in this.subscriptions.Keys.Where(k => k.Symbol == message.Symbol))
+            foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
-                this.subscriptions[barType]?.Cancel();
-                this.subscriptions[barType] = null;
+                subscription.Value?.Cancel();
+                this.subscriptions[subscription.Key] = null;
 
-                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {barType}.");
+                this.Log.Debug($"MarketClosed: Cancelled CloseBar job for {subscription.Key}.");
             }
+        }
+
+        private IEnumerable<KeyValuePair<BarType, ICancelable?>> SubscriptionsForSymbol(Symbol symbol)
+        {
+            return this.subscriptions.Where(s => s.Key.Symbol == symbol);
         }
     }
 }

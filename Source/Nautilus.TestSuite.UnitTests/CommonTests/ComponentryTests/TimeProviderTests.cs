@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
 {
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Componentry;
+    using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
 
@@ -97,6 +98,26 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
 
             // Assert
             Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(250, 1000, 750)]
+        [InlineData(500, 1000, 500)]
+        [InlineData(999, 1000, 1)]
+        internal void GetDelayForDuration_WithVariousDurations_ReturnsExpectedResult(
+            int millisecondsInitialOffset,
+            int millisecondsDuration,
+            int millisecondsDelay)
+        {
+            // Arrange
+            var utcNow = StubZonedDateTime.UnixEpoch() + Duration.FromMilliseconds(millisecondsInitialOffset);
+            var duration = Duration.FromMilliseconds(millisecondsDuration);
+
+            // Act
+            var result = TimeProvider.GetDelayForDuration(utcNow, duration);
+
+            // Assert
+            Assert.Equal(Duration.FromMilliseconds(millisecondsDelay), result);
         }
     }
 }

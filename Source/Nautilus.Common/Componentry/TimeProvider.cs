@@ -10,6 +10,7 @@ namespace Nautilus.Common.Componentry
 {
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.Core.Extensions;
     using NodaTime;
 
     /// <summary>
@@ -118,6 +119,17 @@ namespace Nautilus.Common.Componentry
             Debug.NotDefault(next, nameof(next));
 
             return next.ToInstant() - now;
+        }
+
+        /// <summary>
+        /// Returns the duration of delay to the next duration from the floored time now.
+        /// </summary>
+        /// <param name="now">The time now.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The delay duration.</returns>
+        public static Duration GetDelayForDuration(ZonedDateTime now, Duration duration)
+        {
+            return (now.Floor(duration) + duration) - now;
         }
     }
 }
