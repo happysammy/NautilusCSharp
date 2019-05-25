@@ -55,7 +55,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 
             if (!this.IsValidStateTransition(transition))
             {
-                throw new InvalidOperationException($"Invalid state transition ({transition}).");
+                throw new InvalidOperationException($"Invalid state transition ({transition.Description()}).");
             }
 
             this.ChangeStateTo(this.StateTransitionResult(transition));

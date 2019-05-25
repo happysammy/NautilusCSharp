@@ -10,6 +10,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.FiniteStateMachine;
@@ -19,10 +20,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
     public class FiniteStateMachineTests
     {
         [Fact]
-        public void CurrentState_WithNewStateMachine_EqualsStartingState()
+        public void State_WithNewStateMachine_EqualsStartingState()
         {
             // Arrange
-            var stateMachine = ExampleOrderStateMachine.Create();
+            var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
             var result = stateMachine.State;
@@ -35,20 +36,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_WithValidTrigger_ReturnsExpectedState()
         {
             // Arrange
-            var stateMachine = ExampleOrderStateMachine.Create();
+            var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
-            stateMachine.Process(new Trigger(nameof(OrderAccepted)));
+            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
 
             // Assert
-            Assert.Equal(new State(OrderStatus.Accepted), stateMachine.State);
+            Assert.Equal(new State(OrderStatus.Submitted), stateMachine.State);
         }
 
         [Fact]
         public void Process_WithInvalidTrigger_ReturnsFailure()
         {
             // Arrange
-            var stateMachine = ExampleOrderStateMachine.Create();
+            var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
             // Assert
@@ -59,9 +60,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_ThroughFullCycle_ReturnsExpectedState()
         {
             // Arrange
-            var stateMachine = ExampleOrderStateMachine.Create();
+            var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
+            stateMachine.Process(new Trigger(nameof(OrderInitialized)));  // Redundant trigger doesn't throw.
+            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
             stateMachine.Process(new Trigger(nameof(OrderAccepted)));
             stateMachine.Process(new Trigger(nameof(OrderWorking)));
             stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
@@ -75,15 +78,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Process_MultipleValidTriggersThenInvalidTrigger_ReturnsFailure()
         {
             // Arrange
-            var stateMachine = ExampleOrderStateMachine.Create();
+            var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
+            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
             stateMachine.Process(new Trigger(nameof(OrderAccepted)));
             stateMachine.Process(new Trigger(nameof(OrderWorking)));
             stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(OrderStatus.Expired)));
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(OrderStatus.Rejected)));
         }
     }
 }

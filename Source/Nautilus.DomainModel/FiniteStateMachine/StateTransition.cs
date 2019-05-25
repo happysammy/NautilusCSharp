@@ -83,6 +83,12 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// Returns a string representation of the <see cref="StateTransition"/>.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string ToString() => $"{nameof(StateTransition)}: {this.CurrentState} -> {this.Trigger}";
+        public override string ToString() => $"{nameof(StateTransition)}({this.Description()})";
+
+        /// <summary>
+        /// Returns the description of the state transition including current state and trigger.
+        /// </summary>
+        /// <returns>The description string.</returns>
+        public string Description() => $"{this.CurrentState} -> {this.Trigger}";
     }
 }

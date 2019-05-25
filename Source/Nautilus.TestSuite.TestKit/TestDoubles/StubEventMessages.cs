@@ -21,26 +21,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubEventMessages
     {
-        public static OrderFilled OrderFilledEvent(Order order)
-        {
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
-
-            return new OrderFilled(
-                order.Symbol,
-                order.Id,
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
-                order.Side,
-                order.Quantity,
-                order.Price,
-                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-        }
-
         public static OrderPartiallyFilled OrderPartiallyFilledEvent(
             Order order,
             int filledQuantity,
@@ -59,6 +39,26 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Side,
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
+                order.Price,
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
+
+        public static OrderFilled OrderFilledEvent(Order order)
+        {
+            if (order.Price is null)
+            {
+                throw new InvalidOperationException("Order must have a price.");
+            }
+
+            return new OrderFilled(
+                order.Symbol,
+                order.Id,
+                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
+                order.Side,
+                order.Quantity,
                 order.Price,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),

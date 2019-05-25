@@ -96,7 +96,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var result = stateTransition.ToString();
 
             // Assert
-            Assert.Equal("StateTransition: Initialized -> OrderAccepted", result);
+            Assert.Equal("StateTransition(Initialized -> OrderAccepted)", result);
+        }
+
+        [Fact]
+        public void Description_ReturnsExpectedString()
+        {
+            // Arrange
+            var stateTransition = new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderAccepted)));
+
+            // Act
+            var result = stateTransition.Description();
+
+            // Assert
+            Assert.Equal("Initialized -> OrderAccepted", result);
         }
     }
 }

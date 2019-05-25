@@ -67,7 +67,7 @@ namespace Nautilus.DomainModel.Aggregates
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.orderStateMachine = OrderStateMachine.Create();
+            this.orderStateMachine = CreateOrderFiniteStateMachine();
             this.orderIds = new List<OrderId> { this.Id };
             this.orderIdsBroker = new List<OrderId>();
             this.executionIds = new List<ExecutionId>();
@@ -112,7 +112,7 @@ namespace Nautilus.DomainModel.Aggregates
         public Order(OrderInitialized initialized)
             : base(initialized.OrderId, initialized.Timestamp)
         {
-            this.orderStateMachine = OrderStateMachine.Create();
+            this.orderStateMachine = CreateOrderFiniteStateMachine();
             this.orderIds = new List<OrderId> { this.Id };
             this.orderIdsBroker = new List<OrderId>();
             this.executionIds = new List<ExecutionId>();
@@ -324,6 +324,7 @@ namespace Nautilus.DomainModel.Aggregates
                 default: throw new InvalidEnumArgumentException($"The {orderEvent} is not recognized by the order {this}");
             }
 
+            this.orderStateMachine.Process(new Trigger(orderEvent.Type.Name));
             this.Events.Add(orderEvent);
         }
 
@@ -332,6 +333,32 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
         public override string ToString() => $"{nameof(Order)}-{this.Symbol}-{this.Id}";
+
+        /// <summary>
+        /// Creates and returns a new order FSM.
+        /// </summary>
+        /// <returns>The FSM.</returns>
+        internal static FiniteStateMachine CreateOrderFiniteStateMachine()
+        {
+            var stateTransitionTable = new Dictionary<StateTransition, State>
+            {
+                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderInitialized))), new State(OrderStatus.Initialized) },
+                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderSubmitted))), new State(OrderStatus.Submitted) },
+                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Submitted), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Submitted), new Trigger(nameof(OrderAccepted))), new State(OrderStatus.Accepted) },
+                { new StateTransition(new State(OrderStatus.Accepted), new Trigger(nameof(OrderWorking))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderModified))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderExpired))), new State(OrderStatus.Expired) },
+                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
+                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
+            };
+
+            return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
+        }
 
         /// <summary>
         /// Updates the broker order identifier list with the given <see cref="OrderId"/>
@@ -348,37 +375,32 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderInitialized orderEvent)
         {
-            // Do nothing.
+            // Order state machine starts OrderStatus.Initialized.
         }
 
         private void When(OrderSubmitted orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(OrderStatus.Accepted));
             this.IsComplete = true;
         }
 
         private void When(OrderAccepted orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(OrderStatus.Accepted));
             this.IsComplete = true;
         }
 
         private void When(OrderRejected orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderRejected)));
             this.IsComplete = true;
         }
 
         private void When(OrderWorking orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderWorking)));
             this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
             this.IsActive = true;
         }
 
         private void When(OrderCancelled orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderCancelled)));
             this.IsActive = false;
             this.IsComplete = true;
         }
@@ -390,21 +412,18 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderExpired orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderExpired)));
             this.IsActive = false;
             this.IsComplete = true;
         }
 
         private void When(OrderModified orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderModified)));
             this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
             this.Price = orderEvent.ModifiedPrice;
         }
 
         private void When(OrderPartiallyFilled orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
@@ -413,7 +432,6 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderFilled orderEvent)
         {
-            this.orderStateMachine.Process(new Trigger(nameof(OrderFilled)));
             this.executionIds.Add(orderEvent.ExecutionId);
             this.FilledQuantity = orderEvent.FilledQuantity;
             this.AveragePrice = orderEvent.AveragePrice;
@@ -455,29 +473,6 @@ namespace Nautilus.DomainModel.Aggregates
         {
             Debug.IsIn(this.Id, this.orderIds, nameof(this.Id), nameof(this.orderIds));
             Debug.True(this.Events.Count > 0, "this.Events.Count > 0.");
-        }
-
-        private static class OrderStateMachine
-        {
-            internal static FiniteStateMachine Create()
-            {
-                var stateTransitionTable = new Dictionary<StateTransition, State>
-                {
-                    { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderSubmitted))), new State(OrderStatus.Submitted) },
-                    { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderRejected))), new State(OrderStatus.Rejected) },
-                    { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                    { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderWorking))), new State(OrderStatus.Working) },
-                    { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                    { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderModified))), new State(OrderStatus.Working) },
-                    { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderExpired))), new State(OrderStatus.Expired) },
-                    { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
-                    { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                    { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                    { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
-                };
-
-                return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
-            }
         }
     }
 }
