@@ -300,25 +300,25 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderRejected @event:
                     this.When(@event);
                     break;
+                case OrderWorking @event:
+                    this.When(@event);
+                    break;
                 case OrderCancelled @event:
                     this.When(@event);
                     break;
                 case OrderCancelReject @event:
                     this.When(@event);
                     break;
-                case OrderWorking @event:
+                case OrderExpired @event:
+                    this.When(@event);
+                    break;
+                case OrderModified @event:
                     this.When(@event);
                     break;
                 case OrderPartiallyFilled @event:
                     this.When(@event);
                     break;
                 case OrderFilled @event:
-                    this.When(@event);
-                    break;
-                case OrderExpired @event:
-                    this.When(@event);
-                    break;
-                case OrderModified @event:
                     this.When(@event);
                     break;
                 default: throw new InvalidEnumArgumentException($"The {orderEvent} is not recognized by the order {this}");
