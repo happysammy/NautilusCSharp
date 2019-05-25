@@ -18,15 +18,11 @@ namespace Nautilus.Serialization
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
-    /// Provides a command binary serializer for the Message Pack specification.
+    /// Provides a command serializer for the Message Pack specification.
     /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {
-        /// <summary>
-        /// Serialize the given command to Message Pack specification bytes.
-        /// </summary>
-        /// <param name="command">The command to serialize.</param>
-        /// <returns>The serialized command.</returns>
+        /// <inheritdoc />
         public byte[] Serialize(Command command)
         {
             var package = new MessagePackObjectDictionary
@@ -71,11 +67,7 @@ namespace Nautilus.Serialization
             return MsgPackSerializer.Serialize(package);
         }
 
-        /// <summary>
-        /// Deserialize the given Message Pack specification bytes to a command.
-        /// </summary>
-        /// <param name="commandBytes">The command bytes to deserialize.</param>
-        /// <returns>The deserialized command.</returns>
+        /// <inheritdoc />
         public Command Deserialize(byte[] commandBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);

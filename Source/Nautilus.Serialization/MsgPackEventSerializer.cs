@@ -23,12 +23,7 @@ namespace Nautilus.Serialization
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {
-        /// <summary>
-        /// Serialize the given event to Message Pack specification bytes.
-        /// </summary>
-        /// <param name="event">The order to serialize.</param>
-        /// <returns>The serialized event.</returns>
-        /// <exception cref="InvalidOperationException">Throws if the event cannot be serialized.</exception>
+        /// <inheritdoc />
         public byte[] Serialize(Event @event)
         {
             var package = new MessagePackObjectDictionary
@@ -146,12 +141,7 @@ namespace Nautilus.Serialization
             return MsgPackSerializer.Serialize(package);
         }
 
-        /// <summary>
-        /// Deserializes the given Message Pack specification bytes to an event.
-        /// </summary>
-        /// <param name="eventBytes">The event bytes to deserialize.</param>
-        /// <returns>The deserialized event.</returns>
-        /// <exception cref="InvalidOperationException">Throws if the event cannot be deserialized.</exception>
+        /// <inheritdoc />
         public Event Deserialize(byte[] eventBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
