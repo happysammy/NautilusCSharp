@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TimeProvider.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TimingProvider.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,7 +16,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// Provides useful methods relating to time.
     /// </summary>
-    public static class TimeProvider
+    public static class TimingProvider
     {
         /// <summary>
         /// Returns a value indicating whether the given instant now is inside the given weekly interval.
@@ -85,12 +85,10 @@ namespace Nautilus.Common.Componentry
         /// <returns>The next date time (UTC).</returns>
         public static ZonedDateTime GetNextUtc(
             IsoDayOfWeek dayOfWeek,
-            LocalTime timeOfDay,
+            [CanBeDefault] LocalTime timeOfDay,
             [CanBeDefault] Instant now)
         {
             Debug.NotDefault(dayOfWeek, nameof(dayOfWeek));
-            Debug.NotDefault(timeOfDay, nameof(timeOfDay));
-            Debug.NotDefault(now, nameof(now));
 
             var localNow = now.InZone(DateTimeZone.Utc).LocalDateTime;
             var localNext = localNow

@@ -75,7 +75,7 @@ namespace Nautilus.Data.Aggregation
 
         private static bool IsMarketOpen(Instant now)
         {
-            return TimeProvider.IsOutsideWeeklyInterval(
+            return TimingProvider.IsOutsideWeeklyInterval(
                 (IsoDayOfWeek.Saturday, new LocalTime(20, 00)),
                 (IsoDayOfWeek.Sunday, new LocalTime(21, 00)),
                 now);
@@ -207,7 +207,7 @@ namespace Nautilus.Data.Aggregation
 
                 // Create close bar job schedule.
                 var barDuration = subscription.Key.Specification.Duration;
-                var initialDelay = TimeProvider.GetDelayForDuration(this.TimeNow(), barDuration);
+                var initialDelay = TimingProvider.GetDelayForDuration(this.TimeNow(), barDuration);
                 var scheduledCancelable = this.scheduler.ScheduleRepeatedlyCancelable(
                     initialDelay,
                     barDuration,

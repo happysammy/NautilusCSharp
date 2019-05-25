@@ -95,7 +95,7 @@ namespace Nautilus.Data
         {
             this.Log.Information($"Starting from {message}...");
 
-            if (TimeProvider.IsOutsideWeeklyInterval(
+            if (TimingProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
                 this.InstantNow()))
@@ -196,11 +196,11 @@ namespace Nautilus.Data
         private void CreateConnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimeProvider.GetNextUtc(
+            var nextTime = TimingProvider.GetNextUtc(
                 this.fixConnectTime.Day,
                 this.fixConnectTime.Time,
                 now);
-            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new ConnectFix(
                 nextTime,
@@ -219,11 +219,11 @@ namespace Nautilus.Data
         private void CreateDisconnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimeProvider.GetNextUtc(
+            var nextTime = TimingProvider.GetNextUtc(
                 this.fixDisconnectTime.Day,
                 this.fixDisconnectTime.Time,
                 now);
-            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new DisconnectFix(
                 nextTime,
@@ -247,8 +247,8 @@ namespace Nautilus.Data
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = TimeProvider.GetNextUtc(jobDay, jobTime, now);
-                var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketOpened = new MarketOpened(
                     symbol,
@@ -274,8 +274,8 @@ namespace Nautilus.Data
 
             foreach (var symbol in this.subscribingSymbols)
             {
-                var nextTime = TimeProvider.GetNextUtc(jobDay, jobTime, now);
-                var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
+                var nextTime = TimingProvider.GetNextUtc(jobDay, jobTime, now);
+                var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, this.InstantNow());
 
                 var marketClosed = new MarketClosed(
                     symbol,
@@ -296,11 +296,11 @@ namespace Nautilus.Data
         private void CreateTrimBarDataJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimeProvider.GetNextUtc(
+            var nextTime = TimingProvider.GetNextUtc(
                 this.barDataTrimTime.Day,
                 this.barDataTrimTime.Time,
                 now);
-            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new TrimBarData(
                 this.barSpecifications,

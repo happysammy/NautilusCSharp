@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TimeProviderTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TimingProviderTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class TimeProviderTests
+    public class TimingProviderTests
     {
         [Theory]
         [InlineData(2018, 6, 30, 19, 59, false)]
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             // Act
             var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
             var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = TimeProvider.IsInsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
+            var result = TimingProvider.IsInsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
 
             // Assert
             Assert.Equal(expected, result);
@@ -94,10 +94,38 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             // Act
             var intervalStart = (IsoDayOfWeek.Saturday, new LocalTime(20, 00));
             var intervalEnd = (IsoDayOfWeek.Sunday, new LocalTime(21, 00));
-            var result = TimeProvider.IsOutsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
+            var result = TimingProvider.IsOutsideWeeklyInterval(intervalStart, intervalEnd, utcNow.ToInstant());
 
             // Assert
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        internal void GetNextUtc_FromUnixEpoch_ReturnsExpectedResult()
+        {
+            // Arrange
+            var utcNow = StubZonedDateTime.UnixEpoch();
+
+            // Act
+            var result = TimingProvider.GetNextUtc(IsoDayOfWeek.Sunday, LocalTime.Midnight, utcNow.ToInstant());
+
+            // Assert
+            Assert.Equal(StubZonedDateTime.UnixEpoch() + Duration.FromDays(3), result);
+        }
+
+        [Fact]
+        internal void GetDurationToNextUtc_WithUnixEpochPlusOneMinutes_ReturnsExpectedResult()
+        {
+            // Arrange
+            var durationToNext = Duration.FromMinutes(1);
+            var next = StubZonedDateTime.UnixEpoch() + durationToNext;
+            var now = StubZonedDateTime.UnixEpoch().ToInstant();
+
+            // Act
+            var result = TimingProvider.GetDurationToNextUtc(next, now);
+
+            // Assert
+            Assert.Equal(durationToNext, result);
         }
 
         [Theory]
@@ -114,7 +142,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var duration = Duration.FromMilliseconds(millisecondsDuration);
 
             // Act
-            var result = TimeProvider.GetDelayForDuration(utcNow, duration);
+            var result = TimingProvider.GetDelayForDuration(utcNow, duration);
 
             // Assert
             Assert.Equal(Duration.FromMilliseconds(millisecondsDelay), result);

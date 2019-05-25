@@ -109,7 +109,7 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"Starting from {message}...");
 
-            if (TimeProvider.IsOutsideWeeklyInterval(
+            if (TimingProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
                 this.InstantNow()))
@@ -188,11 +188,11 @@ namespace Nautilus.Execution
         private void CreateConnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimeProvider.GetNextUtc(
+            var nextTime = TimingProvider.GetNextUtc(
                 this.fixConnectTime.Day,
                 this.fixConnectTime.Time,
                 now);
-            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new ConnectFix(
                 nextTime,
@@ -211,11 +211,11 @@ namespace Nautilus.Execution
         private void CreateDisconnectFixJob()
         {
             var now = this.InstantNow();
-            var nextTime = TimeProvider.GetNextUtc(
+            var nextTime = TimingProvider.GetNextUtc(
                 this.fixDisconnectTime.Day,
                 this.fixDisconnectTime.Time,
                 now);
-            var durationToNext = TimeProvider.GetDurationToNextUtc(nextTime, now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
 
             var job = new DisconnectFix(
                 nextTime,
