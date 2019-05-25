@@ -484,8 +484,8 @@ namespace Nautilus.DomainModel.Aggregates
         [System.Diagnostics.Conditional("DEBUG")]
         private void CheckClassInvariants()
         {
-            Debug.IsIn(this.Id, this.orderIds, nameof(this.Id), nameof(this.orderIds));
-            Debug.True(this.Events.Count > 0, "this.Events.Count > 0.");
+            Debug.True(this.orderIds[0] == this.Id, "this.orderIds[0] == this.Id");
+            Debug.True(this.Events[0] is OrderInitialized, "this.Events[0] is OrderInitialized"); // Should always contain OrderInitialized event first.
         }
     }
 }
