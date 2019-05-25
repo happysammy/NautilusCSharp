@@ -346,18 +346,29 @@ namespace Nautilus.DomainModel.Aggregates
                 { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderInitialized))), new State(OrderStatus.Initialized) },
                 { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderStatus.Submitted) },
                 { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Initialized) }, // Cancel rejected.
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderStatus.Rejected) },
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderStatus.Accepted) },
                 { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Submitted) }, // Cancel rejected.
                 { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Accepted) }, // Cancel rejected.
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderModified))), new State(OrderStatus.Working) },
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderExpired))), new State(OrderStatus.Expired) },
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
                 { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelReject))), new State(OrderStatus.Working) }, // Cancel rejected.
                 { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
                 { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
             };
+
+            // Check that all OrderCancelReject events leave the state unchanged.
+            Debug.True(
+                stateTransitionTable
+                .Where(kvp => kvp.Key.Trigger.ToString().Equals(nameof(OrderCancelReject)))
+                .All(kvp => kvp.Key.CurrentState.ToString().Equals(kvp.Value.ToString())), nameof(stateTransitionTable));
 
             return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
         }
