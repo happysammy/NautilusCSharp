@@ -41,6 +41,18 @@ namespace Nautilus.Core.Extensions
         }
 
         /// <summary>
+        /// Returns a <see cref="ZonedDateTime"/> parsed from the given (ISO-8601) string.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public static ZonedDateTime? ToNullableZonedDateTimeFromIso(this string dateTime)
+        {
+            Debug.NotEmptyOrWhiteSpace(dateTime, nameof(dateTime));
+
+            return NodaIsoStringParsePattern.Parse(dateTime.Replace("Z", string.Empty)).Value;
+        }
+
+        /// <summary>
         /// Returns a <see cref="ZonedDateTime"/> parsed from the given string.
         /// </summary>
         /// <param name="dateTime">The date time.</param>

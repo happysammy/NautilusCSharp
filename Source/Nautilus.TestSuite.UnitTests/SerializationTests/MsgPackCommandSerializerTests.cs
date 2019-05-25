@@ -55,6 +55,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(command, unpacked);
             Assert.Equal(order, unpacked?.Order);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -111,6 +112,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(command, unpacked);
             Assert.Equal(atomicOrder, unpacked?.AtomicOrder);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -154,6 +156,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(command, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]
@@ -170,6 +173,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Assert
             Assert.Equal(command, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]

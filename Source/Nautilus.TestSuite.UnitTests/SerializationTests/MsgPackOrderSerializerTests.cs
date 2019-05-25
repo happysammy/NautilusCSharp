@@ -33,14 +33,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_MarketOrders()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var order = new StubOrderBuilder()
                 .WithTimestamp(StubZonedDateTime.UnixEpoch() + Duration.FromDays(1))
                 .BuildMarketOrder();
 
             // Act
-            var packed = serializer.Serialize(order);
-            var unpacked = serializer.Deserialize(packed);
+            var packed = MsgPackOrderSerializer.Serialize(order);
+            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -52,12 +51,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_LimitOrders()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = serializer.Serialize(order);
-            var unpacked = serializer.Deserialize(packed);
+            var packed = MsgPackOrderSerializer.Serialize(order);
+            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -69,12 +67,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_StopMarketOrders()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
-            var packed = serializer.Serialize(order);
-            var unpacked = serializer.Deserialize(packed);
+            var packed = MsgPackOrderSerializer.Serialize(order);
+            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -86,12 +83,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_StopLimitOrders()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = serializer.Serialize(order);
-            var unpacked = serializer.Deserialize(packed);
+            var packed = MsgPackOrderSerializer.Serialize(order);
+            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -103,13 +99,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenMarketOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var base64 = "iqZTeW1ib2yrQVVEVVNELkZYQ02nT3JkZXJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGpT3JkZXJTaWRlo0JVWalPcmRlclR5cGWmTUFSS0VUqFF1YW50aXR5zgABhqCpVGltZXN0YW1wuDE5NzAtMDEtMDFUMDA6MDA6MDAuMDAwWqVQcmljZaROT05FpUxhYmVspFUxX0WrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORQ==";
-
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = serializer.Deserialize(orderBytes);
+            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.MARKET, order.Type);
@@ -119,13 +113,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var base64 = "iqZTeW1ib2yrQVVEVVNELkZYQ02nT3JkZXJJZLtPLTE5NzAwMTAxLTAwMDAwMC0wMDEtMDAxLTGpT3JkZXJTaWRlo0JVWalPcmRlclR5cGWlTElNSVSoUXVhbnRpdHnOAAGGoKlUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapVByaWNlpzEuMDAwMDClTGFiZWylUzFfU0yrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORQ==";
-
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = serializer.Deserialize(orderBytes);
+            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.LIMIT, order.Type);
@@ -135,13 +127,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void Deserialize_GivenStopLimitOrder_FromPythonMsgPack_ReturnsExpectedOrder()
         {
             // Arrange
-            var serializer = new MsgPackOrderSerializer();
             var base64 = "iqZTeW1ib2yrQVVEVVNELkZYQ02nT3JkZXJJZKdPMTIzNDU2qU9yZGVyU2lkZaNCVVmpT3JkZXJUeXBlqlNUT1BfTElNSVSoUXVhbnRpdHnOAAGGoKlUaW1lc3RhbXC4MTk3MC0wMS0wMVQwMDowMDowMC4wMDBapVByaWNlpzEuMDAwMDClTGFiZWylUzFfU0yrVGltZUluRm9yY2WjREFZqkV4cGlyZVRpbWWkTk9ORQ==";
-
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = serializer.Deserialize(orderBytes);
+            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.STOP_LIMIT, order.Type);

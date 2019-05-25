@@ -18,6 +18,8 @@ namespace Nautilus.Core
     [Immutable]
     public abstract class Identifier<T>
     {
+        private readonly string value;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Identifier{T}"/> class.
         /// </summary>
@@ -26,13 +28,8 @@ namespace Nautilus.Core
         {
             Debug.NotEmptyOrWhiteSpace(value, nameof(value));
 
-            this.Value = value;
+            this.value = value;
         }
-
-        /// <summary>
-        /// Gets the value of the entity identifier.
-        /// </summary>
-        public string Value { get; }
 
         /// <summary>
         /// Returns a value indicating whether the <see cref="Identifier{T}"/>(s) are equal.
@@ -64,7 +61,7 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object other) => other is Identifier<T> entityId && this.Equals(entityId);
+        public override bool Equals(object other) => other is Identifier<T> identifier && this.Equals(identifier);
 
         /// <summary>
         /// Returns a value indicating whether this <see cref="Identifier{T}"/> is equal
@@ -72,18 +69,18 @@ namespace Nautilus.Core
         /// </summary>
         /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public bool Equals(Identifier<T> other) => this.Value == other.Value;
+        public bool Equals(Identifier<T> other) => this.value == other.value;
 
         /// <summary>
         /// Returns the hash code of the wrapped object.
         /// </summary>
         /// <returns>An <see cref="int"/>.</returns>
-        public override int GetHashCode() => Hash.GetCode(this.Value);
+        public override int GetHashCode() => Hash.GetCode(this.value);
 
         /// <summary>
         /// Returns a string representation of the <see cref="Identifier{T}"></see>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Value;
+        public override string ToString() => this.value;
     }
 }

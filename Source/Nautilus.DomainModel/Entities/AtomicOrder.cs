@@ -31,7 +31,7 @@ namespace Nautilus.DomainModel.Entities
             Order entry,
             Order stopLoss,
             Order? takeProfit = null)
-            : base(new AtomicOrderId("A" + entry.Id.Value), entry.Timestamp)
+            : base(new AtomicOrderId("A" + entry.Id), entry.Timestamp)
         {
             this.Entry = entry;
             this.StopLoss = stopLoss;

@@ -15,15 +15,13 @@ namespace Nautilus.Serialization
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
 
     /// <summary>
     /// Provides an events binary serializer for the Message Pack specification.
     /// </summary>
-    public class MsgPackEventSerializer : MsgPackSerializer, IEventSerializer
+    public class MsgPackEventSerializer : IEventSerializer
     {
         /// <summary>
         /// Serialize the given event to Message Pack specification bytes.
@@ -36,6 +34,7 @@ namespace Nautilus.Serialization
             var package = new MessagePackObjectDictionary
             {
                 { Key.Type, nameof(Event) },
+                { Key.Event, @event.Type.Name },
                 { Key.EventId, @event.Id.ToString() },
                 { Key.EventTimestamp, @event.Timestamp.ToIsoString() },
             };
@@ -43,7 +42,6 @@ namespace Nautilus.Serialization
             switch (@event)
             {
                 case AccountEvent accountEvent:
-                    package.Add(Key.Event, nameof(AccountEvent));
                     package.Add(Key.AccountId, accountEvent.AccountId.ToString());
                     package.Add(Key.Broker, accountEvent.Broker.ToString());
                     package.Add(Key.AccountNumber, accountEvent.AccountNumber);
@@ -54,43 +52,38 @@ namespace Nautilus.Serialization
                     package.Add(Key.MarginUsedLiquidation, accountEvent.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.MarginUsedMaintenance, accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.MarginRatio, accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.MarginCallStatus, accountEvent.MarginCallStatus.ToString());
+                    package.Add(Key.MarginCallStatus, accountEvent.MarginCallStatus);
                     break;
                 case OrderInitialized orderEvent:
-                    package.Add(Key.Event, nameof(OrderInitialized));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.Label, orderEvent.OrderLabel.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.OrderType, orderEvent.OrderType.ToString());
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
-                    package.Add(Key.Price, MsgPackSerializationHelper.GetPriceString(orderEvent.Price));
+                    package.Add(Key.Price, MsgPackObjectConverter.FromNullablePrice(orderEvent.Price));
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, MsgPackSerializationHelper.GetExpireTimeString(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, MsgPackObjectConverter.ToExpireTime(orderEvent.ExpireTime));
                     break;
                 case OrderSubmitted orderEvent:
-                    package.Add(Key.Event, nameof(OrderSubmitted));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.SubmittedTime, orderEvent.SubmittedTime.ToIsoString());
                     break;
                 case OrderAccepted orderEvent:
-                    package.Add(Key.Event, nameof(OrderAccepted));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.AcceptedTime, orderEvent.AcceptedTime.ToIsoString());
                     break;
                 case OrderRejected orderEvent:
-                    package.Add(Key.Event, nameof(OrderRejected));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
                     package.Add(Key.RejectedReason, orderEvent.RejectedReason);
                     break;
                 case OrderWorking orderEvent:
-                    package.Add(Key.Event, nameof(OrderWorking));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.BrokerOrderId, orderEvent.OrderIdBroker.ToString());
                     package.Add(Key.Label, orderEvent.Label.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
@@ -98,43 +91,38 @@ namespace Nautilus.Serialization
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
                     package.Add(Key.Price, orderEvent.Price.ToString());
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, MsgPackSerializationHelper.GetExpireTimeString(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, MsgPackObjectConverter.ToExpireTime(orderEvent.ExpireTime));
                     package.Add(Key.WorkingTime, orderEvent.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled orderEvent:
-                    package.Add(Key.Event, nameof(OrderCancelled));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.CancelledTime, orderEvent.CancelledTime.ToIsoString());
                     break;
                 case OrderCancelReject orderEvent:
-                    package.Add(Key.Event, nameof(OrderCancelReject));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
                     package.Add(Key.RejectedResponse, orderEvent.RejectedResponseTo);
                     package.Add(Key.RejectedReason, orderEvent.RejectedReason);
                     break;
                 case OrderModified orderEvent:
-                    package.Add(Key.Event, nameof(OrderModified));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.BrokerOrderId, orderEvent.BrokerOrderId.ToString());
                     package.Add(Key.ModifiedPrice, orderEvent.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.ModifiedTime, orderEvent.ModifiedTime.ToIsoString());
                     break;
                 case OrderExpired orderEvent:
-                    package.Add(Key.Event, nameof(OrderExpired));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.ExpiredTime, orderEvent.ExpiredTime.ToIsoString());
                     break;
                 case OrderPartiallyFilled orderEvent:
-                    package.Add(Key.Event, nameof(OrderPartiallyFilled));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
-                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.Value);
-                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
+                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
+                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
                     package.Add(Key.LeavesQuantity, orderEvent.LeavesQuantity.Value);
@@ -142,11 +130,10 @@ namespace Nautilus.Serialization
                     package.Add(Key.ExecutionTime, orderEvent.ExecutionTime.ToIsoString());
                     break;
                 case OrderFilled orderEvent:
-                    package.Add(Key.Event, nameof(OrderFilled));
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderId, orderEvent.OrderId.Value);
-                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.Value);
-                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.Value);
+                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
+                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
+                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
                     package.Add(Key.AveragePrice, orderEvent.AveragePrice.ToString());
@@ -156,7 +143,7 @@ namespace Nautilus.Serialization
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
 
-            return SerializeToMsgPack(package);
+            return MsgPackSerializer.Serialize(package);
         }
 
         /// <summary>
@@ -167,138 +154,137 @@ namespace Nautilus.Serialization
         /// <exception cref="InvalidOperationException">Throws if the event cannot be deserialized.</exception>
         public Event Deserialize(byte[] eventBytes)
         {
-            var unpacked = DeserializeFromMsgPack<MessagePackObjectDictionary>(eventBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
 
-            var eventId = Guid.Parse(unpacked[Key.EventId].ToString());
-            var eventTimestamp = unpacked[Key.EventTimestamp].ToString().ToZonedDateTimeFromIso();
+            var eventId = MsgPackObjectConverter.ToGuid(unpacked[Key.EventId]);
+            var eventTimestamp = MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.EventTimestamp]);
             var @event = unpacked[Key.Event].ToString();
 
             switch (@event)
             {
                 case nameof(AccountEvent):
-                    var currency = unpacked[Key.Currency].ToString().ToEnum<Currency>();
+                    var currency = MsgPackObjectConverter.ToCurrency(unpacked[Key.Currency]);
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
-                        unpacked[Key.Broker].ToString().ToEnum<Brokerage>(),
+                        MsgPackObjectConverter.ToBrokerage(unpacked[Key.Broker]),
                         unpacked[Key.AccountNumber].ToString(),
                         currency,
-                        Money.Create(Convert.ToDecimal(unpacked[Key.CashBalance].ToString()), currency),
-                        Money.Create(Convert.ToDecimal(unpacked[Key.CashStartDay].ToString()), currency),
-                        Money.Create(Convert.ToDecimal(unpacked[Key.CashActivityDay].ToString()), currency),
-                        Money.Create(Convert.ToDecimal(unpacked[Key.MarginUsedLiquidation].ToString()), currency),
-                        Money.Create(Convert.ToDecimal(unpacked[Key.MarginUsedMaintenance].ToString()), currency),
+                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashBalance], currency),
+                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashStartDay], currency),
+                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashActivityDay], currency),
+                        MsgPackObjectConverter.ToMoney(unpacked[Key.MarginUsedLiquidation], currency),
+                        MsgPackObjectConverter.ToMoney(unpacked[Key.MarginUsedMaintenance], currency),
                         Convert.ToDecimal(unpacked[Key.MarginRatio].ToString()),
                         unpacked[Key.MarginCallStatus].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        new Label(unpacked[Key.Label].ToString()),
-                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
-                        Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        MsgPackSerializationHelper.GetNullablePrice(unpacked[Key.Price].ToString()),
-                        unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToLabel(unpacked[Key.Label]),
+                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
+                        MsgPackObjectConverter.ToOrderType(unpacked[Key.OrderType]),
+                        MsgPackObjectConverter.ToQuantity(unpacked[Key.Quantity]),
+                        MsgPackObjectConverter.ToNullablePrice(unpacked[Key.Price]),
+                        MsgPackObjectConverter.ToTimeInForce(unpacked[Key.TimeInForce]),
+                        MsgPackObjectConverter.ToExpireTime(unpacked[Key.ExpireTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.SubmittedTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.SubmittedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.AcceptedTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.AcceptedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.RejectedTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        new OrderId(unpacked[Key.BrokerOrderId].ToString()),
-                        new Label(unpacked[Key.Label].ToString()),
-                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        unpacked[Key.OrderType].ToString().ToEnum<OrderType>(),
-                        Quantity.Create(unpacked[Key.Quantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.Price].ToString()),
-                        unpacked[Key.TimeInForce].ToString().ToEnum<TimeInForce>(),
-                        MsgPackSerializationHelper.GetExpireTime(unpacked[Key.ExpireTime].ToString()),
-                        unpacked[Key.WorkingTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.BrokerOrderId]),
+                        MsgPackObjectConverter.ToLabel(unpacked[Key.Label]),
+                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
+                        MsgPackObjectConverter.ToOrderType(unpacked[Key.OrderType]),
+                        MsgPackObjectConverter.ToQuantity(unpacked[Key.Quantity]),
+                        MsgPackObjectConverter.ToPrice(unpacked[Key.Price]),
+                        MsgPackObjectConverter.ToTimeInForce(unpacked[Key.TimeInForce]),
+                        MsgPackObjectConverter.ToExpireTime(unpacked[Key.ExpireTime]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.WorkingTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.CancelledTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.CancelledTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.RejectedTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        new OrderId(unpacked[Key.BrokerOrderId].ToString()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.ModifiedPrice].ToString()),
-                        unpacked[Key.ModifiedTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToPrice(unpacked[Key.ModifiedPrice]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ModifiedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        unpacked[Key.ExpiredTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExpiredTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        new ExecutionId(unpacked[Key.ExecutionId].ToString()),
-                        new ExecutionTicket(unpacked[Key.ExecutionTicket].ToString()),
-                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
-                        Quantity.Create(unpacked[Key.LeavesQuantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()),
-                        unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToExecutionId(unpacked[Key.ExecutionId]),
+                        MsgPackObjectConverter.ToExecutionTicket(unpacked[Key.ExecutionId]),
+                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
+                        MsgPackObjectConverter.ToQuantity(unpacked[Key.FilledQuantity]),
+                        MsgPackObjectConverter.ToQuantity(unpacked[Key.LeavesQuantity]),
+                        MsgPackObjectConverter.ToPrice(unpacked[Key.AveragePrice]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExecutionTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        MsgPackSerializationHelper.GetSymbol(unpacked[Key.Symbol].ToString()),
-                        new OrderId(unpacked[Key.OrderId].ToString()),
-                        new ExecutionId(unpacked[Key.ExecutionId].ToString()),
-                        new ExecutionTicket(unpacked[Key.ExecutionTicket].ToString()),
-                        unpacked[Key.OrderSide].ToString().ToEnum<OrderSide>(),
-                        Quantity.Create(unpacked[Key.FilledQuantity].AsInt32()),
-                        MsgPackSerializationHelper.GetPrice(unpacked[Key.AveragePrice].ToString()),
-                        unpacked[Key.ExecutionTime].ToString().ToZonedDateTimeFromIso(),
+                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
+                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
+                        MsgPackObjectConverter.ToExecutionId(unpacked[Key.ExecutionId]),
+                        MsgPackObjectConverter.ToExecutionTicket(unpacked[Key.ExecutionId]),
+                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
+                        MsgPackObjectConverter.ToQuantity(unpacked[Key.FilledQuantity]),
+                        MsgPackObjectConverter.ToPrice(unpacked[Key.AveragePrice]),
+                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExecutionTime]),
                         eventId,
                         eventTimestamp);
-
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }
