@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
-            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
+            stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
 
             // Assert
             Assert.Equal(new State(OrderStatus.Submitted), stateMachine.State);
@@ -53,7 +53,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(nameof(OrderWorking))));
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(Trigger.Event(typeof(OrderWorking))));
         }
 
         [Fact]
@@ -63,12 +63,12 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
-            stateMachine.Process(new Trigger(nameof(OrderInitialized)));  // Redundant trigger doesn't throw.
-            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
-            stateMachine.Process(new Trigger(nameof(OrderAccepted)));
-            stateMachine.Process(new Trigger(nameof(OrderWorking)));
-            stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
-            stateMachine.Process(new Trigger(nameof(OrderFilled)));
+            stateMachine.Process(Trigger.Event(typeof(OrderInitialized)));  // Redundant trigger doesn't throw.
+            stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
+            stateMachine.Process(Trigger.Event(typeof(OrderAccepted)));
+            stateMachine.Process(Trigger.Event(typeof(OrderWorking)));
+            stateMachine.Process(Trigger.Event(typeof(OrderPartiallyFilled)));
+            stateMachine.Process(Trigger.Event(typeof(OrderFilled)));
 
             // Assert
             Assert.Equal(new State(OrderStatus.Filled), stateMachine.State);
@@ -81,13 +81,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
             var stateMachine = Order.CreateOrderFiniteStateMachine();
 
             // Act
-            stateMachine.Process(new Trigger(nameof(OrderSubmitted)));
-            stateMachine.Process(new Trigger(nameof(OrderAccepted)));
-            stateMachine.Process(new Trigger(nameof(OrderWorking)));
-            stateMachine.Process(new Trigger(nameof(OrderPartiallyFilled)));
+            stateMachine.Process(Trigger.Event(typeof(OrderSubmitted)));
+            stateMachine.Process(Trigger.Event(typeof(OrderAccepted)));
+            stateMachine.Process(Trigger.Event(typeof(OrderWorking)));
+            stateMachine.Process(Trigger.Event(typeof(OrderPartiallyFilled)));
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(new Trigger(OrderStatus.Rejected)));
+            Assert.Throws<InvalidOperationException>(() => stateMachine.Process(Trigger.Event(typeof(OrderRejected))));
         }
     }
 }

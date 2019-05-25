@@ -9,6 +9,7 @@
 namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
@@ -23,23 +24,12 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <summary>
         /// Initializes a new instance of the <see cref="Trigger"/> structure.
         /// </summary>
-        /// <param name="trigger">The state.</param>
-        /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
-        internal Trigger(string trigger)
+        /// <param name="value">The trigger value.</param>
+        private Trigger(string value)
         {
-            Debug.NotEmptyOrWhiteSpace(trigger, nameof(trigger));
+            Debug.NotEmptyOrWhiteSpace(value, nameof(value));
 
-            this.value = trigger;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Trigger"/> structure.
-        /// </summary>
-        /// <param name="trigger">The state.</param>
-        /// <exception cref="ArgumentNullException">Throws if the argument is null.</exception>
-        internal Trigger(Enum trigger)
-        {
-            this.value = trigger.ToString();
+            this.value = value;
         }
 
         /// <summary>
@@ -83,5 +73,27 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <returns>A string.</returns>
         public override string ToString() => this.value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Trigger"/> structure.
+        /// </summary>
+        /// <param name="type">The trigger event type.</param>
+        /// <returns>The trigger.</returns>
+        internal static Trigger Event(Type type)
+        {
+            Debug.True(type.IsSubclassOf(typeof(Event)), "type.IsSubclassOf(typeof(Event))");
+
+            return new Trigger(type.Name);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Trigger"/> structure.
+        /// </summary>
+        /// <param name="event">The trigger event.</param>
+        /// <returns>The trigger.</returns>
+        internal static Trigger Event(Event @event)
+        {
+            return new Trigger(@event.Type.Name);
+        }
     }
 }

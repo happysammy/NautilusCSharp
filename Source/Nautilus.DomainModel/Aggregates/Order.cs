@@ -294,19 +294,19 @@ namespace Nautilus.DomainModel.Aggregates
                 case OrderSubmitted @event:
                     this.When(@event);
                     break;
-                case OrderAccepted @event:
+                case OrderRejected @event:
                     this.When(@event);
                     break;
-                case OrderRejected @event:
+                case OrderAccepted @event:
                     this.When(@event);
                     break;
                 case OrderWorking @event:
                     this.When(@event);
                     break;
-                case OrderCancelled @event:
+                case OrderCancelReject @event:
                     this.When(@event);
                     break;
-                case OrderCancelReject @event:
+                case OrderCancelled @event:
                     this.When(@event);
                     break;
                 case OrderExpired @event:
@@ -324,7 +324,7 @@ namespace Nautilus.DomainModel.Aggregates
                 default: throw new InvalidEnumArgumentException($"The {orderEvent} is not recognized by the order {this}");
             }
 
-            this.orderStateMachine.Process(new Trigger(orderEvent.Type.Name));
+            this.orderStateMachine.Process(Trigger.Event(orderEvent));
             this.Events.Add(orderEvent);
         }
 
@@ -342,19 +342,20 @@ namespace Nautilus.DomainModel.Aggregates
         {
             var stateTransitionTable = new Dictionary<StateTransition, State>
             {
-                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderInitialized))), new State(OrderStatus.Initialized) },
-                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderSubmitted))), new State(OrderStatus.Submitted) },
-                { new StateTransition(new State(OrderStatus.Initialized), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Submitted), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Submitted), new Trigger(nameof(OrderAccepted))), new State(OrderStatus.Accepted) },
-                { new StateTransition(new State(OrderStatus.Accepted), new Trigger(nameof(OrderWorking))), new State(OrderStatus.Working) },
-                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderCancelled))), new State(OrderStatus.Cancelled) },
-                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderModified))), new State(OrderStatus.Working) },
-                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderExpired))), new State(OrderStatus.Expired) },
-                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
-                { new StateTransition(new State(OrderStatus.Working), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
-                { new StateTransition(new State(OrderStatus.PartiallyFilled), new Trigger(nameof(OrderFilled))), new State(OrderStatus.Filled) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderInitialized))), new State(OrderStatus.Initialized) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderSubmitted))), new State(OrderStatus.Submitted) },
+                { new StateTransition(new State(OrderStatus.Initialized), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderRejected))), new State(OrderStatus.Rejected) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderAccepted))), new State(OrderStatus.Accepted) },
+                { new StateTransition(new State(OrderStatus.Submitted), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Accepted), Trigger.Event(typeof(OrderWorking))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderCancelled))), new State(OrderStatus.Cancelled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderModified))), new State(OrderStatus.Working) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderExpired))), new State(OrderStatus.Expired) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
+                { new StateTransition(new State(OrderStatus.Working), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderPartiallyFilled))), new State(OrderStatus.PartiallyFilled) },
+                { new StateTransition(new State(OrderStatus.PartiallyFilled), Trigger.Event(typeof(OrderFilled))), new State(OrderStatus.Filled) },
             };
 
             return new FiniteStateMachine(stateTransitionTable, new State(OrderStatus.Initialized));
@@ -380,17 +381,17 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderSubmitted orderEvent)
         {
-            this.IsComplete = true;
-        }
-
-        private void When(OrderAccepted orderEvent)
-        {
-            this.IsComplete = true;
+            // Do nothing.
         }
 
         private void When(OrderRejected orderEvent)
         {
             this.IsComplete = true;
+        }
+
+        private void When(OrderAccepted orderEvent)
+        {
+            // Do nothing.
         }
 
         private void When(OrderWorking orderEvent)
@@ -399,15 +400,15 @@ namespace Nautilus.DomainModel.Aggregates
             this.IsActive = true;
         }
 
+        private void When(OrderCancelReject orderEvent)
+        {
+            // Do nothing.
+        }
+
         private void When(OrderCancelled orderEvent)
         {
             this.IsActive = false;
             this.IsComplete = true;
-        }
-
-        private void When(OrderCancelReject orderEvent)
-        {
-            // Do nothing.
         }
 
         private void When(OrderExpired orderEvent)

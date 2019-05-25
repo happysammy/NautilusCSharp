@@ -21,46 +21,12 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public static class StubEventMessages
     {
-        public static OrderPartiallyFilled OrderPartiallyFilledEvent(
-            Order order,
-            int filledQuantity,
-            int leavesQuantity)
+        public static OrderSubmitted OrderSubmittedEvent(Order order)
         {
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
-
-            return new OrderPartiallyFilled(
+            return new OrderSubmitted(
                 order.Symbol,
                 order.Id,
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
-                order.Side,
-                Quantity.Create(filledQuantity),
-                Quantity.Create(leavesQuantity),
-                order.Price,
-                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
-        }
-
-        public static OrderFilled OrderFilledEvent(Order order)
-        {
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
-
-            return new OrderFilled(
-                order.Symbol,
-                order.Id,
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
-                order.Side,
-                order.Quantity,
-                order.Price,
-                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
+                StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
         }
@@ -76,13 +42,18 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static OrderWorking OrderWorkingEvent(Order order)
+        public static OrderAccepted OrderAcceptedEvent(Order order)
         {
-            if (order.Price is null)
-            {
-                throw new InvalidOperationException("Order must have a price.");
-            }
+            return new OrderAccepted(
+                order.Symbol,
+                order.Id,
+                StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
 
+        public static OrderWorking OrderWorkingEvent(Order order, Price workingPrice)
+        {
             return new OrderWorking(
                 order.Symbol,
                 order.Id,
@@ -91,7 +62,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Side,
                 order.Type,
                 order.Quantity,
-                order.Price,
+                workingPrice,
                 order.TimeInForce,
                 StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(),
                 StubZonedDateTime.UnixEpoch(),
@@ -127,6 +98,41 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 order.Symbol,
                 order.Id,
                 StubZonedDateTime.UnixEpoch(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
+
+        public static OrderPartiallyFilled OrderPartiallyFilledEvent(
+            Order order,
+            int filledQuantity,
+            int leavesQuantity,
+            Price averagePrice)
+        {
+            return new OrderPartiallyFilled(
+                order.Symbol,
+                order.Id,
+                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
+                order.Side,
+                Quantity.Create(filledQuantity),
+                Quantity.Create(leavesQuantity),
+                averagePrice,
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+        }
+
+        public static OrderFilled OrderFilledEvent(Order order, Price averagePrice)
+        {
+            return new OrderFilled(
+                order.Symbol,
+                order.Id,
+                new ExecutionId("NONE"),
+                new ExecutionTicket("NONE"),
+                order.Side,
+                order.Quantity,
+                averagePrice,
+                StubZonedDateTime.UnixEpoch() + Period.FromMinutes(1).ToDuration(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
         }

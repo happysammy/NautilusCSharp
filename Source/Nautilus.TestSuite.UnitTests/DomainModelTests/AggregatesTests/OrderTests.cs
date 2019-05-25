@@ -118,13 +118,16 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message = StubEventMessages.OrderRejectedEvent(order);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderRejectedEvent(order);
 
             // Act
-            order.Apply(message);
+            order.Apply(event1);
+            order.Apply(event2);
 
             // Assert
-            Assert.Equal(2, order.EventCount);
+            Assert.Equal(3, order.EventCount);
             Assert.Equal(OrderStatus.Rejected, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -134,15 +137,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = StubEventMessages.OrderCancelledEvent(order);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessages.OrderCancelledEvent(order);
 
             // Act
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Assert
-            Assert.Equal(3, order.EventCount);
+            Assert.Equal(5, order.EventCount);
             Assert.Equal(OrderStatus.Cancelled, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -152,15 +160,20 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = StubEventMessages.OrderExpiredEvent(order);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessages.OrderExpiredEvent(order);
 
             // Act
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Assert
-            Assert.Equal(3, order.EventCount);
+            Assert.Equal(5, order.EventCount);
             Assert.Equal(OrderStatus.Expired, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -170,14 +183,19 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message = StubEventMessages.OrderWorkingEvent(order);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
 
             // Act
-            order.Apply(message);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
 
             // Assert
             Assert.Equal("some_broker_orderId", order.IdBroker?.ToString());
-            Assert.Equal(2, order.EventCount);
+            Assert.Equal(4, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
         }
@@ -187,12 +205,17 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = StubEventMessages.OrderFilledEvent(order);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessages.OrderFilledEvent(order, order.Price);
 
             // Act
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Assert
             Assert.Equal(OrderStatus.Filled, order.Status);
@@ -203,12 +226,22 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var order = new StubOrderBuilder().BuildStopMarketOrder();
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = StubEventMessages.OrderPartiallyFilledEvent(order, order.Quantity / 2, order.Quantity / 2);
+
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = StubEventMessages.OrderPartiallyFilledEvent(
+                order,
+                order.Quantity / 2,
+                order.Quantity / 2,
+                order.Price);
 
             // Act
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
+
             var result = order.Status;
 
             // Assert
@@ -239,7 +272,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var message = new OrderWorking(
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = new OrderWorking(
                 new Symbol("AUDUSD", Venue.LMAX),
                 order.Id,
                 new OrderId("some_broker_orderId"),
@@ -255,7 +290,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            order.Apply(message);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+
             var result = order.IsComplete;
 
             // Assert
@@ -275,8 +313,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = new OrderPartiallyFilled(
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = new OrderPartiallyFilled(
                 new Symbol("AUDUSD", Venue.LMAX),
                 order.Id,
                 new ExecutionId("some_execution_id"),
@@ -289,8 +329,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Act
             var result = order.IsComplete;
@@ -310,8 +352,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 throw new InvalidOperationException("Order must have a price.");
             }
 
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = new OrderFilled(
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = new OrderFilled(
                 order.Symbol,
                 order.Id,
                 new ExecutionId("some_execution_id"),
@@ -324,8 +368,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             // Act
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Assert
             Assert.Equal(OrderStatus.Filled, order.Status);
@@ -372,8 +418,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                .WithPrice(Price.Create(0.80000m, 5))
                .BuildStopMarketOrder();
 
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = new OrderFilled(
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = new OrderFilled(
                 order.Symbol,
                 order.Id,
                 new ExecutionId("some_execution_id"),
@@ -385,8 +433,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Act
             var result = order.Slippage;
@@ -408,8 +458,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                .WithPrice(Price.Create(1.20000m, 5))
                .BuildStopMarketOrder();
 
-            var message1 = StubEventMessages.OrderWorkingEvent(order);
-            var message2 = new OrderFilled(
+            var event1 = StubEventMessages.OrderSubmittedEvent(order);
+            var event2 = StubEventMessages.OrderAcceptedEvent(order);
+            var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
+            var event4 = new OrderFilled(
                 order.Symbol,
                 order.Id,
                 new ExecutionId("some_execution_id"),
@@ -421,8 +473,10 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
-            order.Apply(message1);
-            order.Apply(message2);
+            order.Apply(event1);
+            order.Apply(event2);
+            order.Apply(event3);
+            order.Apply(event4);
 
             // Act
             var result = order.Slippage;

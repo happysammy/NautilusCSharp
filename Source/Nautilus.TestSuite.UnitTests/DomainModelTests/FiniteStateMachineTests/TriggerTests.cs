@@ -20,9 +20,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void Equals_VariousTriggerTransitionsAndOperators_TestsCorrectly()
         {
             // Arrange
-            var trigger1 = new Trigger(nameof(OrderAccepted));
-            var trigger2 = new Trigger("OrderAccepted");
-            var trigger3 = new Trigger(nameof(OrderWorking));
+            var trigger1 = Trigger.Event(typeof(OrderAccepted));
+            var trigger2 = Trigger.Event(typeof(OrderAccepted));
+            var trigger3 = Trigger.Event(typeof(OrderWorking));
 
             // Act
             var result1 = trigger1.Equals(trigger2);
@@ -45,7 +45,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void GetHashCode_ReturnsExpectedInt()
         {
             // Arrange
-            var trigger = new Trigger(nameof(OrderCancelled));
+            var trigger = Trigger.Event(typeof(OrderCancelled));
 
             // Act
             var result = trigger.GetHashCode();
@@ -58,7 +58,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FiniteStateMachineTests
         public void ToString_ReturnsExpectedString()
         {
             // Arrange
-            var trigger = new Trigger(nameof(OrderWorking));
+            var trigger = Trigger.Event(typeof(OrderWorking));
 
             // Act
             var result = trigger.ToString();

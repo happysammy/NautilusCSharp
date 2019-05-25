@@ -60,18 +60,16 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="obj">The object.</param>
+        /// <param name="other">The other object.</param>
         /// <returns>A boolean.</returns>
-        public override bool Equals(object obj) => obj is StateTransition other && this.Equals(other);
+        public override bool Equals(object other) => other is StateTransition transition && this.Equals(transition);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="StateTransition"/>.
         /// </summary>
         /// <param name="other">The other state transition.</param>
         /// <returns>A boolean.</returns>
-        public bool Equals(StateTransition other) =>
-               this.CurrentState.Equals(other.CurrentState) &&
-               this.Trigger.Equals(other.Trigger);
+        public bool Equals(StateTransition other) => this.CurrentState.Equals(other.CurrentState) && this.Trigger.Equals(other.Trigger);
 
         /// <summary>
         /// Returns the hash code of this <see cref="StateTransition"/>.
