@@ -125,7 +125,7 @@ namespace Nautilus.Common.Componentry
         /// <param name="now">The time now.</param>
         /// <param name="duration">The duration.</param>
         /// <returns>The delay duration.</returns>
-        public static Duration GetDelayForDuration(ZonedDateTime now, Duration duration)
+        public static Duration GetDelayToNextDuration(ZonedDateTime now, Duration duration)
         {
             return (now.Floor(duration) + duration) - now;
         }

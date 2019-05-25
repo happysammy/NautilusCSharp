@@ -207,7 +207,7 @@ namespace Nautilus.Data.Aggregation
 
                 // Create close bar job schedule.
                 var barDuration = subscription.Key.Specification.Duration;
-                var initialDelay = TimingProvider.GetDelayForDuration(this.TimeNow(), barDuration);
+                var initialDelay = TimingProvider.GetDelayToNextDuration(this.TimeNow(), barDuration);
                 var scheduledCancelable = this.scheduler.ScheduleRepeatedlyCancelable(
                     initialDelay,
                     barDuration,

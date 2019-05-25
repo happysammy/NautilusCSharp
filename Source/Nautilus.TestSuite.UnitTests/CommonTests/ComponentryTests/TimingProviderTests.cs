@@ -132,7 +132,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
         [InlineData(250, 1000, 750)]
         [InlineData(500, 1000, 500)]
         [InlineData(999, 1000, 1)]
-        internal void GetDelayForDuration_WithVariousDurations_ReturnsExpectedResult(
+        internal void GetDelayToNextDuration_WithVariousDurations_ReturnsExpectedResult(
             int millisecondsInitialOffset,
             int millisecondsDuration,
             int millisecondsDelay)
@@ -142,7 +142,7 @@ namespace Nautilus.TestSuite.UnitTests.CommonTests.ComponentryTests
             var duration = Duration.FromMilliseconds(millisecondsDuration);
 
             // Act
-            var result = TimingProvider.GetDelayForDuration(utcNow, duration);
+            var result = TimingProvider.GetDelayToNextDuration(utcNow, duration);
 
             // Assert
             Assert.Equal(Duration.FromMilliseconds(millisecondsDelay), result);
