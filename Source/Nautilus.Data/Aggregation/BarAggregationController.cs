@@ -196,6 +196,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketOpened message)
         {
+            // ReSharper disable once UseDeconstruction (causes nullability problem).
             foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
                 // Cancel old scheduled job if it still exists (this shouldn't need to happen).
@@ -224,6 +225,7 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(MarketClosed message)
         {
+            // ReSharper disable once UseDeconstruction (causes nullability problem).
             foreach (var subscription in this.SubscriptionsForSymbol(message.Symbol))
             {
                 subscription.Value?.Cancel();
