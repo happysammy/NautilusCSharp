@@ -17,7 +17,7 @@ namespace Nautilus.DomainModel.Enums
     public enum OrderType
     {
         /// <summary>
-        /// The order type is unknown.
+        /// The order type is unknown (this should never happen).
         /// </summary>
         UNKNOWN = 0,
 
