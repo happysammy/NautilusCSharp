@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization
+namespace Nautilus.Serialization.Internal
 {
     /// <summary>
     /// Provides key strings for Message Pack serialization.
@@ -62,6 +62,11 @@ namespace Nautilus.Serialization
         /// Gets the key string.
         /// </summary>
         internal static string OrderId => nameof(OrderId);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string InitEventGuid => nameof(InitEventGuid);
 
         /// <summary>
         /// Gets the key string.
@@ -206,7 +211,7 @@ namespace Nautilus.Serialization
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CancelReason => nameof(CancelReason);
+        internal static string Reason => nameof(Reason);
 
         /// <summary>
         /// Gets the key string.
@@ -271,16 +276,26 @@ namespace Nautilus.Serialization
         /// <summary>
         /// Gets the key string.
         /// </summary>
+        internal static string InitEventGuidEntry => nameof(InitEventGuidEntry);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string InitEventGuidStopLoss => nameof(InitEventGuidStopLoss);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string InitEventGuidTakeProfit => nameof(InitEventGuidTakeProfit);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
         internal static string StopLoss => nameof(StopLoss);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
         internal static string TakeProfit => nameof(TakeProfit);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string HasTakeProfit => nameof(HasTakeProfit);
     }
 }

@@ -8,6 +8,7 @@
 
 namespace Nautilus.DomainModel.Factories
 {
+    using System;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;
@@ -28,6 +29,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="orderSide">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         /// <returns>The market order.</returns>
         public static Order Market(
             Symbol symbol,
@@ -35,7 +37,8 @@ namespace Nautilus.DomainModel.Factories
             Label orderLabel,
             OrderSide orderSide,
             Quantity quantity,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
         {
             return new Order(
                 symbol,
@@ -47,7 +50,8 @@ namespace Nautilus.DomainModel.Factories
                 null,
                 TimeInForce.DAY,
                 null,
-                timestamp);
+                timestamp,
+                initEventGuid);
         }
 
         /// <summary>
@@ -62,6 +66,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         /// <returns>The market if touched order.</returns>
         public static Order MarketIfTouched(
             Symbol symbol,
@@ -72,7 +77,8 @@ namespace Nautilus.DomainModel.Factories
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
         {
             return new Order(
                 symbol,
@@ -84,7 +90,8 @@ namespace Nautilus.DomainModel.Factories
                 price,
                 timeInForce,
                 expireTime,
-                timestamp);
+                timestamp,
+                initEventGuid);
         }
 
         /// <summary>
@@ -99,6 +106,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         /// <returns>The limit order.</returns>
         public static Order Limit(
             Symbol symbol,
@@ -109,7 +117,8 @@ namespace Nautilus.DomainModel.Factories
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
         {
             return new Order(
                 symbol,
@@ -121,7 +130,8 @@ namespace Nautilus.DomainModel.Factories
                 price,
                 timeInForce,
                 expireTime,
-                timestamp);
+                timestamp,
+                initEventGuid);
         }
 
         /// <summary>
@@ -136,6 +146,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         /// <returns>The stop market order.</returns>
         public static Order StopMarket(
             Symbol symbol,
@@ -146,7 +157,8 @@ namespace Nautilus.DomainModel.Factories
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
         {
             return new Order(
                 symbol,
@@ -158,7 +170,8 @@ namespace Nautilus.DomainModel.Factories
                 price,
                 timeInForce,
                 expireTime,
-                timestamp);
+                timestamp,
+                initEventGuid);
         }
 
         /// <summary>
@@ -173,6 +186,7 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         /// <returns>The stop limit order.</returns>
         public static Order StopLimit(
             Symbol symbol,
@@ -183,7 +197,8 @@ namespace Nautilus.DomainModel.Factories
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
         {
             return new Order(
                 symbol,
@@ -195,7 +210,8 @@ namespace Nautilus.DomainModel.Factories
                 price,
                 timeInForce,
                 expireTime,
-                timestamp);
+                timestamp,
+                initEventGuid);
         }
     }
 }

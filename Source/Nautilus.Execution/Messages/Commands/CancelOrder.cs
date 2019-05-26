@@ -12,7 +12,7 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Aggregates;
+    using Nautilus.Execution.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -24,12 +24,14 @@ namespace Nautilus.Execution.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelOrder"/> class.
         /// </summary>
-        /// <param name="order">The commands order to cancel.</param>
-        /// <param name="cancelReason">The commands cancel reason.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
+        /// <param name="cancelReason">The cancel reason.</param>
         /// <param name="commandId">The commands identifier.</param>
         /// <param name="commandTimestamp">The commands timestamp.</param>
         public CancelOrder(
-            Order order,
+            TraderId traderId,
+            StrategyId strategyId,
             string cancelReason,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -42,14 +44,20 @@ namespace Nautilus.Execution.Messages.Commands
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.Order = order;
+            this.TraderId = traderId;
+            this.StrategyId = strategyId;
             this.Reason = cancelReason;
         }
 
         /// <summary>
-        /// Gets the commands order.
+        /// Gets the commands trader identifier.
         /// </summary>
-        public Order Order { get; }
+        public TraderId TraderId { get; }
+
+        /// <summary>
+        /// Gets the commands strategy identifier.
+        /// </summary>
+        public StrategyId StrategyId { get; }
 
         /// <summary>
         /// Gets the commands cancel reason.

@@ -11,8 +11,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using MsgPack;
     using Nautilus.DomainModel.Enums;
-    using Nautilus.Serialization;
+    using Nautilus.Serialization.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using NodaTime;
     using Xunit;
@@ -38,8 +39,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .BuildMarketOrder();
 
             // Act
-            var packed = MsgPackOrderSerializer.Serialize(order);
-            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
+            var packed = OrderSerializer.Serialize(order);
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -54,8 +55,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = MsgPackOrderSerializer.Serialize(order);
-            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
+            var packed = OrderSerializer.Serialize(order);
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -70,8 +71,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopMarketOrder();
 
             // Act
-            var packed = MsgPackOrderSerializer.Serialize(order);
-            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
+            var packed = OrderSerializer.Serialize(order);
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -86,11 +87,43 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
 
             // Act
-            var packed = MsgPackOrderSerializer.Serialize(order);
-            var unpacked = MsgPackOrderSerializer.Deserialize(packed);
+            var packed = OrderSerializer.Serialize(order);
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_NullableOrders_GivenOrder()
+        {
+            // Arrange
+            var order = new StubOrderBuilder().BuildLimitOrder();
+
+            // Act
+            var packed = OrderSerializer.SerializeTakeProfit(order);
+            var unpacked = OrderSerializer.DeserializeTakeProfit(packed);
+
+            // Assert
+            Assert.Equal(order, unpacked);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_NullableOrders_GivenNil()
+        {
+            // Arrange
+            // var order = new StubOrderBuilder().BuildStopLimitOrder();
+
+            // Act
+            var packed = OrderSerializer.SerializeTakeProfit(null);
+            var unpacked = OrderSerializer.DeserializeTakeProfit(packed);
+
+            // Assert
+            Assert.Equal(null, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -103,7 +136,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
+            var order = OrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.MARKET, order.Type);
@@ -117,7 +150,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
+            var order = OrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.LIMIT, order.Type);
@@ -131,7 +164,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var orderBytes = Convert.FromBase64String(base64);
 
             // Act
-            var order = MsgPackOrderSerializer.Deserialize(orderBytes);
+            var order = OrderSerializer.Deserialize(orderBytes);
 
             // Assert
             Assert.Equal(OrderType.STOP_LIMIT, order.Type);

@@ -54,7 +54,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(10, order.Quantity.Value);
             Assert.Null(order.AveragePrice);
             Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }, order.GetOrderIds());
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
 
@@ -87,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal(TimeInForce.GTD, order.TimeInForce);
             Assert.Equal(StubZonedDateTime.UnixEpoch() + Period.FromMinutes(5).ToDuration(), order.ExpireTime);
             Assert.Equal(new List<OrderId> { new OrderId("some_orderId") }.ToImmutableList(), order.GetOrderIds());
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
             Assert.Equal(OrderStatus.Initialized, order.Status);
         }
 
@@ -129,7 +129,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(3, order.EventCount);
             Assert.Equal(OrderStatus.Rejected, order.Status);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(5, order.EventCount);
             Assert.Equal(OrderStatus.Cancelled, order.Status);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(5, order.EventCount);
             Assert.Equal(OrderStatus.Expired, order.Status);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
         [Fact]
@@ -197,7 +197,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             Assert.Equal("some_broker_orderId", order.IdBroker?.ToString());
             Assert.Equal(4, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
-            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEventTime);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
         }
 
         [Fact]

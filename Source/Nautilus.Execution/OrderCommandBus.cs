@@ -59,18 +59,17 @@ namespace Nautilus.Execution
             this.gateway.SubmitOrder(message.AtomicOrder);
         }
 
-        private void OnMessage(CancelOrder message)
-        {
-            this.gateway.CancelOrder(message.Order);
-        }
-
-        private void OnMessage(ModifyOrder message)
-        {
-            this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
-
-            this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
-        }
-
+// private void OnMessage(CancelOrder message)
+//        {
+//            this.gateway.CancelOrder(message.Order);
+//        }
+//
+//        private void OnMessage(ModifyOrder message)
+//        {
+//            this.gateway.ModifyOrder(message.Order, message.ModifiedPrice);
+//
+//            this.Log.Debug($"Routing StopLossReplaceRequest {message.Order.Symbol} => {this.gateway.Broker}");
+//        }
         private void RouteOrder(AtomicOrder atomicOrder)
         {
             this.gateway.SubmitOrder(atomicOrder);

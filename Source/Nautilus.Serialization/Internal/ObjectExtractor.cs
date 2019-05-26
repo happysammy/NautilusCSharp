@@ -1,12 +1,12 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackObjectConverter.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ObjectExtractor.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Serialization
+namespace Nautilus.Serialization.Internal
 {
     using System;
     using MsgPack;
@@ -19,18 +19,18 @@ namespace Nautilus.Serialization
     using NodaTime;
 
     /// <summary>
-    /// Provides methods for converting between <see cref="MessagePackObject"/>s and domain objects.
+    /// Provides methods for extracting objects from <see cref="MessagePackObjectDictionary"/>s.
     /// </summary>
-    internal static class MsgPackObjectConverter
+    internal static class ObjectExtractor
     {
         /// <summary>
         /// Parses and returns the symbol from the given string.
         /// </summary>
         /// <param name="guid">The guid object.</param>
         /// <returns>The guid.</returns>
-        internal static Guid ToGuid(MessagePackObject guid)
+        internal static Guid Guid(MessagePackObject guid)
         {
-            return Guid.Parse(guid.ToString());
+            return System.Guid.Parse(guid.ToString());
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="symbol">The symbol object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static Symbol ToSymbol(MessagePackObject symbol)
+        internal static Symbol Symbol(MessagePackObject symbol)
         {
             var splitSymbol = symbol.ToString().Split('.');
             return new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
@@ -49,7 +49,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="traderId">The trader identifier object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static TraderId ToTraderId(MessagePackObject traderId)
+        internal static TraderId TraderId(MessagePackObject traderId)
         {
             return new TraderId(traderId.ToString());
         }
@@ -59,7 +59,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="strategyId">The strategy identifier object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static StrategyId ToStrategyId(MessagePackObject strategyId)
+        internal static StrategyId StrategyId(MessagePackObject strategyId)
         {
             return new StrategyId(strategyId.ToString());
         }
@@ -69,7 +69,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="positionId">The position identifier object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static PositionId ToPositionId(MessagePackObject positionId)
+        internal static PositionId PositionId(MessagePackObject positionId)
         {
             return new PositionId(positionId.ToString());
         }
@@ -79,7 +79,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="orderId">The order identifier object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static OrderId ToOrderId(MessagePackObject orderId)
+        internal static OrderId OrderId(MessagePackObject orderId)
         {
             return new OrderId(orderId.ToString());
         }
@@ -89,7 +89,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="executionId">The execution identifier object.</param>
         /// <returns>The execution identifier.</returns>
-        internal static ExecutionId ToExecutionId(MessagePackObject executionId)
+        internal static ExecutionId ExecutionId(MessagePackObject executionId)
         {
             return new ExecutionId(executionId.ToString());
         }
@@ -99,7 +99,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="executionTicket">The execution ticket object.</param>
         /// <returns>The parsed execution ticket.</returns>
-        internal static ExecutionTicket ToExecutionTicket(MessagePackObject executionTicket)
+        internal static ExecutionTicket ExecutionTicket(MessagePackObject executionTicket)
         {
             return new ExecutionTicket(executionTicket.ToString());
         }
@@ -109,7 +109,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="label">The label object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static Label ToLabel(MessagePackObject label)
+        internal static Label Label(MessagePackObject label)
         {
             return new Label(label.ToString());
         }
@@ -119,7 +119,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="brokerage">The brokerage object.</param>
         /// <returns>The brokerage.</returns>
-        internal static Brokerage ToBrokerage(MessagePackObject brokerage)
+        internal static Brokerage Brokerage(MessagePackObject brokerage)
         {
             return brokerage.ToString().ToEnum<Brokerage>();
         }
@@ -129,7 +129,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="currency">The currency object.</param>
         /// <returns>The currency.</returns>
-        internal static Currency ToCurrency(MessagePackObject currency)
+        internal static Currency Currency(MessagePackObject currency)
         {
             return currency.ToString().ToEnum<Currency>();
         }
@@ -139,7 +139,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="orderSide">The order side object.</param>
         /// <returns>The order side.</returns>
-        internal static OrderSide ToOrderSide(MessagePackObject orderSide)
+        internal static OrderSide OrderSide(MessagePackObject orderSide)
         {
             return orderSide.ToString().ToEnum<OrderSide>();
         }
@@ -149,7 +149,7 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="orderType">The order type object.</param>
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static OrderType ToOrderType(MessagePackObject orderType)
+        internal static OrderType OrderType(MessagePackObject orderType)
         {
             return orderType.ToString().ToEnum<OrderType>();
         }
@@ -159,100 +159,76 @@ namespace Nautilus.Serialization
         /// </summary>
         /// <param name="timeInForce">The time in force object.</param>
         /// <returns>The time in force.</returns>
-        internal static TimeInForce ToTimeInForce(MessagePackObject timeInForce)
+        internal static TimeInForce TimeInForce(MessagePackObject timeInForce)
         {
             return timeInForce.ToString().ToEnum<TimeInForce>();
         }
 
         /// <summary>
-        /// Return a <see cref="Price"/> from the given string.
+        /// Return a <see cref="DomainModel.ValueObjects.Price"/> from the given string.
         /// </summary>
         /// <param name="quantity">The quantity object.</param>
         /// <returns>The quantity.</returns>
-        internal static Quantity ToQuantity(MessagePackObject quantity)
+        internal static Quantity Quantity(MessagePackObject quantity)
         {
-            return Quantity.Create(quantity.AsInt32());
+            return DomainModel.ValueObjects.Quantity.Create(quantity.AsInt32());
         }
 
         /// <summary>
-        /// Return a <see cref="Price"/> from the given string.
+        /// Return a <see cref="DomainModel.ValueObjects.Price"/> from the given string.
         /// </summary>
         /// <param name="money">The money object.</param>
         /// <param name="currency">The currency.</param>
         /// <returns>The money.</returns>
-        internal static Money ToMoney(MessagePackObject money, Currency currency)
+        internal static Money Money(MessagePackObject money, Currency currency)
         {
-            return Money.Create(Convert.ToDecimal(money.ToString()), currency);
+            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(money.ToString()), currency);
         }
 
         /// <summary>
-        /// Return a <see cref="Price"/> from the given string.
+        /// Return a <see cref="DomainModel.ValueObjects.Price"/> from the given string.
         /// </summary>
         /// <param name="price">The price string.</param>
         /// <returns>The optional price.</returns>
-        internal static Price ToPrice(MessagePackObject price)
+        internal static Price Price(MessagePackObject price)
         {
             Debug.NotEmptyOrWhiteSpace(price.ToString(), nameof(price));
 
-            return Price.Create(Convert.ToDecimal(price.ToString()));
+            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(price.ToString()));
         }
 
         /// <summary>
-        /// Return a <see cref="Price"/> from the given string.
+        /// Return a <see cref="DomainModel.ValueObjects.Price"/> from the given string.
         /// </summary>
         /// <param name="price">The price string.</param>
         /// <returns>The optional price.</returns>
-        internal static Price? ToNullablePrice(MessagePackObject price)
+        internal static Price? NullablePrice(MessagePackObject price)
         {
             return price.Equals(MessagePackObject.Nil)
                 ? null
-                : Price.Create(Convert.ToDecimal(price.ToString()));
-        }
-
-        /// <summary>
-        /// Return a <see cref="MessagePackObject"/> from the given price.
-        /// </summary>
-        /// <param name="price">The price.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject FromNullablePrice(Price? price)
-        {
-            return price is null
-                ? MessagePackObject.Nil
-                : price.ToString();
+                : DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(price.ToString()));
         }
 
         /// <summary>
         /// Parses and returns the expire time from the given string.
         /// </summary>
-        /// <param name="timestamp">The timestamp object.</param>
+        /// <param name="dateTime">The zoned date time object.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static ZonedDateTime ToZonedDateTime(MessagePackObject timestamp)
+        internal static ZonedDateTime ZonedDateTime(MessagePackObject dateTime)
         {
-            return timestamp.ToString().ToZonedDateTimeFromIso();
+            return dateTime.ToString().ToZonedDateTimeFromIso();
         }
 
         /// <summary>
         /// Parses and returns the expire time from the given string.
         /// </summary>
-        /// <param name="expireTimeString">The expire time string.</param>
+        /// <param name="dateTime">The zoned date time.</param>
         /// <returns>The parsed expire time <see cref="string"/>.</returns>
-        internal static ZonedDateTime? ToExpireTime(MessagePackObject expireTimeString)
+        internal static ZonedDateTime? NullableZonedDateTime(MessagePackObject dateTime)
         {
-            return expireTimeString == MessagePackObject.Nil
+            return dateTime == MessagePackObject.Nil
                 ? null
-                : expireTimeString.ToString().ToNullableZonedDateTimeFromIso();
-        }
-
-        /// <summary>
-        /// Returns a <see cref="MessagePackObject"/> from the given nullable expire time.
-        /// </summary>
-        /// <param name="expireTime">The nullable expire time.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject ToExpireTime(ZonedDateTime? expireTime)
-        {
-            return expireTime is null
-                ? MessagePackObject.Nil
-                : expireTime.Value.ToIsoString();
+                : dateTime.ToString().ToNullableZonedDateTimeFromIso();
         }
     }
 }

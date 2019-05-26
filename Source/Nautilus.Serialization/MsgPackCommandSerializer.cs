@@ -16,6 +16,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Execution.Messages.Commands;
+    using Nautilus.Serialization.Internal;
 
     /// <summary>
     /// Provides a command serializer for the Message Pack specification.
@@ -36,11 +37,13 @@ namespace Nautilus.Serialization
             switch (command)
             {
                 case CancelOrder cmd:
-                    package.Add(Key.Order, MsgPackOrderSerializer.Serialize(cmd.Order));
-                    package.Add(Key.CancelReason, cmd.Reason);
+                    package.Add(Key.TraderId, cmd.TraderId.ToString());
+                    package.Add(Key.StrategyId, cmd.StrategyId.ToString());
+                    package.Add(Key.Reason, cmd.Reason);
                     break;
                 case ModifyOrder cmd:
-                    package.Add(Key.Order, MsgPackOrderSerializer.Serialize(cmd.Order));
+                    package.Add(Key.TraderId, cmd.TraderId.ToString());
+                    package.Add(Key.StrategyId, cmd.StrategyId.ToString());
                     package.Add(Key.ModifiedPrice, cmd.ModifiedPrice.ToString());
                     break;
                 case CollateralInquiry cmd:
@@ -49,16 +52,19 @@ namespace Nautilus.Serialization
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
                     package.Add(Key.PositionId, cmd.PositionId.ToString());
-                    package.Add(Key.Order, MsgPackOrderSerializer.Serialize(cmd.Order));
+                    package.Add(Key.Order, OrderSerializer.Serialize(cmd.Order));
+                    package.Add(Key.InitEventGuid, cmd.InitEventGuid.ToString());
                     break;
                 case SubmitAtomicOrder cmd:
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
                     package.Add(Key.PositionId, cmd.PositionId.ToString());
-                    package.Add(Key.Entry, MsgPackOrderSerializer.Serialize(cmd.AtomicOrder.Entry));
-                    package.Add(Key.StopLoss, MsgPackOrderSerializer.Serialize(cmd.AtomicOrder.StopLoss));
-                    package.Add(Key.TakeProfit, MsgPackOrderSerializer.SerializeTakeProfit(cmd.AtomicOrder.TakeProfit));
-                    package.Add(Key.HasTakeProfit, cmd.HasTakeProfit);
+                    package.Add(Key.Entry, OrderSerializer.SerializeEntry(cmd.AtomicOrder));
+                    package.Add(Key.StopLoss, OrderSerializer.SerializeStopLoss(cmd.AtomicOrder));
+                    package.Add(Key.TakeProfit, OrderSerializer.SerializeTakeProfit(cmd.AtomicOrder));
+                    package.Add(Key.InitEventGuidEntry, cmd.InitEventGuidEntry.ToString());
+                    package.Add(Key.InitEventGuidStopLoss, cmd.InitEventGuidStopLoss.ToString());
+                    package.Add(Key.InitEventGuidTakeProfit, cmd.InitEventGuidTakeProfit.ToString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
@@ -82,35 +88,36 @@ namespace Nautilus.Serialization
                     return new CollateralInquiry(commandId, commandTimestamp);
                 case nameof(CancelOrder):
                     return new CancelOrder(
-                        MsgPackOrderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
-                        unpacked[Key.CancelReason].ToString(),
+                        ObjectExtractor.TraderId(unpacked[Key.TraderId]),
+                        ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        unpacked[Key.Reason].ToString(),
                         commandId,
                         commandTimestamp);
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
-                        MsgPackOrderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
-                        MsgPackObjectConverter.ToPrice(unpacked[Key.ModifiedPrice].ToString()),
+                        ObjectExtractor.TraderId(unpacked[Key.TraderId]),
+                        ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        ObjectExtractor.Price(unpacked[Key.ModifiedPrice].ToString()),
                         commandId,
                         commandTimestamp);
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
-                        MsgPackOrderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
-                        MsgPackObjectConverter.ToTraderId(unpacked[Key.TraderId]),
-                        MsgPackObjectConverter.ToStrategyId(unpacked[Key.StrategyId]),
-                        MsgPackObjectConverter.ToPositionId(unpacked[Key.PositionId]),
+                        ObjectExtractor.TraderId(unpacked[Key.TraderId]),
+                        ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        ObjectExtractor.PositionId(unpacked[Key.PositionId]),
+                        OrderSerializer.Deserialize(unpacked[Key.Order].AsBinary(), ObjectExtractor.Guid(unpacked[Key.InitEventGuid])),
+                        ObjectExtractor.Guid(unpacked[Key.InitEventGuid]),
                         commandId,
                         commandTimestamp);
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
+                        ObjectExtractor.TraderId(unpacked[Key.TraderId]),
+                        ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        ObjectExtractor.PositionId(unpacked[Key.PositionId]),
                         new AtomicOrder(
-                            MsgPackOrderSerializer.Deserialize(unpacked[Key.Entry].AsBinary()),
-                            MsgPackOrderSerializer.Deserialize(unpacked[Key.StopLoss].AsBinary()),
-                            MsgPackOrderSerializer.DeserializeTakeProfit(
-                                unpacked[Key.TakeProfit].AsBinary(),
-                                unpacked[Key.HasTakeProfit].AsBoolean())),
-                        MsgPackObjectConverter.ToTraderId(unpacked[Key.TraderId]),
-                        MsgPackObjectConverter.ToStrategyId(unpacked[Key.StrategyId]),
-                        MsgPackObjectConverter.ToPositionId(unpacked[Key.PositionId]),
+                            OrderSerializer.DeserializeEntry(unpacked),
+                            OrderSerializer.DeserializeStopLoss(unpacked),
+                            OrderSerializer.DeserializeTakeProfit(unpacked)),
                         commandId,
                         commandTimestamp);
                 default:

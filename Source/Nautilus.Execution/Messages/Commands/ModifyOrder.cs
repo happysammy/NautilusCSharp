@@ -12,8 +12,8 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.ValueObjects;
+    using Nautilus.Execution.Identifiers;
     using NodaTime;
 
     /// <summary>
@@ -25,12 +25,14 @@ namespace Nautilus.Execution.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyOrder"/> class.
         /// </summary>
-        /// <param name="order">The commands order to modify.</param>
+        /// <param name="traderId">The trader identifier.</param>
+        /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public ModifyOrder(
-            Order order,
+            TraderId traderId,
+            StrategyId strategyId,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -42,14 +44,20 @@ namespace Nautilus.Execution.Messages.Commands
             Debug.NotDefault(commandId, nameof(commandId));
             Debug.NotDefault(commandTimestamp, nameof(commandTimestamp));
 
-            this.Order = order;
+            this.TraderId = traderId;
+            this.StrategyId = strategyId;
             this.ModifiedPrice = modifiedPrice;
         }
 
         /// <summary>
-        /// Gets the commands order.
+        /// Gets the commands trader identifier.
         /// </summary>
-        public Order Order { get; }
+        public TraderId TraderId { get; }
+
+        /// <summary>
+        /// Gets the commands strategy identifier.
+        /// </summary>
+        public StrategyId StrategyId { get; }
 
         /// <summary>
         /// Gets the commands modified order price.

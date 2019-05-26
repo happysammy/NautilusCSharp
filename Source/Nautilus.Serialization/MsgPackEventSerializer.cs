@@ -17,6 +17,7 @@ namespace Nautilus.Serialization
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Serialization.Internal;
 
     /// <summary>
     /// Provides an events binary serializer for the Message Pack specification.
@@ -56,9 +57,9 @@ namespace Nautilus.Serialization
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.OrderType, orderEvent.OrderType.ToString());
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
-                    package.Add(Key.Price, MsgPackObjectConverter.FromNullablePrice(orderEvent.Price));
+                    package.Add(Key.Price, ObjectPacker.NullablePrice(orderEvent.Price));
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, MsgPackObjectConverter.ToExpireTime(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, ObjectPacker.NullableZonedDateTime(orderEvent.ExpireTime));
                     break;
                 case OrderSubmitted orderEvent:
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
@@ -86,7 +87,7 @@ namespace Nautilus.Serialization
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
                     package.Add(Key.Price, orderEvent.Price.ToString());
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, MsgPackObjectConverter.ToExpireTime(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, ObjectPacker.NullableZonedDateTime(orderEvent.ExpireTime));
                     package.Add(Key.WorkingTime, orderEvent.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled orderEvent:
@@ -146,133 +147,133 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
 
-            var eventId = MsgPackObjectConverter.ToGuid(unpacked[Key.EventId]);
-            var eventTimestamp = MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.EventTimestamp]);
+            var eventId = ObjectExtractor.Guid(unpacked[Key.EventId]);
+            var eventTimestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.EventTimestamp]);
             var @event = unpacked[Key.Event].ToString();
 
             switch (@event)
             {
                 case nameof(AccountEvent):
-                    var currency = MsgPackObjectConverter.ToCurrency(unpacked[Key.Currency]);
+                    var currency = ObjectExtractor.Currency(unpacked[Key.Currency]);
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
-                        MsgPackObjectConverter.ToBrokerage(unpacked[Key.Broker]),
+                        ObjectExtractor.Brokerage(unpacked[Key.Broker]),
                         unpacked[Key.AccountNumber].ToString(),
                         currency,
-                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashBalance], currency),
-                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashStartDay], currency),
-                        MsgPackObjectConverter.ToMoney(unpacked[Key.CashActivityDay], currency),
-                        MsgPackObjectConverter.ToMoney(unpacked[Key.MarginUsedLiquidation], currency),
-                        MsgPackObjectConverter.ToMoney(unpacked[Key.MarginUsedMaintenance], currency),
+                        ObjectExtractor.Money(unpacked[Key.CashBalance], currency),
+                        ObjectExtractor.Money(unpacked[Key.CashStartDay], currency),
+                        ObjectExtractor.Money(unpacked[Key.CashActivityDay], currency),
+                        ObjectExtractor.Money(unpacked[Key.MarginUsedLiquidation], currency),
+                        ObjectExtractor.Money(unpacked[Key.MarginUsedMaintenance], currency),
                         Convert.ToDecimal(unpacked[Key.MarginRatio].ToString()),
                         unpacked[Key.MarginCallStatus].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToLabel(unpacked[Key.Label]),
-                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
-                        MsgPackObjectConverter.ToOrderType(unpacked[Key.OrderType]),
-                        MsgPackObjectConverter.ToQuantity(unpacked[Key.Quantity]),
-                        MsgPackObjectConverter.ToNullablePrice(unpacked[Key.Price]),
-                        MsgPackObjectConverter.ToTimeInForce(unpacked[Key.TimeInForce]),
-                        MsgPackObjectConverter.ToExpireTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Label(unpacked[Key.Label]),
+                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.OrderType(unpacked[Key.OrderType]),
+                        ObjectExtractor.Quantity(unpacked[Key.Quantity]),
+                        ObjectExtractor.NullablePrice(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.SubmittedTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.SubmittedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.AcceptedTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.AcceptedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.RejectedTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.BrokerOrderId]),
-                        MsgPackObjectConverter.ToLabel(unpacked[Key.Label]),
-                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
-                        MsgPackObjectConverter.ToOrderType(unpacked[Key.OrderType]),
-                        MsgPackObjectConverter.ToQuantity(unpacked[Key.Quantity]),
-                        MsgPackObjectConverter.ToPrice(unpacked[Key.Price]),
-                        MsgPackObjectConverter.ToTimeInForce(unpacked[Key.TimeInForce]),
-                        MsgPackObjectConverter.ToExpireTime(unpacked[Key.ExpireTime]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.WorkingTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.OrderId(unpacked[Key.BrokerOrderId]),
+                        ObjectExtractor.Label(unpacked[Key.Label]),
+                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.OrderType(unpacked[Key.OrderType]),
+                        ObjectExtractor.Quantity(unpacked[Key.Quantity]),
+                        ObjectExtractor.Price(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.WorkingTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.CancelledTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.CancelledTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.RejectedTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToPrice(unpacked[Key.ModifiedPrice]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ModifiedTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Price(unpacked[Key.ModifiedPrice]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.ModifiedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExpiredTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExpiredTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToExecutionId(unpacked[Key.ExecutionId]),
-                        MsgPackObjectConverter.ToExecutionTicket(unpacked[Key.ExecutionId]),
-                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
-                        MsgPackObjectConverter.ToQuantity(unpacked[Key.FilledQuantity]),
-                        MsgPackObjectConverter.ToQuantity(unpacked[Key.LeavesQuantity]),
-                        MsgPackObjectConverter.ToPrice(unpacked[Key.AveragePrice]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExecutionTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
+                        ObjectExtractor.Quantity(unpacked[Key.LeavesQuantity]),
+                        ObjectExtractor.Price(unpacked[Key.AveragePrice]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        MsgPackObjectConverter.ToSymbol(unpacked[Key.Symbol]),
-                        MsgPackObjectConverter.ToOrderId(unpacked[Key.OrderId]),
-                        MsgPackObjectConverter.ToExecutionId(unpacked[Key.ExecutionId]),
-                        MsgPackObjectConverter.ToExecutionTicket(unpacked[Key.ExecutionId]),
-                        MsgPackObjectConverter.ToOrderSide(unpacked[Key.OrderSide]),
-                        MsgPackObjectConverter.ToQuantity(unpacked[Key.FilledQuantity]),
-                        MsgPackObjectConverter.ToPrice(unpacked[Key.AveragePrice]),
-                        MsgPackObjectConverter.ToZonedDateTime(unpacked[Key.ExecutionTime]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
+                        ObjectExtractor.Price(unpacked[Key.AveragePrice]),
+                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
                         eventId,
                         eventTimestamp);
                 default:

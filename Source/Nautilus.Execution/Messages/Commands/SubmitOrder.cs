@@ -25,17 +25,19 @@ namespace Nautilus.Execution.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="SubmitOrder"/> class.
         /// </summary>
-        /// <param name="order">The order to submit.</param>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="positionId">The position identifier.</param>
+        /// <param name="order">The order to submit.</param>
+        /// <param name="initEventGuid">The initialization event GUID.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitOrder(
-            Order order,
             TraderId traderId,
             StrategyId strategyId,
             PositionId positionId,
+            Order order,
+            Guid initEventGuid,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -43,16 +45,12 @@ namespace Nautilus.Execution.Messages.Commands
                 commandId,
                 commandTimestamp)
         {
-            this.Order = order;
             this.TraderId = traderId;
             this.StrategyId = strategyId;
             this.PositionId = positionId;
+            this.Order = order;
+            this.InitEventGuid = initEventGuid;
         }
-
-        /// <summary>
-        /// Gets the commands order.
-        /// </summary>
-        public Order Order { get; }
 
         /// <summary>
         /// Gets the commands trader identifier.
@@ -68,5 +66,15 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands position identifier.
         /// </summary>
         public PositionId PositionId { get; }
+
+        /// <summary>
+        /// Gets the commands order.
+        /// </summary>
+        public Order Order { get; }
+
+        /// <summary>
+        /// Gets the commands order initialization event GUID.
+        /// </summary>
+        public Guid InitEventGuid { get; }
     }
 }

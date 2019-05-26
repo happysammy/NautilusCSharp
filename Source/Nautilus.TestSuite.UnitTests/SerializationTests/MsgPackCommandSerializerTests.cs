@@ -40,10 +40,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildMarketOrder();
 
             var command = new SubmitOrder(
-                order,
                 new TraderId("000"),
                 new StrategyId("001"),
                 new PositionId("001"),
+                order,
+                Guid.NewGuid(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -68,10 +69,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var atomicOrder = new AtomicOrder(entry, stopLoss);
 
             var command = new SubmitAtomicOrder(
-                atomicOrder,
                 new TraderId("000"),
                 new StrategyId("001"),
                 new PositionId("001"),
+                atomicOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -97,10 +98,10 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
 
             var command = new SubmitAtomicOrder(
-                atomicOrder,
                 new TraderId("000"),
                 new StrategyId("001"),
                 new PositionId("001"),
+                atomicOrder,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -122,7 +123,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackCommandSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new CancelOrder(
-                order,
+                new TraderId("000"),
+                new StrategyId("001"),
                 "EXPIRED",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -144,7 +146,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackCommandSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var command = new ModifyOrder(
-                order,
+                new TraderId("000"),
+                new StrategyId("001"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

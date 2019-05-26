@@ -32,10 +32,10 @@ namespace Nautilus.Execution.Messages.Commands
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitAtomicOrder(
-            AtomicOrder atomicOrder,
             TraderId traderId,
             StrategyId strategyId,
             PositionId positionId,
+            AtomicOrder atomicOrder,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
@@ -43,22 +43,16 @@ namespace Nautilus.Execution.Messages.Commands
                 commandId,
                 commandTimestamp)
         {
-            this.AtomicOrder = atomicOrder;
-            this.HasTakeProfit = atomicOrder.HasTakeProfit;
             this.TraderId = traderId;
             this.StrategyId = strategyId;
             this.PositionId = positionId;
+            this.AtomicOrder = atomicOrder;
+            this.InitEventGuidEntry = atomicOrder.Entry.InitEventGuid;
+            this.InitEventGuidStopLoss = atomicOrder.StopLoss.InitEventGuid;
+            this.InitEventGuidTakeProfit = atomicOrder.HasTakeProfit
+                ? atomicOrder.TakeProfit.InitEventGuid
+                : Guid.Empty;
         }
-
-        /// <summary>
-        /// Gets the commands atomic order.
-        /// </summary>
-        public AtomicOrder AtomicOrder { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the commands atomic order has a take profit.
-        /// </summary>
-        public bool HasTakeProfit { get; }
 
         /// <summary>
         /// Gets the commands trader identifier.
@@ -74,5 +68,25 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands position identifier.
         /// </summary>
         public PositionId PositionId { get; }
+
+        /// <summary>
+        /// Gets the commands atomic order.
+        /// </summary>
+        public AtomicOrder AtomicOrder { get; }
+
+        /// <summary>
+        /// Gets the commands atomic order entry initialization event <see cref="Guid"/>.
+        /// </summary>
+        public Guid InitEventGuidEntry { get; }
+
+        /// <summary>
+        /// Gets the commands atomic order stop-loss initialization event <see cref="Guid"/>.
+        /// </summary>
+        public Guid InitEventGuidStopLoss { get; }
+
+        /// <summary>
+        /// Gets the commands atomic order take-profit initialization event <see cref="Guid"/>.
+        /// </summary>
+        public Guid InitEventGuidTakeProfit { get; }
     }
 }

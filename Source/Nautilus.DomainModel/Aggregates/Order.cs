@@ -48,6 +48,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
+        /// <param name="initEventGuid">The order initialization event GUID.</param>
         public Order(
             Symbol symbol,
             OrderId orderId,
@@ -58,7 +59,8 @@ namespace Nautilus.DomainModel.Aggregates
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
-            ZonedDateTime timestamp)
+            ZonedDateTime timestamp,
+            Guid initEventGuid = default)
             : base(orderId, timestamp)
         {
             Debug.NotDefault(orderSide, nameof(orderSide));
@@ -97,8 +99,9 @@ namespace Nautilus.DomainModel.Aggregates
                 price,
                 timeInForce,
                 expireTime,
-                Guid.NewGuid(),
+                initEventGuid == default ? Guid.NewGuid() : initEventGuid,
                 timestamp);
+            this.InitEventGuid = initialized.Id;
 
             this.Apply(initialized);
             this.CheckClassInvariants();
@@ -127,6 +130,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Slippage = null;
             this.TimeInForce = initialized.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
+            this.InitEventGuid = initialized.Id;
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
             this.IsActive = false;
@@ -217,9 +221,14 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
+        /// Gets the initialization event GUID.
+        /// </summary>
+        public Guid InitEventGuid { get; }
+
+        /// <summary>
         /// Gets the orders last event time.
         /// </summary>
-        public ZonedDateTime LastEventTime => this.Events.Last().Timestamp;  // Should always contain an OrderInitialized event.
+        public OrderEvent LastEvent => (OrderEvent)this.Events.Last();
 
         /// <summary>
         /// Gets the current order status.
