@@ -12,6 +12,7 @@ namespace Nautilus.Execution.Messages.Commands
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
+    using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Identifiers;
     using NodaTime;
@@ -27,12 +28,14 @@ namespace Nautilus.Execution.Messages.Commands
         /// </summary>
         /// <param name="traderId">The trader identifier.</param>
         /// <param name="strategyId">The strategy identifier.</param>
+        /// <param name="orderId">The order identifier.</param>
         /// <param name="modifiedPrice">The modified price.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public ModifyOrder(
             TraderId traderId,
             StrategyId strategyId,
+            OrderId orderId,
             Price modifiedPrice,
             Guid commandId,
             ZonedDateTime commandTimestamp)
@@ -46,6 +49,7 @@ namespace Nautilus.Execution.Messages.Commands
 
             this.TraderId = traderId;
             this.StrategyId = strategyId;
+            this.OrderId = orderId;
             this.ModifiedPrice = modifiedPrice;
         }
 
@@ -58,6 +62,11 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands strategy identifier.
         /// </summary>
         public StrategyId StrategyId { get; }
+
+        /// <summary>
+        /// Gets the commands order identifier.
+        /// </summary>
+        public OrderId OrderId { get; }
 
         /// <summary>
         /// Gets the commands modified order price.

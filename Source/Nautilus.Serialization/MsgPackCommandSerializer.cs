@@ -39,11 +39,13 @@ namespace Nautilus.Serialization
                 case CancelOrder cmd:
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
+                    package.Add(Key.OrderId, cmd.OrderId.ToString());
                     package.Add(Key.Reason, cmd.Reason);
                     break;
                 case ModifyOrder cmd:
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
+                    package.Add(Key.OrderId, cmd.OrderId.ToString());
                     package.Add(Key.ModifiedPrice, cmd.ModifiedPrice.ToString());
                     break;
                 case CollateralInquiry cmd:
@@ -90,6 +92,7 @@ namespace Nautilus.Serialization
                     return new CancelOrder(
                         ObjectExtractor.TraderId(unpacked[Key.TraderId]),
                         ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         unpacked[Key.Reason].ToString(),
                         commandId,
                         commandTimestamp);
@@ -97,6 +100,7 @@ namespace Nautilus.Serialization
                     return new ModifyOrder(
                         ObjectExtractor.TraderId(unpacked[Key.TraderId]),
                         ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.Price(unpacked[Key.ModifiedPrice].ToString()),
                         commandId,
                         commandTimestamp);

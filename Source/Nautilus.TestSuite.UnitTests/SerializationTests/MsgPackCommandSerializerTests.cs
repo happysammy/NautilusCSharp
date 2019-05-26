@@ -125,6 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new CancelOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new OrderId("123456"),
                 "EXPIRED",
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -148,6 +149,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var command = new ModifyOrder(
                 new TraderId("000"),
                 new StrategyId("001"),
+                new OrderId("123456"),
                 Price.Create(1.50000m, 5),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());

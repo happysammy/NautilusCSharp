@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -56,7 +56,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -72,7 +72,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -88,7 +88,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed);
+            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
 
             // Assert
             Assert.Equal(order, unpacked);

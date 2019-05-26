@@ -37,8 +37,9 @@ namespace Nautilus.Execution
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
-            this.RegisterHandler<CancelOrder>(this.OnMessage);
-            this.RegisterHandler<ModifyOrder>(this.OnMessage);
+
+            // this.RegisterHandler<CancelOrder>(this.OnMessage);
+            // this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<AtomicOrder>(this.RouteOrder);
         }
 

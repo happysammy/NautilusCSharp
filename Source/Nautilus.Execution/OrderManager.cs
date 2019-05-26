@@ -71,40 +71,28 @@ namespace Nautilus.Execution
 
         private void OnMessage(CancelOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
+            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.OrderId));
 
             if (order is null)
             {
                 this.Log.Warning(
-                    $"Order not found for CancelOrder (command order_id={message.Order.Id}).");
+                    $"Order not found for CancelOrder (command order_id={message.OrderId}).");
                 return;
             }
 
-            var cancelOrder = new CancelOrder(
-                order,
-                message.Reason,
-                message.Id,
-                message.Timestamp);
-
-            this.Send(ExecutionServiceAddress.Core, cancelOrder);
+            this.Send(ExecutionServiceAddress.Core, message);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.Order.Id));
+            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.OrderId));
 
             if (order is null)
             {
                 this.Log.Warning(
-                    $"Order not found for ModifyOrder (command order_id={message.Order.Id}).");
+                    $"Order not found for ModifyOrder (command order_id={message.OrderId}).");
                 return;
             }
-
-            var modifyOrder = new ModifyOrder(
-                order,
-                message.ModifiedPrice,
-                message.Id,
-                message.Timestamp);
 
             if (!this.modifyCache.ContainsKey(order.Id))
             {
@@ -115,12 +103,12 @@ namespace Nautilus.Execution
 
             if (this.modifyCache[order.Id].Count == 0)
             {
-                this.Send(ExecutionServiceAddress.Core, modifyOrder);
-                this.AddToCache(modifyOrder);
+                this.Send(ExecutionServiceAddress.Core, message);
+                this.AddToCache(message);
             }
             else
             {
-                this.AddToCache(modifyOrder);
+                this.AddToCache(message);
             }
         }
 
@@ -162,7 +150,7 @@ namespace Nautilus.Execution
 
         private void AddToCache(ModifyOrder modifyOrder)
         {
-            var orderId = modifyOrder.Order.Id;
+            var orderId = modifyOrder.OrderId;
             if (!this.modifyCache.ContainsKey(orderId))
             {
                 // No cache for order id (this should never happen).
