@@ -11,6 +11,7 @@ namespace Nautilus.Serialization
     using System.Globalization;
     using MsgPack;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.Internal;
@@ -32,7 +33,7 @@ namespace Nautilus.Serialization
                 { Key.SecurityType, instrument.SecurityType.ToString() },
                 { Key.TickPrecision, instrument.TickPrecision },
                 { Key.TickSize, instrument.TickSize.ToString(CultureInfo.InvariantCulture) },
-                { Key.RoundLotSize, instrument.RoundLotSize.ToString() },
+                { Key.RoundLotSize, instrument.RoundLotSize },
                 { Key.MinStopDistanceEntry, instrument.MinStopDistanceEntry },
                 { Key.MinStopDistance, instrument.MinStopDistance },
                 { Key.MinLimitDistanceEntry, instrument.MinLimitDistanceEntry },
@@ -41,6 +42,7 @@ namespace Nautilus.Serialization
                 { Key.MaxTradeSize, instrument.MaxTradeSize },
                 { Key.RolloverInterestBuy, instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
                 { Key.RolloverInterestSell, instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
+                { Key.Timestamp, instrument.Timestamp.ToIsoString() },
             });
         }
 
