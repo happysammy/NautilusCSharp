@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Core;
 
     /// <summary>
-    /// Provides an interface for event serializers.
+    /// Provides a binary serializer for <see cref="Event"/> messages.
     /// </summary>
     public interface IEventSerializer
     {
@@ -25,8 +25,8 @@ namespace Nautilus.Common.Interfaces
         /// <summary>
         /// Deserialize the given event bytes.
         /// </summary>
-        /// <param name="eventBytes">The event bytes to deserialize.</param>
+        /// <param name="serializedEvent">The event bytes to deserialize.</param>
         /// <returns>The deserialized event.</returns>
-        Event Deserialize(byte[] eventBytes);
+        Event Deserialize(byte[] serializedEvent);
     }
 }

@@ -184,8 +184,8 @@ namespace Nautilus.DomainModel.Factories
         public Instrument Build(ZonedDateTime timestamp)
         {
             return new Instrument(
-                this.Symbol,
                 new InstrumentId(this.Symbol.ToString()),
+                this.Symbol,
                 this.BrokerSymbol,
                 this.QuoteCurrency,
                 this.SecurityType,

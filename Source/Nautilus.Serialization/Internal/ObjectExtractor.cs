@@ -24,6 +24,16 @@ namespace Nautilus.Serialization.Internal
     internal static class ObjectExtractor
     {
         /// <summary>
+        /// Parses and returns a decimal from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="decimalObject">The decimal object.</param>
+        /// <returns>The parsed decimal.</returns>
+        internal static decimal Decimal(MessagePackObject decimalObject)
+        {
+            return Convert.ToDecimal(decimalObject.ToString());
+        }
+
+        /// <summary>
         /// Parses and returns the symbol from the given string.
         /// </summary>
         /// <param name="guid">The guid object.</param>
@@ -40,8 +50,17 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The parsed symbol <see cref="string"/>.</returns>
         internal static Symbol Symbol(MessagePackObject symbol)
         {
-            var splitSymbol = symbol.ToString().Split('.');
-            return new Symbol(splitSymbol[0], splitSymbol[1].ToEnum<Venue>());
+            return DomainModel.ValueObjects.Symbol.Create(symbol.ToString());
+        }
+
+        /// <summary>
+        /// Parses and returns the symbol from the given string.
+        /// </summary>
+        /// <param name="brokerSymbol">The broker symbol object.</param>
+        /// <returns>The parsed symbol <see cref="string"/>.</returns>
+        internal static BrokerSymbol BrokerSymbol(MessagePackObject brokerSymbol)
+        {
+            return new BrokerSymbol(brokerSymbol.ToString());
         }
 
         /// <summary>
@@ -97,6 +116,16 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Parses and returns the symbol from the given string.
         /// </summary>
+        /// <param name="instrumentId">The instrument identifier object.</param>
+        /// <returns>The execution identifier.</returns>
+        internal static InstrumentId InstrumentId(MessagePackObject instrumentId)
+        {
+            return new InstrumentId(instrumentId.ToString());
+        }
+
+        /// <summary>
+        /// Parses and returns the symbol from the given string.
+        /// </summary>
         /// <param name="executionTicket">The execution ticket object.</param>
         /// <returns>The parsed execution ticket.</returns>
         internal static ExecutionTicket ExecutionTicket(MessagePackObject executionTicket)
@@ -117,51 +146,13 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Parses and returns the symbol from the given string.
         /// </summary>
-        /// <param name="brokerage">The brokerage object.</param>
+        /// <typeparam name="TEnum">The enum type.</typeparam>
+        /// <param name="toEnum">The enumerator object.</param>
         /// <returns>The brokerage.</returns>
-        internal static Brokerage Brokerage(MessagePackObject brokerage)
+        internal static TEnum Enum<TEnum>(MessagePackObject toEnum)
+            where TEnum : struct
         {
-            return brokerage.ToString().ToEnum<Brokerage>();
-        }
-
-        /// <summary>
-        /// Parses and returns the symbol from the given string.
-        /// </summary>
-        /// <param name="currency">The currency object.</param>
-        /// <returns>The currency.</returns>
-        internal static Currency Currency(MessagePackObject currency)
-        {
-            return currency.ToString().ToEnum<Currency>();
-        }
-
-        /// <summary>
-        /// Parses and returns the symbol from the given string.
-        /// </summary>
-        /// <param name="orderSide">The order side object.</param>
-        /// <returns>The order side.</returns>
-        internal static OrderSide OrderSide(MessagePackObject orderSide)
-        {
-            return orderSide.ToString().ToEnum<OrderSide>();
-        }
-
-        /// <summary>
-        /// Parses and returns the symbol from the given string.
-        /// </summary>
-        /// <param name="orderType">The order type object.</param>
-        /// <returns>The parsed symbol <see cref="string"/>.</returns>
-        internal static OrderType OrderType(MessagePackObject orderType)
-        {
-            return orderType.ToString().ToEnum<OrderType>();
-        }
-
-        /// <summary>
-        /// Parses and returns the symbol from the given string.
-        /// </summary>
-        /// <param name="timeInForce">The time in force object.</param>
-        /// <returns>The time in force.</returns>
-        internal static TimeInForce TimeInForce(MessagePackObject timeInForce)
-        {
-            return timeInForce.ToString().ToEnum<TimeInForce>();
+            return toEnum.ToString().ToEnum<TEnum>();
         }
 
         /// <summary>

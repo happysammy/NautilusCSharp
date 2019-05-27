@@ -25,8 +25,8 @@ namespace Nautilus.DomainModel.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="Instrument"/> class.
         /// </summary>
-        /// <param name="symbol">The instruments symbol.</param>
         /// <param name="instrumentId">The instruments identifier.</param>
+        /// <param name="symbol">The instruments symbol.</param>
         /// <param name="brokerSymbol">The instruments broker symbol.</param>
         /// <param name="quoteCurrency">The instruments quote currency.</param>
         /// <param name="securityType">The instruments security type.</param>
@@ -43,8 +43,8 @@ namespace Nautilus.DomainModel.Entities
         /// <param name="rolloverInterestSell">The instruments rollover interest for short positions.</param>
         /// <param name="timestamp"> The instruments initialization timestamp.</param>
         public Instrument(
-            Symbol symbol,
             InstrumentId instrumentId,
+            Symbol symbol,
             BrokerSymbol brokerSymbol,
             Currency quoteCurrency,
             SecurityType securityType,

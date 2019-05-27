@@ -105,7 +105,7 @@ namespace Nautilus.DomainModel.ValueObjects
         /// <returns>An <see cref="int"/>.</returns>
         public override int GetHashCode()
         {
-            return Hash.GetCode(this.Code, this.Venue);
+            return Hash.GetCode(this.value);
         }
 
         /// <summary>

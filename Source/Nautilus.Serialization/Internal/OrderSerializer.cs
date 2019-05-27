@@ -88,11 +88,11 @@ namespace Nautilus.Serialization.Internal
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var orderType = ObjectExtractor.OrderType(unpacked[Key.OrderType]);
+            var orderType = ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]);
             var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
             var id = ObjectExtractor.OrderId(unpacked[Key.OrderId]);
             var label = ObjectExtractor.Label(unpacked[Key.Label]);
-            var side = ObjectExtractor.OrderSide(unpacked[Key.OrderSide]);
+            var side = ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]);
             var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
             var initEventGuid = ObjectExtractor.Guid(unpacked[Key.InitEventGuid]);
@@ -116,7 +116,7 @@ namespace Nautilus.Serialization.Internal
                         side,
                         quantity,
                         ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
@@ -128,7 +128,7 @@ namespace Nautilus.Serialization.Internal
                         side,
                         quantity,
                         ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
@@ -140,7 +140,7 @@ namespace Nautilus.Serialization.Internal
                         side,
                         quantity,
                         ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
@@ -152,7 +152,7 @@ namespace Nautilus.Serialization.Internal
                         side,
                         quantity,
                         ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);

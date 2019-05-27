@@ -15,12 +15,13 @@ namespace Nautilus.Serialization
     using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.Serialization.Internal;
 
     /// <summary>
-    /// Provides an events binary serializer for the MessagePack specification.
+    /// Provides an <see cref="Event"/> message binary serializer for the MessagePack specification.
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {
@@ -143,9 +144,9 @@ namespace Nautilus.Serialization
         }
 
         /// <inheritdoc />
-        public Event Deserialize(byte[] eventBytes)
+        public Event Deserialize(byte[] serializedEvent)
         {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(eventBytes);
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
 
             var eventId = ObjectExtractor.Guid(unpacked[Key.EventId]);
             var eventTimestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.EventTimestamp]);
@@ -154,10 +155,10 @@ namespace Nautilus.Serialization
             switch (@event)
             {
                 case nameof(AccountEvent):
-                    var currency = ObjectExtractor.Currency(unpacked[Key.Currency]);
+                    var currency = ObjectExtractor.Enum<Currency>(unpacked[Key.Currency]);
                     return new AccountEvent(
                         new AccountId(unpacked[Key.AccountId].ToString()),
-                        ObjectExtractor.Brokerage(unpacked[Key.Broker]),
+                        ObjectExtractor.Enum<Brokerage>(unpacked[Key.Broker]),
                         unpacked[Key.AccountNumber].ToString(),
                         currency,
                         ObjectExtractor.Money(unpacked[Key.CashBalance], currency),
@@ -165,7 +166,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Money(unpacked[Key.CashActivityDay], currency),
                         ObjectExtractor.Money(unpacked[Key.MarginUsedLiquidation], currency),
                         ObjectExtractor.Money(unpacked[Key.MarginUsedMaintenance], currency),
-                        Convert.ToDecimal(unpacked[Key.MarginRatio].ToString()),
+                        ObjectExtractor.Decimal(unpacked[Key.MarginRatio].ToString()),
                         unpacked[Key.MarginCallStatus].ToString(),
                         eventId,
                         eventTimestamp);
@@ -174,11 +175,11 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.Label(unpacked[Key.Label]),
-                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
-                        ObjectExtractor.OrderType(unpacked[Key.OrderType]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),
                         ObjectExtractor.Quantity(unpacked[Key.Quantity]),
                         ObjectExtractor.NullablePrice(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         eventId,
                         eventTimestamp);
@@ -210,11 +211,11 @@ namespace Nautilus.Serialization
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.OrderId(unpacked[Key.BrokerOrderId]),
                         ObjectExtractor.Label(unpacked[Key.Label]),
-                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
-                        ObjectExtractor.OrderType(unpacked[Key.OrderType]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),
                         ObjectExtractor.Quantity(unpacked[Key.Quantity]),
                         ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.WorkingTime]),
                         eventId,
@@ -257,7 +258,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
                         ObjectExtractor.Quantity(unpacked[Key.LeavesQuantity]),
                         ObjectExtractor.Price(unpacked[Key.AveragePrice]),
@@ -270,7 +271,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.OrderSide(unpacked[Key.OrderSide]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
                         ObjectExtractor.Price(unpacked[Key.AveragePrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),

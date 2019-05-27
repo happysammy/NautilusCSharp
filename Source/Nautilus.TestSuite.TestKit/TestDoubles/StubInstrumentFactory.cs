@@ -24,8 +24,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var symbol = new Symbol($"AUDUSD", Venue.FXCM);
 
             var instrument = new Instrument(
-                    symbol,
                     new InstrumentId(symbol.ToString()),
+                    symbol,
                     new BrokerSymbol("AUD/USD"),
                     Currency.AUD,
                     SecurityType.Forex,
@@ -50,8 +50,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var symbol = new Symbol($"EURUSD", Venue.FXCM);
 
             var instrument = new Instrument(
-                    symbol,
                     new InstrumentId(symbol.ToString()),
+                    symbol,
                     new BrokerSymbol("EUR/USD"),
                     Currency.EUR,
                     SecurityType.Forex,
@@ -76,23 +76,23 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             var symbol = new Symbol("USDJPY", Venue.FXCM);
 
             var instrument = new Instrument(
-                   symbol,
-                   new InstrumentId(symbol.ToString()),
-                   new BrokerSymbol("USD/JPY"),
-                   Currency.JPY,
-                   SecurityType.Forex,
-                   3,
-                   0.001m,
-                   1000,
-                   0,
-                   0,
-                   0,
-                   0,
-                   1,
-                   50000000,
-                   1,
-                   1,
-                   StubZonedDateTime.UnixEpoch());
+                    new InstrumentId(symbol.ToString()),
+                    symbol,
+                    new BrokerSymbol("USD/JPY"),
+                    Currency.JPY,
+                    SecurityType.Forex,
+                    3,
+                    0.001m,
+                    1000,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    50000000,
+                    1,
+                    1,
+                    StubZonedDateTime.UnixEpoch());
 
             return instrument;
         }

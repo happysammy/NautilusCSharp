@@ -183,8 +183,8 @@ namespace Nautilus.Redis
                     hashEntry => hashEntry.Value.ToString());
 
             var instrument = new Instrument(
-                Symbol.Create(instrumentDict[nameof(Instrument.Symbol)]),
                 new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
+                Symbol.Create(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),

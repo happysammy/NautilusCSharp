@@ -21,7 +21,22 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
+        internal static string Id => nameof(Id);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
         internal static string Command => nameof(Command);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string CommandId => nameof(CommandId);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string CommandTimestamp => nameof(CommandTimestamp);
 
         /// <summary>
         /// Gets the key string.
@@ -42,6 +57,11 @@ namespace Nautilus.Serialization.Internal
         /// Gets the key string.
         /// </summary>
         internal static string Symbol => nameof(Symbol);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string BrokerSymbol => nameof(BrokerSymbol);
 
         /// <summary>
         /// Gets the key string.
@@ -196,17 +216,22 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandId => nameof(CommandId);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string CommandTimestamp => nameof(CommandTimestamp);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
         internal static string Order => nameof(Order);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string Entry => nameof(Entry);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string StopLoss => nameof(StopLoss);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string TakeProfit => nameof(TakeProfit);
 
         /// <summary>
         /// Gets the key string.
@@ -232,6 +257,71 @@ namespace Nautilus.Serialization.Internal
         /// Gets the key string.
         /// </summary>
         internal static string Currency => nameof(Currency);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string QuoteCurrency => nameof(QuoteCurrency);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string SecurityType => nameof(SecurityType);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string TickPrecision => nameof(TickPrecision);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string TickSize => nameof(TickSize);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string RoundLotSize => nameof(RoundLotSize);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MinStopDistanceEntry => nameof(MinStopDistanceEntry);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MinLimitDistanceEntry => nameof(MinLimitDistanceEntry);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MinStopDistance => nameof(MinStopDistance);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MinLimitDistance => nameof(MinLimitDistance);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MinTradeSize => nameof(MinTradeSize);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string MaxTradeSize => nameof(MaxTradeSize);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string RolloverInterestBuy => nameof(RolloverInterestBuy);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string RolloverInterestSell => nameof(RolloverInterestSell);
 
         /// <summary>
         /// Gets the key string.
@@ -267,20 +357,5 @@ namespace Nautilus.Serialization.Internal
         /// Gets the key string.
         /// </summary>
         internal static string MarginCallStatus => nameof(MarginCallStatus);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string Entry => nameof(Entry);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string StopLoss => nameof(StopLoss);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string TakeProfit => nameof(TakeProfit);
     }
 }

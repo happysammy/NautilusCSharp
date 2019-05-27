@@ -67,8 +67,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.FactoriesTests
             var instrumentBuilder = new InstrumentBuilder(audusd);
 
             var instrument = new Instrument(
-                new Symbol("SPX500", Venue.FXCM),
                 new InstrumentId("NONE"),
+                new Symbol("SPX500", Venue.FXCM),
                 new BrokerSymbol("NONE"),
                 Currency.CAD,
                 SecurityType.Bond,

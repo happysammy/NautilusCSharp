@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="ICommandSerializer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="IInstrumentSerializer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -8,25 +8,25 @@
 
 namespace Nautilus.Common.Interfaces
 {
-    using Nautilus.Core;
+    using Nautilus.DomainModel.Entities;
 
     /// <summary>
-    /// Provides a binary serializer for <see cref="Command"/> messages.
+    /// Provides a serializer for <see cref="Instrument"/>s.
     /// </summary>
-    public interface ICommandSerializer
+    public interface IInstrumentSerializer
     {
         /// <summary>
-        /// Serialize the given command.
+        /// Serialize the given instrument.
         /// </summary>
-        /// <param name="command">The command to serialize.</param>
+        /// <param name="instrument">The instrument to serialize.</param>
         /// <returns>The serialized command.</returns>
-        byte[] Serialize(Command command);
+        byte[] Serialize(Instrument instrument);
 
         /// <summary>
-        /// Deserialize the given command bytes.
+        /// Deserialize the given instrument bytes.
         /// </summary>
-        /// <param name="commandBytes">The command bytes to deserialize.</param>
-        /// <returns>The deserialized command.</returns>
-        Command Deserialize(byte[] commandBytes);
+        /// <param name="serialized">The serialized instrument.</param>
+        /// <returns>The deserialized instrument.</returns>
+        Instrument Deserialize(byte[] serialized);
     }
 }
