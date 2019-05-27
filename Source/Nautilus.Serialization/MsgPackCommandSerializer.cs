@@ -106,7 +106,6 @@ namespace Nautilus.Serialization
                         ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
                         ObjectExtractor.PositionId(unpacked[Key.PositionId]),
                         OrderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
-                        ObjectExtractor.Guid(unpacked[Key.InitEventGuid]),
                         commandId,
                         commandTimestamp);
                 case nameof(SubmitAtomicOrder):

@@ -45,7 +45,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 new PositionId("001"),
                 order,
                 Guid.NewGuid(),
-                Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act

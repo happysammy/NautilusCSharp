@@ -29,7 +29,6 @@ namespace Nautilus.Execution.Messages.Commands
         /// <param name="strategyId">The strategy identifier.</param>
         /// <param name="positionId">The position identifier.</param>
         /// <param name="order">The order to submit.</param>
-        /// <param name="initEventGuid">The initialization event GUID.</param>
         /// <param name="commandId">The command identifier.</param>
         /// <param name="commandTimestamp">The command timestamp.</param>
         public SubmitOrder(
@@ -37,7 +36,6 @@ namespace Nautilus.Execution.Messages.Commands
             StrategyId strategyId,
             PositionId positionId,
             Order order,
-            Guid initEventGuid,
             Guid commandId,
             ZonedDateTime commandTimestamp)
             : base(
