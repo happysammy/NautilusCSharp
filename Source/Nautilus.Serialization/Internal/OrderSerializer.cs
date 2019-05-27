@@ -47,10 +47,10 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns the given nullable take profit order as a <see cref="MessagePackObject"/>.
+        /// Serialize the given nullable order to Message Pack specification bytes.
         /// </summary>
-        /// <param name="order">The nullable order.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
+        /// <param name="order">The nullable order to serialize.</param>
+        /// <returns>The serialized order.</returns>
         internal static byte[] SerializeNullable(Order? order)
         {
             return order == null ? Empty : Serialize(order);
