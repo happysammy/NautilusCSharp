@@ -48,7 +48,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventId">The order initialization event identifier.</param>
+        /// <param name="initId">The order initialization event identifier.</param>
         public Order(
             OrderId orderId,
             Symbol symbol,
@@ -60,7 +60,7 @@ namespace Nautilus.DomainModel.Aggregates
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventId = default)
+            Guid initId = default)
             : base(orderId, timestamp)
         {
             Debug.NotDefault(side, nameof(side));
@@ -99,7 +99,7 @@ namespace Nautilus.DomainModel.Aggregates
                 price,
                 timeInForce,
                 expireTime,
-                initEventId == default ? Guid.NewGuid() : initEventId,
+                initId == default ? Guid.NewGuid() : initId,
                 timestamp);
             this.InitEventId = initialized.Id;
 

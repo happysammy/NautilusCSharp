@@ -23,8 +23,8 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new market order.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
@@ -32,8 +32,8 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The market order.</returns>
         public static Order Market(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             Quantity quantity,
@@ -57,8 +57,8 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new market if touched order.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
@@ -69,8 +69,8 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The market if touched order.</returns>
         public static Order MarketIfTouched(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             Quantity quantity,
@@ -97,8 +97,8 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new limit order.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
@@ -109,8 +109,8 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The limit order.</returns>
         public static Order Limit(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             Quantity quantity,
@@ -137,8 +137,8 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new stop market order.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
@@ -149,8 +149,8 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The stop market order.</returns>
         public static Order StopMarket(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             Quantity quantity,
@@ -177,8 +177,8 @@ namespace Nautilus.DomainModel.Factories
         /// <summary>
         /// Creates and returns a new stop limit order.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
@@ -189,8 +189,8 @@ namespace Nautilus.DomainModel.Factories
         /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The stop limit order.</returns>
         public static Order StopLimit(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             Quantity quantity,

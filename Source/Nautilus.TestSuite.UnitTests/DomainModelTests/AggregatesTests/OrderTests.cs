@@ -38,8 +38,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = OrderFactory.Market(
-                new Symbol("SYMBOL", Venue.LMAX),
                 new OrderId("some_orderId"),
+                new Symbol("SYMBOL", Venue.LMAX),
                 new Label("some_label"),
                 OrderSide.BUY,
                 Quantity.Create(10),
@@ -64,8 +64,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Arrange
             // Act
             var order = OrderFactory.StopMarket(
-                new Symbol("SYMBOL", Venue.LMAX),
                 new OrderId("some_orderId"),
+                new Symbol("SYMBOL", Venue.LMAX),
                 new Label("some_label"),
                 OrderSide.BUY,
                 Quantity.Create(10),

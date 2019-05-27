@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public Order BuildMarketOrder()
         {
             return OrderFactory.Market(
-                this.Symbol,
                 this.OrderId,
+                this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
                 this.Quantity,
@@ -151,8 +151,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public Order BuildLimitOrder()
         {
             return OrderFactory.Limit(
-                this.Symbol,
                 this.OrderId,
+                this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
                 this.Quantity,
@@ -165,8 +165,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public Order BuildStopMarketOrder()
         {
             return OrderFactory.StopMarket(
-                this.Symbol,
                 this.OrderId,
+                this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
                 this.Quantity,
@@ -179,8 +179,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public Order BuildStopLimitOrder()
         {
             return OrderFactory.StopLimit(
-                this.Symbol,
                 this.OrderId,
+                this.Symbol,
                 this.OrderLabel,
                 this.OrderSide,
                 this.Quantity,

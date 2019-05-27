@@ -32,8 +32,8 @@ namespace Nautilus.Serialization.Internal
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
-                { Key.Symbol, order.Symbol.ToString() },
                 { Key.Id, order.Id.ToString() },
+                { Key.Symbol, order.Symbol.ToString() },
                 { Key.Label, order.Label.ToString() },
                 { Key.OrderSide, order.Side.ToString() },
                 { Key.OrderType, order.Type.ToString() },
@@ -42,7 +42,7 @@ namespace Nautilus.Serialization.Internal
                 { Key.TimeInForce, order.TimeInForce.ToString() },
                 { Key.ExpireTime, ObjectPacker.NullableZonedDateTime(order.ExpireTime) },
                 { Key.Timestamp, order.Timestamp.ToIsoString() },
-                { Key.InitEventGuid, order.InitEventId.ToString() },
+                { Key.InitId, order.InitEventId.ToString() },
             });
         }
 
@@ -88,30 +88,30 @@ namespace Nautilus.Serialization.Internal
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var orderType = ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]);
-            var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
+            var type = ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]);
             var id = ObjectExtractor.OrderId(unpacked[Key.Id]);
+            var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
             var label = ObjectExtractor.Label(unpacked[Key.Label]);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]);
             var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
-            var initEventGuid = ObjectExtractor.Guid(unpacked[Key.InitEventGuid]);
+            var initId = ObjectExtractor.Guid(unpacked[Key.InitId]);
 
-            switch (orderType)
+            switch (type)
             {
                 case OrderType.MARKET:
                     return OrderFactory.Market(
-                        symbol,
                         id,
+                        symbol,
                         label,
                         side,
                         quantity,
                         timestamp,
-                        initEventGuid);
+                        initId);
                 case OrderType.LIMIT:
                     return OrderFactory.Limit(
-                        symbol,
                         id,
+                        symbol,
                         label,
                         side,
                         quantity,
@@ -119,11 +119,11 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
-                        initEventGuid);
+                        initId);
                 case OrderType.STOP_LIMIT:
                     return OrderFactory.StopLimit(
-                        symbol,
                         id,
+                        symbol,
                         label,
                         side,
                         quantity,
@@ -131,11 +131,11 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
-                        initEventGuid);
+                        initId);
                 case OrderType.STOP_MARKET:
                     return OrderFactory.StopMarket(
-                        symbol,
                         id,
+                        symbol,
                         label,
                         side,
                         quantity,
@@ -143,11 +143,11 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
-                        initEventGuid);
+                        initId);
                 case OrderType.MIT:
                     return OrderFactory.MarketIfTouched(
-                        symbol,
                         id,
+                        symbol,
                         label,
                         side,
                         quantity,
@@ -155,11 +155,11 @@ namespace Nautilus.Serialization.Internal
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
-                        initEventGuid);
+                        initId);
                 case OrderType.UNKNOWN:
                     goto default;
                 default:
-                    throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
+                    throw ExceptionFactory.InvalidSwitchArgument(type, nameof(type));
             }
         }
     }
