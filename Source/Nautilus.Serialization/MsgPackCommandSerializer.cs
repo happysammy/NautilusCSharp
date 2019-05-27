@@ -19,7 +19,7 @@ namespace Nautilus.Serialization
     using Nautilus.Serialization.Internal;
 
     /// <summary>
-    /// Provides a command serializer for the Message Pack specification.
+    /// Provides a command serializer for the MessagePack specification.
     /// </summary>
     public class MsgPackCommandSerializer : ICommandSerializer
     {

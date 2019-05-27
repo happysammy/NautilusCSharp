@@ -20,7 +20,7 @@ namespace Nautilus.Serialization
     using Nautilus.Serialization.Internal;
 
     /// <summary>
-    /// Provides an events binary serializer for the Message Pack specification.
+    /// Provides an events binary serializer for the MessagePack specification.
     /// </summary>
     public class MsgPackEventSerializer : IEventSerializer
     {

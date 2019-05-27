@@ -17,14 +17,14 @@ namespace Nautilus.Serialization.Internal
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// Provides serialization of <see cref="Order"/> objects to Message Pack specification.
+    /// Provides serialization of <see cref="Order"/> objects to MessagePack specification.
     /// </summary>
     internal static class OrderSerializer
     {
         private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
 
         /// <summary>
-        /// Serialize the given order to Message Pack specification bytes.
+        /// Serialize the given order to MessagePack specification bytes.
         /// </summary>
         /// <param name="order">The order to serialize.</param>
         /// <returns>The serialized order.</returns>
@@ -47,7 +47,7 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Serialize the given nullable order to Message Pack specification bytes.
+        /// Serialize the given nullable order to MessagePack specification bytes.
         /// </summary>
         /// <param name="order">The nullable order to serialize.</param>
         /// <returns>The serialized order.</returns>

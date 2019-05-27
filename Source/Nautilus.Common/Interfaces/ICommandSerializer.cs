@@ -11,7 +11,7 @@ namespace Nautilus.Common.Interfaces
     using Nautilus.Core;
 
     /// <summary>
-    /// Provides a serializer for command messages.
+    /// Provides a serializer for <see cref="Command"/> messages.
     /// </summary>
     public interface ICommandSerializer
     {

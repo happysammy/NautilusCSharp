@@ -9,7 +9,7 @@
 namespace Nautilus.Serialization.Internal
 {
     /// <summary>
-    /// Provides key strings for Message Pack serialization.
+    /// Provides key strings for MessagePack serialization.
     /// </summary>
     internal static class Key
     {

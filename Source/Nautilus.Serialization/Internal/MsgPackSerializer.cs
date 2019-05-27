@@ -12,12 +12,12 @@ namespace Nautilus.Serialization.Internal
     using MsgPack.Serialization;
 
     /// <summary>
-    /// Provides a serializer for Message Pack specification.
+    /// Provides a serializer for MessagePack specification.
     /// </summary>
     internal static class MsgPackSerializer
     {
         /// <summary>
-        /// Serializes the given object to the Message Pack specification.
+        /// Serializes the given object to the MessagePack specification.
         /// </summary>
         /// <param name="obj">The object to serialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
@@ -33,7 +33,7 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Deserializes the given Message Pack byte array to the specified type.
+        /// Deserializes the given MessagePack byte array to the specified type.
         /// </summary>
         /// <param name="bytes">The bytes to deserialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
