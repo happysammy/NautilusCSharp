@@ -101,17 +101,11 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_NullableOrders_GivenOrder()
         {
             // Arrange
-            var entry = new StubOrderBuilder().EntryOrder("O-123").BuildMarketOrder();
-            var stopLoss = new StubOrderBuilder().StopLossOrder("O-124").BuildStopMarketOrder();
             var takeProfit = new StubOrderBuilder().TakeProfitOrder("O-125").BuildLimitOrder();
-            var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
-
-            var serialized = OrderSerializer.SerializeTakeProfit(atomicOrder);
-            var package = new MessagePackObjectDictionary { { "TakeProfit", serialized } };
 
             // Act
-            var packed = OrderSerializer.SerializeTakeProfit(atomicOrder);
-            var unpacked = OrderSerializer.DeserializeTakeProfit(package);
+            var packed = OrderSerializer.SerializeNullable(takeProfit);
+            var unpacked = OrderSerializer.DeserializeNullable(packed);
 
             // Assert
             Assert.Equal(takeProfit, unpacked);
@@ -123,20 +117,14 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_NullableOrders_GivenNil()
         {
             // Arrange
-            var entry = new StubOrderBuilder().EntryOrder("O-123").BuildMarketOrder();
-            var stopLoss = new StubOrderBuilder().StopLossOrder("O-124").BuildStopMarketOrder();
-            var atomicOrder = new AtomicOrder(entry, stopLoss);
-
-            var serialized = OrderSerializer.SerializeTakeProfit(atomicOrder);
-            var package = new MessagePackObjectDictionary { { "TakeProfit", serialized } };
-
             // Act
-            var unpacked = OrderSerializer.DeserializeTakeProfit(package);
+            var packed = OrderSerializer.SerializeNullable(null);
+            var unpacked = OrderSerializer.DeserializeNullable(packed);
 
             // Assert
             Assert.Equal(null, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(MsgPackSerializer.Serialize(package)));
-            this.output.WriteLine(Encoding.UTF8.GetString(MsgPackSerializer.Serialize(package)));
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
 
         [Fact]

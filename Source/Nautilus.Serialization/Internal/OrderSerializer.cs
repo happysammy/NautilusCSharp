@@ -47,70 +47,30 @@ namespace Nautilus.Serialization.Internal
             });
         }
 
-                /// <summary>
-        /// Returns the given order as a <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="atomicOrder">The atomic order.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static byte[] SerializeEntry(AtomicOrder atomicOrder)
-        {
-            return Serialize(atomicOrder.Entry);
-        }
-
-        /// <summary>
-        /// Returns the given order as a <see cref="MessagePackObject"/>.
-        /// </summary>
-        /// <param name="atomicOrder">The atomic order.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static byte[] SerializeStopLoss(AtomicOrder atomicOrder)
-        {
-            return Serialize(atomicOrder.StopLoss);
-        }
-
         /// <summary>
         /// Returns the given nullable take profit order as a <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="atomicOrder">The atomic order.</param>
+        /// <param name="order">The nullable order.</param>
         /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static byte[] SerializeTakeProfit(AtomicOrder atomicOrder)
+        internal static byte[] SerializeNullable(Order? order)
         {
-            return atomicOrder.TakeProfit == null
+            return order == null
                 ? Empty
-                : Serialize(atomicOrder.TakeProfit);
+                : Serialize(order);
         }
 
         /// <summary>
         /// Returns the nullable take profit <see cref="Order"/>.
         /// </summary>
-        /// <param name="unpacked">The message pack object dictionary.</param>
+        /// <param name="orderBytes">The message pack object dictionary.</param>
         /// <returns>The nullable <see cref="Order"/>.</returns>
-        internal static Order DeserializeEntry(MessagePackObjectDictionary unpacked)
+        internal static Order? DeserializeNullable(byte[] orderBytes)
         {
-            return Deserialize(unpacked[Key.Entry].AsBinary());
-        }
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
 
-        /// <summary>
-        /// Returns the nullable take profit <see cref="Order"/>.
-        /// </summary>
-        /// <param name="unpacked">The message pack object dictionary.</param>
-        /// <returns>The nullable <see cref="Order"/>.</returns>
-        internal static Order DeserializeStopLoss(MessagePackObjectDictionary unpacked)
-        {
-            return Deserialize(unpacked[Key.StopLoss].AsBinary());
-        }
-
-        /// <summary>
-        /// Returns the nullable take profit <see cref="Order"/>.
-        /// </summary>
-        /// <param name="unpacked">The message pack object dictionary.</param>
-        /// <returns>The nullable <see cref="Order"/>.</returns>
-        internal static Order? DeserializeTakeProfit(MessagePackObjectDictionary unpacked)
-        {
-            var deserialized = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(unpacked[Key.TakeProfit].AsBinary());
-
-            return deserialized.Count == 0
+            return unpacked.Count == 0
                 ? null
-                : Deserialize(deserialized);
+                : Deserialize(unpacked);
         }
 
         /// <summary>
