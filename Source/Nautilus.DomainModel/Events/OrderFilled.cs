@@ -30,7 +30,7 @@ namespace Nautilus.DomainModel.Events
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
-        /// <param name="orderSide">The event order side.</param>
+        /// <param name="side">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
         /// <param name="executionTime">The event order execution time.</param>
@@ -41,7 +41,7 @@ namespace Nautilus.DomainModel.Events
             OrderId orderId,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
-            OrderSide orderSide,
+            OrderSide side,
             Quantity filledQuantity,
             Price averagePrice,
             ZonedDateTime executionTime,
@@ -54,14 +54,14 @@ namespace Nautilus.DomainModel.Events
                 eventId,
                 eventTimestamp)
         {
-            Debug.NotDefault(orderSide, nameof(orderSide));
+            Debug.NotDefault(side, nameof(side));
             Debug.NotDefault(executionTime, nameof(executionTime));
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.ExecutionId = executionId;
             this.ExecutionTicket = executionTicket;
-            this.OrderSide = orderSide;
+            this.Side = side;
             this.FilledQuantity = filledQuantity;
             this.AveragePrice = averagePrice;
             this.ExecutionTime = executionTime;
@@ -80,7 +80,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order side.
         /// </summary>
-        public OrderSide OrderSide { get; }
+        public OrderSide Side { get; }
 
         /// <summary>
         /// Gets the events order filled quantity.

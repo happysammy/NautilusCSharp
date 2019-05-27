@@ -28,7 +28,7 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="orderLabel">The event order label.</param>
+        /// <param name="label">The event order label.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
         /// <param name="quantity">The event order quantity.</param>
@@ -40,7 +40,7 @@ namespace Nautilus.DomainModel.Events
         public OrderInitialized(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
+            Label label,
             OrderSide orderSide,
             OrderType orderType,
             Quantity quantity,
@@ -62,7 +62,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.OrderLabel = orderLabel;
+            this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
             this.Quantity = quantity;
@@ -74,7 +74,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events order label.
         /// </summary>
-        public Label OrderLabel { get; }
+        public Label Label { get; }
 
         /// <summary>
         /// Gets the events order side.

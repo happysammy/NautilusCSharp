@@ -42,7 +42,7 @@ namespace Nautilus.Serialization.Internal
                 { Key.TimeInForce, order.TimeInForce.ToString() },
                 { Key.ExpireTime, ObjectPacker.NullableZonedDateTime(order.ExpireTime) },
                 { Key.Timestamp, order.Timestamp.ToIsoString() },
-                { Key.InitEventGuid, order.InitEventGuid.ToString() },
+                { Key.InitEventGuid, order.InitEventId.ToString() },
             });
         }
 

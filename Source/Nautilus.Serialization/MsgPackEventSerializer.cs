@@ -53,7 +53,7 @@ namespace Nautilus.Serialization
                 case OrderInitialized orderEvent:
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Label, orderEvent.OrderLabel.ToString());
+                    package.Add(Key.Label, orderEvent.Label.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.OrderType, orderEvent.OrderType.ToString());
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
@@ -130,7 +130,7 @@ namespace Nautilus.Serialization
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
                     package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
-                    package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
+                    package.Add(Key.OrderSide, orderEvent.Side.ToString());
                     package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
                     package.Add(Key.AveragePrice, orderEvent.AveragePrice.ToString());
                     package.Add(Key.ExecutionTime, orderEvent.ExecutionTime.ToIsoString());

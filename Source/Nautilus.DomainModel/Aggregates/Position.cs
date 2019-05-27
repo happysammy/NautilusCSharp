@@ -209,7 +209,7 @@ namespace Nautilus.DomainModel.Aggregates
                         filled.OrderId,
                         filled.ExecutionId,
                         filled.ExecutionTicket,
-                        filled.OrderSide,
+                        filled.Side,
                         filled.FilledQuantity.Value,
                         filled.AveragePrice,
                         filled.ExecutionTime);

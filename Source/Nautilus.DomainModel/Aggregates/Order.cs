@@ -40,31 +40,31 @@ namespace Nautilus.DomainModel.Aggregates
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
-        /// <param name="orderType">The order type.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
+        /// <param name="type">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event identifier.</param>
         public Order(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
-            OrderType orderType,
+            Label label,
+            OrderSide side,
+            OrderType type,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
             : base(orderId, timestamp)
         {
-            Debug.NotDefault(orderSide, nameof(orderSide));
-            Debug.NotDefault(orderType, nameof(orderType));
+            Debug.NotDefault(side, nameof(side));
+            Debug.NotDefault(type, nameof(type));
             Debug.NotDefault(timeInForce, nameof(timeInForce));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
@@ -74,9 +74,9 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds = new List<ExecutionId>();
 
             this.Symbol = symbol;
-            this.Label = orderLabel;
-            this.Side = orderSide;
-            this.Type = orderType;
+            this.Label = label;
+            this.Side = side;
+            this.Type = type;
             this.Quantity = quantity;
             this.FilledQuantity = Quantity.Zero();
             this.Price = price;
@@ -92,16 +92,16 @@ namespace Nautilus.DomainModel.Aggregates
             var initialized = new OrderInitialized(
                 symbol,
                 orderId,
-                orderLabel,
-                orderSide,
-                orderType,
+                label,
+                side,
+                type,
                 quantity,
                 price,
                 timeInForce,
                 expireTime,
-                initEventGuid == default ? Guid.NewGuid() : initEventGuid,
+                initEventId == default ? Guid.NewGuid() : initEventId,
                 timestamp);
-            this.InitEventGuid = initialized.Id;
+            this.InitEventId = initialized.Id;
 
             this.Apply(initialized);
             this.CheckClassInvariants();
@@ -120,7 +120,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds = new List<ExecutionId>();
 
             this.Symbol = initialized.Symbol;
-            this.Label = initialized.OrderLabel;
+            this.Label = initialized.Label;
             this.Side = initialized.OrderSide;
             this.Type = initialized.OrderType;
             this.Quantity = initialized.Quantity;
@@ -130,7 +130,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Slippage = null;
             this.TimeInForce = initialized.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
-            this.InitEventGuid = initialized.Id;
+            this.InitEventId = initialized.Id;
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
             this.IsActive = false;
@@ -221,9 +221,9 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
-        /// Gets the initialization event GUID.
+        /// Gets the initialization event identifier.
         /// </summary>
-        public Guid InitEventGuid { get; }
+        public Guid InitEventId { get; }
 
         /// <summary>
         /// Gets the orders last event time.
