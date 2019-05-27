@@ -13,7 +13,6 @@ namespace Nautilus.Serialization.Internal
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Aggregates;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
 
@@ -54,9 +53,19 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The <see cref="MessagePackObject"/>.</returns>
         internal static byte[] SerializeNullable(Order? order)
         {
-            return order == null
-                ? Empty
-                : Serialize(order);
+            return order == null ? Empty : Serialize(order);
+        }
+
+        /// <summary>
+        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="orderBytes">The order bytes.</param>
+        /// <returns>The deserialized order.</returns>
+        internal static Order Deserialize(byte[] orderBytes)
+        {
+            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
+
+            return Deserialize(unpacked);
         }
 
         /// <summary>
@@ -68,39 +77,25 @@ namespace Nautilus.Serialization.Internal
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
 
-            return unpacked.Count == 0
-                ? null
-                : Deserialize(unpacked);
+            return unpacked.Count == 0 ? null : Deserialize(unpacked);
         }
 
         /// <summary>
         /// Deserialize the given byte array to an <see cref="Order"/>.
         /// </summary>
-        /// <param name="orderBytes">The order bytes.</param>
-        /// <returns>The deserialized order.</returns>
-        internal static Order Deserialize(byte[] orderBytes)
-        {
-            var deserialized = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
-
-            return Deserialize(deserialized);
-        }
-
-        /// <summary>
-        /// Deserialize the given byte array to an <see cref="Order"/>.
-        /// </summary>
-        /// <param name="unpackedOrder">The unpacked order object dictionary.</param>
+        /// <param name="unpacked">The unpacked order object dictionary.</param>
         /// <returns>The deserialized order.</returns>
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
-        private static Order Deserialize(MessagePackObjectDictionary unpackedOrder)
+        private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var orderType = ObjectExtractor.OrderType(unpackedOrder[Key.OrderType]);
-            var symbol = ObjectExtractor.Symbol(unpackedOrder[Key.Symbol]);
-            var id = ObjectExtractor.OrderId(unpackedOrder[Key.OrderId]);
-            var label = ObjectExtractor.Label(unpackedOrder[Key.Label]);
-            var side = ObjectExtractor.OrderSide(unpackedOrder[Key.OrderSide]);
-            var quantity = ObjectExtractor.Quantity(unpackedOrder[Key.Quantity]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpackedOrder[Key.Timestamp]);
-            var initEventGuid = ObjectExtractor.Guid(unpackedOrder[Key.InitEventGuid]);
+            var orderType = ObjectExtractor.OrderType(unpacked[Key.OrderType]);
+            var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
+            var id = ObjectExtractor.OrderId(unpacked[Key.OrderId]);
+            var label = ObjectExtractor.Label(unpacked[Key.Label]);
+            var side = ObjectExtractor.OrderSide(unpacked[Key.OrderSide]);
+            var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
+            var initEventGuid = ObjectExtractor.Guid(unpacked[Key.InitEventGuid]);
 
             switch (orderType)
             {
@@ -120,9 +115,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
                 case OrderType.STOP_LIMIT:
@@ -132,9 +127,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
                 case OrderType.STOP_MARKET:
@@ -144,9 +139,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
                 case OrderType.MIT:
@@ -156,9 +151,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         timestamp,
                         initEventGuid);
                 case OrderType.UNKNOWN:
