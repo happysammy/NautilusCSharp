@@ -8,7 +8,7 @@
 
 namespace Nautilus.Serialization.Internal
 {
-    using System;
+    using System.ComponentModel;
     using MsgPack;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -22,6 +22,8 @@ namespace Nautilus.Serialization.Internal
     /// </summary>
     internal static class OrderSerializer
     {
+        private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
+
         /// <summary>
         /// Serialize the given order to Message Pack specification bytes.
         /// </summary>
@@ -41,95 +43,11 @@ namespace Nautilus.Serialization.Internal
                 { Key.TimeInForce, order.TimeInForce.ToString() },
                 { Key.ExpireTime, ObjectPacker.NullableZonedDateTime(order.ExpireTime) },
                 { Key.Timestamp, order.Timestamp.ToIsoString() },
+                { Key.InitEventGuid, order.InitEventGuid.ToString() },
             });
         }
 
-        /// <summary>
-        /// Deserialize the given byte array to an <see cref="Order"/>.
-        /// </summary>
-        /// <param name="orderBytes">The order bytes.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
-        /// <returns>The deserialized order.</returns>
-        /// <exception cref="InvalidOperationException">If the order type is unknown.</exception>
-        internal static Order Deserialize(byte[] orderBytes, Guid initEventGuid)
-        {
-            var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
-
-            var orderType = ObjectExtractor.OrderType(unpacked[Key.OrderType]);
-            var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
-            var id = ObjectExtractor.OrderId(unpacked[Key.OrderId]);
-            var label = ObjectExtractor.Label(unpacked[Key.Label]);
-            var side = ObjectExtractor.OrderSide(unpacked[Key.OrderSide]);
-            var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
-
-            switch (orderType)
-            {
-                case OrderType.MARKET:
-                    return OrderFactory.Market(
-                        symbol,
-                        id,
-                        label,
-                        side,
-                        quantity,
-                        timestamp,
-                        initEventGuid);
-                case OrderType.LIMIT:
-                    return OrderFactory.Limit(
-                        symbol,
-                        id,
-                        label,
-                        side,
-                        quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        timestamp,
-                        initEventGuid);
-                case OrderType.STOP_LIMIT:
-                    return OrderFactory.StopLimit(
-                        symbol,
-                        id,
-                        label,
-                        side,
-                        quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        timestamp,
-                        initEventGuid);
-                case OrderType.STOP_MARKET:
-                    return OrderFactory.StopMarket(
-                        symbol,
-                        id,
-                        label,
-                        side,
-                        quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        timestamp,
-                        initEventGuid);
-                case OrderType.MIT:
-                    return OrderFactory.MarketIfTouched(
-                        symbol,
-                        id,
-                        label,
-                        side,
-                        quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.TimeInForce(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        timestamp,
-                        initEventGuid);
-                case OrderType.UNKNOWN:
-                    goto default;
-                default:
-                    throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
-            }
-        }
-
-        /// <summary>
+                /// <summary>
         /// Returns the given order as a <see cref="MessagePackObject"/>.
         /// </summary>
         /// <param name="atomicOrder">The atomic order.</param>
@@ -156,9 +74,9 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The <see cref="MessagePackObject"/>.</returns>
         internal static byte[] SerializeTakeProfit(AtomicOrder atomicOrder)
         {
-            return atomicOrder.HasTakeProfit
-                ? Serialize(atomicOrder.TakeProfit)
-                : MsgPackSerializer.Serialize(MessagePackObject.Nil);
+            return atomicOrder.TakeProfit == null
+                ? Empty
+                : Serialize(atomicOrder.TakeProfit);
         }
 
         /// <summary>
@@ -168,7 +86,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The nullable <see cref="Order"/>.</returns>
         internal static Order DeserializeEntry(MessagePackObjectDictionary unpacked)
         {
-            return Deserialize(unpacked[Key.Entry].AsBinary(), ObjectExtractor.Guid(unpacked[Key.InitEventGuidEntry]));
+            return Deserialize(unpacked[Key.Entry].AsBinary());
         }
 
         /// <summary>
@@ -178,7 +96,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The nullable <see cref="Order"/>.</returns>
         internal static Order DeserializeStopLoss(MessagePackObjectDictionary unpacked)
         {
-            return Deserialize(unpacked[Key.StopLoss].AsBinary(), ObjectExtractor.Guid(unpacked[Key.InitEventGuidStopLoss]));
+            return Deserialize(unpacked[Key.StopLoss].AsBinary());
         }
 
         /// <summary>
@@ -188,12 +106,106 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The nullable <see cref="Order"/>.</returns>
         internal static Order? DeserializeTakeProfit(MessagePackObjectDictionary unpacked)
         {
-            var unpackedOrder = unpacked[Key.TakeProfit].AsBinary();
-            var deserialized = MsgPackSerializer.Deserialize<MessagePackObject>(unpackedOrder);
+            var deserialized = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(unpacked[Key.TakeProfit].AsBinary());
 
-            return deserialized.Equals(MessagePackObject.Nil)
+            return deserialized.Count == 0
                 ? null
-                : Deserialize(unpackedOrder, ObjectExtractor.Guid(unpacked[Key.InitEventGuidTakeProfit]));
+                : Deserialize(deserialized);
+        }
+
+        /// <summary>
+        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="orderBytes">The order bytes.</param>
+        /// <returns>The deserialized order.</returns>
+        internal static Order Deserialize(byte[] orderBytes)
+        {
+            var deserialized = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
+
+            return Deserialize(deserialized);
+        }
+
+        /// <summary>
+        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// </summary>
+        /// <param name="unpackedOrder">The unpacked order object dictionary.</param>
+        /// <returns>The deserialized order.</returns>
+        /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
+        private static Order Deserialize(MessagePackObjectDictionary unpackedOrder)
+        {
+            var orderType = ObjectExtractor.OrderType(unpackedOrder[Key.OrderType]);
+            var symbol = ObjectExtractor.Symbol(unpackedOrder[Key.Symbol]);
+            var id = ObjectExtractor.OrderId(unpackedOrder[Key.OrderId]);
+            var label = ObjectExtractor.Label(unpackedOrder[Key.Label]);
+            var side = ObjectExtractor.OrderSide(unpackedOrder[Key.OrderSide]);
+            var quantity = ObjectExtractor.Quantity(unpackedOrder[Key.Quantity]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpackedOrder[Key.Timestamp]);
+            var initEventGuid = ObjectExtractor.Guid(unpackedOrder[Key.InitEventGuid]);
+
+            switch (orderType)
+            {
+                case OrderType.MARKET:
+                    return OrderFactory.Market(
+                        symbol,
+                        id,
+                        label,
+                        side,
+                        quantity,
+                        timestamp,
+                        initEventGuid);
+                case OrderType.LIMIT:
+                    return OrderFactory.Limit(
+                        symbol,
+                        id,
+                        label,
+                        side,
+                        quantity,
+                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        timestamp,
+                        initEventGuid);
+                case OrderType.STOP_LIMIT:
+                    return OrderFactory.StopLimit(
+                        symbol,
+                        id,
+                        label,
+                        side,
+                        quantity,
+                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        timestamp,
+                        initEventGuid);
+                case OrderType.STOP_MARKET:
+                    return OrderFactory.StopMarket(
+                        symbol,
+                        id,
+                        label,
+                        side,
+                        quantity,
+                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        timestamp,
+                        initEventGuid);
+                case OrderType.MIT:
+                    return OrderFactory.MarketIfTouched(
+                        symbol,
+                        id,
+                        label,
+                        side,
+                        quantity,
+                        ObjectExtractor.Price(unpackedOrder[Key.Price]),
+                        ObjectExtractor.TimeInForce(unpackedOrder[Key.TimeInForce]),
+                        ObjectExtractor.NullableZonedDateTime(unpackedOrder[Key.ExpireTime]),
+                        timestamp,
+                        initEventGuid);
+                case OrderType.UNKNOWN:
+                    goto default;
+                default:
+                    throw ExceptionFactory.InvalidSwitchArgument(orderType, nameof(orderType));
+            }
         }
     }
 }

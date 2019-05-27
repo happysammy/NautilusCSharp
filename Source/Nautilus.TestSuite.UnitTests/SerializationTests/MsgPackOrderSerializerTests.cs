@@ -12,6 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using MsgPack;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;
@@ -40,7 +41,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -56,7 +57,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -72,7 +73,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -88,7 +89,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = OrderSerializer.Serialize(order);
-            var unpacked = OrderSerializer.Deserialize(packed, Guid.NewGuid());
+            var unpacked = OrderSerializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(order, unpacked);
@@ -100,14 +101,20 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_NullableOrders_GivenOrder()
         {
             // Arrange
-            var order = new StubOrderBuilder().BuildLimitOrder();
+            var entry = new StubOrderBuilder().EntryOrder("O-123").BuildMarketOrder();
+            var stopLoss = new StubOrderBuilder().StopLossOrder("O-124").BuildStopMarketOrder();
+            var takeProfit = new StubOrderBuilder().TakeProfitOrder("O-125").BuildLimitOrder();
+            var atomicOrder = new AtomicOrder(entry, stopLoss, takeProfit);
+
+            var serialized = OrderSerializer.SerializeTakeProfit(atomicOrder);
+            var package = new MessagePackObjectDictionary { { "TakeProfit", serialized } };
 
             // Act
-            var packed = OrderSerializer.SerializeTakeProfit(order);
-            var unpacked = OrderSerializer.DeserializeTakeProfit(packed);
+            var packed = OrderSerializer.SerializeTakeProfit(atomicOrder);
+            var unpacked = OrderSerializer.DeserializeTakeProfit(package);
 
             // Assert
-            Assert.Equal(order, unpacked);
+            Assert.Equal(takeProfit, unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -116,16 +123,20 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_NullableOrders_GivenNil()
         {
             // Arrange
-            // var order = new StubOrderBuilder().BuildStopLimitOrder();
+            var entry = new StubOrderBuilder().EntryOrder("O-123").BuildMarketOrder();
+            var stopLoss = new StubOrderBuilder().StopLossOrder("O-124").BuildStopMarketOrder();
+            var atomicOrder = new AtomicOrder(entry, stopLoss);
+
+            var serialized = OrderSerializer.SerializeTakeProfit(atomicOrder);
+            var package = new MessagePackObjectDictionary { { "TakeProfit", serialized } };
 
             // Act
-            var packed = OrderSerializer.SerializeTakeProfit(null);
-            var unpacked = OrderSerializer.DeserializeTakeProfit(packed);
+            var unpacked = OrderSerializer.DeserializeTakeProfit(package);
 
             // Assert
             Assert.Equal(null, unpacked);
-            this.output.WriteLine(Convert.ToBase64String(packed));
-            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+            this.output.WriteLine(Convert.ToBase64String(MsgPackSerializer.Serialize(package)));
+            this.output.WriteLine(Encoding.UTF8.GetString(MsgPackSerializer.Serialize(package)));
         }
 
         [Fact]

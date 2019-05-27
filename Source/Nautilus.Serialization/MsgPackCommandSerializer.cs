@@ -55,7 +55,6 @@ namespace Nautilus.Serialization
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
                     package.Add(Key.PositionId, cmd.PositionId.ToString());
                     package.Add(Key.Order, OrderSerializer.Serialize(cmd.Order));
-                    package.Add(Key.InitEventGuid, cmd.InitEventGuid.ToString());
                     break;
                 case SubmitAtomicOrder cmd:
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
@@ -64,9 +63,6 @@ namespace Nautilus.Serialization
                     package.Add(Key.Entry, OrderSerializer.SerializeEntry(cmd.AtomicOrder));
                     package.Add(Key.StopLoss, OrderSerializer.SerializeStopLoss(cmd.AtomicOrder));
                     package.Add(Key.TakeProfit, OrderSerializer.SerializeTakeProfit(cmd.AtomicOrder));
-                    package.Add(Key.InitEventGuidEntry, cmd.InitEventGuidEntry.ToString());
-                    package.Add(Key.InitEventGuidStopLoss, cmd.InitEventGuidStopLoss.ToString());
-                    package.Add(Key.InitEventGuidTakeProfit, cmd.InitEventGuidTakeProfit.ToString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
@@ -109,7 +105,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.TraderId(unpacked[Key.TraderId]),
                         ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
                         ObjectExtractor.PositionId(unpacked[Key.PositionId]),
-                        OrderSerializer.Deserialize(unpacked[Key.Order].AsBinary(), ObjectExtractor.Guid(unpacked[Key.InitEventGuid])),
+                        OrderSerializer.Deserialize(unpacked[Key.Order].AsBinary()),
                         ObjectExtractor.Guid(unpacked[Key.InitEventGuid]),
                         commandId,
                         commandTimestamp);

@@ -47,11 +47,6 @@ namespace Nautilus.Execution.Messages.Commands
             this.StrategyId = strategyId;
             this.PositionId = positionId;
             this.AtomicOrder = atomicOrder;
-            this.InitEventGuidEntry = atomicOrder.Entry.InitEventGuid;
-            this.InitEventGuidStopLoss = atomicOrder.StopLoss.InitEventGuid;
-            this.InitEventGuidTakeProfit = atomicOrder.HasTakeProfit
-                ? atomicOrder.TakeProfit.InitEventGuid
-                : Guid.Empty;
         }
 
         /// <summary>
@@ -73,20 +68,5 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands atomic order.
         /// </summary>
         public AtomicOrder AtomicOrder { get; }
-
-        /// <summary>
-        /// Gets the commands atomic order entry initialization event <see cref="Guid"/>.
-        /// </summary>
-        public Guid InitEventGuidEntry { get; }
-
-        /// <summary>
-        /// Gets the commands atomic order stop-loss initialization event <see cref="Guid"/>.
-        /// </summary>
-        public Guid InitEventGuidStopLoss { get; }
-
-        /// <summary>
-        /// Gets the commands atomic order take-profit initialization event <see cref="Guid"/>.
-        /// </summary>
-        public Guid InitEventGuidTakeProfit { get; }
     }
 }

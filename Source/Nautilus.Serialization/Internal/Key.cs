@@ -276,21 +276,6 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string InitEventGuidEntry => nameof(InitEventGuidEntry);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string InitEventGuidStopLoss => nameof(InitEventGuidStopLoss);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string InitEventGuidTakeProfit => nameof(InitEventGuidTakeProfit);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
         internal static string StopLoss => nameof(StopLoss);
 
         /// <summary>

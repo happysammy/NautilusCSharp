@@ -49,7 +49,6 @@ namespace Nautilus.Execution.Messages.Commands
             this.StrategyId = strategyId;
             this.PositionId = positionId;
             this.Order = order;
-            this.InitEventGuid = initEventGuid;
         }
 
         /// <summary>
@@ -71,10 +70,5 @@ namespace Nautilus.Execution.Messages.Commands
         /// Gets the commands order.
         /// </summary>
         public Order Order { get; }
-
-        /// <summary>
-        /// Gets the commands order initialization event GUID.
-        /// </summary>
-        public Guid InitEventGuid { get; }
     }
 }
