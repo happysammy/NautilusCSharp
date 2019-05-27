@@ -38,8 +38,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Order" /> class.
         /// </summary>
-        /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
+        /// <param name="symbol">The order symbol.</param>
         /// <param name="label">The order label.</param>
         /// <param name="side">The order side.</param>
         /// <param name="type">The order type.</param>
@@ -50,8 +50,8 @@ namespace Nautilus.DomainModel.Aggregates
         /// <param name="timestamp">The order timestamp.</param>
         /// <param name="initEventId">The order initialization event identifier.</param>
         public Order(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide side,
             OrderType type,

@@ -170,21 +170,20 @@ namespace Nautilus.DomainModel.Entities
         /// Returns a value indicating whether this <see cref="Instrument"/> is equal to the
         /// specified <see cref="object"/>.
         /// </summary>
-        /// <param name="obj">The other object.</param>
+        /// <param name="other">The other object.</param>
         /// <returns>A <see cref="bool"/>.</returns>
-        public override bool Equals(object obj) =>
-            obj is Instrument otherInstrument && otherInstrument.Symbol.Equals(this.Symbol);
+        public override bool Equals(object other) => other is Instrument instrument && this.Equals(instrument);
 
         /// <summary>
         /// Returns the hash code of the <see cref="Instrument"/>.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
-        public override int GetHashCode() => this.Symbol.GetHashCode();
+        public override int GetHashCode() => this.Id.GetHashCode();
 
         /// <summary>
         /// Returns a string representation of the <see cref="Instrument"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => this.Symbol.ToString();
+        public override string ToString() => this.Id.ToString();
     }
 }

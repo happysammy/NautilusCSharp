@@ -42,7 +42,7 @@ namespace Nautilus.DomainModel.Entities.Base
         public Identifier<T> Id { get; }
 
         /// <summary>
-        /// Gets the entity timestamp.
+        /// Gets the entity initialization timestamp.
         /// </summary>
         public ZonedDateTime Timestamp { get; }
 

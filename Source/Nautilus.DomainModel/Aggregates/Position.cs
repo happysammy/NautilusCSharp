@@ -36,16 +36,14 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> class.
         /// </summary>
-        /// <param name="symbol">The position symbol.</param>
         /// <param name="positionId">The position identifier.</param>
+        /// <param name="symbol">The position symbol.</param>
         /// <param name="timestamp">The position timestamp.</param>
         public Position(
-            Symbol symbol,
             PositionId positionId,
+            Symbol symbol,
             ZonedDateTime timestamp)
-            : base(
-                  positionId,
-                  timestamp)
+            : base(positionId, timestamp)
         {
             this.orderIds = new List<OrderId>();
             this.executionIds = new List<ExecutionId>();

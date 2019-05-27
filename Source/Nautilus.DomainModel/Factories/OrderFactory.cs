@@ -25,33 +25,33 @@ namespace Nautilus.DomainModel.Factories
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The market order.</returns>
         public static Order Market(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
+            Label label,
+            OrderSide side,
             Quantity quantity,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
         {
             return new Order(
-                symbol,
                 orderId,
-                orderLabel,
-                orderSide,
+                symbol,
+                label,
+                side,
                 OrderType.MARKET,
                 quantity,
                 null,
                 TimeInForce.DAY,
                 null,
                 timestamp,
-                initEventGuid);
+                initEventId);
         }
 
         /// <summary>
@@ -59,39 +59,39 @@ namespace Nautilus.DomainModel.Factories
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The market if touched order.</returns>
         public static Order MarketIfTouched(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
+            Label label,
+            OrderSide side,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
         {
             return new Order(
-                symbol,
                 orderId,
-                orderLabel,
-                orderSide,
+                symbol,
+                label,
+                side,
                 OrderType.MIT,
                 quantity,
                 price,
                 timeInForce,
                 expireTime,
                 timestamp,
-                initEventGuid);
+                initEventId);
         }
 
         /// <summary>
@@ -99,39 +99,39 @@ namespace Nautilus.DomainModel.Factories
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The limit order.</returns>
         public static Order Limit(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
+            Label label,
+            OrderSide side,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
         {
             return new Order(
-                symbol,
                 orderId,
-                orderLabel,
-                orderSide,
+                symbol,
+                label,
+                side,
                 OrderType.LIMIT,
                 quantity,
                 price,
                 timeInForce,
                 expireTime,
                 timestamp,
-                initEventGuid);
+                initEventId);
         }
 
         /// <summary>
@@ -139,39 +139,39 @@ namespace Nautilus.DomainModel.Factories
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The stop market order.</returns>
         public static Order StopMarket(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
+            Label label,
+            OrderSide side,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
         {
             return new Order(
-                symbol,
                 orderId,
-                orderLabel,
-                orderSide,
+                symbol,
+                label,
+                side,
                 OrderType.STOP_MARKET,
                 quantity,
                 price,
                 timeInForce,
                 expireTime,
                 timestamp,
-                initEventGuid);
+                initEventId);
         }
 
         /// <summary>
@@ -179,39 +179,39 @@ namespace Nautilus.DomainModel.Factories
         /// </summary>
         /// <param name="symbol">The order symbol.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price (optional).</param>
         /// <param name="timeInForce">The order time in force.</param>
         /// <param name="expireTime">The order expire time (optional).</param>
         /// <param name="timestamp">The order timestamp.</param>
-        /// <param name="initEventGuid">The order initialization event GUID.</param>
+        /// <param name="initEventId">The order initialization event GUID.</param>
         /// <returns>The stop limit order.</returns>
         public static Order StopLimit(
             Symbol symbol,
             OrderId orderId,
-            Label orderLabel,
-            OrderSide orderSide,
+            Label label,
+            OrderSide side,
             Quantity quantity,
             Price? price,
             TimeInForce timeInForce,
             ZonedDateTime? expireTime,
             ZonedDateTime timestamp,
-            Guid initEventGuid = default)
+            Guid initEventId = default)
         {
             return new Order(
-                symbol,
                 orderId,
-                orderLabel,
-                orderSide,
+                symbol,
+                label,
+                side,
                 OrderType.STOP_LIMIT,
                 quantity,
                 price,
                 timeInForce,
                 expireTime,
                 timestamp,
-                initEventGuid);
+                initEventId);
         }
     }
 }

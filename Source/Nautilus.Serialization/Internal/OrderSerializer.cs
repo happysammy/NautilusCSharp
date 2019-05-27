@@ -33,7 +33,7 @@ namespace Nautilus.Serialization.Internal
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
                 { Key.Symbol, order.Symbol.ToString() },
-                { Key.OrderId, order.Id.ToString() },
+                { Key.Id, order.Id.ToString() },
                 { Key.Label, order.Label.ToString() },
                 { Key.OrderSide, order.Side.ToString() },
                 { Key.OrderType, order.Type.ToString() },
@@ -90,7 +90,7 @@ namespace Nautilus.Serialization.Internal
         {
             var orderType = ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]);
             var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
-            var id = ObjectExtractor.OrderId(unpacked[Key.OrderId]);
+            var id = ObjectExtractor.OrderId(unpacked[Key.Id]);
             var label = ObjectExtractor.Label(unpacked[Key.Label]);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]);
             var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);

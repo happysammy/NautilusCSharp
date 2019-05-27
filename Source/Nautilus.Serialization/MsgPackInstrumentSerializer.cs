@@ -54,7 +54,7 @@ namespace Nautilus.Serialization
             return new Instrument(
                 ObjectExtractor.InstrumentId(unpacked[Key.Id]),
                 ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                ObjectExtractor.BrokerSymbol(unpacked[Key.Id]),
+                ObjectExtractor.BrokerSymbol(unpacked[Key.BrokerSymbol]),
                 ObjectExtractor.Enum<Currency>(unpacked[Key.QuoteCurrency]),
                 ObjectExtractor.Enum<SecurityType>(unpacked[Key.SecurityType]),
                 unpacked[Key.TickPrecision].AsInt32(),

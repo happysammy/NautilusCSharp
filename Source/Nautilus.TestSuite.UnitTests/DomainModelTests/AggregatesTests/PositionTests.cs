@@ -26,8 +26,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Venue.GLOBEX),
                 new PositionId("NONE"),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
@@ -60,8 +60,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Venue.GLOBEX),
                 new PositionId("NONE"),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
@@ -115,8 +115,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Venue.GLOBEX),
                 new PositionId("NONE"),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
@@ -183,8 +183,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new Symbol("SYMBOL", Venue.GLOBEX),
                 new PositionId("NONE"),
+                new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
