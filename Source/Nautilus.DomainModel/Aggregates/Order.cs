@@ -274,7 +274,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns the broker order identifiers.
         /// </summary>
         /// <returns>A read only collection.</returns>
-        public IEnumerable<OrderId> GetBrokerOrderIds() => this.orderIdsBroker;
+        public IEnumerable<OrderId> GetOrderIdsBroker() => this.orderIdsBroker;
 
         /// <summary>
         /// Returns the execution identifiers.
