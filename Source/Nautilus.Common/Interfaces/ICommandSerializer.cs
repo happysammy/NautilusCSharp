@@ -16,17 +16,17 @@ namespace Nautilus.Common.Interfaces
     public interface ICommandSerializer
     {
         /// <summary>
-        /// Serialize the given command.
+        /// Returns the serialized command bytes.
         /// </summary>
         /// <param name="command">The command to serialize.</param>
-        /// <returns>The serialized command.</returns>
+        /// <returns>The serialized command bytes.</returns>
         byte[] Serialize(Command command);
 
         /// <summary>
-        /// Deserialize the given command bytes.
+        /// Returns the deserialize <see cref="Command"/>.
         /// </summary>
         /// <param name="commandBytes">The command bytes to deserialize.</param>
-        /// <returns>The deserialized command.</returns>
+        /// <returns>The deserialized <see cref="Command"/>.</returns>
         Command Deserialize(byte[] commandBytes);
     }
 }
