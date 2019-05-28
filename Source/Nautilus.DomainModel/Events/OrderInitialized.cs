@@ -26,8 +26,8 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderInitialized"/> class.
         /// </summary>
-        /// <param name="symbol">The event order symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="label">The event order label.</param>
         /// <param name="orderSide">The event order side.</param>
         /// <param name="orderType">The event order type.</param>
@@ -38,8 +38,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderInitialized(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Label label,
             OrderSide orderSide,
             OrderType orderType,
@@ -50,8 +50,8 @@ namespace Nautilus.DomainModel.Events
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderInitialized),
                 eventId,
                 eventTimestamp)

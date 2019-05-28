@@ -25,20 +25,20 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderSubmitted"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="submittedTime">The event submitted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderSubmitted(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             ZonedDateTime submittedTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderSubmitted),
                 eventId,
                 eventTimestamp)

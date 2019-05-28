@@ -57,8 +57,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = new OrderRejected(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 "INVALID_ORDER",
                 Guid.NewGuid(),

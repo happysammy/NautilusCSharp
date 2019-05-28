@@ -31,8 +31,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,
@@ -65,8 +65,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.SELL,
@@ -77,8 +77,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,
@@ -89,8 +89,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.SELL,
@@ -120,8 +120,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,
@@ -132,8 +132,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,
@@ -144,8 +144,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.SELL,
@@ -156,8 +156,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message4 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.SELL,
@@ -188,8 +188,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.SELL,
@@ -200,8 +200,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,
@@ -212,8 +212,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                position.Symbol,
                 new OrderId("123456"),
+                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 OrderSide.BUY,

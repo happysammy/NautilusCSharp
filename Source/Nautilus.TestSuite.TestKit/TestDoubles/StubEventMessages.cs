@@ -24,8 +24,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderSubmitted OrderSubmittedEvent(Order order)
         {
             return new OrderSubmitted(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -34,8 +34,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderRejected OrderRejectedEvent(Order order)
         {
             return new OrderRejected(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
@@ -45,8 +45,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderAccepted OrderAcceptedEvent(Order order)
         {
             return new OrderAccepted(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -55,8 +55,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderWorking OrderWorkingEvent(Order order, Price workingPrice)
         {
             return new OrderWorking(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new OrderId("some_broker_orderId"),
                 order.Label,
                 order.Side,
@@ -73,8 +73,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderModified OrderModifiedEvent(Order order, Price newPrice)
         {
             return new OrderModified(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new OrderId("NONE"),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
@@ -85,8 +85,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderCancelled OrderCancelledEvent(Order order)
         {
             return new OrderCancelled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -95,8 +95,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderExpired OrderExpiredEvent(Order order)
         {
             return new OrderExpired(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -109,8 +109,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Price averagePrice)
         {
             return new OrderPartiallyFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Side,
@@ -125,8 +125,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         public static OrderFilled OrderFilledEvent(Order order, Price averagePrice)
         {
             return new OrderFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
                 order.Side,

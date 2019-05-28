@@ -68,8 +68,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var initialized = new OrderInitialized(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 order.Label,
                 order.Side,
                 order.Type,
@@ -96,8 +96,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var submitted = new OrderSubmitted(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -118,8 +118,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var accepted = new OrderAccepted(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -140,8 +140,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildMarketOrder();
             var rejected = new OrderRejected(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 "INVALID_ORDER",
                 Guid.NewGuid(),
@@ -168,8 +168,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             }
 
             var working = new OrderWorking(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
@@ -206,8 +206,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             }
 
             var working = new OrderWorking(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
@@ -236,8 +236,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelled = new OrderCancelled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -258,8 +258,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var cancelReject = new OrderCancelReject(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 "REJECT_RESPONSE?",
                 "ORDER_NOT_FOUND",
@@ -282,8 +282,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var modified = new OrderModified(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new OrderId("B123456"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
@@ -306,8 +306,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var serializer = new MsgPackEventSerializer();
             var order = new StubOrderBuilder().BuildStopMarketOrder();
             var expired = new OrderExpired(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -330,8 +330,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .WithQuantity(Quantity.Create(100000))
                 .BuildStopLimitOrder();
             var partiallyFilled = new OrderPartiallyFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("E123456"),
                 new ExecutionTicket("P123456"),
                 order.Side,
@@ -360,8 +360,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
                 .WithQuantity(Quantity.Create(100000))
                 .BuildStopLimitOrder();
             var filled = new OrderFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("E123456"),
                 new ExecutionTicket("P123456"),
                 order.Side,

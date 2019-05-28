@@ -25,20 +25,20 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderExpired"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="expiredTime">The event order expired time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderExpired(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             ZonedDateTime expiredTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderExpired),
                 eventId,
                 eventTimestamp)

@@ -90,8 +90,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.IsComplete = false;
 
             var initialized = new OrderInitialized(
-                symbol,
                 orderId,
+                symbol,
                 label,
                 side,
                 type,
@@ -101,7 +101,7 @@ namespace Nautilus.DomainModel.Aggregates
                 expireTime,
                 initId == default ? Guid.NewGuid() : initId,
                 timestamp);
-            this.InitEventId = initialized.Id;
+            this.InitId = initialized.Id;
 
             this.Apply(initialized);
             this.CheckClassInvariants();
@@ -130,7 +130,7 @@ namespace Nautilus.DomainModel.Aggregates
             this.Slippage = null;
             this.TimeInForce = initialized.TimeInForce;
             this.ExpireTime = this.ValidateExpireTime(initialized.ExpireTime);
-            this.InitEventId = initialized.Id;
+            this.InitId = initialized.Id;
             this.IsBuy = this.Side == OrderSide.BUY;
             this.IsSell = this.Side == OrderSide.SELL;
             this.IsActive = false;
@@ -223,7 +223,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// <summary>
         /// Gets the initialization event identifier.
         /// </summary>
-        public Guid InitEventId { get; }
+        public Guid InitId { get; }
 
         /// <summary>
         /// Gets the orders last event time.

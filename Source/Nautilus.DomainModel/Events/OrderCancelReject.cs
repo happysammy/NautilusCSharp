@@ -25,24 +25,24 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderCancelReject"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedResponseTo">The event cancel reject response.</param>
         /// <param name="rejectedReason">The event order cancel rejected reason.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderCancelReject(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             ZonedDateTime rejectedTime,
             string rejectedResponseTo,
             string rejectedReason,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderCancelReject),
                 eventId,
                 eventTimestamp)

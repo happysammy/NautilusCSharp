@@ -172,8 +172,8 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.Label(unpacked[Key.Label]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),
@@ -185,30 +185,30 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.SubmittedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.AcceptedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.BrokerOrderId]),
                         ObjectExtractor.Label(unpacked[Key.Label]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
@@ -222,15 +222,15 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.CancelledTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
@@ -238,8 +238,8 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.Price(unpacked[Key.ModifiedPrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ModifiedTime]),
@@ -247,15 +247,15 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExpiredTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
@@ -267,8 +267,8 @@ namespace Nautilus.Serialization
                         eventTimestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),

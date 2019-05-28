@@ -26,8 +26,8 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderPartiallyFilled"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
         /// <param name="orderSide">The event order side.</param>
@@ -38,8 +38,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderPartiallyFilled(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
             OrderSide orderSide,
@@ -50,8 +50,8 @@ namespace Nautilus.DomainModel.Events
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderPartiallyFilled),
                 eventId,
                 eventTimestamp)

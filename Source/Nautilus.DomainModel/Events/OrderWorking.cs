@@ -26,8 +26,8 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderWorking"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderIdBroker">The event order identifier from the broker.</param>
         /// <param name="label">The event order label. </param>
         /// <param name="orderSide">The event order side.</param>
@@ -40,8 +40,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderWorking(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             OrderId orderIdBroker,
             Label label,
             OrderSide orderSide,
@@ -54,8 +54,8 @@ namespace Nautilus.DomainModel.Events
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
-                symbol,
                 orderId,
+                symbol,
                 typeof(OrderWorking),
                 eventId,
                 eventTimestamp)

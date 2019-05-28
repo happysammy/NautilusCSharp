@@ -275,8 +275,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event1 = StubEventMessages.OrderSubmittedEvent(order);
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = new OrderWorking(
-                new Symbol("AUDUSD", Venue.LMAX),
                 order.Id,
+                new Symbol("AUDUSD", Venue.LMAX),
                 new OrderId("some_broker_orderId"),
                 order.Label,
                 order.Side,
@@ -317,8 +317,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderPartiallyFilled(
-                new Symbol("AUDUSD", Venue.LMAX),
                 order.Id,
+                new Symbol("AUDUSD", Venue.LMAX),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Side,
@@ -356,8 +356,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Side,
@@ -422,8 +422,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Side,
@@ -462,8 +462,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
-                order.Symbol,
                 order.Id,
+                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
                 order.Side,

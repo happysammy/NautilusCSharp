@@ -25,14 +25,14 @@ namespace Nautilus.DomainModel.Events.Base
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderEvent"/> class.
         /// </summary>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="symbol">The event symbol.</param>
         /// <param name="eventType">The event type.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderEvent(
-            Symbol symbol,
             OrderId orderId,
+            Symbol symbol,
             Type eventType,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -44,14 +44,9 @@ namespace Nautilus.DomainModel.Events.Base
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.Symbol = symbol;
             this.OrderId = orderId;
+            this.Symbol = symbol;
         }
-
-        /// <summary>
-        /// Gets the events order symbol.
-        /// </summary>
-        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the events order identifier.
@@ -59,9 +54,8 @@ namespace Nautilus.DomainModel.Events.Base
         public OrderId OrderId { get; }
 
         /// <summary>
-        /// Returns a string representation of this <see cref="OrderEvent"/>.
+        /// Gets the events order symbol.
         /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{this.GetType().Name}({this.OrderId})";
+        public Symbol Symbol { get; }
     }
 }

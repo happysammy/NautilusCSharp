@@ -332,8 +332,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderRejected = new OrderRejected(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     timestamp,
                     rejectReason,
                     this.NewGuid(),
@@ -367,8 +367,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelReject = new OrderCancelReject(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     timestamp,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -404,8 +404,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelled = new OrderCancelled(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -440,8 +440,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderModified = new OrderModified(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     new OrderId(brokerOrderId),
                     Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
@@ -484,8 +484,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderWorking = new OrderWorking(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     new OrderId(brokerOrderId),
                     new Label(orderLabel),
                     orderSide,
@@ -535,8 +535,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderExpired = new OrderExpired(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -578,8 +578,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderFilled = new OrderFilled(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
                     orderSide,
@@ -631,8 +631,8 @@ namespace Nautilus.Fix
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(
-                    new Symbol(symbolCode, venue),
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
                     orderSide,
