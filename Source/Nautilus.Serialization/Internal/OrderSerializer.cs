@@ -24,10 +24,10 @@ namespace Nautilus.Serialization.Internal
         private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
 
         /// <summary>
-        /// Serialize the given order to MessagePack specification bytes.
+        /// Returns the given <see cref="Order"/> serialized to a MessagePack specification byte array.
         /// </summary>
         /// <param name="order">The order to serialize.</param>
-        /// <returns>The serialized order.</returns>
+        /// <returns>The serialized byte array.</returns>
         internal static byte[] Serialize(Order order)
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
@@ -38,29 +38,29 @@ namespace Nautilus.Serialization.Internal
                 { Key.OrderSide, order.Side.ToString() },
                 { Key.OrderType, order.Type.ToString() },
                 { Key.Quantity, order.Quantity.Value },
-                { Key.Price, ObjectPacker.NullablePrice(order.Price) },
+                { Key.Price, ObjectPacker.Pack(order.Price) },
                 { Key.TimeInForce, order.TimeInForce.ToString() },
-                { Key.ExpireTime, ObjectPacker.NullableZonedDateTime(order.ExpireTime) },
+                { Key.ExpireTime, ObjectPacker.Pack(order.ExpireTime) },
                 { Key.Timestamp, order.Timestamp.ToIsoString() },
                 { Key.InitId, order.InitId.ToString() },
             });
         }
 
         /// <summary>
-        /// Serialize the given nullable order to MessagePack specification bytes.
+        /// Returns the given <see cref="Order"/>? serialized to a MessagePack specification byte array.
         /// </summary>
         /// <param name="order">The nullable order to serialize.</param>
-        /// <returns>The serialized order.</returns>
+        /// <returns>The serialized byte array.</returns>
         internal static byte[] SerializeNullable(Order? order)
         {
             return order == null ? Empty : Serialize(order);
         }
 
         /// <summary>
-        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// Returns the given byte array deserialized to an <see cref="Order"/>.
         /// </summary>
         /// <param name="orderBytes">The order bytes.</param>
-        /// <returns>The deserialized order.</returns>
+        /// <returns>The deserialized <see cref="Order"/>.</returns>
         internal static Order Deserialize(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
@@ -69,10 +69,10 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns the nullable take profit <see cref="Order"/>.
+        /// Returns the given byte array deserialized to an <see cref="Order"/>?.
         /// </summary>
         /// <param name="orderBytes">The message pack object dictionary.</param>
-        /// <returns>The nullable <see cref="Order"/>.</returns>
+        /// <returns>The deserialized <see cref="Order"/>?.</returns>
         internal static Order? DeserializeNullable(byte[] orderBytes)
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(orderBytes);
@@ -81,10 +81,10 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Deserialize the given byte array to an <see cref="Order"/>.
+        /// Returns the given <see cref="MessagePackObjectDictionary"/> deserialized to an <see cref="Order"/>.
         /// </summary>
         /// <param name="unpacked">The unpacked order object dictionary.</param>
-        /// <returns>The deserialized order.</returns>
+        /// <returns>The deserialized <see cref="Order"/>.</returns>
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {

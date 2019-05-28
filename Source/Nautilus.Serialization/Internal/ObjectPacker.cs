@@ -14,16 +14,16 @@ namespace Nautilus.Serialization.Internal
     using NodaTime;
 
     /// <summary>
-    /// Provides methods for converting objects to <see cref="MessagePackObject"/>s.
+    /// Provides methods for packing objects to <see cref="MessagePackObject"/>s.
     /// </summary>
     internal static class ObjectPacker
     {
         /// <summary>
-        /// Return a <see cref="MessagePackObject"/> from the given price.
+        /// Return a <see cref="MessagePackObject"/> from the given <see cref="Price"/>?.
         /// </summary>
         /// <param name="price">The nullable price.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject NullablePrice(Price? price)
+        /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
+        internal static MessagePackObject Pack(Price? price)
         {
             return price is null
                 ? MessagePackObject.Nil
@@ -31,11 +31,11 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns a <see cref="MessagePackObject"/> from the given nullable expire time.
+        /// Returns a <see cref="MessagePackObject"/> from the given <see cref="ZonedDateTime"/>?.
         /// </summary>
         /// <param name="dateTime">The nullable zoned date time.</param>
-        /// <returns>The <see cref="MessagePackObject"/>.</returns>
-        internal static MessagePackObject NullableZonedDateTime(ZonedDateTime? dateTime)
+        /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
+        internal static MessagePackObject Pack(ZonedDateTime? dateTime)
         {
             return dateTime is null
                 ? MessagePackObject.Nil

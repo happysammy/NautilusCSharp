@@ -26,200 +26,200 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Returns a <see cref="decimal"/> extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="decimal"/>.</returns>
-        internal static decimal Decimal(MessagePackObject packed)
+        internal static decimal Decimal(MessagePackObject unpacked)
         {
-            return Convert.ToDecimal(packed.ToString());
+            return Convert.ToDecimal(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a Guid extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Guid.</returns>
-        internal static Guid Guid(MessagePackObject packed)
+        internal static Guid Guid(MessagePackObject unpacked)
         {
-            return System.Guid.Parse(packed.ToString());
+            return System.Guid.Parse(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a Symbol extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Symbol.</returns>
-        internal static Symbol Symbol(MessagePackObject packed)
+        internal static Symbol Symbol(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Symbol.Create(packed.ToString());
+            return DomainModel.ValueObjects.Symbol.Create(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a BrokerSymbol extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted BrokerSymbol.</returns>
-        internal static BrokerSymbol BrokerSymbol(MessagePackObject packed)
+        internal static BrokerSymbol BrokerSymbol(MessagePackObject unpacked)
         {
-            return new BrokerSymbol(packed.ToString());
+            return new BrokerSymbol(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a TraderId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted TraderId.</returns>
-        internal static TraderId TraderId(MessagePackObject packed)
+        internal static TraderId TraderId(MessagePackObject unpacked)
         {
-            return new TraderId(packed.ToString());
+            return new TraderId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a StrategyId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted StrategyId.</returns>
-        internal static StrategyId StrategyId(MessagePackObject packed)
+        internal static StrategyId StrategyId(MessagePackObject unpacked)
         {
-            return new StrategyId(packed.ToString());
+            return new StrategyId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a PositionId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted PositionId.</returns>
-        internal static PositionId PositionId(MessagePackObject packed)
+        internal static PositionId PositionId(MessagePackObject unpacked)
         {
-            return new PositionId(packed.ToString());
+            return new PositionId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns an OrderId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted OrderId.</returns>
-        internal static OrderId OrderId(MessagePackObject packed)
+        internal static OrderId OrderId(MessagePackObject unpacked)
         {
-            return new OrderId(packed.ToString());
+            return new OrderId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns an ExecutionId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionId.</returns>
-        internal static ExecutionId ExecutionId(MessagePackObject packed)
+        internal static ExecutionId ExecutionId(MessagePackObject unpacked)
         {
-            return new ExecutionId(packed.ToString());
+            return new ExecutionId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns an InstrumentId extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted InstrumentId.</returns>
-        internal static InstrumentId InstrumentId(MessagePackObject packed)
+        internal static InstrumentId InstrumentId(MessagePackObject unpacked)
         {
-            return new InstrumentId(packed.ToString());
+            return new InstrumentId(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns an ExecutionTicket extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionTicket.</returns>
-        internal static ExecutionTicket ExecutionTicket(MessagePackObject packed)
+        internal static ExecutionTicket ExecutionTicket(MessagePackObject unpacked)
         {
-            return new ExecutionTicket(packed.ToString());
+            return new ExecutionTicket(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns a Label extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Label.</returns>
-        internal static Label Label(MessagePackObject packed)
+        internal static Label Label(MessagePackObject unpacked)
         {
-            return new Label(packed.ToString());
+            return new Label(unpacked.ToString());
         }
 
         /// <summary>
         /// Returns an enumerator extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
         /// <typeparam name="TEnum">The enumerator type.</typeparam>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="Enum"/>.</returns>
-        internal static TEnum Enum<TEnum>(MessagePackObject packed)
+        internal static TEnum Enum<TEnum>(MessagePackObject unpacked)
             where TEnum : struct
         {
-            return packed.ToString().ToEnum<TEnum>();
+            return unpacked.ToString().ToEnum<TEnum>();
         }
 
         /// <summary>
         /// Returns a Quantity extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Quantity.</returns>
-        internal static Quantity Quantity(MessagePackObject packed)
+        internal static Quantity Quantity(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Quantity.Create(packed.AsInt32());
+            return DomainModel.ValueObjects.Quantity.Create(unpacked.AsInt32());
         }
 
         /// <summary>
         /// Returns a Money extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <param name="currency">The currency.</param>
         /// <returns>The extracted Money.</returns>
-        internal static Money Money(MessagePackObject packed, Currency currency)
+        internal static Money Money(MessagePackObject unpacked, Currency currency)
         {
-            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(packed.ToString()), currency);
+            return DomainModel.ValueObjects.Money.Create(Convert.ToDecimal(unpacked.ToString()), currency);
         }
 
         /// <summary>
         /// Returns a Price extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Price.</returns>
-        internal static Price Price(MessagePackObject packed)
+        internal static Price Price(MessagePackObject unpacked)
         {
-            Debug.NotEmptyOrWhiteSpace(packed.ToString(), nameof(packed));
+            Debug.NotEmptyOrWhiteSpace(unpacked.ToString(), nameof(unpacked));
 
-            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(packed.ToString()));
+            return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.ToString()));
         }
 
         /// <summary>
         /// Returns a Price? extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Price?.</returns>
-        internal static Price? NullablePrice(MessagePackObject packed)
+        internal static Price? NullablePrice(MessagePackObject unpacked)
         {
-            return packed.Equals(MessagePackObject.Nil)
+            return unpacked.Equals(MessagePackObject.Nil)
                 ? null
-                : DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(packed.ToString()));
+                : DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.ToString()));
         }
 
         /// <summary>
         /// Returns a <see cref="decimal"/> extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="decimal"/>.</returns>
-        internal static ZonedDateTime ZonedDateTime(MessagePackObject packed)
+        internal static ZonedDateTime ZonedDateTime(MessagePackObject unpacked)
         {
-            return packed.ToString().ToZonedDateTimeFromIso();
+            return unpacked.ToString().ToZonedDateTimeFromIso();
         }
 
         /// <summary>
         /// Returns a <see cref="NodaTime.ZonedDateTime"/>? extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
-        /// <param name="packed">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted <see cref="NodaTime.ZonedDateTime"/>?.</returns>
-        internal static ZonedDateTime? NullableZonedDateTime(MessagePackObject packed)
+        internal static ZonedDateTime? NullableZonedDateTime(MessagePackObject unpacked)
         {
-            return packed == MessagePackObject.Nil
+            return unpacked == MessagePackObject.Nil
                 ? null
-                : packed.ToString().ToNullableZonedDateTimeFromIso();
+                : unpacked.ToString().ToNullableZonedDateTimeFromIso();
         }
     }
 }

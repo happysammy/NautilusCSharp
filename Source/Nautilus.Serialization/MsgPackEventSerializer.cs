@@ -57,9 +57,9 @@ namespace Nautilus.Serialization
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.OrderType, orderEvent.OrderType.ToString());
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
-                    package.Add(Key.Price, ObjectPacker.NullablePrice(orderEvent.Price));
+                    package.Add(Key.Price, ObjectPacker.Pack(orderEvent.Price));
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, ObjectPacker.NullableZonedDateTime(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, ObjectPacker.Pack(orderEvent.ExpireTime));
                     break;
                 case OrderSubmitted orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
@@ -87,7 +87,7 @@ namespace Nautilus.Serialization
                     package.Add(Key.Quantity, orderEvent.Quantity.Value);
                     package.Add(Key.Price, orderEvent.Price.ToString());
                     package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, ObjectPacker.NullableZonedDateTime(orderEvent.ExpireTime));
+                    package.Add(Key.ExpireTime, ObjectPacker.Pack(orderEvent.ExpireTime));
                     package.Add(Key.WorkingTime, orderEvent.WorkingTime.ToIsoString());
                     break;
                 case OrderCancelled orderEvent:
