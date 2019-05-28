@@ -74,8 +74,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderModified(
                 order.Id,
-                order.Symbol,
                 new OrderId("NONE"),
+                order.Symbol,
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),

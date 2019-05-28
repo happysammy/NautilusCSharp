@@ -26,16 +26,16 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderModified"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
+        /// <param name="orderIdBroker">The event broker order identifier.</param>
         /// <param name="symbol">The event symbol.</param>
-        /// <param name="brokerOrderId">The event broker order identifier.</param>
         /// <param name="modifiedPrice">The event order modified price.</param>
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderModified(
             OrderId orderId,
+            OrderId orderIdBroker,
             Symbol symbol,
-            OrderId brokerOrderId,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
@@ -51,7 +51,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
-            this.BrokerOrderId = brokerOrderId;
+            this.OrderIdBroker = orderIdBroker;
             this.ModifiedPrice = modifiedPrice;
             this.ModifiedTime = modifiedTime;
         }
@@ -59,7 +59,7 @@ namespace Nautilus.DomainModel.Events
         /// <summary>
         /// Gets the events broker order identifier.
         /// </summary>
-        public OrderId BrokerOrderId { get; }
+        public OrderId OrderIdBroker { get; }
 
         /// <summary>
         /// Gets the events order modified price.

@@ -283,8 +283,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var order = new StubOrderBuilder().BuildStopLimitOrder();
             var modified = new OrderModified(
                 order.Id,
+                new OrderId("B" + order.Id),
                 order.Symbol,
-                new OrderId("B123456"),
                 Price.Create(2, 1),
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),

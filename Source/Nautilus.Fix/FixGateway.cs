@@ -441,8 +441,8 @@ namespace Nautilus.Fix
 
                 var orderModified = new OrderModified(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     new OrderId(orderIdBroker),
+                    new Symbol(symbolCode, venue),
                     Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),

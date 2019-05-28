@@ -439,7 +439,7 @@ namespace Nautilus.DomainModel.Aggregates
 
         private void When(OrderModified orderEvent)
         {
-            this.UpdateBrokerOrderIds(orderEvent.BrokerOrderId);
+            this.UpdateBrokerOrderIds(orderEvent.OrderIdBroker);
             this.Price = orderEvent.ModifiedPrice;
         }
 
