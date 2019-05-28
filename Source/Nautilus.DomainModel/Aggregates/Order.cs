@@ -256,12 +256,12 @@ namespace Nautilus.DomainModel.Aggregates
         public bool IsComplete { get; private set; }
 
         /// <summary>
-        /// Adds the modified order identifier to the order.
+        /// Adds the modified order identifier to the order identifiers.
         /// </summary>
-        /// <param name="modifiedOrderId">The modified order identifier.</param>
-        public void AddModifiedOrderId(OrderId modifiedOrderId)
+        /// <param name="modified">The modified order identifier.</param>
+        public void AddModifiedOrderId(OrderId modified)
         {
-            this.orderIds.Add(modifiedOrderId);
+            this.orderIds.Add(modified);
         }
 
         /// <summary>
