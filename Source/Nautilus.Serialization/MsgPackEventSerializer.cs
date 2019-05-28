@@ -81,7 +81,7 @@ namespace Nautilus.Serialization
                 case OrderWorking orderEvent:
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.BrokerOrderId, orderEvent.OrderIdBroker.ToString());
+                    package.Add(Key.OrderIdBroker, orderEvent.OrderIdBroker.ToString());
                     package.Add(Key.Label, orderEvent.Label.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.OrderType, orderEvent.OrderType.ToString());
@@ -106,7 +106,7 @@ namespace Nautilus.Serialization
                 case OrderModified orderEvent:
                     package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.BrokerOrderId, orderEvent.BrokerOrderId.ToString());
+                    package.Add(Key.OrderIdBroker, orderEvent.BrokerOrderId.ToString());
                     package.Add(Key.ModifiedPrice, orderEvent.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.ModifiedTime, orderEvent.ModifiedTime.ToIsoString());
                     break;
@@ -148,9 +148,9 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
 
+            var @event = unpacked[Key.Event].ToString();
             var eventId = ObjectExtractor.Guid(unpacked[Key.EventId]);
             var eventTimestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.EventTimestamp]);
-            var @event = unpacked[Key.Event].ToString();
 
             switch (@event)
             {
@@ -208,8 +208,8 @@ namespace Nautilus.Serialization
                 case nameof(OrderWorking):
                     return new OrderWorking(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
+                        ObjectExtractor.OrderId(unpacked[Key.OrderIdBroker]),
                         ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.OrderId(unpacked[Key.BrokerOrderId]),
                         ObjectExtractor.Label(unpacked[Key.Label]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),

@@ -56,8 +56,8 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderWorking(
                 order.Id,
+                new OrderId("B" + order.Id),
                 order.Symbol,
-                new OrderId("some_broker_orderId"),
                 order.Label,
                 order.Side,
                 order.Type,

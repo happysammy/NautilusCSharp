@@ -41,8 +41,8 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderWorking(
             OrderId orderId,
-            Symbol symbol,
             OrderId orderIdBroker,
+            Symbol symbol,
             Label label,
             OrderSide orderSide,
             OrderType orderType,

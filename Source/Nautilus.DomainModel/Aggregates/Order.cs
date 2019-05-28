@@ -146,9 +146,19 @@ namespace Nautilus.DomainModel.Aggregates
         public new OrderId Id => (OrderId)base.Id;
 
         /// <summary>
-        /// Gets the orders symbol.
+        /// Gets the orders last identifier.
         /// </summary>
-        public Symbol Symbol { get; }
+        public OrderId IdLast => this.orderIds.Last();  // Should always contain an initial OrderId.
+
+        /// <summary>
+        /// Gets the orders last identifier for the broker.
+        /// </summary>
+        public OrderId? IdBroker => this.orderIdsBroker.LastOrDefault();
+
+        /// <summary>
+        /// Gets the orders last execution identifier.
+        /// </summary>
+        public ExecutionId? ExecutionId => this.executionIds.LastOrDefault();
 
         /// <summary>
         /// Gets the orders identifier count.
@@ -156,19 +166,9 @@ namespace Nautilus.DomainModel.Aggregates
         public int IdCount => this.orderIds.Count;
 
         /// <summary>
-        /// Gets the orders current identifier.
+        /// Gets the orders symbol.
         /// </summary>
-        public OrderId IdCurrent => this.orderIds.Last();  // Should always contain an initial OrderId.
-
-        /// <summary>
-        /// Gets the orders current identifier for the broker.
-        /// </summary>
-        public OrderId? IdBroker => this.orderIdsBroker.LastOrDefault();
-
-        /// <summary>
-        /// Gets the orders current execution identifier.
-        /// </summary>
-        public ExecutionId? ExecutionId => this.executionIds.LastOrDefault();
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the orders label.
@@ -221,11 +221,6 @@ namespace Nautilus.DomainModel.Aggregates
         public ZonedDateTime? ExpireTime { get; }
 
         /// <summary>
-        /// Gets the initialization event identifier.
-        /// </summary>
-        public Guid InitId { get; }
-
-        /// <summary>
         /// Gets the orders last event time.
         /// </summary>
         public OrderEvent LastEvent => (OrderEvent)this.Events.Last();
@@ -234,6 +229,11 @@ namespace Nautilus.DomainModel.Aggregates
         /// Gets the current order status.
         /// </summary>
         public OrderStatus Status => this.orderStateMachine.State.ToString().ToEnum<OrderStatus>();
+
+        /// <summary>
+        /// Gets the initialization event identifier.
+        /// </summary>
+        public Guid InitId { get; }
 
         /// <summary>
         /// Gets a value indicating whether the order side is BUY.

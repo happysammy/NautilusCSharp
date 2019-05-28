@@ -391,16 +391,16 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderCancelled = new OrderCancelled(
@@ -413,9 +413,9 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderCancelled);
 
                 this.Log.Information(
-                    $"OrderCancelled: {orderLabel} " +
+                    $"OrderCancelled: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId})");
+                    $"BrokerOrderId={orderIdBroker})");
             });
         }
 
@@ -425,8 +425,8 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             decimal price,
             ZonedDateTime timestamp)
         {
@@ -434,15 +434,15 @@ namespace Nautilus.Fix
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.PositiveDecimal(price, nameof(price));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderModified = new OrderModified(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new Symbol(symbolCode, venue),
-                    new OrderId(brokerOrderId),
+                    new OrderId(orderIdBroker),
                     Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),
@@ -451,9 +451,9 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderModified);
 
                 this.Log.Information(
-                    $"OrderModified: {orderLabel} " +
+                    $"OrderModified: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"BrokerOrderId={orderIdBroker}, " +
                     $"Price={price})");
             });
         }
@@ -464,10 +464,10 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
-            OrderSide orderSide,
-            OrderType orderType,
+            string orderIdBroker,
+            string label,
+            OrderSide side,
+            OrderType type,
             int quantity,
             decimal price,
             TimeInForce timeInForce,
@@ -478,18 +478,18 @@ namespace Nautilus.Fix
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.PositiveDecimal(price, nameof(price));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderWorking = new OrderWorking(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
+                    new OrderId(orderIdBroker),
                     new Symbol(symbolCode, venue),
-                    new OrderId(brokerOrderId),
-                    new Label(orderLabel),
-                    orderSide,
-                    orderType,
+                    new Label(label),
+                    side,
+                    type,
                     Quantity.Create(quantity),
                     Price.Create(price, price.GetDecimalPlaces()),
                     timeInForce,
@@ -508,9 +508,9 @@ namespace Nautilus.Fix
                 }
 
                 this.Log.Information(
-                    $"OrderWorking: {orderLabel} " +
+                    $"OrderWorking: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"BrokerOrderId={orderIdBroker}, " +
                     $"Price={price}, " +
                     $"ExpireTime={expireTimeString})");
             });
@@ -522,16 +522,16 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderExpired = new OrderExpired(
@@ -544,9 +544,9 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderExpired);
 
                 this.Log.Information(
-                    $"OrderExpired: {orderLabel} " +
+                    $"OrderExpired: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId})");
+                    $"BrokerOrderId={orderIdBroker})");
             });
         }
 
@@ -556,11 +556,11 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
+            string orderIdBroker,
             string executionId,
             string executionTicket,
-            string orderLabel,
-            OrderSide orderSide,
+            string label,
+            OrderSide side,
             int filledQuantity,
             decimal averagePrice,
             ZonedDateTime timestamp)
@@ -569,10 +569,10 @@ namespace Nautilus.Fix
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
                 Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
                 Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
                 Condition.NotDefault(timestamp, nameof(timestamp));
@@ -582,7 +582,7 @@ namespace Nautilus.Fix
                     new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
-                    orderSide,
+                    side,
                     Quantity.Create(filledQuantity),
                     Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
                     timestamp,
@@ -592,9 +592,9 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderFilled);
 
                 this.Log.Information(
-                    $"OrderFilled: {orderLabel} " +
+                    $"OrderFilled: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"BrokerOrderId={orderIdBroker}, " +
                     $"ExecutionId={executionId}, " +
                     $"ExecutionTicket={executionTicket}, " +
                     $"FilledQty={filledQuantity} at {averagePrice})");
@@ -607,11 +607,11 @@ namespace Nautilus.Fix
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
+            string orderIdBroker,
             string executionId,
             string executionTicket,
-            string orderLabel,
-            OrderSide orderSide,
+            string label,
+            OrderSide side,
             int filledQuantity,
             int leavesQuantity,
             decimal averagePrice,
@@ -621,10 +621,10 @@ namespace Nautilus.Fix
             {
                 Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
-                Condition.NotEmptyOrWhiteSpace(brokerOrderId, nameof(brokerOrderId));
+                Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
                 Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Condition.NotEmptyOrWhiteSpace(orderLabel, nameof(orderLabel));
+                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
                 Condition.PositiveInt32(leavesQuantity, nameof(leavesQuantity));
                 Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
@@ -635,7 +635,7 @@ namespace Nautilus.Fix
                     new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
-                    orderSide,
+                    side,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
                     Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
@@ -646,9 +646,9 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderPartiallyFilled);
 
                 this.Log.Information(
-                    $"OrderPartiallyFilled: {orderLabel} " +
+                    $"OrderPartiallyFilled: {label} " +
                     $"(OrderId={orderId}, " +
-                    $"BrokerOrderId={brokerOrderId}, " +
+                    $"BrokerOrderId={orderIdBroker}, " +
                     $"ExecutionId={executionId}, " +
                     $"ExecutionTicket={executionTicket}, " +
                     $"FilledQty={filledQuantity} at {averagePrice}, " +

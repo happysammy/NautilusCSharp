@@ -91,7 +91,7 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string BrokerOrderId => nameof(BrokerOrderId);
+        internal static string OrderIdBroker => nameof(OrderIdBroker);
 
         /// <summary>
         /// Gets the key string.

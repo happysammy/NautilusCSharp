@@ -169,8 +169,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var working = new OrderWorking(
                 order.Id,
+                new OrderId("B" + order.Id),
                 order.Symbol,
-                new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
                 order.Type,
@@ -207,8 +207,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             var working = new OrderWorking(
                 order.Id,
+                new OrderId("B" + order.Id),
                 order.Symbol,
-                new OrderId("B123456"),
                 new Label("O123456_E"),
                 order.Side,
                 order.Type,

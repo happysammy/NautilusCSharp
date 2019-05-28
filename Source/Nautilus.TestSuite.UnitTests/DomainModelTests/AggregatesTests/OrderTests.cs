@@ -194,7 +194,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             order.Apply(event3);
 
             // Assert
-            Assert.Equal("some_broker_orderId", order.IdBroker?.ToString());
+            Assert.Equal("BO-123456", order.IdBroker?.ToString());
             Assert.Equal(4, order.EventCount);
             Assert.Equal(OrderStatus.Working, order.Status);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), order.LastEvent.Timestamp);
@@ -276,8 +276,8 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event2 = StubEventMessages.OrderAcceptedEvent(order);
             var event3 = new OrderWorking(
                 order.Id,
+                new OrderId("B" + order.Id),
                 new Symbol("AUDUSD", Venue.LMAX),
-                new OrderId("some_broker_orderId"),
                 order.Label,
                 order.Side,
                 order.Type,
@@ -390,7 +390,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(2, order.IdCount);
-            Assert.Equal(new OrderId("O-123456_R1"), order.IdCurrent);
+            Assert.Equal(new OrderId("O-123456_R1"), order.IdLast);
         }
 
         [Fact]

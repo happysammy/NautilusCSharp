@@ -231,15 +231,15 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order Label.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
+        /// <param name="label">The order Label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderCancelled(
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             ZonedDateTime timestamp);
 
         /// <summary>
@@ -248,16 +248,16 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
+        /// <param name="label">The order label.</param>
         /// <param name="price">The order price.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderModified(
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             decimal price,
             ZonedDateTime timestamp);
 
@@ -267,10 +267,10 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
-        /// <param name="orderType">The order type.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
+        /// <param name="type">The order type.</param>
         /// <param name="quantity">The order quantity.</param>
         /// <param name="price">The order price.</param>
         /// <param name="timeInForce">The order time in force.</param>
@@ -280,10 +280,10 @@ namespace Nautilus.Common.Interfaces
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
-            OrderSide orderSide,
-            OrderType orderType,
+            string orderIdBroker,
+            string label,
+            OrderSide side,
+            OrderType type,
             int quantity,
             decimal price,
             TimeInForce timeInForce,
@@ -296,15 +296,15 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
-        /// <param name="orderLabel">The order label.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
+        /// <param name="label">The order label.</param>
         /// <param name="timestamp">The event timestamp.</param>
         void OnOrderExpired(
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
-            string orderLabel,
+            string orderIdBroker,
+            string label,
             ZonedDateTime timestamp);
 
         /// <summary>
@@ -313,11 +313,11 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
         /// <param name="executionTicket">The order execution ticket.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
         /// <param name="timestamp">The event timestamp.</param>
@@ -325,11 +325,11 @@ namespace Nautilus.Common.Interfaces
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
+            string orderIdBroker,
             string executionId,
             string executionTicket,
-            string orderLabel,
-            OrderSide orderSide,
+            string label,
+            OrderSide side,
             int filledQuantity,
             decimal averagePrice,
             ZonedDateTime timestamp);
@@ -341,11 +341,11 @@ namespace Nautilus.Common.Interfaces
         /// <param name="symbolCode">The order symbol.</param>
         /// <param name="venue">The order exchange.</param>
         /// <param name="orderId">The order identifier.</param>
-        /// <param name="brokerOrderId">The order broker order identifier.</param>
+        /// <param name="orderIdBroker">The order broker order identifier.</param>
         /// <param name="executionId">The order execution identifier.</param>
         /// <param name="executionTicket">The order execution ticket.</param>
-        /// <param name="orderLabel">The order label.</param>
-        /// <param name="orderSide">The order side.</param>
+        /// <param name="label">The order label.</param>
+        /// <param name="side">The order side.</param>
         /// <param name="filledQuantity">The order filled quantity.</param>
         /// <param name="leavesQuantity">The order leaves quantity.</param>
         /// <param name="averagePrice">The order average price.</param>
@@ -354,11 +354,11 @@ namespace Nautilus.Common.Interfaces
             string symbolCode,
             Venue venue,
             string orderId,
-            string brokerOrderId,
+            string orderIdBroker,
             string executionId,
             string executionTicket,
-            string orderLabel,
-            OrderSide orderSide,
+            string label,
+            OrderSide side,
             int filledQuantity,
             int leavesQuantity,
             decimal averagePrice,
