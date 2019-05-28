@@ -21,7 +21,7 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="obj">The object to serialize.</param>
         /// <typeparam name="T">The return type of T.</typeparam>
-        /// <returns>The serialized object as a byte array.</returns>
+        /// <returns>The serialized object bytes.</returns>
         internal static byte[] Serialize<T>(T obj)
         {
             var serializer = MessagePackSerializer.Get<T>();
@@ -33,7 +33,7 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns the deserialized object from the given MessagePack specification byte array.
+        /// Returns the deserialized object from the given MessagePack specification bytes.
         /// </summary>
         /// <param name="bytes">The bytes to deserialize.</param>
         /// <typeparam name="T">The type of object to deserialize.</typeparam>

@@ -17,17 +17,17 @@ namespace Nautilus.Serialization.Internal
     using Nautilus.DomainModel.Factories;
 
     /// <summary>
-    /// Provides serialization of <see cref="Order"/> objects to MessagePack specification.
+    /// Provides serialization of <see cref="Order"/> objects to MessagePack specification bytes.
     /// </summary>
     internal static class OrderSerializer
     {
         private static readonly byte[] Empty = MsgPackSerializer.Serialize(new MessagePackObjectDictionary());
 
         /// <summary>
-        /// Returns the given <see cref="Order"/> serialized to a MessagePack specification byte array.
+        /// Returns the given <see cref="Order"/> serialized to MessagePack specification bytes.
         /// </summary>
         /// <param name="order">The order to serialize.</param>
-        /// <returns>The serialized byte array.</returns>
+        /// <returns>The serialized bytes.</returns>
         internal static byte[] Serialize(Order order)
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
@@ -47,17 +47,17 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns the given <see cref="Order"/>? serialized to a MessagePack specification byte array.
+        /// Returns the given <see cref="Order"/>? serialized to MessagePack specification bytes.
         /// </summary>
         /// <param name="order">The nullable order to serialize.</param>
-        /// <returns>The serialized byte array.</returns>
+        /// <returns>The serialized nullable order bytes.</returns>
         internal static byte[] SerializeNullable(Order? order)
         {
             return order == null ? Empty : Serialize(order);
         }
 
         /// <summary>
-        /// Returns the given byte array deserialized to an <see cref="Order"/>.
+        /// Returns the given bytes deserialized to an <see cref="Order"/>.
         /// </summary>
         /// <param name="orderBytes">The order bytes.</param>
         /// <returns>The deserialized <see cref="Order"/>.</returns>
@@ -69,7 +69,7 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
-        /// Returns the given byte array deserialized to an <see cref="Order"/>?.
+        /// Returns the given bytes deserialized to an <see cref="Order"/>?.
         /// </summary>
         /// <param name="orderBytes">The message pack object dictionary.</param>
         /// <returns>The deserialized <see cref="Order"/>?.</returns>

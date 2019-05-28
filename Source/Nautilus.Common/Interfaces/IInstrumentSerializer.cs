@@ -16,17 +16,17 @@ namespace Nautilus.Common.Interfaces
     public interface IInstrumentSerializer
     {
         /// <summary>
-        /// Serialize the given instrument.
+        /// Returns the given <see cref="Instrument"/> as serialized bytes.
         /// </summary>
         /// <param name="instrument">The instrument to serialize.</param>
-        /// <returns>The serialized command.</returns>
+        /// <returns>The serialized instrument bytes.</returns>
         byte[] Serialize(Instrument instrument);
 
         /// <summary>
-        /// Deserialize the given instrument bytes.
+        /// Returns the deserialize <see cref="Instrument"/> from the given bytes.
         /// </summary>
         /// <param name="serialized">The serialized instrument.</param>
-        /// <returns>The deserialized instrument.</returns>
+        /// <returns>The deserialized <see cref="Instrument"/>.</returns>
         Instrument Deserialize(byte[] serialized);
     }
 }
