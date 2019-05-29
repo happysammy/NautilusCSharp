@@ -32,9 +32,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(1000),
                 Price.Create(2000, 2),
@@ -66,9 +66,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
@@ -78,9 +78,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(5000),
                 Price.Create(1.00000m, 5),
@@ -90,9 +90,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(7000),
                 Price.Create(1.00000m, 5),
@@ -121,9 +121,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(100000),
                 Price.Create(1.00000m, 5),
@@ -133,9 +133,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(200000),
                 Price.Create(1.00000m, 5),
@@ -145,9 +145,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(50000),
                 Price.Create(1.00000m, 5),
@@ -157,9 +157,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message4 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(250000),
                 Price.Create(1.00000m, 5),
@@ -189,9 +189,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message1 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),
@@ -201,9 +201,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message2 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(500000),
                 Price.Create(1.00000m, 5),
@@ -213,9 +213,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             var message3 = new OrderFilled(
                 new OrderId("123456"),
-                position.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(1000000),
                 Price.Create(1.00000m, 5),

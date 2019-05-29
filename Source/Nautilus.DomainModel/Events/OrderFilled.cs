@@ -27,9 +27,9 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderFilled"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="executionId">The event order execution identifier.</param>
         /// <param name="executionTicket">The event order execution ticket.</param>
+        /// <param name="symbol">The event order symbol.</param>
         /// <param name="side">The event order side.</param>
         /// <param name="filledQuantity">The event order filled quantity.</param>
         /// <param name="averagePrice">The event order average price.</param>
@@ -38,9 +38,9 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderFilled(
             OrderId orderId,
-            Symbol symbol,
             ExecutionId executionId,
             ExecutionTicket executionTicket,
+            Symbol symbol,
             OrderSide side,
             Quantity filledQuantity,
             Price averagePrice,
@@ -49,7 +49,6 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderFilled),
                 eventId,
                 eventTimestamp)
@@ -61,6 +60,7 @@ namespace Nautilus.DomainModel.Events
 
             this.ExecutionId = executionId;
             this.ExecutionTicket = executionTicket;
+            this.Symbol = symbol;
             this.Side = side;
             this.FilledQuantity = filledQuantity;
             this.AveragePrice = averagePrice;
@@ -76,6 +76,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order execution ticket.
         /// </summary>
         public ExecutionTicket ExecutionTicket { get; }
+
+        /// <summary>
+        /// Gets the events order symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the events order side.

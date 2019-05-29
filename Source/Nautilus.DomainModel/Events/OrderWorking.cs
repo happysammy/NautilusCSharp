@@ -55,7 +55,6 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderWorking),
                 eventId,
                 eventTimestamp)
@@ -68,6 +67,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.OrderIdBroker = orderIdBroker;
+            this.Symbol = symbol;
             this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
@@ -82,6 +82,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events order identifier from the broker.
         /// </summary>
         public OrderId OrderIdBroker { get; }
+
+        /// <summary>
+        /// Gets the events order symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the events order label.

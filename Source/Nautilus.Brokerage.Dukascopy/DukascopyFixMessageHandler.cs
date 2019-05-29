@@ -313,8 +313,6 @@ namespace Nautilus.Brokerage.Dukascopy
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.fixGateway?.OnOrderCancelReject(
-                    "NULL",
-                    Venue.DUKASCOPY,
                     orderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -358,8 +356,6 @@ namespace Nautilus.Brokerage.Dukascopy
                     var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
                     this.fixGateway?.OnOrderRejected(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         rejectReason,
                         timestamp);
@@ -368,8 +364,6 @@ namespace Nautilus.Brokerage.Dukascopy
                 if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
                     this.fixGateway?.OnOrderCancelled(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -379,8 +373,6 @@ namespace Nautilus.Brokerage.Dukascopy
                 if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
                     this.fixGateway?.OnOrderModified(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -395,10 +387,10 @@ namespace Nautilus.Brokerage.Dukascopy
                         : (ZonedDateTime?)null;
 
                     this.fixGateway?.OnOrderWorking(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
+                        symbol,
+                        Venue.DUKASCOPY,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -412,8 +404,6 @@ namespace Nautilus.Brokerage.Dukascopy
                 if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
                     this.fixGateway?.OnOrderExpired(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -428,13 +418,12 @@ namespace Nautilus.Brokerage.Dukascopy
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                     this.fixGateway?.OnOrderFilled(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         executionId,
                         executionTicket,
-                        orderLabel,
+                        symbol,
+                        Venue.DUKASCOPY,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -450,13 +439,12 @@ namespace Nautilus.Brokerage.Dukascopy
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                     this.fixGateway?.OnOrderPartiallyFilled(
-                        symbol,
-                        Venue.DUKASCOPY,
                         orderId,
                         brokerOrderId,
                         executionId,
                         executionTicket,
-                        orderLabel,
+                        symbol,
+                        Venue.DUKASCOPY,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,

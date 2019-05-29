@@ -185,8 +185,6 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Price.</returns>
         internal static Price Price(MessagePackObject unpacked)
         {
-            Debug.NotEmptyOrWhiteSpace(unpacked.ToString(), nameof(unpacked));
-
             return DomainModel.ValueObjects.Price.Create(Convert.ToDecimal(unpacked.ToString()));
         }
 

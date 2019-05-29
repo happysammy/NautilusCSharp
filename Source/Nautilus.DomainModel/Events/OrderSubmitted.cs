@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,19 +25,16 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderSubmitted"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="submittedTime">The event submitted time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderSubmitted(
             OrderId orderId,
-            Symbol symbol,
             ZonedDateTime submittedTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderSubmitted),
                 eventId,
                 eventTimestamp)

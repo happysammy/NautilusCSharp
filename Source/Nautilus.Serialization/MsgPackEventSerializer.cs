@@ -63,17 +63,14 @@ namespace Nautilus.Serialization
                     break;
                 case OrderSubmitted orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.SubmittedTime, orderEvent.SubmittedTime.ToIsoString());
                     break;
                 case OrderAccepted orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.AcceptedTime, orderEvent.AcceptedTime.ToIsoString());
                     break;
                 case OrderRejected orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
                     package.Add(Key.RejectedReason, orderEvent.RejectedReason);
                     break;
@@ -92,12 +89,10 @@ namespace Nautilus.Serialization
                     break;
                 case OrderCancelled orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.CancelledTime, orderEvent.CancelledTime.ToIsoString());
                     break;
                 case OrderCancelReject orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
                     package.Add(Key.RejectedResponse, orderEvent.RejectedResponseTo);
                     package.Add(Key.RejectedReason, orderEvent.RejectedReason);
@@ -105,20 +100,18 @@ namespace Nautilus.Serialization
                 case OrderModified orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
                     package.Add(Key.OrderIdBroker, orderEvent.OrderIdBroker.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.ModifiedPrice, orderEvent.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
                     package.Add(Key.ModifiedTime, orderEvent.ModifiedTime.ToIsoString());
                     break;
                 case OrderExpired orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.ExpiredTime, orderEvent.ExpiredTime.ToIsoString());
                     break;
                 case OrderPartiallyFilled orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
                     package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
+                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
                     package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
                     package.Add(Key.LeavesQuantity, orderEvent.LeavesQuantity.Value);
@@ -127,9 +120,9 @@ namespace Nautilus.Serialization
                     break;
                 case OrderFilled orderEvent:
                     package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
                     package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
+                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
                     package.Add(Key.OrderSide, orderEvent.Side.ToString());
                     package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
                     package.Add(Key.AveragePrice, orderEvent.AveragePrice.ToString());
@@ -185,21 +178,18 @@ namespace Nautilus.Serialization
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.SubmittedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.AcceptedTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedReason].ToString(),
                         eventId,
@@ -222,14 +212,12 @@ namespace Nautilus.Serialization
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.CancelledTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
@@ -239,7 +227,6 @@ namespace Nautilus.Serialization
                     return new OrderModified(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.Price(unpacked[Key.ModifiedPrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ModifiedTime]),
                         eventId,
@@ -247,16 +234,15 @@ namespace Nautilus.Serialization
                 case nameof(OrderExpired):
                     return new OrderExpired(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExpiredTime]),
                         eventId,
                         eventTimestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
                         ObjectExtractor.Quantity(unpacked[Key.LeavesQuantity]),
@@ -267,9 +253,9 @@ namespace Nautilus.Serialization
                 case nameof(OrderFilled):
                     return new OrderFilled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
                         ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
+                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
                         ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
                         ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
                         ObjectExtractor.Price(unpacked[Key.AveragePrice]),

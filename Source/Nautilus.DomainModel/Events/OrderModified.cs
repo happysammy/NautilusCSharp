@@ -27,7 +27,6 @@ namespace Nautilus.DomainModel.Events
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
         /// <param name="orderIdBroker">The event broker order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="modifiedPrice">The event order modified price.</param>
         /// <param name="modifiedTime">The event order modification accepted time.</param>
         /// <param name="eventId">The event identifier.</param>
@@ -35,14 +34,12 @@ namespace Nautilus.DomainModel.Events
         public OrderModified(
             OrderId orderId,
             OrderId orderIdBroker,
-            Symbol symbol,
             Price modifiedPrice,
             ZonedDateTime modifiedTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderModified),
                 eventId,
                 eventTimestamp)

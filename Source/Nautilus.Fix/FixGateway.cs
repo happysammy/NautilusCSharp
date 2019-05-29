@@ -318,22 +318,18 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderRejected(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string rejectReason,
             ZonedDateTime timestamp)
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(rejectReason, nameof(rejectReason));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderRejected = new OrderRejected(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     timestamp,
                     rejectReason,
                     this.NewGuid(),
@@ -351,8 +347,6 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderCancelReject(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string cancelRejectResponseTo,
             string cancelRejectReason,
@@ -360,7 +354,6 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(cancelRejectResponseTo, nameof(cancelRejectResponseTo));
                 Condition.NotEmptyOrWhiteSpace(cancelRejectReason, nameof(cancelRejectReason));
@@ -368,7 +361,6 @@ namespace Nautilus.Fix
 
                 var orderCancelReject = new OrderCancelReject(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     timestamp,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -388,8 +380,6 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderCancelled(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
             string label,
@@ -397,7 +387,6 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(label, nameof(label));
@@ -405,7 +394,6 @@ namespace Nautilus.Fix
 
                 var orderCancelled = new OrderCancelled(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -422,8 +410,6 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderModified(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
             string label,
@@ -432,7 +418,6 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(label, nameof(label));
@@ -442,7 +427,6 @@ namespace Nautilus.Fix
                 var orderModified = new OrderModified(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
                     new OrderId(orderIdBroker),
-                    new Symbol(symbolCode, venue),
                     Price.Create(price, price.GetDecimalPlaces()),
                     timestamp,
                     this.NewGuid(),
@@ -461,10 +445,10 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderWorking(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
+            string symbolCode,
+            Venue venue,
             string label,
             OrderSide side,
             OrderType type,
@@ -476,9 +460,9 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(label, nameof(label));
                 Condition.PositiveDecimal(price, nameof(price));
                 Condition.NotDefault(timestamp, nameof(timestamp));
@@ -519,8 +503,6 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderExpired(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
             string label,
@@ -528,7 +510,6 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(label, nameof(label));
@@ -536,7 +517,6 @@ namespace Nautilus.Fix
 
                 var orderExpired = new OrderExpired(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     timestamp,
                     this.NewGuid(),
                     this.TimeNow());
@@ -553,13 +533,12 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderFilled(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
             string executionId,
             string executionTicket,
-            string label,
+            string symbolCode,
+            Venue venue,
             OrderSide side,
             int filledQuantity,
             decimal averagePrice,
@@ -567,21 +546,20 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
                 Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
                 Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
                 Condition.NotDefault(timestamp, nameof(timestamp));
 
                 var orderFilled = new OrderFilled(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
+                    new Symbol(symbolCode, venue),
                     side,
                     Quantity.Create(filledQuantity),
                     Price.Create(averagePrice, averagePrice.GetDecimalPlaces()),
@@ -592,7 +570,7 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderFilled);
 
                 this.Log.Information(
-                    $"OrderFilled: {label} " +
+                    $"OrderFilled: " +
                     $"(OrderId={orderId}, " +
                     $"BrokerOrderId={orderIdBroker}, " +
                     $"ExecutionId={executionId}, " +
@@ -604,13 +582,12 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         [SystemBoundary]
         public void OnOrderPartiallyFilled(
-            string symbolCode,
-            Venue venue,
             string orderId,
             string orderIdBroker,
             string executionId,
             string executionTicket,
-            string label,
+            string symbolCode,
+            Venue venue,
             OrderSide side,
             int filledQuantity,
             int leavesQuantity,
@@ -619,12 +596,11 @@ namespace Nautilus.Fix
         {
             this.Execute(() =>
             {
-                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
                 Condition.NotEmptyOrWhiteSpace(orderIdBroker, nameof(orderIdBroker));
                 Condition.NotEmptyOrWhiteSpace(executionId, nameof(executionId));
                 Condition.NotEmptyOrWhiteSpace(executionTicket, nameof(executionTicket));
-                Condition.NotEmptyOrWhiteSpace(label, nameof(label));
+                Condition.NotEmptyOrWhiteSpace(symbolCode, nameof(symbolCode));
                 Condition.PositiveInt32(filledQuantity, nameof(filledQuantity));
                 Condition.PositiveInt32(leavesQuantity, nameof(leavesQuantity));
                 Condition.PositiveDecimal(averagePrice, nameof(averagePrice));
@@ -632,9 +608,9 @@ namespace Nautilus.Fix
 
                 var orderPartiallyFilled = new OrderPartiallyFilled(
                     new OrderId(OrderIdPostfixRemover.Remove(orderId)),
-                    new Symbol(symbolCode, venue),
                     new ExecutionId(executionId),
                     new ExecutionTicket(executionTicket),
+                    new Symbol(symbolCode, venue),
                     side,
                     Quantity.Create(filledQuantity),
                     Quantity.Create(leavesQuantity),
@@ -646,7 +622,7 @@ namespace Nautilus.Fix
                 this.SendToEventReceivers(orderPartiallyFilled);
 
                 this.Log.Information(
-                    $"OrderPartiallyFilled: {label} " +
+                    $"OrderPartiallyFilled: " +
                     $"(OrderId={orderId}, " +
                     $"BrokerOrderId={orderIdBroker}, " +
                     $"ExecutionId={executionId}, " +

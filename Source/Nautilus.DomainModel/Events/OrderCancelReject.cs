@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,7 +25,6 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderCancelReject"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="rejectedTime">The event order rejected time.</param>
         /// <param name="rejectedResponseTo">The event cancel reject response.</param>
         /// <param name="rejectedReason">The event order cancel rejected reason.</param>
@@ -34,7 +32,6 @@ namespace Nautilus.DomainModel.Events
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderCancelReject(
             OrderId orderId,
-            Symbol symbol,
             ZonedDateTime rejectedTime,
             string rejectedResponseTo,
             string rejectedReason,
@@ -42,7 +39,6 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderCancelReject),
                 eventId,
                 eventTimestamp)

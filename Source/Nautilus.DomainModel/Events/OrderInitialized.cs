@@ -51,7 +51,6 @@ namespace Nautilus.DomainModel.Events
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderInitialized),
                 eventId,
                 eventTimestamp)
@@ -62,6 +61,7 @@ namespace Nautilus.DomainModel.Events
             Debug.NotDefault(eventId, nameof(eventId));
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
+            this.Symbol = symbol;
             this.Label = label;
             this.OrderSide = orderSide;
             this.OrderType = orderType;
@@ -70,6 +70,11 @@ namespace Nautilus.DomainModel.Events
             this.TimeInForce = timeInForce;
             this.ExpireTime = expireTime;
         }
+
+        /// <summary>
+        /// Gets the events order symbol.
+        /// </summary>
+        public Symbol Symbol { get; }
 
         /// <summary>
         /// Gets the events order label.

@@ -25,7 +25,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderSubmitted(
                 order.Id,
-                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -35,7 +34,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderRejected(
                 order.Id,
-                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 "some_rejected_reason",
                 Guid.NewGuid(),
@@ -46,7 +44,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderAccepted(
                 order.Id,
-                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -74,8 +71,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderModified(
                 order.Id,
-                new OrderId("NONE"),
-                order.Symbol,
+                new OrderId("B" + order.Id),
                 newPrice,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
@@ -86,7 +82,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderCancelled(
                 order.Id,
-                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -96,7 +91,6 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderExpired(
                 order.Id,
-                order.Symbol,
                 StubZonedDateTime.UnixEpoch(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -110,9 +104,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderPartiallyFilled(
                 order.Id,
-                order.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                order.Symbol,
                 order.Side,
                 Quantity.Create(filledQuantity),
                 Quantity.Create(leavesQuantity),
@@ -126,9 +120,9 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
         {
             return new OrderFilled(
                 order.Id,
-                order.Symbol,
                 new ExecutionId("NONE"),
                 new ExecutionTicket("NONE"),
+                order.Symbol,
                 order.Side,
                 order.Quantity,
                 averagePrice,

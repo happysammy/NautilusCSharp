@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,19 +25,16 @@ namespace Nautilus.DomainModel.Events
         /// Initializes a new instance of the <see cref="OrderCancelled"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="cancelledTime">The event order cancelled time.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         public OrderCancelled(
             OrderId orderId,
-            Symbol symbol,
             ZonedDateTime cancelledTime,
             Guid eventId,
             ZonedDateTime eventTimestamp)
             : base(
                 orderId,
-                symbol,
                 typeof(OrderCancelled),
                 eventId,
                 eventTimestamp)

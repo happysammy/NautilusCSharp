@@ -318,9 +318,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderPartiallyFilled(
                 order.Id,
-                new Symbol("AUDUSD", Venue.LMAX),
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
+                order.Symbol,
                 order.Side,
                 Quantity.Create(order.Quantity.Value / 2),
                 Quantity.Create(order.Quantity.Value / 2),
@@ -357,9 +357,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
-                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
+                order.Symbol,
                 order.Side,
                 order.Quantity,
                 order.Price,
@@ -423,9 +423,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
-                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
+                order.Symbol,
                 order.Side,
                 order.Quantity,
                 Price.Create(averagePrice, 5),
@@ -463,9 +463,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             var event3 = StubEventMessages.OrderWorkingEvent(order, order.Price);
             var event4 = new OrderFilled(
                 order.Id,
-                order.Symbol,
                 new ExecutionId("some_execution_id"),
                 new ExecutionTicket("some_execution_ticket"),
+                order.Symbol,
                 order.Side,
                 order.Quantity,
                 Price.Create(averagePrice, 5),

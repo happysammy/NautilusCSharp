@@ -312,8 +312,6 @@ namespace Nautilus.Brokerage.FXCM
                 var timestamp = FixMessageHelper.ConvertExecutionReportString(GetField(message, Tags.TransactTime));
 
                 this.fixGateway?.OnOrderCancelReject(
-                    "NULL",
-                    Venue.FXCM,
                     orderId,
                     cancelRejectResponseTo,
                     cancelRejectReason,
@@ -357,8 +355,6 @@ namespace Nautilus.Brokerage.FXCM
                     var rejectReason = $"Code({rejectReasonCode})={FixMessageHelper.GetCancelRejectReasonString(rejectReasonCode)}, FXCM({fxcmRejectCode})={rejectReasonText}";
 
                     this.fixGateway?.OnOrderRejected(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         rejectReason,
                         timestamp);
@@ -367,8 +363,6 @@ namespace Nautilus.Brokerage.FXCM
                 if (orderStatus == OrdStatus.CANCELED.ToString())
                 {
                     this.fixGateway?.OnOrderCancelled(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -378,8 +372,6 @@ namespace Nautilus.Brokerage.FXCM
                 if (orderStatus == OrdStatus.REPLACED.ToString())
                 {
                     this.fixGateway?.OnOrderModified(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -394,10 +386,10 @@ namespace Nautilus.Brokerage.FXCM
                         : (ZonedDateTime?)null;
 
                     this.fixGateway?.OnOrderWorking(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
+                        symbol,
+                        Venue.FXCM,
                         orderLabel,
                         orderSide,
                         orderType,
@@ -411,8 +403,6 @@ namespace Nautilus.Brokerage.FXCM
                 if (orderStatus == OrdStatus.EXPIRED.ToString())
                 {
                     this.fixGateway?.OnOrderExpired(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         orderLabel,
@@ -427,13 +417,12 @@ namespace Nautilus.Brokerage.FXCM
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                     this.fixGateway?.OnOrderFilled(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         executionId,
                         executionTicket,
-                        orderLabel,
+                        symbol,
+                        Venue.FXCM,
                         orderSide,
                         filledQuantity,
                         averagePrice,
@@ -449,13 +438,12 @@ namespace Nautilus.Brokerage.FXCM
                     var averagePrice = Convert.ToDecimal(GetField(message, Tags.AvgPx));
 
                     this.fixGateway?.OnOrderPartiallyFilled(
-                        symbol,
-                        Venue.FXCM,
                         orderId,
                         brokerOrderId,
                         executionId,
                         executionTicket,
-                        orderLabel,
+                        symbol,
+                        Venue.FXCM,
                         orderSide,
                         filledQuantity,
                         leavesQuantity,

@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Events.Base
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
@@ -26,13 +25,11 @@ namespace Nautilus.DomainModel.Events.Base
         /// Initializes a new instance of the <see cref="OrderEvent"/> class.
         /// </summary>
         /// <param name="orderId">The event order identifier.</param>
-        /// <param name="symbol">The event symbol.</param>
         /// <param name="eventType">The event type.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="eventTimestamp">The event timestamp.</param>
         protected OrderEvent(
             OrderId orderId,
-            Symbol symbol,
             Type eventType,
             Guid eventId,
             ZonedDateTime eventTimestamp)
@@ -45,17 +42,11 @@ namespace Nautilus.DomainModel.Events.Base
             Debug.NotDefault(eventTimestamp, nameof(eventTimestamp));
 
             this.OrderId = orderId;
-            this.Symbol = symbol;
         }
 
         /// <summary>
         /// Gets the events order identifier.
         /// </summary>
         public OrderId OrderId { get; }
-
-        /// <summary>
-        /// Gets the events order symbol.
-        /// </summary>
-        public Symbol Symbol { get; }
     }
 }
