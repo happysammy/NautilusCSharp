@@ -18,6 +18,8 @@ namespace Nautilus.Serialization.Internal
     /// </summary>
     internal static class ObjectPacker
     {
+        private const string NONE = nameof(NONE);
+
         /// <summary>
         /// Return a <see cref="MessagePackObject"/> from the given <see cref="Price"/>?.
         /// </summary>
@@ -25,9 +27,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
         internal static MessagePackObject Pack(Price? price)
         {
-            return price is null
-                ? MessagePackObject.Nil
-                : price.ToString();
+            return price is null ? NONE : price.ToString();
         }
 
         /// <summary>
@@ -37,9 +37,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The packed <see cref="MessagePackObject"/>.</returns>
         internal static MessagePackObject Pack(ZonedDateTime? dateTime)
         {
-            return dateTime is null
-                ? MessagePackObject.Nil
-                : dateTime.Value.ToIsoString();
+            return dateTime is null ? NONE : dateTime.Value.ToIsoString();
         }
     }
 }

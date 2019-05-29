@@ -50,7 +50,7 @@ namespace Nautilus.Execution.Messages.Commands
             this.TraderId = traderId;
             this.StrategyId = strategyId;
             this.OrderId = orderId;
-            this.Reason = cancelReason;
+            this.CancelReason = cancelReason;
         }
 
         /// <summary>
@@ -71,6 +71,6 @@ namespace Nautilus.Execution.Messages.Commands
         /// <summary>
         /// Gets the commands cancel reason.
         /// </summary>
-        public string Reason { get; }
+        public string CancelReason { get; }
     }
 }

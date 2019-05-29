@@ -236,7 +236,7 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string Reason => nameof(Reason);
+        internal static string CancelReason => nameof(CancelReason);
 
         /// <summary>
         /// Gets the key string.

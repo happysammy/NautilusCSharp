@@ -62,7 +62,7 @@ namespace Nautilus.Serialization
                     package.Add(Key.TraderId, cmd.TraderId.ToString());
                     package.Add(Key.StrategyId, cmd.StrategyId.ToString());
                     package.Add(Key.OrderId, cmd.OrderId.ToString());
-                    package.Add(Key.Reason, cmd.Reason);
+                    package.Add(Key.CancelReason, cmd.CancelReason);
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));
@@ -116,7 +116,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.TraderId(unpacked[Key.TraderId]),
                         ObjectExtractor.StrategyId(unpacked[Key.StrategyId]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        unpacked[Key.Reason].ToString(),
+                        unpacked[Key.CancelReason].ToString(),
                         commandId,
                         commandTimestamp);
                 default:
