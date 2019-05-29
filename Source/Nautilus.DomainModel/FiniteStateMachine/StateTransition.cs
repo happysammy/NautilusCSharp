@@ -24,7 +24,6 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         /// </summary>
         /// <param name="currentState">The current state.</param>
         /// <param name="trigger">The trigger.</param>
-        /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
         internal StateTransition(State currentState, Trigger trigger)
         {
             this.CurrentState = currentState;

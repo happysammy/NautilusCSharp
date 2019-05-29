@@ -17,14 +17,14 @@ namespace Nautilus.Fix
     public static class OrderIdPostfixRemover
     {
         /// <summary>
-        /// Removes any characters after and including '_R' from the given order identifier.
+        /// Return a modified order identifier from the given order identifier.
+        /// Removes any characters after and including '_R'.
         /// </summary>
         /// <param name="orderId">The order identifier.</param>
-        /// <returns>A <see cref="string"/>.</returns>
-        /// <exception cref="ArgumentException">If the orderId is empty or whitespace.</exception>
+        /// <returns>The modified order identifier <see cref="string"/>.</returns>
         public static string Remove(string orderId)
         {
-            Condition.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
+            Debug.NotEmptyOrWhiteSpace(orderId, nameof(orderId));
 
             var orderIdToString = orderId;
             var index = orderIdToString.LastIndexOf("_R", StringComparison.CurrentCulture);

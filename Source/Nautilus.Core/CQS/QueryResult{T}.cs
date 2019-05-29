@@ -48,8 +48,7 @@ namespace Nautilus.Core.CQS
         /// Gets the value of the query.
         /// </summary>
         /// <returns>The query value.</returns>
-        /// <exception cref="InvalidOperationException">If there is no value for a query failure.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">If the value of a query failure is accessed.</exception>
         public T Value => this.IsSuccess
                         ? this.value
                         : throw new InvalidOperationException("There is no value for a query failure.");

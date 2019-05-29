@@ -24,18 +24,18 @@ namespace Nautilus.Network
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkPort"/> class.
         /// </summary>
-        /// <param name="portNumber">The port number.</param>
+        /// <param name="port">The port number.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the portNumber is out of range [0, 65535].</exception>
-        public NetworkPort(ushort portNumber)
+        public NetworkPort(ushort port)
         {
-            Condition.NotOutOfRangeInt32(portNumber, 0, 65535, nameof(portNumber));
+            Condition.NotOutOfRangeInt32(port, 0, 65535, nameof(port));
 
-            this.Value = portNumber;
-            this.valueString = portNumber.ToString();
+            this.Value = port;
+            this.valueString = port.ToString();
         }
 
         /// <summary>
-        /// Gets the port numbers value.
+        /// Gets the port number.
         /// </summary>
         public ushort Value { get; }
 

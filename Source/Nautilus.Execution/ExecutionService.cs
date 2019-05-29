@@ -49,8 +49,6 @@ namespace Nautilus.Execution
         /// <param name="addresses">The execution service addresses.</param>
         /// <param name="config">The execution service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the commandsPerSecond is not positive (> 0).</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the newOrdersPerSecond is not positive (> 0).</exception>
         public ExecutionService(
             IComponentryContainer container,
             MessagingAdapter messagingAdapter,

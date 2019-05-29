@@ -10,6 +10,7 @@ namespace Nautilus.Scheduler.Internal
 {
     using System;
     using System.Threading;
+    using Nautilus.Core.Correctness;
 
     /// <summary>
     /// A <see cref="ICancelable"/> that wraps a <see cref="CancellationTokenSource"/>.
@@ -23,7 +24,8 @@ namespace Nautilus.Scheduler.Internal
         private bool isDisposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of time.
+        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled
+        /// after the specified amount of time.
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="delay">The delay before the cancelable is canceled.</param>
@@ -34,7 +36,8 @@ namespace Nautilus.Scheduler.Internal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of time.
+        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled
+        /// after the specified amount of time.
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="delay">The delay before the cancelable is canceled.</param>
@@ -45,7 +48,8 @@ namespace Nautilus.Scheduler.Internal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled after the specified amount of milliseconds.
+        /// Initializes a new instance of the <see cref="Cancelable"/> class that will be cancelled
+        /// after the specified amount of milliseconds.
         /// </summary>
         /// <param name="scheduler">The scheduler.</param>
         /// <param name="millisecondsDelay">The delay in milliseconds.</param>
@@ -93,7 +97,8 @@ namespace Nautilus.Scheduler.Internal
         }
 
         /// <summary>
-        /// Communicates a request for cancellation, and specifies whether remaining callbacks and cancelable operations should be processed.
+        /// Communicates a request for cancellation, and specifies whether remaining callbacks and
+        /// cancelable operations should be processed.
         /// </summary>
         /// <param name="throwOnFirstException"><c>true</c> if exceptions should immediately propagate; otherwise, <c>false</c>.</param>
         /// <remarks>
@@ -121,14 +126,12 @@ namespace Nautilus.Scheduler.Internal
         /// Schedules a cancel operation on this cancelable after the specified delay.
         /// </summary>
         /// <param name="delay">The delay before this instance is canceled.</param>
-        /// <exception cref="ArgumentOutOfRangeException">This exception is thrown if the given <paramref name="delay"/> is less than or equal to 0.</exception>
-        /// <exception cref="ObjectDisposedException">This exception is thrown if this cancelable has already been disposed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="delay"/> is negative.</exception>
+        /// <exception cref="ObjectDisposedException">This exception is thrown if this cancelable
+        /// has already been disposed.</exception>
         public void CancelAfter(TimeSpan delay)
         {
-            if (delay < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(delay), $"The delay must be >0, it was {delay}");
-            }
+            Condition.NotNegativeInt32(delay.Milliseconds, nameof(delay));
 
             this.InternalCancelAfter(delay);
         }
@@ -137,14 +140,11 @@ namespace Nautilus.Scheduler.Internal
         /// Schedules a cancel operation on this cancelable after the specified number of milliseconds.
         /// </summary>
         /// <param name="millisecondsDelay">The delay in milliseconds before this instance is canceled.</param>
-        /// <exception cref="ArgumentOutOfRangeException">This exception is thrown if the given <paramref name="millisecondsDelay"/> is less than or equal to 0.</exception>
-        /// <exception cref="ObjectDisposedException">This exception is thrown if this cancelable has already been disposed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="millisecondsDelay"/> is negative.</exception>
+        /// <exception cref="ObjectDisposedException">If this cancelable has already been disposed.</exception>
         public void CancelAfter(int millisecondsDelay)
         {
-            if (millisecondsDelay < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), $"The delay must be >0, it was {millisecondsDelay}");
-            }
+            Condition.NotNegativeInt32(millisecondsDelay, nameof(millisecondsDelay));
 
             this.InternalCancelAfter(TimeSpan.FromMilliseconds(millisecondsDelay));
         }
@@ -206,7 +206,7 @@ namespace Nautilus.Scheduler.Internal
         {
             if (this.isDisposed)
             {
-                throw new ObjectDisposedException(null, "The cancelable has been disposed");
+                throw new ObjectDisposedException(null, "The cancelable has already been disposed");
             }
         }
     }

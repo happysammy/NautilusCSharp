@@ -49,9 +49,6 @@ namespace Nautilus.Data
         /// <param name="addresses">The data service address dictionary.</param>
         /// <param name="config">The service configuration.</param>
         /// <exception cref="ArgumentException">If the addresses is empty.</exception>
-        /// <exception cref="ArgumentException">If the subscribing symbols is empty.</exception>
-        /// <exception cref="ArgumentException">If the bar specifications is empty.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the barRollingWindowDays is not positive (> 0).</exception>
         public DataService(
             IComponentryContainer container,
             MessagingAdapter messagingAdapter,
