@@ -26,14 +26,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new PositionId("NONE"),
+                new PositionId("P-123456"),
                 new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(1000),
@@ -47,12 +47,22 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
 
             // Assert
             Assert.Equal(new Symbol("SYMBOL", Venue.GLOBEX), position.Symbol);
-            Assert.Equal("123456", position.FromOrderId?.ToString());
+            Assert.Equal(new OrderId("O-123456"), position.FromOrderId);
+            Assert.Equal(new OrderId("O-123456"), position.LastOrderId);
             Assert.Equal(Quantity.Create(1000), position.Quantity);
+            Assert.Equal(Quantity.Create(1000), position.PeakQuantity);
             Assert.Equal(MarketPosition.Long, position.MarketPosition);
             Assert.Equal(StubZonedDateTime.UnixEpoch(), position.EntryTime);
             Assert.Equal(1, position.EventCount);
             Assert.Equal(Price.Create(2000, 2), position.AverageEntryPrice);
+            Assert.Equal(new ExecutionId("E-123456"), position.LastExecutionId);
+            Assert.Equal(new ExecutionTicket("ET-123456"), position.LastExecutionTicket);
+            Assert.Equal(OrderSide.BUY, position.EntryDirection);
+            Assert.Equal(message, position.LastEvent);
+            Assert.True(position.IsLong);
+            Assert.False(position.IsExited);
+            Assert.False(position.IsShort);
+            Assert.False(position.IsFlat);
         }
 
         [Fact]
@@ -60,14 +70,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new PositionId("NONE"),
+                new PositionId("P-123456"),
                 new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(5000),
@@ -77,9 +87,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(5000),
@@ -89,9 +99,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(7000),
@@ -108,6 +118,11 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(MarketPosition.Short, position.MarketPosition);
             Assert.Equal(Quantity.Create(7000), position.Quantity);
+            Assert.Equal(message3, position.LastEvent);
+            Assert.True(position.IsShort);
+            Assert.False(position.IsExited);
+            Assert.False(position.IsLong);
+            Assert.False(position.IsFlat);
         }
 
         [Fact]
@@ -115,14 +130,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new PositionId("NONE"),
+                new PositionId("P-123456"),
                 new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(100000),
@@ -132,9 +147,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(200000),
@@ -144,9 +159,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123457"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(50000),
@@ -156,9 +171,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message4 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123458"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(250000),
@@ -176,6 +191,13 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
             // Assert
             Assert.Equal(MarketPosition.Flat, position.MarketPosition);
             Assert.Equal(Quantity.Zero(), position.Quantity);
+            Assert.Equal(StubZonedDateTime.UnixEpoch(), position.ExitTime);
+            Assert.Equal(Price.Create(1.00000m, 5), position.AverageExitPrice);
+            Assert.Equal(message4, position.LastEvent);
+            Assert.False(position.IsShort);
+            Assert.True(position.IsExited);
+            Assert.False(position.IsLong);
+            Assert.True(position.IsFlat);
         }
 
         [Fact]
@@ -183,14 +205,14 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
         {
             // Arrange
             var position = new Position(
-                new PositionId("NONE"),
+                new PositionId("P-123456"),
                 new Symbol("SYMBOL", Venue.GLOBEX),
                 StubZonedDateTime.UnixEpoch());
 
             var message1 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123456"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.SELL,
                 Quantity.Create(1000000),
@@ -200,9 +222,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123457"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(500000),
@@ -212,9 +234,9 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.AggregatesTests
                 StubZonedDateTime.UnixEpoch());
 
             var message3 = new OrderFilled(
-                new OrderId("123456"),
-                new ExecutionId("NONE"),
-                new ExecutionTicket("NONE"),
+                new OrderId("O-123458"),
+                new ExecutionId("E-123456"),
+                new ExecutionTicket("ET-123456"),
                 position.Symbol,
                 OrderSide.BUY,
                 Quantity.Create(1000000),

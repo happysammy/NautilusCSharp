@@ -50,11 +50,14 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionTickets = new List<ExecutionTicket>();
 
             this.Symbol = symbol;
+            this.FromOrderId = null;
+            this.LastOrderId = null;
+            this.LastExecutionId = null;
+            this.LastExecutionTicket = null;
             this.Quantity = Quantity.Zero();
             this.PeakQuantity = Quantity.Zero();
             this.MarketPosition = MarketPosition.Flat;
-            this.FromOrderId = null;
-            this.LastOrderId = null;
+            this.EntryDirection = OrderSide.UNKNOWN;
             this.EntryTime = null;
             this.ExitTime = null;
             this.AverageEntryPrice = null;
@@ -94,9 +97,19 @@ namespace Nautilus.DomainModel.Aggregates
         public OrderId? LastOrderId { get; private set; }
 
         /// <summary>
+        /// Gets the positions last execution identifier.
+        /// </summary>
+        public ExecutionId? LastExecutionId { get; private set; }
+
+        /// <summary>
+        /// Gets the positions last execution ticket.
+        /// </summary>
+        public ExecutionTicket? LastExecutionTicket { get; private set; }
+
+        /// <summary>
         /// Gets the positions entry direction.
         /// </summary>
-        public OrderSide? EntryDirection { get; private set; }
+        public OrderSide EntryDirection { get; private set; }
 
         /// <summary>
         /// Gets the positions entry time.
@@ -236,6 +249,8 @@ namespace Nautilus.DomainModel.Aggregates
             this.executionIds.Add(executionId);
             this.executionTickets.Add(executionTicket);
             this.LastOrderId = orderId;
+            this.LastExecutionId = executionId;
+            this.LastExecutionTicket = executionTicket;
 
             // Entry logic
             if (this.IsEntered is false)
@@ -270,26 +285,23 @@ namespace Nautilus.DomainModel.Aggregates
                 this.PeakQuantity = this.Quantity;
             }
 
-            // Exit logic
-            if (this.relativeQuantity == 0)
-            {
-                this.ExitTime = eventTime;
-                this.AverageExitPrice = averagePrice;
-                this.IsExited = true;
-            }
-
             // Market position logic.
             if (this.relativeQuantity > 0)
             {
                 this.MarketPosition = MarketPosition.Long;
+                this.IsExited = false;
             }
             else if (this.relativeQuantity < 0)
             {
                 this.MarketPosition = MarketPosition.Short;
+                this.IsExited = false;
             }
             else
             {
                 this.MarketPosition = MarketPosition.Flat;
+                this.ExitTime = eventTime;
+                this.AverageExitPrice = averagePrice;
+                this.IsExited = true;
             }
         }
     }
