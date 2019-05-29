@@ -10,6 +10,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
@@ -20,14 +21,13 @@ namespace Nautilus.DomainModel.FiniteStateMachine
     [PerformanceOptimized]
     internal class FiniteStateMachine
     {
-        private readonly Dictionary<StateTransition, State> stateTransitionTable;
+        private readonly ImmutableDictionary<StateTransition, State> stateTransitionTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FiniteStateMachine"/> class.
         /// </summary>
         /// <param name="stateTransitionTable">The state transition table.</param>
         /// <param name="startingState">The starting state.</param>
-        /// <exception cref="ArgumentNullException">Throws if either argument is null.</exception>
         /// <exception cref="ArgumentException">Throws if the state transition table is empty.</exception>
         internal FiniteStateMachine(
             Dictionary<StateTransition, State> stateTransitionTable,
@@ -35,7 +35,7 @@ namespace Nautilus.DomainModel.FiniteStateMachine
         {
             Condition.NotEmpty(stateTransitionTable, nameof(stateTransitionTable));
 
-            this.stateTransitionTable = new Dictionary<StateTransition, State>(stateTransitionTable);
+            this.stateTransitionTable = stateTransitionTable.ToImmutableDictionary();
             this.State = startingState;
         }
 
