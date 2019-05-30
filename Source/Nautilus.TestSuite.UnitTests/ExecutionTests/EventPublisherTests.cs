@@ -10,6 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
+    using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
     using Nautilus.DomainModel.Events;
     using Nautilus.Execution.Network;
@@ -18,6 +20,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;
+    using NetMQ;
     using NetMQ.Sockets;
     using Xunit;
     using Xunit.Abstractions;
@@ -50,44 +53,44 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         {
             // Arrange
             const string testAddress = "tcp://127.0.0.1:56601";
-            var subscriber = new SubscriberSocket(testAddress);
-            subscriber.Connect(testAddress);
-            subscriber.Subscribe(EXECUTION_EVENTS);
-
-            var serializer = new MsgPackEventSerializer();
-            var order = new StubOrderBuilder().BuildMarketOrder();
-            var rejected = new OrderRejected(
-                order.Id,
-                StubZonedDateTime.UnixEpoch(),
-                "INVALID_ORDER",
-                Guid.NewGuid(),
-                StubZonedDateTime.UnixEpoch());
 
             var publisher = new EventPublisher(
                 this.setupContainer,
                 new MsgPackEventSerializer(),
                 this.localHost,
-                new NetworkPort(56601),
-                EXECUTION_EVENTS);
+                new NetworkPort(56601));
+            publisher.Start();
+
+            Task.Delay(100).Wait();
+
+            var subscriber = new SubscriberSocket(testAddress);
+            subscriber.Connect(testAddress);
+            subscriber.Subscribe("NAUTILUS");
+            Task.Delay(100).Wait();
+
+            var serializer = new MsgPackEventSerializer();
+            var order = new StubOrderBuilder().BuildMarketOrder();
+            var rejected = StubEventMessages.OrderRejectedEvent(order);
 
             // Act
             publisher.Endpoint.Send(rejected);
             this.output.WriteLine("Waiting for published events...");
 
-            // var message = subscriber.ReceiveFrameBytes();
-            // var @event = serializer.Deserialize(message);
+            var topic = subscriber.ReceiveFrameBytes();
+            var message = subscriber.ReceiveFrameBytes();
+            var @event = serializer.Deserialize(message);
 
             // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
 
-            // Assert.Equal(ExecutionEvents, Encoding.UTF8.GetString(topic));
-            // Assert.Equal(rejected, @event);
+            Assert.Equal("NAUTILUS:EXECUTION:O-123456", Encoding.UTF8.GetString(topic));
+            Assert.Equal(rejected, @event);
 
             // Tear Down
-//            publisher.GracefulStop(TimeSpan.FromMilliseconds(1000));
-//            subscriber.Unsubscribe(ExecutionEvents);
-//            subscriber.Disconnect(TestAddress);
-//            subscriber.Dispose();
+            subscriber.Unsubscribe("NAUTILUS");
+            subscriber.Disconnect(testAddress);
+            subscriber.Dispose();
+            publisher.Stop();
         }
     }
 }

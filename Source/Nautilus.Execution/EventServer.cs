@@ -41,8 +41,7 @@ namespace Nautilus.Execution
                 container,
                 eventSerializer,
                 config.ServerAddress,
-                config.EventsPort,
-                "NAUTILUS_EVENTS").Endpoint;
+                config.EventsPort).Endpoint;
 
             this.RegisterHandler<Event>(this.OnMessage);
         }

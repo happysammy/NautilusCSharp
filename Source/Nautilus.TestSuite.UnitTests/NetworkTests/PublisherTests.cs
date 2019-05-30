@@ -23,7 +23,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     public class PublisherTests
     {
-        private const string TestTopic = "test_topic";
+        private const string TEST_TOPIC = "test_topic";
 
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
@@ -70,26 +70,26 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             const string testAddress = "tcp://localhost:55504";
             var subscriber = new SubscriberSocket(testAddress);
             subscriber.Connect(testAddress);
-            subscriber.Subscribe(TestTopic);
+            subscriber.Subscribe(TEST_TOPIC);
             Task.Delay(100).Wait();
 
             // Act
             const string message = "1234,1234";
-            publisher.Endpoint.Send((TestTopic, message));
+            publisher.Endpoint.Send((TEST_TOPIC, message));
 
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
             // Assert
-            Assert.Equal(TestTopic, Encoding.UTF8.GetString(receivedTopic));
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
 
             // Tear Down
-            subscriber.Unsubscribe(TestTopic);
+            subscriber.Unsubscribe(TEST_TOPIC);
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
-            LogDumper.Dump(this.mockLoggingAdapter, this.output);
         }
     }
 }

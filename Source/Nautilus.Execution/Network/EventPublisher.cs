@@ -12,6 +12,8 @@ namespace Nautilus.Execution.Network
     using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
+    using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.Network;
 
     /// <summary>
@@ -19,8 +21,10 @@ namespace Nautilus.Execution.Network
     /// </summary>
     public class EventPublisher : Publisher
     {
+        private const string NAUTILUS = "NAUTILUS";
+        private const string ACCOUNT = "ACCOUNT";
+        private const string EXECUTION = "EXECUTION";
         private readonly IEventSerializer serializer;
-        private readonly byte[] topic;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventPublisher"/> class.
@@ -29,13 +33,11 @@ namespace Nautilus.Execution.Network
         /// <param name="serializer">The event serializer.</param>
         /// <param name="host">The publishers host address.</param>
         /// <param name="port">The publishers port.</param>
-        /// <param name="topic">The publishing topic.</param>
         public EventPublisher(
             IComponentryContainer container,
             IEventSerializer serializer,
             NetworkAddress host,
-            NetworkPort port,
-            string topic)
+            NetworkPort port)
             : base(
                 container,
                 host,
@@ -43,15 +45,30 @@ namespace Nautilus.Execution.Network
                 Guid.NewGuid())
         {
             this.serializer = serializer;
-            this.topic = Encoding.UTF8.GetBytes(topic);
 
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
         private void OnMessage(Event message)
         {
-            // TODO: Topic depending on event type.
-            this.Publish(this.topic, this.serializer.Serialize(message));
+            switch (message)
+            {
+                case OrderEvent @event:
+                    this.Publish($"{NAUTILUS}:{EXECUTION}:{@event.OrderId}", message);
+                    break;
+                case AccountEvent @event:
+                    this.Publish($"{NAUTILUS}:{ACCOUNT}:{@event.AccountId}", message);
+                    break;
+                default:
+                    this.Publish(NAUTILUS, message);
+                    break;
+            }
+        }
+
+        private void Publish(string topic, Event message)
+        {
+            this.Log.Debug($"Publishing[{topic}] {message}");
+            this.Publish(Encoding.UTF8.GetBytes(topic), this.serializer.Serialize(message));
         }
     }
 }
