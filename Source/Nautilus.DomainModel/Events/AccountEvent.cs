@@ -126,5 +126,11 @@ namespace Nautilus.DomainModel.Events
         /// Gets the events margin call status.
         /// </summary>
         public string MarginCallStatus { get; }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="AccountEvent"/>.
+        /// </summary>
+        /// <returns>A <see cref="string"/>.</returns>
+        public override string ToString() => $"{this.Type.Name}({this.AccountId})";
     }
 }
