@@ -33,9 +33,14 @@ namespace Nautilus.Execution
         public static Address FixGateway { get; } = new Address(nameof(FixGateway));
 
         /// <summary>
-        /// Gets the <see cref="MessageServer"/> module messaging address.
+        /// Gets the <see cref="CommandServer"/> module messaging address.
         /// </summary>
-        public static Address MessageServer { get; } = new Address(nameof(MessageServer));
+        public static Address CommandServer { get; } = new Address(nameof(CommandServer));
+
+        /// <summary>
+        /// Gets the <see cref="EventServer"/> module messaging address.
+        /// </summary>
+        public static Address EventServer { get; } = new Address(nameof(EventServer));
 
         /// <summary>
         /// Gets the <see cref="OrderManager"/> module messaging address.

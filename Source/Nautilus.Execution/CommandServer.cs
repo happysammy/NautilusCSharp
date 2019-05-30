@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="MessageServer.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CommandServer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -10,70 +10,61 @@ namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
-    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
+    using NodaTime;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class MessageServer : ComponentBusConnectedBase
+    public class CommandServer : ComponentBusConnectedBase
     {
-        private readonly IEndpoint commandConsumer;
-        private readonly IEndpoint eventPublisher;
+        private readonly Throttler<Command> commandThrottler;
+        private readonly Throttler<SubmitOrder> newOrderThrottler;
+        private readonly CommandRouter commandRouter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageServer"/> class.
+        /// Initializes a new instance of the <see cref="CommandServer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="commandSerializer">The command serializer.</param>
-        /// <param name="eventSerializer">The event serializer.</param>
-        /// <param name="serverAddress">The server address.</param>
-        /// <param name="commandsPort">The commands port.</param>
-        /// <param name="eventsPort">The events port.</param>
-        public MessageServer(
+        /// <param name="config">The service configuration.</param>
+        public CommandServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ICommandSerializer commandSerializer,
-            IEventSerializer eventSerializer,
-            NetworkAddress serverAddress,
-            NetworkPort commandsPort,
-            NetworkPort eventsPort)
+            Configuration config)
             : base(container, messagingAdapter)
         {
-            this.commandConsumer = new CommandRouter(
+            this.commandThrottler = new Throttler<Command>(
+                container,
+                this.Endpoint,
+                Duration.FromSeconds(1),
+                config.CommandsPerSecond);
+
+            this.newOrderThrottler = new Throttler<SubmitOrder>(
+                container,
+                this.commandThrottler.Endpoint,
+                Duration.FromSeconds(1),
+                config.NewOrdersPerSecond);
+
+            this.commandRouter = new CommandRouter(
                 container,
                 commandSerializer,
-                this.Endpoint,
-                serverAddress,
-                commandsPort).Endpoint;
-
-            this.eventPublisher = new EventPublisher(
-                container,
-                eventSerializer,
-                serverAddress,
-                eventsPort,
-                "NAUTILUS_EVENTS").Endpoint;
+                this.commandThrottler.Endpoint,
+                config.ServerAddress,
+                config.CommandsPort);
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
-            this.RegisterHandler<Event>(this.OnMessage);
-        }
-
-        /// <inheritdoc />
-        protected override void OnStop(Stop message)
-        {
-            this.commandConsumer.Send(message);
-            this.eventPublisher.Send(message);
         }
 
         private void OnMessage(SubmitOrder message)
@@ -98,13 +89,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(CollateralInquiry message)
         {
-            this.Send(ExecutionServiceAddress.Core, message);
-        }
-
-        private void OnMessage(Event @event)
-        {
-            this.eventPublisher.Send(@event);
-            this.Log.Debug($"Published event {@event}.");
+            this.Send(ExecutionServiceAddress.OrderManager, message);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Nautilus.Common
             log.Information($"OS {Environment.OSVersion}");
             log.Information($"Is64BitOperatingSystem={Environment.Is64BitOperatingSystem}");
             log.Information($"Is64BitProcess={Environment.Is64BitProcess}");
-            log.Information($".NET Core v{GetNetCoreVersion()}");
+            log.Information($"Microsoft.NETCore.App v{GetNetCoreVersion()}");
         }
 
         private static string GetNetCoreVersion()

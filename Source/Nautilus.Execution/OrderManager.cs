@@ -28,24 +28,29 @@ namespace Nautilus.Execution
     {
         private readonly List<Order> orders;
         private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
+        private readonly IFixGateway gateway;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderManager"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
+        /// <param name="gateway">The FIX gateway.</param>
         public OrderManager(
             IComponentryContainer container,
-            IMessagingAdapter messagingAdapter)
+            IMessagingAdapter messagingAdapter,
+            IFixGateway gateway)
             : base(container, messagingAdapter)
         {
             this.orders = new List<Order>();
             this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
+            this.gateway = gateway;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
+            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
@@ -66,7 +71,7 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitAtomicOrder message)
         {
-            // TODO: Implement.
+            this.gateway.SubmitOrder(message.AtomicOrder);
         }
 
         private void OnMessage(CancelOrder message)
@@ -75,8 +80,7 @@ namespace Nautilus.Execution
 
             if (order is null)
             {
-                this.Log.Warning(
-                    $"Order not found for CancelOrder (command order_id={message.OrderId}).");
+                this.Log.Warning($"Order not found for CancelOrder (command order_id={message.OrderId}).");
                 return;
             }
 
@@ -89,8 +93,7 @@ namespace Nautilus.Execution
 
             if (order is null)
             {
-                this.Log.Warning(
-                    $"Order not found for ModifyOrder (command order_id={message.OrderId}).");
+                this.Log.Warning($"Order not found for ModifyOrder (command order_id={message.OrderId}).");
                 return;
             }
 
@@ -110,6 +113,11 @@ namespace Nautilus.Execution
             {
                 this.AddToCache(message);
             }
+        }
+
+        private void OnMessage(CollateralInquiry message)
+        {
+            this.gateway.CollateralInquiry();
         }
 
         private void OnMessage(Event @event)
@@ -145,7 +153,7 @@ namespace Nautilus.Execution
                 }
             }
 
-            this.Send(ExecutionServiceAddress.MessageServer, @event);
+            this.Send(ExecutionServiceAddress.EventServer, @event);
         }
 
         private void AddToCache(ModifyOrder modifyOrder)

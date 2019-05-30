@@ -33,9 +33,6 @@ namespace Nautilus.Execution
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
-        private readonly IEndpoint orderCommandBus;
-        private readonly IEndpoint commandThrottler;
-        private readonly IEndpoint newOrderThrottler;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
 
@@ -70,32 +67,9 @@ namespace Nautilus.Execution
 
             this.scheduler = scheduler;
             this.fixGateway = fixGateway;
-
-            this.orderCommandBus = new OrderCommandBus(
-                container,
-                messagingAdapter,
-                fixGateway).Endpoint;
-
-            this.commandThrottler = new Throttler<Command>(
-                container,
-                this.orderCommandBus,
-                Duration.FromSeconds(1),
-                config.CommandsPerSecond).Endpoint;
-
-            this.newOrderThrottler = new Throttler<SubmitOrder>(
-                container,
-                this.commandThrottler,
-                Duration.FromSeconds(1),
-                config.NewOrdersPerSecond).Endpoint;
-
             this.fixConnectTime = config.FixConfiguration.ConnectTime;
             this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
 
-            this.RegisterHandler<SubmitOrder>(this.OnMessage);
-            this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
-            this.RegisterHandler<ModifyOrder>(this.OnMessage);
-            this.RegisterHandler<CancelOrder>(this.OnMessage);
-            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<FixSessionConnected>(this.OnMessage);
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<ConnectFix>(this.OnMessage);
@@ -139,31 +113,6 @@ namespace Nautilus.Execution
         {
             // Forward message.
             this.Send(ExecutionServiceAddress.FixGateway, message);
-        }
-
-        private void OnMessage(CollateralInquiry message)
-        {
-            this.commandThrottler.Send(message);
-        }
-
-        private void OnMessage(SubmitOrder message)
-        {
-            this.newOrderThrottler.Send(message);
-        }
-
-        private void OnMessage(SubmitAtomicOrder message)
-        {
-            this.newOrderThrottler.Send(message);
-        }
-
-        private void OnMessage(ModifyOrder message)
-        {
-            this.commandThrottler.Send(message);
-        }
-
-        private void OnMessage(CancelOrder message)
-        {
-            this.commandThrottler.Send(message);
         }
 
         private void OnMessage(FixSessionConnected message)

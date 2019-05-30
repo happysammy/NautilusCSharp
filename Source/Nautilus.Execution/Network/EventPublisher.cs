@@ -50,6 +50,7 @@ namespace Nautilus.Execution.Network
 
         private void OnMessage(Event message)
         {
+            // TODO: Topic depending on event type.
             this.Publish(this.topic, this.serializer.Serialize(message));
         }
     }
