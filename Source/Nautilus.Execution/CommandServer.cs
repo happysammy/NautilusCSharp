@@ -10,10 +10,10 @@ namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
+    using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
     using NodaTime;
 
@@ -23,9 +23,9 @@ namespace Nautilus.Execution
     [PerformanceOptimized]
     public class CommandServer : ComponentBusConnectedBase
     {
-        private readonly Throttler<Command> commandThrottler;
-        private readonly Throttler<SubmitOrder> newOrderThrottler;
         private readonly CommandRouter commandRouter;
+        private readonly Throttler commandThrottler;
+        private readonly Throttler newOrderThrottler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandServer"/> class.
@@ -33,32 +33,34 @@ namespace Nautilus.Execution
         /// <param name="container">The componentry container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
         /// <param name="commandSerializer">The command serializer.</param>
+        /// <param name="orderManager">The order manager endpoint.</param>
         /// <param name="config">The service configuration.</param>
         public CommandServer(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter,
             ICommandSerializer commandSerializer,
+            IEndpoint orderManager,
             Configuration config)
             : base(container, messagingAdapter)
         {
-            this.commandThrottler = new Throttler<Command>(
+            this.commandRouter = new CommandRouter(
                 container,
+                commandSerializer,
                 this.Endpoint,
+                config.ServerAddress,
+                config.CommandsPort);
+
+            this.commandThrottler = new Throttler(
+                container,
+                orderManager,
                 Duration.FromSeconds(1),
                 config.CommandsPerSecond);
 
-            this.newOrderThrottler = new Throttler<SubmitOrder>(
+            this.newOrderThrottler = new Throttler(
                 container,
                 this.commandThrottler.Endpoint,
                 Duration.FromSeconds(1),
                 config.NewOrdersPerSecond);
-
-            this.commandRouter = new CommandRouter(
-                container,
-                commandSerializer,
-                this.commandThrottler.Endpoint,
-                config.ServerAddress,
-                config.CommandsPort);
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
@@ -69,27 +71,27 @@ namespace Nautilus.Execution
 
         private void OnMessage(SubmitOrder message)
         {
-            this.Send(ExecutionServiceAddress.OrderManager, message);
+            this.newOrderThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(SubmitAtomicOrder message)
         {
-            this.Send(ExecutionServiceAddress.OrderManager, message);
+            this.newOrderThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(CancelOrder message)
         {
-            this.Send(ExecutionServiceAddress.OrderManager, message);
+            this.commandThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            this.Send(ExecutionServiceAddress.OrderManager, message);
+            this.commandThrottler.Endpoint.Send(message);
         }
 
         private void OnMessage(CollateralInquiry message)
         {
-            this.Send(ExecutionServiceAddress.OrderManager, message);
+            this.commandThrottler.Endpoint.Send(message);
         }
     }
 }

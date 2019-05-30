@@ -51,13 +51,24 @@ namespace NautilusData
             var messagingAdapter = MessagingServiceFactory.Create(container);
             var scheduler = new HashedWheelTimerScheduler(container);
 
+            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
+            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
+
+            var fixClient = CreateFixClient(
+                container,
+                messagingAdapter,
+                config.FixConfiguration,
+                symbolConverter);
+
+            var fixGateway = FixGatewayFactory.Create(
+                container,
+                messagingAdapter,
+                fixClient);
+
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
             var barRepository = new RedisBarRepository(redisConnection);
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
-
-            var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
-            var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
             var tickPublisher = new TickPublisher(container, config.ServerAddress, config.TickPublisherPort);
             var barPublisher = new BarPublisher(container, config.ServerAddress, config.TickPublisherPort);
@@ -72,17 +83,6 @@ namespace NautilusData
                 messagingAdapter,
                 scheduler,
                 barPublisher.Endpoint);
-
-            var fixClient = CreateFixClient(
-                container,
-                messagingAdapter,
-                config.FixConfiguration,
-                symbolConverter);
-
-            var fixGateway = FixGatewayFactory.Create(
-                container,
-                messagingAdapter,
-                fixClient);
 
             // Wire up service.
             fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);

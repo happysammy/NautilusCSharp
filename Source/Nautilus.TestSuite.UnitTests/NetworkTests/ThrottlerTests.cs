@@ -42,7 +42,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_throttle_ten_messages_per_one_hundred_milliseconds()
         {
             // Arrange
-            var throttler = new Throttler<string>(
+            var throttler = new Throttler(
                 this.setupContainer,
                 this.testReceiver.Endpoint,
                 Duration.FromMilliseconds(100),
@@ -82,7 +82,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         internal void Test_can_throttle_messages_per_one_hundred_milliseconds()
         {
             // Arrange
-            var throttler = new Throttler<string>(
+            var throttler = new Throttler(
                 this.setupContainer,
                 this.testReceiver.Endpoint,
                 Duration.FromMilliseconds(100),

@@ -51,18 +51,6 @@ namespace NautilusExecutor
             var venue = config.FixConfiguration.Broker.ToString().ToEnum<Venue>();
             var symbolConverter = new SymbolConverter(venue, config.SymbolIndex);
 
-            var commandServer = new CommandServer(
-                container,
-                messagingAdapter,
-                new MsgPackCommandSerializer(),
-                config);
-
-            var eventServer = new EventServer(
-                container,
-                messagingAdapter,
-                new MsgPackEventSerializer(),
-                config);
-
             var fixClient = CreateFixClient(
                 container,
                 messagingAdapter,
@@ -74,10 +62,23 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
+            var eventServer = new EventServer(
+                container,
+                messagingAdapter,
+                new MsgPackEventSerializer(),
+                config);
+
             var orderManager = new OrderManager(
                 container,
                 messagingAdapter,
                 fixGateway);
+
+            var commandServer = new CommandServer(
+                container,
+                messagingAdapter,
+                new MsgPackCommandSerializer(),
+                orderManager.Endpoint,
+                config);
 
             // Wire up service
             fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);

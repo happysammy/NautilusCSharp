@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Throttler{T}.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Throttler.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,7 +9,7 @@
 namespace Nautilus.Network
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
@@ -19,48 +19,49 @@ namespace Nautilus.Network
     using NodaTime;
 
     /// <summary>
-    /// Provides a message throttling component.
+    /// Provides a message throttler.
     /// </summary>
-    /// <typeparam name="T">The message type to throttle.</typeparam>
     [PerformanceOptimized]
-    public sealed class Throttler<T> : ComponentBase
+    public sealed class Throttler : ComponentBase
     {
         private readonly IEndpoint receiver;
         private readonly TimeSpan interval;
+        private readonly RefreshVouchers refresh;
         private readonly int limit;
-        private readonly Queue<T> queue;
+        private readonly Queue queue;
 
         private int vouchers;
         private int totalCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Throttler{T}"/> class.
+        /// Initializes a new instance of the <see cref="Throttler"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="receiver">The receiver service.</param>
-        /// <param name="interval">The throttle timer interval.</param>
-        /// <param name="limit">The message limit per second.</param>
+        /// <param name="intervalDuration">The throttle timer interval.</param>
+        /// <param name="limit">The message limit per interval.</param>
         public Throttler(
             IComponentryContainer container,
             IEndpoint receiver,
-            Duration interval,
+            Duration intervalDuration,
             int limit)
             : base(container)
         {
-            Condition.PositiveInt32((int)interval.TotalMilliseconds, nameof(interval.TotalMilliseconds));
+            Condition.PositiveInt32((int)intervalDuration.TotalMilliseconds, nameof(intervalDuration.TotalMilliseconds));
             Condition.PositiveInt32(limit, nameof(limit));
 
             this.receiver = receiver;
-            this.interval = interval.ToTimeSpan();
+            this.interval = intervalDuration.ToTimeSpan();
+            this.refresh = new RefreshVouchers();
             this.limit = limit;
-            this.queue = new Queue<T>();
+            this.queue = new Queue();
 
             this.IsIdle = true;
             this.vouchers = limit;
             this.totalCount = 0;
 
-            this.RegisterHandler<T>(this.OnMessage);
-            this.RegisterHandler<TimeSpan>(this.OnMessage);
+            this.RegisterHandler<RefreshVouchers>(this.OnMessage);
+            this.RegisterHandler<object>(this.OnMessage);
         }
 
         /// <summary>
@@ -73,15 +74,7 @@ namespace Nautilus.Network
         /// </summary>
         public bool IsIdle { get; private set; }
 
-        private void OnMessage(T message)
-        {
-            this.queue.Enqueue(message);
-
-            this.totalCount++;
-            this.ProcessQueue();
-        }
-
-        private void OnMessage(TimeSpan message)
+        private void OnMessage(RefreshVouchers message)
         {
             this.vouchers = this.limit;
 
@@ -101,6 +94,14 @@ namespace Nautilus.Network
                 this.Log.Debug("Active.");
             }
 
+            this.ProcessQueue();
+        }
+
+        private void OnMessage(object message)
+        {
+            this.queue.Enqueue(message);
+
+            this.totalCount++;
             this.ProcessQueue();
         }
 
@@ -139,7 +140,11 @@ namespace Nautilus.Network
         {
             Task.Delay(this.interval).Wait();
 
-            this.SendToSelf(this.interval);
+            this.SendToSelf(this.refresh);
+        }
+
+        private class RefreshVouchers
+        {
         }
     }
 }
