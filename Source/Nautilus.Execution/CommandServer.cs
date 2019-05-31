@@ -74,16 +74,14 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Starting from {message}...");
-
+            // Forward start message.
             this.commandRouter.Send(message);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Information($"Stopping from {message}...");
-
+            // Forward stop message.
             this.commandRouter.Send(message);
         }
 

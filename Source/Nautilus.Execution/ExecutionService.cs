@@ -76,8 +76,6 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Starting from {message}...");
-
             if (TimingProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
@@ -96,9 +94,7 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Information($"Stopping from {message}...");
-
-            // Forward message.
+            // Forward stop message.
             this.Send(ExecutionServiceAddress.FixGateway, message);
             this.Send(ExecutionServiceAddress.CommandServer, message);
             this.Send(ExecutionServiceAddress.EventServer, message);

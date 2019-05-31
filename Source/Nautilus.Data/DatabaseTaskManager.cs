@@ -49,10 +49,8 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void OnStop(Stop message)
+        protected override void OnStop(Stop stop)
         {
-            this.Log.Information($"Stopping from {message}...");
-
             this.barRepository.SnapshotDatabase();
         }
 

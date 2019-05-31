@@ -9,6 +9,9 @@
 namespace Nautilus.Common.Componentry
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
@@ -24,20 +27,26 @@ namespace Nautilus.Common.Componentry
         private readonly IZonedClock clock;
         private readonly IGuidFactory guidFactory;
         private readonly CommandHandler commandHandler;
+        private readonly List<ZonedDateTime> startedTimes;
+        private readonly List<ZonedDateTime> stoppedTimes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Component"/> class.
         /// </summary>
         /// <param name="container">The components componentry container.</param>
-        protected Component(IComponentryContainer container)
+        /// <param name="initial">The initial state of the component.</param>
+        protected Component(IComponentryContainer container, State initial = State.Init)
         {
-            this.Name = new Label(this.CreateComponentName());
-            this.Address = new Address(this.Name.ToString());
             this.clock = container.Clock;
             this.guidFactory = container.GuidFactory;
-            this.Log = container.LoggerFactory.Create(this.Name);
             this.commandHandler = new CommandHandler(this.Log);
-            this.StartTime = this.clock.TimeNow();
+            this.startedTimes = new List<ZonedDateTime>();
+            this.stoppedTimes = new List<ZonedDateTime>();
+
+            this.Name = new Label(this.CreateComponentName());
+            this.Address = new Address(this.Name.ToString());
+            this.Log = container.LoggerFactory.Create(this.Name);
+            this.State = initial;
 
             this.RegisterHandler<Envelope<Command>>(this.Open);
             this.RegisterHandler<Envelope<Event>>(this.Open);
@@ -46,10 +55,12 @@ namespace Nautilus.Common.Componentry
             this.RegisterHandler<Start>(this.OnMessage);
             this.RegisterHandler<Stop>(this.OnMessage);
             this.RegisterUnhandled(this.Unhandled);
+
+            this.InitializedTime = this.clock.TimeNow();
         }
 
         /// <summary>
-        /// Gets the components name label.
+        /// Gets the components name.
         /// </summary>
         public Label Name { get; }
 
@@ -59,10 +70,27 @@ namespace Nautilus.Common.Componentry
         public Address Address { get; }
 
         /// <summary>
-        /// Gets the time the component was last started.
+        /// Gets the components current state.
+        /// </summary>
+        public State State { get; private set; }
+
+        /// <summary>
+        /// Gets the time the component was initialized.
         /// </summary>
         /// <returns>A <see cref="ZonedDateTime"/>.</returns>
-        public ZonedDateTime StartTime { get; }
+        public ZonedDateTime InitializedTime { get; }
+
+        /// <summary>
+        /// Gets the time the component was initialized.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public IReadOnlyList<ZonedDateTime> StartedTimes => this.startedTimes.ToList().AsReadOnly();
+
+        /// <summary>
+        /// Gets the time the component was initialized.
+        /// </summary>
+        /// <returns>A <see cref="ZonedDateTime"/>.</returns>
+        public IReadOnlyList<ZonedDateTime> StoppedTimes => this.stoppedTimes.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets the components logger.
@@ -70,7 +98,7 @@ namespace Nautilus.Common.Componentry
         protected ILogger Log { get; }
 
         /// <summary>
-        /// Sends a <see cref="Start"/> message to the component.
+        /// Sends a new <see cref="Start"/> message to the component.
         /// </summary>
         public void Start()
         {
@@ -78,7 +106,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends a <see cref="Stop"/> message to the component.
+        /// Sends a new <see cref="Stop"/> message to the component.
         /// </summary>
         public void Stop()
         {
@@ -86,21 +114,21 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Handles the start message.
+        /// Actions to be performed on component start.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected virtual void OnStart(Start message)
+        /// <param name="start">The start message.</param>
+        protected virtual void OnStart(Start start)
         {
-            this.Log.Error($"Received {message} handling not implemented.");
+            this.Log.Error($"Received {start} and OnStart() not overridden in implementation.");
         }
 
         /// <summary>
-        /// Handles the stop message.
+        /// Actions to be performed on component stop.
         /// </summary>
-        /// <param name="message">The message.</param>
-        protected virtual void OnStop(Stop message)
+        /// <param name="stop">The stop message.</param>
+        protected virtual void OnStop(Stop stop)
         {
-            this.Log.Error($"Received {message} handling not implemented.");
+            this.Log.Error($"Received {stop} and OnStop() not overridden in implementation.");
         }
 
         /// <summary>
@@ -151,7 +179,13 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The start message.</param>
         private void OnMessage(Start message)
         {
+            this.Log.Information($"Starting from {message}...");
+
             this.OnStart(message);
+            this.startedTimes.Add(this.TimeNow());
+            this.State = State.Running;
+
+            this.Log.Information($"Running...");
         }
 
         /// <summary>
@@ -160,7 +194,13 @@ namespace Nautilus.Common.Componentry
         /// <param name="message">The stop message.</param>
         private void OnMessage(Stop message)
         {
+            this.Log.Information($"Stopping from {message}...");
+
             this.OnStop(message);
+            this.stoppedTimes.Add(this.TimeNow());
+            this.State = State.Stopped;
+
+            this.Log.Information($"Stopped.");
         }
 
         private void Unhandled(object message)
@@ -186,12 +226,9 @@ namespace Nautilus.Common.Componentry
         {
             var thisType = this.GetType();
 
-            if (thisType.IsGenericType)
-            {
-                return $"{thisType.Name.Split('`')[0]}<{thisType.GenericTypeArguments[0].Name}>";
-            }
-
-            return thisType.Name;
+            return thisType.IsGenericType
+                ? $"{thisType.Name.Split('`')[0]}<{thisType.GenericTypeArguments[0].Name}>"
+                : thisType.Name;
         }
     }
 }

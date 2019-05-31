@@ -26,13 +26,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             // Arrange
             var message1 = new StatusResponse(
                 new Label("SomeComponent1"),
-                Status.Running,
+                State.Running,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new StatusResponse(
                 new Label("SomeComponent2"),
-                Status.Running,
+                State.Running,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -69,7 +69,7 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
             var guid = Guid.NewGuid();
             var message = new StatusResponse(
                 new Label("CommandBus"),
-                Status.Running,
+                State.Running,
                 guid,
                 StubZonedDateTime.UnixEpoch());
 

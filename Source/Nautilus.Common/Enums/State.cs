@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="Status.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="State.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,27 +9,32 @@
 namespace Nautilus.Common.Enums
 {
     /// <summary>
-    /// Represents the status of a service component or module.
+    /// Represents the status of a service component.
     /// </summary>
-    public enum Status
+    public enum State
     {
         /// <summary>
-        /// The component or module is running normally.
+        /// The component state is unknown (this is an invalid value).
         /// </summary>
-        Running = 0,
+        Unknown = 0,
 
         /// <summary>
-        /// The component or module has gracefully stopped.
+        /// The component is initialized.
+        /// </summary>
+        Init = 1,
+
+        /// <summary>
+        /// The component is running normally.
+        /// </summary>
+        Running = 2,
+
+        /// <summary>
+        /// The component has gracefully stopped.
         /// </summary>
         Stopped = 1,
 
         /// <summary>
-        /// The component or module is temporarily suspended (has not failed).
-        /// </summary>
-        Suspended = 2,
-
-        /// <summary>
-        /// The component or module has failed and will not process further work.
+        /// The component has failed and will not process further work.
         /// </summary>
         Failed = 3,
     }

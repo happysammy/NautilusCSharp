@@ -50,16 +50,12 @@ namespace Nautilus.Execution
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.Log.Information($"Starting from {message}...");
-
             this.eventPublisher.Send(message);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Information($"Stopping from {message}...");
-
             this.eventPublisher.Send(message);
         }
 

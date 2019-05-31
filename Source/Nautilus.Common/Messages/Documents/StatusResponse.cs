@@ -26,12 +26,12 @@ namespace Nautilus.Common.Messages.Documents
         /// Initializes a new instance of the <see cref="StatusResponse"/> class.
         /// </summary>
         /// <param name="componentName">The component name.</param>
-        /// <param name="status">The status.</param>
+        /// <param name="state">The status.</param>
         /// <param name="id">The documents identifier.</param>
         /// <param name="timestamp">The documents timestamp.</param>
         public StatusResponse(
             Label componentName,
-            Status status,
+            State state,
             Guid id,
             ZonedDateTime timestamp)
             : base(typeof(StatusResponse), id, timestamp)
@@ -40,7 +40,7 @@ namespace Nautilus.Common.Messages.Documents
             Debug.NotDefault(timestamp, nameof(timestamp));
 
             this.ComponentName = componentName;
-            this.Status = status;
+            this.State = state;
         }
 
         /// <summary>
@@ -51,12 +51,12 @@ namespace Nautilus.Common.Messages.Documents
         /// <summary>
         /// Gets the responses component status.
         /// </summary>
-        public Status Status { get; }
+        public State State { get; }
 
         /// <summary>
         /// Gets a string representation of the <see cref="StatusResponse"/> message.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.ComponentName}={this.Status}";
+        public override string ToString() => $"{base.ToString()}-{this.ComponentName}={this.State}";
     }
 }

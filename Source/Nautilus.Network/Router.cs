@@ -67,10 +67,8 @@ namespace Nautilus.Network
         public ZmqServerAddress ServerAddress { get; }
 
         /// <inheritdoc />
-        protected override void OnStart(Start message)
+        protected override void OnStart(Start start)
         {
-            this.Log.Information($"Starting from {message}...");
-
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound router socket to {this.ServerAddress}");
             this.Log.Debug("Ready to consume...");
@@ -80,16 +78,14 @@ namespace Nautilus.Network
         }
 
         /// <inheritdoc />
-        protected override void OnStop(Stop message)
+        protected override void OnStop(Stop stop)
         {
-            this.Log.Debug($"Stopping from {message}...");
             this.isConsuming = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();
-            this.Log.Debug("Stopped.");
         }
 
         private Task StartConsuming()

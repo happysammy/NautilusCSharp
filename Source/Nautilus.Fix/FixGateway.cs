@@ -659,18 +659,14 @@ namespace Nautilus.Fix
         }
 
         /// <inheritdoc />
-        protected override void OnStart(Start message)
+        protected override void OnStart(Start start)
         {
-            this.Log.Information($"Starting from {message}...");
-
             this.fixClient.Connect();
         }
 
         /// <inheritdoc />
-        protected override void OnStop(Stop message)
+        protected override void OnStop(Stop stop)
         {
-            this.Log.Information($"Stopping from {message}...");
-
             this.fixClient.Disconnect();
         }
 

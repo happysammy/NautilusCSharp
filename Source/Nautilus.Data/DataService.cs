@@ -88,16 +88,14 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        protected override void OnStart(Start message)
+        protected override void OnStart(Start start)
         {
-            this.Log.Information($"Starting from {message}...");
-
             if (TimingProvider.IsOutsideWeeklyInterval(
                 this.fixDisconnectTime,
                 this.fixConnectTime,
                 this.InstantNow()))
             {
-                this.Send(DataServiceAddress.FixGateway, message);
+                this.Send(DataServiceAddress.FixGateway, start);
             }
             else
             {
@@ -112,8 +110,6 @@ namespace Nautilus.Data
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Information($"Stopping from {message}...");
-
             this.Send(DataServiceAddress.DatabaseTaskManager, message);
             this.Send(DataServiceAddress.FixGateway, message);
         }

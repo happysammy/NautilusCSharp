@@ -443,7 +443,8 @@ namespace Nautilus.Scheduler
             var p = new TaskCompletionSource<IEnumerable<SchedulerRegistration>>();
             if (this.stopped.CompareAndSet(null, p) && Interlocked.CompareExchange(ref this.workerState, WORKER_STATE_SHUTDOWN, WORKER_STATE_STARTED) == WORKER_STATE_STARTED)
             {
-                // Let remaining work that is already being processed finish. The termination task will complete afterwards.
+                // Let remaining work that is already being processed finish.
+                // The termination task will complete afterwards.
                 return p.Task;
             }
 
