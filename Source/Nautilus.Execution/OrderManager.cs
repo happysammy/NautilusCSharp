@@ -14,6 +14,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
+    using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
@@ -86,11 +87,9 @@ namespace Nautilus.Execution
 
             var order = message.Order;
 
-            if (this.cancelBuffer.ContainsKey(order.Id))
+            if (this.CancelOrderInBuffer(order.Id, message.ToString()))
             {
-                this.Log.Warning($"Cannot submit order ({this.cancelBuffer[order.Id]} already received).");
-                this.cancelBuffer.Remove(order.Id);
-                return;
+                return; // Warning logged.
             }
 
             if (this.OrderBookContainsId(order.Id, message.ToString()))
@@ -110,6 +109,12 @@ namespace Nautilus.Execution
             this.commandCount++;
 
             var atomicOrder = message.AtomicOrder;
+            var entryOrderId = atomicOrder.Entry.Id;
+
+            if (this.CancelOrderInBuffer(entryOrderId, message.ToString()))
+            {
+                return; // Warning logged.
+            }
 
             if (this.OrderBookContainsId(atomicOrder.Entry.Id, message.ToString()))
             {
@@ -226,7 +231,7 @@ namespace Nautilus.Execution
             }
 
             this.Send(ExecutionServiceAddress.EventServer, @event);
-            this.Log.Debug($"Sent cached {@event} to EventServer.");
+            this.Log.Debug($"Sent {@event} to EventServer.");
         }
 
         private void CreateModifyCache(Order order)
@@ -287,24 +292,42 @@ namespace Nautilus.Execution
 
         private bool OrderBookDoesNotContainId(OrderId id, string message)
         {
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
+
             if (!this.orderBook.ContainsKey(id))
             {
                 this.Log.Error($"Cannot process {message} (order id not found in order book).");
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         private bool OrderBookContainsId(OrderId id, string message)
         {
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
+
             if (this.orderBook.ContainsKey(id))
             {
                 this.Log.Error($"Cannot process {message} (duplicate order id in order book).");
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
+        }
+
+        private bool CancelOrderInBuffer(OrderId id, string message)
+        {
+            Debug.NotEmptyOrWhiteSpace(message, nameof(message));
+
+            if (this.cancelBuffer.ContainsKey(id))
+            {
+                this.Log.Warning($"Cannot process {message} ({this.cancelBuffer[id]} already received).");
+                this.cancelBuffer.Remove(id);
+                return true;
+            }
+
+            return false;
         }
     }
 }
