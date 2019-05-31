@@ -62,12 +62,6 @@ namespace NautilusExecutor
                 messagingAdapter,
                 fixClient);
 
-            var eventServer = new EventServer(
-                container,
-                messagingAdapter,
-                new MsgPackEventSerializer(),
-                config);
-
             var orderManager = new OrderManager(
                 container,
                 messagingAdapter,
@@ -80,6 +74,12 @@ namespace NautilusExecutor
                 orderManager.Endpoint,
                 config);
 
+            var eventServer = new EventServer(
+                container,
+                messagingAdapter,
+                new MsgPackEventSerializer(),
+                config);
+
             // Wire up service
             fixGateway.RegisterConnectionEventReceiver(ExecutionServiceAddress.Core);
             fixGateway.RegisterAccountEventReceiver(ExecutionServiceAddress.EventServer);
@@ -89,9 +89,9 @@ namespace NautilusExecutor
             {
                 { ExecutionServiceAddress.Scheduler, scheduler.Endpoint },
                 { ExecutionServiceAddress.FixGateway, fixGateway.Endpoint },
+                { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
                 { ExecutionServiceAddress.CommandServer, commandServer.Endpoint },
                 { ExecutionServiceAddress.EventServer, eventServer.Endpoint },
-                { ExecutionServiceAddress.OrderManager, orderManager.Endpoint },
             };
 
             return new ExecutionService(

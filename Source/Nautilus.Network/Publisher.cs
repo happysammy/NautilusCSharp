@@ -61,6 +61,8 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
+            this.Log.Information($"Starting from {message}...");
+
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
             this.Log.Debug("Ready to publish...");
@@ -69,10 +71,12 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
+            this.Log.Debug($"Stopping from {message}...");
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");
 
             this.socket.Dispose();
+            this.Log.Debug("Stopped.");
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace Nautilus.Network
                 .SendFrame(message);
 
             this.cycles++;
-            this.Log.Verbose($"Published message[{this.cycles}].");
+            this.Log.Verbose($"Published message[{this.cycles}] on {this.ServerAddress.Value}.");
         }
     }
 }

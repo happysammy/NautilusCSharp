@@ -11,6 +11,7 @@ namespace Nautilus.Execution
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
@@ -19,12 +20,12 @@ namespace Nautilus.Execution
     using NodaTime;
 
     /// <summary>
-    /// Provides a messaging server using the ZeroMQ protocol.
+    /// Provides a <see cref="Command"/> message server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
     public class CommandServer : ComponentBusConnected
     {
-        private readonly CommandRouter commandRouter;
+        private readonly IEndpoint commandRouter;
         private readonly Throttler commandThrottler;
         private readonly Throttler newOrderThrottler;
 
@@ -49,7 +50,7 @@ namespace Nautilus.Execution
                 commandSerializer,
                 this.Endpoint,
                 config.ServerAddress,
-                config.CommandsPort);
+                config.CommandsPort).Endpoint;
 
             this.commandThrottler = new Throttler(
                 container,
@@ -68,8 +69,6 @@ namespace Nautilus.Execution
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
-
-            this.commandRouter.Start();
         }
 
         /// <inheritdoc />
@@ -77,7 +76,7 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"Starting from {message}...");
 
-            this.commandRouter.Start();
+            this.commandRouter.Send(message);
         }
 
         /// <inheritdoc />
@@ -85,8 +84,7 @@ namespace Nautilus.Execution
         {
             this.Log.Information($"Stopping from {message}...");
 
-            // Forward message.
-            this.commandRouter.Stop();
+            this.commandRouter.Send(message);
         }
 
         private void OnMessage(SubmitOrder message)

@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="CommandConsumerTests.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CommandRouterTests.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class CommandConsumerTests
+    public class CommandRouterTests
     {
         private readonly NetworkAddress localHost = new NetworkAddress("127.0.0.1");
         private readonly ITestOutputHelper output;
@@ -29,7 +29,7 @@ namespace Nautilus.TestSuite.UnitTests.ExecutionTests
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly IEndpoint testReceiver;
 
-        public CommandConsumerTests(ITestOutputHelper output)
+        public CommandRouterTests(ITestOutputHelper output)
         {
             // Fixture Setup
             this.output = output;

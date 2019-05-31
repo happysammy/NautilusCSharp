@@ -25,7 +25,6 @@ namespace Nautilus.Network
     public abstract class Router : Component
     {
         private readonly CancellationTokenSource cts;
-        private readonly ZmqServerAddress serverAddress;
         private readonly RouterSocket socket;
         private readonly byte[] ok = Encoding.UTF8.GetBytes("OK");
 
@@ -49,7 +48,6 @@ namespace Nautilus.Network
             Condition.NotDefault(id, nameof(id));
 
             this.cts = new CancellationTokenSource();
-            this.serverAddress = new ZmqServerAddress(host, port);
 
             this.socket = new RouterSocket()
             {
@@ -59,13 +57,22 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+
+            this.ServerAddress = new ZmqServerAddress(host, port);
         }
+
+        /// <summary>
+        /// Gets the server address for the router.
+        /// </summary>
+        public ZmqServerAddress ServerAddress { get; }
 
         /// <inheritdoc />
         protected override void OnStart(Start message)
         {
-            this.socket.Bind(this.serverAddress.Value);
-            this.Log.Debug($"Bound router socket to {this.serverAddress}");
+            this.Log.Information($"Starting from {message}...");
+
+            this.socket.Bind(this.ServerAddress.Value);
+            this.Log.Debug($"Bound router socket to {this.ServerAddress}");
             this.Log.Debug("Ready to consume...");
 
             this.isConsuming = true;
@@ -75,14 +82,14 @@ namespace Nautilus.Network
         /// <inheritdoc />
         protected override void OnStop(Stop message)
         {
-            this.Log.Debug($"Stopping...");
+            this.Log.Debug($"Stopping from {message}...");
             this.isConsuming = false;
             this.cts.Cancel();
-            this.socket.Unbind(this.serverAddress.Value);
-            this.Log.Debug($"Unbound router socket from {this.serverAddress}");
+            this.socket.Unbind(this.ServerAddress.Value);
+            this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();
-            this.Log.Debug($"Stopped.");
+            this.Log.Debug("Stopped.");
         }
 
         private Task StartConsuming()
@@ -106,7 +113,7 @@ namespace Nautilus.Network
             this.socket.SendMultipartBytes(response);
 
             this.cycles++;
-            this.Log.Debug($"Acknowledged message[{this.cycles}] receipt.");
+            this.Log.Verbose($"Acknowledged message[{this.cycles}] receipt on {this.ServerAddress.Value}.");
 
             this.SendToSelf(data);
         }
