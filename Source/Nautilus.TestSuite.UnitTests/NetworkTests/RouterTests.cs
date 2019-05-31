@@ -63,7 +63,10 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             Task.Delay(100).Wait();
 
+            var response = requester.ReceiveFrameBytes();
+
             // Assert
+            this.output.WriteLine(Encoding.UTF8.GetString(response));
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
             Assert.Contains("MSG", this.testReceiver.Messages);
 

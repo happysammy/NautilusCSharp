@@ -65,7 +65,7 @@ namespace Nautilus.Fix
             return this.symbolIndex.ContainsValue(nautilusSymbol)
                 ? QueryResult<string>.Ok(this.symbolIndex.FirstOrDefault(x => x.Value == nautilusSymbol).Key)
                 : QueryResult<string>.Fail(
-                    $"Cannot find the broker symbol (index did not contain the given Nautilus symbol {nautilusSymbol}.");
+                    $"Cannot find the broker symbol (index did not contain the given Nautilus symbol {nautilusSymbol}).");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nautilus.Fix
         /// Returns all broker symbols.
         /// </summary>
         /// <returns>The collection of broker symbols.</returns>
-        public IReadOnlyCollection<string> GetAllBrokerSymbols()
+        public IEnumerable<string> GetAllBrokerSymbols()
         {
             return this.symbolIndex.Keys.ToList();
         }

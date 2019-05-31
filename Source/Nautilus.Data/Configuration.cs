@@ -49,9 +49,12 @@ namespace Nautilus.Data
             this.ServerAddress = isDevelopment
                 ? NetworkAddress.LocalHost()
                 : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
-            this.TickPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickPublisherPort"]);
-            this.BarPublisherPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barPublisherPort"]);
-            this.HistoricalBarsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["historicalBarsPort"]);
+            this.TickRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickReqPort"]);
+            this.TickSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickSubPort"]);
+            this.BarRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barReqPort"]);
+            this.BarSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["barSubPort"]);
+            this.InstrumentRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["instrumentReqPort"]);
+            this.InstrumentSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["instrumentSubPort"]);
 
             // FIX Settings
             var fixConfigFile = (string)configJson[ConfigSection.Fix44]["configFile"];
@@ -112,24 +115,39 @@ namespace Nautilus.Data
         public ILoggingAdapter LoggingAdapter { get; }
 
         /// <summary>
-        /// Gets the configuration server address.
+        /// Gets the network configuration server address.
         /// </summary>
         public NetworkAddress ServerAddress { get; }
 
         /// <summary>
-        /// Gets the configuration tick publisher port.
+        /// Gets the network configuration tick request port.
         /// </summary>
-        public NetworkPort TickPublisherPort { get; }
+        public NetworkPort TickRequestPort { get; }
 
         /// <summary>
-        /// Gets the configuration bar publisher port.
+        /// Gets the network configuration tick subscribe port.
         /// </summary>
-        public NetworkPort BarPublisherPort { get; }
+        public NetworkPort TickSubscribePort { get; }
 
         /// <summary>
-        /// Gets the configuration historical bars publisher port.
+        /// Gets the network configuration bar request port.
         /// </summary>
-        public NetworkPort HistoricalBarsPort { get; }
+        public NetworkPort BarRequestPort { get; }
+
+        /// <summary>
+        /// Gets the network configuration bar subscribe port.
+        /// </summary>
+        public NetworkPort BarSubscribePort { get; }
+
+        /// <summary>
+        /// Gets the network configuration instrument request port.
+        /// </summary>
+        public NetworkPort InstrumentRequestPort { get; }
+
+        /// <summary>
+        /// Gets the network configuration instrument subscribe port.
+        /// </summary>
+        public NetworkPort InstrumentSubscribePort { get; }
 
         /// <summary>
         /// Gets the FIX configuration.

@@ -6,7 +6,7 @@
 // </copyright>
 //--------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Data.Publishers
+namespace Nautilus.Data.Network
 {
     using System;
     using System.Text;

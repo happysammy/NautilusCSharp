@@ -1,13 +1,16 @@
 ﻿{
   "logging": {
-    "logLevel": "Information"
+    "logLevel": "Verbose"
   },
 
   "network": {
     "serverAddress": "127.0.0.1",
-    "tickPublisherPort": 55501,
-    "barPublisherPort": 55502,
-    "historicalBarsPort": 55503
+    "tickReqPort": 55501,
+    "tickSubPort": 55502,
+    "barReqPort": 55503,
+    "barSubPort": 55504,
+    "instrumentReqPort": 55505,
+    "instrumentSubPort": 55506
   },
 
   "fix44": {

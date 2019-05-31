@@ -19,13 +19,14 @@ namespace NautilusData
     using Nautilus.Core.Extensions;
     using Nautilus.Data;
     using Nautilus.Data.Aggregation;
-    using Nautilus.Data.Publishers;
+    using Nautilus.Data.Network;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Fix;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Redis;
     using Nautilus.Scheduler;
+    using Nautilus.Serialization;
     using NodaTime;
     using StackExchange.Redis;
 
@@ -70,8 +71,34 @@ namespace NautilusData
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
-            var tickPublisher = new TickPublisher(container, config.ServerAddress, config.TickPublisherPort);
-            var barPublisher = new BarPublisher(container, config.ServerAddress, config.TickPublisherPort);
+            var tickPublisher = new TickPublisher(
+                container,
+                config.ServerAddress,
+                config.TickSubscribePort);
+
+            var barResponder = new BarResponder(
+                container,
+                barRepository,
+                config.ServerAddress,
+                config.BarRequestPort);
+
+            var barPublisher = new BarPublisher(
+                container,
+                config.ServerAddress,
+                config.BarSubscribePort);
+
+            var instrumentResponder = new InstrumentResponder(
+                container,
+                instrumentRepository,
+                new MsgPackInstrumentSerializer(),
+                config.ServerAddress,
+                config.InstrumentRequestPort);
+
+            var instrumentPublisher = new InstrumentPublisher(
+                container,
+                new MsgPackInstrumentSerializer(),
+                config.ServerAddress,
+                config.InstrumentSubscribePort);
 
             var databaseTaskManager = new DatabaseTaskManager(
                 container,
@@ -89,6 +116,7 @@ namespace NautilusData
             fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
             fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
             fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
+            fixGateway.RegisterInstrumentReceiver(DataServiceAddress.InstrumentPublisher);
 
             var addresses = new Dictionary<Address, IEndpoint>
             {
@@ -97,7 +125,10 @@ namespace NautilusData
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
+                { DataServiceAddress.BarResponder, barResponder.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },
+                { DataServiceAddress.InstrumentResponder, instrumentResponder.Endpoint },
+                { DataServiceAddress.InstrumentPublisher, instrumentPublisher.Endpoint },
             };
 
             return new DataService(

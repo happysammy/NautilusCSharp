@@ -27,6 +27,7 @@
         <ProjectReference Include="..\Nautilus.Logging\Nautilus.Logging.csproj" />
         <ProjectReference Include="..\Nautilus.Redis\Nautilus.Redis.csproj" />
         <ProjectReference Include="..\Nautilus.Scheduler\Nautilus.Scheduler.csproj" />
+        <ProjectReference Include="..\Nautilus.Serialization\Nautilus.Serialization.csproj" />
         <ProjectReference Include="..\NautilusData.Api\NautilusData.Api.csproj" />
     </ItemGroup>
 

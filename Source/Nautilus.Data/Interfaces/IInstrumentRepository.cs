@@ -15,7 +15,7 @@ namespace Nautilus.Data.Interfaces
     using NodaTime;
 
     /// <summary>
-    /// The <see cref="IInstrumentRepository"/> interface.
+    /// Provides a repository for accessing <see cref="Instrument"/> data.
     /// </summary>
     public interface IInstrumentRepository
     {

@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Data.Publishers;
+    using Nautilus.Data.Network;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
     using Nautilus.TestSuite.TestKit.TestDoubles;

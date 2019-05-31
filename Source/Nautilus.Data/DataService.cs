@@ -105,13 +105,26 @@ namespace Nautilus.Data
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
             this.CreateTrimBarDataJob();
+
+            this.Send(DataServiceAddress.TickResponder, start);
+            this.Send(DataServiceAddress.TickPublisher, start);
+            this.Send(DataServiceAddress.BarResponder, start);
+            this.Send(DataServiceAddress.BarPublisher, start);
+            this.Send(DataServiceAddress.InstrumentResponder, start);
+            this.Send(DataServiceAddress.InstrumentPublisher, start);
         }
 
         /// <inheritdoc />
-        protected override void OnStop(Stop message)
+        protected override void OnStop(Stop stop)
         {
-            this.Send(DataServiceAddress.DatabaseTaskManager, message);
-            this.Send(DataServiceAddress.FixGateway, message);
+            this.Send(DataServiceAddress.DatabaseTaskManager, stop);
+            this.Send(DataServiceAddress.FixGateway, stop);
+            this.Send(DataServiceAddress.TickResponder, stop);
+            this.Send(DataServiceAddress.TickPublisher, stop);
+            this.Send(DataServiceAddress.BarResponder, stop);
+            this.Send(DataServiceAddress.BarPublisher, stop);
+            this.Send(DataServiceAddress.InstrumentResponder, stop);
+            this.Send(DataServiceAddress.InstrumentPublisher, stop);
         }
 
         private void OnMessage(ConnectFix message)

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Router.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Responder.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -9,6 +9,8 @@
 namespace Nautilus.Network
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,24 +24,26 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging router.
     /// </summary>
-    public abstract class Router : Component
+    public abstract class Responder : Component
     {
-        private static readonly byte[] Ok = { 0x4f, 0x4b };  // "OK"
+        private static readonly byte[] Delimiter = new byte[] { };
 
         private readonly CancellationTokenSource cts;
-        private readonly RouterSocket socket;
+        private readonly ResponseSocket socket;
 
-        private bool isConsuming;
+        private bool isResponding;
         private int cycles;
 
+        private byte[] requesterIdentity;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Router"/> class.
+        /// Initializes a new instance of the <see cref="Responder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        protected Router(
+        protected Responder(
             IComponentryContainer container,
             NetworkAddress host,
             NetworkPort port,
@@ -49,7 +53,7 @@ namespace Nautilus.Network
             Condition.NotDefault(id, nameof(id));
 
             this.cts = new CancellationTokenSource();
-            this.socket = new RouterSocket()
+            this.socket = new ResponseSocket()
             {
                 Options =
                 {
@@ -59,6 +63,7 @@ namespace Nautilus.Network
             };
 
             this.ServerAddress = new ZmqServerAddress(host, port);
+            this.requesterIdentity = new byte[] { };
         }
 
         /// <summary>
@@ -72,14 +77,14 @@ namespace Nautilus.Network
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound router socket to {this.ServerAddress}");
 
-            this.isConsuming = true;
-            Task.Run(this.StartConsuming, this.cts.Token);
+            this.isResponding = true;
+            Task.Run(this.StartResponding, this.cts.Token);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.isConsuming = false;
+            this.isResponding = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
@@ -87,30 +92,51 @@ namespace Nautilus.Network
             this.socket.Dispose();
         }
 
-        private Task StartConsuming()
+        /// <summary>
+        /// Respond to the last request with the given response.
+        /// </summary>
+        /// <param name="response">The response bytes.</param>
+        protected void SendResponse(byte[] response)
         {
-            while (this.isConsuming)
-            {
-                this.ConsumeMessage();
-            }
+            this.socket.SendMultipartBytes(this.requesterIdentity, Delimiter, response);
 
-            this.Log.Debug("Stopped consuming messages.");
-            return Task.CompletedTask;
+            this.cycles++;
+            this.Log.Verbose($"Responded to message[{this.cycles}] on {this.ServerAddress.Value}.");
         }
 
-        private void ConsumeMessage()
+        /// <summary>
+        /// Respond to the last request with the given response.
+        /// </summary>
+        /// <param name="response">The response byte arrays.</param>
+        protected void SendResponse(List<byte[]> response)
         {
-            var identity = this.socket.ReceiveFrameBytes();
-            var delimiter = this.socket.ReceiveFrameBytes();
-            var data = this.socket.ReceiveFrameBytes();
+            response.Insert(0, Delimiter);
+            response.Insert(0, this.requesterIdentity);
 
-            var response = new[] { identity, delimiter, Ok };
             this.socket.SendMultipartBytes(response);
 
             this.cycles++;
-            this.Log.Verbose($"Acknowledged message[{this.cycles}] receipt on {this.ServerAddress.Value}.");
+            this.Log.Verbose($"Responded to message[{this.cycles}] on {this.ServerAddress.Value}.");
+        }
 
-            this.SendToSelf(data);
+        private Task StartResponding()
+        {
+            while (this.isResponding)
+            {
+                this.ListenForRequest();
+            }
+
+            this.Log.Debug("Stopped responding to messages.");
+            return Task.CompletedTask;
+        }
+
+        private void ListenForRequest()
+        {
+            this.requesterIdentity = this.socket.ReceiveFrameBytes();
+            this.socket.ReceiveFrameBytes(); // Delimiter
+            var request = this.socket.ReceiveFrameBytes();
+
+            this.SendToSelf(request);
         }
     }
 }
