@@ -71,7 +71,6 @@ namespace Nautilus.Network
         {
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound router socket to {this.ServerAddress}");
-            this.Log.Debug("Ready to consume...");
 
             this.isConsuming = true;
             Task.Run(this.StartConsuming, this.cts.Token);

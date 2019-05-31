@@ -21,6 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
+    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public class PublisherTests
     {
         private const string TEST_TOPIC = "test_topic";

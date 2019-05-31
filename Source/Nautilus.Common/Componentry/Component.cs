@@ -114,7 +114,9 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Actions to be performed on component start.
+        /// Actions to be performed on component start. Called when a Start message is received.
+        /// After this method is called the component state with become Running.
+        /// Note: A log event will be created for the Start message.
         /// </summary>
         /// <param name="start">The start message.</param>
         protected virtual void OnStart(Start start)
@@ -123,7 +125,9 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Actions to be performed on component stop.
+        /// Actions to be performed on component stop. Called when a Stop message is received.
+        /// After this method is called the component state will become Stopped.
+        /// Note: A log event will be created for the Stop message.
         /// </summary>
         /// <param name="stop">The stop message.</param>
         protected virtual void OnStop(Stop stop)
@@ -185,7 +189,7 @@ namespace Nautilus.Common.Componentry
             this.startedTimes.Add(this.TimeNow());
             this.State = State.Running;
 
-            this.Log.Information($"Running...");
+            this.Log.Information($"{this.State}...");
         }
 
         /// <summary>
@@ -200,7 +204,7 @@ namespace Nautilus.Common.Componentry
             this.stoppedTimes.Add(this.TimeNow());
             this.State = State.Stopped;
 
-            this.Log.Information($"Stopped.");
+            this.Log.Information($"{this.State}.");
         }
 
         private void Unhandled(object message)

@@ -66,7 +66,7 @@ namespace Nautilus.Common.Messaging
         {
             this.switchboard = message.Switchboard;
             this.switchboard.RegisterDeadLetterChannel(this.AddToDeadLetters);
-            this.log.Information("Initialized.");
+            this.log.Information("Switchboard initialized.");
         }
 
         private void OnMessage(Envelope<T> envelope)

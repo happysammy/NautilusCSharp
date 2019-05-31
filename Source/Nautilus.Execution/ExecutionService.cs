@@ -149,7 +149,7 @@ namespace Nautilus.Execution
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}.");
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}.");
         }
 
         private void CreateDisconnectFixJob()
@@ -172,7 +172,7 @@ namespace Nautilus.Execution
                 job,
                 this.Endpoint);
 
-            this.Log.Information($"Created {job}Job for {nextTime.ToIsoString()}.");
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}.");
         }
     }
 }

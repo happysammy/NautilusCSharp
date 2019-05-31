@@ -63,7 +63,6 @@ namespace Nautilus.Network
         {
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound publisher socket to {this.ServerAddress}");
-            this.Log.Debug("Ready to publish...");
         }
 
         /// <inheritdoc />

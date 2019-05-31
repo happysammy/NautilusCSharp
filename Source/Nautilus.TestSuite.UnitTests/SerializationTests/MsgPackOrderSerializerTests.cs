@@ -120,7 +120,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var unpacked = OrderSerializer.DeserializeNullable(packed);
 
             // Assert
-            Assert.Equal(null, unpacked);
+            Assert.Null(unpacked);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
