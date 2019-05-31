@@ -8,6 +8,7 @@
 
 namespace Nautilus.Common.Componentry
 {
+    using System.Collections.Generic;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
     using Nautilus.Messaging;
@@ -33,7 +34,7 @@ namespace Nautilus.Common.Componentry
         }
 
         /// <summary>
-        /// Sends the given object to the given endpoint via the message bus.
+        /// Sends the given message to the given address via the message bus.
         /// </summary>
         /// <param name="receiver">The message receiver.</param>
         /// <param name="message">The message to send.</param>
@@ -42,6 +43,21 @@ namespace Nautilus.Common.Componentry
             where T : Message
         {
             this.messagingAdapter.Send(receiver, message, this.Address);
+        }
+
+        /// <summary>
+        /// Sends the given message to the given address via the message bus.
+        /// </summary>
+        /// <param name="receivers">The message receivers.</param>
+        /// <param name="message">The message to send.</param>
+        /// <typeparam name="T">The message type.</typeparam>
+        protected void SendAll<T>(List<Address> receivers, T message)
+            where T : Message
+        {
+            for (var i = 0; i < receivers.Count; i++)
+            {
+                this.messagingAdapter.Send(receivers[i], message, this.Address);
+            }
         }
     }
 }

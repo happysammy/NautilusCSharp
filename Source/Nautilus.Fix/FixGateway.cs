@@ -13,7 +13,6 @@ namespace Nautilus.Fix
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Documents;
-    using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
@@ -271,7 +270,7 @@ namespace Nautilus.Fix
                         this.NewGuid(),
                         this.TimeNow());
 
-                    this.SendToInstrumentReceivers(dataDelivery);
+                    this.SendAll(this.instrumentReceivers, dataDelivery);
                 }
             });
         }
@@ -332,7 +331,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     timestamp);
 
-                this.SendToAccountEventReceivers(accountEvent);
+                this.SendAll(this.accountEventReceivers, accountEvent);
 
                 this.Log.Debug(
                     $"AccountEvent: " +
@@ -361,7 +360,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderRejected);
+                this.SendAll(this.executionEventReceivers, orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -393,7 +392,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderCancelReject);
+                this.SendAll(this.executionEventReceivers, orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -424,7 +423,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderCancelled);
+                this.SendAll(this.executionEventReceivers, orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {label} " +
@@ -458,7 +457,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderModified);
+                this.SendAll(this.executionEventReceivers, orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {label} " +
@@ -508,7 +507,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderWorking);
+                this.SendAll(this.executionEventReceivers, orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -547,7 +546,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderExpired);
+                this.SendAll(this.executionEventReceivers, orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {label} " +
@@ -593,7 +592,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderFilled);
+                this.SendAll(this.executionEventReceivers, orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: " +
@@ -645,7 +644,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToExecutionEventReceivers(orderPartiallyFilled);
+                this.SendAll(this.executionEventReceivers, orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: " +
@@ -685,30 +684,6 @@ namespace Nautilus.Fix
             for (var i = 0; i < this.tickReceivers.Count; i++)
             {
                 this.tickReceivers[i].Send(tick);
-            }
-        }
-
-        private void SendToAccountEventReceivers(Event message)
-        {
-            for (var i = 0; i < this.accountEventReceivers.Count; i++)
-            {
-                this.Send(this.accountEventReceivers[i], message);
-            }
-        }
-
-        private void SendToExecutionEventReceivers(Event message)
-        {
-            for (var i = 0; i < this.executionEventReceivers.Count; i++)
-            {
-                this.Send(this.executionEventReceivers[i], message);
-            }
-        }
-
-        private void SendToInstrumentReceivers(DataDelivery<Instrument> message)
-        {
-            for (var i = 0; i < this.instrumentReceivers.Count; i++)
-            {
-                this.Send(this.instrumentReceivers[i], message);
             }
         }
     }
