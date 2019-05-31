@@ -10,7 +10,6 @@ namespace Nautilus.Serialization.Internal
 {
     using System;
     using MsgPack;
-    using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Identifiers;

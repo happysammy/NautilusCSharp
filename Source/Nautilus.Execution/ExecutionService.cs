@@ -16,13 +16,10 @@ namespace Nautilus.Execution
     using Nautilus.Common.Messages.Commands;
     using Nautilus.Common.Messages.Events;
     using Nautilus.Common.Messaging;
-    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using Nautilus.Core.Extensions;
-    using Nautilus.Execution.Messages.Commands;
     using Nautilus.Messaging;
     using Nautilus.Messaging.Interfaces;
-    using Nautilus.Network;
     using Nautilus.Scheduler;
     using NodaTime;
 

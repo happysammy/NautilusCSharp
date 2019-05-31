@@ -11,8 +11,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using MsgPack;
-    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.Serialization.Internal;
     using Nautilus.TestSuite.TestKit.TestDoubles;

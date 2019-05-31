@@ -13,7 +13,6 @@ namespace Nautilus.DomainModel.Events
     using Nautilus.Core.Correctness;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>

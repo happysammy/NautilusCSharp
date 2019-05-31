@@ -8,12 +8,10 @@
 
 namespace Nautilus.TestSuite.UnitTests.ExecutionTests
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
     using Nautilus.Common.Interfaces;
-    using Nautilus.DomainModel.Events;
     using Nautilus.Execution.Network;
     using Nautilus.Messaging.Interfaces;
     using Nautilus.Network;
