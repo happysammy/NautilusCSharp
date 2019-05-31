@@ -18,6 +18,7 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
+    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
@@ -26,9 +27,17 @@ namespace Nautilus.Execution
     [PerformanceOptimized]
     public class OrderManager : ComponentBusConnectedBase
     {
-        private readonly List<Order> orders;
-        private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
         private readonly IFixGateway gateway;
+        private readonly Dictionary<TraderId, List<OrderId>> traderIndex;
+        private readonly Dictionary<OrderId, Order> orderBook;
+        private readonly Dictionary<OrderId, Order> ordersActive;
+        private readonly Dictionary<OrderId, Order> ordersCompleted;
+        private readonly Dictionary<OrderId, List<ModifyOrder>> modifyCache;
+        private readonly Dictionary<OrderId, ModifyOrder> modifyBuffer;
+        private readonly Dictionary<OrderId, CancelOrder> cancelBuffer;
+
+        private int commandCount;
+        private int eventCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderManager"/> class.
@@ -42,100 +51,163 @@ namespace Nautilus.Execution
             IFixGateway gateway)
             : base(container, messagingAdapter)
         {
-            this.orders = new List<Order>();
-            this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
             this.gateway = gateway;
+            this.traderIndex = new Dictionary<TraderId, List<OrderId>>();
+            this.orderBook = new Dictionary<OrderId, Order>();
+            this.ordersActive = new Dictionary<OrderId, Order>();
+            this.ordersCompleted = new Dictionary<OrderId, Order>();
+            this.modifyCache = new Dictionary<OrderId, List<ModifyOrder>>();
+            this.modifyBuffer = new Dictionary<OrderId, ModifyOrder>();
+            this.cancelBuffer = new Dictionary<OrderId, CancelOrder>();
+
+            this.commandCount = 0;
+            this.eventCount = 0;
 
             this.RegisterHandler<SubmitOrder>(this.OnMessage);
             this.RegisterHandler<SubmitAtomicOrder>(this.OnMessage);
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
-            this.RegisterHandler<CollateralInquiry>(this.OnMessage);
             this.RegisterHandler<Event>(this.OnMessage);
         }
 
+        /// <summary>
+        /// Gets the number of commands received by the order manager.
+        /// </summary>
+        public int CommandsCount => this.commandCount;
+
+        /// <summary>
+        /// Gets the number of events received by the order manager.
+        /// </summary>
+        public int EventsCount => this.eventCount;
+
         private void OnMessage(SubmitOrder message)
         {
+            this.commandCount++;
+
             var order = message.Order;
-            this.orders.Add(order);
-            this.Log.Debug($"Order {order.Id} added to order list.");
 
-            this.Send(ExecutionServiceAddress.Core, message);
-
-            if (!(order.Price is null) && !this.modifyCache.ContainsKey(order.Id))
+            if (this.cancelBuffer.ContainsKey(order.Id))
             {
-                // Buffer modification cache preemptively.
-                this.modifyCache.Add(order.Id, new List<ModifyOrder>());
+                this.Log.Warning($"Cannot submit order ({this.cancelBuffer[order.Id]} already received).");
+                this.cancelBuffer.Remove(order.Id);
+                return;
             }
+
+            if (this.OrderBookContainsId(order.Id, message.ToString()))
+            {
+                return; // Error logged.
+            }
+
+            this.orderBook.Add(order.Id, order);
+            this.CreateModifyCache(order);
+
+            this.gateway.SubmitOrder(order);
+            this.Log.Debug($"Sent cached {message} to FixGateway.");
         }
 
         private void OnMessage(SubmitAtomicOrder message)
         {
+            this.commandCount++;
+
+            var atomicOrder = message.AtomicOrder;
+
+            if (this.OrderBookContainsId(atomicOrder.Entry.Id, message.ToString()))
+            {
+                return; // Error logged.
+            }
+
+            if (this.OrderBookContainsId(atomicOrder.StopLoss.Id, message.ToString()))
+            {
+                return; // Error logged.
+            }
+
+            if (atomicOrder.HasTakeProfit)
+            {
+                if (this.OrderBookContainsId(atomicOrder.TakeProfit.Id, message.ToString()))
+                {
+                    return; // Error logged.
+                }
+
+                this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
+                this.CreateModifyCache(atomicOrder.TakeProfit);
+            }
+
+            this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
+            this.orderBook.Add(atomicOrder.StopLoss.Id, atomicOrder.Entry);
+            this.CreateModifyCache(atomicOrder.Entry);
+            this.CreateModifyCache(atomicOrder.StopLoss);
+
             this.gateway.SubmitOrder(message.AtomicOrder);
+            this.Log.Debug($"Sent cached {message} to FixGateway.");
         }
 
         private void OnMessage(CancelOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.OrderId));
+            this.commandCount++;
 
-            if (order is null)
+            if (this.OrderBookDoesNotContainId(message.OrderId, message.ToString()))
             {
-                this.Log.Warning($"Order not found for CancelOrder (command order_id={message.OrderId}).");
-                return;
+                this.cancelBuffer.Add(message.OrderId, message);
+                return; // Error logged.
             }
 
-            this.Send(ExecutionServiceAddress.Core, message);
+            this.gateway.CancelOrder(this.orderBook[message.OrderId]);
+            this.Log.Debug($"Sent cached {message} to FixGateway.");
         }
 
         private void OnMessage(ModifyOrder message)
         {
-            var order = this.orders.FirstOrDefault(o => o.Id.Equals(message.OrderId));
+            this.commandCount++;
 
-            if (order is null)
+            if (this.OrderBookDoesNotContainId(message.OrderId, message.ToString()))
             {
-                this.Log.Warning($"Order not found for ModifyOrder (command order_id={message.OrderId}).");
-                return;
+                if (this.modifyBuffer.ContainsKey(message.OrderId))
+                {
+                    // Remove previously buffered ModifyOrder command.
+                    this.modifyBuffer.Remove(message.OrderId);
+                }
+
+                this.modifyBuffer.Add(message.OrderId, message);
+                return; // Error logged.
             }
 
-            if (!this.modifyCache.ContainsKey(order.Id))
-            {
-                // No cache for order id (this should never happen).
-                this.Log.Warning($"No modification cache found for {order.Id}.");
-                return;
-            }
+            var order = this.orderBook[message.OrderId];
 
             if (this.modifyCache[order.Id].Count == 0)
             {
-                this.Send(ExecutionServiceAddress.Core, message);
-                this.AddToCache(message);
+                this.gateway.ModifyOrder(order, message.ModifiedPrice);
+                this.Log.Debug($"Sent cached {message} to FixGateway.");
             }
-            else
-            {
-                this.AddToCache(message);
-            }
-        }
 
-        private void OnMessage(CollateralInquiry message)
-        {
-            this.gateway.CollateralInquiry();
+            this.AddToModifyCache(message);
         }
 
         private void OnMessage(Event @event)
         {
-            this.Log.Debug($"Event {@event} received.");
+            this.eventCount++;
 
             if (@event is OrderEvent orderEvent)
             {
-                var order = this.orders.FirstOrDefault(o => o.Id == orderEvent.OrderId);
-
-                if (order is null)
+                if (this.OrderBookDoesNotContainId(orderEvent.OrderId, orderEvent.ToString()))
                 {
-                    this.Log.Warning($"Order not found for OrderEvent (event order_id={orderEvent.Id}).");
-                    return;
+                    return; // Error logged.
                 }
 
+                var order = this.orderBook[orderEvent.OrderId];
                 order.Apply(orderEvent);
+
                 this.Log.Debug($"Applied {@event} to {order.Id}.");
+
+                if (orderEvent is OrderWorking working)
+                {
+                    if (this.modifyBuffer.ContainsKey(working.OrderId))
+                    {
+                        // Send previously buffered ModifyOrder command to gateway.
+                        var buffered = this.modifyBuffer[working.OrderId];
+                        this.gateway.ModifyOrder(order, buffered.ModifiedPrice);
+                        this.modifyBuffer.Remove(working.OrderId);
+                    }
+                }
 
                 if (order.IsComplete)
                 {
@@ -154,47 +226,44 @@ namespace Nautilus.Execution
             }
 
             this.Send(ExecutionServiceAddress.EventServer, @event);
+            this.Log.Debug($"Sent cached {@event} to EventServer.");
         }
 
-        private void AddToCache(ModifyOrder modifyOrder)
+        private void CreateModifyCache(Order order)
         {
-            var orderId = modifyOrder.OrderId;
+            if (order.Price is null)
+            {
+                return; // No need to cache.
+            }
+
+            if (this.modifyCache.ContainsKey(order.Id))
+            {
+                this.Log.Error($"Cannot create modify cache for {order} (duplicate key already in cache).");
+                return; // This should never happen.
+            }
+
+            this.modifyCache.Add(order.Id, new List<ModifyOrder>());
+        }
+
+        private void AddToModifyCache(ModifyOrder command)
+        {
+            var orderId = command.OrderId;
             if (!this.modifyCache.ContainsKey(orderId))
             {
-                // No cache for order id (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no cache for {orderId}.");
-                return;
+                this.Log.Error($"Cannot add {command} to modify cache (no cache for {orderId}).");
+                return; // This should never happen.
             }
 
-            // Any cached modify order command price equals the new modify order command price?
-            if (this.modifyCache[orderId].Any(command => command.ModifiedPrice.Equals(modifyOrder.ModifiedPrice)))
-            {
-                // No need to cache.
-                this.Log.Debug($"Duplicate price for {modifyOrder}, not cached.");
-                return;
-            }
-
-            this.modifyCache[orderId].Add(modifyOrder);
-            this.Log.Debug($"Added {modifyOrder} to cache.");
+            this.modifyCache[orderId].Add(command);
+            this.Log.Debug($"Added {command} to cache.");
         }
 
         private void ProcessCache(Order order)
         {
-            if (!this.modifyCache.ContainsKey(order.Id))
+            if (this.OrderBookDoesNotContainId(order.Id, "modify cache"))
             {
-                // Cannot process - no cache for order id (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no cache for {order.Id}.");
-                return;
+                return; // Error logged.
             }
-
-            if (order.Price is null)
-            {
-                // Cannot process - no price for order (this should never happen).
-                this.Log.Warning($"Cannot process modification cache, no price {order.Id}.");
-                return;
-            }
-
-            this.Log.Verbose($"Processing modify order cache...");
 
             foreach (var command in this.modifyCache[order.Id].ToList())
             {
@@ -207,11 +276,35 @@ namespace Nautilus.Execution
 
             if (this.modifyCache[order.Id].Count > 0)
             {
-                var command = this.modifyCache[order.Id][0];
+                var nextCached = this.modifyCache[order.Id][0];
+                this.modifyCache[order.Id].RemoveAt(0);
+                this.Log.Verbose($"Removed {nextCached} from cache.");
 
-                this.Send(ExecutionServiceAddress.Core, command);
-                this.Log.Debug($"Sent cached {command}.");
+                this.gateway.ModifyOrder(order, nextCached.ModifiedPrice);
+                this.Log.Debug($"Sent cached {nextCached} to FixGateway.");
             }
+        }
+
+        private bool OrderBookDoesNotContainId(OrderId id, string message)
+        {
+            if (!this.orderBook.ContainsKey(id))
+            {
+                this.Log.Error($"Cannot process {message} (order id not found in order book).");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool OrderBookContainsId(OrderId id, string message)
+        {
+            if (this.orderBook.ContainsKey(id))
+            {
+                this.Log.Error($"Cannot process {message} (duplicate order id in order book).");
+                return false;
+            }
+
+            return true;
         }
     }
 }

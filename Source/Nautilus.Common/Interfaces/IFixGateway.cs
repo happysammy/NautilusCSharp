@@ -9,14 +9,11 @@
 namespace Nautilus.Common.Interfaces
 {
     using System.Collections.Generic;
-    using Nautilus.Core;
     using Nautilus.DomainModel.Aggregates;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.ValueObjects;
-    using Nautilus.Messaging;
-    using Nautilus.Messaging.Interfaces;
     using NodaTime;
 
     /// <summary>
@@ -33,30 +30,6 @@ namespace Nautilus.Common.Interfaces
         /// Gets a value indicating whether the gateway is connected.
         /// </summary>
         bool IsConnected { get; }
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        void RegisterTickReceiver(IEndpoint receiver);
-
-        /// <summary>
-        /// Registers the receiver to receive connection events from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        void RegisterConnectionEventReceiver(Address receiver);
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Event"/>s from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        void RegisterEventReceiver(Address receiver);
-
-        /// <summary>
-        /// Registers the receiver to receive <see cref="Instrument"/> updates from the gateway.
-        /// </summary>
-        /// <param name="receiver">The receiver.</param>
-        void RegisterInstrumentReceiver(Address receiver);
 
         /// <summary>
         /// Sends an update and subscribe request message for the instrument of the given symbol.

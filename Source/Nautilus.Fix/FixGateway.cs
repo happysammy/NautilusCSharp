@@ -21,6 +21,7 @@ namespace Nautilus.Fix
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Events;
+    using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
@@ -36,7 +37,8 @@ namespace Nautilus.Fix
     {
         private readonly IFixClient fixClient;
         private readonly List<IEndpoint> tickReceivers;
-        private readonly List<Address> eventReceivers;
+        private readonly List<Address> accountEventReceivers;
+        private readonly List<Address> executionEventReceivers;
         private readonly List<Address> instrumentReceivers;
         private readonly Currency accountCurrency = Currency.AUD;  // TODO
 
@@ -54,7 +56,8 @@ namespace Nautilus.Fix
         {
             this.fixClient = fixClient;
             this.tickReceivers = new List<IEndpoint>();
-            this.eventReceivers = new List<Address>();
+            this.accountEventReceivers = new List<Address>();
+            this.executionEventReceivers = new List<Address>();
             this.instrumentReceivers = new List<Address>();
 
             this.RegisterHandler<ConnectFix>(this.OnMessage);
@@ -67,7 +70,10 @@ namespace Nautilus.Fix
         /// <inheritdoc />
         public bool IsConnected => this.fixClient.IsConnected;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Registers the receiver to receive <see cref="Tick"/>s from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
         public void RegisterTickReceiver(IEndpoint receiver)
         {
             Debug.NotIn(receiver, this.tickReceivers, nameof(receiver), nameof(this.tickReceivers));
@@ -75,21 +81,41 @@ namespace Nautilus.Fix
             this.tickReceivers.Add(receiver);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Registers the receiver to receive connection events from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
         public void RegisterConnectionEventReceiver(Address receiver)
         {
             this.fixClient.RegisterConnectionEventReceiver(receiver);
         }
 
-        /// <inheritdoc />
-        public void RegisterEventReceiver(Address receiver)
+        /// <summary>
+        /// Registers the receiver to receive <see cref="AccountEvent"/>s from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterAccountEventReceiver(Address receiver)
         {
-            Debug.NotIn(receiver, this.eventReceivers, nameof(receiver), nameof(this.eventReceivers));
+            Debug.NotIn(receiver, this.accountEventReceivers, nameof(receiver), nameof(this.accountEventReceivers));
 
-            this.eventReceivers.Add(receiver);
+            this.accountEventReceivers.Add(receiver);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Registers the receiver to receive <see cref="OrderEvent"/>s from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
+        public void RegisterOrderEventReceiver(Address receiver)
+        {
+            Debug.NotIn(receiver, this.executionEventReceivers, nameof(receiver), nameof(this.executionEventReceivers));
+
+            this.executionEventReceivers.Add(receiver);
+        }
+
+        /// <summary>
+        /// Registers the receiver to receive <see cref="Instrument"/> updates from the gateway.
+        /// </summary>
+        /// <param name="receiver">The receiver.</param>
         public void RegisterInstrumentReceiver(Address receiver)
         {
             Debug.NotIn(receiver, this.instrumentReceivers, nameof(receiver), nameof(this.instrumentReceivers));
@@ -306,7 +332,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     timestamp);
 
-                this.SendToEventReceivers(accountEvent);
+                this.SendToAccountEventReceivers(accountEvent);
 
                 this.Log.Debug(
                     $"AccountEvent: " +
@@ -335,7 +361,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderRejected);
+                this.SendToExecutionEventReceivers(orderRejected);
 
                 this.Log.Warning(
                     $"OrderRejected: " +
@@ -367,7 +393,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderCancelReject);
+                this.SendToExecutionEventReceivers(orderCancelReject);
 
                 this.Log.Warning(
                     $"OrderCancelReject: " +
@@ -398,7 +424,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderCancelled);
+                this.SendToExecutionEventReceivers(orderCancelled);
 
                 this.Log.Information(
                     $"OrderCancelled: {label} " +
@@ -432,7 +458,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderModified);
+                this.SendToExecutionEventReceivers(orderModified);
 
                 this.Log.Information(
                     $"OrderModified: {label} " +
@@ -482,7 +508,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderWorking);
+                this.SendToExecutionEventReceivers(orderWorking);
 
                 var expireTimeString = string.Empty;
 
@@ -521,7 +547,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderExpired);
+                this.SendToExecutionEventReceivers(orderExpired);
 
                 this.Log.Information(
                     $"OrderExpired: {label} " +
@@ -567,7 +593,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderFilled);
+                this.SendToExecutionEventReceivers(orderFilled);
 
                 this.Log.Information(
                     $"OrderFilled: " +
@@ -619,7 +645,7 @@ namespace Nautilus.Fix
                     this.NewGuid(),
                     this.TimeNow());
 
-                this.SendToEventReceivers(orderPartiallyFilled);
+                this.SendToExecutionEventReceivers(orderPartiallyFilled);
 
                 this.Log.Information(
                     $"OrderPartiallyFilled: " +
@@ -666,11 +692,19 @@ namespace Nautilus.Fix
             }
         }
 
-        private void SendToEventReceivers(Event message)
+        private void SendToAccountEventReceivers(Event message)
         {
-            for (var i = 0; i < this.eventReceivers.Count; i++)
+            for (var i = 0; i < this.accountEventReceivers.Count; i++)
             {
-                this.Send(this.eventReceivers[i], message);
+                this.Send(this.accountEventReceivers[i], message);
+            }
+        }
+
+        private void SendToExecutionEventReceivers(Event message)
+        {
+            for (var i = 0; i < this.executionEventReceivers.Count; i++)
+            {
+                this.Send(this.executionEventReceivers[i], message);
             }
         }
 

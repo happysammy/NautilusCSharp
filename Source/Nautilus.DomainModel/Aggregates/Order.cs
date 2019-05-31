@@ -341,7 +341,7 @@ namespace Nautilus.DomainModel.Aggregates
         /// Returns a string representation of the <see cref="Order"/>.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{nameof(Order)}-{this.Symbol}-{this.Id}";
+        public override string ToString() => $"{nameof(Order)}({this.Id})";
 
         /// <summary>
         /// Creates and returns a new order FSM.
