@@ -19,17 +19,16 @@ namespace Nautilus.Execution
     using Nautilus.DomainModel.Events;
     using Nautilus.DomainModel.Events.Base;
     using Nautilus.DomainModel.Identifiers;
-    using Nautilus.Execution.Identifiers;
     using Nautilus.Execution.Messages.Commands;
 
     /// <summary>
     /// Provides an <see cref="Order"/> manager.
     /// </summary>
     [PerformanceOptimized]
-    public class OrderManager : ComponentBusConnectedBase
+    public class OrderManager : ComponentBusConnected
     {
         private readonly IFixGateway gateway;
-        private readonly Dictionary<TraderId, List<OrderId>> traderIndex;
+        private readonly OrderRegister register;
         private readonly Dictionary<OrderId, Order> orderBook;
         private readonly Dictionary<OrderId, Order> ordersActive;
         private readonly Dictionary<OrderId, Order> ordersCompleted;
@@ -53,7 +52,7 @@ namespace Nautilus.Execution
             : base(container, messagingAdapter)
         {
             this.gateway = gateway;
-            this.traderIndex = new Dictionary<TraderId, List<OrderId>>();
+            this.register = new OrderRegister(container);
             this.orderBook = new Dictionary<OrderId, Order>();
             this.ordersActive = new Dictionary<OrderId, Order>();
             this.ordersCompleted = new Dictionary<OrderId, Order>();
@@ -97,6 +96,7 @@ namespace Nautilus.Execution
                 return; // Error logged.
             }
 
+            this.register.Register(message);
             this.orderBook.Add(order.Id, order);
             this.CreateModifyCache(order);
 
@@ -126,21 +126,22 @@ namespace Nautilus.Execution
                 return; // Error logged.
             }
 
-            if (atomicOrder.HasTakeProfit)
+            if (atomicOrder.TakeProfit != null &&
+                this.OrderBookContainsId(atomicOrder.TakeProfit.Id, message.ToString()))
             {
-                if (this.OrderBookContainsId(atomicOrder.TakeProfit.Id, message.ToString()))
-                {
-                    return; // Error logged.
-                }
-
-                this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
-                this.CreateModifyCache(atomicOrder.TakeProfit);
+                return; // Error logged.
             }
 
+            this.register.Register(message);
             this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
             this.orderBook.Add(atomicOrder.StopLoss.Id, atomicOrder.Entry);
             this.CreateModifyCache(atomicOrder.Entry);
             this.CreateModifyCache(atomicOrder.StopLoss);
+            if (atomicOrder.TakeProfit != null)
+            {
+                this.orderBook.Add(atomicOrder.Entry.Id, atomicOrder.Entry);
+                this.CreateModifyCache(atomicOrder.TakeProfit);
+            }
 
             this.gateway.SubmitOrder(message.AtomicOrder);
             this.Log.Debug($"Sent cached {message} to FixGateway.");
@@ -214,8 +215,26 @@ namespace Nautilus.Execution
                     }
                 }
 
+                if (order.IsActive)
+                {
+                    if (!this.ordersActive.ContainsKey(order.Id))
+                    {
+                        this.ordersActive.Add(order.Id, order);
+                    }
+                }
+
                 if (order.IsComplete)
                 {
+                    if (!this.ordersCompleted.ContainsKey(order.Id))
+                    {
+                        this.ordersCompleted.Add(order.Id, order);
+                    }
+
+                    if (this.ordersActive.ContainsKey(order.Id))
+                    {
+                        this.ordersActive.Remove(order.Id);
+                    }
+
                     if (this.modifyCache.ContainsKey(order.Id))
                     {
                         // Flush cache.
@@ -224,9 +243,15 @@ namespace Nautilus.Execution
                     }
                 }
 
-                if (@event is OrderModified)
+                switch (@event)
                 {
-                    this.ProcessCache(order);
+                    case OrderModified _:
+                        this.ProcessCache(order);
+                        break;
+                    case OrderRejected _:
+                    case OrderCancelReject _:
+                        this.Log.Warning(@event.ToString());
+                        break;
                 }
             }
 
@@ -272,6 +297,12 @@ namespace Nautilus.Execution
 
             foreach (var command in this.modifyCache[order.Id].ToList())
             {
+                if (order.Price is null)
+                {
+                    this.Log.Error($"Cannot process {command} ({order} price is null).");
+                    continue;
+                }
+
                 if (order.Price.Equals(command.ModifiedPrice))
                 {
                     this.modifyCache[order.Id].Remove(command);

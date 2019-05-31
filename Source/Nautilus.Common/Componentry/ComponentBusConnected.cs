@@ -1,5 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------------------
-// <copyright file="ComponentBusConnectedBase.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="ComponentBusConnected.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -15,16 +15,16 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// The base class for all components which are connected to the message bus.
     /// </summary>
-    public abstract class ComponentBusConnectedBase : ComponentBase
+    public abstract class ComponentBusConnected : Component
     {
         private readonly IMessagingAdapter messagingAdapter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBusConnectedBase"/> class.
+        /// Initializes a new instance of the <see cref="ComponentBusConnected"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="messagingAdapter">The messaging adapter.</param>
-        protected ComponentBusConnectedBase(
+        protected ComponentBusConnected(
             IComponentryContainer container,
             IMessagingAdapter messagingAdapter)
             : base(container)

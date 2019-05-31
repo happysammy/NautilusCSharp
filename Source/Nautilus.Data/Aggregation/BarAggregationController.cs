@@ -27,7 +27,7 @@ namespace Nautilus.Data.Aggregation
     /// Provides a bar aggregation controller to manage bar aggregators for many symbols.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class BarAggregationController : ComponentBusConnectedBase
+    public sealed class BarAggregationController : ComponentBusConnected
     {
         private readonly IComponentryContainer storedContainer;
         private readonly IScheduler scheduler;

@@ -22,7 +22,7 @@ namespace Nautilus.Network
     /// Provides a message throttler.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class Throttler : ComponentBase
+    public sealed class Throttler : Component
     {
         private readonly IEndpoint receiver;
         private readonly TimeSpan interval;

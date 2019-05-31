@@ -29,7 +29,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides an execution service.
     /// </summary>
-    public sealed class ExecutionService : ComponentBusConnectedBase
+    public sealed class ExecutionService : ComponentBusConnected
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;
@@ -87,6 +87,8 @@ namespace Nautilus.Execution
                 this.InstantNow()))
             {
                 this.Send(ExecutionServiceAddress.FixGateway, message);
+                this.Send(ExecutionServiceAddress.CommandServer, message);
+                this.Send(ExecutionServiceAddress.EventServer, message);
             }
             else
             {
@@ -101,6 +103,8 @@ namespace Nautilus.Execution
 
             // Forward message.
             this.Send(ExecutionServiceAddress.FixGateway, message);
+            this.Send(ExecutionServiceAddress.CommandServer, message);
+            this.Send(ExecutionServiceAddress.EventServer, message);
         }
 
         private void OnMessage(ConnectFix message)

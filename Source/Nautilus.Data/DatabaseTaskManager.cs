@@ -22,7 +22,7 @@ namespace Nautilus.Data
     /// <summary>
     /// The component manages the queue of job messages being sent to the database.
     /// </summary>
-    public class DatabaseTaskManager : ComponentBase
+    public class DatabaseTaskManager : Component
     {
         private readonly IBarRepository barRepository;
         private readonly IInstrumentRepository instrumentRepository;

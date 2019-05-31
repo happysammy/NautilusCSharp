@@ -33,7 +33,7 @@ namespace Nautilus.Fix
     /// Provides a gateway to, and anti-corruption layer from, the FIX module of the service.
     /// </summary>
     [PerformanceOptimized]
-    public sealed class FixGateway : ComponentBusConnectedBase, IFixGateway
+    public sealed class FixGateway : ComponentBusConnected, IFixGateway
     {
         private readonly IFixClient fixClient;
         private readonly List<IEndpoint> tickReceivers;

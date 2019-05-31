@@ -24,7 +24,7 @@ namespace Nautilus.Brokerage.FXCM
     /// <summary>
     /// Provides an implementation for routing FXCM FIX messages.
     /// </summary>
-    public class FxcmFixMessageRouter : ComponentBase, IFixMessageRouter
+    public class FxcmFixMessageRouter : Component, IFixMessageRouter
     {
         private readonly SymbolConverter symbolConverter;
         private readonly string accountNumber;

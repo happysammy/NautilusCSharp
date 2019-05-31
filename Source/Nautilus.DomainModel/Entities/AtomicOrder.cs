@@ -36,7 +36,6 @@ namespace Nautilus.DomainModel.Entities
             this.Entry = entry;
             this.StopLoss = stopLoss;
             this.TakeProfit = takeProfit;
-            this.HasTakeProfit = takeProfit != null;
         }
 
         /// <summary>
@@ -58,10 +57,5 @@ namespace Nautilus.DomainModel.Entities
         /// Gets the atomic orders profit target order (optional).
         /// </summary>
         public Order? TakeProfit { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the atomic order has a take .
-        /// </summary>
-        public bool HasTakeProfit { get; }
     }
 }

@@ -30,7 +30,7 @@ namespace Nautilus.Brokerage.Dukascopy
     /// <summary>
     /// Provides an implementation for handling Dukascopy FIX messages.
     /// </summary>
-    public class DukascopyFixMessageHandler : ComponentBase, IFixMessageHandler
+    public class DukascopyFixMessageHandler : Component, IFixMessageHandler
     {
         private readonly SymbolConverter symbolConverter;
 

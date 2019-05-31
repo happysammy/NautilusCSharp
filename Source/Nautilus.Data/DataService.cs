@@ -28,7 +28,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides a data service.
     /// </summary>
-    public sealed class DataService : ComponentBusConnectedBase
+    public sealed class DataService : ComponentBusConnected
     {
         private readonly IScheduler scheduler;
         private readonly IFixGateway fixGateway;

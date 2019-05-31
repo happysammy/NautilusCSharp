@@ -10,18 +10,18 @@ namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Network;
-    using Nautilus.Messaging.Interfaces;
 
     /// <summary>
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class EventServer : ComponentBusConnectedBase
+    public class EventServer : ComponentBusConnected
     {
-        private readonly IEndpoint eventPublisher;
+        private readonly EventPublisher eventPublisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventServer"/> class.
@@ -41,14 +41,33 @@ namespace Nautilus.Execution
                 container,
                 eventSerializer,
                 config.ServerAddress,
-                config.EventsPort).Endpoint;
+                config.EventsPort);
 
             this.RegisterHandler<Event>(this.OnMessage);
+
+            this.eventPublisher.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStart(Start message)
+        {
+            this.Log.Information($"Starting from {message}...");
+
+            this.eventPublisher.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop message)
+        {
+            this.Log.Information($"Stopping from {message}...");
+
+            // Forward message.
+            this.eventPublisher.Stop();
         }
 
         private void OnMessage(Event @event)
         {
-            this.eventPublisher.Send(@event);
+            this.eventPublisher.Endpoint.Send(@event);
             this.Log.Debug($"Published event {@event}.");
         }
     }

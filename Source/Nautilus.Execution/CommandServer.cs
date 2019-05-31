@@ -10,6 +10,7 @@ namespace Nautilus.Execution
 {
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Common.Messages.Commands;
     using Nautilus.Core.Annotations;
     using Nautilus.Execution.Messages.Commands;
     using Nautilus.Execution.Network;
@@ -21,7 +22,7 @@ namespace Nautilus.Execution
     /// Provides a messaging server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class CommandServer : ComponentBusConnectedBase
+    public class CommandServer : ComponentBusConnected
     {
         private readonly CommandRouter commandRouter;
         private readonly Throttler commandThrottler;
@@ -67,6 +68,25 @@ namespace Nautilus.Execution
             this.RegisterHandler<CancelOrder>(this.OnMessage);
             this.RegisterHandler<ModifyOrder>(this.OnMessage);
             this.RegisterHandler<CollateralInquiry>(this.OnMessage);
+
+            this.commandRouter.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStart(Start message)
+        {
+            this.Log.Information($"Starting from {message}...");
+
+            this.commandRouter.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStop(Stop message)
+        {
+            this.Log.Information($"Stopping from {message}...");
+
+            // Forward message.
+            this.commandRouter.Stop();
         }
 
         private void OnMessage(SubmitOrder message)

@@ -20,7 +20,7 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging consumer.
     /// </summary>
-    public abstract class Publisher : ComponentBase
+    public abstract class Publisher : Component
     {
         private readonly PublisherSocket socket;
         private int cycles;
