@@ -91,6 +91,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
             publisher.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Nautilus.Network
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace Nautilus.Network
     /// </summary>
     public abstract class Responder : Component
     {
-        private static readonly byte[] Delimiter = new byte[] { };
+        private static readonly byte[] Delimiter = { };
 
         private readonly CancellationTokenSource cts;
         private readonly ResponseSocket socket;
@@ -87,6 +86,7 @@ namespace Nautilus.Network
             this.isResponding = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
+            this.socket.Close();
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();

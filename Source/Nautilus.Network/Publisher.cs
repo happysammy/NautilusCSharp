@@ -69,6 +69,7 @@ namespace Nautilus.Network
         protected override void OnStop(Stop stop)
         {
             this.socket.Unbind(this.ServerAddress.Value);
+            this.socket.Close();
             this.Log.Debug($"Unbound publisher socket from {this.ServerAddress}");
 
             this.socket.Dispose();

@@ -75,8 +75,9 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             subscriber.Unsubscribe(barType.ToString());
             subscriber.Disconnect(testAddress);
             subscriber.Dispose();
-            publisher.Start();
+            publisher.Stop();
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+            Task.Delay(100).Wait();  // Allows sockets to dispose
         }
     }
 }

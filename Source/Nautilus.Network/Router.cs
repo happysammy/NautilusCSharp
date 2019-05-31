@@ -24,7 +24,8 @@ namespace Nautilus.Network
     /// </summary>
     public abstract class Router : Component
     {
-        private static readonly byte[] Ok = { 0x4f, 0x4b };  // "OK"
+        private static readonly byte[] Delimiter = { };  // Empty bytes.
+        private static readonly byte[] Ok = { 0x4f, 0x4b };  // "OK" UTF-8 encoding.
 
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
@@ -82,6 +83,7 @@ namespace Nautilus.Network
             this.isConsuming = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
+            this.socket.Close();
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();
@@ -101,10 +103,10 @@ namespace Nautilus.Network
         private void ConsumeMessage()
         {
             var identity = this.socket.ReceiveFrameBytes();
-            var delimiter = this.socket.ReceiveFrameBytes();
+            this.socket.ReceiveFrameBytes();  // Delimiter
             var data = this.socket.ReceiveFrameBytes();
 
-            var response = new[] { identity, delimiter, Ok };
+            var response = new[] { identity, Delimiter, Ok };
             this.socket.SendMultipartBytes(response);
 
             this.cycles++;
