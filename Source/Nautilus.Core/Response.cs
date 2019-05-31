@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="Document.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Response.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -14,18 +14,18 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all <see cref="Document"/> messages.
+    /// The base class for all <see cref="Response"/> messages.
     /// </summary>
     [Immutable]
-    public abstract class Document : Message
+    public abstract class Response : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Document"/> class.
+        /// Initializes a new instance of the <see cref="Response"/> class.
         /// </summary>
-        /// <param name="type">The document type.</param>
-        /// <param name="id">The document identifier.</param>
-        /// <param name="timestamp">The document timestamp.</param>
-        protected Document(
+        /// <param name="type">The response type.</param>
+        /// <param name="id">The response identifier.</param>
+        /// <param name="timestamp">The response timestamp.</param>
+        protected Response(
             Type type,
             Guid id,
             ZonedDateTime timestamp)

@@ -14,7 +14,7 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all events.
+    /// The base class for all <see cref="Event"/> messages.
     /// </summary>
     [Immutable]
     public abstract class Event : Message

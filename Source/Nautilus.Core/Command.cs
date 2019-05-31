@@ -14,7 +14,7 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all commands.
+    /// The base class for all <see cref="Command"/> messages.
     /// </summary>
     [Immutable]
     public abstract class Command : Message

@@ -14,7 +14,7 @@ namespace Nautilus.Core
     using NodaTime;
 
     /// <summary>
-    /// The base class for all messages.
+    /// The base class for all <see cref="Message"/>s.
     /// </summary>
     [Immutable]
     public abstract class Message
