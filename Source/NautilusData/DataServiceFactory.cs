@@ -67,16 +67,17 @@ namespace NautilusData
                 fixClient);
 
             var redisConnection = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var tickRepository = new InMemoryTickStore(container);
             var barRepository = new RedisBarRepository(redisConnection);
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
             var tickResponder = new TickResponder(
                 container,
-                new InMemoryTickStore(),
+                tickRepository,
                 new MsgPackRequestSerializer(),
                 config.ServerAddress,
-                config.TickSubscribePort);
+                config.TickRequestPort);
 
             var tickPublisher = new TickPublisher(
                 container,
@@ -123,6 +124,7 @@ namespace NautilusData
             // Wire up service.
             fixGateway.RegisterConnectionEventReceiver(DataServiceAddress.Core);
             fixGateway.RegisterTickReceiver(tickPublisher.Endpoint);
+            fixGateway.RegisterTickReceiver(tickRepository.Endpoint);
             fixGateway.RegisterTickReceiver(barAggregationController.Endpoint);
             fixGateway.RegisterInstrumentReceiver(DataServiceAddress.DatabaseTaskManager);
             fixGateway.RegisterInstrumentReceiver(DataServiceAddress.InstrumentPublisher);
@@ -133,6 +135,7 @@ namespace NautilusData
                 { DataServiceAddress.FixGateway, fixGateway.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { DataServiceAddress.TickStore, tickRepository.Endpoint },
                 { DataServiceAddress.TickResponder, tickResponder.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarResponder, barResponder.Endpoint },

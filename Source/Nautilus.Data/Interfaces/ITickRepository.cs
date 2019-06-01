@@ -10,7 +10,6 @@ namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -24,13 +23,13 @@ namespace Nautilus.Data.Interfaces
         /// </summary>
         /// <param name="symbol">The tick symbol to count.</param>
         /// <returns>An <see cref="int"/>.</returns>
-        long TicksCount(Symbol symbol);
+        int TicksCount(Symbol symbol);
 
         /// <summary>
         /// Returns the total count of ticks held within the repository.
         /// </summary>
         /// <returns>A <see cref="int"/>.</returns>
-        long AllTicksCount();
+        int AllTicksCount();
 
         /// <summary>
         /// Add the given tick to the repository.
@@ -66,10 +65,10 @@ namespace Nautilus.Data.Interfaces
         QueryResult<ZonedDateTime> LastTickTimestamp(Symbol symbol);
 
         /// <summary>
-        /// Removes the difference in date keys for each symbol from the repository.
+        /// Removes the ticks prior to the given trim from date time.
         /// </summary>
-        /// <param name="trimToDays">The number of days (keys) to trim to.</param>
+        /// <param name="trimFrom">The date time the tick data should be trimmed from.</param>
         /// <returns>The result of the operation.</returns>
-        CommandResult TrimToDays(int trimToDays);
+        CommandResult TrimFrom(ZonedDateTime trimFrom);
     }
 }

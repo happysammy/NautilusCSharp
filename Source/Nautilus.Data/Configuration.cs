@@ -87,7 +87,8 @@ namespace Nautilus.Data
                 disconnectTime);
 
             // Data Settings
-            this.SymbolIndex = JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolsIndex);
+            this.SymbolIndex =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(symbolsIndex);
 
             var symbols = (JArray)configJson[ConfigSection.Data]["symbols"];
             this.SubscribingSymbols = symbols
@@ -102,10 +103,16 @@ namespace Nautilus.Data
                 .Select(BarSpecificationFactory.Create)
                 .ToImmutableList();
 
-            var trimDay = configJson[ConfigSection.Data]["barDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();
-            var trimHour = (int)configJson[ConfigSection.Data]["barDataTrimHour"];
-            var trimMinute = (int)configJson[ConfigSection.Data]["barDataTrimMinute"];
-            this.BarDataTrimTime = (trimDay, new LocalTime(trimHour, trimMinute));
+            var tickTrimDay = configJson[ConfigSection.Data]["tickDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();
+            var tickTrimHour = (int)configJson[ConfigSection.Data]["tickDataTrimHour"];
+            var tickTrimMinute = (int)configJson[ConfigSection.Data]["tickDataTrimMinute"];
+            this.TickDataTrimTime = (tickTrimDay, new LocalTime(tickTrimHour, tickTrimMinute));
+            this.TickDataTrimWindowDays = (int)configJson[ConfigSection.Data]["tickDataTrimWindowDays"];
+
+            var barTrimDay = configJson[ConfigSection.Data]["barDataTrimDay"].ToString().ToEnum<IsoDayOfWeek>();
+            var barTrimHour = (int)configJson[ConfigSection.Data]["barDataTrimHour"];
+            var barTrimMinute = (int)configJson[ConfigSection.Data]["barDataTrimMinute"];
+            this.BarDataTrimTime = (barTrimDay, new LocalTime(barTrimHour, barTrimMinute));
             this.BarDataTrimWindowDays = (int)configJson[ConfigSection.Data]["barDataTrimWindowDays"];
         }
 
@@ -170,12 +177,22 @@ namespace Nautilus.Data
         public IReadOnlyCollection<BarSpecification> BarSpecifications { get; }
 
         /// <summary>
+        /// Gets the time to trim the tick data.
+        /// </summary>
+        public (IsoDayOfWeek, LocalTime) TickDataTrimTime { get; }
+
+        /// <summary>
         /// Gets the time to trim the bar data.
         /// </summary>
         public (IsoDayOfWeek, LocalTime) BarDataTrimTime { get; }
 
         /// <summary>
-        /// Gets the database bar rolling trim window in days.
+        /// Gets the tick data rolling trim window in days.
+        /// </summary>
+        public int TickDataTrimWindowDays { get; }
+
+        /// <summary>
+        /// Gets the bar data rolling trim window in days.
         /// </summary>
         public int BarDataTrimWindowDays { get; }
     }

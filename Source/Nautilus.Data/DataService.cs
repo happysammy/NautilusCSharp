@@ -36,7 +36,9 @@ namespace Nautilus.Data
         private readonly IReadOnlyCollection<BarSpecification> barSpecifications;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixConnectTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) fixDisconnectTime;
+        private readonly (IsoDayOfWeek Day, LocalTime Time) tickDataTrimTime;
         private readonly (IsoDayOfWeek Day, LocalTime Time) barDataTrimTime;
+        private readonly int tickRollingWindowDays;
         private readonly int barRollingWindowDays;
 
         /// <summary>
@@ -69,6 +71,8 @@ namespace Nautilus.Data
 
             this.fixConnectTime = config.FixConfiguration.ConnectTime;
             this.fixDisconnectTime = config.FixConfiguration.DisconnectTime;
+            this.tickDataTrimTime = config.TickDataTrimTime;
+            this.tickRollingWindowDays = config.TickDataTrimWindowDays;
             this.barDataTrimTime = config.BarDataTrimTime;
             this.barRollingWindowDays = config.BarDataTrimWindowDays;
 
@@ -84,6 +88,7 @@ namespace Nautilus.Data
             this.RegisterHandler<FixSessionDisconnected>(this.OnMessage);
             this.RegisterHandler<MarketOpened>(this.OnMessage);
             this.RegisterHandler<MarketClosed>(this.OnMessage);
+            this.RegisterHandler<TrimTickData>(this.OnMessage);
             this.RegisterHandler<TrimBarData>(this.OnMessage);
         }
 
@@ -104,6 +109,7 @@ namespace Nautilus.Data
 
             this.CreateMarketOpenedJob();
             this.CreateMarketClosedJob();
+            this.CreateTrimTickDataJob();
             this.CreateTrimBarDataJob();
 
             this.Send(DataServiceAddress.TickResponder, start);
@@ -187,6 +193,16 @@ namespace Nautilus.Data
             this.Send(DataServiceAddress.BarAggregationController, message);
 
             this.CreateMarketOpenedJob();
+        }
+
+        private void OnMessage(TrimTickData message)
+        {
+            this.Log.Information($"Received {message}.");
+
+            // Forward message.
+            this.Send(DataServiceAddress.TickStore, message);
+
+            this.CreateTrimTickDataJob();
         }
 
         private void OnMessage(TrimBarData message)
@@ -297,6 +313,30 @@ namespace Nautilus.Data
 
                 this.Log.Information($"Created scheduled event {marketClosed}Event[{symbol}] for {nextTime.ToIsoString()}");
             }
+        }
+
+        private void CreateTrimTickDataJob()
+        {
+            var now = this.InstantNow();
+            var nextTime = TimingProvider.GetNextUtc(
+                this.tickDataTrimTime.Day,
+                this.tickDataTrimTime.Time,
+                now);
+            var durationToNext = TimingProvider.GetDurationToNextUtc(nextTime, now);
+
+            var job = new TrimTickData(
+                nextTime - Duration.FromDays(this.tickRollingWindowDays),
+                nextTime,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.scheduler.ScheduleSendOnceCancelable(
+                durationToNext,
+                this.Endpoint,
+                job,
+                this.Endpoint);
+
+            this.Log.Information($"Created scheduled job {job} for {nextTime.ToIsoString()}");
         }
 
         private void CreateTrimBarDataJob()

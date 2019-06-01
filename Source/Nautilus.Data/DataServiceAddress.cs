@@ -63,6 +63,11 @@ namespace Nautilus.Data
         public static Address TickPublisher { get; } = new Address(nameof(TickPublisher));
 
         /// <summary>
+        /// Gets the <see cref="TickPublisher"/> component messaging address.
+        /// </summary>
+        public static Address TickStore { get; } = new Address(nameof(TickStore));
+
+        /// <summary>
         /// Gets the <see cref="InstrumentResponder"/> component messaging address.
         /// </summary>
         public static Address InstrumentResponder { get; } = new Address(nameof(InstrumentResponder));
