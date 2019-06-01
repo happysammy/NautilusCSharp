@@ -10,7 +10,6 @@ namespace Nautilus.Data.Interfaces
 {
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
-    using Nautilus.Data.Types;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
@@ -54,7 +53,7 @@ namespace Nautilus.Data.Interfaces
         /// <param name="fromDateTime">The from date time.</param>
         /// <param name="toDateTime">The to date time.</param>
         /// <returns>The result of the query.</returns>
-        QueryResult<BarDataFrame> Find(
+        QueryResult<List<Tick>> Find(
             Symbol symbol,
             ZonedDateTime fromDateTime,
             ZonedDateTime toDateTime);

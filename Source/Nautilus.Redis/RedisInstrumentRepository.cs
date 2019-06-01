@@ -47,17 +47,13 @@ namespace Nautilus.Redis
             this.cache = new Dictionary<Symbol, Instrument>();
         }
 
-        /// <summary>
-        /// Clears all instruments from the in-memory cache.
-        /// </summary>
+        /// <inheritdoc />
         public void ResetCache()
         {
             this.cache.Clear();
         }
 
-        /// <summary>
-        /// Adds all persisted instruments to the in-memory cache.
-        /// </summary>
+        /// <inheritdoc />
         public void CacheAll()
         {
             var keys = this.GetAllKeys();
@@ -76,18 +72,13 @@ namespace Nautilus.Redis
             }
         }
 
-        /// <summary>
-        /// Deletes the instrument of the given symbol from the Redis database.
-        /// </summary>
-        /// <param name="symbol">The symbol to delete.</param>
+        /// <inheritdoc />
         public void Delete(Symbol symbol)
         {
             this.redisDatabase.KeyDelete(KeyProvider.GetInstrumentKey(symbol));
         }
 
-        /// <summary>
-        /// Deletes all instruments from the Redis database.
-        /// </summary>
+        /// <inheritdoc />
         public void DeleteAll()
         {
             var keys = this.GetAllKeys();
@@ -109,12 +100,7 @@ namespace Nautilus.Redis
                 .ToArray();
         }
 
-        /// <summary>
-        /// Adds the given instrument to the repository.
-        /// </summary>
-        /// <param name="instrument">The instrument.</param>
-        /// <param name="timeNow">The time now.</param>
-        /// <returns>The result of the operation.</returns>
+        /// <inheritdoc />
         [PerformanceOptimized]
         public CommandResult Add(Instrument instrument, ZonedDateTime timeNow)
         {
@@ -150,12 +136,7 @@ namespace Nautilus.Redis
             return CommandResult.Ok($"Updated instrument {symbol}" + changesString);
         }
 
-        /// <summary>
-        /// Returns the instrument from the repository if contained (otherwise returns a failed
-        /// query).
-        /// </summary>
-        /// <param name="symbol">The instrument symbol.</param>
-        /// <returns>The result of the query.</returns>
+        /// <inheritdoc />
         public QueryResult<Instrument> FindInCache(Symbol symbol)
         {
             return this.cache.ContainsKey(symbol)
@@ -163,11 +144,24 @@ namespace Nautilus.Redis
                 : QueryResult<Instrument>.Fail($"Cannot find instrument {symbol}");
         }
 
+        /// <inheritdoc />
+        public QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue)
+        {
+            var instruments = this.cache
+                .Where(kvp => kvp.Key.Venue == venue)
+                .Select(kvp => kvp.Value)
+                .ToList();
+
+            return instruments.Count > 0
+                ? QueryResult<IEnumerable<Instrument>>.Ok(instruments)
+                : QueryResult<IEnumerable<Instrument>>.Fail($"Cannot find any instrument for {venue}");
+        }
+
         /// <summary>
-        /// Returns the instrument from the Redis database with the given key.
+        /// Returns the instrument from the Redis database matching the given key.
         /// </summary>
-        /// <param name="key">The instruments key.</param>
-        /// <returns>The result of the query.</returns>
+        /// <param name="key">The instrument key to read.</param>
+        /// <returns>The keys.</returns>
         public QueryResult<Instrument> Read(string key)
         {
             Debug.NotEmptyOrWhiteSpace(key, nameof(key));
@@ -204,10 +198,7 @@ namespace Nautilus.Redis
             return QueryResult<Instrument>.Ok(instrument);
         }
 
-        /// <summary>
-        /// Returns the list of instrument symbols currently held in cache.
-        /// </summary>
-        /// <returns>The symbols.</returns>
+        /// <inheritdoc />
         public IReadOnlyCollection<Symbol> GetSymbols() => this.cache.Keys.ToArray();
 
         private CommandResult Write(Instrument instrument)

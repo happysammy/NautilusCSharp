@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="BarResponder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TickResponder.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -21,24 +21,24 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public class BarResponder : Responder
+    public class TickResponder : Responder
     {
         private const string INVALID = "INVALID REQUEST";
 
-        private readonly IBarRepository repository;
+        private readonly ITickRepository repository;
         private readonly IRequestSerializer serializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarResponder"/> class.
+        /// Initializes a new instance of the <see cref="TickResponder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="repository">The instrument repository.</param>
+        /// <param name="repository">The tick repository.</param>
         /// <param name="serializer">The request serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public BarResponder(
+        public TickResponder(
             IComponentryContainer container,
-            IBarRepository repository,
+            ITickRepository repository,
             IRequestSerializer serializer,
             NetworkAddress host,
             NetworkPort port)
@@ -60,16 +60,18 @@ namespace Nautilus.Data.Network
             {
                 var request = this.serializer.Deserialize(requestBytes);
 
-                if (!(request is BarDataRequest))
+                if (!(request is TickDataRequest))
                 {
-                    var message = "request not of type BarDataRequest";
+                    var message = $"request type {request.GetType()} not valid on this port";
                     this.SendInvalidResponse(message);
                     this.Log.Error(message);
                 }
 
-                var dataRequest = (BarDataRequest)request;
-                var barType = new BarType(dataRequest.Symbol, dataRequest.BarSpecification);
-                var query = this.repository.Find(barType, dataRequest.FromDateTime, dataRequest.ToDateTime);
+                var dataRequest = (TickDataRequest)request;
+                var query = this.repository.Find(
+                    dataRequest.Symbol,
+                    dataRequest.FromDateTime,
+                    dataRequest.ToDateTime);
 
                 if (query.IsFailure)
                 {
@@ -77,13 +79,12 @@ namespace Nautilus.Data.Network
                     this.Log.Error(query.Message);
                 }
 
-                var barsList = query
+                var ticksList = query
                     .Value
-                    .Bars
-                    .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
+                    .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
                     .ToList();
 
-                this.SendResponse(barsList);
+                this.SendResponse(ticksList);
             }
             catch (Exception ex)
             {

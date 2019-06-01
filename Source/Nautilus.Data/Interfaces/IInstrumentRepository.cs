@@ -11,6 +11,7 @@ namespace Nautilus.Data.Interfaces
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
     using Nautilus.DomainModel.Entities;
+    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -54,6 +55,13 @@ namespace Nautilus.Data.Interfaces
         /// <param name="symbol">The symbol.</param>
         /// <returns>A <see cref="QueryResult{Instrument}"/> result.</returns>
         QueryResult<Instrument> FindInCache(Symbol symbol);
+
+        /// <summary>
+        /// Returns the all instruments corresponding to the given venue.
+        /// </summary>
+        /// <param name="venue">The venue.</param>
+        /// <returns>A result of the query.</returns>
+        QueryResult<IEnumerable<Instrument>> FindInCache(Venue venue);
 
         /// <summary>
         /// Returns the instrument symbol collection.

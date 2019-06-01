@@ -9,14 +9,12 @@
 namespace Nautilus.Data.Network
 {
     using System;
+    using System.Linq;
     using System.Text;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core.CQS;
-    using Nautilus.Core.Extensions;
     using Nautilus.Data.Interfaces;
+    using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.Enums;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
 
     /// <summary>
@@ -59,41 +57,68 @@ namespace Nautilus.Data.Network
             this.RegisterHandler<byte[]>(this.OnMessage);
         }
 
-        private static QueryResult<Symbol> ParseSymbol(string symbol)
+        private void OnMessage(byte[] requestBytes)
         {
             try
             {
-                var symbolSplit = symbol.Split(".");
-                return QueryResult<Symbol>.Ok(new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>()));
+                var request = this.requestSerializer.Deserialize(requestBytes);
+
+                switch (request)
+                {
+                    case InstrumentRequest req:
+                        this.HandleRequest(req);
+                        break;
+                    case InstrumentsRequest req:
+                        this.HandleRequest(req);
+                        break;
+                    default:
+                    {
+                        var message = $"request type {request.GetType()} not valid on this port";
+                        this.SendInvalidResponse(message);
+                        this.Log.Error(message);
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                return QueryResult<Symbol>.Fail(ex.Message);
+                this.SendInvalidResponse(ex.Message);
+                this.Log.Error(ex.Message);
             }
         }
 
-        private void OnMessage(byte[] request)
+        private void HandleRequest(InstrumentRequest request)
         {
-            var requestString = Encoding.UTF8.GetString(request);
+            var query = this.repository.FindInCache(request.Symbol);
 
-            var symbolQuery = ParseSymbol(requestString);
-            if (symbolQuery.IsFailure)
+            if (query.IsSuccess)
             {
-                this.Log.Error(symbolQuery.Message);
-                this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({symbolQuery.Message})."));
+                this.SendResponse(this.instrumentSerializer.Serialize(query.Value));
                 return;
             }
 
-            var query = this.repository.FindInCache(symbolQuery.Value);
+            this.SendInvalidResponse(query.Message);
+            this.Log.Error(query.Message);
+        }
 
-            if (query.IsFailure)
+        private void HandleRequest(InstrumentsRequest request)
+        {
+            var query = this.repository.FindInCache(request.Venue);
+
+            if (query.IsSuccess)
             {
-                this.Log.Error(query.Message);
-                this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({query.Message})."));
+                var serialized = query.Value.Select(i => this.instrumentSerializer.Serialize(i)).ToList();
+                this.SendResponse(serialized);
                 return;
             }
 
-            this.SendResponse(this.instrumentSerializer.Serialize(query.Value));
+            this.SendInvalidResponse(query.Message);
+            this.Log.Error(query.Message);
+        }
+
+        private void SendInvalidResponse(string message)
+        {
+            this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({message})."));
         }
     }
 }
