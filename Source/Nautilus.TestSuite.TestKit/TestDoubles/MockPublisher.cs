@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock publisher for testing.
     /// </summary>
-    public class MockPublisher : Publisher
+    public sealed class MockPublisher : Publisher
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MockPublisher"/> class.

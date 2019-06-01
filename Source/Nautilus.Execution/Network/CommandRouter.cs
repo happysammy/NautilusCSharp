@@ -16,7 +16,7 @@ namespace Nautilus.Execution.Network
     /// <summary>
     /// Provides a command consumer for the messaging server.
     /// </summary>
-    public class CommandRouter : Router
+    public sealed class CommandRouter : Router
     {
         private readonly ICommandSerializer serializer;
         private readonly IEndpoint receiver;

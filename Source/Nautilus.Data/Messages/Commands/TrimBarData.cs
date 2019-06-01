@@ -24,7 +24,7 @@ namespace Nautilus.Data.Messages.Commands
     /// to be equal to the size of the rolling window at a scheduled time.
     /// </summary>
     [Immutable]
-    public class TrimBarData : Command, IScheduledJob
+    public sealed class TrimBarData : Command, IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrimBarData"/> class.

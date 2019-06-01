@@ -19,7 +19,7 @@ namespace Nautilus.Fix
     /// <summary>
     /// Provides a converter between Nautilus symbols and broker symbols.
     /// </summary>
-    public class SymbolConverter
+    public sealed class SymbolConverter
     {
         private readonly ImmutableList<Symbol> symbols;
         private readonly ImmutableDictionary<string, string> symbolIndex;

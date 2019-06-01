@@ -19,7 +19,7 @@ namespace Nautilus.Data.Messages.Commands
     /// Represents a command to trim the tick data with timestamps prior to the trim from date time.
     /// </summary>
     [Immutable]
-    public class TrimTickData : Command, IScheduledJob
+    public sealed class TrimTickData : Command, IScheduledJob
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrimTickData"/> class.

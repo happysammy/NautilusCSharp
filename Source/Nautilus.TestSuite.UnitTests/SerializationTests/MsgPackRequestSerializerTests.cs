@@ -21,7 +21,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MsgPackRequestSerializerTests
+    public sealed class MsgPackRequestSerializerTests
     {
         private readonly ITestOutputHelper output;
 

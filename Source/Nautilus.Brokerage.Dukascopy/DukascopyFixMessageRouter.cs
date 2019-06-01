@@ -24,7 +24,7 @@ namespace Nautilus.Brokerage.Dukascopy
     /// <summary>
     /// Provides an Dukascopy implementation for routing FIX messages.
     /// </summary>
-    public class DukascopyFixMessageRouter : Component, IFixMessageRouter
+    public sealed class DukascopyFixMessageRouter : Component, IFixMessageRouter
     {
         private readonly SymbolConverter symbolConverter;
         private readonly string accountNumber;

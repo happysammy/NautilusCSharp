@@ -21,7 +21,7 @@ namespace Nautilus.Serialization
     /// <summary>
     /// Provides a <see cref="Request"/> message binary serializer for the MessagePack specification.
     /// </summary>
-    public class MsgPackRequestSerializer : IRequestSerializer
+    public sealed class MsgPackRequestSerializer : IRequestSerializer
     {
         /// <inheritdoc />
         public byte[] Serialize(Request request)

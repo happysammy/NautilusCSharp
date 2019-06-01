@@ -30,7 +30,7 @@ namespace Nautilus.Redis
     /// <summary>
     /// Provides a Redis implementation for an instrument repository.
     /// </summary>
-    public class RedisInstrumentRepository : IInstrumentRepository
+    public sealed class RedisInstrumentRepository : IInstrumentRepository
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;

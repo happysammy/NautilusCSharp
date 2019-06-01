@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Identifiers
     /// <summary>
     /// Represents a <see cref="Strategy"/> identifier.
     /// </summary>
-    public class StrategyId : Identifier<Strategy>
+    public sealed class StrategyId : Identifier<Strategy>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StrategyId"/> class.

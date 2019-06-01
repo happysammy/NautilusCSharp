@@ -15,7 +15,7 @@ namespace Nautilus.Logging
     /// <summary>
     /// The Serilog thread identifier enricher.
     /// </summary>
-    public class ThreadIdEnricher : ILogEventEnricher
+    public sealed class ThreadIdEnricher : ILogEventEnricher
     {
         /// <summary>
         /// Enriches log events with the thread identifier.

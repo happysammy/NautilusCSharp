@@ -15,13 +15,12 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
 
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public class TickResponder : Responder
+    public sealed class TickResponder : Responder
     {
         private const string INVALID = "INVALID REQUEST";
 

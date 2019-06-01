@@ -17,7 +17,7 @@ namespace Nautilus.Logging
     /// <summary>
     /// The <see cref="Nautilus.Logging"/> adapter.
     /// </summary>
-    public class SerilogLogger : ILoggingAdapter
+    public sealed class SerilogLogger : ILoggingAdapter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogLogger"/> class.

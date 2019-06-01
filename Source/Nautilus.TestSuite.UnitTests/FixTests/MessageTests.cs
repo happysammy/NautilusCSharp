@@ -14,7 +14,7 @@ namespace Nautilus.TestSuite.UnitTests.FixTests
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MessageTests
+    public sealed class MessageTests
     {
         [Fact]
         internal void MarketDataRequestMessage()

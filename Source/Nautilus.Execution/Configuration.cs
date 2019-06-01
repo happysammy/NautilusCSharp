@@ -24,7 +24,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Represents an <see cref="ExecutionService"/> configuration.
     /// </summary>
-    public class Configuration
+    public sealed class Configuration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Configuration"/> class.

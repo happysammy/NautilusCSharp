@@ -11,7 +11,7 @@ namespace Nautilus.Execution.Types
     /// <summary>
     /// Represents a trade strategy.
     /// </summary>
-    public class Strategy
+    public sealed class Strategy
     {
         // Place holder class (not implemented).
     }

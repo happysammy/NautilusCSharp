@@ -19,7 +19,7 @@ namespace Nautilus.Fix
     /// Provides a FIX client.
     /// </summary>
     [PerformanceOptimized]
-    public class FixClient : FixComponent, IFixClient
+    public sealed class FixClient : FixComponent, IFixClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FixClient"/> class.

@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.UnitTests.MessagingTests
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class HandlerTests
+    public sealed class HandlerTests
     {
         private readonly ITestOutputHelper output;
 

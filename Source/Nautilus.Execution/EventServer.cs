@@ -20,7 +20,7 @@ namespace Nautilus.Execution
     /// Provides an <see cref="Event"/> message server using the ZeroMQ protocol.
     /// </summary>
     [PerformanceOptimized]
-    public class EventServer : ComponentBusConnected
+    public sealed class EventServer : ComponentBusConnected
     {
         private readonly IEndpoint eventPublisher;
 

@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using NodaTime;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class StubOrderBuilder
+    public sealed class StubOrderBuilder
     {
         private Symbol Symbol { get; set; } = new Symbol("AUDUSD", Venue.FXCM);
 

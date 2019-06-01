@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.UnitTests.DomainModelTests.ValueObjectsTests
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class TickTests
+    public sealed class TickTests
     {
         private readonly Symbol symbol;
 

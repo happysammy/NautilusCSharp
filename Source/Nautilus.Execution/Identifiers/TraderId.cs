@@ -14,7 +14,7 @@ namespace Nautilus.Execution.Identifiers
     /// <summary>
     /// Represents a <see cref="Trader"/> identifier.
     /// </summary>
-    public class TraderId : Identifier<Trader>
+    public sealed class TraderId : Identifier<Trader>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TraderId"/> class.

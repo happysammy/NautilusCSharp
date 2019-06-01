@@ -27,7 +27,7 @@ namespace NautilusExecutor
     /// <summary>
     /// The main ASP.NET Core Startup class to configure and build the web hosting services.
     /// </summary>
-    public class Startup
+    public sealed class Startup
     {
         private readonly ExecutionService executionService;
 

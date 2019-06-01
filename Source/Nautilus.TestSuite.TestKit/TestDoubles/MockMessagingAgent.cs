@@ -18,7 +18,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock messaging agent for testing.
     /// </summary>
-    public class MockMessagingAgent : MessagingAgent
+    public sealed class MockMessagingAgent : MessagingAgent
     {
         private readonly int workDelayMilliseconds;
 

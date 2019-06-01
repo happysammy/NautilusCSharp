@@ -19,7 +19,7 @@ namespace Nautilus.Execution
     /// <summary>
     /// Provides a register for <see cref="Order"/>s associated with Traders and Strategies.
     /// </summary>
-    public class OrderRegister : Component
+    public sealed class OrderRegister : Component
     {
         private readonly Dictionary<TraderId, Dictionary<StrategyId, List<OrderId>>> orderIndex;
 

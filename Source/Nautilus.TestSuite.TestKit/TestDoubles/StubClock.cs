@@ -15,7 +15,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "*", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class StubClock : IZonedClock
+    public sealed class StubClock : IZonedClock
     {
         private bool isTimeFrozen;
         private ZonedDateTime frozenTime;

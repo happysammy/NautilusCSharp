@@ -26,7 +26,7 @@ namespace Nautilus.Redis
     /// <summary>
     /// Provides a thread-safe client for accessing bar data from <see cref="Redis"/>.
     /// </summary>
-    public class RedisBarClient
+    public sealed class RedisBarClient
     {
         private readonly IServer redisServer;
         private readonly IDatabase redisDatabase;

@@ -19,7 +19,7 @@ namespace Nautilus.Common.Messages.Events
     /// Represents an event where a financial market has closed.
     /// </summary>
     [Immutable]
-    public class MarketClosed : Event
+    public sealed class MarketClosed : Event
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketClosed"/> class.

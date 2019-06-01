@@ -11,7 +11,7 @@ namespace Nautilus.Execution.Types
     /// <summary>
     /// Represents an individual trader managing a portfolio of strategies.
     /// </summary>
-    public class Trader
+    public sealed class Trader
     {
         // Place holder class (not implemented).
     }

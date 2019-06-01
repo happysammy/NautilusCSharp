@@ -16,7 +16,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     /// <summary>
     /// Provides a mock router for testing.
     /// </summary>
-    public class MockRouter : Router
+    public sealed class MockRouter : Router
     {
         private readonly IEndpoint receiver;
 

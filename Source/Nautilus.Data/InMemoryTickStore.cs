@@ -23,7 +23,7 @@ namespace Nautilus.Data
     /// <summary>
     /// Provides an in memory <see cref="Tick"/> store.
     /// </summary>
-    public class InMemoryTickStore : Component, ITickRepository
+    public sealed class InMemoryTickStore : Component, ITickRepository
     {
         private readonly Dictionary<Symbol, List<Tick>> tickStore;
 

@@ -13,7 +13,7 @@ namespace Nautilus.TestSuite.UnitTests.FixTests
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class OrderIdPostfixRemoverTests
+    public sealed class OrderIdPostfixRemoverTests
     {
         [Fact]
         internal void Remove_WithNormalOrderId_ReturnsExpectedOrderId()

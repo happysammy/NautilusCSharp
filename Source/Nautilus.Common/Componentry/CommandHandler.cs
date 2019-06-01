@@ -16,7 +16,7 @@ namespace Nautilus.Common.Componentry
     /// and handles and logs all errors and exceptions. Validation exceptions are logged and swallowed,
     /// all other exceptions other than a specified exception type are logged and rethrown.
     /// </summary>
-    public class CommandHandler
+    public sealed class CommandHandler
     {
         private readonly ILogger log;
 

@@ -17,7 +17,7 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
     using Xunit.Abstractions;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Reviewed. Suppression is OK within the Test Suite.")]
-    public class MockLoggingAdapter : ILoggingAdapter
+    public sealed class MockLoggingAdapter : ILoggingAdapter
     {
         private readonly ConcurrentQueue<string> stash = new ConcurrentQueue<string>();
 

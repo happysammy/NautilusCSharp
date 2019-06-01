@@ -30,7 +30,7 @@ namespace Nautilus.Brokerage.FXCM
     /// <summary>
     /// Provides an implementation for handling FXCM FIX messages.
     /// </summary>
-    public class FxcmFixMessageHandler : Component, IFixMessageHandler
+    public sealed class FxcmFixMessageHandler : Component, IFixMessageHandler
     {
         private readonly SymbolConverter symbolConverter;
 

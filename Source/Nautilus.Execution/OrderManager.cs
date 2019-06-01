@@ -25,7 +25,7 @@ namespace Nautilus.Execution
     /// Provides an <see cref="Order"/> manager.
     /// </summary>
     [PerformanceOptimized]
-    public class OrderManager : ComponentBusConnected
+    public sealed class OrderManager : ComponentBusConnected
     {
         private readonly IFixGateway gateway;
         private readonly OrderRegister register;

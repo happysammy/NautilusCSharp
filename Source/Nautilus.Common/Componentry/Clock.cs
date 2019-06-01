@@ -14,7 +14,7 @@ namespace Nautilus.Common.Componentry
     /// <summary>
     /// Provides a clock with an embedded timezone.
     /// </summary>
-    public class Clock : IZonedClock
+    public sealed class Clock : IZonedClock
     {
         private readonly ZonedClock clock;
         private readonly DateTimeZone dateTimeZone;

@@ -20,7 +20,7 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public class InstrumentResponder : Responder
+    public sealed class InstrumentResponder : Responder
     {
         private const string INVALID = "INVALID REQUEST";
 
