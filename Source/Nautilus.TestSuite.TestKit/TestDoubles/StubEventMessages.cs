@@ -49,8 +49,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static OrderWorking OrderWorkingEvent(Order order, Price workingPrice)
+        public static OrderWorking OrderWorkingEvent(Order order, Price? workingPrice)
         {
+            if (workingPrice is null)
+            {
+                workingPrice = Price.Create(1.00000m);
+            }
+
             return new OrderWorking(
                 order.Id,
                 new OrderId("B" + order.Id),
@@ -100,8 +105,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
             Order order,
             int filledQuantity,
             int leavesQuantity,
-            Price averagePrice)
+            Price? averagePrice)
         {
+            if (averagePrice is null)
+            {
+                averagePrice = Price.Create(1.00000m);
+            }
+
             return new OrderPartiallyFilled(
                 order.Id,
                 new ExecutionId("NONE"),
@@ -116,8 +126,13 @@ namespace Nautilus.TestSuite.TestKit.TestDoubles
                 StubZonedDateTime.UnixEpoch());
         }
 
-        public static OrderFilled OrderFilledEvent(Order order, Price averagePrice)
+        public static OrderFilled OrderFilledEvent(Order order, Price? averagePrice)
         {
+            if (averagePrice is null)
+            {
+                averagePrice = Price.Create(1.00000m);
+            }
+
             return new OrderFilled(
                 order.Id,
                 new ExecutionId("NONE"),

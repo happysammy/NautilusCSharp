@@ -71,6 +71,13 @@ namespace NautilusData
             var instrumentRepository = new RedisInstrumentRepository(redisConnection);
             instrumentRepository.CacheAll();
 
+            var tickResponder = new TickResponder(
+                container,
+                new InMemoryTickStore(),
+                new MsgPackRequestSerializer(),
+                config.ServerAddress,
+                config.TickSubscribePort);
+
             var tickPublisher = new TickPublisher(
                 container,
                 config.ServerAddress,
@@ -126,6 +133,7 @@ namespace NautilusData
                 { DataServiceAddress.FixGateway, fixGateway.Endpoint },
                 { DataServiceAddress.DatabaseTaskManager, databaseTaskManager.Endpoint },
                 { DataServiceAddress.BarAggregationController, barAggregationController.Endpoint },
+                { DataServiceAddress.TickResponder, tickResponder.Endpoint },
                 { DataServiceAddress.TickPublisher, tickPublisher.Endpoint },
                 { DataServiceAddress.BarResponder, barResponder.Endpoint },
                 { DataServiceAddress.BarPublisher, barPublisher.Endpoint },

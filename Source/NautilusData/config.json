@@ -95,6 +95,10 @@
       "1-HOUR[MID]",
       "1-HOUR[BID]"
     ],
+    "tickDataTrimDay": "Sunday",
+    "tickDataTrimHour": 0,
+    "tickDataTrimMinute": 1,
+    "tickDataTrimWindowDays": 1,
     "barDataTrimDay": "Sunday",
     "barDataTrimHour": 0,
     "barDataTrimMinute": 1,

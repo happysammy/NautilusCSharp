@@ -72,11 +72,5 @@ namespace Nautilus.Data.Interfaces
         /// <param name="trimToDays">The number of days (keys) to trim to.</param>
         /// <returns>The result of the operation.</returns>
         CommandResult TrimToDays(Resolution resolution, int trimToDays);
-
-        /// <summary>
-        /// Save a snapshot of the database to disk.
-        /// </summary>
-        /// <returns>The result of the operation.</returns>
-        CommandResult SnapshotDatabase();
     }
 }
