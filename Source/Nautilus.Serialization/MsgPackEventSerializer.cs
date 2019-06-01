@@ -31,8 +31,8 @@ namespace Nautilus.Serialization
             {
                 { Key.Type, nameof(Event) },
                 { Key.Event, @event.Type.Name },
-                { Key.EventId, @event.Id.ToString() },
-                { Key.EventTimestamp, @event.Timestamp.ToIsoString() },
+                { Key.Id, @event.Id.ToString() },
+                { Key.Timestamp, @event.Timestamp.ToIsoString() },
             };
 
             switch (@event)
@@ -141,8 +141,8 @@ namespace Nautilus.Serialization
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
 
             var @event = unpacked[Key.Event].ToString();
-            var eventId = ObjectExtractor.Guid(unpacked[Key.EventId]);
-            var eventTimestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.EventTimestamp]);
+            var identifier = ObjectExtractor.Guid(unpacked[Key.Id]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
 
             switch (@event)
             {
@@ -160,8 +160,8 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Money(unpacked[Key.MarginUsedMaintenance], currency),
                         ObjectExtractor.Decimal(unpacked[Key.MarginRatio].ToString()),
                         unpacked[Key.MarginCallStatus].ToString(),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
@@ -173,27 +173,27 @@ namespace Nautilus.Serialization
                         ObjectExtractor.NullablePrice(unpacked[Key.Price]),
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.SubmittedTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.AcceptedTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedReason].ToString(),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
@@ -207,36 +207,36 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
                         ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.WorkingTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.CancelledTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
                         unpacked[Key.RejectedResponse].ToString(),
                         unpacked[Key.RejectedReason].ToString(),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.Price(unpacked[Key.ModifiedPrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ModifiedTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExpiredTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
@@ -248,8 +248,8 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Quantity(unpacked[Key.LeavesQuantity]),
                         ObjectExtractor.Price(unpacked[Key.AveragePrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
                         ObjectExtractor.OrderId(unpacked[Key.OrderId]),
@@ -260,8 +260,8 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
                         ObjectExtractor.Price(unpacked[Key.AveragePrice]),
                         ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
-                        eventId,
-                        eventTimestamp);
+                        identifier,
+                        timestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
             }

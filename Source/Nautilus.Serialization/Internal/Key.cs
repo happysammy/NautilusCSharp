@@ -31,32 +31,22 @@ namespace Nautilus.Serialization.Internal
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string CommandId => nameof(CommandId);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string CommandTimestamp => nameof(CommandTimestamp);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
         internal static string Event => nameof(Event);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
-        internal static string EventId => nameof(EventId);
-
-        /// <summary>
-        /// Gets the key string.
-        /// </summary>
-        internal static string EventTimestamp => nameof(EventTimestamp);
+        internal static string Request => nameof(Request);
 
         /// <summary>
         /// Gets the key string.
         /// </summary>
         internal static string Symbol => nameof(Symbol);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string Venue => nameof(Venue);
 
         /// <summary>
         /// Gets the key string.
@@ -357,5 +347,20 @@ namespace Nautilus.Serialization.Internal
         /// Gets the key string.
         /// </summary>
         internal static string MarginCallStatus => nameof(MarginCallStatus);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string BarSpecification => nameof(BarSpecification);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string FromDateTime => nameof(FromDateTime);
+
+        /// <summary>
+        /// Gets the key string.
+        /// </summary>
+        internal static string ToDateTime => nameof(ToDateTime);
     }
 }

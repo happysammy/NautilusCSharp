@@ -56,6 +56,16 @@ namespace Nautilus.Serialization.Internal
         }
 
         /// <summary>
+        /// Returns a BarSpecification extracted from the given <see cref="MessagePackObject"/>.
+        /// </summary>
+        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <returns>The extracted BarSpecification.</returns>
+        internal static BarSpecification BarSpecification(MessagePackObject unpacked)
+        {
+            return BarSpecificationFactory.Create(unpacked.ToString());
+        }
+
+        /// <summary>
         /// Returns a BrokerSymbol extracted from the given <see cref="MessagePackObject"/>.
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
