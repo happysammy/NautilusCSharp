@@ -33,9 +33,4 @@
         <AdditionalFiles Include="..\stylecop.json" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Requests" />
-      <Folder Include="Responses" />
-    </ItemGroup>
-
 </Project>

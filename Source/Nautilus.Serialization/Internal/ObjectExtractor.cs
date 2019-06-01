@@ -12,6 +12,7 @@ namespace Nautilus.Serialization.Internal
     using MsgPack;
     using Nautilus.Core.Extensions;
     using Nautilus.DomainModel.Enums;
+    using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Execution.Identifiers;
@@ -51,7 +52,7 @@ namespace Nautilus.Serialization.Internal
         /// <returns>The extracted Symbol.</returns>
         internal static Symbol Symbol(MessagePackObject unpacked)
         {
-            return DomainModel.ValueObjects.Symbol.Create(unpacked.ToString());
+            return SymbolFactory.Create(unpacked.ToString());
         }
 
         /// <summary>

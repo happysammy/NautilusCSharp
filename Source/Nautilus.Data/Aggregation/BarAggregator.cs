@@ -145,11 +145,11 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Subscribe<BarType> message)
         {
-            var barSpec = message.DataType.Specification;
+            var barSpec = message.SubscriptionType.Specification;
 
             if (this.specifications.Contains(barSpec))
             {
-                this.Log.Warning($"Already subscribed to {message.DataType} bars.");
+                this.Log.Warning($"Already subscribed to {message.SubscriptionType} bars.");
                 return;
             }
 
@@ -165,11 +165,11 @@ namespace Nautilus.Data.Aggregation
 
         private void OnMessage(Unsubscribe<BarType> message)
         {
-            var barSpec = message.DataType.Specification;
+            var barSpec = message.SubscriptionType.Specification;
 
             if (!this.specifications.Contains(barSpec))
             {
-                this.Log.Warning($"Already unsubscribed from {message.DataType} bars.");
+                this.Log.Warning($"Already unsubscribed from {message.SubscriptionType} bars.");
                 return;
             }
 

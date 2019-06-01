@@ -15,20 +15,20 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to subscribe to data of type T.
+    /// Represents a command to subscribe to type T.
     /// </summary>
-    /// <typeparam name="T">The data type.</typeparam>
+    /// <typeparam name="T">The subscription type.</typeparam>
     [Immutable]
     public sealed class Subscribe<T> : Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscribe{T}"/> class.
         /// </summary>
-        /// <param name="dataType">The message symbol.</param>
-        /// <param name="id">The message identifier.</param>
-        /// <param name="timestamp">The message timestamp.</param>
+        /// <param name="subscriptionType">The subscription type.</param>
+        /// <param name="id">The commands identifier.</param>
+        /// <param name="timestamp">The commands timestamp.</param>
         public Subscribe(
-            T dataType,
+            T subscriptionType,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -39,18 +39,18 @@ namespace Nautilus.Data.Messages.Commands
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.DataType = dataType;
+            this.SubscriptionType = subscriptionType;
         }
 
         /// <summary>
-        /// Gets the messages data type T.
+        /// Gets the type to subscribe to.
         /// </summary>
-        public T DataType { get; }
+        public T SubscriptionType { get; }
 
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Subscribe<{this.DataType}>";
+        public override string ToString() => $"Subscribe<{this.SubscriptionType}>({this.Id})";
     }
 }

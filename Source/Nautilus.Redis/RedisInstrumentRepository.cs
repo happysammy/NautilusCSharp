@@ -184,7 +184,7 @@ namespace Nautilus.Redis
 
             var instrument = new Instrument(
                 new InstrumentId(instrumentDict[nameof(Instrument.Id)]),
-                Symbol.Create(instrumentDict[nameof(Instrument.Symbol)]),
+                SymbolFactory.Create(instrumentDict[nameof(Instrument.Symbol)]),
                 new BrokerSymbol(instrumentDict[nameof(Instrument.BrokerSymbol)]),
                 instrumentDict[nameof(Instrument.QuoteCurrency)].ToEnum<Currency>(),
                 instrumentDict[nameof(Instrument.SecurityType)].ToEnum<SecurityType>(),

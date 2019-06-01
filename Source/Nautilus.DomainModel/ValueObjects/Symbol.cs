@@ -69,18 +69,6 @@ namespace Nautilus.DomainModel.ValueObjects
         public static bool operator !=(Symbol left,  Symbol right) => !(left == right);
 
         /// <summary>
-        /// Return a new <see cref="Symbol"/> from the given string.
-        /// </summary>
-        /// <param name="symbol">The symbol string.</param>
-        /// <returns>The created symbol.</returns>
-        public static Symbol Create(string symbol)
-        {
-            var symbolSplit = symbol.Split('.');
-
-            return new Symbol(symbolSplit[0], symbolSplit[1].ToEnum<Venue>());
-        }
-
-        /// <summary>
         /// Returns a value indicating whether this <see cref="Symbol"/> is equal
         /// to the given <see cref="object"/>.
         /// </summary>

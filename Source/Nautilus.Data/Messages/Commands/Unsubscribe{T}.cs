@@ -15,7 +15,7 @@ namespace Nautilus.Data.Messages.Commands
     using NodaTime;
 
     /// <summary>
-    /// Represents a command to unsubscribe from data of type T.
+    /// Represents a command to unsubscribe from type T.
     /// </summary>
     /// <typeparam name="T">The data type.</typeparam>
     [Immutable]
@@ -24,11 +24,11 @@ namespace Nautilus.Data.Messages.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="Unsubscribe{T}"/> class.
         /// </summary>
-        /// <param name="dataType">The commands symbol.</param>
+        /// <param name="subscriptionType">The subscription type.</param>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
         public Unsubscribe(
-            T dataType,
+            T subscriptionType,
             Guid id,
             ZonedDateTime timestamp)
             : base(
@@ -39,18 +39,18 @@ namespace Nautilus.Data.Messages.Commands
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.DataType = dataType;
+            this.SubscriptionType = subscriptionType;
         }
 
         /// <summary>
-        /// Gets the messages data type T.
+        /// Gets the type to unsubscribe from.
         /// </summary>
-        public T DataType { get; }
+        public T SubscriptionType { get; }
 
         /// <summary>
         /// Returns a string representation of this object.
         /// </summary>
         /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"Unsubscribe<{this.DataType}>";
+        public override string ToString() => $"Unsubscribe<{this.SubscriptionType}>({this.Id})";
     }
 }
