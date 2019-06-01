@@ -27,20 +27,23 @@ namespace Nautilus.Data.Network
         private const string INVALID = "INVALID REQUEST";
 
         private readonly IInstrumentRepository repository;
-        private readonly IInstrumentSerializer serializer;
+        private readonly IInstrumentSerializer instrumentSerializer;
+        private readonly IRequestSerializer requestSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentResponder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The instrument repository.</param>
-        /// <param name="serializer">The instrument serializer.</param>
+        /// <param name="instrumentSerializer">The instrument serializer.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public InstrumentResponder(
             IComponentryContainer container,
             IInstrumentRepository repository,
-            IInstrumentSerializer serializer,
+            IInstrumentSerializer instrumentSerializer,
+            IRequestSerializer requestSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
@@ -50,7 +53,8 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid())
         {
             this.repository = repository;
-            this.serializer = serializer;
+            this.instrumentSerializer = instrumentSerializer;
+            this.requestSerializer = requestSerializer;
 
             this.RegisterHandler<byte[]>(this.OnMessage);
         }
@@ -89,7 +93,7 @@ namespace Nautilus.Data.Network
                 return;
             }
 
-            this.SendResponse(this.serializer.Serialize(query.Value));
+            this.SendResponse(this.instrumentSerializer.Serialize(query.Value));
         }
     }
 }

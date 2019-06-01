@@ -37,11 +37,11 @@ namespace Nautilus.Data.Messages.Requests
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(BarDataRequest),
+                typeof(TickDataRequest),
                 id,
                 timestamp)
         {
-            Condition.True(fromDateTime.IsGreaterThan(toDateTime), "fromDateTime > to DateTime");
+            Condition.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime <= toDateTime");
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 

@@ -28,17 +28,20 @@ namespace Nautilus.Data.Network
         private const string INVALID = "INVALID REQUEST";
 
         private readonly IBarRepository repository;
+        private readonly IRequestSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarResponder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The instrument repository.</param>
+        /// <param name="serializer">The request serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarResponder(
             IComponentryContainer container,
             IBarRepository repository,
+            IRequestSerializer serializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
@@ -48,6 +51,7 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid())
         {
             this.repository = repository;
+            this.serializer = serializer;
 
             this.RegisterHandler<byte[]>(this.OnMessage);
         }

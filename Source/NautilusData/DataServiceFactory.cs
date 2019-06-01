@@ -79,6 +79,7 @@ namespace NautilusData
             var barResponder = new BarResponder(
                 container,
                 barRepository,
+                new MsgPackRequestSerializer(),
                 config.ServerAddress,
                 config.BarRequestPort);
 
@@ -91,6 +92,7 @@ namespace NautilusData
                 container,
                 instrumentRepository,
                 new MsgPackInstrumentSerializer(),
+                new MsgPackRequestSerializer(),
                 config.ServerAddress,
                 config.InstrumentRequestPort);
 

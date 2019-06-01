@@ -32,7 +32,7 @@ namespace Nautilus.Data.Messages.Requests
             Guid id,
             ZonedDateTime timestamp)
             : base(
-                typeof(InstrumentRequest),
+                typeof(InstrumentsRequest),
                 id,
                 timestamp)
         {

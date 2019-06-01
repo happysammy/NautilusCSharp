@@ -43,7 +43,7 @@ namespace Nautilus.Data.Messages.Requests
                 id,
                 timestamp)
         {
-            Condition.True(fromDateTime.IsGreaterThan(toDateTime), "fromDateTime > to DateTime");
+            Condition.True(fromDateTime.IsLessThanOrEqualTo(toDateTime), "fromDateTime <= toDateTime");
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
