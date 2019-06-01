@@ -107,7 +107,11 @@ namespace Nautilus.Data.Network
 
             if (query.IsSuccess)
             {
-                var serialized = query.Value.Select(i => this.instrumentSerializer.Serialize(i)).ToList();
+                var serialized = query
+                    .Value
+                    .Select(i => this.instrumentSerializer.Serialize(i))
+                    .ToList();
+
                 this.SendResponse(serialized);
                 return;
             }
