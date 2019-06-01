@@ -110,8 +110,8 @@ namespace Nautilus.Data.Aggregation
         private void OnMessage(Subscribe<BarType> message)
         {
             var symbol = message.SubscriptionType.Symbol;
-            var barType = message.SubscriptionType;
             var barSpec = message.SubscriptionType.Specification;
+            var barType = message.SubscriptionType;
 
             if (!this.barAggregators.ContainsKey(symbol))
             {
