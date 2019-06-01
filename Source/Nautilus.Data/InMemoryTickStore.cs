@@ -11,7 +11,6 @@ namespace Nautilus.Data
     using System.Collections.Generic;
     using Nautilus.Core.CQS;
     using Nautilus.Data.Interfaces;
-    using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
@@ -57,7 +56,7 @@ namespace Nautilus.Data
         }
 
         /// <inheritdoc />
-        public CommandResult TrimToDays(Resolution resolution, int trimToDays)
+        public CommandResult TrimToDays(int trimToDays)
         {
             throw new System.NotImplementedException();
         }
