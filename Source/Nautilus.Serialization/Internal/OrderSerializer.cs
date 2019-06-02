@@ -32,17 +32,17 @@ namespace Nautilus.Serialization.Internal
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
-                { Key.Id, order.Id.ToString() },
-                { Key.Symbol, order.Symbol.ToString() },
-                { Key.Label, order.Label.ToString() },
-                { Key.OrderSide, order.Side.ToString() },
-                { Key.OrderType, order.Type.ToString() },
-                { Key.Quantity, order.Quantity.Value },
-                { Key.Price, ObjectPacker.Pack(order.Price) },
-                { Key.TimeInForce, order.TimeInForce.ToString() },
-                { Key.ExpireTime, ObjectPacker.Pack(order.ExpireTime) },
-                { Key.Timestamp, order.Timestamp.ToIsoString() },
-                { Key.InitId, order.InitId.ToString() },
+                { nameof(Order.Id), order.Id.ToString() },
+                { nameof(Order.Symbol), order.Symbol.ToString() },
+                { nameof(Order.Label), order.Label.ToString() },
+                { nameof(Order.Side), order.Side.ToString() },
+                { nameof(Order.Type), order.Type.ToString() },
+                { nameof(Order.Quantity), order.Quantity.Value },
+                { nameof(Order.Price), ObjectPacker.Pack(order.Price) },
+                { nameof(Order.TimeInForce), order.TimeInForce.ToString() },
+                { nameof(Order.ExpireTime), ObjectPacker.Pack(order.ExpireTime) },
+                { nameof(Order.Timestamp), order.Timestamp.ToIsoString() },
+                { nameof(Order.InitId), order.InitId.ToString() },
             });
         }
 
@@ -88,14 +88,14 @@ namespace Nautilus.Serialization.Internal
         /// <exception cref="InvalidEnumArgumentException">If the order type is unknown.</exception>
         private static Order Deserialize(MessagePackObjectDictionary unpacked)
         {
-            var type = ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]);
-            var id = ObjectExtractor.OrderId(unpacked[Key.Id]);
-            var symbol = ObjectExtractor.Symbol(unpacked[Key.Symbol]);
-            var label = ObjectExtractor.Label(unpacked[Key.Label]);
-            var side = ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]);
-            var quantity = ObjectExtractor.Quantity(unpacked[Key.Quantity]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
-            var initId = ObjectExtractor.Guid(unpacked[Key.InitId]);
+            var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(Order.Type)]);
+            var id = ObjectExtractor.OrderId(unpacked[nameof(Order.Id)]);
+            var symbol = ObjectExtractor.Symbol(unpacked[nameof(Order.Symbol)]);
+            var label = ObjectExtractor.Label(unpacked[nameof(Order.Label)]);
+            var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(Order.Side)]);
+            var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);
+            var initId = ObjectExtractor.Guid(unpacked[nameof(Order.InitId)]);
 
             switch (type)
             {
@@ -115,9 +115,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initId);
                 case OrderType.STOP_LIMIT:
@@ -127,9 +127,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initId);
                 case OrderType.STOP_MARKET:
@@ -139,9 +139,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initId);
                 case OrderType.MIT:
@@ -151,9 +151,9 @@ namespace Nautilus.Serialization.Internal
                         label,
                         side,
                         quantity,
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.Price(unpacked[nameof(Order.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(Order.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(Order.ExpireTime)]),
                         timestamp,
                         initId);
                 case OrderType.UNKNOWN:

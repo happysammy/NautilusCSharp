@@ -29,104 +29,104 @@ namespace Nautilus.Serialization
         {
             var package = new MessagePackObjectDictionary
             {
-                { Key.Type, nameof(Event) },
-                { Key.Event, @event.Type.Name },
-                { Key.Id, @event.Id.ToString() },
-                { Key.Timestamp, @event.Timestamp.ToIsoString() },
+                { nameof(Event.Type), nameof(Event) },
+                { nameof(Event), @event.Type.Name },
+                { nameof(Event.Id), @event.Id.ToString() },
+                { nameof(Event.Timestamp), @event.Timestamp.ToIsoString() },
             };
 
             switch (@event)
             {
-                case AccountEvent accountEvent:
-                    package.Add(Key.AccountId, accountEvent.AccountId.ToString());
-                    package.Add(Key.Broker, accountEvent.Broker.ToString());
-                    package.Add(Key.AccountNumber, accountEvent.AccountNumber);
-                    package.Add(Key.Currency, accountEvent.Currency.ToString());
-                    package.Add(Key.CashBalance, accountEvent.CashBalance.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.CashStartDay, accountEvent.CashStartDay.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.CashActivityDay, accountEvent.CashActivityDay.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.MarginUsedLiquidation, accountEvent.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.MarginUsedMaintenance, accountEvent.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.MarginRatio, accountEvent.MarginRatio.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.MarginCallStatus, accountEvent.MarginCallStatus);
+                case AccountEvent evt:
+                    package.Add(nameof(evt.AccountId), evt.AccountId.ToString());
+                    package.Add(nameof(evt.Broker), evt.Broker.ToString());
+                    package.Add(nameof(evt.AccountNumber), evt.AccountNumber);
+                    package.Add(nameof(evt.Currency), evt.Currency.ToString());
+                    package.Add(nameof(evt.CashBalance), evt.CashBalance.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.CashStartDay), evt.CashStartDay.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.CashActivityDay), evt.CashActivityDay.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.MarginUsedLiquidation), evt.MarginUsedLiquidation.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.MarginUsedMaintenance), evt.MarginUsedMaintenance.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.MarginRatio), evt.MarginRatio.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.MarginCallStatus), evt.MarginCallStatus);
                     break;
-                case OrderInitialized orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.Label, orderEvent.Label.ToString());
-                    package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
-                    package.Add(Key.OrderType, orderEvent.OrderType.ToString());
-                    package.Add(Key.Quantity, orderEvent.Quantity.Value);
-                    package.Add(Key.Price, ObjectPacker.Pack(orderEvent.Price));
-                    package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, ObjectPacker.Pack(orderEvent.ExpireTime));
+                case OrderInitialized evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.Label), evt.Label.ToString());
+                    package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
+                    package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
+                    package.Add(nameof(evt.Quantity), evt.Quantity.Value);
+                    package.Add(nameof(evt.Price), ObjectPacker.Pack(evt.Price));
+                    package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
+                    package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
                     break;
-                case OrderSubmitted orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.SubmittedTime, orderEvent.SubmittedTime.ToIsoString());
+                case OrderSubmitted evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.SubmittedTime), evt.SubmittedTime.ToIsoString());
                     break;
-                case OrderAccepted orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.AcceptedTime, orderEvent.AcceptedTime.ToIsoString());
+                case OrderAccepted evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.AcceptedTime), evt.AcceptedTime.ToIsoString());
                     break;
-                case OrderRejected orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
-                    package.Add(Key.RejectedReason, orderEvent.RejectedReason);
+                case OrderRejected evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
+                    package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
-                case OrderWorking orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.OrderIdBroker, orderEvent.OrderIdBroker.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.Label, orderEvent.Label.ToString());
-                    package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
-                    package.Add(Key.OrderType, orderEvent.OrderType.ToString());
-                    package.Add(Key.Quantity, orderEvent.Quantity.Value);
-                    package.Add(Key.Price, orderEvent.Price.ToString());
-                    package.Add(Key.TimeInForce, orderEvent.TimeInForce.ToString());
-                    package.Add(Key.ExpireTime, ObjectPacker.Pack(orderEvent.ExpireTime));
-                    package.Add(Key.WorkingTime, orderEvent.WorkingTime.ToIsoString());
+                case OrderWorking evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.ToString());
+                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.Label), evt.Label.ToString());
+                    package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
+                    package.Add(nameof(evt.OrderType), evt.OrderType.ToString());
+                    package.Add(nameof(evt.Quantity), evt.Quantity.Value);
+                    package.Add(nameof(evt.Price), evt.Price.ToString());
+                    package.Add(nameof(evt.TimeInForce), evt.TimeInForce.ToString());
+                    package.Add(nameof(evt.ExpireTime), ObjectPacker.Pack(evt.ExpireTime));
+                    package.Add(nameof(evt.WorkingTime), evt.WorkingTime.ToIsoString());
                     break;
-                case OrderCancelled orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.CancelledTime, orderEvent.CancelledTime.ToIsoString());
+                case OrderCancelled evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.CancelledTime), evt.CancelledTime.ToIsoString());
                     break;
-                case OrderCancelReject orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.RejectedTime, orderEvent.RejectedTime.ToIsoString());
-                    package.Add(Key.RejectedResponse, orderEvent.RejectedResponseTo);
-                    package.Add(Key.RejectedReason, orderEvent.RejectedReason);
+                case OrderCancelReject evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.RejectedTime), evt.RejectedTime.ToIsoString());
+                    package.Add(nameof(evt.RejectedResponseTo), evt.RejectedResponseTo);
+                    package.Add(nameof(evt.RejectedReason), evt.RejectedReason);
                     break;
-                case OrderModified orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.OrderIdBroker, orderEvent.OrderIdBroker.ToString());
-                    package.Add(Key.ModifiedPrice, orderEvent.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
-                    package.Add(Key.ModifiedTime, orderEvent.ModifiedTime.ToIsoString());
+                case OrderModified evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.OrderIdBroker), evt.OrderIdBroker.ToString());
+                    package.Add(nameof(evt.ModifiedPrice), evt.ModifiedPrice.Value.ToString(CultureInfo.InvariantCulture));
+                    package.Add(nameof(evt.ModifiedTime), evt.ModifiedTime.ToIsoString());
                     break;
-                case OrderExpired orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.ExpiredTime, orderEvent.ExpiredTime.ToIsoString());
+                case OrderExpired evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.ExpiredTime), evt.ExpiredTime.ToIsoString());
                     break;
-                case OrderPartiallyFilled orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
-                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderSide, orderEvent.OrderSide.ToString());
-                    package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
-                    package.Add(Key.LeavesQuantity, orderEvent.LeavesQuantity.Value);
-                    package.Add(Key.AveragePrice, orderEvent.AveragePrice.ToString());
-                    package.Add(Key.ExecutionTime, orderEvent.ExecutionTime.ToIsoString());
+                case OrderPartiallyFilled evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.ToString());
+                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.ToString());
+                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.OrderSide), evt.OrderSide.ToString());
+                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
+                    package.Add(nameof(evt.LeavesQuantity), evt.LeavesQuantity.Value);
+                    package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
+                    package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
-                case OrderFilled orderEvent:
-                    package.Add(Key.OrderId, orderEvent.OrderId.ToString());
-                    package.Add(Key.ExecutionId, orderEvent.ExecutionId.ToString());
-                    package.Add(Key.ExecutionTicket, orderEvent.ExecutionTicket.ToString());
-                    package.Add(Key.Symbol, orderEvent.Symbol.ToString());
-                    package.Add(Key.OrderSide, orderEvent.Side.ToString());
-                    package.Add(Key.FilledQuantity, orderEvent.FilledQuantity.Value);
-                    package.Add(Key.AveragePrice, orderEvent.AveragePrice.ToString());
-                    package.Add(Key.ExecutionTime, orderEvent.ExecutionTime.ToIsoString());
+                case OrderFilled evt:
+                    package.Add(nameof(evt.OrderId), evt.OrderId.ToString());
+                    package.Add(nameof(evt.ExecutionId), evt.ExecutionId.ToString());
+                    package.Add(nameof(evt.ExecutionTicket), evt.ExecutionTicket.ToString());
+                    package.Add(nameof(evt.Symbol), evt.Symbol.ToString());
+                    package.Add(nameof(evt.Side), evt.Side.ToString());
+                    package.Add(nameof(evt.FilledQuantity), evt.FilledQuantity.Value);
+                    package.Add(nameof(evt.AveragePrice), evt.AveragePrice.ToString());
+                    package.Add(nameof(evt.ExecutionTime), evt.ExecutionTime.ToIsoString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(@event, nameof(@event));
@@ -140,126 +140,126 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serializedEvent);
 
-            var @event = unpacked[Key.Event].ToString();
-            var identifier = ObjectExtractor.Guid(unpacked[Key.Id]);
-            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]);
+            var @event = unpacked[nameof(Event)].ToString();
+            var identifier = ObjectExtractor.Guid(unpacked[nameof(Event.Id)]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Event.Timestamp)]);
 
             switch (@event)
             {
                 case nameof(AccountEvent):
-                    var currency = ObjectExtractor.Enum<Currency>(unpacked[Key.Currency]);
+                    var currency = ObjectExtractor.Enum<Currency>(unpacked[nameof(AccountEvent.Currency)]);
                     return new AccountEvent(
-                        new AccountId(unpacked[Key.AccountId].ToString()),
-                        ObjectExtractor.Enum<Brokerage>(unpacked[Key.Broker]),
-                        unpacked[Key.AccountNumber].ToString(),
+                        new AccountId(unpacked[nameof(AccountEvent.AccountId)].ToString()),
+                        ObjectExtractor.Enum<Brokerage>(unpacked[nameof(AccountEvent.Broker)]),
+                        unpacked[nameof(AccountEvent.AccountNumber)].ToString(),
                         currency,
-                        ObjectExtractor.Money(unpacked[Key.CashBalance], currency),
-                        ObjectExtractor.Money(unpacked[Key.CashStartDay], currency),
-                        ObjectExtractor.Money(unpacked[Key.CashActivityDay], currency),
-                        ObjectExtractor.Money(unpacked[Key.MarginUsedLiquidation], currency),
-                        ObjectExtractor.Money(unpacked[Key.MarginUsedMaintenance], currency),
-                        ObjectExtractor.Decimal(unpacked[Key.MarginRatio].ToString()),
-                        unpacked[Key.MarginCallStatus].ToString(),
+                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashBalance)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashStartDay)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.CashActivityDay)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedLiquidation)], currency),
+                        ObjectExtractor.Money(unpacked[nameof(AccountEvent.MarginUsedMaintenance)], currency),
+                        ObjectExtractor.Decimal(unpacked[nameof(AccountEvent.MarginRatio)].ToString()),
+                        unpacked[nameof(AccountEvent.MarginCallStatus)].ToString(),
                         identifier,
                         timestamp);
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.Label(unpacked[Key.Label]),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
-                        ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),
-                        ObjectExtractor.Quantity(unpacked[Key.Quantity]),
-                        ObjectExtractor.NullablePrice(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderInitialized.OrderId)]),
+                        ObjectExtractor.Symbol(unpacked[nameof(OrderInitialized.Symbol)]),
+                        ObjectExtractor.Label(unpacked[nameof(OrderInitialized.Label)]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
+                        ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderInitialized.Quantity)]),
+                        ObjectExtractor.NullablePrice(unpacked[nameof(OrderInitialized.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderInitialized.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(OrderInitialized.ExpireTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderSubmitted):
                     return new OrderSubmitted(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.SubmittedTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderSubmitted.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderSubmitted.SubmittedTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderAccepted):
                     return new OrderAccepted(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.AcceptedTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderAccepted.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderAccepted.AcceptedTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderRejected):
                     return new OrderRejected(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
-                        unpacked[Key.RejectedReason].ToString(),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderRejected.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderRejected.RejectedTime)]),
+                        unpacked[nameof(OrderRejected.RejectedReason)].ToString(),
                         identifier,
                         timestamp);
                 case nameof(OrderWorking):
                     return new OrderWorking(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.OrderId(unpacked[Key.OrderIdBroker]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.Label(unpacked[Key.Label]),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
-                        ObjectExtractor.Enum<OrderType>(unpacked[Key.OrderType]),
-                        ObjectExtractor.Quantity(unpacked[Key.Quantity]),
-                        ObjectExtractor.Price(unpacked[Key.Price]),
-                        ObjectExtractor.Enum<TimeInForce>(unpacked[Key.TimeInForce]),
-                        ObjectExtractor.NullableZonedDateTime(unpacked[Key.ExpireTime]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.WorkingTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderWorking.OrderId)]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderWorking.OrderIdBroker)]),
+                        ObjectExtractor.Symbol(unpacked[nameof(OrderWorking.Symbol)]),
+                        ObjectExtractor.Label(unpacked[nameof(OrderWorking.Label)]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
+                        ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderWorking.Quantity)]),
+                        ObjectExtractor.Price(unpacked[nameof(OrderWorking.Price)]),
+                        ObjectExtractor.Enum<TimeInForce>(unpacked[nameof(OrderWorking.TimeInForce)]),
+                        ObjectExtractor.NullableZonedDateTime(unpacked[nameof(OrderWorking.ExpireTime)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderWorking.WorkingTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderCancelled):
                     return new OrderCancelled(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.CancelledTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderCancelled.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelled.CancelledTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderCancelReject):
                     return new OrderCancelReject(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.RejectedTime]),
-                        unpacked[Key.RejectedResponse].ToString(),
-                        unpacked[Key.RejectedReason].ToString(),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderCancelReject.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderCancelReject.RejectedTime)]),
+                        unpacked[nameof(OrderCancelReject.RejectedResponseTo)].ToString(),
+                        unpacked[nameof(OrderCancelReject.RejectedReason)].ToString(),
                         identifier,
                         timestamp);
                 case nameof(OrderModified):
                     return new OrderModified(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.Price(unpacked[Key.ModifiedPrice]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ModifiedTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderModified.OrderId)]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderModified.OrderIdBroker)]),
+                        ObjectExtractor.Price(unpacked[nameof(OrderModified.ModifiedPrice)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderModified.ModifiedTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderExpired):
                     return new OrderExpired(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExpiredTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderExpired.OrderId)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderExpired.ExpiredTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
-                        ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
-                        ObjectExtractor.Quantity(unpacked[Key.LeavesQuantity]),
-                        ObjectExtractor.Price(unpacked[Key.AveragePrice]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderPartiallyFilled.OrderId)]),
+                        ObjectExtractor.ExecutionId(unpacked[nameof(OrderPartiallyFilled.ExecutionId)]),
+                        ObjectExtractor.ExecutionTicket(unpacked[nameof(OrderPartiallyFilled.ExecutionId)]),
+                        ObjectExtractor.Symbol(unpacked[nameof(OrderPartiallyFilled.Symbol)]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
+                        ObjectExtractor.Price(unpacked[nameof(OrderPartiallyFilled.AveragePrice)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderPartiallyFilled.ExecutionTime)]),
                         identifier,
                         timestamp);
                 case nameof(OrderFilled):
                     return new OrderFilled(
-                        ObjectExtractor.OrderId(unpacked[Key.OrderId]),
-                        ObjectExtractor.ExecutionId(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.ExecutionTicket(unpacked[Key.ExecutionId]),
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.Enum<OrderSide>(unpacked[Key.OrderSide]),
-                        ObjectExtractor.Quantity(unpacked[Key.FilledQuantity]),
-                        ObjectExtractor.Price(unpacked[Key.AveragePrice]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ExecutionTime]),
+                        ObjectExtractor.OrderId(unpacked[nameof(OrderFilled.OrderId)]),
+                        ObjectExtractor.ExecutionId(unpacked[nameof(OrderFilled.ExecutionId)]),
+                        ObjectExtractor.ExecutionTicket(unpacked[nameof(OrderFilled.ExecutionId)]),
+                        ObjectExtractor.Symbol(unpacked[nameof(OrderFilled.Symbol)]),
+                        ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.Side)]),
+                        ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
+                        ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(OrderFilled.ExecutionTime)]),
                         identifier,
                         timestamp);
                 default:

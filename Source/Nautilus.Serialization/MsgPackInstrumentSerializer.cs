@@ -26,23 +26,23 @@ namespace Nautilus.Serialization
         {
             return MsgPackSerializer.Serialize(new MessagePackObjectDictionary
             {
-                { Key.Id, instrument.Id.ToString() },
-                { Key.Symbol, instrument.Symbol.ToString() },
-                { Key.BrokerSymbol, instrument.BrokerSymbol.ToString() },
-                { Key.QuoteCurrency, instrument.QuoteCurrency.ToString() },
-                { Key.SecurityType, instrument.SecurityType.ToString() },
-                { Key.TickPrecision, instrument.TickPrecision },
-                { Key.TickSize, instrument.TickSize.ToString(CultureInfo.InvariantCulture) },
-                { Key.RoundLotSize, instrument.RoundLotSize },
-                { Key.MinStopDistanceEntry, instrument.MinStopDistanceEntry },
-                { Key.MinStopDistance, instrument.MinStopDistance },
-                { Key.MinLimitDistanceEntry, instrument.MinLimitDistanceEntry },
-                { Key.MinLimitDistance, instrument.MinLimitDistance },
-                { Key.MinTradeSize, instrument.MinTradeSize },
-                { Key.MaxTradeSize, instrument.MaxTradeSize },
-                { Key.RolloverInterestBuy, instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
-                { Key.RolloverInterestSell, instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
-                { Key.Timestamp, instrument.Timestamp.ToIsoString() },
+                { nameof(Instrument.Id), instrument.Id.ToString() },
+                { nameof(Instrument.Symbol), instrument.Symbol.ToString() },
+                { nameof(Instrument.BrokerSymbol), instrument.BrokerSymbol.ToString() },
+                { nameof(Instrument.QuoteCurrency), instrument.QuoteCurrency.ToString() },
+                { nameof(Instrument.SecurityType), instrument.SecurityType.ToString() },
+                { nameof(Instrument.TickPrecision), instrument.TickPrecision },
+                { nameof(Instrument.TickSize), instrument.TickSize.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.RoundLotSize), instrument.RoundLotSize },
+                { nameof(Instrument.MinStopDistanceEntry), instrument.MinStopDistanceEntry },
+                { nameof(Instrument.MinStopDistance), instrument.MinStopDistance },
+                { nameof(Instrument.MinLimitDistanceEntry), instrument.MinLimitDistanceEntry },
+                { nameof(Instrument.MinLimitDistance), instrument.MinLimitDistance },
+                { nameof(Instrument.MinTradeSize), instrument.MinTradeSize },
+                { nameof(Instrument.MaxTradeSize), instrument.MaxTradeSize },
+                { nameof(Instrument.RolloverInterestBuy), instrument.RolloverInterestBuy.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.RolloverInterestSell), instrument.RolloverInterestSell.ToString(CultureInfo.InvariantCulture) },
+                { nameof(Instrument.Timestamp), instrument.Timestamp.ToIsoString() },
             });
         }
 
@@ -52,23 +52,23 @@ namespace Nautilus.Serialization
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serialized);
 
             return new Instrument(
-                ObjectExtractor.InstrumentId(unpacked[Key.Id]),
-                ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                ObjectExtractor.BrokerSymbol(unpacked[Key.BrokerSymbol]),
-                ObjectExtractor.Enum<Currency>(unpacked[Key.QuoteCurrency]),
-                ObjectExtractor.Enum<SecurityType>(unpacked[Key.SecurityType]),
-                unpacked[Key.TickPrecision].AsInt32(),
-                ObjectExtractor.Decimal(unpacked[Key.TickSize]),
-                unpacked[Key.RoundLotSize].AsInt32(),
-                unpacked[Key.MinStopDistanceEntry].AsInt32(),
-                unpacked[Key.MinLimitDistanceEntry].AsInt32(),
-                unpacked[Key.MinStopDistance].AsInt32(),
-                unpacked[Key.MinLimitDistance].AsInt32(),
-                unpacked[Key.MinTradeSize].AsInt32(),
-                unpacked[Key.MaxTradeSize].AsInt32(),
-                ObjectExtractor.Decimal(unpacked[Key.RolloverInterestBuy]),
-                ObjectExtractor.Decimal(unpacked[Key.RolloverInterestSell]),
-                ObjectExtractor.ZonedDateTime(unpacked[Key.Timestamp]));
+                ObjectExtractor.InstrumentId(unpacked[nameof(Instrument.Id)]),
+                ObjectExtractor.Symbol(unpacked[nameof(Instrument.Symbol)]),
+                ObjectExtractor.BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)]),
+                ObjectExtractor.Enum<Currency>(unpacked[nameof(Instrument.QuoteCurrency)]),
+                ObjectExtractor.Enum<SecurityType>(unpacked[nameof(Instrument.SecurityType)]),
+                unpacked[nameof(Instrument.TickPrecision)].AsInt32(),
+                ObjectExtractor.Decimal(unpacked[nameof(Instrument.TickSize)]),
+                unpacked[nameof(Instrument.RoundLotSize)].AsInt32(),
+                unpacked[nameof(Instrument.MinStopDistanceEntry)].AsInt32(),
+                unpacked[nameof(Instrument.MinLimitDistanceEntry)].AsInt32(),
+                unpacked[nameof(Instrument.MinStopDistance)].AsInt32(),
+                unpacked[nameof(Instrument.MinLimitDistance)].AsInt32(),
+                unpacked[nameof(Instrument.MinTradeSize)].AsInt32(),
+                unpacked[nameof(Instrument.MaxTradeSize)].AsInt32(),
+                ObjectExtractor.Decimal(unpacked[nameof(Instrument.RolloverInterestBuy)]),
+                ObjectExtractor.Decimal(unpacked[nameof(Instrument.RolloverInterestSell)]),
+                ObjectExtractor.ZonedDateTime(unpacked[nameof(Instrument.Timestamp)]));
         }
     }
 }

@@ -28,30 +28,30 @@ namespace Nautilus.Serialization
         {
             var package = new MessagePackObjectDictionary
             {
-                { Key.Type, nameof(Command) },
-                { Key.Request, request.Type.Name },
-                { Key.Id, request.Id.ToString() },
-                { Key.Timestamp, request.Timestamp.ToIsoString() },
+                { nameof(Request.Type), nameof(Request) },
+                { nameof(Request), request.Type.Name },
+                { nameof(Request.Id), request.Id.ToString() },
+                { nameof(Request.Timestamp), request.Timestamp.ToIsoString() },
             };
 
             switch (request)
             {
                 case TickDataRequest req:
-                    package.Add(Key.Symbol, req.Symbol.ToString());
-                    package.Add(Key.FromDateTime, req.FromDateTime.ToIsoString());
-                    package.Add(Key.ToDateTime, req.ToDateTime.ToIsoString());
+                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
+                    package.Add(nameof(req.FromDateTime), req.FromDateTime.ToIsoString());
+                    package.Add(nameof(req.ToDateTime), req.ToDateTime.ToIsoString());
                     break;
                 case BarDataRequest req:
-                    package.Add(Key.Symbol, req.Symbol.ToString());
-                    package.Add(Key.BarSpecification, req.BarSpecification.ToString());
-                    package.Add(Key.FromDateTime, req.FromDateTime.ToIsoString());
-                    package.Add(Key.ToDateTime, req.ToDateTime.ToIsoString());
+                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
+                    package.Add(nameof(req.BarSpecification), req.BarSpecification.ToString());
+                    package.Add(nameof(req.FromDateTime), req.FromDateTime.ToIsoString());
+                    package.Add(nameof(req.ToDateTime), req.ToDateTime.ToIsoString());
                     break;
                 case InstrumentRequest req:
-                    package.Add(Key.Symbol, req.Symbol.ToString());
+                    package.Add(nameof(req.Symbol), req.Symbol.ToString());
                     break;
                 case InstrumentsRequest req:
-                    package.Add(Key.Venue, req.Venue.ToString());
+                    package.Add(nameof(req.Venue), req.Venue.ToString());
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(request, nameof(request));
@@ -65,35 +65,35 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
 
-            var identifier = new Guid(unpacked[Key.Id].ToString());
-            var timestamp = unpacked[Key.Timestamp].ToString().ToZonedDateTimeFromIso();
-            var request = unpacked[Key.Request].ToString();
+            var identifier = new Guid(unpacked[nameof(Request.Id)].ToString());
+            var timestamp = unpacked[nameof(Request.Timestamp)].ToString().ToZonedDateTimeFromIso();
+            var request = unpacked[nameof(Request)].ToString();
 
             switch (request)
             {
                 case nameof(TickDataRequest):
                     return new TickDataRequest(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.FromDateTime]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ToDateTime]),
+                        ObjectExtractor.Symbol(unpacked[nameof(TickDataRequest.Symbol)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.FromDateTime)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.ToDateTime)]),
                         identifier,
                         timestamp);
                 case nameof(BarDataRequest):
                     return new BarDataRequest(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
-                        ObjectExtractor.BarSpecification(unpacked[Key.BarSpecification]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.FromDateTime]),
-                        ObjectExtractor.ZonedDateTime(unpacked[Key.ToDateTime]),
+                        ObjectExtractor.Symbol(unpacked[nameof(BarDataRequest.Symbol)]),
+                        ObjectExtractor.BarSpecification(unpacked[nameof(BarDataRequest.BarSpecification)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.FromDateTime)]),
+                        ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.ToDateTime)]),
                         identifier,
                         timestamp);
                 case nameof(InstrumentRequest):
                     return new InstrumentRequest(
-                        ObjectExtractor.Symbol(unpacked[Key.Symbol]),
+                        ObjectExtractor.Symbol(unpacked[nameof(InstrumentRequest.Symbol)]),
                         identifier,
                         timestamp);
                 case nameof(InstrumentsRequest):
                     return new InstrumentsRequest(
-                        ObjectExtractor.Enum<Venue>(unpacked[Key.Venue]),
+                        ObjectExtractor.Enum<Venue>(unpacked[nameof(InstrumentsRequest.Venue)]),
                         identifier,
                         timestamp);
                 default:
