@@ -18,7 +18,7 @@ namespace Nautilus.Serialization
     using Nautilus.Serialization.Internal;
 
     /// <summary>
-    /// Provides a <see cref="Request"/> message binary serializer for the MessagePack specification.
+    /// Provides a <see cref="Response"/> message binary serializer for the MessagePack specification.
     /// </summary>
     public sealed class MsgPackResponseSerializer : IResponseSerializer
     {
@@ -41,7 +41,7 @@ namespace Nautilus.Serialization
                 case BarDataResponse res:
                     package.Add(nameof(res.Symbol), res.Symbol.ToString());
                     package.Add(nameof(res.BarSpecification), res.BarSpecification.ToString());
-                    package.Add(nameof(res.BarsCount), res.BarsCount);
+                    package.Add(nameof(res.Bars), MsgPackSerializer.Serialize(res.Bars));
                     break;
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(response, nameof(response));
@@ -72,7 +72,7 @@ namespace Nautilus.Serialization
                     return new BarDataResponse(
                         ObjectExtractor.Symbol(unpacked[nameof(BarDataResponse.Symbol)]),
                         ObjectExtractor.BarSpecification(unpacked[nameof(BarDataResponse.BarSpecification)]),
-                        unpacked[nameof(BarDataResponse.BarsCount)].AsInt32(),
+                        MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
                         correlationId,
                         id,
                         timestamp);

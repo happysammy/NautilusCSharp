@@ -10,10 +10,11 @@ namespace Nautilus.Data.Network
 {
     using System;
     using System.Linq;
-    using System.Text;
     using Nautilus.Common.Interfaces;
+    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
+    using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
 
@@ -22,11 +23,8 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class InstrumentResponder : Responder
     {
-        private const string INVALID = "INVALID REQUEST";
-
         private readonly IInstrumentRepository repository;
         private readonly IInstrumentSerializer instrumentSerializer;
-        private readonly IRequestSerializer requestSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstrumentResponder"/> class.
@@ -35,6 +33,7 @@ namespace Nautilus.Data.Network
         /// <param name="repository">The instrument repository.</param>
         /// <param name="instrumentSerializer">The instrument serializer.</param>
         /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public InstrumentResponder(
@@ -42,87 +41,67 @@ namespace Nautilus.Data.Network
             IInstrumentRepository repository,
             IInstrumentSerializer instrumentSerializer,
             IRequestSerializer requestSerializer,
+            IResponseSerializer responseSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                requestSerializer,
+                responseSerializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.repository = repository;
             this.instrumentSerializer = instrumentSerializer;
-            this.requestSerializer = requestSerializer;
 
-            this.RegisterHandler<byte[]>(this.OnMessage);
+            this.RegisterHandler<InstrumentRequest>(this.OnMessage);
+            this.RegisterHandler<InstrumentsRequest>(this.OnMessage);
+            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
-        private void OnMessage(byte[] requestBytes)
-        {
-            try
-            {
-                var request = this.requestSerializer.Deserialize(requestBytes);
-
-                switch (request)
-                {
-                    case InstrumentRequest req:
-                        this.HandleRequest(req);
-                        break;
-                    case InstrumentsRequest req:
-                        this.HandleRequest(req);
-                        break;
-                    default:
-                    {
-                        var message = $"request type {request.GetType()} not valid on this port";
-                        this.SendInvalidResponse(message);
-                        this.Log.Error(message);
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                this.SendInvalidResponse(ex.Message);
-                this.Log.Error(ex.Message);
-            }
-        }
-
-        private void HandleRequest(InstrumentRequest request)
+        private void OnMessage(InstrumentRequest request)
         {
             var query = this.repository.FindInCache(request.Symbol);
 
-            if (query.IsSuccess)
+            if (query.IsFailure)
             {
-                this.SendResponse(this.instrumentSerializer.Serialize(query.Value));
-                return;
+                this.SendBadResponse(query.Message);
+                this.Log.Error(query.Message);
             }
 
-            this.SendInvalidResponse(query.Message);
-            this.Log.Error(query.Message);
+            var instrument = new byte[][] { this.instrumentSerializer.Serialize(query.Value) };
+            var response = new InstrumentDataResponse(
+                instrument,
+                this.CorrelationId,
+                Guid.NewGuid(),
+                this.TimeNow());
+
+            this.SendResponse(response);
         }
 
-        private void HandleRequest(InstrumentsRequest request)
+        private void OnMessage(InstrumentsRequest request)
         {
             var query = this.repository.FindInCache(request.Venue);
 
-            if (query.IsSuccess)
+            if (query.IsFailure)
             {
-                var serialized = query
-                    .Value
-                    .Select(i => this.instrumentSerializer.Serialize(i))
-                    .ToList();
-
-                this.SendResponse(serialized);
-                return;
+                this.SendBadResponse(query.Message);
+                this.Log.Error(query.Message);
             }
 
-            this.SendInvalidResponse(query.Message);
-            this.Log.Error(query.Message);
-        }
+            var instruments = query
+                .Value
+                .Select(i => this.instrumentSerializer.Serialize(i))
+                .ToArray();
 
-        private void SendInvalidResponse(string message)
-        {
-            this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({message})."));
+            var response = new InstrumentDataResponse(
+                instruments,
+                this.CorrelationId,
+                Guid.NewGuid(),
+                this.TimeNow());
+
+            this.SendResponse(response);
         }
     }
 }

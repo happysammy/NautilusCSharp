@@ -9,13 +9,14 @@
 namespace Nautilus.Network
 {
     using System;
-    using System.Collections.Generic;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Nautilus.Common.Componentry;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Commands;
+    using Nautilus.Common.Messages.Responses;
+    using Nautilus.Core;
     using Nautilus.Core.Correctness;
     using NetMQ;
     using NetMQ.Sockets;
@@ -29,6 +30,8 @@ namespace Nautilus.Network
 
         private readonly CancellationTokenSource cts;
         private readonly ResponseSocket socket;
+        private readonly IRequestSerializer requestSerializer;
+        private readonly IResponseSerializer responseSerializer;
 
         private bool isResponding;
         private int cycles;
@@ -39,11 +42,15 @@ namespace Nautilus.Network
         /// Initializes a new instance of the <see cref="Responder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
         protected Responder(
             IComponentryContainer container,
+            IRequestSerializer requestSerializer,
+            IResponseSerializer responseSerializer,
             NetworkAddress host,
             NetworkPort port,
             Guid id)
@@ -60,15 +67,23 @@ namespace Nautilus.Network
                     Identity = Encoding.Unicode.GetBytes(id.ToString()),
                 },
             };
+            this.requestSerializer = requestSerializer;
+            this.responseSerializer = responseSerializer;
+            this.requesterIdentity = new byte[] { };
+            this.CorrelationId = Guid.Empty;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
-            this.requesterIdentity = new byte[] { };
         }
 
         /// <summary>
         /// Gets the server address for the router.
         /// </summary>
         public ZmqServerAddress ServerAddress { get; }
+
+        /// <summary>
+        /// Gets the response correlation identifier.
+        /// </summary>
+        public Guid CorrelationId { get; private set; }
 
         /// <inheritdoc />
         protected override void OnStart(Start start)
@@ -96,27 +111,46 @@ namespace Nautilus.Network
         /// Respond to the last request with the given response.
         /// </summary>
         /// <param name="response">The response bytes.</param>
-        protected void SendResponse(byte[] response)
+        protected void SendResponse(Response response)
         {
-            this.socket.SendMultipartBytes(this.requesterIdentity, Delimiter, response);
+            this.socket.SendMultipartBytes(
+                this.requesterIdentity,
+                Delimiter,
+                this.responseSerializer.Serialize(response));
 
             this.cycles++;
             this.Log.Verbose($"Responded to message[{this.cycles}] on {this.ServerAddress.Value}.");
         }
 
         /// <summary>
-        /// Respond to the last request with the given response.
+        /// Respond to the last request with a bad response containing the given message.
         /// </summary>
-        /// <param name="response">The response byte arrays.</param>
-        protected void SendResponse(List<byte[]> response)
+        /// <param name="message">The bad response message.</param>
+        protected void SendBadResponse(string message)
         {
-            response.Insert(0, Delimiter);
-            response.Insert(0, this.requesterIdentity);
+            var badResponse = new BadResponse(
+                message,
+                this.CorrelationId,
+                Guid.NewGuid(),
+                this.TimeNow());
 
-            this.socket.SendMultipartBytes(response);
+            this.SendResponse(badResponse);
+        }
 
-            this.cycles++;
-            this.Log.Verbose($"Responded to message[{this.cycles}] on {this.ServerAddress.Value}.");
+        /// <summary>
+        /// Handle the given unhandled request message.
+        /// </summary>
+        /// <param name="message">The unhandled object.</param>
+        protected void UnhandledRequest(object message)
+        {
+            if (message is Request request)
+            {
+                var errorMessage = $"request type {request.Type} not valid on this port";
+                this.SendBadResponse(errorMessage);
+                this.Log.Error(errorMessage);
+            }
+
+            this.AddToUnhandledMessages(message);
         }
 
         private Task StartResponding()
@@ -132,11 +166,21 @@ namespace Nautilus.Network
 
         private void ListenForRequest()
         {
-            this.requesterIdentity = this.socket.ReceiveFrameBytes();
-            this.socket.ReceiveFrameBytes(); // Delimiter
-            var request = this.socket.ReceiveFrameBytes();
+            try
+            {
+                this.CorrelationId = Guid.Empty;
+                this.requesterIdentity = this.socket.ReceiveFrameBytes();
+                this.socket.ReceiveFrameBytes(); // Delimiter
+                var request = this.requestSerializer.Deserialize(this.socket.ReceiveFrameBytes());
+                this.CorrelationId = request.Id;
 
-            this.SendToSelf(request);
+                this.SendToSelf(request);
+            }
+            catch (Exception ex)
+            {
+                this.SendBadResponse(ex.Message);
+                this.Log.Error(ex.Message);
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
+    using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.Network;
 
@@ -22,79 +23,64 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class TickResponder : Responder
     {
-        private const string INVALID = "INVALID REQUEST";
-
         private readonly ITickRepository repository;
-        private readonly IRequestSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickResponder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The tick repository.</param>
-        /// <param name="serializer">The request serializer.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public TickResponder(
             IComponentryContainer container,
             ITickRepository repository,
-            IRequestSerializer serializer,
+            IRequestSerializer requestSerializer,
+            IResponseSerializer responseSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                requestSerializer,
+                responseSerializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.repository = repository;
-            this.serializer = serializer;
 
-            this.RegisterHandler<byte[]>(this.OnMessage);
+            this.RegisterHandler<TickDataRequest>(this.OnMessage);
+            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
-        private void OnMessage(byte[] requestBytes)
+        private void OnMessage(TickDataRequest request)
         {
-            try
+            var query = this.repository.Find(
+                request.Symbol,
+                request.FromDateTime,
+                request.ToDateTime);
+
+            if (query.IsFailure)
             {
-                var request = this.serializer.Deserialize(requestBytes);
-
-                if (!(request is TickDataRequest))
-                {
-                    var message = $"request type {request.GetType()} not valid on this port";
-                    this.SendInvalidResponse(message);
-                    this.Log.Error(message);
-                }
-
-                var dataRequest = (TickDataRequest)request;
-                var query = this.repository.Find(
-                    dataRequest.Symbol,
-                    dataRequest.FromDateTime,
-                    dataRequest.ToDateTime);
-
-                if (query.IsFailure)
-                {
-                    this.SendInvalidResponse(query.Message);
-                    this.Log.Error(query.Message);
-                }
-
-                var ticksList = query
-                    .Value
-                    .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
-                    .ToList();
-
-                this.SendResponse(ticksList);
+                this.SendBadResponse(query.Message);
+                this.Log.Error(query.Message);
             }
-            catch (Exception ex)
-            {
-                this.SendInvalidResponse(ex.Message);
-                this.Log.Error(ex.Message);
-            }
-        }
 
-        private void SendInvalidResponse(string message)
-        {
-            this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({message})."));
+            var ticks = query
+                .Value
+                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
+                .ToArray();
+
+            var response = new TickDataResponse(
+                request.Symbol,
+                ticks,
+                this.CorrelationId,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.SendResponse(response);
         }
     }
 }

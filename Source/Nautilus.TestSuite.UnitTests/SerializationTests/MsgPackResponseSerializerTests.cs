@@ -64,13 +64,15 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             // Arrange
             var symbol = new Symbol("AUDUSD", Venue.FXCM);
             var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
-            var barsCount = 10000;
             var correlationId = Guid.NewGuid();
+
+            var bar = Encoding.UTF8.GetBytes(StubBarBuilder.Build().ToString());
+            var bars = new byte[][] { bar, bar };
 
             var response = new BarDataResponse(
                 symbol,
                 barSpec,
-                barsCount,
+                bars,
                 correlationId,
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
@@ -83,7 +85,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(symbol, unpacked.Symbol);
             Assert.Equal(barSpec, unpacked.BarSpecification);
-            Assert.Equal(barsCount, unpacked.BarsCount);
+            Assert.Equal(bars, unpacked.Bars);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));

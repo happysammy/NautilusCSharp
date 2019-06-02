@@ -76,6 +76,7 @@ namespace NautilusData
                 container,
                 tickRepository,
                 new MsgPackRequestSerializer(),
+                new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.TickRequestPort);
 
@@ -88,6 +89,7 @@ namespace NautilusData
                 container,
                 barRepository,
                 new MsgPackRequestSerializer(),
+                new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.BarRequestPort);
 
@@ -101,6 +103,7 @@ namespace NautilusData
                 instrumentRepository,
                 new MsgPackInstrumentSerializer(),
                 new MsgPackRequestSerializer(),
+                new MsgPackResponseSerializer(),
                 config.ServerAddress,
                 config.InstrumentRequestPort);
 

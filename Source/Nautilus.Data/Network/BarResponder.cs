@@ -14,6 +14,7 @@ namespace Nautilus.Data.Network
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
+    using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
@@ -23,78 +24,67 @@ namespace Nautilus.Data.Network
     /// </summary>
     public sealed class BarResponder : Responder
     {
-        private const string INVALID = "INVALID REQUEST";
-
         private readonly IBarRepository repository;
-        private readonly IRequestSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BarResponder"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="repository">The instrument repository.</param>
-        /// <param name="serializer">The request serializer.</param>
+        /// <param name="requestSerializer">The request serializer.</param>
+        /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
         public BarResponder(
             IComponentryContainer container,
             IBarRepository repository,
-            IRequestSerializer serializer,
+            IRequestSerializer requestSerializer,
+            IResponseSerializer responseSerializer,
             NetworkAddress host,
             NetworkPort port)
             : base(
                 container,
+                requestSerializer,
+                responseSerializer,
                 host,
                 port,
                 Guid.NewGuid())
         {
             this.repository = repository;
-            this.serializer = serializer;
 
-            this.RegisterHandler<byte[]>(this.OnMessage);
+            this.RegisterHandler<BarDataRequest>(this.OnMessage);
+            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
-        private void OnMessage(byte[] requestBytes)
+        private void OnMessage(BarDataRequest request)
         {
-            try
+            var barType = new BarType(request.Symbol, request.BarSpecification);
+            var query = this.repository.Find(
+                barType,
+                request.FromDateTime,
+                request.ToDateTime);
+
+            if (query.IsFailure)
             {
-                var request = this.serializer.Deserialize(requestBytes);
-
-                if (!(request is BarDataRequest))
-                {
-                    var message = "request not of type BarDataRequest";
-                    this.SendInvalidResponse(message);
-                    this.Log.Error(message);
-                }
-
-                var dataRequest = (BarDataRequest)request;
-                var barType = new BarType(dataRequest.Symbol, dataRequest.BarSpecification);
-                var query = this.repository.Find(barType, dataRequest.FromDateTime, dataRequest.ToDateTime);
-
-                if (query.IsFailure)
-                {
-                    this.SendInvalidResponse(query.Message);
-                    this.Log.Error(query.Message);
-                }
-
-                var barsList = query
-                    .Value
-                    .Bars
-                    .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
-                    .ToList();
-
-                this.SendResponse(barsList);
+                this.SendBadResponse(query.Message);
+                this.Log.Error(query.Message);
             }
-            catch (Exception ex)
-            {
-                this.SendInvalidResponse(ex.Message);
-                this.Log.Error(ex.Message);
-            }
-        }
 
-        private void SendInvalidResponse(string message)
-        {
-            this.SendResponse(Encoding.UTF8.GetBytes(INVALID + $" ({message})."));
+            var bars = query
+                .Value
+                .Bars
+                .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
+                .ToArray();
+
+            var response = new BarDataResponse(
+                request.Symbol,
+                request.BarSpecification,
+                bars,
+                this.CorrelationId,
+                this.NewGuid(),
+                this.TimeNow());
+
+            this.SendResponse(response);
         }
     }
 }
