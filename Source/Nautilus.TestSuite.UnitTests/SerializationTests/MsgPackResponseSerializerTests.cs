@@ -12,7 +12,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Nautilus.Common.Messages.Responses;
-    using Nautilus.Data.Messages.Requests;
+    using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Serialization;
@@ -54,6 +54,37 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             Assert.Equal(response, unpacked);
             Assert.Equal(correlationId, unpacked.CorrelationId);
             Assert.Equal(message, unpacked.Message);
+            this.output.WriteLine(Convert.ToBase64String(packed));
+            this.output.WriteLine(Encoding.UTF8.GetString(packed));
+        }
+
+        [Fact]
+        internal void CanSerializeAndDeserialize_BarDataResponses()
+        {
+            // Arrange
+            var symbol = new Symbol("AUDUSD", Venue.FXCM);
+            var barSpec = new BarSpecification(1, Resolution.MINUTE, QuoteType.BID);
+            var barsCount = 10000;
+            var correlationId = Guid.NewGuid();
+
+            var response = new BarDataResponse(
+                symbol,
+                barSpec,
+                barsCount,
+                correlationId,
+                Guid.NewGuid(),
+                StubZonedDateTime.UnixEpoch());
+
+            // Act
+            var packed = this.serializer.Serialize(response);
+            var unpacked = (BarDataResponse)this.serializer.Deserialize(packed);
+
+            // Assert
+            Assert.Equal(response, unpacked);
+            Assert.Equal(symbol, unpacked.Symbol);
+            Assert.Equal(barSpec, unpacked.BarSpecification);
+            Assert.Equal(barsCount, unpacked.BarsCount);
+            Assert.Equal(correlationId, unpacked.CorrelationId);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
