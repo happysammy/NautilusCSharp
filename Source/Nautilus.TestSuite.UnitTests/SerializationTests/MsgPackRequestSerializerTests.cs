@@ -46,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = serializer.Serialize(request);
-            var unpacked = serializer.Deserialize(packed) as TickDataRequest;
+            var unpacked = (TickDataRequest)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(request, unpacked);
@@ -71,7 +71,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = serializer.Serialize(request);
-            var unpacked = serializer.Deserialize(packed) as BarDataRequest;
+            var unpacked = (BarDataRequest)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(request, unpacked);
@@ -93,7 +93,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = serializer.Serialize(request);
-            var unpacked = serializer.Deserialize(packed) as InstrumentRequest;
+            var unpacked = (InstrumentRequest)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(request, unpacked);
@@ -115,7 +115,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = serializer.Serialize(request);
-            var unpacked = serializer.Deserialize(packed) as InstrumentsRequest;
+            var unpacked = (InstrumentsRequest)serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(request, unpacked);

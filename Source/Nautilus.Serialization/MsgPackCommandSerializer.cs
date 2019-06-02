@@ -8,7 +8,6 @@
 
 namespace Nautilus.Serialization
 {
-    using System;
     using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -28,8 +27,7 @@ namespace Nautilus.Serialization
         {
             var package = new MessagePackObjectDictionary
             {
-                { nameof(Command.Type), nameof(Command) },
-                { nameof(Command), command.Type.Name },
+                { nameof(Command.Type), command.Type.Name },
                 { nameof(Command.Id), command.Id.ToString() },
                 { nameof(Command.Timestamp), command.Timestamp.ToIsoString() },
             };
@@ -76,21 +74,21 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
 
-            var identifier = new Guid(unpacked[nameof(Command.Id)].ToString());
+            var command = unpacked[nameof(Command.Type)].ToString();
+            var id = ObjectExtractor.Guid(unpacked[nameof(Command.Id)]);
             var timestamp = unpacked[nameof(Command.Timestamp)].ToString().ToZonedDateTimeFromIso();
-            var command = unpacked[nameof(Command)].ToString();
 
             switch (command)
             {
                 case nameof(CollateralInquiry):
-                    return new CollateralInquiry(identifier, timestamp);
+                    return new CollateralInquiry(id, timestamp);
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
                         ObjectExtractor.TraderId(unpacked[nameof(SubmitOrder.TraderId)]),
                         ObjectExtractor.StrategyId(unpacked[nameof(SubmitOrder.StrategyId)]),
                         ObjectExtractor.PositionId(unpacked[nameof(SubmitOrder.PositionId)]),
                         OrderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
@@ -101,7 +99,7 @@ namespace Nautilus.Serialization
                             OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
                             OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
                             OrderSerializer.DeserializeNullable(unpacked[nameof(AtomicOrder.TakeProfit)].AsBinary())),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
@@ -109,7 +107,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.StrategyId(unpacked[nameof(ModifyOrder.StrategyId)]),
                         ObjectExtractor.OrderId(unpacked[nameof(ModifyOrder.OrderId)]),
                         ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].ToString()),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(CancelOrder):
                     return new CancelOrder(
@@ -117,7 +115,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.StrategyId(unpacked[nameof(CancelOrder.StrategyId)]),
                         ObjectExtractor.OrderId(unpacked[nameof(CancelOrder.OrderId)]),
                         unpacked[nameof(CancelOrder.CancelReason)].ToString(),
-                        identifier,
+                        id,
                         timestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(command, nameof(command));

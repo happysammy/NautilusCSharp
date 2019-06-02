@@ -8,7 +8,6 @@
 
 namespace Nautilus.Serialization
 {
-    using System;
     using MsgPack;
     using Nautilus.Common.Interfaces;
     using Nautilus.Core;
@@ -28,8 +27,7 @@ namespace Nautilus.Serialization
         {
             var package = new MessagePackObjectDictionary
             {
-                { nameof(Request.Type), nameof(Request) },
-                { nameof(Request), request.Type.Name },
+                { nameof(Request.Type), request.Type.Name },
                 { nameof(Request.Id), request.Id.ToString() },
                 { nameof(Request.Timestamp), request.Timestamp.ToIsoString() },
             };
@@ -65,9 +63,9 @@ namespace Nautilus.Serialization
         {
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(commandBytes);
 
-            var identifier = new Guid(unpacked[nameof(Request.Id)].ToString());
-            var timestamp = unpacked[nameof(Request.Timestamp)].ToString().ToZonedDateTimeFromIso();
-            var request = unpacked[nameof(Request)].ToString();
+            var request = unpacked[nameof(Request.Type)].ToString();
+            var id = ObjectExtractor.Guid(unpacked[nameof(Request.Id)]);
+            var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Request.Timestamp)]);
 
             switch (request)
             {
@@ -76,7 +74,7 @@ namespace Nautilus.Serialization
                         ObjectExtractor.Symbol(unpacked[nameof(TickDataRequest.Symbol)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.FromDateTime)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.ToDateTime)]),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(BarDataRequest):
                     return new BarDataRequest(
@@ -84,17 +82,17 @@ namespace Nautilus.Serialization
                         ObjectExtractor.BarSpecification(unpacked[nameof(BarDataRequest.BarSpecification)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.FromDateTime)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.ToDateTime)]),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(InstrumentRequest):
                     return new InstrumentRequest(
                         ObjectExtractor.Symbol(unpacked[nameof(InstrumentRequest.Symbol)]),
-                        identifier,
+                        id,
                         timestamp);
                 case nameof(InstrumentsRequest):
                     return new InstrumentsRequest(
                         ObjectExtractor.Enum<Venue>(unpacked[nameof(InstrumentsRequest.Venue)]),
-                        identifier,
+                        id,
                         timestamp);
                 default:
                     throw ExceptionFactory.InvalidSwitchArgument(request, nameof(request));
