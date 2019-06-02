@@ -17,7 +17,7 @@ namespace Nautilus.Data.Messages.Responses
     using NodaTime;
 
     /// <summary>
-    /// Represents a request for historical bar data.
+    /// Represents a response of historical bar data.
     /// </summary>
     [Immutable]
     public sealed class BarDataResponse : Response
