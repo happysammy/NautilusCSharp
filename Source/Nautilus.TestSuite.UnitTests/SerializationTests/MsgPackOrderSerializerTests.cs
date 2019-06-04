@@ -42,6 +42,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(order, unpacked);
+            Assert.Equal(order.Symbol, unpacked.Symbol);
+            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.Price, unpacked.Price);
+            Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
+            Assert.Equal(order.Label, unpacked.Label);
+            Assert.Equal(order.Quantity, unpacked.Quantity);
+            Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -58,6 +65,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(order, unpacked);
+            Assert.Equal(order.Symbol, unpacked.Symbol);
+            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.Price, unpacked.Price);
+            Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
+            Assert.Equal(order.Label, unpacked.Label);
+            Assert.Equal(order.Quantity, unpacked.Quantity);
+            Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -74,6 +88,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(order, unpacked);
+            Assert.Equal(order.Symbol, unpacked.Symbol);
+            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.Price, unpacked.Price);
+            Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
+            Assert.Equal(order.Label, unpacked.Label);
+            Assert.Equal(order.Quantity, unpacked.Quantity);
+            Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -90,6 +111,13 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(order, unpacked);
+            Assert.Equal(order.Symbol, unpacked.Symbol);
+            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.Price, unpacked.Price);
+            Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
+            Assert.Equal(order.Label, unpacked.Label);
+            Assert.Equal(order.Quantity, unpacked.Quantity);
+            Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -98,14 +126,21 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         internal void CanSerializeAndDeserialize_NullableOrders_GivenOrder()
         {
             // Arrange
-            var takeProfit = new StubOrderBuilder().TakeProfitOrder("O-125").BuildLimitOrder();
+            var order = new StubOrderBuilder().TakeProfitOrder("O-125").BuildLimitOrder();
 
             // Act
-            var packed = OrderSerializer.SerializeNullable(takeProfit);
+            var packed = OrderSerializer.SerializeNullable(order);
             var unpacked = OrderSerializer.DeserializeNullable(packed);
 
             // Assert
-            Assert.Equal(takeProfit, unpacked);
+            Assert.Equal(order, unpacked);
+            Assert.Equal(order.Symbol, unpacked.Symbol);
+            Assert.Equal(order.Type, unpacked.Type);
+            Assert.Equal(order.Price, unpacked.Price);
+            Assert.Equal(order.ExecutionId, unpacked.ExecutionId);
+            Assert.Equal(order.Label, unpacked.Label);
+            Assert.Equal(order.Quantity, unpacked.Quantity);
+            Assert.Equal(order.ExpireTime, unpacked.ExpireTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }

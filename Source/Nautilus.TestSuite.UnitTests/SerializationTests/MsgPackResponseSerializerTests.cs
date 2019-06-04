@@ -34,7 +34,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
         }
 
         [Fact]
-        internal void CanSerializeAndDeserialize_BadResponses()
+        internal void CanSerializeAndDeserialize_BadRequestResponses()
         {
             // Arrange
             var correlationId = Guid.NewGuid();

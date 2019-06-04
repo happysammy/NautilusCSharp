@@ -49,7 +49,8 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-
+            Assert.Equal(request.FromDateTime, unpacked.FromDateTime);
+            Assert.Equal(request.ToDateTime, unpacked.ToDateTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -74,7 +75,9 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-
+            Assert.Equal(request.Symbol, unpacked.Symbol);
+            Assert.Equal(request.BarSpecification, unpacked.BarSpecification);
+            Assert.Equal(request.ToDateTime, unpacked.ToDateTime);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -96,7 +99,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-
+            Assert.Equal(request.Symbol, unpacked.Symbol);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
@@ -118,7 +121,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Assert
             Assert.Equal(request, unpacked);
-
+            Assert.Equal(request.Venue, unpacked.Venue);
             this.output.WriteLine(Convert.ToBase64String(packed));
             this.output.WriteLine(Encoding.UTF8.GetString(packed));
         }
