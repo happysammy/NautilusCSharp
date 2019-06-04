@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------------------
-// <copyright file="Responder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="Dealer.cs" company="Nautech Systems Pty Ltd">
 //   Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //   The use of this source code is governed by the license as found in the LICENSE.txt file.
 //   http://www.nautechsystems.net
@@ -24,20 +24,20 @@ namespace Nautilus.Network
     /// <summary>
     /// Provides a messaging router.
     /// </summary>
-    public abstract class Responder : Component
+    public abstract class Dealer : Component
     {
         private static readonly byte[] Delimiter = { };
 
         private readonly CancellationTokenSource cts;
-        private readonly ResponseSocket socket;
+        private readonly DealerSocket socket;
         private readonly IRequestSerializer requestSerializer;
         private readonly IResponseSerializer responseSerializer;
 
-        private bool isResponding;
+        private bool isReceiving;
         private int cycles;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Responder"/> class.
+        /// Initializes a new instance of the <see cref="Dealer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
         /// <param name="requestSerializer">The request serializer.</param>
@@ -45,7 +45,7 @@ namespace Nautilus.Network
         /// <param name="host">The consumer host address.</param>
         /// <param name="port">The consumer port.</param>
         /// <param name="id">The consumer identifier.</param>
-        protected Responder(
+        protected Dealer(
             IComponentryContainer container,
             IRequestSerializer requestSerializer,
             IResponseSerializer responseSerializer,
@@ -57,7 +57,7 @@ namespace Nautilus.Network
             Condition.NotDefault(id, nameof(id));
 
             this.cts = new CancellationTokenSource();
-            this.socket = new ResponseSocket()
+            this.socket = new DealerSocket()
             {
                 Options =
                 {
@@ -82,19 +82,19 @@ namespace Nautilus.Network
         protected override void OnStart(Start start)
         {
             this.socket.Bind(this.ServerAddress.Value);
-            this.Log.Debug($"Bound router socket to {this.ServerAddress}");
+            this.Log.Debug($"Bound dealer socket to {this.ServerAddress}");
 
-            this.isResponding = true;
-            Task.Run(this.StartResponding, this.cts.Token);
+            this.isReceiving = true;
+            Task.Run(this.StartWork, this.cts.Token);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.isResponding = false;
+            this.isReceiving = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
-            this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
+            this.Log.Debug($"Unbound dealer socket from {this.ServerAddress}");
 
             this.socket.Dispose();
         }
@@ -148,18 +148,18 @@ namespace Nautilus.Network
             this.AddToUnhandledMessages(message);
         }
 
-        private Task StartResponding()
+        private Task StartWork()
         {
-            while (this.isResponding)
+            while (this.isReceiving)
             {
-                this.ListenForRequests();
+                this.ReceiveMessage();
             }
 
-            this.Log.Debug("Stopped responding to messages.");
+            this.Log.Debug("Stopped receiving messages.");
             return Task.CompletedTask;
         }
 
-        private void ListenForRequests()
+        private void ReceiveMessage()
         {
             try
             {

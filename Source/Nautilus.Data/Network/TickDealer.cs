@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="BarResponder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="TickDealer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -16,28 +16,27 @@ namespace Nautilus.Data.Network
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
     using Nautilus.DomainModel.Entities;
-    using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Network;
 
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class BarResponder : Responder
+    public sealed class TickDealer : Dealer
     {
-        private readonly IBarRepository repository;
+        private readonly ITickRepository repository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BarResponder"/> class.
+        /// Initializes a new instance of the <see cref="TickDealer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="repository">The instrument repository.</param>
+        /// <param name="repository">The tick repository.</param>
         /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public BarResponder(
+        public TickDealer(
             IComponentryContainer container,
-            IBarRepository repository,
+            ITickRepository repository,
             IRequestSerializer requestSerializer,
             IResponseSerializer responseSerializer,
             NetworkAddress host,
@@ -52,14 +51,13 @@ namespace Nautilus.Data.Network
         {
             this.repository = repository;
 
-            this.RegisterHandler<BarDataRequest>(this.OnMessage);
+            this.RegisterHandler<TickDataRequest>(this.OnMessage);
         }
 
-        private void OnMessage(BarDataRequest request)
+        private void OnMessage(TickDataRequest request)
         {
-            var barType = new BarType(request.Symbol, request.BarSpecification);
             var query = this.repository.Find(
-                barType,
+                request.Symbol,
                 request.FromDateTime,
                 request.ToDateTime);
 
@@ -69,16 +67,14 @@ namespace Nautilus.Data.Network
                 this.Log.Error(query.Message);
             }
 
-            var bars = query
+            var ticks = query
                 .Value
-                .Bars
-                .Select(b => Encoding.UTF8.GetBytes(b.ToString()))
+                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
                 .ToArray();
 
-            var response = new BarDataResponse(
+            var response = new TickDataResponse(
                 request.Symbol,
-                request.BarSpecification,
-                bars,
+                ticks,
                 request.Id,
                 this.NewGuid(),
                 this.TimeNow());

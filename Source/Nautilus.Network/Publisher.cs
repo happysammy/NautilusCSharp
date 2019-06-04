@@ -81,9 +81,7 @@ namespace Nautilus.Network
         /// <param name="message">The message to publish.</param>
         protected void Publish(byte[] topic, byte[] message)
         {
-            this.socket
-                .SendMoreFrame(topic)
-                .SendFrame(message);
+            this.socket.SendMultipartBytes(topic, message);
 
             this.cycles++;
             this.Log.Verbose($"Published message[{this.cycles}] on {this.ServerAddress.Value}.");

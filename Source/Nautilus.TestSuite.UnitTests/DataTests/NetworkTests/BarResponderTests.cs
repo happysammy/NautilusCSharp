@@ -20,7 +20,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.NetworkTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly BarResponder responder;
+        private readonly BarDealer dealer;
 
         public BarResponderTests(ITestOutputHelper output)
         {

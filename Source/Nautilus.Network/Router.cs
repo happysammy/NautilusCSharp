@@ -30,7 +30,7 @@ namespace Nautilus.Network
         private readonly CancellationTokenSource cts;
         private readonly RouterSocket socket;
 
-        private bool isConsuming;
+        private bool isReceiving;
         private int cycles;
 
         /// <summary>
@@ -73,14 +73,14 @@ namespace Nautilus.Network
             this.socket.Bind(this.ServerAddress.Value);
             this.Log.Debug($"Bound router socket to {this.ServerAddress}");
 
-            this.isConsuming = true;
-            Task.Run(this.StartConsuming, this.cts.Token);
+            this.isReceiving = true;
+            Task.Run(this.StartWork, this.cts.Token);
         }
 
         /// <inheritdoc />
         protected override void OnStop(Stop stop)
         {
-            this.isConsuming = false;
+            this.isReceiving = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
@@ -88,18 +88,18 @@ namespace Nautilus.Network
             this.socket.Dispose();
         }
 
-        private Task StartConsuming()
+        private Task StartWork()
         {
-            while (this.isConsuming)
+            while (this.isReceiving)
             {
-                this.ConsumeMessage();
+                this.ReceiveMessage();
             }
 
-            this.Log.Debug("Stopped consuming messages.");
+            this.Log.Debug("Stopped receiving messages.");
             return Task.CompletedTask;
         }
 
-        private void ConsumeMessage()
+        private void ReceiveMessage()
         {
             var identity = this.socket.ReceiveFrameBytes();
             this.socket.ReceiveFrameBytes();  // Delimiter

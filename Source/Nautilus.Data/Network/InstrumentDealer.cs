@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-// <copyright file="TickResponder.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="InstrumentDealer.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -10,7 +10,6 @@ namespace Nautilus.Data.Network
 {
     using System;
     using System.Linq;
-    using System.Text;
     using Nautilus.Common.Interfaces;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
@@ -21,22 +20,25 @@ namespace Nautilus.Data.Network
     /// <summary>
     /// Provides a responder for <see cref="Instrument"/> data requests.
     /// </summary>
-    public sealed class TickResponder : Responder
+    public sealed class InstrumentDealer : Dealer
     {
-        private readonly ITickRepository repository;
+        private readonly IInstrumentRepository repository;
+        private readonly IInstrumentSerializer instrumentSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TickResponder"/> class.
+        /// Initializes a new instance of the <see cref="InstrumentDealer"/> class.
         /// </summary>
         /// <param name="container">The componentry container.</param>
-        /// <param name="repository">The tick repository.</param>
+        /// <param name="repository">The instrument repository.</param>
+        /// <param name="instrumentSerializer">The instrument serializer.</param>
         /// <param name="requestSerializer">The request serializer.</param>
         /// <param name="responseSerializer">The response serializer.</param>
         /// <param name="host">The host address.</param>
         /// <param name="port">The port.</param>
-        public TickResponder(
+        public InstrumentDealer(
             IComponentryContainer container,
-            ITickRepository repository,
+            IInstrumentRepository repository,
+            IInstrumentSerializer instrumentSerializer,
             IRequestSerializer requestSerializer,
             IResponseSerializer responseSerializer,
             NetworkAddress host,
@@ -50,16 +52,15 @@ namespace Nautilus.Data.Network
                 Guid.NewGuid())
         {
             this.repository = repository;
+            this.instrumentSerializer = instrumentSerializer;
 
-            this.RegisterHandler<TickDataRequest>(this.OnMessage);
+            this.RegisterHandler<InstrumentRequest>(this.OnMessage);
+            this.RegisterHandler<InstrumentsRequest>(this.OnMessage);
         }
 
-        private void OnMessage(TickDataRequest request)
+        private void OnMessage(InstrumentRequest request)
         {
-            var query = this.repository.Find(
-                request.Symbol,
-                request.FromDateTime,
-                request.ToDateTime);
+            var query = this.repository.FindInCache(request.Symbol);
 
             if (query.IsFailure)
             {
@@ -67,16 +68,35 @@ namespace Nautilus.Data.Network
                 this.Log.Error(query.Message);
             }
 
-            var ticks = query
+            var instrument = new[] { this.instrumentSerializer.Serialize(query.Value) };
+            var response = new InstrumentDataResponse(
+                instrument,
+                request.Id,
+                Guid.NewGuid(),
+                this.TimeNow());
+
+            this.SendResponse(request.RequesterId, response);
+        }
+
+        private void OnMessage(InstrumentsRequest request)
+        {
+            var query = this.repository.FindInCache(request.Venue);
+
+            if (query.IsFailure)
+            {
+                this.SendBadRequest(request, query.Message);
+                this.Log.Error(query.Message);
+            }
+
+            var instruments = query
                 .Value
-                .Select(t => Encoding.UTF8.GetBytes(t.ToString()))
+                .Select(i => this.instrumentSerializer.Serialize(i))
                 .ToArray();
 
-            var response = new TickDataResponse(
-                request.Symbol,
-                ticks,
+            var response = new InstrumentDataResponse(
+                instruments,
                 request.Id,
-                this.NewGuid(),
+                Guid.NewGuid(),
                 this.TimeNow());
 
             this.SendResponse(request.RequesterId, response);
