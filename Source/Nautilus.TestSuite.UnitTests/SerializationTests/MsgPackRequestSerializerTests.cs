@@ -16,7 +16,6 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.Serialization;
     using Nautilus.TestSuite.TestKit.TestDoubles;
-    using NodaTime;
     using Xunit;
     using Xunit.Abstractions;
 
