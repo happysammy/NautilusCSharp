@@ -128,7 +128,7 @@ namespace Nautilus.Network
         /// <param name="message">The bad response message.</param>
         protected void SendBadResponse(string message)
         {
-            var badResponse = new BadResponse(
+            var badResponse = new BadRequest(
                 message,
                 this.CorrelationId,
                 Guid.NewGuid(),

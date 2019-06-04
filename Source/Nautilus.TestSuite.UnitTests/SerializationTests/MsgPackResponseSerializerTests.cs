@@ -40,7 +40,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
             var correlationId = Guid.NewGuid();
             var message = "data not found";
 
-            var response = new BadResponse(
+            var response = new BadRequest(
                 message,
                 correlationId,
                 Guid.NewGuid(),
@@ -48,7 +48,7 @@ namespace Nautilus.TestSuite.UnitTests.SerializationTests
 
             // Act
             var packed = this.serializer.Serialize(response);
-            var unpacked = (BadResponse)this.serializer.Deserialize(packed);
+            var unpacked = (BadRequest)this.serializer.Deserialize(packed);
 
             // Assert
             Assert.Equal(response, unpacked);

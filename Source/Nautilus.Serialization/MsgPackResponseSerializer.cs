@@ -35,7 +35,7 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
-                case BadResponse res:
+                case BadRequest res:
                     package.Add(nameof(res.Message), res.Message);
                     break;
                 case BarDataResponse res:
@@ -62,9 +62,9 @@ namespace Nautilus.Serialization
 
             switch (response)
             {
-                case nameof(BadResponse):
-                    return new BadResponse(
-                        unpacked[nameof(BadResponse.Message)].ToString(),
+                case nameof(BadRequest):
+                    return new BadRequest(
+                        unpacked[nameof(BadRequest.Message)].ToString(),
                         correlationId,
                         id,
                         timestamp);
