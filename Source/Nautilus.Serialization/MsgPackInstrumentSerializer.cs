@@ -52,9 +52,9 @@ namespace Nautilus.Serialization
             var unpacked = MsgPackSerializer.Deserialize<MessagePackObjectDictionary>(serialized);
 
             return new Instrument(
-                ObjectExtractor.InstrumentId(unpacked[nameof(Instrument.Id)]),
-                ObjectExtractor.Symbol(unpacked[nameof(Instrument.Symbol)]),
-                ObjectExtractor.BrokerSymbol(unpacked[nameof(Instrument.BrokerSymbol)]),
+                ObjectExtractor.InstrumentId(unpacked),
+                ObjectExtractor.Symbol(unpacked),
+                ObjectExtractor.BrokerSymbol(unpacked),
                 ObjectExtractor.Enum<Currency>(unpacked[nameof(Instrument.QuoteCurrency)]),
                 ObjectExtractor.Enum<SecurityType>(unpacked[nameof(Instrument.SecurityType)]),
                 unpacked[nameof(Instrument.TickPrecision)].AsInt32(),

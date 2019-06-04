@@ -71,22 +71,22 @@ namespace Nautilus.Serialization
             {
                 case nameof(TickDataRequest):
                     return new TickDataRequest(
-                        ObjectExtractor.Symbol(unpacked[nameof(TickDataRequest.Symbol)]),
+                        ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.FromDateTime)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(TickDataRequest.ToDateTime)]),
                         id,
                         timestamp);
                 case nameof(BarDataRequest):
                     return new BarDataRequest(
-                        ObjectExtractor.Symbol(unpacked[nameof(BarDataRequest.Symbol)]),
-                        ObjectExtractor.BarSpecification(unpacked[nameof(BarDataRequest.BarSpecification)]),
+                        ObjectExtractor.Symbol(unpacked),
+                        ObjectExtractor.BarSpecification(unpacked),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.FromDateTime)]),
                         ObjectExtractor.ZonedDateTime(unpacked[nameof(BarDataRequest.ToDateTime)]),
                         id,
                         timestamp);
                 case nameof(InstrumentRequest):
                     return new InstrumentRequest(
-                        ObjectExtractor.Symbol(unpacked[nameof(InstrumentRequest.Symbol)]),
+                        ObjectExtractor.Symbol(unpacked),
                         id,
                         timestamp);
                 case nameof(InstrumentsRequest):

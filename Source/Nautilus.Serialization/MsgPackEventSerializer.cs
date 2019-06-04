@@ -164,8 +164,8 @@ namespace Nautilus.Serialization
                 case nameof(OrderInitialized):
                     return new OrderInitialized(
                         ObjectExtractor.OrderId(unpacked[nameof(OrderInitialized.OrderId)]),
-                        ObjectExtractor.Symbol(unpacked[nameof(OrderInitialized.Symbol)]),
-                        ObjectExtractor.Label(unpacked[nameof(OrderInitialized.Label)]),
+                        ObjectExtractor.Symbol(unpacked),
+                        ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderInitialized.OrderSide)]),
                         ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderInitialized.OrderType)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderInitialized.Quantity)]),
@@ -197,8 +197,8 @@ namespace Nautilus.Serialization
                     return new OrderWorking(
                         ObjectExtractor.OrderId(unpacked[nameof(OrderWorking.OrderId)]),
                         ObjectExtractor.OrderId(unpacked[nameof(OrderWorking.OrderIdBroker)]),
-                        ObjectExtractor.Symbol(unpacked[nameof(OrderWorking.Symbol)]),
-                        ObjectExtractor.Label(unpacked[nameof(OrderWorking.Label)]),
+                        ObjectExtractor.Symbol(unpacked),
+                        ObjectExtractor.Label(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderWorking.OrderSide)]),
                         ObjectExtractor.Enum<OrderType>(unpacked[nameof(OrderWorking.OrderType)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderWorking.Quantity)]),
@@ -239,9 +239,9 @@ namespace Nautilus.Serialization
                 case nameof(OrderPartiallyFilled):
                     return new OrderPartiallyFilled(
                         ObjectExtractor.OrderId(unpacked[nameof(OrderPartiallyFilled.OrderId)]),
-                        ObjectExtractor.ExecutionId(unpacked[nameof(OrderPartiallyFilled.ExecutionId)]),
-                        ObjectExtractor.ExecutionTicket(unpacked[nameof(OrderPartiallyFilled.ExecutionId)]),
-                        ObjectExtractor.Symbol(unpacked[nameof(OrderPartiallyFilled.Symbol)]),
+                        ObjectExtractor.ExecutionId(unpacked),
+                        ObjectExtractor.ExecutionTicket(unpacked),
+                        ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderPartiallyFilled.OrderSide)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.FilledQuantity)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderPartiallyFilled.LeavesQuantity)]),
@@ -252,9 +252,9 @@ namespace Nautilus.Serialization
                 case nameof(OrderFilled):
                     return new OrderFilled(
                         ObjectExtractor.OrderId(unpacked[nameof(OrderFilled.OrderId)]),
-                        ObjectExtractor.ExecutionId(unpacked[nameof(OrderFilled.ExecutionId)]),
-                        ObjectExtractor.ExecutionTicket(unpacked[nameof(OrderFilled.ExecutionId)]),
-                        ObjectExtractor.Symbol(unpacked[nameof(OrderFilled.Symbol)]),
+                        ObjectExtractor.ExecutionId(unpacked),
+                        ObjectExtractor.ExecutionTicket(unpacked),
+                        ObjectExtractor.Symbol(unpacked),
                         ObjectExtractor.Enum<OrderSide>(unpacked[nameof(OrderFilled.Side)]),
                         ObjectExtractor.Quantity(unpacked[nameof(OrderFilled.FilledQuantity)]),
                         ObjectExtractor.Price(unpacked[nameof(OrderFilled.AveragePrice)]),

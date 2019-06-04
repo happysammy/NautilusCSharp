@@ -90,8 +90,8 @@ namespace Nautilus.Serialization.Internal
         {
             var type = ObjectExtractor.Enum<OrderType>(unpacked[nameof(Order.Type)]);
             var id = ObjectExtractor.OrderId(unpacked[nameof(Order.Id)]);
-            var symbol = ObjectExtractor.Symbol(unpacked[nameof(Order.Symbol)]);
-            var label = ObjectExtractor.Label(unpacked[nameof(Order.Label)]);
+            var symbol = ObjectExtractor.Symbol(unpacked);
+            var label = ObjectExtractor.Label(unpacked);
             var side = ObjectExtractor.Enum<OrderSide>(unpacked[nameof(Order.Side)]);
             var quantity = ObjectExtractor.Quantity(unpacked[nameof(Order.Quantity)]);
             var timestamp = ObjectExtractor.ZonedDateTime(unpacked[nameof(Order.Timestamp)]);

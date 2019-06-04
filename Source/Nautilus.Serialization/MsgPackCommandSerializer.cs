@@ -84,17 +84,17 @@ namespace Nautilus.Serialization
                     return new CollateralInquiry(id, timestamp);
                 case nameof(SubmitOrder):
                     return new SubmitOrder(
-                        ObjectExtractor.TraderId(unpacked[nameof(SubmitOrder.TraderId)]),
-                        ObjectExtractor.StrategyId(unpacked[nameof(SubmitOrder.StrategyId)]),
-                        ObjectExtractor.PositionId(unpacked[nameof(SubmitOrder.PositionId)]),
+                        ObjectExtractor.TraderId(unpacked),
+                        ObjectExtractor.StrategyId(unpacked),
+                        ObjectExtractor.PositionId(unpacked),
                         OrderSerializer.Deserialize(unpacked[nameof(SubmitOrder.Order)].AsBinary()),
                         id,
                         timestamp);
                 case nameof(SubmitAtomicOrder):
                     return new SubmitAtomicOrder(
-                        ObjectExtractor.TraderId(unpacked[nameof(SubmitAtomicOrder.TraderId)]),
-                        ObjectExtractor.StrategyId(unpacked[nameof(SubmitAtomicOrder.StrategyId)]),
-                        ObjectExtractor.PositionId(unpacked[nameof(SubmitAtomicOrder.PositionId)]),
+                        ObjectExtractor.TraderId(unpacked),
+                        ObjectExtractor.StrategyId(unpacked),
+                        ObjectExtractor.PositionId(unpacked),
                         new AtomicOrder(
                             OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.Entry)].AsBinary()),
                             OrderSerializer.Deserialize(unpacked[nameof(AtomicOrder.StopLoss)].AsBinary()),
@@ -103,16 +103,16 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(ModifyOrder):
                     return new ModifyOrder(
-                        ObjectExtractor.TraderId(unpacked[nameof(ModifyOrder.TraderId)]),
-                        ObjectExtractor.StrategyId(unpacked[nameof(ModifyOrder.StrategyId)]),
+                        ObjectExtractor.TraderId(unpacked),
+                        ObjectExtractor.StrategyId(unpacked),
                         ObjectExtractor.OrderId(unpacked[nameof(ModifyOrder.OrderId)]),
                         ObjectExtractor.Price(unpacked[nameof(ModifyOrder.ModifiedPrice)].ToString()),
                         id,
                         timestamp);
                 case nameof(CancelOrder):
                     return new CancelOrder(
-                        ObjectExtractor.TraderId(unpacked[nameof(CancelOrder.TraderId)]),
-                        ObjectExtractor.StrategyId(unpacked[nameof(CancelOrder.StrategyId)]),
+                        ObjectExtractor.TraderId(unpacked),
+                        ObjectExtractor.StrategyId(unpacked),
                         ObjectExtractor.OrderId(unpacked[nameof(CancelOrder.OrderId)]),
                         unpacked[nameof(CancelOrder.CancelReason)].ToString(),
                         id,

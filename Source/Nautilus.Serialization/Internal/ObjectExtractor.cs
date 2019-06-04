@@ -11,6 +11,7 @@ namespace Nautilus.Serialization.Internal
     using System;
     using MsgPack;
     using Nautilus.Core.Extensions;
+    using Nautilus.DomainModel.Entities;
     using Nautilus.DomainModel.Enums;
     using Nautilus.DomainModel.Factories;
     using Nautilus.DomainModel.Identifiers;
@@ -50,9 +51,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Symbol.</returns>
-        internal static Symbol Symbol(MessagePackObject unpacked)
+        internal static Symbol Symbol(MessagePackObjectDictionary unpacked)
         {
-            return SymbolFactory.Create(unpacked.ToString());
+            return SymbolFactory.Create(unpacked[nameof(Symbol)].ToString());
         }
 
         /// <summary>
@@ -60,9 +61,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted BarSpecification.</returns>
-        internal static BarSpecification BarSpecification(MessagePackObject unpacked)
+        internal static BarSpecification BarSpecification(MessagePackObjectDictionary unpacked)
         {
-            return BarSpecificationFactory.Create(unpacked.ToString());
+            return BarSpecificationFactory.Create(unpacked[nameof(BarSpecification)].ToString());
         }
 
         /// <summary>
@@ -70,37 +71,37 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted BrokerSymbol.</returns>
-        internal static BrokerSymbol BrokerSymbol(MessagePackObject unpacked)
+        internal static BrokerSymbol BrokerSymbol(MessagePackObjectDictionary unpacked)
         {
-            return new BrokerSymbol(unpacked.ToString());
+            return new BrokerSymbol(unpacked[nameof(BrokerSymbol)].ToString());
         }
 
         /// <summary>
-        /// Returns a TraderId extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns a TraderId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted TraderId.</returns>
-        internal static TraderId TraderId(MessagePackObject unpacked)
+        internal static TraderId TraderId(MessagePackObjectDictionary unpacked)
         {
-            return new TraderId(unpacked.ToString());
+            return new TraderId(unpacked[nameof(TraderId)].ToString());
         }
 
         /// <summary>
-        /// Returns a StrategyId extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns a StrategyId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted StrategyId.</returns>
-        internal static StrategyId StrategyId(MessagePackObject unpacked)
+        internal static StrategyId StrategyId(MessagePackObjectDictionary unpacked)
         {
-            return new StrategyId(unpacked.ToString());
+            return new StrategyId(unpacked[nameof(StrategyId)].ToString());
         }
 
         /// <summary>
-        /// Returns a PositionId extracted from the given <see cref="MessagePackObject"/>.
+        /// Returns a PositionId extracted from the given <see cref="MessagePackObjectDictionary"/>.
         /// </summary>
-        /// <param name="unpacked">The MessagePack object to extract from.</param>
+        /// <param name="unpacked">The dictionary to extract from.</param>
         /// <returns>The extracted PositionId.</returns>
-        internal static PositionId PositionId(MessagePackObject unpacked)
+        internal static PositionId PositionId(MessagePackObjectDictionary unpacked)
         {
             return new PositionId(unpacked.ToString());
         }
@@ -120,9 +121,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionId.</returns>
-        internal static ExecutionId ExecutionId(MessagePackObject unpacked)
+        internal static ExecutionId ExecutionId(MessagePackObjectDictionary unpacked)
         {
-            return new ExecutionId(unpacked.ToString());
+            return new ExecutionId(unpacked[nameof(ExecutionId)].ToString());
         }
 
         /// <summary>
@@ -130,9 +131,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted InstrumentId.</returns>
-        internal static InstrumentId InstrumentId(MessagePackObject unpacked)
+        internal static InstrumentId InstrumentId(MessagePackObjectDictionary unpacked)
         {
-            return new InstrumentId(unpacked.ToString());
+            return new InstrumentId(unpacked[nameof(Instrument.Id)].ToString());
         }
 
         /// <summary>
@@ -140,9 +141,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted ExecutionTicket.</returns>
-        internal static ExecutionTicket ExecutionTicket(MessagePackObject unpacked)
+        internal static ExecutionTicket ExecutionTicket(MessagePackObjectDictionary unpacked)
         {
-            return new ExecutionTicket(unpacked.ToString());
+            return new ExecutionTicket(unpacked[nameof(ExecutionTicket)].ToString());
         }
 
         /// <summary>
@@ -150,9 +151,9 @@ namespace Nautilus.Serialization.Internal
         /// </summary>
         /// <param name="unpacked">The MessagePack object to extract from.</param>
         /// <returns>The extracted Label.</returns>
-        internal static Label Label(MessagePackObject unpacked)
+        internal static Label Label(MessagePackObjectDictionary unpacked)
         {
-            return new Label(unpacked.ToString());
+            return new Label(unpacked[nameof(Label)].ToString());
         }
 
         /// <summary>

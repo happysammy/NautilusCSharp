@@ -70,8 +70,8 @@ namespace Nautilus.Serialization
                         timestamp);
                 case nameof(BarDataResponse):
                     return new BarDataResponse(
-                        ObjectExtractor.Symbol(unpacked[nameof(BarDataResponse.Symbol)]),
-                        ObjectExtractor.BarSpecification(unpacked[nameof(BarDataResponse.BarSpecification)]),
+                        ObjectExtractor.Symbol(unpacked),
+                        ObjectExtractor.BarSpecification(unpacked),
                         MsgPackSerializer.Deserialize<byte[][]>(unpacked[nameof(BarDataResponse.Bars)].AsBinary()),
                         correlationId,
                         id,
