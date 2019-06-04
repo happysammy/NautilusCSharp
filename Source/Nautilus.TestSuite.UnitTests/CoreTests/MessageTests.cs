@@ -11,8 +11,8 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Nautilus.Common.Enums;
-    using Nautilus.Common.Messages.Commands;
-    using Nautilus.Common.Messages.Documents;
+    using Nautilus.Common.Messages.Requests;
+    using Nautilus.Common.Messages.Responses;
     using Nautilus.DomainModel.ValueObjects;
     using Nautilus.TestSuite.TestKit.TestDoubles;
     using Xunit;
@@ -28,11 +28,13 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
                 new Label("SomeComponent1"),
                 State.Running,
                 Guid.NewGuid(),
+                Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             var message2 = new StatusResponse(
                 new Label("SomeComponent2"),
                 State.Running,
+                Guid.NewGuid(),
                 Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
@@ -66,11 +68,11 @@ namespace Nautilus.TestSuite.UnitTests.CoreTests
         internal void ToString_WhenOverridden_ReturnsExpectedString()
         {
             // Arrange
-            var guid = Guid.NewGuid();
             var message = new StatusResponse(
                 new Label("CommandBus"),
                 State.Running,
-                guid,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
                 StubZonedDateTime.UnixEpoch());
 
             // Act

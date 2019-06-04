@@ -6,7 +6,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Nautilus.Common.Messages.Commands
+namespace Nautilus.Common.Messages.Requests
 {
     using System;
     using Nautilus.Core;
@@ -18,7 +18,7 @@ namespace Nautilus.Common.Messages.Commands
     /// Represents a command requesting the status of a service component.
     /// </summary>
     [Immutable]
-    public sealed class StatusRequest : Command
+    public sealed class StatusRequest : Request
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StatusRequest"/> class.
