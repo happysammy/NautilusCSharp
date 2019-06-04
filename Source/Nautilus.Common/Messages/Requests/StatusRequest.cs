@@ -25,8 +25,13 @@ namespace Nautilus.Common.Messages.Requests
         /// </summary>
         /// <param name="id">The commands identifier.</param>
         /// <param name="timestamp">The commands timestamp.</param>
-        public StatusRequest(Guid id, ZonedDateTime timestamp)
-            : base(typeof(StatusRequest), id, timestamp)
+        public StatusRequest(
+            Guid id,
+            ZonedDateTime timestamp)
+            : base(
+                typeof(StatusRequest),
+                id,
+                timestamp)
         {
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));

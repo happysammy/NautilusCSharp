@@ -65,7 +65,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(query.Message);
+                this.SendBadRequest(request, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -79,11 +79,11 @@ namespace Nautilus.Data.Network
                 request.Symbol,
                 request.BarSpecification,
                 bars,
-                this.CorrelationId,
+                request.Id,
                 this.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(response);
+            this.SendResponse(request.RequesterId, response);
         }
     }
 }

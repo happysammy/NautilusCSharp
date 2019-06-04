@@ -36,8 +36,6 @@ namespace Nautilus.Network
         private bool isResponding;
         private int cycles;
 
-        private byte[] requesterIdentity;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Responder"/> class.
         /// </summary>
@@ -69,8 +67,6 @@ namespace Nautilus.Network
             };
             this.requestSerializer = requestSerializer;
             this.responseSerializer = responseSerializer;
-            this.requesterIdentity = new byte[] { };
-            this.CorrelationId = Guid.Empty;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
 
@@ -81,11 +77,6 @@ namespace Nautilus.Network
         /// Gets the server address for the router.
         /// </summary>
         public ZmqServerAddress ServerAddress { get; }
-
-        /// <summary>
-        /// Gets the response correlation identifier.
-        /// </summary>
-        public Guid CorrelationId { get; private set; }
 
         /// <inheritdoc />
         protected override void OnStart(Start start)
@@ -103,7 +94,6 @@ namespace Nautilus.Network
             this.isResponding = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
-            this.socket.Close();
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();
@@ -112,13 +102,15 @@ namespace Nautilus.Network
         /// <summary>
         /// Respond to the last request with the given response.
         /// </summary>
+        /// <param name="requesterId">The requester identifier to respond to.</param>
         /// <param name="response">The response bytes.</param>
-        protected void SendResponse(Response response)
+        protected void SendResponse(string requesterId, Response response)
         {
-            this.socket.SendMultipartBytes(
-                this.requesterIdentity,
-                Delimiter,
-                this.responseSerializer.Serialize(response));
+            Debug.NotEmptyOrWhiteSpace(requesterId, nameof(requesterId));
+
+            var requesterIdBytes = Encoding.UTF8.GetBytes(requesterId);
+            var responseBytes = this.responseSerializer.Serialize(response);
+            this.socket.SendMultipartBytes(requesterIdBytes, Delimiter, responseBytes);
 
             this.cycles++;
             this.Log.Verbose($"Responded to message[{this.cycles}] on {this.ServerAddress.Value}.");
@@ -127,26 +119,29 @@ namespace Nautilus.Network
         /// <summary>
         /// Respond to the last request with a <see cref="BadRequest"/> containing the given message.
         /// </summary>
+        /// <param name="request">The bad request.</param>
         /// <param name="message">The bad request message.</param>
-        protected void SendBadRequest(string message)
+        protected void SendBadRequest(Request request, string message)
         {
-            this.SendResponse(new BadRequest(
+            var badRequest = new BadRequest(
                 message,
-                this.CorrelationId,
+                request.Id,
                 Guid.NewGuid(),
-                this.TimeNow()));
+                this.TimeNow());
+
+            this.SendResponse(request.RequesterId, badRequest);
         }
 
         /// <summary>
         /// Handle the given unhandled request message.
         /// </summary>
         /// <param name="message">The unhandled object.</param>
-        protected void UnhandledRequest(object message)
+        private void UnhandledRequest(object message)
         {
             if (message is Request request)
             {
                 var errorMessage = $"request type {request.Type} not valid on this port";
-                this.SendBadRequest(errorMessage);
+                this.SendBadRequest(request, errorMessage);
                 this.Log.Error(errorMessage);
             }
 
@@ -168,17 +163,14 @@ namespace Nautilus.Network
         {
             try
             {
-                this.CorrelationId = Guid.Empty;
-                this.requesterIdentity = this.socket.ReceiveFrameBytes();
-                this.socket.ReceiveFrameBytes(); // Delimiter
-                var request = this.requestSerializer.Deserialize(this.socket.ReceiveFrameBytes());
-                this.CorrelationId = request.Id;
+                var requestBytes = this.socket.ReceiveMultipartBytes(); // [1] is empty bytes delimiter
+                var request = this.requestSerializer.Deserialize(requestBytes[2]);
+                request.SetRequesterId(Encoding.UTF8.GetString(requestBytes[0]));
 
                 this.SendToSelf(request);
             }
             catch (Exception ex)
             {
-                this.SendBadRequest(ex.Message);
                 this.Log.Error(ex.Message);
             }
         }

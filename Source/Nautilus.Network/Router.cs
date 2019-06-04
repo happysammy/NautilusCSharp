@@ -83,7 +83,6 @@ namespace Nautilus.Network
             this.isConsuming = false;
             this.cts.Cancel();
             this.socket.Unbind(this.ServerAddress.Value);
-            this.socket.Close();
             this.Log.Debug($"Unbound router socket from {this.ServerAddress}");
 
             this.socket.Dispose();

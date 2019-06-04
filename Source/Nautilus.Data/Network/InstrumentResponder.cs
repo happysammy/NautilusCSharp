@@ -64,18 +64,18 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(query.Message);
+                this.SendBadRequest(request, query.Message);
                 this.Log.Error(query.Message);
             }
 
-            var instrument = new byte[][] { this.instrumentSerializer.Serialize(query.Value) };
+            var instrument = new[] { this.instrumentSerializer.Serialize(query.Value) };
             var response = new InstrumentDataResponse(
                 instrument,
-                this.CorrelationId,
+                request.Id,
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(response);
+            this.SendResponse(request.RequesterId, response);
         }
 
         private void OnMessage(InstrumentsRequest request)
@@ -84,7 +84,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadRequest(query.Message);
+                this.SendBadRequest(request, query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -95,11 +95,11 @@ namespace Nautilus.Data.Network
 
             var response = new InstrumentDataResponse(
                 instruments,
-                this.CorrelationId,
+                request.Id,
                 Guid.NewGuid(),
                 this.TimeNow());
 
-            this.SendResponse(response);
+            this.SendResponse(request.RequesterId, response);
         }
     }
 }

@@ -37,5 +37,19 @@ namespace Nautilus.Core
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
         }
+
+        /// <summary>
+        /// Gets the requests requester identifier.
+        /// </summary>
+        public string RequesterId { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Sets the requester identifier to the given requester identifier.
+        /// </summary>
+        /// <param name="requesterId">The requester identifier.</param>
+        public void SetRequesterId(string requesterId)
+        {
+            this.RequesterId = requesterId;
+        }
     }
 }
