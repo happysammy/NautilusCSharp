@@ -73,6 +73,8 @@ namespace Nautilus.Network
             this.CorrelationId = Guid.Empty;
 
             this.ServerAddress = new ZmqServerAddress(host, port);
+
+            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
         /// <summary>
@@ -123,18 +125,16 @@ namespace Nautilus.Network
         }
 
         /// <summary>
-        /// Respond to the last request with a bad response containing the given message.
+        /// Respond to the last request with a <see cref="BadRequest"/> containing the given message.
         /// </summary>
-        /// <param name="message">The bad response message.</param>
-        protected void SendBadResponse(string message)
+        /// <param name="message">The bad request message.</param>
+        protected void SendBadRequest(string message)
         {
-            var badResponse = new BadRequest(
+            this.SendResponse(new BadRequest(
                 message,
                 this.CorrelationId,
                 Guid.NewGuid(),
-                this.TimeNow());
-
-            this.SendResponse(badResponse);
+                this.TimeNow()));
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nautilus.Network
             if (message is Request request)
             {
                 var errorMessage = $"request type {request.Type} not valid on this port";
-                this.SendBadResponse(errorMessage);
+                this.SendBadRequest(errorMessage);
                 this.Log.Error(errorMessage);
             }
 
@@ -178,7 +178,7 @@ namespace Nautilus.Network
             }
             catch (Exception ex)
             {
-                this.SendBadResponse(ex.Message);
+                this.SendBadRequest(ex.Message);
                 this.Log.Error(ex.Message);
             }
         }

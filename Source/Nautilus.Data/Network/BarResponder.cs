@@ -53,7 +53,6 @@ namespace Nautilus.Data.Network
             this.repository = repository;
 
             this.RegisterHandler<BarDataRequest>(this.OnMessage);
-            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
         private void OnMessage(BarDataRequest request)
@@ -66,7 +65,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadResponse(query.Message);
+                this.SendBadRequest(query.Message);
                 this.Log.Error(query.Message);
             }
 

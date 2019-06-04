@@ -52,7 +52,6 @@ namespace Nautilus.Data.Network
             this.repository = repository;
 
             this.RegisterHandler<TickDataRequest>(this.OnMessage);
-            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
         private void OnMessage(TickDataRequest request)
@@ -64,7 +63,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadResponse(query.Message);
+                this.SendBadRequest(query.Message);
                 this.Log.Error(query.Message);
             }
 

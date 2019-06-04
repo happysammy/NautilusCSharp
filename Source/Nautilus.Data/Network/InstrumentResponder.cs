@@ -11,7 +11,6 @@ namespace Nautilus.Data.Network
     using System;
     using System.Linq;
     using Nautilus.Common.Interfaces;
-    using Nautilus.Core;
     using Nautilus.Data.Interfaces;
     using Nautilus.Data.Messages.Requests;
     using Nautilus.Data.Messages.Responses;
@@ -57,7 +56,6 @@ namespace Nautilus.Data.Network
 
             this.RegisterHandler<InstrumentRequest>(this.OnMessage);
             this.RegisterHandler<InstrumentsRequest>(this.OnMessage);
-            this.RegisterUnhandled(this.UnhandledRequest);
         }
 
         private void OnMessage(InstrumentRequest request)
@@ -66,7 +64,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadResponse(query.Message);
+                this.SendBadRequest(query.Message);
                 this.Log.Error(query.Message);
             }
 
@@ -86,7 +84,7 @@ namespace Nautilus.Data.Network
 
             if (query.IsFailure)
             {
-                this.SendBadResponse(query.Message);
+                this.SendBadRequest(query.Message);
                 this.Log.Error(query.Message);
             }
 
