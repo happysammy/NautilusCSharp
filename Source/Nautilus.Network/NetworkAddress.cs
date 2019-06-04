@@ -9,7 +9,6 @@
 namespace Nautilus.Network
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
 
@@ -17,7 +16,6 @@ namespace Nautilus.Network
     /// Represents a valid network address.
     /// </summary>
     [Immutable]
-    [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public sealed class NetworkAddress
     {
         /// <summary>
