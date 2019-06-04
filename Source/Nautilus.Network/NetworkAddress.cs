@@ -20,8 +20,6 @@ namespace Nautilus.Network
     [SuppressMessage("ReSharper", "SA1310", Justification = "Easier to read.")]
     public sealed class NetworkAddress
     {
-        private const string LOCAL_HOST_STRING = "127.0.0.1";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkAddress"/> class.
         /// </summary>
@@ -35,15 +33,15 @@ namespace Nautilus.Network
         }
 
         /// <summary>
+        /// Gets the local host 127.0.0.1 network address.
+        /// </summary>
+        /// <returns>The local host network address.</returns>
+        public static NetworkAddress LocalHost { get; } = new NetworkAddress("127.0.0.1");
+
+        /// <summary>
         /// Gets the network address value.
         /// </summary>
         public string Value { get; }
-
-        /// <summary>
-        /// Creates and returns a new local host 127.0.0.1 network address.
-        /// </summary>
-        /// <returns>The local host network address.</returns>
-        public static NetworkAddress LocalHost() => new NetworkAddress(LOCAL_HOST_STRING);
 
         /// <summary>
         /// Returns a string representation of this <see cref="NetworkAddress"/>.

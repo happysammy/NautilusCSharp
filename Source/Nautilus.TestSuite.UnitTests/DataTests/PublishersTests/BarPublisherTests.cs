@@ -27,7 +27,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
 
         public BarPublisherTests(ITestOutputHelper output)
         {
@@ -45,7 +44,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Arrange
             var publisher = new BarPublisher(
                 this.setupContainer,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55511));
             publisher.Start();
             Task.Delay(100).Wait();

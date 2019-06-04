@@ -28,7 +28,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly IComponentryContainer container;
         private readonly MockLoggingAdapter mockLoggingAdapter;
         private readonly MockMessagingAgent testReceiver;
-        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
 
         public RouterTests(ITestOutputHelper output)
         {
@@ -53,7 +52,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(5555),
                 Guid.NewGuid());
             consumer.Start();
@@ -88,7 +87,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(5556),
                 Guid.NewGuid());
             consumer.Start();
@@ -126,7 +125,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(5557),
                 Guid.NewGuid());
             consumer.Start();
@@ -162,7 +161,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(5558),
                 Guid.NewGuid());
             consumer.Start();
@@ -202,7 +201,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var consumer = new MockRouter(
                 this.testReceiver.Endpoint,
                 this.container,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(5559),
                 Guid.NewGuid());
             consumer.Start();

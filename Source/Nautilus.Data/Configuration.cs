@@ -47,7 +47,7 @@ namespace Nautilus.Data
 
             // Network Settings
             this.ServerAddress = isDevelopment
-                ? NetworkAddress.LocalHost()
+                ? NetworkAddress.LocalHost
                 : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
             this.TickRequestPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickReqPort"]);
             this.TickSubscribePort = new NetworkPort((ushort)configJson[ConfigSection.Network]["tickSubPort"]);

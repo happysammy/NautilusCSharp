@@ -29,7 +29,6 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
 
         public TickPublisherTests(ITestOutputHelper output)
         {
@@ -47,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.DataTests.PublishersTests
             // Arrange
             var publisher = new TickPublisher(
                 this.setupContainer,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55506));
             publisher.Start();
             Task.Delay(100).Wait();

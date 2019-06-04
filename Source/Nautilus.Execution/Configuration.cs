@@ -43,7 +43,7 @@ namespace Nautilus.Execution
 
             // Network Settings
             this.ServerAddress = isDevelopment
-                ? NetworkAddress.LocalHost()
+                ? NetworkAddress.LocalHost
                 : new NetworkAddress((string)configJson[ConfigSection.Network]["serverAddress"]);
             this.CommandsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["commandsPort"]);
             this.EventsPort = new NetworkPort((ushort)configJson[ConfigSection.Network]["eventsPort"]);

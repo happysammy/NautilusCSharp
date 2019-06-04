@@ -29,7 +29,6 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         private readonly ITestOutputHelper output;
         private readonly IComponentryContainer setupContainer;
         private readonly MockLoggingAdapter mockLoggingAdapter;
-        private readonly NetworkAddress localHost = NetworkAddress.LocalHost();
 
         public PublisherTests(ITestOutputHelper output)
         {
@@ -47,7 +46,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var publisher = new MockPublisher(
                 this.setupContainer,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55504));
 
             // Act
@@ -63,7 +62,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             // Arrange
             var publisher = new MockPublisher(
                 this.setupContainer,
-                this.localHost,
+                NetworkAddress.LocalHost,
                 new NetworkPort(55504));
             publisher.Start();
 
