@@ -152,14 +152,14 @@ namespace Nautilus.Network
         {
             while (this.isResponding)
             {
-                this.ListenForRequest();
+                this.ListenForRequests();
             }
 
             this.Log.Debug("Stopped responding to messages.");
             return Task.CompletedTask;
         }
 
-        private void ListenForRequest()
+        private void ListenForRequests()
         {
             try
             {
