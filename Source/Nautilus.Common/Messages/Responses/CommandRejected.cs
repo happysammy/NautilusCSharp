@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="StatusResponse.cs" company="Nautech Systems Pty Ltd">
+// <copyright file="CommandRejected.cs" company="Nautech Systems Pty Ltd">
 //  Copyright (C) 2015-2019 Nautech Systems Pty Ltd. All rights reserved.
 //  The use of this source code is governed by the license as found in the LICENSE.txt file.
 //  http://www.nautechsystems.net
@@ -9,30 +9,28 @@
 namespace Nautilus.Common.Messages.Responses
 {
     using System;
-    using Nautilus.Common.Enums;
     using Nautilus.Core;
     using Nautilus.Core.Annotations;
     using Nautilus.Core.Correctness;
-    using Nautilus.DomainModel.ValueObjects;
     using NodaTime;
 
     /// <summary>
-    /// A response containing information on the status of a component.
+    /// A response indicating that a command has been rejected.
     /// </summary>
     [Immutable]
-    public sealed class StatusResponse : Response
+    public sealed class CommandRejected : Response
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatusResponse"/> class.
+        /// Initializes a new instance of the <see cref="CommandRejected"/> class.
         /// </summary>
-        /// <param name="componentName">The component name.</param>
-        /// <param name="state">The status.</param>
+        /// <param name="commandType">The command type.</param>
+        /// <param name="rejectedReason">The rejected reason.</param>
         /// <param name="correlationId">The request correlation identifier.</param>
         /// <param name="id">The documents identifier.</param>
         /// <param name="timestamp">The documents timestamp.</param>
-        public StatusResponse(
-            Label componentName,
-            State state,
+        public CommandRejected(
+            string commandType,
+            string rejectedReason,
             Guid correlationId,
             Guid id,
             ZonedDateTime timestamp)
@@ -45,24 +43,18 @@ namespace Nautilus.Common.Messages.Responses
             Debug.NotDefault(id, nameof(id));
             Debug.NotDefault(timestamp, nameof(timestamp));
 
-            this.ComponentName = componentName;
-            this.State = state;
+            this.CommandType = commandType;
+            this.RejectedReason = rejectedReason;
         }
 
         /// <summary>
         /// Gets the responses component name.
         /// </summary>
-        public Label ComponentName { get; }
+        public string CommandType { get; }
 
         /// <summary>
-        /// Gets the responses component status.
+        /// Gets the responses rejected reason.
         /// </summary>
-        public State State { get; }
-
-        /// <summary>
-        /// Gets a string representation of the <see cref="StatusResponse"/> message.
-        /// </summary>
-        /// <returns>A <see cref="string"/>.</returns>
-        public override string ToString() => $"{base.ToString()}-{this.ComponentName}={this.State}";
+        public string RejectedReason { get; }
     }
 }

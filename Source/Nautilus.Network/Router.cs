@@ -101,17 +101,14 @@ namespace Nautilus.Network
 
         private void ReceiveMessage()
         {
-            var identity = this.socket.ReceiveFrameBytes();
-            this.socket.ReceiveFrameBytes();  // Delimiter
-            var data = this.socket.ReceiveFrameBytes();
-
-            var response = new[] { identity, Delimiter, Ok };
+            var requestBytes = this.socket.ReceiveMultipartBytes(); // [1] is empty bytes delimiter
+            var response = new[] { requestBytes[0], Delimiter, Ok };
             this.socket.SendMultipartBytes(response);
 
             this.cycles++;
             this.Log.Verbose($"Acknowledged message[{this.cycles}] receipt on {this.ServerAddress.Value}.");
 
-            this.SendToSelf(data);
+            this.SendToSelf(requestBytes[2]);
         }
     }
 }
