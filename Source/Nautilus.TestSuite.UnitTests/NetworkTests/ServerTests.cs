@@ -10,8 +10,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using System.Threading.Tasks;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Common.Messages.Responses;
     using Nautilus.Network;
@@ -45,7 +45,31 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_receive_one_message()
+        internal void InitializedServer_IsInCorrectState()
+        {
+            // Arrange
+            // Act
+            var server = new MockMessageServer(
+                this.container,
+                NetworkAddress.LocalHost,
+                new NetworkPort(5555),
+                Guid.NewGuid());
+
+            LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
+            Assert.Equal("tcp://127.0.0.1:5555", server.ServerAddress.ToString());
+            Assert.Equal(State.Init, server.State);
+            Assert.Equal(0, server.ReceivedCount);
+            Assert.Equal(0, server.SentCount);
+
+            // Tear Down
+            server.Stop();
+            Task.Delay(100).Wait();  // Allows sockets to dispose
+        }
+
+        [Fact]
+        internal void GivenOneMessage_StoresAndSendsResponseToSender()
         {
             // Arrange
             var server = new MockMessageServer(
@@ -68,9 +92,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             requester.SendFrame(this.serializer.Serialize(message));
             var response = this.responseSerializer.Deserialize(requester.ReceiveFrameBytes());
 
-            // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
             Assert.Equal(typeof(MessageReceived), response.Type);
+            Assert.Equal(State.Running, server.State);
+            Assert.Equal(1, server.ReceivedCount);
+            Assert.Equal(1, server.SentCount);
             Assert.Contains(message, server.ReceivedMessages);
 
             // Tear Down
@@ -81,7 +109,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_receive_multiple_messages()
+        internal void GivenMultipleMessages_StoresAndSendsResponsesToSender()
         {
             // Arrange
             var server = new MockMessageServer(
@@ -119,6 +147,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             Assert.Contains(message2, server.ReceivedMessages);
             Assert.Equal(typeof(MessageReceived), response1.Type);
             Assert.Equal(typeof(MessageReceived), response2.Type);
+            Assert.Equal(2, server.ReceivedCount);
+            Assert.Equal(2, server.SentCount);
 
             // Tear Down
             requester.Disconnect(testAddress);
@@ -128,7 +158,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_be_stopped()
+        internal void ServerCanBeStopped()
         {
             // Arrange
             var server = new MockMessageServer(
@@ -174,7 +204,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_receive_one_thousand_messages_in_order()
+        internal void Given1000Messages_StoresAndSendsResponsesToSenderInOrder()
         {
             // Arrange
             var server = new MockMessageServer(
@@ -204,6 +234,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Assert
             Assert.Equal(1000, server.ReceivedMessages.Count);
+            Assert.Equal(1000, server.ReceivedCount);
+            Assert.Equal(1000, server.SentCount);
             Assert.Equal("TEST-999", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
             Assert.Equal("TEST-998", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
 
@@ -215,7 +247,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_receive_one_thousand_messages_from_multiple_request_sockets()
+        internal void Given1000Messages_FromDifferentSenders_StoresAndSendsResponsesToSendersInOrder()
         {
             // Arrange
             var server = new MockMessageServer(
@@ -254,6 +286,8 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
 
             // Assert
             Assert.Equal(2000, server.ReceivedMessages.Count);
+            Assert.Equal(2000, server.ReceivedCount);
+            Assert.Equal(2000, server.SentCount);
             Assert.Equal("TEST-999 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 1].Payload);
             Assert.Equal("TEST-999 from 1", server.ReceivedMessages[server.ReceivedMessages.Count - 2].Payload);
             Assert.Equal("TEST-998 from 2", server.ReceivedMessages[server.ReceivedMessages.Count - 3].Payload);

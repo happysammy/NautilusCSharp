@@ -23,7 +23,6 @@ namespace Nautilus.Network
     public abstract class MessagePublisher : Component
     {
         private readonly PublisherSocket socket;
-        private int cycles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagePublisher"/> class.
@@ -51,12 +50,18 @@ namespace Nautilus.Network
             };
 
             this.ServerAddress = new ZmqServerAddress(host, port);
+            this.PublishedCount = 0;
         }
 
         /// <summary>
         /// Gets the server address for the publisher.
         /// </summary>
         public ZmqServerAddress ServerAddress { get; }
+
+        /// <summary>
+        /// Gets the server received message count.
+        /// </summary>
+        public int PublishedCount { get; private set; }
 
         /// <inheritdoc />
         protected override void OnStart(Start start)
@@ -83,8 +88,8 @@ namespace Nautilus.Network
         {
             this.socket.SendMultipartBytes(topic, message);
 
-            this.cycles++;
-            this.Log.Verbose($"Published message[{this.cycles}]");
+            this.PublishedCount++;
+            this.Log.Verbose($"Published message[{this.PublishedCount}]");
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_throttle_ten_messages_per_one_hundred_milliseconds()
+        internal void CanThrottleMessagesPer100Milliseconds_Test1()
         {
             // Arrange
             var throttler = new Throttler(
@@ -79,7 +79,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void Test_can_throttle_messages_per_one_hundred_milliseconds()
+        internal void CanThrottleMessagesPer100Milliseconds_Test2()
         {
             // Arrange
             var throttler = new Throttler(

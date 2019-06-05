@@ -11,6 +11,7 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading.Tasks;
+    using Nautilus.Common.Enums;
     using Nautilus.Common.Interfaces;
     using Nautilus.Network;
     using Nautilus.TestSuite.TestKit;
@@ -41,19 +42,19 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
         }
 
         [Fact]
-        internal void InitializedPublisher_HasCorrectServerAddress()
+        internal void InitializedPublisher_IsInCorrectState()
         {
             // Arrange
+            // Act
             var publisher = new MockPublisher(
                 this.setupContainer,
                 NetworkAddress.LocalHost,
                 new NetworkPort(55504));
 
-            // Act
-            var result = publisher.ServerAddress;
-
             // Assert
             Assert.Equal("tcp://127.0.0.1:55504", publisher.ServerAddress.Value);
+            Assert.Equal(State.Init, publisher.State);
+            Assert.Equal(0, publisher.PublishedCount);
         }
 
         [Fact]
@@ -80,10 +81,13 @@ namespace Nautilus.TestSuite.UnitTests.NetworkTests
             var receivedTopic = subscriber.ReceiveFrameBytes();
             var receivedMessage = subscriber.ReceiveFrameBytes();
 
-            // Assert
             LogDumper.Dump(this.mockLoggingAdapter, this.output);
+
+            // Assert
             Assert.Equal(TEST_TOPIC, Encoding.UTF8.GetString(receivedTopic));
             Assert.Equal(message, Encoding.UTF8.GetString(receivedMessage));
+            Assert.Equal(State.Running, publisher.State);
+            Assert.Equal(1, publisher.PublishedCount);
 
             // Tear Down
             subscriber.Unsubscribe(TEST_TOPIC);
